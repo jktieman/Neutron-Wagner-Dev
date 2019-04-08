@@ -1,0 +1,107 @@
+﻿using NeutronData.Models;
+using NeutronData.Models.Lookups;
+using NeutronData.ModelViews;
+using System.Data.Entity;
+
+namespace NeutronData.DataContexts
+{
+    public class NeutronDb : DbContext
+    {
+        public NeutronDb() : base("name=Neutron")
+        {
+            Database.SetInitializer(new NullDatabaseInitializer<NeutronDb>());
+        }
+
+        public DbSet<OperationStatus> OperationStatuses { get; set; }
+        
+        public DbSet<ItemDefinition> ItemDefinitions { get; set; }
+        public DbSet<StorageType> StorageTypes { get; set; }
+        public DbSet<UnitOfIssue> UnitOfIssues { get; set; }
+        public DbSet<SizeCode> SizeCodes { get; set; }
+        public DbSet<VelocityCode> VelocityCodes { get; set; }
+        public DbSet<HeightCode> HeightCodes { get; set; }
+        public DbSet<ItemImage> ItemImages { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Station> Stations { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
+        public DbSet<ShipMethod> ShipMethods { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Shipper> Shippers { get; set; }
+        public DbSet<LocationCount> LocationCounts { get; set; }
+        public DbSet<ReplenOrder> ReplenOrders { get; set; }
+        public DbSet<ReplenOrderDetail> ReplenOrderDetails { get; set; }
+        public DbSet<Container> Containers { get; set; }
+        public DbSet<HardwareDevice> HardwareDevices { get; set; }
+        public DbSet<LocationCode> LocationCodes { get; set; }
+        public DbSet<LookupTable> LookupTables { get; set; }
+        public DbSet<DeviceType> DeviceTypes { get; set; }
+        public DbSet<TcpConfiguration> TcpConfigurations { get; set; }
+        public DbSet<SerialConfiguration> SerialConfigurations { get; set; }
+        public DbSet<PickLocationSkip> PickLocationSkips { get; set; }
+        //public DbSet<GroupActivity> GroupActivities { get; set; }
+        public DbSet<History> History { get; set; }
+        //public DbSet<ActionCode> ActionCodes { get; set; }
+        public DbSet<LineStatus> LineStatus { get; set; }
+        //public DbSet<LocationGroup> LocationGroups { get; set; }
+       // public DbSet<LocationGroupLocation> LocationGroupLocations { get; set; }
+        
+        public DbSet<LocationView> LocationViews { get; set; }
+        //public DbSet<Activity> Activities { get; set; }
+        
+        public DbSet<AkaType> AkaTypes { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        //public DbSet<SecureItem> SecureItems { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Carrier> Carriers { get; set; }
+
+        public DbSet<PrintJob> PrintJobs { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.Groups)
+            //    .WithMany(r => r.Users)
+            //    .Map(m => m.ToTable("GroupUser")
+            //    .MapLeftKey("GroupId")
+            //    .MapRightKey("UserId"));
+
+
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.Roles)
+            //    .WithMany(r => r.Users)
+            //    .Map(m => m.ToTable("RoleUser")
+            //    .MapLeftKey("RoleId")
+            //    .MapRightKey("UserId"));
+
+            //modelBuilder.Entity<Carrier>().
+            //    HasMany(u => u.Roles).
+            //    WithMany(r => r.Carriers)
+            //    .Map(m => m.ToTable("RoleCarrier")
+            //    .MapLeftKey("RoleId")
+            //    .MapRightKey("CarrierId"));
+
+            //modelBuilder.Entity<SecureItem>().
+            //   HasMany(u => u.Groups).
+            //   WithMany(r => r.SecureItems)
+            //   .Map(m => m.ToTable("GroupSecureItem")
+            //   .MapLeftKey("GroupId")
+            //   .MapRightKey("SecureItemId"));
+
+            //modelBuilder.Entity<Carrier>().
+            //   HasMany(u => u.Roles).
+            //   WithMany(r => r.Carriers)
+            //   .Map(m => m.ToTable("RoleCarrier")
+            //   .MapLeftKey("RoleId")
+            //   .MapRightKey("CarrierId"));
+
+
+
+            base.OnModelCreating(modelBuilder);
+
+        }
+    }
+}

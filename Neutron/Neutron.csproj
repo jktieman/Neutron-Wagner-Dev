@@ -1,0 +1,681 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0BEF7888-448B-49B0-B8D5-8DCEB8DB5F3C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Neutron</RootNamespace>
+    <AssemblyName>Neutron</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/TMG/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://www.nameit21.com/Programs/Neutron/TMG/</InstallUrl>
+    <SupportUrl>http://www.put2light.com</SupportUrl>
+    <ProductName>Neutron Warehouse Management</ProductName>
+    <PublisherName>Allied Inc</PublisherName>
+    <SuiteName>Neutron</SuiteName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>341</ApplicationRevision>
+    <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Neutron.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>D16606353E07966D96219F6F214048EFC65C085F</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Neutron_2_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>iStock-509981271-Atom.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Neutron_1_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AlliedFileSystemWatcher, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AlliedFileSystemWatcher\bin\Release\AlliedFileSystemWatcher.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Enums.NET, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
+      <HintPath>..\packages\Enums.NET.2.3.2\lib\net45\Enums.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Equin.ApplicationFramework.BindingListView, Version=1.4.5222.35545, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Equin.ApplicationFramework.BindingListView.1.4.5222.35545\lib\net40-Client\Equin.ApplicationFramework.BindingListView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hart_DC, Version=20.18.4.9, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Hart For Production\Hart_DC.DLL</HintPath>
+    </Reference>
+    <Reference Include="JsonManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\JsonManager\bin\Debug\JsonManager.dll</HintPath>
+    </Reference>
+    <Reference Include="LibraryUserControl">
+      <HintPath>..\..\LibraryUserControl\LibraryUserControl\bin\Debug\LibraryUserControl.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MetroFramework.Design, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Design.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MetroFramework.Fonts, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.Fonts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bindings.cs" />
+    <Compile Include="Builders\BayControllerBuilder.cs" />
+    <Compile Include="Builders\InterfaceControllerBuilder.cs" />
+    <Compile Include="Builders\Interfaces\IBayControllerBuilder.cs" />
+    <Compile Include="Builders\Interfaces\IBayControllerRule.cs" />
+    <Compile Include="Builders\Interfaces\IControllerTypeRule.cs" />
+    <Compile Include="Builders\Interfaces\IInterfaceControllerBuilder.cs" />
+    <Compile Include="Builders\Interfaces\IInterfaceControllerRule.cs" />
+    <Compile Include="Builders\Interfaces\IResponseBuilder.cs" />
+    <Compile Include="Builders\ResponseBuilder.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_01.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_14.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_17.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_27.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_33.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_39.cs" />
+    <Compile Include="Builders\Rules\ControllerTypeRules\ControllerTypeRule_Bay.cs" />
+    <Compile Include="Builders\Rules\ControllerTypeRules\ControllerTypeRule_Error.cs" />
+    <Compile Include="Builders\Rules\ControllerTypeRules\ControllerTypeRule_Interface.cs" />
+    <Compile Include="Builders\Rules\InterfaceControllerRules\InterfaceControllerRule_01.cs" />
+    <Compile Include="Classes\CsvUtility.cs" />
+    <Compile Include="Classes\LacProcessor.cs" />
+    <Compile Include="Classes\SecurityProcessor.cs" />
+    <Compile Include="Controllers\C2000.cs" />
+    <Compile Include="Controllers\C3000.cs" />
+    <Compile Include="Controllers\IDisplayController.cs" />
+    <Compile Include="Controllers\IPTIController.cs" />
+    <Compile Include="Controllers\Ipti_BLI.cs" />
+    <Compile Include="Controllers\Ipti_SHI.cs" />
+    <Compile Include="Controllers\RCC2.cs" />
+    <Compile Include="Controllers\DisplayController.cs" />
+    <!-- <Compile Include="..\NeutronData\Models\TowerLevelDisplay.cs"> -->
+    <!-- <Link>Controllers\TowerLevelDisplay.cs</Link> -->
+    <!-- </Compile> -->
+    <Compile Include="Enums\ControllerTypeEnum.cs" />
+    <Compile Include="Enums\CurrentDataSet.cs" />
+    <Compile Include="Enums\DeviceResponse.cs" />
+    <Compile Include="Enums\NeutronSecurity.cs" />
+    <Compile Include="Enums\OrderStatus.cs" />
+    <Compile Include="Enums\StorageType.cs" />
+    <Compile Include="Extensions\ByteExtensions.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\FileInfoExtensions.cs" />
+    <Compile Include="Extensions\IntegerExtensions.cs" />
+    <Compile Include="Extensions\MyExtensions.cs" />
+    <Compile Include="Extensions\StringHelper.cs" />
+    <Compile Include="Forms\BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BaseForm.Designer.cs">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmChangePriority.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangePriority.Designer.cs">
+      <DependentUpon>FrmChangePriority.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmChangeStoreQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeStoreQuantity.Designer.cs">
+      <DependentUpon>FrmChangeStoreQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmChangeQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeQuantity.Designer.cs">
+      <DependentUpon>FrmChangeQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDevices.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDevices.Designer.cs">
+      <DependentUpon>FrmDevices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDeviceSetup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDeviceSetup.Designer.cs">
+      <DependentUpon>FrmDeviceSetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmEditItemDefinition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmEditItemDefinition.Designer.cs">
+      <DependentUpon>FrmEditItemDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmEditLocationDefinition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmEditLocationDefinition.Designer.cs">
+      <DependentUpon>FrmEditLocationDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmHelp.Designer.cs">
+      <DependentUpon>FrmHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmHistory.Designer.cs">
+      <DependentUpon>FrmHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmHotAction.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmHotAction.Designer.cs">
+      <DependentUpon>FrmHotAction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmInventory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmInventory.Designer.cs">
+      <DependentUpon>FrmInventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmItemDefinitions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmItemDefinitions.Designer.cs">
+      <DependentUpon>FrmItemDefinitions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmHeightCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmHeightCodes.Designer.cs">
+      <DependentUpon>FrmHeightCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmGroups.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmGroups.Designer.cs">
+      <DependentUpon>FrmGroups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmLAC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLAC.Designer.cs">
+      <DependentUpon>FrmLAC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmLocationCount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLocationCount.Designer.cs">
+      <DependentUpon>FrmLocationCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmNewItemAuth.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmNewItemAuth.Designer.cs">
+      <DependentUpon>FrmNewItemAuth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmPin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPin.Designer.cs">
+      <DependentUpon>FrmPin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmReplen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReplen.Designer.cs">
+      <DependentUpon>FrmReplen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmReprint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReprint.Designer.cs">
+      <DependentUpon>FrmReprint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmReprintOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReprintOrder.Designer.cs">
+      <DependentUpon>FrmReprintOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmSecurity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSecurity.Designer.cs">
+      <DependentUpon>FrmSecurity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmUtilities.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmUtilities.Designer.cs">
+      <DependentUpon>FrmUtilities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmSystem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSystem.Designer.cs">
+      <DependentUpon>FrmSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmUsers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmUsers.Designer.cs">
+      <DependentUpon>FrmUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmLocations.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLocations.Designer.cs">
+      <DependentUpon>FrmLocations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmLookups.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmLookups.Designer.cs">
+      <DependentUpon>FrmLookups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmPick.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPick.Designer.cs">
+      <DependentUpon>FrmPick.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmSizeCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSizeCodes.Designer.cs">
+      <DependentUpon>FrmSizeCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmVelocityCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmVelocityCodes.Designer.cs">
+      <DependentUpon>FrmVelocityCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmTcpConfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmTcpConfiguration.Designer.cs">
+      <DependentUpon>FrmTcpConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Command.cs" />
+    <Compile Include="Models\Global.cs" />
+    <Compile Include="Models\IptiButtonResponse.cs" />
+    <Compile Include="Forms\TopUploadProcessor.cs" />
+    <Compile Include="FrmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmMain.Designer.cs">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Global\GlobalVar.cs" />
+    <Compile Include="Global\HistoryManager.cs" />
+    <Compile Include="Global\Variables.cs" />
+    <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\ILacProcessor.cs" />
+    <Compile Include="Interfaces\INomenclature.cs" />
+    <Compile Include="Interfaces\ISecurityProcessor.cs" />
+    <Compile Include="Interfaces\IShuttleDriver.cs" />
+    <Compile Include="Models\CostCenterManager.cs" />
+    <Compile Include="Models\DeviceManager.cs" />
+    <Compile Include="Models\DeviceMover.cs" />
+    <Compile Include="Models\InventoryManager.cs" />
+    <Compile Include="Models\MyFileInfo.cs" />
+    <Compile Include="Models\Nomenclature.cs" />
+    <Compile Include="Models\OperationResult.cs" />
+    <Compile Include="Models\Prompt.cs" />
+    <Compile Include="Models\RectangleControl.cs" />
+    <Compile Include="Models\ReplenDeviceManager.cs" />
+    <Compile Include="Models\ResponseManager.cs" />
+    <Compile Include="Models\RuleResult.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\BaseForm.resx">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmChangePriority.resx">
+      <DependentUpon>FrmChangePriority.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmChangeStoreQuantity.resx">
+      <DependentUpon>FrmChangeStoreQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmChangeQuantity.resx">
+      <DependentUpon>FrmChangeQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDevices.resx">
+      <DependentUpon>FrmDevices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDeviceSetup.resx">
+      <DependentUpon>FrmDeviceSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmEditItemDefinition.resx">
+      <DependentUpon>FrmEditItemDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmEditLocationDefinition.resx">
+      <DependentUpon>FrmEditLocationDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmHelp.resx">
+      <DependentUpon>FrmHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmHistory.resx">
+      <DependentUpon>FrmHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmHotAction.resx">
+      <DependentUpon>FrmHotAction.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmInventory.resx">
+      <DependentUpon>FrmInventory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmItemDefinitions.resx">
+      <DependentUpon>FrmItemDefinitions.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmHeightCodes.resx">
+      <DependentUpon>FrmHeightCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmGroups.resx">
+      <DependentUpon>FrmGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLAC.resx">
+      <DependentUpon>FrmLAC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLocationCount.resx">
+      <DependentUpon>FrmLocationCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmNewItemAuth.resx">
+      <DependentUpon>FrmNewItemAuth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPin.resx">
+      <DependentUpon>FrmPin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmReplen.resx">
+      <DependentUpon>FrmReplen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmReprint.resx">
+      <DependentUpon>FrmReprint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmReprintOrder.resx">
+      <DependentUpon>FrmReprintOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSecurity.resx">
+      <DependentUpon>FrmSecurity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmUtilities.resx">
+      <DependentUpon>FrmUtilities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSystem.resx">
+      <DependentUpon>FrmSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmUsers.resx">
+      <DependentUpon>FrmUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLocations.resx">
+      <DependentUpon>FrmLocations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmLookups.resx">
+      <DependentUpon>FrmLookups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPick.resx">
+      <DependentUpon>FrmPick.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSizeCodes.resx">
+      <DependentUpon>FrmSizeCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmVelocityCodes.resx">
+      <DependentUpon>FrmVelocityCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmTcpConfiguration.resx">
+      <DependentUpon>FrmTcpConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmMain.resx">
+      <DependentUpon>FrmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="App.Debug.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Release.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="Neutron_1_TemporaryKey.pfx" />
+    <None Include="Neutron_2_TemporaryKey.pfx" />
+    <None Include="Neutron_TemporaryKey.pfx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Neutron_Logo32.png" />
+    <None Include="Images\Neutron_Logo.png" />
+    <Content Include="iStock-509981271-Atom.ico" />
+    <None Include="Icons\glyphicons-171-step-backward.png" />
+    <None Include="Icons\glyphicons-172-fast-backward.png" />
+    <None Include="Icons\glyphicons-173-rewind.png" />
+    <None Include="Icons\glyphicons-174-play.png" />
+    <None Include="Icons\glyphicons-177-forward.png" />
+    <None Include="Icons\glyphicons-178-fast-forward.png" />
+    <None Include="Icons\glyphicons-179-step-forward.png" />
+    <None Include="Icons\glyphicons-182-download-alt.png" />
+    <None Include="Icons\glyphicons-224-chevron-right.png" />
+    <None Include="Icons\glyphicons-225-chevron-left.png" />
+    <Content Include="Hart_DC.xml" />
+    <Content Include="Hart_LV.DLL">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\1121.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\1489123904_circle-arrow_back-previous-glyph.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NeutronLogo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Neutron-Loaders\TMG\NeutronLoader\NeutronLoader.csproj">
+      <Project>{CF98A081-AE8A-49D0-B879-DBC68D94BD18}</Project>
+      <Name>NeutronLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SlotNameFactory\SlotNameFactory.csproj">
+      <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>
+      <Name>SlotNameFactory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
+      <Project>{BA17BDF5-4F6B-4ADA-A7F0-9AE6A51A9816}</Project>
+      <Name>AlliedLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
+      <Name>NeutronCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronData\NeutronData.csproj">
+      <Project>{e325f3e2-6660-451f-b9b2-d8866447be4d}</Project>
+      <Name>NeutronData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
+      <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
+      <Name>NeutronEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronMaintenance\NeutronMaintenance.csproj">
+      <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
+      <Name>NeutronMaintenance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PrintRequest\PrintRequest.csproj">
+      <Project>{ac64b1bd-e3e7-49f5-8ddf-103fca0970fe}</Project>
+      <Name>PrintRequest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UserControls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterCompile" Condition="Exists('App.$(Configuration).config')">
+    <!--Generate transformed app config in the intermediate directory-->
+    <TransformXml Source="App.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="App.$(Configuration).config" />
+    <!--Force build process to use the transformed configuration file from now on.-->
+    <ItemGroup>
+      <AppConfigWithTargetPath Remove="App.config" />
+      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
+        <TargetPath>$(TargetFileName).config</TargetPath>
+      </AppConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
+  <!--Override After Publish to support ClickOnce AfterPublish. Target replaces the untransformed config file copied to the deployment directory with the transformed one.-->
+  <Target Name="AfterPublish">
+    <PropertyGroup>
+      <DeployedConfig>$(_DeploymentApplicationDir)$(TargetName)$(TargetExt).config$(_DeploymentFileMappingExtension)</DeployedConfig>
+    </PropertyGroup>
+    <!--Publish copies the untransformed App.config to deployment directory so overwrite it-->
+    <Copy Condition="Exists('$(DeployedConfig)')" SourceFiles="$(IntermediateOutputPath)$(TargetFileName).config" DestinationFiles="$(DeployedConfig)" />
+  </Target>
+</Project>

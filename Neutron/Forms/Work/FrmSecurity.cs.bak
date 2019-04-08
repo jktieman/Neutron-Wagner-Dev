@@ -1,0 +1,809 @@
+﻿using NeutronData.DataContexts;
+using NeutronData.Models;
+using NeutronData.Models.Lookups;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Entity.Migrations;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Neutron
+{
+    public partial class FrmLAC : Form
+    {
+        private readonly NeutronDb context = new NeutronDb();
+
+        private bool checkAllUsers;
+        private bool checkAllDevice1;
+        private bool checkAllDevice2;
+        private bool checkAllDevice3;
+        private bool checkAllDevice4;
+        private bool checkAllActivities;
+
+        public FrmLAC()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //var users = new List<User>();
+            //var roles = new List<Role>();
+            //var carriers = new List<Carrier>();
+
+            //var user1 = new User { EmpId = "1001", Firstname = "Earl", Lastname = "Night", Username = "enight", Pin = 1234 };
+            //var user2 = new User { EmpId = "2002", Firstname = "Tom", Lastname = "Thumb", Username = "tthumb", Pin = 2345 };
+            //var user3 = new User { EmpId = "3003", Firstname = "Ralph", Lastname = "May", Username = "rmay", Pin = 3456 };
+            //var user4 = new User { EmpId = "4004", Firstname = "Steve", Lastname = "Bower", Username = "sbower", Pin = 4567 };
+
+            //users.Add(user1);
+            //users.Add(user2);
+            //users.Add(user3);
+            //users.Add(user4);
+
+            //var admin = new Role { RoleName = "Admin" };
+            //var picker = new Role { RoleName = "Picker" };
+            //var maint = new Role { RoleName = "Maint" };
+
+            //roles.Add(admin);
+            //roles.Add(picker);
+            //roles.Add(maint);
+
+            //for (int i = 1; i <= 4; i++)
+            //{
+            //    for (int j = 1; j <= 120; j++)
+            //    {
+            //        var carrier = new Carrier { DeviceNumber = i, CarrierNumber = j };
+            //        carriers.Add(carrier);
+            //    }
+
+            //}
+
+            //user1.Roles.Add(admin);
+            //user2.Roles.Add(picker);
+            //user3.Roles.Add(picker);
+            //user4.Roles.Add(maint);
+
+            //admin.Carriers.Add(carriers[1]);
+            //admin.Carriers.Add(carriers[2]);
+            //admin.Carriers.Add(carriers[3]);
+            //admin.Carriers.Add(carriers[4]);
+
+            //picker.Carriers.Add(carriers[3]);
+            //picker.Carriers.Add(carriers[4]);
+            //picker.Carriers.Add(carriers[5]);
+            //picker.Carriers.Add(carriers[6]);
+            //picker.Carriers.Add(carriers[7]);
+
+
+            //maint.Carriers.Add(carriers[6]);
+            //maint.Carriers.Add(carriers[7]);
+
+            //context.Roles.AddOrUpdate(roles.ToArray());
+            //context.Users.AddOrUpdate(users.ToArray());
+            //context.Carriers.AddOrUpdate(carriers.ToArray());
+
+
+            //context.SaveChanges();
+
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Activity[] activities = context.Activities.ToArray();
+            Carrier[] carriers = context.Carriers.ToArray();
+            Role[] roles = context.Roles.ToArray();
+            User[] users = context.Users.ToArray();
+
+            ListViewDevice1.Items.AddRange(carriers.Where(r => r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice2.Items.AddRange(carriers.Where(r => r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice3.Items.AddRange(carriers.Where(r => r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice4.Items.AddRange(carriers.Where(r => r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.UserInfo, Tag = r }).ToArray());
+            ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
+            ListViewActivities.Items.AddRange(activities.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+
+            ComboBoxRoles.DataSource = roles.ToList();
+            ComboBoxRoles.DisplayMember = "RoleName";
+            ComboBoxRoles.ValueMember = "RoleId";
+
+        }
+
+        private void LoadRoles()
+        {
+            ListViewRoles.Clear();
+            Role[] roles = context.Roles.ToArray();
+            //ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem(r.RoleName)).ToArray());
+            ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
+        }
+
+        private void LoadUsers()
+        {
+            ListViewUsers.Clear();
+            User[] users = context.Users.ToArray();
+            //ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem(r.ToString())).ToArray());
+            ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.UserInfo, Tag = r }).ToArray());
+        }
+
+        private void LoadActivities()
+        {
+            ListViewActivities.Clear();
+            Activity[] activities = context.Activities.ToArray();
+            ListViewActivities.Items.AddRange(activities.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+        }
+
+        private void LoadDevice1()
+        {
+            ListViewDevice1.Clear();
+            Carrier[] carriers = context.Carriers.ToArray();
+            ListViewDevice1.Items.AddRange(carriers.Where(r => r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+        }
+
+        private void LoadDevice2()
+        {
+            ListViewDevice2.Clear();
+            Carrier[] carriers = context.Carriers.ToArray();
+            ListViewDevice2.Items.AddRange(carriers.Where(r => r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+        }
+
+        private void LoadDevice3()
+        {
+            ListViewDevice3.Clear();
+            Carrier[] carriers = context.Carriers.ToArray();
+            ListViewDevice3.Items.AddRange(carriers.Where(r => r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+        }
+
+        private void LoadDevice4()
+        {
+            ListViewDevice4.Clear();
+            Carrier[] carriers = context.Carriers.ToArray();
+            ListViewDevice4.Items.AddRange(carriers.Where(r => r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+        }
+
+        private void ListViewDevice1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            ListViewItem item = e.Item;
+            var carrier = (Carrier) item.Tag;
+        }
+
+        public bool CheckAllUsers
+        {
+            get
+            {
+                return checkAllUsers;
+            }
+            set
+            {
+                checkAllUsers = value;
+                ButtonSelectUsers.Text = checkAllUsers ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectUsers_Click(object sender, EventArgs e)
+        {
+            CheckAllUsers = !CheckAllUsers;
+            if (CheckAllUsers == true)
+            {
+                CheckUsers();
+            }
+            else
+            {
+                ClearUsers();
+            }
+        }
+
+        private void CheckUsers()
+        {
+            foreach (ListViewItem item in ListViewUsers.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckUsers(List<User> users)
+        {
+            foreach (ListViewItem item in ListViewUsers.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var usr in users)
+                {
+                    if (((User) item.Tag).Id == usr.Id)
+                    {
+                        item.Checked = true;
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        private void ClearUsers()
+        {
+            foreach (ListViewItem item in ListViewUsers.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        //------
+        //public bool CheckAllRoles
+        //{
+        //    get
+        //    {
+        //        return checkAllRoles;
+        //    }
+        //    set
+        //    {
+        //        checkAllRoles = value;
+        //        ButtonSelectRoles.Text = checkAllRoles ? "Clear All" : "Check All";
+        //    }
+        //}
+
+        //private void ButtonSelectRoles_Click(object sender, EventArgs e)
+        //{
+        //    CheckAllRoles = !CheckAllRoles;
+        //    if (CheckAllRoles == true)
+        //    {
+        //        CheckRoles();
+        //    }
+        //    else
+        //    {
+        //        ClearRoles();
+        //    }
+        //}
+
+        //private void CheckRoles()
+        //{
+        //    foreach (ListViewItem item in ListViewRoles.Items)
+        //    {
+        //        item.Checked = true;
+        //    }
+        //}
+
+        //private void ClearRoles()
+        //{
+        //    foreach (ListViewItem item in ListViewRoles.Items)
+        //    {
+        //        item.Checked = false;
+        //    }
+        //}
+
+        //------
+        public bool CheckAllDevice1
+        {
+            get
+            {
+                return checkAllDevice1;
+            }
+            set
+            {
+                checkAllDevice1 = value;
+                ButtonSelectDevice1.Text = checkAllDevice1 ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectDevice1_Click(object sender, EventArgs e)
+        {
+            CheckAllDevice1 = !CheckAllDevice1;
+            if (CheckAllDevice1 == true)
+            {
+                CheckDevice1();
+            }
+            else
+            {
+                ClearDevice1();
+            }
+        }
+
+        private void CheckDevice1()
+        {
+            foreach (ListViewItem item in ListViewDevice1.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckDevice1(List<Carrier> carriers)
+        {
+            foreach (ListViewItem item in ListViewDevice1.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var car in carriers)
+                {
+                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    {
+                        item.Checked = true;
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        private void ClearDevice1()
+        {
+            foreach (ListViewItem item in ListViewDevice1.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        //------
+        public bool CheckAllDevice2
+        {
+            get
+            {
+                return checkAllDevice2;
+            }
+            set
+            {
+                checkAllDevice2 = value;
+                ButtonSelectDevice2.Text = checkAllDevice2 ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectDevice2_Click(object sender, EventArgs e)
+        {
+            CheckAllDevice2 = !CheckAllDevice2;
+            if (CheckAllDevice2 == true)
+            {
+                CheckDevice2();
+            }
+            else
+            {
+                ClearDevice2();
+            }
+        }
+
+        private void CheckDevice2()
+        {
+            foreach (ListViewItem item in ListViewDevice2.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckDevice2(List<Carrier> carriers)
+        {
+            foreach (ListViewItem item in ListViewDevice2.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var car in carriers)
+                {
+                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    {
+                        item.Checked = true;
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        private void ClearDevice2()
+        {
+            foreach (ListViewItem item in ListViewDevice2.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        //------
+        public bool CheckAllDevice3
+        {
+            get
+            {
+                return checkAllDevice3;
+            }
+            set
+            {
+                checkAllDevice3 = value;
+                ButtonSelectDevice3.Text = checkAllDevice3 ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectDevice3_Click(object sender, EventArgs e)
+        {
+            CheckAllDevice3 = !CheckAllDevice3;
+            if (CheckAllDevice3 == true)
+            {
+                CheckDevice3();
+            }
+            else
+            {
+                ClearDevice3();
+            }
+        }
+
+        private void CheckDevice3()
+        {
+            foreach (ListViewItem item in ListViewDevice3.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckDevice3(List<Carrier> carriers)
+        {
+            foreach (ListViewItem item in ListViewDevice3.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var car in carriers)
+                {
+                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    {
+                        item.Checked = true;
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        private void ClearDevice3()
+        {
+            foreach (ListViewItem item in ListViewDevice3.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        //------
+        public bool CheckAllDevice4
+        {
+            get
+            {
+                return checkAllDevice4;
+            }
+            set
+            {
+                checkAllDevice4 = value;
+                ButtonSelectDevice4.Text = checkAllDevice4 ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectDevice4_Click(object sender, EventArgs e)
+        {
+            CheckAllDevice4 = !CheckAllDevice4;
+            if (CheckAllDevice4 == true)
+            {
+                CheckDevice4();
+            }
+            else
+            {
+                ClearDevice4();
+            }
+        }
+
+        private void CheckDevice4()
+        {
+            foreach (ListViewItem item in ListViewDevice4.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckDevice4(List<Carrier> carriers)
+        {
+            foreach (ListViewItem item in ListViewDevice4.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var car in carriers)
+                {
+                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    {
+                        item.Checked = true;
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        private void ClearDevice4()
+        {
+            foreach (ListViewItem item in ListViewDevice4.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        private void ButtonSaveNewRole_Click(object sender, EventArgs e)
+        {
+            if (TextBoxNewRole.Text.Length > 3)
+            {
+                context.Roles.Add(new Role { RoleName = TextBoxNewRole.Text });
+                context.SaveChanges();
+                LoadRoles();
+            }
+        }
+
+        private void ShowChecked_Click(object sender, EventArgs e)
+        {
+            //string msg = string.Empty;
+            //foreach (ListViewItem item in ListViewRoles.Items)
+            //{
+            //    if (item.Checked)
+            //    {
+            //        msg += item.Tag + " " + item.Text + "\r\n";
+            //    }
+
+            //}
+
+            //MessageBox.Show(msg);
+        }
+
+        private void ComboBoxRoles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            Role usersWithThisRole = context.Roles.Include("Users").Include("Carriers").Where(r => r.RoleId == role.RoleId).FirstOrDefault();
+            CheckUsers(usersWithThisRole.Users);
+            //List<Carrier> carriers = role.Carriers.Where(r => r.DeviceNumber == 1).ToList();
+            CheckDevice1(usersWithThisRole.Carriers);
+            //carriers = role.Carriers.Where(r => r.DeviceNumber == 2).ToList();
+            CheckDevice2(usersWithThisRole.Carriers);
+            //carriers = role.Carriers.Where(r => r.DeviceNumber == 3).ToList();
+            CheckDevice3(usersWithThisRole.Carriers);
+            //carriers = role.Carriers.Where(r => r.DeviceNumber == 4).ToList();
+            CheckDevice4(usersWithThisRole.Carriers);
+
+            CheckActivities(usersWithThisRole.Activities);
+        }
+
+        private void ButtonSaveUsers_Click(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            List<User> users = context.Users.ToList();
+            foreach (var item in users)
+            {
+                role.Users.Remove(item);
+            }
+            context.SaveChanges();
+            SaveSelectedUsers(role);
+
+        }
+
+        private void SaveSelectedUsers(Role role)
+        {
+            foreach (ListViewItem item in ListViewUsers.Items)
+            {
+                if (item.Checked)
+                {
+                    var user = (User) item.Tag;
+                    role.Users.Add(user);
+                }
+            }
+            context.SaveChanges();
+        }
+
+        private void ButtonSaveDevice1_Click(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 1).ToList();
+            foreach (var item in carriers)
+            {
+                role.Carriers.Remove(item);
+            }
+            context.SaveChanges();
+            SaveSelectedDevice1(role);
+
+        }
+
+        private void SaveSelectedDevice1(Role role)
+        {
+            foreach (ListViewItem item in ListViewDevice1.Items)
+            {
+                if (item.Checked)
+                {
+                    var carrier = (Carrier) item.Tag;
+                    role.Carriers.Add(carrier);
+                }
+            }
+            context.SaveChanges();
+        }
+
+        private void ButtonSaveDevice2_Click(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 2).ToList();
+            foreach (var item in carriers)
+            {
+                role.Carriers.Remove(item);
+            }
+            context.SaveChanges();
+            SaveSelectedDevice2(role);
+
+        }
+
+        private void SaveSelectedDevice2(Role role)
+        {
+            foreach (ListViewItem item in ListViewDevice2.Items)
+            {
+                if (item.Checked)
+                {
+                    var carrier = (Carrier) item.Tag;
+                    role.Carriers.Add(carrier);
+                }
+            }
+            context.SaveChanges();
+        }
+
+        private void ButtonSaveDevice3_Click(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 3).ToList();
+            foreach (var item in carriers)
+            {
+                role.Carriers.Remove(item);
+            }
+            context.SaveChanges();
+            SaveSelectedDevice3(role);
+
+        }
+
+        private void SaveSelectedDevice3(Role role)
+        {
+            foreach (ListViewItem item in ListViewDevice3.Items)
+            {
+                if (item.Checked)
+                {
+                    var carrier = (Carrier) item.Tag;
+                    role.Carriers.Add(carrier);
+                }
+            }
+            context.SaveChanges();
+        }
+
+        private void ButtonSaveDevice4_Click(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 4).ToList();
+            foreach (var item in carriers)
+            {
+                role.Carriers.Remove(item);
+            }
+            context.SaveChanges();
+            SaveSelectedDevice4(role);
+
+        }
+
+        private void SaveSelectedDevice4(Role role)
+        {
+            foreach (ListViewItem item in ListViewDevice4.Items)
+            {
+                if (item.Checked)
+                {
+                    var carrier = (Carrier) item.Tag;
+                    role.Carriers.Add(carrier);
+                }
+            }
+            context.SaveChanges();
+        }
+
+        private void ButtonSaveNewUser_Click(object sender, EventArgs e)
+        {
+            var user = new User
+            {
+                EmpId = TextBoxEmpId.Text,
+                Pin = TextBoxPin.Text,
+                Firstname = TextBoxFirstname.Text,
+                Lastname = TextBoxLastname.Text,
+                Username = TextBoxUsername.Text,
+                Password = TextBoxPassword.Text,
+                Disabled = CheckBoxDisabled.Checked
+            };
+            context.Users.Add(user);
+            context.SaveChanges();
+
+            ClearFields();
+            LoadUsers();
+        }
+
+        private void ClearFields()
+        {
+            TextBoxEmpId.Text = string.Empty;
+            TextBoxPin.Text = string.Empty;
+            TextBoxFirstname.Text = string.Empty;
+            TextBoxLastname.Text = string.Empty;
+            TextBoxUsername.Text = string.Empty;
+            TextBoxPassword.Text = string.Empty;
+            CheckBoxDisabled.Checked = false;
+        }
+
+        private void ButtonSaveActivities_Click(object sender, EventArgs e)
+        {
+            var role = (Role) ComboBoxRoles.SelectedItem;
+            List<Activity> activities = context.Activities.ToList();
+            foreach (var item in activities)
+            {
+                role.Activities.Remove(item);
+            }
+            context.SaveChanges();
+            SaveSelectedActivities(role);
+
+        }
+
+        private void SaveSelectedActivities(Role role)
+        {
+            foreach (ListViewItem item in ListViewActivities.Items)
+            {
+                if (item.Checked)
+                {
+                    var activity = (Activity) item.Tag;
+                    role.Activities.Add(activity);
+                }
+            }
+            context.SaveChanges();
+        }
+
+        public bool CheckAllActivities
+        {
+            get
+            {
+                return checkAllActivities;
+            }
+            set
+            {
+                checkAllActivities = value;
+                ButtonSelectActivities.Text = checkAllActivities ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectActivities_Click(object sender, EventArgs e)
+        {
+            CheckAllActivities = !CheckAllActivities;
+            if (CheckAllActivities == true)
+            {
+                CheckActivities();
+            }
+            else
+            {
+                ClearActivities();
+            }
+        }
+
+        private void CheckActivities()
+        {
+            foreach (ListViewItem item in ListViewActivities.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckActivities(List<Activity> activities)
+        {
+            foreach (ListViewItem item in ListViewActivities.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var act in activities)
+                {
+                    if (((Activity) item.Tag).Id == act.Id)
+                    {
+                        item.Checked = true;
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        private void ClearActivities()
+        {
+            foreach (ListViewItem item in ListViewActivities.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+    }
+}

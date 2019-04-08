@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E325F3E2-6660-451F-B9B2-D8866447BE4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NeutronData</RootNamespace>
+    <AssemblyName>NeutronData</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseClasses\LookupData.cs" />
+    <Compile Include="BaseClasses\PickStopBase.cs" />
+    <Compile Include="DataContexts\SecureDb.cs" />
+    <Compile Include="Interfaces\IAkaRepository.cs" />
+    <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
+    <Compile Include="Migrations\201902271513321_PickLocationSkip.Designer.cs">
+      <DependentUpon>201902271513321_PickLocationSkip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903191238154_historychange.cs" />
+    <Compile Include="Migrations\201903191238154_historychange.Designer.cs">
+      <DependentUpon>201903191238154_historychange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AkaType.cs" />
+    <Compile Include="Models\Carrier.cs" />
+    <Compile Include="Models\GroupUser.cs" />
+    <Compile Include="Models\LocationDetail.cs" />
+    <Compile Include="Models\LocationGroupLocation.cs" />
+    <Compile Include="Models\GroupSecureItem.cs" />
+    <Compile Include="Models\History.cs" />
+    <Compile Include="Models\Lookups\aaaActionCode.cs" />
+    <Compile Include="Models\Activity.cs" />
+    <Compile Include="Models\Lookups\CommunicationType.cs" />
+    <Compile Include="Models\Lookups\HardwareDeviceLookup.cs" />
+    <Compile Include="Models\Lookups\LocationGroup.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\ItemImage.cs" />
+    <Compile Include="DataContexts\NeutronDb.cs" />
+    <Compile Include="General\Extensions.cs" />
+    <Compile Include="General\TransferRec.cs" />
+    <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\ILookup.cs" />
+    <Compile Include="Models\Lookups\DeviceType.cs" />
+    <Compile Include="Models\Lookups\LineStatus.cs" />
+    <Compile Include="Models\LookupTable.cs" />
+    <Compile Include="Interfaces\IRepositoryBase.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BatchPosition.cs" />
+    <Compile Include="Models\Container.cs" />
+    <Compile Include="Models\DetailRec.cs" />
+    <Compile Include="Models\HardwareDevice.cs" />
+    <Compile Include="Models\Lookups\HeightCode.cs" />
+    <Compile Include="Models\HostOrder.cs" />
+    <Compile Include="Interfaces\IHostOrder.cs" />
+    <Compile Include="Models\Inventory.cs" />
+    <Compile Include="Models\ItemDefinition.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\LocationBase.cs" />
+    <Compile Include="Models\Lookups\LocationCode.cs" />
+    <Compile Include="Models\LocationCount.cs" />
+    <Compile Include="Models\OperationStatus.cs" />
+    <Compile Include="Models\PrintJob.cs" />
+    <Compile Include="Models\ReplenHostOrder.cs" />
+    <Compile Include="Models\ReplenOrderDetail.cs" />
+    <Compile Include="Models\ReplenOrder.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderCtlType.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Lookups\OrderStatus.cs" />
+    <Compile Include="Models\OrdSummRec.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\RoleCarrier.cs" />
+    <Compile Include="Models\SecureItem.cs" />
+    <Compile Include="Models\SerialConfiguration.cs" />
+    <Compile Include="Models\Lookups\ShipMethod.cs" />
+    <Compile Include="Models\Lookups\Shipper.cs" />
+    <Compile Include="Models\Lookups\SizeCode.cs" />
+    <Compile Include="Models\Station.cs" />
+    <Compile Include="Models\StationOcLocation.cs" />
+    <Compile Include="Models\Lookups\StorageType.cs" />
+    <Compile Include="Models\TcpConfiguration.cs" />
+    <Compile Include="Models\Lookups\UnitOfIssue.cs" />
+    <Compile Include="Models\TowerLevelInfo.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Lookups\VelocityCode.cs" />
+    <Compile Include="Models\RoleUser.cs" />
+    <Compile Include="Models\UserRoles.cs" />
+    <Compile Include="ModelViews\AvailableOrdersView.cs" />
+    <Compile Include="ModelViews\HardwareDeviceView.cs" />
+    <Compile Include="ModelViews\HistoryView.cs" />
+    <Compile Include="ModelViews\HotPickView.cs" />
+    <Compile Include="ModelViews\HotStoreListView.cs" />
+    <Compile Include="ModelViews\InventoryView.cs" />
+    <Compile Include="ModelViews\ItemDefinitionView.cs" />
+    <Compile Include="ModelViews\LocationView.cs" />
+    <Compile Include="ModelViews\NewItemView.cs" />
+    <Compile Include="ModelViews\OrderDetailsView.cs" />
+    <Compile Include="ModelViews\RackOrderView.cs" />
+    <Compile Include="ModelViews\PickLocation.cs" />
+    <Compile Include="ModelViews\PickLocationSkip.cs" />
+    <Compile Include="ModelViews\PickStop.cs" />
+    <Compile Include="ModelViews\ReplenOrderDetailsView.cs" />
+    <Compile Include="ModelViews\ReplenPickStop.cs" />
+    <Compile Include="ModelViews\ReplenPickView.cs" />
+    <Compile Include="ModelViews\ReplenOrderView.cs" />
+    <Compile Include="ModelViews\OrderView.cs" />
+    <Compile Include="ModelViews\PickView.cs" />
+    <Compile Include="ModelViews\SkipInventoryView.cs" />
+    <Compile Include="ModelViews\SkipView.cs" />
+    <Compile Include="ModelViews\StationView.cs" />
+    <Compile Include="ModelViews\UserView.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AkaRepository.cs" />
+    <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Interfaces\ILocationsRepository.cs" />
+    <Compile Include="Repositories\InventoryRepository.cs" />
+    <Compile Include="Repositories\ItemDefinitionsRepository.cs" />
+    <Compile Include="Repositories\LocationsRepository.cs" />
+    <Compile Include="Repositories\OrderDetailsRepository.cs" />
+    <Compile Include="Repositories\ReplenOrderDetailsRepository.cs" />
+    <Compile Include="Repositories\ReplenOrdersRepository.cs" />
+    <Compile Include="Repositories\OrdersRepository.cs" />
+    <Compile Include="Repositories\RepositoryBase.cs" />
+    <Compile Include="Repositories\StationRepository.cs" />
+    <Compile Include="SqlModelViews\SqlInventoryView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
+      <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
+      <Name>AlliedLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
+      <Name>NeutronCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\1121.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201902271513321_PickLocationSkip.resx">
+      <DependentUpon>201902271513321_PickLocationSkip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903191238154_historychange.resx">
+      <DependentUpon>201903191238154_historychange.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

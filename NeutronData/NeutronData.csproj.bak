@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E325F3E2-6660-451F-B9B2-D8866447BE4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NeutronData</RootNamespace>
+    <AssemblyName>NeutronData</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataContexts\NeutronDb.cs" />
+    <Compile Include="General\Extensions.cs" />
+    <Compile Include="General\TransferRec.cs" />
+    <Compile Include="Interfaces\INeutronNDefDbRepository.cs" />
+    <Compile Include="Interfaces\IRepositoryBase.cs" />
+    <Compile Include="Migrations\201702240505078_InitialCreate.cs" />
+    <Compile Include="Migrations\201702240505078_InitialCreate.Designer.cs">
+      <DependentUpon>201702240505078_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702241530157_OperationStatuses.cs" />
+    <Compile Include="Migrations\201702241530157_OperationStatuses.Designer.cs">
+      <DependentUpon>201702241530157_OperationStatuses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702251538538_OrderCtlType.cs" />
+    <Compile Include="Migrations\201702251538538_OrderCtlType.Designer.cs">
+      <DependentUpon>201702251538538_OrderCtlType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702251704225_OrderCtlTypeArrayExpand.cs" />
+    <Compile Include="Migrations\201702251704225_OrderCtlTypeArrayExpand.Designer.cs">
+      <DependentUpon>201702251704225_OrderCtlTypeArrayExpand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702251735216_DetailArrayExpand.cs" />
+    <Compile Include="Migrations\201702251735216_DetailArrayExpand.Designer.cs">
+      <DependentUpon>201702251735216_DetailArrayExpand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702251819247_ArrayExpand.cs" />
+    <Compile Include="Migrations\201702251819247_ArrayExpand.Designer.cs">
+      <DependentUpon>201702251819247_ArrayExpand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702252144321_ArrayExpand1.cs" />
+    <Compile Include="Migrations\201702252144321_ArrayExpand1.Designer.cs">
+      <DependentUpon>201702252144321_ArrayExpand1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702252301074_ArrayExpand2.cs" />
+    <Compile Include="Migrations\201702252301074_ArrayExpand2.Designer.cs">
+      <DependentUpon>201702252301074_ArrayExpand2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702252309114_ArrayExpand3.cs" />
+    <Compile Include="Migrations\201702252309114_ArrayExpand3.Designer.cs">
+      <DependentUpon>201702252309114_ArrayExpand3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702271540119_SizeAndVelLate.cs" />
+    <Compile Include="Migrations\201702271540119_SizeAndVelLate.Designer.cs">
+      <DependentUpon>201702271540119_SizeAndVelLate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703052114208_LoadTimeChange.cs" />
+    <Compile Include="Migrations\201703052114208_LoadTimeChange.Designer.cs">
+      <DependentUpon>201703052114208_LoadTimeChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703081827087_SlotField.cs" />
+    <Compile Include="Migrations\201703081827087_SlotField.Designer.cs">
+      <DependentUpon>201703081827087_SlotField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703111811244_User.cs" />
+    <Compile Include="Migrations\201703111811244_User.Designer.cs">
+      <DependentUpon>201703111811244_User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703112158524_SizeVelHeight.cs" />
+    <Compile Include="Migrations\201703112158524_SizeVelHeight.Designer.cs">
+      <DependentUpon>201703112158524_SizeVelHeight.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703112204269_SizeVelHeight1.cs" />
+    <Compile Include="Migrations\201703112204269_SizeVelHeight1.Designer.cs">
+      <DependentUpon>201703112204269_SizeVelHeight1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704031649402_04032017.cs" />
+    <Compile Include="Migrations\201704031649402_04032017.Designer.cs">
+      <DependentUpon>201704031649402_04032017.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DetailRec.cs" />
+    <Compile Include="Models\HeightClass.cs" />
+    <Compile Include="Models\LocationBase.cs" />
+    <Compile Include="Models\NDefDb.cs" />
+    <Compile Include="Models\NLocDb.cs" />
+    <Compile Include="Models\NovaRec.cs" />
+    <Compile Include="Models\OCType.cs" />
+    <Compile Include="Models\OperationStatus.cs" />
+    <Compile Include="Models\OrderCtlType.cs" />
+    <Compile Include="Models\OrdSummRec.cs" />
+    <Compile Include="Models\ResDefType.cs" />
+    <Compile Include="Models\ReserveType.cs" />
+    <Compile Include="Models\SizeClass.cs" />
+    <Compile Include="Models\SizeClassBToS.cs" />
+    <Compile Include="Models\SizeClassSToB.cs" />
+    <Compile Include="Models\StationOcLocation.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\VelClass.cs" />
+    <Compile Include="Models\VelClassSToB.cs" />
+    <Compile Include="Models\VelClassBToS.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\NeutronDetailRecRepository.cs" />
+    <Compile Include="Repositories\NeutronNDefDbRepository.cs" />
+    <Compile Include="Repositories\NeutronNLocDbRepository.cs" />
+    <Compile Include="Repositories\NeutronNovaRecRepository.cs" />
+    <Compile Include="Repositories\NeutronOCTypeRepository.cs" />
+    <Compile Include="Repositories\NeutronOrderCtlTypeRepository.cs" />
+    <Compile Include="Repositories\NeutronOrdSummRecRepository.cs" />
+    <Compile Include="Repositories\NeutronReserveTypeRepository.cs" />
+    <Compile Include="Repositories\NeutronSizeAndVelClassRepository.cs" />
+    <Compile Include="Repositories\RepositoryBase.cs" />
+    <Compile Include="Repositories\NeutronResDefTypeRepository.cs" />
+    <Compile Include="Repositories\StationOCLocationRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AlliedLogger\AlliedLogger.csproj">
+      <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
+      <Name>AlliedLogger</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702240505078_InitialCreate.resx">
+      <DependentUpon>201702240505078_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702241530157_OperationStatuses.resx">
+      <DependentUpon>201702241530157_OperationStatuses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702251538538_OrderCtlType.resx">
+      <DependentUpon>201702251538538_OrderCtlType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702251704225_OrderCtlTypeArrayExpand.resx">
+      <DependentUpon>201702251704225_OrderCtlTypeArrayExpand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702251735216_DetailArrayExpand.resx">
+      <DependentUpon>201702251735216_DetailArrayExpand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702251819247_ArrayExpand.resx">
+      <DependentUpon>201702251819247_ArrayExpand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702252144321_ArrayExpand1.resx">
+      <DependentUpon>201702252144321_ArrayExpand1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702252301074_ArrayExpand2.resx">
+      <DependentUpon>201702252301074_ArrayExpand2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702252309114_ArrayExpand3.resx">
+      <DependentUpon>201702252309114_ArrayExpand3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702271540119_SizeAndVelLate.resx">
+      <DependentUpon>201702271540119_SizeAndVelLate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703052114208_LoadTimeChange.resx">
+      <DependentUpon>201703052114208_LoadTimeChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703081827087_SlotField.resx">
+      <DependentUpon>201703081827087_SlotField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703111811244_User.resx">
+      <DependentUpon>201703111811244_User.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703112158524_SizeVelHeight.resx">
+      <DependentUpon>201703112158524_SizeVelHeight.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703112204269_SizeVelHeight1.resx">
+      <DependentUpon>201703112204269_SizeVelHeight1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704031649402_04032017.resx">
+      <DependentUpon>201704031649402_04032017.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\SharedProjectTowerMove\SharedProjectTowerMove.projitems" Label="Shared" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

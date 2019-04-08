@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace NeutronData.ModelViews
+{
+    public class SkipInventoryView
+    {
+        public int InventoryId { get; set; }
+        public int StationNumber { get; set; }
+        public string StorageType { get; set; }
+        public string Item { get; set; }
+        public string Description { get; set; }
+        public string Slot { get; set; }
+        public int Quantity { get; set; }
+        public int Required { get; set; }
+        public int Picked { get; set; }
+
+    }
+}

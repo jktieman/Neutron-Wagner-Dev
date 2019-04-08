@@ -1,0 +1,528 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hart_DC</name>
+    </assembly>
+    <members>
+        <member name="T:Hart_DeviceControllers.Hart_TellMeWhenTrayArrives">
+            <summary>
+            This is the required signature for the delegate passed to Notification_Register(). 
+            </summary>
+        </member>
+        <member name="T:Hart_DeviceControllers.Hart_DC">
+            <summary>
+            The base class for all machine-based device controllers.
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC.WebAuth_CheckInFrequencyMinutes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Init_PercentageComplete">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Machine_HaltConversation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Machine_SimulationMode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._LastStatus_Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._UnitNumbers_ValidList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Machine_CurrentTrayStatusList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Notifications_CallersRequestsList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._CallersContext_Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._CallersObject_Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._CallersDelegateHandler_Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Notifications_DelegateHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Hart_DeviceControllers.Hart_DC._Notification_Current">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DC.Init_Success">
+            <summary>
+            Value is true if the device controller was successfully initialized.
+            If true, you may begin controlling the device.
+            If false, refer to LastStatus_Code and LastStatus_Message for further information about the failure to initialize.
+            Note that this gets updated on an on-going basis, not just as the result of initialization.
+            As a result, you must check LastStatus_Code at least once per day in case there are any important messages which may restrict future usage.
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DC.LastStatus_Code">
+            <summary>
+            Value is zero if there are no important status messages.
+            If non-zero, the value represents a unique message number.
+            Refer to LastStatus_Message for a text description of the same.
+            Note that this gets updated on an on-going basis, not just as the result of initialization.
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DC.LastStatus_Message">
+            <summary>
+            If LastStatus_Code is non-zero, this will contain the corresponding text message.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DC.Notification_Register(System.Object,System.Int32,System.Int32,System.Int32,System.Int32,Hart_DeviceControllers.Hart_TellMeWhenTrayArrives,System.Boolean,System.Int32,System.String@)">
+            <summary>
+            Calling this method registers your request to have your callback delegate called when the TargetDevice and TargetTray you specify have the status you specify in the RequiredMotionStatus and RequiredAlignmentStatus parameters.
+            Valid values for RequiredMotionStatus and RequiredAlignmentStatus are: +1=true, -1=false, 0=don't care.
+            The return value is an identifier for your notification request, which although not required, can later be used to remove your notification request via a call to Notification_DeRegister(). 
+            If the return value is zero, the notification request could not be registered.
+            Setting AutoDeRegister to true, deregisters your notification request automatically once it fires for the first time. Setting it to false, causes the notification to be reset and fired again on a subsequent triggering event.
+            Setting TimeOut to a value greater than zero, results in a notification being sent if that many seconds have elapsed and your event has not fired naturally.
+            Note that AutoDeRegister=false is currently not supported.
+            Note that you have to be very careful with your use of RequiredMotionStatus and RequiredAlignmentStatus. They are evaluated in conjunction with each other. Also, if you just want to know when the device starts to move after you issue a move command,
+            it could be that the tray you request is already in position, or that it is retrieved very fast, so if you set RequiredMotionStatus to +1 (true), you may not be notified if the tray is already in position by the time you register the notification request.
+            Note that when the controller status indicates motion has stopped, there may be a slight delay before alignment is set to true. 
+            However, for most purposes, the operator should be able to begin their task if motion is false, regardless of the alignment status. 
+            Alignment status becomes critical when you have other automated machinery interacting with the device being controlled.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DC.Notification_DeRegister(System.Guid,System.String@)">
+            <summary>
+            Calling this method deregisters a notification request. There is no error raised if the NotificationHandle does not exist.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DC.Get_Device_Status(System.Collections.Generic.List{Hart_DeviceControllers.Hart_DeviceStatusType}@,System.String@)">
+            <summary>
+            Returns true to indicate the "by reference" list contains valid detailed status of the devices being controlled.
+            A return value of false indicates status was not available. 
+            Note that the list is zero-based where the number of elements equals the number of enabled devices.
+            You _must-not_ use your device's unit number as an index into the list, as unit numbers could be of "any" value and are
+            not necessarily consecutive, contiguous, or starting at a certain value.
+            Note that when the controller status indicates motion has stopped, there may be a slight delay before alignment is set to true. 
+            However, for most purposes, the operator should be able to begin their task if motion is false, regardless of the alignment status. 
+            Alignment status becomes critical when you have other automated machinery interacting with the device being controlled.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DC._Base_Close_Controller">
+            <summary>
+            Common Close operations
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DC.AlignmentQualificationsHaveBeenMet(System.Int32,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="RequiredAlignment"></param>
+            <param name="ActualAlignment"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Hart_DeviceControllers.Hart_C2000">
+            <summary>
+             A class for controlling the operation of a Remstar C2000 controller, which is used on a variety of automated storage and retrieval devices.
+             You may instantiate multiple instances. Each instance communicates with a specific C2000 host controller through a specific serial port.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000.#ctor">
+            <summary>
+            Contructor takes no parameters
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000.Init_Controller(System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Boolean,System.Int32,System.Collections.Generic.IReadOnlyCollection{System.Int32},System.Object,System.Threading.SendOrPostCallback,System.String@)">
+            <summary>
+            This method must be called first (and return successful) before you will be able to obtain any useful results from any of the other methods of the class.
+            Calling this method submits a request for the initialization of communications with the machine controller.         
+            It returns prior to obtaining all of the results of initialization.
+            A return value of true only indicates the request process was initiated.
+            If the parameters to this call change (typically EnabledDeviceUnitNumbers), you do not need to create a new object, simply call the "Close_Controller()" method and then call this method again.
+            
+            You must pass parity as "NONE","EVEN", "ODD". 
+            
+            SimulationMode=true allows you to pass all unit numbers, enabled or not, and interact with the class, without any communications taking place with the machine controller.
+            
+            LogLevel allows you to set how much logging will take place. Valid values are from 0-8 where 0 is least and 8 is most. A value of 2 is recommended for production operators where no issues are present.
+            
+            The EnabledDeviceUnitNumbers may be a list or an array of the device unit numbers connected to the controller you want to drive. 
+            Device unit numbers need not be consecutive, contiguous, sorted, or starting at any particular value.
+            Include only unit numbers of those devices that are enabled, unless you have Simulation=true.
+            
+            CallersObject must be passed in order to receive initialization callbacks and drive notifications, otherwise can be passed as null.
+            CallersDelegateHandler is a SendOrPostCallback to your method for accepting initialization status updates.
+            Your callback delegate (optional by passing null) will be called at various stages through the initialization process indicating the current percentage of completion.
+            You may also call Init_PercentageComplete() at any time to get the current percentage of completion. 
+            Note that, if all goes well, the initialization process only takes one or two seconds.
+            It is only when there are issues that initialization begins a retry cycle and this could extend the duration of the process.
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_C2000.Init_PercentageComplete">
+            <summary>
+            This method gives the caller access to the percentage of completion of the task launched by Init_Controller().
+            Values returned are in the range of 0 to 100.
+            When the percentage of completion hits 100, you should then check the value of Init_Success to determine the results of the initialization attempt.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000.Drive_Device(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String@)">
+            <summary>
+            Submits a request to the controller to drive a device.
+            Returns prior to any communications taking place with the machine controller.
+            A return value of true reflects success submitting the request, not success of the drive operation.
+            To obtain the results of the drive operation, call Notification_Register() to register for a notification callback or call Get_Device_Status() to get immediate status. 
+            Facing, Depth, and Quantity may be passed as zeros as they are not strictly required for driving the device but do disply on the operator panel.
+            Display text is up to 80 character of text that will display on the operator panel, four lines of 20 characters each.
+            </summary>
+            <param name="DeviceUnitNumber"></param>
+            <param name="Tray"></param>
+            <param name="Facing"></param>
+            <param name="Depth"></param>
+            <param name="Quantity"></param>
+            <param name="DisplayText"></param>
+            <param name="cError"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000.Show_Text(System.Int32,System.String,System.String,System.String,System.String,System.String@)">
+            <summary>
+            Submits a request to display text on the device's built-in display. 
+            Returns prior to any communications taking place with the device controller.
+            A return value of true reflects success submitting the request, not success of the display operation.
+            Currently, there is no status available for the success or failure of this operation. 
+            Status of the display command could be available with additional programming.
+            Note that the text is limited to four lines of 20 characters each for a total of 80 characters. 
+            Each of the four text parameters will be padded or trimmed (as required) to 20 characters each and displayed on a separate line of the display.
+            As long as the text you send is 20 characters, any formatting you have provided (centered for example), will not be lost.
+            Do not send blanks in all four text parameters to blank the display. Instead use the Clear_Text() method.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000.Clear_Text(System.Int32,System.String@)">
+            <summary>
+            Submits a request to clear the device's built-in display. 
+            Returns prior to any communications taking place with the device controller.
+            A return value of true reflects success submitting the request, not success of the display operation.
+            Currently, there is no status available for the success or failure of this operation. 
+            Status of the display command could be available with additional programming.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000.Close_Controller(System.String@)">
+            <summary>
+            Closes communications with the device controller. A return value of false indicates the closing was not required but is not considered an error.
+            Note that you can call Init_Controller() again if you like, with the same or different values, you do not have to instantiate a new controller object.
+            </summary>        
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C2000._Machine_ConversationStart_Async(System.Boolean)">
+            <summary>
+            An on-going conversation with the machine.
+            To stop the conversation, set _Machine_HaltConversation = true.
+            </summary>
+            <param name="BlockThisCall"></param>
+        </member>
+        <member name="T:Hart_DeviceControllers.Hart_DeviceNotificationType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.Unique_ID">
+            <summary>
+            A unique identifier for the notification. 32 characters, all digits. 
+            This is what is returned to the caller when the notification is first registered and also what the caller uses to (optionally) deregister a notification.
+            </summary>  
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.CallersContext">
+            <summary>
+            The caller's context. 
+            </summary>  
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.CallersObject">
+            <summary>
+            The caller's specific instance of the Machine Controller class. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.TimeOutSeconds">
+            <summary>
+            The number of whole seconds from the time of registering a notification that will be allowed to pass before the notification expires and the callback is issued. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.Registered">
+            <summary>
+            The date and time that the notification was first registered. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.Expiry">
+            <summary>
+            The date and time at which the notification will expire, if conditions do not cause it to be fired before expiry. This is simply the number of TimeOutSeconds added to the Registered date/time. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.CallBack">
+            <summary>
+            The caller's callback delegate. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.TargetDevice">
+            <summary>
+            The device unit number that the Notification Manager is to monitor. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.TargetTray">
+            <summary>
+            The tray/shelf/carrier that the Notification Manager is to look for on the TargetDevice. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.RequestedMotionStatus">
+            <summary>
+            The status whether in motion or stationary that the caller wishes to be notified of, in relation to the TargetTray on the TargetDevice. 
+            -1 indicates "not in motion", +1 indicates "in motion", 0 indicates "any status - don't care".
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.RequestedAlignmentStatus">
+            <summary>
+            The status whether in alignment or not that the caller wishes to be notified of, in relation to the TargetTray on the TargetDevice. 
+            -1 indicates "not in alignment", +1 indicates "in alignment", 0 indicates "any status - don't care".
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.MotionStatusUponNotification">
+            <summary>
+            The actual Motion status when the notification was triggered. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.AlignmentStatusUponNotification">
+            <summary>
+            The actual Alignment status when the notification was triggered. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.AutoDeregister">
+            <summary>
+            A value of true tells the Notification Manager to delete the notification after it fires.
+            A value of false is currently not supported but may be in the future.
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.Expired">
+            <summary>
+            A value of true indicate that the notification fired due to it expiring, versus the requested requirements being met. 
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceNotificationType.Message">
+            <summary>
+            Used for warning messages. You should check this for messages that are generated as processing takes place. 
+            It will be empty if there is no message.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DeviceNotificationType.#ctor(System.Guid,System.Threading.SynchronizationContext,System.Object,System.Int32,System.DateTime,System.DateTime,Hart_DeviceControllers.Hart_TellMeWhenTrayArrives,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Objects of this class are containers for device status information. Some of the properties are updated as events occur.
+            </summary>
+        </member>
+        <member name="T:Hart_DeviceControllers.Hart_DeviceStatusType">
+            <summary>
+            Objects of this class are containers for device status information.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_DeviceStatusType.#ctor(System.DateTime,System.DateTime,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Objects of this class are containers for device status information. The individual properties are updated as events occur.
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.Last_Status">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.Last_Command">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.Device">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.Target_Tray">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.Current_Tray">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.In_Motion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.In_Alignment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_DeviceStatusType.Message">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Hart_DeviceControllers.Hart_C3000">
+            <summary>
+            A class for controlling the operation of a Kardex C3000 controller, which is used on a variety of automated storage and retrieval devices.
+            You may instantiate multiple instances. Each instance communicates with a specific C3000 host controller at a specific IP address and port.
+            You may instantiate multiple instances to communicate with the same host controller, but it is not recommended. If you find it necessary, please let me know.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C3000.#ctor">
+            <summary>
+             Contructor takes no parameters         
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C3000.Init_Controller(System.String,System.Int32,System.Boolean,System.Int32,System.Collections.Generic.IReadOnlyCollection{System.Int32},System.Object,System.Threading.SendOrPostCallback,System.String@)">
+            <summary>
+            This method must be called first (and return successful) before you will be able to obtain any useful results from any of the other methods of the class.
+            Calling this method submits a request for the initialization of communications with the machine controller.         
+            It returns prior to obtaining all of the results of initialization.
+            A return value of true only indicates the request process was initiated.
+            If the parameters to this call change (typically EnabledDeviceUnitNumbers), you do not need to create a new object, simply call the "Close_Controller()" method and then call this method again.
+            
+            You must pass the IP address of the C3000 host controller in the format "192.168.10.1" and the port number as digits. 
+            
+            SimulationMode=true allows you to pass all unit numbers, enabled or not, and interact with the class, without any communications taking place with the machine controller.
+            
+            LogLevel allows you to set how much logging will take place. Valid values are from 0-8 where 0 is least and 8 is most. A value of 2 is recommended for production operators where no issues are present.
+            
+            The EnabledDeviceUnitNumbers may be a list or an array of the device unit numbers connected to the controller you want to drive. 
+            Device unit numbers need not be consecutive, contiguous, sorted, or starting at any particular value.
+            Include only unit numbers of those devices that are enabled, unless you have Simulation=true.
+            
+            CallersObject must be passed in order to receive initialization callbacks and drive notifications, otherwise can be passed as null.
+            CallersDelegateHandler is a SendOrPostCallback to your method for accepting initialization status updates.
+            Your callback delegate (optional by passing null) will be called at various stages through the initialization process indicating the current percentage of completion.
+            You may also call Init_PercentageComplete() at any time to get the current percentage of completion. 
+            Note that, if all goes well, the initialization process only takes one or two seconds.
+            It is only when there are issues that initialization begins a retry cycle and this could extend the duration of the process.
+            </summary>
+        </member>
+        <member name="P:Hart_DeviceControllers.Hart_C3000.Init_PercentageComplete">
+            <summary>        
+            This method gives the caller access to the percentage of completion of the task launched by Init_Controller().
+            Values returned are in the range of 0 to 100.
+            When the percentage of completion hits 100, you should then check the value of Init_Success to determine the results of the initialization attempt.
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C3000.Drive_Device(System.Int32,System.Int32,System.String@)">
+            <summary>
+             Submits a request to the controller to drive a device.
+             Returns prior to any communications taking place with the machine controller.
+             A return value of true reflects success submitting the request, not success of the drive operation.
+             To obtain the results of the drive operation, call Notification_Register() to register for a notification callback or call Get_Device_Status() to get immediate status. 
+            </summary>
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C3000.Close_Controller(System.String@)">
+            <summary>
+            Closes communications with the device controller. A return value of false indicates the closing was not required but is not considered an error.
+            Note that you can call Init_Controller() again if you like, with the same or different values, you do not have to instantiate a new controller object.
+            </summary>        
+        </member>
+        <member name="M:Hart_DeviceControllers.Hart_C3000._Machine_ConversationStart_Async(System.Boolean)">
+            <summary>
+            An on-going conversation with the machine.
+            To stop the conversation, set _Machine_HaltConversation = true.
+            </summary>
+            <param name="BlockThisCall"></param>
+        </member>
+        <member name="T:Hart_Common.Hart_Log">
+            <summary>
+            A class for logging trace information, errors, and other helpful program operation and flow to a log file. 
+            </summary>
+        </member>
+        <member name="P:Hart_Common.Hart_Log.FilePrefix">
+            <summary>
+            The log filename created (using the default prefix or a prefix you pass) will be post-fixed with the current date.
+            </summary>
+        </member>
+        <member name="P:Hart_Common.Hart_Log.PathName">
+            <summary>
+            The log file will be created in the default folder unless you pass your own path.
+            If you specify a path, be sure it exists as it will not be created.
+            </summary>
+        </member>
+        <member name="M:Hart_Common.Hart_Log.#ctor(System.String,System.String)">
+            <summary>
+            Class constructor and sets defaults for future calls to WriteLog() or WriteLine().      
+            Refer to properties FolderName and FilePrefix for more information on the parameters to this call.
+            You may set those properties separately or override the defaults in this call.        
+            Logging is only active when the file "Hart_DC_LogLevel.Dat" exists in the default folder at the time you instantiate this class
+            </summary>
+            <param name="fileNamePrefix"></param>
+            <param name="logFilePath"></param>
+        </member>
+        <member name="M:Hart_Common.Hart_Log.WriteLog(System.String)">
+            <summary>
+            Attempts to writes contents of LineToWrite to a log file.
+            </summary>
+            <param name="LineToWrite"></param>
+        </member>
+        <member name="M:Hart_Common.Hart_Log.WriteLine(System.String,System.String@)">
+            <summary>
+            Attempts to write contents of LineToWrite to a log file.
+            Returns true if successful, returns false and message in cError if unable to write to the log file.
+            </summary>
+            <param name="LineToWrite"></param>
+            <param name="cError"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Hart_Common.Hart_Util.GetCurrentMethodName">
+            <summary>
+            Returns the method name of the caller.
+            </summary>
+        </member>
+        <member name="M:Hart_Common.Hart_Util.GetMethodName(System.Int32)">
+            <summary>
+            By default, HowFarBack = 1 and provides the name of the method that called GetMethodName(). 
+            Passing a value of 2 will return the name of the method that called the method that called GetMethodName(), and so on, up the chain.
+            If you pass a value that does not exist, an empty string will be returned.
+            </summary>
+        </member>
+        <member name="T:Hart_Device_Controllers.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Hart_Device_Controllers.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Hart_Device_Controllers.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>

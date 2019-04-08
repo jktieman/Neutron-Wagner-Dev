@@ -1,0 +1,893 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Ports;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using AlliedLogger;
+using Hart_DisplayControllers;
+using JsonManager;
+using Neutron.Extensions;
+using Neutron.Models;
+using NeutronCore;
+using NeutronCore.Enums;
+using NeutronCore.Global;
+using NeutronData.DataContexts;
+using NeutronData.Models;
+using NeutronData.ModelViews;
+using NeutronData.Repositories;
+using NeutronEvents;
+
+
+namespace Neutron.Controllers
+{
+    public partial class IptiController : IDisplayController
+    {
+        private const string Bayid = "01";
+        private const string DisplayOc = "27";
+        //private const string Turnon = "33";
+        //private const string Turnoff = "14";
+        //private const string FourSpaces = "    ";
+        //private const string EndOfLine = "00000000120012000";
+        public CancellationTokenSource Token = new CancellationTokenSource();
+        //Added 1/29
+        private static readonly BlockingCollection<byte[]>
+            ResponseBlockingCollection = new BlockingCollection<byte[]>();
+
+        private static readonly BlockingCollection<byte[]>
+            RequestBlockingCollection = new BlockingCollection<byte[]>();
+
+        private static readonly BlockingCollection<byte[]>
+            ReceivedBlockingCollection = new BlockingCollection<byte[]>();
+
+        private readonly bool _bliEnabled = true;
+        private readonly List<Ipti_BLI> _bliList = new List<Ipti_BLI>();
+        private readonly NeutronVariables _neutronVariables;
+
+        private readonly GenericRepository<SerialConfiguration> _repoSerial = new GenericRepository<SerialConfiguration>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevice = new GenericRepository<HardwareDevice>(new NeutronDb());
+
+        private readonly ResponseManager _responseManager;
+        private readonly bool _shiEnabled = true;
+       // private readonly List<Ipti_SHI> _shiList = new List<Ipti_SHI>();
+        private readonly StationView _station;
+
+       // private List<Ipti_BLI> _blisOn = new List<Ipti_BLI>();
+        private DynamicLogger _logger;
+        private Thread _responseProcessor;
+        private readonly int _serialConfigurationId = 4;
+
+        private SerialPort _serialPort;
+
+        private List<Ipti_SHI> _shisOn = new List<Ipti_SHI>();
+
+        public bool Transmit { get; set; }
+        // private Thread _transmitterSending;
+        // private readonly char ACK = Convert.ToChar(6);
+
+        private string _cError = string.Empty;
+        // private readonly char ETX = Convert.ToChar(3);
+        private int _lBeacon;
+        private int _rBeacon;
+        // private readonly char SOH = Convert.ToChar(1);
+        //  private char STX = Convert.ToChar(2);
+
+        private Dictionary<int, TowerLevelInfo> _towerLevelInfoList;
+
+        public IptiController(IJsonData jsonData, StationView station, NeutronVariables neutronVariables)
+        {
+            _station = station;
+            _neutronVariables = neutronVariables;
+            _bliEnabled = _neutronVariables.BliEnabled;
+            _shiEnabled = _neutronVariables.ShiEnabled;
+
+            CreateLog();
+
+            if (_bliEnabled) FillBliList();
+
+            if (_shiEnabled) GetTowerLevelInfoList();
+
+            _responseManager = new ResponseManager(ResponseBlockingCollection, RequestBlockingCollection,
+                ReceivedBlockingCollection, _logger);
+            _responseManager.Transmit = false;
+
+            IptiControllerInit();
+
+            //if (IptiControllerInit())
+            //{
+            //    Ready = true;
+            //}
+            //else
+            //{
+            //    Task.Run(() => _logger.Log(@"IPTIControllerInit failed Initialization"));
+            //    MessageBox.Show(@"IPTI Controller Failed to Initialize.");
+            //    Ready = false;
+            //}
+        }
+
+        public void SetTransmit(bool value)
+        {
+            Transmit = value;
+            _responseManager.Transmit = value;
+        }
+
+        public event EventHandler<MySerialDataReceivedEventArgs> MySerialDataReceived;
+
+        public bool Ready { get; set; }
+
+        public void CloseController()
+        {
+            try
+            {
+                Token.Cancel();
+                SetTransmit(false);
+                ReceivedBlockingCollection.CompleteAdding();
+                ResponseBlockingCollection.CompleteAdding();
+                RequestBlockingCollection.CompleteAdding();
+
+                if (_serialPort.IsOpen) _serialPort.Close();
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => _logger.Log($"Close Serial Port Exception: {ex.Message} \r\n {ex.InnerException} "));
+            }
+        }
+
+        public void ClearAllBli()
+        {
+            if (_bliEnabled)
+            {
+                foreach (var bli in _bliList)
+                {
+                    Task.Run(() => _logger.Log($"BLI Clear All Displays.  {bli.BLI_Address}"));
+                    // Thread.Sleep(10);
+                    // var cmd = Bayid + Turnoff + bli.BLI_Address.ToString().PadLeft(2, '0');
+                    SendData(bli.TurnOff);
+                }
+            }
+        }
+
+        public void ClearAllShi()
+        {
+            if (_shiEnabled)
+            {
+                foreach (var towerLevelInfo in _towerLevelInfoList)
+                {
+                    ClearShi(new Ipti_SHI(towerLevelInfo.Value, 0, 0, "", ""));
+                }
+            }
+
+            //int[] devices = { 1, 2, 3, 4 };
+            //for (var x = 1; x < devices.Length; x++)
+            //{
+            //    for (var i = 1; i < 9; i++)
+            //    {
+            //        var t = GetShiAddress(x, i);
+            //        ClearShi(new Ipti_SHI(t, 0, 0, "", ""));
+            //    }
+            //}
+
+            //device = 3;
+            //for (var i = 1; i < 9; i++)
+            //{
+            //    var t = GetShiAddress(device, i);
+            //    ClearShi(new Ipti_SHI(t, 0, 0, "", ""));
+            //}
+        }
+
+        public void ShowShi(Ipti_SHI shi)
+        {
+            SendData(shi.TurnOn());
+            Task.Run(() => _logger.Log($"ShowShi  Turning ON BayId: {shi.BayId}  Display: {shi.DisplayId}"));
+        }
+
+        public void ClearShi(Ipti_SHI shi)
+        {
+            if (_shiEnabled)
+            {
+                SendData(shi.TurnOff());
+                Task.Run(() => _logger.Log($"ClearShi Turning OFF BayId: {shi.BayId}  Display: {shi.DisplayId}"));
+            }
+        }
+
+        public void ShowBli(int address, int beacon, string text)
+        {
+            if (_bliEnabled)
+            {
+                var bli = new Ipti_BLI(address, beacon, text);
+                ShowBli(bli);
+            }
+        }
+
+        public void ShowBli(Hart_BLI bli)
+        {
+            // throw new NotImplementedException();
+        }
+
+        public void ShowBli(Ipti_BLI bli)
+        {
+            if (_bliEnabled)
+            {
+                //if (_bliList.Contains(bli))
+                //{
+                Task.Run(() => _logger.Log($"Ipti BLI Address: {bli.BLI_Address}"));
+                //Thread.Sleep(10);
+                //var cmd = Bayid + Turnon + bli.BLI_Address.ToString().PadLeft(2, '0') + bli.BLI_Text.PadLeft(4, ' ') +
+                //          FourSpaces + EndOfLine;
+
+                SendData(bli.TurnOn);
+                // }
+            }
+        }
+
+        public void ClearOc(int address)
+        {
+            if (_bliEnabled)
+            {
+                Task.Run(() => _logger.Log($"Ipti OC Address Clear: {address}"));
+               // Thread.Sleep(10);
+                var cmd = Bayid + DisplayOc + "0100" + "            ";
+                SendData(cmd);
+            }
+        }
+
+        public void ShowOc(int address, int beacon, string text)
+        {
+            if (_bliEnabled)
+            {
+                Task.Run(() => _logger.Log($"Ipti OC Address: {address}"));
+                //Thread.Sleep(10);
+                var cmd = Bayid + DisplayOc + "0100" + text;
+                SendData(cmd);
+            }
+        }
+
+        public void ShowShi(int device, int bin, int level, string part, string text)
+        {
+            if (_shiEnabled)
+            {
+                Task.Run(() => _logger.Log($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
+                var towerLevelInfo = GetShiAddress(device, level);
+                var shi = new Ipti_SHI(towerLevelInfo, _lBeacon, _rBeacon, part, text);
+                SendData(shi.TurnOn());
+            }
+        }
+
+        public void ShowShi(Hart_SHI shi)
+        {
+            //  throw new NotImplementedException();
+        }
+
+        public void ClearBli(Hart_BLI bli)
+        {
+            //  throw new NotImplementedException();
+        }
+
+        public void ClearShi(Hart_SHI shi)
+        {
+            //  throw new NotImplementedException();
+        }
+
+        public void ClearBli(Ipti_BLI bli)
+        {
+            if (_bliEnabled)
+            { 
+            //    if (_bliList.Contains(bli))
+            //    {
+                    Task.Run(() => _logger.Log($"BLI Clear Single Display. {bli.BLI_Address}"));
+            // Thread.Sleep(10);
+            // var cmd = Bayid + Turnoff + bli.BLI_Address;
+
+            SendData(bli.TurnOff);
+                }
+        }
+
+        public void ShowBli(int address, string text)
+        {
+            if (_bliEnabled)
+            {
+                Task.Run(() => _logger.Log($"BLI Address: {address}"));
+                var bli = new Ipti_BLI(address, text);
+                ShowBli(bli);
+            }
+        }
+
+        public int GetInitStatus()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void FileShiList()
+        {
+        }
+
+        private void FillBliList()
+        {
+            _bliList.Add(new Ipti_BLI(1, 0, "1"));
+            _bliList.Add(new Ipti_BLI(2, 0, "2"));
+            _bliList.Add(new Ipti_BLI(3, 0, "3"));
+            _bliList.Add(new Ipti_BLI(4, 0, "4"));
+            _bliList.Add(new Ipti_BLI(5, 0, "5"));
+            _bliList.Add(new Ipti_BLI(6, 0, "6"));
+            // _bliList.Add(new Ipti_BLI(7, 0, "7"));
+            // _bliList.Add(new Ipti_BLI(8, 0, "8"));
+        }
+
+        private void CreateLog()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName =
+                $"Display Controller_{_station.StationNumber.ToString()}";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+        }
+
+
+        private void StartTransmission()
+        {
+            while (Transmit)
+            {
+                try
+                {
+                    if (_serialPort.IsOpen)
+                    {
+                        foreach (var request in RequestBlockingCollection.GetConsumingEnumerable(Token.Token))
+                        {
+                            if (Token.IsCancellationRequested)
+                            {
+                                _logger.Log($"Start Transmission Cancellation Requested.");
+                                return;
+                            }
+
+                            _logger.Log($"Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
+                            //UpdateTextBox($"Start Transmitting: {request.ByteArrayToStringX2()}");
+                            _serialPort.Write(request, 0, request.Length);
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    _logger.Log($"CATCH - Start Transmission Operation Canceled Requested.");
+                    return;
+                }
+
+                Thread.Sleep(50);
+            }
+
+            _logger.Log($"EXITING Start Transmission.");
+        }
+
+        public void IptiControllerInit()
+        {
+            var loggingMessage = string.Empty;
+
+            var displayDevice = _repoHardwareDevice
+                .FindBy(r => r.DeviceTypeId == (int)DeviceType.IptiDisplays && r.StationId == _station.StationId).FirstOrDefault();
+            if (displayDevice != null)
+            {
+                var serialConfiguration = _repoSerial.FindBy(r => r.Id == displayDevice.SerialConfigurationId).FirstOrDefault();
+                if (serialConfiguration != null)
+                {
+                    Task.Run(() => _logger.Log($"Hardware Device: {displayDevice.Name}"));
+                    Task.Run(() => _logger.Log($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));
+                    Task.Run(() => _logger.Log($"Serial Port Number: {serialConfiguration.PortNumber.ToString()}"));
+                    _serialPort = new SerialPort
+                    {
+                        PortName = serialConfiguration.PortName,
+                        BaudRate = serialConfiguration.BaudRate,
+                        Parity = serialConfiguration.Parity,
+                        DataBits = serialConfiguration.DataBits,
+                        StopBits = serialConfiguration.StopBits
+                    };
+
+                    // 1/29 _serialPort.DataReceived += SerialPortDataReceived;
+
+                    try
+                    {
+                        _serialPort.Open();
+                        Thread.Sleep(100);
+                        //Added 1/29
+                        var buffer = new byte[256];
+                        Action startListen = null;
+
+                        var onResult = new AsyncCallback(result => OnResult(result, startListen, _serialPort, buffer));
+                        _logger.Log("ButtonOpenSerialPort_Click - Task.Run(() => consumer.Start())");
+                        // Task.Run(() => _responseManager.Start());
+
+                        startListen = () => _serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, onResult, null);
+                        _logger.Log("ButtonOpenSerialPort_Click - StartListen() ");
+
+                        startListen();
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show($"Error Initializing Serial Port. {ex.Message}");
+
+                        _logger.Log($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
+                        _serialPort.Close();
+                        ReceivedBlockingCollection.CompleteAdding();
+                    }
+
+
+                    if (_serialPort.IsOpen)
+                    {
+                        SetTransmit(true);
+                        Task.Factory.StartNew(StartTransmission, CancellationToken.None, TaskCreationOptions.None,
+                            TaskScheduler.Default);
+
+                        Task.Factory.StartNew(() => _responseManager.StartResponseProcessor(), CancellationToken.None,
+                            TaskCreationOptions.None, TaskScheduler.Default);
+
+                        Task.Factory.StartNew(() => _responseManager.Start(), CancellationToken.None,
+                            TaskCreationOptions.None, TaskScheduler.Default);
+
+                        //_transmitterSending = new Thread(StartTransmission) {Name = "TransmitterSending"};
+                        //_transmitterSending.Start();
+                        //var t = Task.Factory.StartNew(state =>
+                        //{
+                        //    while (_transmit)
+                        //    {
+                        //        if (_serialPort.IsOpen)
+                        //        {
+                        //            try
+                        //            {
+                        //                foreach (var broadcast in RequestBlockingCollection.GetConsumingEnumerable(Token.Token))
+                        //                {
+                        //                    if (Token.IsCancellationRequested)
+                        //                    {
+                        //                        return;
+                        //                    }
+
+                        //                    _logger.Log(
+                        //                        $"Start Transmission - RequestBlockingCollection Loop: {broadcast.ByteArrayToStringX2()}");
+                        //                    _serialPort.Write(broadcast, 0, broadcast.Length);
+                        //                }
+                        //            }
+                        //            catch (OperationCanceledException)
+                        //            {
+                        //                return;
+                        //            }
+
+
+                        //            //while (RequestBlockingCollection.TryTake(out request, 100))
+                        //            //{
+                        //            //    _logger.Log(
+                        //            //        $"Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
+                        //            //    //UpdateTextBox($"Start Transmitting: {request.ByteArrayToStringX2()}");
+                        //            //    _serialPort.Write(request, 0, request.Length);
+                        //            //    Thread.Sleep(50);
+                        //            //}
+                        //        }
+
+                        //        Thread.Sleep(50);
+                        //    }
+                        //}, "TaskSubscribe", TaskCreationOptions.None);
+
+                        //_responseProcessor = new Thread(_responseManager.StartResponseProcessor)
+                        //{ Name = "StartResponseProcessor" };
+                        //_responseProcessor.Start();
+
+                        //    Task.Run( () => { _responseManager.StartResponseProcessor(); }, Token);
+                        //}
+
+
+
+
+
+
+                        //Mediator.GetInstance().OnTransmitStateChanged(this, true);
+                        //t.Wait();
+                    }
+                    else
+                    {
+                        SetTransmit(false);
+                        //Mediator.GetInstance().OnTransmitStateChanged(this, false);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Serial Configuration not set in Serial Configuration.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Display device not found in Hardware Devices.");
+            }
+
+            //_logger.Log($"OnResult - startListen()");
+            //startListen();
+        }
+
+        private void OnResult(IAsyncResult result, Action startListen, SerialPort serialPort, byte[] buffer)
+        {
+            try
+            {
+                if (!serialPort.IsOpen) return;
+
+                var actualLength = _serialPort.BaseStream.EndRead(result);
+                var received = new byte[actualLength];
+                Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
+                _logger.Log($"OnResult: {received.ByteArrayToStringX2()}");
+                //Debug.Print($"OnResult: {received.ByteArrayToStringX2()}");
+                ReceivedBlockingCollection.Add(received);
+            }
+            catch (IOException ex)
+            {
+                _logger.Log($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
+
+                Debug.Print($@"IO Exception: {ex.Message}");
+                _serialPort.Close();
+                ReceivedBlockingCollection.CompleteAdding();
+                return;
+            }
+
+            _logger.Log("OnResult - startListen()");
+            startListen();
+        }
+        // 1/29
+        //if (_serialPort.IsOpen)
+        //{
+        //    Task.Run(() => _logger.Log("Initialization Requested"));
+        //    result = true;
+        //}
+        //else
+        //{
+        //    Task.Run(() => _logger.Log("Problem requesting initialization. " + cError));
+        //}
+        //}
+        //    else
+        //    {
+        //        Task.Run(() => _logger.Log("SerialConfiguration is null "));
+        //    }
+
+        // 1/29  return result;
+
+        private bool ValidatePort(string port)
+        {
+            var result = port.Substring(0, 3) == "COM";
+            return result;
+        }
+
+        private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            //var sb = new StringBuilder();
+            //var holdText = "";
+            //var existing = "";
+
+            //do
+            //{
+            //    existing = _serialPort.ReadExisting();
+            //    holdText += existing;
+            //    Thread.Sleep(20);
+            //} while (existing != string.Empty);
+
+            ////var len = holdText.Length;
+            //SendData(holdText.Substring(1, 6) + Models.Global.ACK);
+
+            //if (holdText.Length == 12 && holdText.Contains(Models.Global.ACK))
+            //{
+            //    var success = holdText.Substring(7, 1);
+            //    SendData(holdText.Substring(1, 6) + Models.Global.ACK);
+            //}
+
+
+            //if (holdText.Length < 10 || holdText.Contains(Models.Global.ACK)) return;
+            //var args = new MySerialDataReceivedEventArgs {FormText = holdText};
+            //OnMySerialDataReceived(args);
+        }
+
+        protected virtual void OnMySerialDataReceived(MySerialDataReceivedEventArgs args)
+        {
+            MySerialDataReceived?.Invoke(this, args);
+        }
+
+        public void SendData(string baseCommand)
+        {
+            try
+            {
+                var portOpen = false;
+                // Thread.Sleep(100);
+                if (!_serialPort.IsOpen)
+                {
+                    if (ConnectToComPort())
+                        portOpen = true;
+                    else
+                        MessageBox.Show("Com Port Error");
+                }
+                else
+                {
+                    portOpen = true;
+                }
+
+                if (portOpen)
+                {
+                    var command = Models.Global.SOH + baseCommand + ToHex(baseCommand) + Models.Global.ETX;
+                    var bytes = command.StringToByteArray();
+                    RequestBlockingCollection.TryAdd(bytes);
+
+                    //_serialPort.Write(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Send Data Error. {ex.Message} ");
+            }
+        }
+
+        private string ToHex(string value)
+        {
+            var values = value.ToCharArray();
+            var total = values.Select(c => (int)c).Select(decValue => (int)(decimal)decValue).Sum();
+            var hex = @"00" + total.ToString("X");
+            return hex.Substring(hex.Length - 2, 2);
+        }
+
+        private bool ConnectToComPort()
+        {
+            if (_serialPort.IsOpen) _serialPort.Close();
+
+            try
+            {
+                _serialPort.Open();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + @"Com Port Connection Error.");
+            }
+
+            return false;
+        }
+
+        private string GetAddress(int device, int level)
+        {
+            var address = string.Empty;
+            switch (device)
+            {
+                case 1:
+                    _lBeacon = 2;
+                    _rBeacon = 0;
+                    address = $"1{level.ToString().PadLeft(2, '0')}";
+                    break;
+                case 2:
+                    _lBeacon = 0;
+                    _rBeacon = 2;
+                    address = $"1{level.ToString().PadLeft(2, '0')}";
+                    break;
+                case 3:
+                    _lBeacon = 2;
+                    _rBeacon = 0;
+                    address = $"2{level.ToString().PadLeft(2, '0')}";
+                    break;
+                case 4:
+                    _lBeacon = 0;
+                    _rBeacon = 2;
+                    address = $"2{level.ToString().PadLeft(2, '0')}";
+                    break;
+            }
+
+            Task.Run(() => _logger.Log($"Get Address Returned: {address}"));
+
+            return address;
+        }
+
+        public class MySerialDataReceivedEventArgs
+        {
+            public string FormText { get; set; }
+        }
+
+        private TowerLevelInfo GetShiAddress(int device, int level)
+        {
+            TowerLevelInfo rec = null;
+            try
+            {
+                var key = device * 10 + level;
+                _towerLevelInfoList.TryGetValue(key, out rec);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to retrieve SHI Info.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+            }
+            return rec;
+        }
+
+        public void GetTowerLevelInfoList()
+        {
+            var towerList = new Dictionary<int, TowerLevelInfo>();
+            if (_station.StationNumber == 1)
+            {
+                var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(11, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 2, BayId = "04", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(12, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 3, BayId = "04", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(13, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 4, BayId = "04", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(14, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 5, BayId = "05", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(15, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 6, BayId = "05", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(16, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 7, BayId = "05", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(17, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 8, BayId = "05", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(18, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(21, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 2, BayId = "04", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(22, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 3, BayId = "04", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(23, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 4, BayId = "04", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(24, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 5, BayId = "05", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(25, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 6, BayId = "05", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(26, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 7, BayId = "05", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(27, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 8, BayId = "05", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(28, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(31, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 2, BayId = "02", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(32, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 3, BayId = "02", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(33, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 4, BayId = "02", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(34, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 5, BayId = "03", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(35, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 6, BayId = "03", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(36, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 7, BayId = "03", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(37, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 8, BayId = "03", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(38, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(41, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 2, BayId = "02", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(42, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 3, BayId = "02", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(43, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 4, BayId = "02", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(44, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 5, BayId = "03", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(45, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 6, BayId = "03", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(46, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 7, BayId = "03", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(47, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 8, BayId = "03", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(48, rec);
+            }
+
+            if (_station.StationNumber == 2)
+            {
+                var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(11, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 2, BayId = "02", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(12, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 3, BayId = "02", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(13, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 4, BayId = "02", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(14, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 5, BayId = "03", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(15, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 6, BayId = "03", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(16, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 7, BayId = "03", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(17, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 8, BayId = "03", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(18, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(21, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 2, BayId = "02", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(22, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 3, BayId = "02", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(23, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 4, BayId = "02", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(24, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 5, BayId = "03", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(25, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 6, BayId = "03", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(26, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 7, BayId = "03", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(27, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 8, BayId = "03", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(28, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(31, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 2, BayId = "04", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(32, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 3, BayId = "04", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(33, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 4, BayId = "04", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(34, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 5, BayId = "05", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(35, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 6, BayId = "05", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(36, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 7, BayId = "05", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(37, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 8, BayId = "05", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(38, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(41, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 2, BayId = "04", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(42, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 3, BayId = "04", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(43, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 4, BayId = "04", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(44, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 5, BayId = "05", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(45, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 6, BayId = "05", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(46, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 7, BayId = "05", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(47, rec);
+                rec = new TowerLevelInfo { Device = 4, Level = 8, BayId = "05", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(48, rec);
+            }
+
+            if (_station.StationNumber == 3)
+            {
+                var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(11, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 2, BayId = "02", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(12, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 3, BayId = "02", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(13, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 4, BayId = "02", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(14, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 5, BayId = "03", Display = "01", ArrowDirection = "Left" };
+                towerList.Add(15, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 6, BayId = "03", Display = "02", ArrowDirection = "Left" };
+                towerList.Add(16, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 7, BayId = "03", Display = "03", ArrowDirection = "Left" };
+                towerList.Add(17, rec);
+                rec = new TowerLevelInfo { Device = 1, Level = 8, BayId = "03", Display = "04", ArrowDirection = "Left" };
+                towerList.Add(18, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(21, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 2, BayId = "02", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(22, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 3, BayId = "02", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(23, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 4, BayId = "02", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(24, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 5, BayId = "03", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(25, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 6, BayId = "03", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(26, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 7, BayId = "03", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(27, rec);
+                rec = new TowerLevelInfo { Device = 2, Level = 8, BayId = "03", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(28, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(31, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 2, BayId = "04", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(32, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 3, BayId = "04", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(33, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 4, BayId = "04", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(34, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 5, BayId = "05", Display = "01", ArrowDirection = "Right" };
+                towerList.Add(35, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 6, BayId = "05", Display = "02", ArrowDirection = "Right" };
+                towerList.Add(36, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 7, BayId = "05", Display = "03", ArrowDirection = "Right" };
+                towerList.Add(37, rec);
+                rec = new TowerLevelInfo { Device = 3, Level = 8, BayId = "05", Display = "04", ArrowDirection = "Right" };
+                towerList.Add(38, rec);
+            }
+
+            _towerLevelInfoList = towerList;
+        }
+    }
+}
