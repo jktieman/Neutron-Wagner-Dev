@@ -1,0 +1,324 @@
+﻿using AlliedLogger;
+using NeutronCore;
+using NeutronCore.Extensions;
+using NeutronData.DataContexts;
+using NeutronData.Models;
+using NeutronData.Repositories;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace NeutronLoader
+{
+    public class Pr1FileProcessor
+    {
+        private readonly GenericRepository<Order> repoOrder = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<Station> repoStation = new GenericRepository<Station>(new NeutronDb());
+
+        public Pr1FileProcessor(FileInfo[] files)
+        {
+            bool offCarouselSupport = false;
+            Order order = null;
+            int orderId = 0;
+            OrderDetail detail = null;
+            bool firstLine = true;
+
+            foreach (var file in files)
+            {
+                firstLine = true;
+                var allLines = new string[] { };
+                string line = "";
+                try
+                {
+                    allLines = File.ReadAllLines(file.FullName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error Reading All Order Lines. {ex.Message} \r\n {ex.InnerException}");
+                }
+
+                for (int i = 0; i < allLines.Count(); i++)
+                {
+                    line = allLines[i];
+                    if (firstLine)
+                    {
+                        if (allLines[i].Contains("RAKED"))
+                        {
+                            continue;
+                        }
+
+                    }
+                    string lineType = line.Substring(0, 1);
+                    if (lineType == "2")
+                    {
+                        if (order != null)
+                        {
+                            //time to write the Order record and get Order Id.
+                            try
+                            {
+                                repoOrder.Insert(order);
+                                orderId = order.Id;
+                                order = null;
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Error Inserting Order Line. {ex.Message} \r\n {ex.InnerException}");
+                            }
+                        }
+                        //string oc = line.Substring(48, 1);
+                        //if (oc == "O")
+                        //{
+                        //    continue;
+                        //}
+                    }
+
+
+                    switch (lineType)
+                    {
+                        case "1":
+                            order = new Order();
+                            order.Ord1 = line.Substring(8, 10);
+                            order.Ord2 = line.Substring(19, 10);
+                            order.Priority = line.Substring(31, 2).ParseInt();
+                            order.LoadDate = DateTime.Now;
+                            order.OrderStatusId = 1;
+                            order.ShipMethodId = 1;
+                            order.ShipperId = 1;
+                            firstLine = false;
+                            break;
+                        case "2":
+                            if (detail != null)
+                            {
+                                try
+                                {
+                                    repoOrderDetail.Insert(detail);
+                                    detail = null;
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show($"Error Inserting Order Detail Line. {ex.Message} \r\n {ex.InnerException}");
+                                }
+                            }
+                            if (line.Substring(48, 1) == "O")
+                            {
+                                // Off Carousel not used to pick only for tote label logic routing
+                                continue;
+                            }
+
+                            ItemDefinition itemDef = null;
+
+                            string partNum = line.Substring(2, 35);
+                            string description = line.Substring(74, 30);
+
+                            //if (offCarouselSupport)
+                            //{
+                            //    //Pick from Station 50
+                            //    string oc = line.Substring(48, 1);
+                            //    itemDef = GetItemDefinition(partNum, description, oc);
+                            //}
+                           
+                            itemDef = GetItemDefinition(partNum, description);
+                            int stationNumber = GetStationNumber(itemDef.StationId);
+                            string primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
+                            detail = new OrderDetail();
+                            detail.OrderId = orderId;
+                            detail.ItemDefinitionId = itemDef.Id;
+                            detail.PartNum = partNum;
+                            detail.Quantity = line.Substring(38, 9).ParseInt();
+                            detail.PrimeBin = primeBin;
+                            detail.PartDesc = description;
+                            detail.OrderDetailInfo = line.Substring(105, 100);
+                            detail.StationNumber = stationNumber;
+                            detail.LineStatusId = 1;
+                            detail.PickedQuantity = 0;
+                            break;
+                        case "3":
+                            order.OrderInfo = line;
+                            break;
+                        case "4":
+                            order.OrderInfo += line;
+                            break;
+                        case "5":
+                            order.OrderInfo += line;
+                            break;
+                        case "6":
+                            order.OrderInfo += line;
+                            break;
+                        case "7":
+                            order.OrderInfo += line;
+                            break;
+                        case "8":
+                            detail.OrderDetailInfo += line;
+                            break;
+                        case "9":
+                            detail.OrderDetailInfo += line;
+                            break;
+                        default:
+                            break;
+
+                    }
+
+                    if (i == allLines.Count() - 1)
+                    {
+                        //last record in file.  Write the last OrderDetail to database.
+                        try
+                        {
+                           // repoOrderDetail.Insert(detail);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error Saving Order Detail Line. {ex.Message} \r\n {ex.InnerException}");
+                        }
+                    }
+                }
+
+                ArchiveFile(file);
+            }
+        }
+
+        private ItemDefinition GetItemDefinition(string partNum, string description, string oc = "C")
+        {
+            ItemDefinition item = null;
+            if (oc == "O")  //force to Off Carousel Station 50 at Dexter
+            {
+                try
+                {
+                    int stationId = GetStationId(stationNumber: 50);
+
+                    item = repoItemDefinition.FindBy(r => r.Item == partNum
+                        && r.StationId == stationId).FirstOrDefault();
+                    if (item == null)
+                    {
+                        item = new ItemDefinitionProcessor().GetOrCreate(partNum, description, stationId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error Finding Item Definition 1. {ex.Message} \r\n {ex.InnerException}");
+                }
+            }
+            else
+            {
+                try
+                {
+                    item = repoItemDefinition.FindBy(r => r.Item == partNum).FirstOrDefault();
+                    if (item == null)
+                    {
+                        item = new ItemDefinitionProcessor().GetOrCreate(partNum, description);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error Finding Item Definition 1. {ex.Message} \r\n {ex.InnerException}");
+                }
+            }
+
+
+            return item;
+        }
+
+        private ItemDefinition GetItemDefinition(string partNum, string description)
+        {
+            ItemDefinition item = null;
+            {
+                try
+                {
+                    item = repoItemDefinition.FindBy(r => r.Item == partNum).FirstOrDefault();
+                    if (item == null)
+                    {
+                        item = new ItemDefinitionProcessor().GetOrCreate(partNum, description);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error Finding Item Definition 1. {ex.Message} \r\n {ex.InnerException}");
+                }
+            }
+            return item;
+        }
+
+        private int GetStationNumber(int stationId)
+        {
+            int stationNum = 1;
+
+            try
+            {
+                Station station = repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
+                if (station != null)
+                {
+                    stationNum = station.StationNumber;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error Returning Station Number. {ex.Message} \r\n {ex.InnerException}");
+            }
+            return stationNum;
+        }
+
+        private int GetStationId(int stationNumber)
+        {
+            int stationId = 0;
+
+            try
+            {
+                Station station = repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
+                if (station != null)
+                {
+                    stationId = station.Id;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error Returning Station Id. {ex.Message} \r\n {ex.InnerException}");
+            }
+            return stationId;
+        }
+
+        public void ArchiveFile(FileInfo fileInfo)
+        {
+            string archiveDir = string.Format(@"{0}Archive\{1}", LoaderSettings.GetHostOrderDirectory(), fileInfo.Name);
+            try
+            {
+                if (File.Exists(fileInfo.FullName))
+                {
+                    if (File.Exists(archiveDir))
+                    {
+                        File.Delete(archiveDir);
+                    }
+
+                    fileInfo.MoveTo(archiveDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Archive File Error:  {ex.Message} \r\n  {ex.InnerException}");
+            }
+        }
+
+        private string GetPrimeBin(int stationNum, string v)
+        {
+            var result = new StringBuilder();
+            if (!string.IsNullOrEmpty(v))
+            {
+                if (v.Length >= 11)
+                {
+                    result.Append(stationNum.ToString());
+                    result.Append($"-{v.Substring(0, 2)}");
+                    result.Append($"-{v.Substring(2, 3)}");
+                    result.Append($"-{v.Substring(6, 2)}");
+                    result.Append($"-{v.Substring(9, 2)}");
+                }
+            }
+            return result.ToString();
+        }
+    }
+}

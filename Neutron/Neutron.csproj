@@ -600,7 +600,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Neutron-Loaders\TMG\NeutronLoader\NeutronLoader.csproj">
-      <Project>{CF98A081-AE8A-49D0-B879-DBC68D94BD18}</Project>
+      <Project>{2748bdf0-d6ed-48c5-9230-f18e33779e67}</Project>
       <Name>NeutronLoader</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SlotNameFactory\SlotNameFactory.csproj">
@@ -622,10 +622,6 @@
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeutronMaintenance\NeutronMaintenance.csproj">
-      <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
-      <Name>NeutronMaintenance</Name>
     </ProjectReference>
     <ProjectReference Include="..\PrintRequest\PrintRequest.csproj">
       <Project>{ac64b1bd-e3e7-49f5-8ddf-103fca0970fe}</Project>

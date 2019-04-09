@@ -17,13 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintRequest", "PrintReques
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlotNameFactory", "..\SlotNameFactory\SlotNameFactory.csproj", "{68DAC5EF-FE13-4541-A233-A5897A0A3016}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronLoader", "..\Neutron-Loaders\TMG\NeutronLoader\NeutronLoader.csproj", "{CF98A081-AE8A-49D0-B879-DBC68D94BD18}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronMaintenance", "NeutronMaintenance\NeutronMaintenance.csproj", "{D3E5D83E-1327-4346-B811-C86BD4F297FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronEvents", "NeutronEvents\NeutronEvents.csproj", "{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neutron", "Neutron\Neutron.csproj", "{0BEF7888-448B-49B0-B8D5-8DCEB8DB5F3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronLoader", "..\Neutron-Loaders\TMG\NeutronLoader\NeutronLoader.csproj", "{2748BDF0-D6ED-48C5-9230-F18E33779E67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,10 +60,6 @@ Global
 		{68DAC5EF-FE13-4541-A233-A5897A0A3016}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68DAC5EF-FE13-4541-A233-A5897A0A3016}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68DAC5EF-FE13-4541-A233-A5897A0A3016}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF98A081-AE8A-49D0-B879-DBC68D94BD18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF98A081-AE8A-49D0-B879-DBC68D94BD18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF98A081-AE8A-49D0-B879-DBC68D94BD18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF98A081-AE8A-49D0-B879-DBC68D94BD18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D3E5D83E-1327-4346-B811-C86BD4F297FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D3E5D83E-1327-4346-B811-C86BD4F297FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3E5D83E-1327-4346-B811-C86BD4F297FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -76,6 +72,10 @@ Global
 		{0BEF7888-448B-49B0-B8D5-8DCEB8DB5F3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BEF7888-448B-49B0-B8D5-8DCEB8DB5F3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BEF7888-448B-49B0-B8D5-8DCEB8DB5F3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2748BDF0-D6ED-48C5-9230-F18E33779E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2748BDF0-D6ED-48C5-9230-F18E33779E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2748BDF0-D6ED-48C5-9230-F18E33779E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2748BDF0-D6ED-48C5-9230-F18E33779E67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
