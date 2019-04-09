@@ -145,6 +145,7 @@ namespace Neutron.Forms
             UpdateNomenclature();
             SetupPrinters();
             SetupGrids();
+            SetupPickPositions(_neutronVariables.PickBatchSize);
             HideTabControlTabs();
             ShowButtons();
             SetLoaderButtonText();
@@ -167,6 +168,659 @@ namespace Neutron.Forms
             //Mediator.GetInstance().IptiButtonPressed += (s, e) => SetFocus(e.ResponseInfo);
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+        }
+
+        private void SetupPickPositions(int pickBatchSize)
+        {
+            switch (pickBatchSize)
+            {
+                case 6:
+                    {
+                        // 
+                        // LabelPickPos1
+                        // 
+                        this.LabelPickPos1.BackColor = System.Drawing.Color.RoyalBlue;
+                        this.LabelPickPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPickPos1.ForeColor = System.Drawing.SystemColors.ControlText;
+                        this.LabelPickPos1.Location = new System.Drawing.Point(82, 12);
+                        this.LabelPickPos1.Name = "LabelPickPos1";
+                        this.LabelPickPos1.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos1.TabIndex = 120;
+                        this.LabelPickPos1.Text = "1";
+                        this.LabelPickPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        // 
+                        // LabelPickPos2
+                        // 
+                        this.LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPickPos2.Location = new System.Drawing.Point(272, 12);
+                        this.LabelPickPos2.Name = "LabelPickPos2";
+                        this.LabelPickPos2.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos2.TabIndex = 122;
+                        this.LabelPickPos2.Text = "2";
+                        this.LabelPickPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos2.Visible = false;
+                        // 
+                        // LabelPickPos3
+                        // 
+                        this.LabelPickPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPickPos3.Location = new System.Drawing.Point(462, 12);
+                        this.LabelPickPos3.Name = "LabelPickPos3";
+                        this.LabelPickPos3.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos3.TabIndex = 124;
+                        this.LabelPickPos3.Text = "3";
+                        this.LabelPickPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos3.Visible = false;
+                        // 
+                        // LabelPickPos4
+                        // 
+                        this.LabelPickPos4.BackColor = System.Drawing.Color.RoyalBlue;
+                        this.LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPickPos4.Location = new System.Drawing.Point(652, 12);
+                        this.LabelPickPos4.Name = "LabelPickPos4";
+                        this.LabelPickPos4.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos4.TabIndex = 126;
+                        this.LabelPickPos4.Text = "4";
+                        this.LabelPickPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos4.Visible = false;
+                        // 
+                        // LabelPickPos5
+                        // 
+                        this.LabelPickPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPickPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPickPos5.Location = new System.Drawing.Point(842, 12);
+                        this.LabelPickPos5.Name = "LabelPickPos5";
+                        this.LabelPickPos5.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos5.TabIndex = 128;
+                        this.LabelPickPos5.Text = "5";
+                        this.LabelPickPos5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos5.Visible = false;
+                        // 
+                        // LabelPickPos6
+                        // 
+                        this.LabelPickPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPickPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPickPos6.Location = new System.Drawing.Point(1032, 12);
+                        this.LabelPickPos6.Name = "LabelPickPos6";
+                        this.LabelPickPos6.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos6.TabIndex = 130;
+                        this.LabelPickPos6.Text = "6";
+                        this.LabelPickPos6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos6.Visible = false;
+                        // 
+                        // LabelPickPos7
+                        // 
+                        //this.LabelPickPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        //this.LabelPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.LabelPickPos7.Location = new System.Drawing.Point(907, 12);
+                        //this.LabelPickPos7.Name = "LabelPickPos7";
+                        //this.LabelPickPos7.Size = new System.Drawing.Size(26, 26);
+                        //this.LabelPickPos7.TabIndex = 161;
+                        //this.LabelPickPos7.Text = "7";
+                        //this.LabelPickPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos7.Visible = false;
+                        // 
+                        // LabelPickPos8
+                        // 
+                        //this.LabelPickPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        //this.LabelPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.LabelPickPos8.Location = new System.Drawing.Point(1048, 12);
+                        //this.LabelPickPos8.Name = "LabelPickPos8";
+                        //this.LabelPickPos8.Size = new System.Drawing.Size(26, 26);
+                        //this.LabelPickPos8.TabIndex = 164;
+                        //this.LabelPickPos8.Text = "8";
+                        //this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPickPos8.Visible = false;
+                        
+                        // 
+                        // TextBoxPickPos1
+                        // 
+                        this.TextBoxPickPos1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        this.TextBoxPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPickPos1.Location = new System.Drawing.Point(28, 44);
+                        this.TextBoxPickPos1.Multiline = true;
+                        this.TextBoxPickPos1.Name = "TextBoxPickPos1";
+                        this.TextBoxPickPos1.ReadOnly = true;
+                        this.TextBoxPickPos1.Size = new System.Drawing.Size(134, 44);
+                        this.TextBoxPickPos1.TabIndex = 121;
+                        this.TextBoxPickPos1.Tag = "0";
+                        this.TextBoxPickPos1.Text = "";
+                        this.TextBoxPickPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        // 
+                        // TextBoxPickPos2
+                        // 
+                        this.TextBoxPickPos2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        this.TextBoxPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPickPos2.Location = new System.Drawing.Point(218, 44);
+                        this.TextBoxPickPos2.Multiline = true;
+                        this.TextBoxPickPos2.Name = "TextBoxPickPos2";
+                        this.TextBoxPickPos2.ReadOnly = true;
+                        this.TextBoxPickPos2.Size = new System.Drawing.Size(134, 44);
+                        this.TextBoxPickPos2.TabIndex = 123;
+                        this.TextBoxPickPos2.Tag = "1";
+                        this.TextBoxPickPos2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos2.Visible = false;
+                        // 
+                        // TextBoxPickPos3
+                        // 
+                        this.TextBoxPickPos3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        this.TextBoxPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPickPos3.Location = new System.Drawing.Point(408, 44);
+                        this.TextBoxPickPos3.Multiline = true;
+                        this.TextBoxPickPos3.Name = "TextBoxPickPos3";
+                        this.TextBoxPickPos3.ReadOnly = true;
+                        this.TextBoxPickPos3.Size = new System.Drawing.Size(134, 44);
+                        this.TextBoxPickPos3.TabIndex = 125;
+                        this.TextBoxPickPos3.Tag = "2";
+                        this.TextBoxPickPos3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos3.Visible = false;
+                        // 
+                        // TextBoxPickPos4
+                        // 
+                        this.TextBoxPickPos4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        this.TextBoxPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPickPos4.Location = new System.Drawing.Point(598, 44);
+                        this.TextBoxPickPos4.Multiline = true;
+                        this.TextBoxPickPos4.Name = "TextBoxPickPos4";
+                        this.TextBoxPickPos4.ReadOnly = true;
+                        this.TextBoxPickPos4.Size = new System.Drawing.Size(134, 44);
+                        this.TextBoxPickPos4.TabIndex = 127;
+                        this.TextBoxPickPos4.Tag = "3";
+                        this.TextBoxPickPos4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos4.Visible = false;
+                        // 
+                        // TextBoxPickPos5
+                        // 
+                        this.TextBoxPickPos5.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        this.TextBoxPickPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPickPos5.Location = new System.Drawing.Point(788, 44);
+                        this.TextBoxPickPos5.Multiline = true;
+                        this.TextBoxPickPos5.Name = "TextBoxPickPos5";
+                        this.TextBoxPickPos5.ReadOnly = true;
+                        this.TextBoxPickPos5.Size = new System.Drawing.Size(134, 44);
+                        this.TextBoxPickPos5.TabIndex = 129;
+                        this.TextBoxPickPos5.Tag = "4";
+                        this.TextBoxPickPos5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos5.Visible = false;
+                        // 
+                        // TextBoxPickPos6
+                        // 
+                        this.TextBoxPickPos6.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        this.TextBoxPickPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPickPos6.Location = new System.Drawing.Point(978, 44);
+                        this.TextBoxPickPos6.Multiline = true;
+                        this.TextBoxPickPos6.Name = "TextBoxPickPos6";
+                        this.TextBoxPickPos6.ReadOnly = true;
+                        this.TextBoxPickPos6.Size = new System.Drawing.Size(134, 44);
+                        this.TextBoxPickPos6.TabIndex = 131;
+                        this.TextBoxPickPos6.Tag = "5";
+                        this.TextBoxPickPos6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos6.Visible = false;
+                        // 
+                        // TextBoxPickPos7
+                        // 
+                        //this.TextBoxPickPos7.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        //this.TextBoxPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.TextBoxPickPos7.Location = new System.Drawing.Point(864, 44);
+                        //this.TextBoxPickPos7.Multiline = true;
+                        //this.TextBoxPickPos7.Name = "TextBoxPickPos7";
+                        //this.TextBoxPickPos7.ReadOnly = true;
+                        //this.TextBoxPickPos7.Size = new System.Drawing.Size(112, 44);
+                        //this.TextBoxPickPos7.TabIndex = 160;
+                        //this.TextBoxPickPos7.Tag = "6";
+                        //this.TextBoxPickPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos7.Visible = false;
+                        // 
+                        // TextBoxPickPos8
+                        // 
+                        //this.TextBoxPickPos8.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+                        //this.TextBoxPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.TextBoxPickPos8.Location = new System.Drawing.Point(1005, 44);
+                        //this.TextBoxPickPos8.Multiline = true;
+                        //this.TextBoxPickPos8.Name = "TextBoxPickPos8";
+                        //this.TextBoxPickPos8.ReadOnly = true;
+                        //this.TextBoxPickPos8.Size = new System.Drawing.Size(112, 44);
+                        //this.TextBoxPickPos8.TabIndex = 165;
+                        //this.TextBoxPickPos8.Tag = "7";
+                        //this.TextBoxPickPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPickPos8.Visible = false;
+
+                        // 
+                        // Pos1Display
+                        // 
+                        this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos1Display.Location = new System.Drawing.Point(20, 44);
+                        this.Pos1Display.Name = "Pos1Display";
+                        this.Pos1Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos1Display.TabIndex = 153;
+                        // 
+                        // Pos2Display
+                        // 
+                        this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos2Display.Location = new System.Drawing.Point(210, 44);
+                        this.Pos2Display.Name = "Pos2Display";
+                        this.Pos2Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos2Display.TabIndex = 154;
+                        this.Pos2Display.Visible = false;
+                        // 
+                        // Pos3Display
+                        // 
+                        this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos3Display.Location = new System.Drawing.Point(400, 44);
+                        this.Pos3Display.Name = "Pos3Display";
+                        this.Pos3Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos3Display.TabIndex = 155;
+                        this.Pos3Display.Visible = false;
+                        // 
+                        // Pos4Display
+                        // 
+                        this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos4Display.Location = new System.Drawing.Point(590, 44);
+                        this.Pos4Display.Name = "Pos4Display";
+                        this.Pos4Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos4Display.TabIndex = 156;
+                        this.Pos4Display.Visible = false;
+                        // 
+                        // Pos5Display
+                        // 
+                        this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos5Display.Location = new System.Drawing.Point(780, 44);
+                        this.Pos5Display.Name = "Pos5Display";
+                        this.Pos5Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos5Display.TabIndex = 157;
+                        this.Pos5Display.Visible = false;
+                        // 
+                        // Pos6Display
+                        // 
+                        this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos6Display.Location = new System.Drawing.Point(970, 44);
+                        this.Pos6Display.Name = "Pos6Display";
+                        this.Pos6Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos6Display.TabIndex = 158;
+                        this.Pos6Display.Visible = false;
+                        // 
+                        // Pos7Display
+                        // 
+                        //this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos7Display.Location = new System.Drawing.Point(856, 44);
+                        //this.Pos7Display.Name = "Pos7Display";
+                        //this.Pos7Display.Size = new System.Drawing.Size(128, 53);
+                        //this.Pos7Display.TabIndex = 162;
+                        this.Pos7Display.Visible = false;
+                        // 
+                        // Pos8Display
+                        // 
+                        //this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos8Display.Location = new System.Drawing.Point(997, 44);
+                        //this.Pos8Display.Name = "Pos8Display";
+                        //this.Pos8Display.Size = new System.Drawing.Size(128, 53);
+                        //this.Pos8Display.TabIndex = 165;
+                        this.Pos8Display.Visible = false;
+
+                        //-----------------Induction Screen ----------------------
+                        // 
+                        // LabelPos1
+                        // 
+                        this.LabelPos1.BackColor = System.Drawing.Color.RoyalBlue;
+                        this.LabelPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPos1.ForeColor = System.Drawing.SystemColors.ControlText;
+                        this.LabelPos1.Location = new System.Drawing.Point(82, 12);
+                        this.LabelPos1.Name = "LabelPos1";
+                        this.LabelPos1.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos1.TabIndex = 151;
+                        this.LabelPos1.Text = "1";
+                        this.LabelPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        // 
+                        // LabelPos2
+                        // 
+                        this.LabelPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPos2.Location = new System.Drawing.Point(271, 13);
+                        this.LabelPos2.Name = "LabelPos2";
+                        this.LabelPos2.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos2.TabIndex = 152;
+                        this.LabelPos2.Text = "2";
+                        this.LabelPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos2.Visible = false;
+                        // 
+                        // LabelPos3
+                        // 
+                        this.LabelPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPos3.Location = new System.Drawing.Point(459, 13);
+                        this.LabelPos3.Name = "LabelPos3";
+                        this.LabelPos3.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos3.TabIndex = 153;
+                        this.LabelPos3.Text = "3";
+                        this.LabelPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos3.Visible = false;
+                        // 
+                        // LabelPos4
+                        // 
+                        this.LabelPos4.BackColor = System.Drawing.Color.RoyalBlue;
+                        this.LabelPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPos4.Location = new System.Drawing.Point(647, 12);
+                        this.LabelPos4.Name = "LabelPos4";
+                        this.LabelPos4.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos4.TabIndex = 154;
+                        this.LabelPos4.Text = "4";
+                        this.LabelPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos4.Visible = false;
+                        // 
+                        // LabelPos5
+                        // 
+                        this.LabelPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPos5.Location = new System.Drawing.Point(835, 12);
+                        this.LabelPos5.Name = "LabelPos5";
+                        this.LabelPos5.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos5.TabIndex = 155;
+                        this.LabelPos5.Text = "5";
+                        this.LabelPos5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos5.Visible = false;
+                        // 
+                        // LabelPos6
+                        // 
+                        this.LabelPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        this.LabelPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.LabelPos6.Location = new System.Drawing.Point(1023, 13);
+                        this.LabelPos6.Name = "LabelPos6";
+                        this.LabelPos6.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos6.TabIndex = 156;
+                        this.LabelPos6.Text = "6";
+                        this.LabelPos6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos6.Visible = false;
+                        // 
+                        // LabelPos7
+                        // 
+                        //this.LabelPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        //this.LabelPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.LabelPos7.Location = new System.Drawing.Point(619, 558);
+                        //this.LabelPos7.Name = "LabelPos7";
+                        //this.LabelPos7.Size = new System.Drawing.Size(26, 26);
+                        //this.LabelPos7.TabIndex = 171;
+                        //this.LabelPos7.Text = "7";
+                        //this.LabelPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos7.Visible = false;
+                        // 
+                        // LabelPos8
+                        // 
+                        //this.LabelPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+                        //this.LabelPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.LabelPos8.Location = new System.Drawing.Point(759, 557);
+                        //this.LabelPos8.Name = "LabelPos8";
+                        //this.LabelPos8.Size = new System.Drawing.Size(26, 26);
+                        //this.LabelPos8.TabIndex = 172;
+                        //this.LabelPos8.Text = "8";
+                        //this.LabelPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                        this.LabelPos8.Visible = false;
+                        // 
+                        // TextBoxPos1
+                        // 
+                        this.TextBoxPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPos1.Location = new System.Drawing.Point(28, 44);
+                        this.TextBoxPos1.Name = "TextBoxPos1";
+                        this.TextBoxPos1.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos1.TabIndex = 0;
+                        this.TextBoxPos1.Tag = "0";
+                        this.TextBoxPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos1.Click += new System.EventHandler(this.TextBoxPos_Click);
+                        this.TextBoxPos1.Enter += new System.EventHandler(this.TextBoxEnter);
+                        this.TextBoxPos1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+                        this.TextBoxPos1.Leave += new System.EventHandler(this.TextBoxPosLeave);
+                        // 
+                        // TextBoxPos2
+                        // 
+                        this.TextBoxPos2.BackColor = System.Drawing.SystemColors.Control;
+                        this.TextBoxPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPos2.Location = new System.Drawing.Point(216, 44);
+                        this.TextBoxPos2.Name = "TextBoxPos2";
+                        this.TextBoxPos2.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos2.TabIndex = 1;
+                        this.TextBoxPos2.Tag = "1";
+                        this.TextBoxPos2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos2.Visible = false;
+                        this.TextBoxPos2.Click += new System.EventHandler(this.TextBoxPos_Click);
+                        this.TextBoxPos2.Enter += new System.EventHandler(this.TextBoxEnter);
+                        this.TextBoxPos2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+                        this.TextBoxPos2.Leave += new System.EventHandler(this.TextBoxPosLeave);
+                        // 
+                        // TextBoxPos3
+                        // 
+                        this.TextBoxPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPos3.Location = new System.Drawing.Point(404, 44);
+                        this.TextBoxPos3.Name = "TextBoxPos3";
+                        this.TextBoxPos3.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos3.TabIndex = 2;
+                        this.TextBoxPos3.Tag = "2";
+                        this.TextBoxPos3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos3.Visible = false;
+                        this.TextBoxPos3.Click += new System.EventHandler(this.TextBoxPos_Click);
+                        this.TextBoxPos3.Enter += new System.EventHandler(this.TextBoxEnter);
+                        this.TextBoxPos3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+                        this.TextBoxPos3.Leave += new System.EventHandler(this.TextBoxPosLeave);
+                        // 
+                        // TextBoxPos4
+                        // 
+                        this.TextBoxPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPos4.Location = new System.Drawing.Point(592, 44);
+                        this.TextBoxPos4.Name = "TextBoxPos4";
+                        this.TextBoxPos4.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos4.TabIndex = 3;
+                        this.TextBoxPos4.Tag = "3";
+                        this.TextBoxPos4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos4.Visible = false;
+                        this.TextBoxPos4.Click += new System.EventHandler(this.TextBoxPos_Click);
+                        this.TextBoxPos4.Enter += new System.EventHandler(this.TextBoxEnter);
+                        this.TextBoxPos4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+                        this.TextBoxPos4.Leave += new System.EventHandler(this.TextBoxPosLeave);
+                        // 
+                        // TextBoxPos5
+                        // 
+                        this.TextBoxPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPos5.Location = new System.Drawing.Point(780, 44);
+                        this.TextBoxPos5.Name = "TextBoxPos5";
+                        this.TextBoxPos5.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos5.TabIndex = 4;
+                        this.TextBoxPos5.Tag = "4";
+                        this.TextBoxPos5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos5.Visible = false;
+                        this.TextBoxPos5.Click += new System.EventHandler(this.TextBoxPos_Click);
+                        this.TextBoxPos5.Enter += new System.EventHandler(this.TextBoxEnter);
+                        this.TextBoxPos5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+                        this.TextBoxPos5.Leave += new System.EventHandler(this.TextBoxPosLeave);
+                        // 
+                        // TextBoxPos6
+                        // 
+                        this.TextBoxPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        this.TextBoxPos6.Location = new System.Drawing.Point(968, 44);
+                        this.TextBoxPos6.Name = "TextBoxPos6";
+                        this.TextBoxPos6.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos6.TabIndex = 5;
+                        this.TextBoxPos6.Tag = "5";
+                        this.TextBoxPos6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos6.Visible = false;
+                        this.TextBoxPos6.Click += new System.EventHandler(this.TextBoxPos_Click);
+                        this.TextBoxPos6.Enter += new System.EventHandler(this.TextBoxEnter);
+                        this.TextBoxPos6.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+                        this.TextBoxPos6.Leave += new System.EventHandler(this.TextBoxPosLeave);
+                        // 
+                        // TextBoxPos7
+                        // 
+                        //this.TextBoxPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.TextBoxPos7.Location = new System.Drawing.Point(577, 590);
+                        //this.TextBoxPos7.Name = "TextBoxPos7";
+                        //this.TextBoxPos7.Size = new System.Drawing.Size(110, 29);
+                        //this.TextBoxPos7.TabIndex = 169;
+                        //this.TextBoxPos7.Tag = "6";
+                        //this.TextBoxPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos7.Visible = false;
+                        // 
+                        // TextBoxPos8
+                        // 
+                        //this.TextBoxPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        //this.TextBoxPos8.Location = new System.Drawing.Point(717, 590);
+                        //this.TextBoxPos8.Name = "TextBoxPos8";
+                        //this.TextBoxPos8.Size = new System.Drawing.Size(110, 29);
+                        //this.TextBoxPos8.TabIndex = 170;
+                        //this.TextBoxPos8.Tag = "7";
+                        //this.TextBoxPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+                        this.TextBoxPos8.Visible = false;
+                        // 
+                        // Pos1Display
+                        // 
+                        this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos1Display.Location = new System.Drawing.Point(20, 44);
+                        this.Pos1Display.Name = "Pos1Display";
+                        this.Pos1Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos1Display.TabIndex = 153;
+                        // 
+                        // Pos2Display
+                        // 
+                        this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos2Display.Location = new System.Drawing.Point(210, 44);
+                        this.Pos2Display.Name = "Pos2Display";
+                        this.Pos2Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos2Display.TabIndex = 154;
+                        this.Pos2Display.Visible = false;
+                        // 
+                        // Pos3Display
+                        // 
+                        this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos3Display.Location = new System.Drawing.Point(400, 44);
+                        this.Pos3Display.Name = "Pos3Display";
+                        this.Pos3Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos3Display.TabIndex = 155;
+                        this.Pos3Display.Visible = false;
+                        // 
+                        // Pos4Display
+                        // 
+                        this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos4Display.Location = new System.Drawing.Point(590, 44);
+                        this.Pos4Display.Name = "Pos4Display";
+                        this.Pos4Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos4Display.TabIndex = 156;
+                        this.Pos4Display.Visible = false;
+                        // 
+                        // Pos5Display
+                        // 
+                        this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos5Display.Location = new System.Drawing.Point(780, 44);
+                        this.Pos5Display.Name = "Pos5Display";
+                        this.Pos5Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos5Display.TabIndex = 157;
+                        this.Pos5Display.Visible = false;
+                        // 
+                        // Pos6Display
+                        // 
+                        this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
+                        this.Pos6Display.Location = new System.Drawing.Point(960, 44);
+                        this.Pos6Display.Name = "Pos6Display";
+                        this.Pos6Display.Size = new System.Drawing.Size(150, 53);
+                        this.Pos6Display.TabIndex = 158;
+                        this.Pos6Display.Visible = false;
+                        // 
+                        // Pos7Display
+                        // 
+                        //this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos7Display.Location = new System.Drawing.Point(856, 44);
+                        //this.Pos7Display.Name = "Pos7Display";
+                        //this.Pos7Display.Size = new System.Drawing.Size(128, 53);
+                        //this.Pos7Display.TabIndex = 162;
+                        this.Pos7Display.Visible = false;
+                        // 
+                        // Pos8Display
+                        // 
+                        //this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos8Display.Location = new System.Drawing.Point(997, 44);
+                        //this.Pos8Display.Name = "Pos8Display";
+                        //this.Pos8Display.Size = new System.Drawing.Size(128, 53);
+                        //this.Pos8Display.TabIndex = 165;
+                        this.Pos8Display.Visible = false;
+
+
+
+
+                        // 
+                        // AvailablePos1Display
+                        // 
+                       // this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
+                        this.AvailablePos1Display.Location = new System.Drawing.Point(20, 44);
+                      //  this.AvailablePos1Display.Name = "Pos1Display";
+                        this.AvailablePos1Display.Size = new System.Drawing.Size(150, 53);
+                      //  this.AvailablePos1Display.TabIndex = 161;
+                        this.AvailablePos1Display.Visible = true;
+                        // 
+                        // AvailablePos2Display
+                        // 
+                       // this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
+                        this.AvailablePos2Display.Location = new System.Drawing.Point(208, 44);
+                       // this.AvailablePos2Display.Name = "Pos2Display";
+                        this.AvailablePos2Display.Size = new System.Drawing.Size(150, 53);
+                       // this.AvailablePos2Display.TabIndex = 162;
+                        this.AvailablePos2Display.Visible = true;
+                        // 
+                        // AvailablePos3Display
+                        // 
+                      //  this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
+                        this.AvailablePos3Display.Location = new System.Drawing.Point(396, 44);
+                     //   this.AvailablePos3Display.Name = "Pos3Display";
+                        this.AvailablePos3Display.Size = new System.Drawing.Size(150, 53);
+                      //  this.AvailablePos3Display.TabIndex = 163;
+                        this.AvailablePos3Display.Visible = true;
+                        // 
+                        // AvailablePos4Display
+                        // 
+                      //  this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
+                        this.AvailablePos4Display.Location = new System.Drawing.Point(584, 44);
+                      //  this.AvailablePos4Display.Name = "Pos4Display";
+                        this.AvailablePos4Display.Size = new System.Drawing.Size(150, 53);
+                      //  this.AvailablePos4Display.TabIndex = 164;
+                        this.AvailablePos4Display.Visible = true;
+                        // 
+                        // AvailablePos5Display
+                        // 
+                       // this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
+                        this.AvailablePos5Display.Location = new System.Drawing.Point(772, 44);
+                      //  this.AvailablePos5Display.Name = "Pos5Display";
+                        this.AvailablePos5Display.Size = new System.Drawing.Size(150, 53);
+                       // this.AvailablePos5Display.TabIndex = 165;
+                        this.AvailablePos5Display.Visible = true;
+                        // 
+                        // AvailablePos6Display
+                        // 
+                       // this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
+                        this.AvailablePos6Display.Location = new System.Drawing.Point(960, 44);
+                       // this.AvailablePos6Display.Name = "Pos6Display";
+                        this.AvailablePos6Display.Size = new System.Drawing.Size(150, 53);
+                      //  this.AvailablePos6Display.TabIndex = 166;
+                        this.AvailablePos6Display.Visible = true;
+                        // 
+                        // AvailablePos7Display
+                        // 
+                        //this.AvailablePos7Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.AvailablePos7Display.Location = new System.Drawing.Point(569, 590);
+                        //this.AvailablePos7Display.Name = "Pos7Display";
+                        //this.AvailablePos7Display.Size = new System.Drawing.Size(126, 53);
+                        //this.AvailablePos7Display.TabIndex = 173;
+                        this.AvailablePos7Display.Visible = false;
+                        // 
+                        // AvailablePos8Display
+                        // 
+                        //this.AvailablePos8Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.AvailablePos8Display.Location = new System.Drawing.Point(709, 590);
+                        //this.AvailablePos8Display.Name = "Pos8Display";
+                        //this.AvailablePos8Display.Size = new System.Drawing.Size(126, 53);
+                        //this.AvailablePos8Display.TabIndex = 174;
+                        this.AvailablePos8Display.Visible = false;
+                        break;
+                    }
+            }
         }
 
 
@@ -895,7 +1549,7 @@ namespace Neutron.Forms
             };
             DataGridViewSkip.Columns.Add(col);
 
-          
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderStatusName",
@@ -1976,7 +2630,7 @@ namespace Neutron.Forms
             return orderIds;
         }
 
-       private List<OrderView> GetCheckedOrders()
+        private List<OrderView> GetCheckedOrders()
         {
             var ordViews = new List<OrderView>();
             var orderIds = new List<int>();
@@ -2046,7 +2700,7 @@ namespace Neutron.Forms
 
         private void PickListBack()
         {
-LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
+            LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = AvailableOrders;
         }
@@ -2064,12 +2718,12 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
 
         private void MBAvailableOrdersBack_Click(object sender, EventArgs e)
         {
-           AvailableOrdersBack();
+            AvailableOrdersBack();
         }
 
         private void AvailableOrdersBack()
         {
- ClearBatchPositions();
+            ClearBatchPositions();
             LabelFormTitle.Text = _resourceManager.GetString("Jobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
@@ -2320,7 +2974,7 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
                         counter = 0;
                     }
 
-            
+
 
 
                     var pickView = new PickView()
@@ -3312,7 +3966,7 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
         private void UpdatePickScreenAfterChangeQuantity()
         {
             Task.Run(() => _logger.Log($"UpdatePickScreenAfterChangeQuantity Start: [{DateTime.Now.ToLongTimeString()}]"));
-           // MBPickNewItem.Visible = _neutronLicense.CompanyCode == "TOP" ? true : false;
+            // MBPickNewItem.Visible = _neutronLicense.CompanyCode == "TOP" ? true : false;
             UpdatePickPosition();
             UpdateInventoryLocation();
             UpdateImages();
@@ -3457,8 +4111,8 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
                 if (GlobalVar.Displays != null)
                 {
                     Task.Run(() => _logger.Log($"ClearAllBli Function"));
-                     GlobalVar.Displays.ClearAllBli();
-                     GlobalVar.Displays.ClearOc(1);
+                    GlobalVar.Displays.ClearAllBli();
+                    GlobalVar.Displays.ClearOc(1);
                 }
             }
         }
@@ -3781,15 +4435,15 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
         }
 
         private void MBPickAccept_Click(object sender, EventArgs e)
-        {            
-           
+        {
+
             PickAccept();
             MBPickAccept.Focus();
         }
 
         private void PickAccept()
         {
- MBPickAccept.Enabled = false;
+            MBPickAccept.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
 
             if (InvokeRequired)
@@ -4032,7 +4686,7 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
                     //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
                 case "AES":
-                   var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
+                    var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
                     uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
                 case "TOP":
@@ -4989,7 +5643,7 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
         {
             Cursor.Current = Cursors.WaitCursor;
             //ShowAvailable();
-            _currentDataSet =  CurrentDataSet.Available;
+            _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
             // MBCompress.Enabled = true;
             Cursor.Current = Cursors.Default;
@@ -5422,31 +6076,31 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
 
         private void MButtonSearch_Click(object sender, EventArgs e)
         {
-           SearchDataSet();
+            SearchDataSet();
 
 
-           // ShowAllOrders();
+            // ShowAllOrders();
         }
 
         private void SearchDataSet()
         {
- switch (_currentDataSet)
+            switch (_currentDataSet)
             {
                 case CurrentDataSet.Available:
-                {
-                    ShowAllOrders();
-                    break;
-                }
+                    {
+                        ShowAllOrders();
+                        break;
+                    }
                 case CurrentDataSet.Complete:
-                {
-                    ShowCompleted();
-                    break;
-                }
+                    {
+                        ShowCompleted();
+                        break;
+                    }
                 case CurrentDataSet.Rack:
-                {
-                    ShowRackOrders();
-                    break;
-                }
+                    {
+                        ShowRackOrders();
+                        break;
+                    }
             }
 
         }
@@ -5951,8 +6605,8 @@ LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
 
         private int ShowCompleted(int recId = 0)
         {
-           // var views = _ordersRepository.GetCompletedOrders();
-           // var bindingListView = new BindingListView<OrderView>(views.ToList());
+            // var views = _ordersRepository.GetCompletedOrders();
+            // var bindingListView = new BindingListView<OrderView>(views.ToList());
             //_bindingSourceCompleted.DataSource = bindingListView;
             //GetRecordCount(_bindingSourceCompleted);
             //DataGridView1.DataSource = _bindingSourceCompleted;
