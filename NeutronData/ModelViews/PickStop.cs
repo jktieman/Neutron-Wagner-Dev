@@ -96,7 +96,7 @@ namespace NeutronData.ModelViews
                     item.OrderDetail.EmpId = user.EmpId;
                     repoOrderDetails.Update(item.OrderDetail);
 
-                    SetOrderComplete(item.OrderId);
+                   // SetOrderComplete(item.OrderId);
                 }
             }
             catch (Exception ex)
@@ -110,15 +110,15 @@ namespace NeutronData.ModelViews
 
         }
 
-        private void SetOrderComplete(int orderId)
-        {
-            Order order = repoOrders.FindByKey(orderId);
-            List<OrderDetail> recs = repoOrderDetails.All().Where(d => d.OrderId == orderId && d.LineStatusId != 6).ToList();
-            if (recs.Count == 0)
-            {
-                order.OrderStatusId = 6;
-                repoOrders.Update(order);
-            }
-        }
+        //private void SetOrderComplete(int orderId)
+        //{
+        //    Order order = repoOrders.FindByKey(orderId);
+        //    List<OrderDetail> recs = repoOrderDetails.All().Where(d => d.OrderId == orderId && d.LineStatusId != 6).ToList();
+        //    if (recs.Count == 0)
+        //    {
+        //        order.OrderStatusId = 6;
+        //        repoOrders.Update(order);
+        //    }
+        //}
     }
 }

@@ -168,6 +168,26 @@ namespace Neutron.Forms
             //Mediator.GetInstance().IptiButtonPressed += (s, e) => SetFocus(e.ResponseInfo);
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+            Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
+        }
+
+        private void ShowOrderComplete(Order order)
+        {
+            Task.Run(() => _logger.Log($"Show Order Complete Event: Order Number _ {order.Ord1} -- {order.Ord2}"));
+            foreach (var bp in _ordersToPick)
+            {
+                if (bp.OrderId != order.Id) continue;
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find("Pos" + pos + "Display", true).Single();
+                if (c != null)
+                {
+                    var panel = ((Panel)c);
+                    panel.BackColor = Color.Green;
+                    panel.Visible = true;
+                    panel.Refresh();
+                }
+                bp.OrderComplete = true;
+            }
         }
 
         private void SetupPickPositions(int pickBatchSize)
@@ -274,7 +294,7 @@ namespace Neutron.Forms
                         //this.LabelPickPos8.Text = "8";
                         //this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
                         this.LabelPickPos8.Visible = false;
-                        
+
                         // 
                         // TextBoxPickPos1
                         // 
@@ -749,56 +769,56 @@ namespace Neutron.Forms
                         // 
                         // AvailablePos1Display
                         // 
-                       // this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
+                        // this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
                         this.AvailablePos1Display.Location = new System.Drawing.Point(20, 44);
-                      //  this.AvailablePos1Display.Name = "Pos1Display";
+                        //  this.AvailablePos1Display.Name = "Pos1Display";
                         this.AvailablePos1Display.Size = new System.Drawing.Size(150, 53);
-                      //  this.AvailablePos1Display.TabIndex = 161;
+                        //  this.AvailablePos1Display.TabIndex = 161;
                         this.AvailablePos1Display.Visible = true;
                         // 
                         // AvailablePos2Display
                         // 
-                       // this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
+                        // this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
                         this.AvailablePos2Display.Location = new System.Drawing.Point(208, 44);
-                       // this.AvailablePos2Display.Name = "Pos2Display";
+                        // this.AvailablePos2Display.Name = "Pos2Display";
                         this.AvailablePos2Display.Size = new System.Drawing.Size(150, 53);
-                       // this.AvailablePos2Display.TabIndex = 162;
+                        // this.AvailablePos2Display.TabIndex = 162;
                         this.AvailablePos2Display.Visible = true;
                         // 
                         // AvailablePos3Display
                         // 
-                      //  this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
+                        //  this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
                         this.AvailablePos3Display.Location = new System.Drawing.Point(396, 44);
-                     //   this.AvailablePos3Display.Name = "Pos3Display";
+                        //   this.AvailablePos3Display.Name = "Pos3Display";
                         this.AvailablePos3Display.Size = new System.Drawing.Size(150, 53);
-                      //  this.AvailablePos3Display.TabIndex = 163;
+                        //  this.AvailablePos3Display.TabIndex = 163;
                         this.AvailablePos3Display.Visible = true;
                         // 
                         // AvailablePos4Display
                         // 
-                      //  this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
+                        //  this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
                         this.AvailablePos4Display.Location = new System.Drawing.Point(584, 44);
-                      //  this.AvailablePos4Display.Name = "Pos4Display";
+                        //  this.AvailablePos4Display.Name = "Pos4Display";
                         this.AvailablePos4Display.Size = new System.Drawing.Size(150, 53);
-                      //  this.AvailablePos4Display.TabIndex = 164;
+                        //  this.AvailablePos4Display.TabIndex = 164;
                         this.AvailablePos4Display.Visible = true;
                         // 
                         // AvailablePos5Display
                         // 
-                       // this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
+                        // this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
                         this.AvailablePos5Display.Location = new System.Drawing.Point(772, 44);
-                      //  this.AvailablePos5Display.Name = "Pos5Display";
+                        //  this.AvailablePos5Display.Name = "Pos5Display";
                         this.AvailablePos5Display.Size = new System.Drawing.Size(150, 53);
-                       // this.AvailablePos5Display.TabIndex = 165;
+                        // this.AvailablePos5Display.TabIndex = 165;
                         this.AvailablePos5Display.Visible = true;
                         // 
                         // AvailablePos6Display
                         // 
-                       // this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
+                        // this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
                         this.AvailablePos6Display.Location = new System.Drawing.Point(960, 44);
-                       // this.AvailablePos6Display.Name = "Pos6Display";
+                        // this.AvailablePos6Display.Name = "Pos6Display";
                         this.AvailablePos6Display.Size = new System.Drawing.Size(150, 53);
-                      //  this.AvailablePos6Display.TabIndex = 166;
+                        //  this.AvailablePos6Display.TabIndex = 166;
                         this.AvailablePos6Display.Visible = true;
                         // 
                         // AvailablePos7Display
@@ -3212,6 +3232,7 @@ namespace Neutron.Forms
                 _ordersToPick[idx].OrderId = orderId;
                 _ordersToPick[idx].Ord1 = ord1;
                 _ordersToPick[idx].Ord2 = ord2;
+                _ordersToPick[idx].OrderComplete = false;
                 CurrentTextBoxPos.Text = ord1;
             }
             ManualOverrideCurrentTextBoxPos = false;
@@ -3248,6 +3269,7 @@ namespace Neutron.Forms
                 bp.OrderId = null;
                 bp.Ord1 = string.Empty;
                 bp.Ord2 = string.Empty;
+                bp.OrderComplete = false;
                 UpdateTextBoxPosition(bp);
 
             }
@@ -3345,7 +3367,7 @@ namespace Neutron.Forms
             _ordersToPick = new List<BatchPosition>();
             for (var i = 0; i < pickBatchSize; i++)
             {
-                var bp = new BatchPosition() { PositionNumber = i + 1, OrderId = null, Ord1 = string.Empty, Ord2 = string.Empty };
+                var bp = new BatchPosition() { PositionNumber = i + 1, OrderId = null, Ord1 = string.Empty, Ord2 = string.Empty, OrderComplete = false };
                 _ordersToPick.Add(bp);
                 ShowPosition(i + 1);
             }
@@ -4267,26 +4289,82 @@ namespace Neutron.Forms
 
         private void ClearPickPositions()
         {
-            TextBoxPickPos1.Text = string.Empty;
-            TextBoxPickPos2.Text = string.Empty;
-            TextBoxPickPos3.Text = string.Empty;
-            TextBoxPickPos4.Text = string.Empty;
-            TextBoxPickPos5.Text = string.Empty;
-            TextBoxPickPos6.Text = string.Empty;
-            TextBoxPickPos7.Text = string.Empty;
-            TextBoxPickPos8.Text = string.Empty;
+            TextBoxPickPos1.Text = _ordersToPick[0].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos2.Text = _ordersToPick[1].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos3.Text = _ordersToPick[2].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos4.Text = _ordersToPick[3].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos5.Text = _ordersToPick[4].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos6.Text = _ordersToPick[5].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos7.Text = _ordersToPick[6].OrderComplete ? "END" : string.Empty;
+            TextBoxPickPos8.Text = _ordersToPick[7].OrderComplete ? "END" : string.Empty;
         }
 
         private void ClearPickDisplays()
         {
-            Pos1Display.BackColor = Color.Transparent;
-            Pos2Display.BackColor = Color.Transparent;
-            Pos3Display.BackColor = Color.Transparent;
-            Pos4Display.BackColor = Color.Transparent;
-            Pos5Display.BackColor = Color.Transparent;
-            Pos6Display.BackColor = Color.Transparent;
-            Pos7Display.BackColor = Color.Transparent;
-            Pos8Display.BackColor = Color.Transparent;
+            Pos1Display.BackColor = _ordersToPick[0].OrderComplete ? Color.Green : Color.Transparent;
+            Pos2Display.BackColor = _ordersToPick[1].OrderComplete ? Color.Green : Color.Transparent;
+            Pos3Display.BackColor = _ordersToPick[2].OrderComplete ? Color.Green : Color.Transparent;
+            Pos4Display.BackColor = _ordersToPick[3].OrderComplete ? Color.Green : Color.Transparent;
+            Pos5Display.BackColor = _ordersToPick[4].OrderComplete ? Color.Green : Color.Transparent;
+            Pos6Display.BackColor = _ordersToPick[5].OrderComplete ? Color.Green : Color.Transparent;
+            Pos7Display.BackColor = _ordersToPick[6].OrderComplete ? Color.Green : Color.Transparent;
+            Pos8Display.BackColor = _ordersToPick[7].OrderComplete ? Color.Green : Color.Transparent;
+
+
+            //foreach (var bp in _ordersToPick)
+            //{
+            //    switch (bp.PositionNumber)
+            //    {
+            //        case 1:
+            //        {
+            //            Pos1Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //            break;
+            //        }
+            //        case 2:
+            //            {
+            //                Pos2Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //        case 3:
+            //            {
+            //                Pos3Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //        case 4:
+            //            {
+            //                Pos4Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //        case 5:
+            //            {
+            //                Pos5Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //        case 6:
+            //            {
+            //                Pos6Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //        case 7:
+            //            {
+            //                Pos7Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //        case 8:
+            //            {
+            //                Pos8Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+            //                break;
+            //            }
+            //    }
+            //}
+
+            //Pos2Display.BackColor = Color.Transparent;
+            //Pos3Display.BackColor = Color.Transparent;
+            //Pos4Display.BackColor = Color.Transparent;
+            //Pos5Display.BackColor = Color.Transparent;
+            //Pos6Display.BackColor = Color.Transparent;
+            //Pos7Display.BackColor = Color.Transparent;
+            //Pos8Display.BackColor = Color.Transparent;
         }
 
         private int GetTotalRequiredThisStop(PickStop currentPickStop)
@@ -4511,6 +4589,11 @@ namespace Neutron.Forms
                     Task.Run(() => _logger.Log($"History Done"));
 
                     _currentPickStop.SetPickViewsComplete(GlobalVar.User);
+
+                    foreach (var pickView in _currentPickStop.PickViews)
+                    {
+                        CheckForOrderComplete(pickView.OrderDetail.Order);
+                    }
 
                     Task.Run(() => _logger.Log($"PickAccept_Click Stop Complete End : [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -4996,11 +5079,14 @@ namespace Neutron.Forms
         {
             foreach (var bp in ordersToPick)
             {
-                if (bp.OrderId != null)
+                if (!bp.OrderComplete)
                 {
-                    var id = bp.OrderId.Value;
-                    var order = _repoOrders.FindByKey(id);
-                    CheckForOrderComplete(order);
+                    if (bp.OrderId != null)
+                    {
+                        var id = bp.OrderId.Value;
+                        var order = _repoOrders.FindByKey(id);
+                        CheckForOrderComplete(order);
+                    }
                 }
             }
         }
@@ -7008,7 +7094,7 @@ namespace Neutron.Forms
             order.OrderStatusId = 6;
             GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order: order);
             _repoOrders.Update(order);
-            // Mediator.GetInstance().OnOrderComplete(this, order);
+            Mediator.GetInstance().OnOrderComplete(this, order);
         }
 
         private void MBRefreshRack_Click(object sender, EventArgs e)
