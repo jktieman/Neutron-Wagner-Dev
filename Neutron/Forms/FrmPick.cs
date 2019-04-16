@@ -2763,9 +2763,11 @@ namespace Neutron.Forms
 
 
                 Task.Run(() => _logger.Log($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
-                PrintAllToteLabels();
 
-                PrintAllDocuments();
+                //  PrintAllToteLabels();
+
+                //   PrintAllDocuments();
+
                 Task.Run(() => _logger.Log($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
 
                 if (itemShort)
@@ -2971,10 +2973,12 @@ namespace Neutron.Forms
                 var details = currentItem.Order.OrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
                 {
-                    if (detail.LineStatusId != 1 && detail.LineStatusId != 9) continue;
+                    if (detail.LineStatusId != (int) LineStatus.Available &&
+                        detail.LineStatusId != (int) LineStatus.Skipped) continue;
+                    //key builder makes each line of orderdetails unique so that an order with the same item
+                    // will be picked separately
+                    // PickStops will be grouped by key, not item number
 
-
-                    //key builder
                     var key = "";
                     if (firstTime)
                     {
@@ -2993,9 +2997,6 @@ namespace Neutron.Forms
                         key = detail.PartNum;
                         counter = 0;
                     }
-
-
-
 
                     var pickView = new PickView()
                     {
@@ -3588,89 +3589,19 @@ namespace Neutron.Forms
 
             newList = BuildNewList(car1List, car2List, car3List, car4List);
 
-            //int seq = 1;
-            //for (int i = 0; i < 1000; i++)
-            //{
-            //    int done = 0;
-            //    if (car1List.Count >= i + 1)
-            //    {
-            //        car1List[i].Sequence = seq;
-            //        seq += 1;
-            //        newList.Add(car1List[i]);
-
-            //        //look at next pick, if it is the same car and bin, add it to newList without moving to the next car
-
-            //        if (car1List.Count >= i + 1)
-            //        {
-            //            if (car1List[i].CurrentInventoryLocation.Location.Loc1 ==
-            //                car1List[i + 1].CurrentInventoryLocation.Location.Loc1)
-            //            {
-            //                if (car1List[i].CurrentInventoryLocation.Location.Loc2 ==
-            //                    car1List[i + 1].CurrentInventoryLocation.Location.Loc2)
-            //                {
-            //                    //Same Car and Bin
-
-            //                }
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        done = 1;
-            //    }
-            //    if (car2List.Count >= i + 1)
-            //    {
-            //        car2List[i].Sequence = seq;
-            //        seq += 1;
-            //        newList.Add(car2List[i]);
-            //    }
-            //    else
-            //    {
-            //        done += 1;
-            //    }
-            //    if (car3List.Count >= i + 1)
-            //    {
-            //        car3List[i].Sequence = seq;
-            //        seq += 1;
-            //        newList.Add(car3List[i]);
-            //    }
-            //    else
-            //    {
-            //        done += 1;
-            //    }
-            //    if (car4List.Count >= i + 1)
-            //    {
-            //        car4List[i].Sequence = seq;
-            //        seq += 1;
-            //        newList.Add(car4List[i]);
-            //    }
-            //    else
-            //    {
-            //        done += 1;
-            //    }
-            //    if (done == 4)
-            //    {
-            //        break;
-            //    }
-
-            //}
             Task.Run(() => _logger.Log($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
 
             _deviceManager = new DeviceManager(car1List, car2List, car3List
                 , car4List, _neutronVariables.ShuttleEnabled, _logger);
 
-            Task.Run(() => _deviceManager.MoveNext(1));
-            Task.Run(() => _deviceManager.MoveNext(2));
-            Task.Run(() => _deviceManager.MoveNext(3));
-            Task.Run(() => _deviceManager.MoveNext(4));
+            Task.Run(() => _deviceManager.FirstMoveAsync());
+
+           //Task.Run(() => _deviceManager.MoveNext(1));
+           //Task.Run(() => _deviceManager.MoveNext(2));
+           //Task.Run(() => _deviceManager.MoveNext(3));
+           //Task.Run(() => _deviceManager.MoveNext(4));
 
             Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-            //var sb = new StringBuilder();
-            //foreach (var item in newList)
-            //{
-            //    sb.AppendLine(item.CurrentInventoryLocation.Location.Slot + "  Sequence: " + item.Sequence);
-            //}
-            //MessageBox.Show(sb.ToString());
             Task.Run(() => _logger.Log($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
             return newList;
         }
@@ -3781,22 +3712,12 @@ namespace Neutron.Forms
                     }
                     else
                     {
-
                         break;
                     }
                 }
                 prevLoc1 = 0;
                 prevLoc2 = 0;
-            } //while loop car 1
-
-            //var sb = new StringBuilder();
-            //foreach (var item in newList)
-            //{
-            //    sb.AppendLine(item.Slot);
-            //}
-
-            //MessageBox.Show(sb.ToString());
-
+            }
 
             return newList;
         }
@@ -4090,7 +4011,7 @@ namespace Neutron.Forms
             LabelPrimeBin.Visible = _currentPickStop.CurrentInventoryLocation.PrimeBin;
             LabelStaticRelease.Text = _currentPickStop.CurrentInventoryLocation.StorageType.Name;
 
-            PositionDevice(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4.ParseInt(), true);
+         //   PositionDevice(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4.ParseInt(), true);
             ShowShi(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4, _currentPickStop.QuantityToBePicked.ToString());
 
             Task.Run(() => _logger.Log($"UpdateInventoryLocation End : [{DateTime.Now.ToLongTimeString()}]"));
@@ -6654,11 +6575,11 @@ namespace Neutron.Forms
                     Task.Run(() => _logger.Log($"Reset After Hot Action : [{DateTime.Now.ToLongTimeString()}]"));
                 }
 
-                var location = _currentPickStop.CurrentInventoryLocation.Location;
+                //var location = _currentPickStop.CurrentInventoryLocation.Location;
 
-                _logger.Log($"After Reset get _currentPickStop.CurrentInventoryLocation.Location: {location.Slot}");
+               // _logger.Log($"After Reset get _currentPickStop.CurrentInventoryLocation.Location: {location.Slot}");
 
-                PositionDevice(location.Loc1, location.Loc2, location.Loc3, location.Loc4, true);
+               // PositionDevice(location.Loc1, location.Loc2, location.Loc3, location.Loc4, true);
             }
         }
 

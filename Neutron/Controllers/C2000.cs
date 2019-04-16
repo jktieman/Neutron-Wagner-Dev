@@ -134,17 +134,17 @@ namespace Neutron.Controllers
         }
 
 
-        private int InitStatus()
+        public int InitStatus()
         {
-            // Note that the sequesnce of the following assignments is critical. Success must be first. Others follow in any sequence.
-            bool success = Shuttle_1.Init_Success;
-            int initCode = Shuttle_1.LastStatus_Code;
-            string initMsg = Shuttle_1.LastStatus_Message;
+            // Note that the sequence of the following assignments is critical. Success must be first. Others follow in any sequence.
+            var success = Shuttle_1.Init_Success;
+            var initCode = Shuttle_1.LastStatus_Code;
+            var initMsg = Shuttle_1.LastStatus_Message;
             Task.Run(() => _logger.Log($"InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
             if (success)
             {
                 // life is good, you can drive the device
-                Task.Run(() => _logger.Log($"InitStatus: success is {success}"));
+                Task.Run(() => _logger.Log($"InitStatus: success is true"));
                 if (initCode == 0)
                 {
                     // life is good, no warning messages
@@ -152,8 +152,12 @@ namespace Neutron.Controllers
                 }
                 else
                 {
+                    MessageBox.Show($"Controller Warning - Initialization was successful but there is a warning. " +
+                                    $"{Environment.NewLine} Please provide the following information to your IT support. " +
+                                    $"{Environment.NewLine} Code is: {initCode} {Environment.NewLine} Message is: {initMsg}");
+
                     // You need to report the warning to the operator or to a log that is monitored frequently
-                    Task.Run(() => _logger.Log($"Kardex Controller Warning - Initialization was successful but there is a warning." + Environment.NewLine +
+                    Task.Run(() => _logger.Log($"Controller Warning - Initialization was successful but there is a warning." + Environment.NewLine +
                     "Please provide the following information to your IT support." + Environment.NewLine +
                     "Code is: " + initCode.ToString() + Environment.NewLine +
                     "Message is: " + initMsg));
@@ -181,7 +185,7 @@ namespace Neutron.Controllers
 
         public void ShowMessage(string msg)
         {
-            // MessageBox.Show(msg);
+            MessageBox.Show(msg);
         }
 
         /*
@@ -191,27 +195,25 @@ namespace Neutron.Controllers
         public static void MyInitProgressDelegate(object formObject)
         {
 
-            //Hart_DC_Init myInit_Progress = (Hart_DC_Init) formObject;
-
-
+            var myInitProgress = (Hart_DC_Init) formObject;
 
             //// This method is running in the UI synchronization context.
             //// You just need to create a reference to your original object
-            //var Original_CallingObject = (C2000) myInit_Progress.CallersObj;
+            var originalCallingObject = (C2000) myInitProgress.CallersObj;
             //// You may now refer to any components of your UI if
             //// you prefix them with: Original_Form_Alias.
 
-            //var newForm = (FrmMain) Original_CallingObject.currentForm;
+            var newForm = (FrmMain) originalCallingObject.CurrentForm; 
 
-            //newForm.UpdateInitStatus(myInit_Progress.Success, myInit_Progress.PercentComplete);
+           // newForm.UpdateInitStatus(myInit_Progress.Success, myInit_Progress.PercentComplete);
 
 
             // This method is running in the UI synchronization context.
             //// You just need to create a reference to your original object
-            //var formAlias = (C2000) formObject;
+         //   var formAlias = (C2000) formObject;
             //// You may now refer to any components of your UI as below.
             //// formAlias.LabelNotify.Text = "Init " + formAlias.Shuttle_1.Init_PercentageComplete.ToString() + "% complete...";
-            //formAlias.ShowMessage("Init " + formAlias.Shuttle_1.Get_Init_PercentageComplete().ToString() + "% complete...");
+        //    formAlias.ShowMessage("Init " + formAlias.Shuttle_1.Get_Init_PercentageComplete().ToString() + "% complete...");
         }
 
         public static void MyTrayArrived(Hart_DeviceNotificationType firedNotification)
@@ -219,10 +221,10 @@ namespace Neutron.Controllers
             // This method is running in the UI synchronization context but
             // you need to create a reference to your original form in order
             //// to reference any of its controls.
-            //var formAlias = (C2000) firedNotification.CallersObject;
+            var formAlias = (C2000) firedNotification.CallersObject;
             //// You may now refer to any components of your UI as below.
             //// formAlias.LabelNotify.Text = "Drive Notification Received";
-            //formAlias.ShowMessage("Drive Notification Received");
+            formAlias.ShowMessage("Drive Notification Received");
             //Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} Notification"));
 
             //if (firedNotification.Message.ToString().Length > 0)

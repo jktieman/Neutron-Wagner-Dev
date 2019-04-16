@@ -187,6 +187,7 @@
     <Compile Include="Enums\ControllerTypeEnum.cs" />
     <Compile Include="Enums\CurrentDataSet.cs" />
     <Compile Include="Enums\DeviceResponse.cs" />
+    <Compile Include="Enums\LineStatus.cs" />
     <Compile Include="Enums\NeutronSecurity.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\StorageType.cs" />

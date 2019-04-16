@@ -116,7 +116,7 @@ namespace Neutron.Controllers
             }
         }
 
-        private int InitStatus()
+        public int InitStatus()
         {
             // Note that the sequesnce of the following assignments is critical. Success must be first. Others follow in any sequence.
             bool success = Shuttle_1.Init_Success;

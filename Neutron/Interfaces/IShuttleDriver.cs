@@ -14,5 +14,6 @@ namespace Neutron.Interfaces
         DeviceResponse Park();
         void CloseController();
         Hart_DeviceStatusType GetDeviceStatus(int deviceNumber);
+        int InitStatus();
     }
 }

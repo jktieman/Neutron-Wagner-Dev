@@ -6,10 +6,12 @@ using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
+using Hart_DeviceControllers;
 
 namespace Neutron.Models
 {
@@ -35,7 +37,7 @@ namespace Neutron.Models
             //_currentLocations[3] = null;
             //_currentLocations[4] = null;
 
-            DeviceMover mover = CreateDeviceMover(deviceNumber: 1, carList: car1List);
+            var mover = CreateDeviceMover(deviceNumber: 1, carList: car1List);
             _deviceMovers.Add(mover);
 
 
@@ -100,7 +102,7 @@ namespace Neutron.Models
 
         private DeviceMover CreateDeviceMover(int deviceNumber, List<PickStop> carList)
         {
-            bool firstLocation = true;
+            var firstLocation = true;
             var locs = new List<Location>();
             foreach (var pickStop in carList)
             {
@@ -114,152 +116,139 @@ namespace Neutron.Models
             return new DeviceMover(deviceNumber, locs);
         }
 
+        public async Task FirstMoveAsync()
+        {
+            _firstMove = true;
+            await MoveNext(1);
+            await MoveNext(2);
+            await MoveNext(3);
+            await MoveNext(4);
+            _firstMove = false;
+        }
+
         public async Task MoveNext(int deviceNumber)
         {
+            var sb = new StringBuilder();
             try
             {
-                Task.Run(() => _logger.Log($"DeviceManager 1 - Move Next Device Number: {deviceNumber}"));
+                sb.AppendLine($"");
+                sb.AppendLine($"Device Number passed in: {deviceNumber}");
+                sb.AppendLine($"Start loop thru all devices.");
                 for (var index = 0; index < _deviceMovers.Count; index++)
                 {
-                    Task.Run(() => _logger.Log($"DeviceManager - 2 - Index: {index} DeviceMover Count: {_deviceMovers.Count}"));
                     var deviceMover = _deviceMovers[index];
 
-                    Task.Run(() => _logger.Log($"DeviceManager - 3 Check MoverNumber: {deviceMover.MoverNumber} with deviceNumber {deviceNumber}"));
+                    sb.AppendLine($"Device Mover: {deviceMover.MoverNumber}");
                     if (deviceMover.MoverNumber == deviceNumber)
                     {
-                        Task.Run(() => _logger.Log($"DeviceManager - 4  - Equal Numbers"));
-
-                        Location location = deviceMover.MoveNext();
+                        sb.AppendLine($"This is the targeted Device Mover, move to next Location");
+                        var location = deviceMover.MoveNext();
 
                         if (location != null)
                         {
-                            _logger.Log($"DeviceManager - 5  MoveNext Location: {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4} ");
+                            sb.AppendLine(
+                                $"Next Location: {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4} ");
 
                             _currentLocations[deviceNumber] = location;
-                            Task.Run(() => _logger.Log($"DeviceManager - 7 Moving to next Location"));
+
                             if (_shuttleEnabled)
                             {
                                 if (GlobalVar.Shuttle != null)
                                 {
-                                    int loc1 = location.Loc1;
-                                    int loc2 = location.Loc2;
+                                    var loc1 = location.Loc1;
+                                    var loc2 = location.Loc2;
 
-                                    Task.Run(() => _logger.Log($"DeviceManager MoveNext Location: {loc1} - {loc2}  Getting Status of {deviceNumber}"));
-                                    
+                                    sb.AppendLine($"Getting Status of {deviceNumber}");
                                     var status = await Task.Run(() => GlobalVar.Shuttle.GetDeviceStatus(deviceNumber));
 
-
-                                    var msg = "Device: \t" + status.Device.ToString() + "\n" +
-                                          "Target Tray: \t" + status.Target_Tray.ToString() + "\n" +
-                                          "Current Tray: \t" + status.Current_Tray.ToString() + "\n" +
-                                          "In Motion: \t" + status.In_Motion.ToString() + "\n" +
-                                          "In Alignment: \t" + status.In_Alignment.ToString() + "\n" +
-                                          "Last Command: \t" + status.Last_Command.ToString("G") + "\n" +
-                                          "Last Status: \t" + status.Last_Status.ToString("G") + "\n" +
-                                          "Message: \t" + status.Status_Message.ToString();
-
-                                    Task.Run(() => _logger.Log($"Check In-Motion and In_Alignment {Environment.NewLine}{msg}"));
-
-
-                                    if (status.Current_Tray != loc2)
+                                    if (status.In_Motion)
                                     {
-                                        Task.Run(() => _logger.Log($"Current: {status.Current_Tray}  New Location: {loc2}  Position Tray"));
+                                        sb.AppendLine($"Device {deviceMover.MoverNumber} is in Motion.");
+                                        var sb1 = sb;
+                                        Task.Run(() => _logger.Log($"{sb1}"));
 
-                                        var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
-
-                                        Task.Run(() => _logger.Log($"DeviceManager MoveNext Response: {response.Result.AsString(EnumFormat.Description)} to Position Tray"));
-
-                                        if (response.Result != DeviceResponse.Success)
-                                        {
-                                            if (response.Result == DeviceResponse.TrayDidNotArrive)
-                                            {
-                                                Task.Run(() => _logger.Log($"Tray did not arrive response."));
-                                            }
-                                            else
-                                            {
-                                                MessageBox.Show(response.Result.AsString(EnumFormat.Description),
-                                                    caption: "Device Response Move Next"
-                                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                                            }
-                                        }
-
+                                        var num = deviceMover.MoverNumber;
+                                       await Task.Run(() => ProcessInMotion(num, loc2));
+                                        //ProcessInMotion(num, loc2);
                                     }
                                     else
                                     {
-                                        Task.Run(() => _logger.Log($"DeviceManager MoveNext Location - Carousel in Position, no need to turn."));
+                                        sb.AppendLine($"Device: {status.Device}");
+                                        sb.AppendLine($"Target Tray: {status.Target_Tray}");
+                                        sb.AppendLine($"Current Tray: {status.Current_Tray}");
+                                        sb.AppendLine($"In Motion: {status.In_Motion}");
+                                        sb.AppendLine($"In Alignment: {status.In_Alignment}");
+                                        sb.AppendLine($"Last Command: {status.Last_Command:G}");
+                                        sb.AppendLine($"Last Status: {status.Last_Status:G}");
+                                        sb.AppendLine($"Message: {status.Status_Message}");
+                                        sb.AppendLine();
+                                        sb.AppendLine($"Device {deviceMover.MoverNumber} is in Stopped.");
+                                        var sb1 = sb;
+                                        Task.Run(() => _logger.Log($"{sb1}"));
+                                       await Task.Run(() => VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2));
+                                       // VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2);
                                     }
                                 }
                             }
+                            else
+                            {
+                                sb.AppendLine("Shuttle Not Enabled.");
+                            }
                         }
+                        else
+                        {
+                            sb.AppendLine("Location is null.");
+                        }
+
+                        var sb2 = sb;
+                       // Task.Run(() => _logger.Log($"{sb2}"));
                     }
                     else
                     {
                         if (!_firstMove)
                         {
+                            sb = new StringBuilder();
+
                             //resend to the others, their current location
-                            if (_shuttleEnabled)
+                            if (!_shuttleEnabled) continue;
+                            if (GlobalVar.Shuttle == null) continue;
+                            sb.AppendLine($"Checking/Verifying Device Mover Status and Location of Mover Number: {deviceMover.MoverNumber}");
+                            var location = _currentLocations[deviceMover.MoverNumber];
+                            if (location == null) continue;
+                            var loc1 = location.Loc1;
+                            var loc2 = location.Loc2;
+                            sb.AppendLine($"Mover Number: {deviceMover.MoverNumber} is supposed to be at Location:  {loc1} - {loc2} ");
+
+                            var status = await Task.Run(() =>
+                                GlobalVar.Shuttle.GetDeviceStatus(deviceMover.MoverNumber));
+
+                            if (status.In_Motion)
                             {
-                                if (GlobalVar.Shuttle != null)
-                                {
-
-                                    Task.Run(() => _logger.Log($"DeviceManager - 8 Not the MoveNext DeviceMover, just Check and Reset DeviceMover Number: {deviceMover.MoverNumber}"));
-                                    var location = _currentLocations[deviceMover.MoverNumber];
-                                    if (location != null)
-                                    {
-                                        Task.Run(() => _logger.Log($"DeviceManager - 10: Have location, do we need to turn?"));
-                                        int loc1 = location.Loc1;
-                                        int loc2 = location.Loc2;
-
-                                        Task.Run(() => _logger.Log($"DeviceManager Current Location: {loc1} - {loc2}  Getting Status"));
-
-                                        var status = await Task.Run(() => GlobalVar.Shuttle.GetDeviceStatus(deviceMover.MoverNumber));
-
-
-                                        var msg = "Device: \t" + status.Device.ToString() + "\n" +  
-                                                  "Target Tray: \t" + status.Target_Tray.ToString() + "\n" +
-                                                  "Current Tray: \t" + status.Current_Tray.ToString() + "\n" +
-                                                  "In Motion: \t" + status.In_Motion.ToString() + "\n" +
-                                                  "In Alignment: \t" + status.In_Alignment.ToString() + "\n" +
-                                                  "Last Command: \t" + status.Last_Command.ToString("G") + "\n" +
-                                                  "Last Status: \t" + status.Last_Status.ToString("G") + "\n" +
-                                                  "Message: \t" + status.Status_Message.ToString();
-
-                                        Task.Run(() => _logger.Log($"{msg}"));
-                          
-                                        if (status.Current_Tray != loc2 && status.In_Motion == false)
-                                        {
-                                            Task.Run(() => _logger.Log($"Says that the Current Tray {status.Current_Tray} is NOT equal to {loc2} AND the carousel is NOT in motion and needs to move."));
-
-                                            var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
-
-                                            Task.Run(() => _logger.Log($"DeviceManager Reset Response: {response.Result.AsString(EnumFormat.Description)}"));
-
-                                            if (response.Result != DeviceResponse.Success)
-                                            {
-                                                if (response.Result == DeviceResponse.TrayDidNotArrive)
-                                                {
-                                                    Task.Run(() => _logger.Log($"Reset - Tray did not arrive response."));
-                                                }
-                                                else
-                                                {
-                                                    MessageBox.Show(response.Result.AsString(EnumFormat.Description),
-                                                        caption: "Device Response Reset"
-                                                        , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                                                }
-                                            }
-
-                                        }
-                                        else
-                                        {
-                                            Task.Run(() => _logger.Log($"Carousel in Position, no need to turn."));
-                                        }
-                                    }
-                                }
+                                sb.AppendLine($"Device {deviceMover.MoverNumber} is in Motion.");
+                                var sb1 = sb;
+                                Task.Run(() => _logger.Log($"{sb1.ToString()}"));
+                                await Task.Run(() => ProcessInMotion(deviceMover.MoverNumber, loc2));
+                                //ProcessInMotion(deviceMover.MoverNumber, loc2);
                             }
-                        }
-                        else
-                        {
-                            _firstMove = false;
+                            else
+                            {
+                                sb.AppendLine($"Device: {status.Device}");
+                                sb.AppendLine($"Target Tray: {status.Target_Tray}");
+                                sb.AppendLine($"Current Tray: {status.Current_Tray}");
+                                sb.AppendLine($"In Motion: {status.In_Motion}");
+                                sb.AppendLine($"In Alignment: {status.In_Alignment}");
+                                sb.AppendLine($"Last Command: {status.Last_Command:G}");
+                                sb.AppendLine($"Last Status: {status.Last_Status:G}");
+                                sb.AppendLine($"Message: {status.Status_Message}");
+                                sb.AppendLine();
+                                sb.AppendLine($"Device {deviceMover.MoverNumber} is in Stopped.");
+                                var sb1 = sb;
+                                Task.Run(() => _logger.Log($"{sb1}"));
+                                await Task.Run(() => VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2));
+                                //VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2);
+                            }
+                            var sb2 = sb;
+                            Task.Run(() => _logger.Log($"{sb2}"));
                         }
                     }
                 }
@@ -269,74 +258,114 @@ namespace Neutron.Models
                 Task.Run(() => _logger.Log($"Device Manager Move Next Error: {ex.Message} {Environment.NewLine} {ex.InnerException}"));
             }
 
+            //Task.Run(() => _logger.Log($"{sb.ToString()}"));
         }
 
-        //public void MoveNext(int deviceNumber)
-        //{
-        //    foreach (var deviceMover in _deviceMovers)
-        //    {
-        //        if (deviceMover.MoverNumber == deviceNumber)
-        //        {
-        //            Location location = deviceMover.MoveNext();
-        //            if (location != null)
-        //            {
-        //                _currentLocations[deviceNumber] = location;
-        //                if (_shuttleEnabled)
-        //                {
-        //                    if (GlobalVar.Shuttle != null)
-        //                    {
-        //                        int loc1 = location.Loc1;
-        //                        int loc2 = location.Loc2;
+        private void VerifyMoveLocation(int deviceMoverMoverNumber, int currentTray, int loc2)
+        {
+            var sb = new StringBuilder();
 
-        //                        Task.Run(() => _logger.Log($"DeviceManager MoveNext: {loc1} - {loc2}"));
+            sb.AppendLine($"VML-Check to see if Status.Current_Tray: {currentTray} is equal to the _currentLocations[x] Tray Number: {loc2} .");
+            if (currentTray != loc2)
+            {
+                sb.AppendLine($"VML-Trays are not the same.  Current: {currentTray}  New Location: {loc2}");
+                sb.AppendLine($"VML-Move it... {deviceMoverMoverNumber}--{loc2}");
 
-        //                        Task <DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
+                var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(deviceMoverMoverNumber, loc2));
 
-        //                        Task.Run(() => _logger.Log($"DeviceManager MoveNext Response: {response.Result}"));
+                sb.AppendLine($"VML-DeviceManager MoveNext Response: {response.Result.AsString(EnumFormat.Description)} to Position Tray");
+                switch (response.Result)
+                {
+                    case DeviceResponse.Success:
+                        sb.AppendLine($"VML-Success");
+                        break;
+                    case DeviceResponse.TrayDidNotArrive:
+                        sb.AppendLine($"VML-Tray did not Arrive.");
+                        break;
+                    default:
+                        sb.AppendLine(
+                            $"VML-Response Result: {response.Result.AsString(EnumFormat.Description)}");
+                        MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                            caption: "Device Response Move Next"
+                            , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                        break;
+                }
+            }
+            else
+            {
+                sb.AppendLine($"VML-Verify Move Location: Carousel in Position. {deviceMoverMoverNumber}--{currentTray}--{loc2}");
+            }
+            Task.Run(() => _logger.Log($"{sb}"));
+        }
 
-        //                        if (response.Result != DeviceResponse.Success)
-        //                        {
-        //                            MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: "Device Response Move Next"
-        //                                , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        //                        }
-        //                    }
-        //                }
-        //            }
+        private void ProcessInMotion(int deviceMoverMoverNumber, int loc2)
+        {
+            var sb = new StringBuilder();
+            var counter = 0;
+            var inMotion = true;
+            var inAlignment = false;
+            var status = new Hart_DeviceStatusType();
+            sb.AppendLine($"PIM-Process In Motion.  Device: {deviceMoverMoverNumber}--{loc2}");
+            while (inMotion == true && inAlignment == false)
+            {
+                counter++;
+                if (counter >= 30)
+                {
+                    sb.AppendLine($"PIM-Device never stopped. Tried for {counter} seconds.");
+                    goto EXITNOW;
+                }
+                sb.AppendLine($"PIM-Device: {deviceMoverMoverNumber} is in Motion for {counter} seconds.");
+                Task.Delay(1000);
+                status = GlobalVar.Shuttle.GetDeviceStatus(deviceMoverMoverNumber);
+                inMotion = status.In_Motion;
+                inAlignment = status.In_Alignment;
+            }
 
-        //        }
-        //        else
-        //        {
-        //            //resend to the others, their current location
-        //            if (_shuttleEnabled)
-        //            {
-        //                if (GlobalVar.Shuttle != null)
-        //                {
-        //                    var location = _currentLocations[deviceNumber];
-        //                    int loc1 = location.Loc1;
-        //                    int loc2 = location.Loc2;
+            sb.AppendLine($"PIM-Device: {status.Device}");
+            sb.AppendLine($"PIM-Target Tray: {status.Target_Tray}");
+            sb.AppendLine($"PIM-Current Tray: {status.Current_Tray}");
+            sb.AppendLine($"PIM-In Motion: {status.In_Motion}");
+            sb.AppendLine($"PIM-In Alignment: {status.In_Alignment}");
+            sb.AppendLine($"PIM-Last Command: {status.Last_Command:G}");
+            sb.AppendLine($"PIM-Last Status: {status.Last_Status:G}");
+            sb.AppendLine($"PIM-Message: {status.Status_Message}");
 
-        //                    Task.Run(() => _logger.Log($"DeviceManager Current Location: {loc1} - {loc2}"));
+            sb.AppendLine($"PIM-Check to see if Status.Current_Tray: {status.Current_Tray} is equal to the _currentLocations Tray Number: {loc2} .");
+            if (status.Current_Tray != loc2)
+            {
+                sb.AppendLine($"PIM-Trays are not the same.  Current: {status.Current_Tray}  New Location: {loc2}");
+                sb.AppendLine($"PIM-Move it... {deviceMoverMoverNumber}--{loc2}");
+                var response = GlobalVar.Shuttle.PositionDevice(deviceMoverMoverNumber, loc2);
+                sb.AppendLine($"PIM-DeviceManager MoveNext Response: {response.AsString(EnumFormat.Description)} to Position Tray");
 
-        //                    Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
-
-        //                    Task.Run(() => _logger.Log($"DeviceManager Current Location Response: {response.Result}"));
-
-        //                    if (response.Result != DeviceResponse.Success)
-        //                    {
-        //                        MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: "Device Response Current Location"
-        //                            , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-        //                    }
-        //                }
-        //            }
-
-        //        }
-
-        //    }
-        //}
+                switch (response)
+                {
+                    case DeviceResponse.Success:
+                        sb.AppendLine($"PIM-Success");
+                        break;
+                    case DeviceResponse.TrayDidNotArrive:
+                        sb.AppendLine($"PIM-Tray did not Arrive.");
+                        break;
+                    default:
+                        sb.AppendLine($"PIM-Response Result: {response.AsString(EnumFormat.Description)}");
+                        MessageBox.Show(response.AsString(EnumFormat.Description),
+                            caption: "Device Response Move Next"
+                            , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                        break;
+                }
+            }
+            else
+            {
+                sb.AppendLine($"PIM-Process In Motion - Carousel in Position. {deviceMoverMoverNumber}--{loc2}");
+            }
+EXITNOW:
+            Task.Run(() => _logger.Log($"{sb}"));
+        }
 
         public void Reset()
         {
-            _logger.Log($"");
+            var sb = new StringBuilder();
+            sb.AppendLine($"Reset");
             for (var index = 1; index <= 4; index++)
             {
                 var location = _currentLocations[index];
@@ -347,24 +376,57 @@ namespace Neutron.Models
                         if (GlobalVar.Shuttle != null)
                         {
                             var loc1 = location.Loc1;
-                            int loc2 = location.Loc2;
+                            var loc2 = location.Loc2;
 
-                            Task.Run(() => _logger.Log($"RESET FUNCTION Position Device: {loc1}-{loc2}"));
+                            sb.AppendLine($"RESET FUNCTION Position Device: {loc1}-{loc2}");
 
-                            var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
+                            var status = GlobalVar.Shuttle.GetDeviceStatus(loc1);
 
-                            Task.Run(() => _logger.Log($"RESET FUNCTION: Response = {response.Result.AsString(EnumFormat.Description)}"));
-
-                            if (response.Result != DeviceResponse.Success)
+                            if (status.In_Motion)
                             {
-                                MessageBox.Show(response.Result.AsString(EnumFormat.Description),
-                                    caption: @"Device Response Reset"
-                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                                sb.AppendLine($"Device {loc1} is in Motion.");
+                                var sb1 = sb;
+                                sb.AppendLine($"{sb1.ToString()}");
+                                ProcessInMotion(loc1, loc2);
                             }
+                            else
+                            {
+                                sb.AppendLine($"Device: {status.Device}");
+                                sb.AppendLine($"Target Tray: {status.Target_Tray}");
+                                sb.AppendLine($"Current Tray: {status.Current_Tray}");
+                                sb.AppendLine($"In Motion: {status.In_Motion}");
+                                sb.AppendLine($"In Alignment: {status.In_Alignment}");
+                                sb.AppendLine($"Last Command: {status.Last_Command:G}");
+                                sb.AppendLine($"Last Status: {status.Last_Status:G}");
+                                sb.AppendLine($"Message: {status.Status_Message}");
+                                sb.AppendLine();
+                                sb.AppendLine($"Device {loc1} is in Stopped.");
+                                var sb1 = sb;
+                                sb.AppendLine($"{sb1}");
+                                VerifyMoveLocation(loc1, status.Current_Tray, loc2);
+                            }
+
+
+
+
+
+
+                            //--------------------------
+                            //var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
+
+                            //Task.Run(() => _logger.Log($"RESET FUNCTION: Response = {response.Result.AsString(EnumFormat.Description)}"));
+
+                            //if (response.Result != DeviceResponse.Success)
+                            //{
+                            //    MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                            //        caption: @"Device Response Reset"
+                            //        , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            //}
                         }
                     }
                 }
             }
+            Task.Run(() => _logger.Log($"{sb}"));
         }
     }
 }

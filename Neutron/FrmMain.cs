@@ -255,6 +255,7 @@ namespace Neutron
                         {
                             _logger.Log("C3000 Controller.");
                             GlobalVar.Shuttle = new C3000(this, _station);
+                            GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
                         }
 
@@ -262,6 +263,7 @@ namespace Neutron
                         {
                             _logger.Log("C2000 Controller.");
                             GlobalVar.Shuttle = new C2000(this, _station);
+                            GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
                         }
 
@@ -269,6 +271,7 @@ namespace Neutron
                         {
                             _logger.Log("RCC2 Controller.");
                             GlobalVar.Shuttle = new RCC2(this, _station);
+                            GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
                         }
                     }
