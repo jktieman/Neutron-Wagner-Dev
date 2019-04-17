@@ -16,7 +16,7 @@ namespace NeutronData.Models
         public int ItemDefinitionId { get; set; }
         public int LocationId { get; set; }
         public int Quantity { get; set; }
-        public DateTime? ReceivedDate { get; set; }
+        public DateTime ReceivedDate { get; set; }
         public bool PrimeBin { get; set; }
         public int StationId { get; set; }
         public int StorageTypeId { get; set; }

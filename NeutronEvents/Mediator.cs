@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Configuration;
 using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using NeutronData.Models;
@@ -79,6 +80,20 @@ namespace NeutronEvents
         public void OnStartStopLoader(object sender, string startStop)
         {
             StartStopLoader?.Invoke(this, new StartStopLoaderEventArgs {StartStop = startStop});
+        }
+
+        public event EventHandler<EventArgs> InventoryFileCreated;
+
+        public void OnInventoryFileCreated(object sender)
+        {
+            InventoryFileCreated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler<InventoryFileCreatedErrorEventArgs> InventoryFileCreatedError;
+
+        public void OnInventoryFileCreatedError(object sender, string msg)
+        {
+            InventoryFileCreatedError?.Invoke(this, new InventoryFileCreatedErrorEventArgs {Text = msg});
         }
     }
 }

@@ -237,7 +237,7 @@ namespace NeutronCore
 
         public static void Init(string configFilePath)
         {
-            var result = false;
+           // var result = false;
             try
             {
                 if (PathExists(_rootDirectory))
@@ -283,13 +283,13 @@ namespace NeutronCore
                             SetLanguageDirectory(tokens[13]);
                         }
                     }
-                    result = true;
+                    //result = true;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Check the Loader Settings file for missing fields.  {ex.Message}  {ex.InnerException}");
-                result = false;
+               // result = false;
             }
             //return result;
         }

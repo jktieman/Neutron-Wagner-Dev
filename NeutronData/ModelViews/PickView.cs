@@ -1,4 +1,5 @@
-﻿using NeutronData.Models;
+﻿using System;
+using NeutronData.Models;
 using System.Collections.Generic;
 
 namespace NeutronData.ModelViews
@@ -33,7 +34,7 @@ namespace NeutronData.ModelViews
         public int TotalQuantityInInventory { get; set; }
         public List<ItemImage> Images { get; set; }
         public List<PickLocation> PickLocations { get; set; }
-        public string ReceivedDate { get; set; }
+        public DateTime ReceivedDate { get; set; }
         public int StationNumber { get; set; }
         public int GetQuantityToBePicked()
         {

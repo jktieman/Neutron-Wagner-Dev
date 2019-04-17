@@ -68,6 +68,13 @@ namespace Neutron
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _startStopLoaderManager = new StartStopLoaderManager(_jsonData,_logger);
             GlobalVar.HistoryManager = new HistoryManager();
+
+            Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
+                , "Inventory File", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+            Mediator.GetInstance().InventoryFileCreatedError += (s, e) => MessageBox.Show(e.Text, "Inventory File Error"
+                , MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
             LogOnOff();
             if (InitForm()) return;
             LogOnOff();

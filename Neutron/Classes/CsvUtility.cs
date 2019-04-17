@@ -7,11 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Neutron.Models;
+using NeutronData.DataContexts;
+using NeutronData.Models;
+using NeutronData.Repositories;
+using NeutronEvents;
 
 namespace Neutron.Classes
 {
     public static class CsvUtility
     {
+        private static readonly GenericRepository<Inventory> RepoInventory = new GenericRepository<Inventory>(new NeutronDb());
+
         public static void SaveToCsv(DataGridView dgv)
         {
 
@@ -68,6 +75,127 @@ namespace Neutron.Classes
                 System.IO.File.WriteAllLines(sfd.FileName, output, System.Text.Encoding.UTF8);
                 MessageBox.Show("Your file was generated and its ready for use.");
             }
+        }
+
+        public static void SaveToCsv(string fileName, string stationNumber)
+        {
+            try
+            {
+                List<Inventory> inventory;
+                if (stationNumber == "ALL")
+                {
+                    inventory = RepoInventory.All().OrderBy(o => o.ItemDefinition.Item).ToList();
+                }
+                else
+                {
+                    var stationNum = stationNumber.ParseInt();
+                    inventory = RepoInventory.All().Where(r => r.Station.StationNumber == stationNum).OrderBy(o => o.ItemDefinition.Item).ToList();
+                }
+                const string columnNames = "sku" +
+                                           ",Description" +
+                                           ",Unit-Of_Issue" +
+                                           ",CAROUSEL" +
+                                           ",Bin" +
+                                           ",Level" +
+                                           ",PARTITION" +
+                                           ",QUANTITY" +
+                                           ",RCV-DATE" +
+                                           ",LAST C/C" +
+                                           ",Sku-Type" +
+                                           ",Scale" +
+                                           ",Velocity-Class" +
+                                           ",Size-Class" +
+                                           ",Height-Class" +
+                                           ",C/C-Class" +
+                                           ",Sel-Class" +
+                                           ",Segment rcvg" +
+                                           ",O/C Trigger" +
+                                           ",Weight" +
+                                           ",Length" +
+                                           ",Capacity" +
+                                           ",Cube" +
+                                           ",Trigger" +
+                                           ",System Cap" +
+                                           ",Sys Rep Trg" +
+                                           ",Quarantined";
+
+                var output = new List<string>();
+                output.Add(columnNames);
+                foreach (var inv in inventory)
+                {
+                    var sb = new StringBuilder();
+
+                    sb.Append(inv.ItemDefinition.Item + ",");
+                    sb.Append(inv.ItemDefinition.Description + ",");
+                    sb.Append(inv.ItemDefinition.UnitOfIssue.Name + ",");
+                    sb.Append(inv.Location.Loc1.ToString() + ",");
+                    sb.Append(inv.Location.Loc2.ToString() + ",");
+                    sb.Append(inv.Location.Loc3.ToString() + ",");
+                    sb.Append(inv.Location.Loc4.ToString() + ",");
+                    sb.Append(inv.Quantity.ToString() + ",");
+                    sb.Append(inv.ReceivedDate.ToString("G") + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(inv.StorageType.Name + ",");
+                    sb.Append("No" + ",");
+                    sb.Append(inv.ItemDefinition.VelocityCode.Name + ",");
+                    sb.Append(inv.ItemDefinition.SizeCode.Name + ",");
+                    sb.Append(inv.ItemDefinition.HeightCode.Name + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(inv.ItemDefinition.LocationMax.ToString() + ",");
+                    sb.Append(string.Empty + ",");
+                    sb.Append(inv.ItemDefinition.LocationMin.ToString() + ",");
+                    sb.Append(inv.ItemDefinition.SystemMax.ToString() + ",");
+                    sb.Append(inv.ItemDefinition.SystemMin.ToString() + ",");
+                    sb.Append("No" + ",");
+
+                    output.Add(sb.ToString());
+
+                }
+
+                File.WriteAllLines(fileName, output, Encoding.UTF8);
+                Mediator.GetInstance().OnInventoryFileCreated(EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                var msg = ($"Create Inventory File Error {Environment.NewLine}" +
+                           $"Exception: {ex.Message} {Environment.NewLine}" +
+                           $"Inner Exception: {ex.InnerException}");
+                Mediator.GetInstance().OnInventoryFileCreatedError(null, msg);
+            }
+        }
+
+
+        private static string GetFileName()
+        {
+            var rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\CSV\");
+            if (!Directory.Exists(rootDirectory))
+            {
+                Directory.CreateDirectory(rootDirectory);
+            }
+            var sfd = new SaveFileDialog
+            {
+                InitialDirectory = rootDirectory,
+                Filter = "CSV (*.csv)|*.csv",
+                FileName = "Output.csv"
+            };
+            if (sfd.ShowDialog() != DialogResult.OK) return sfd.FileName;
+            MessageBox.Show("Data will be exported and you will be notified when it is ready.");
+            if (!File.Exists(sfd.FileName)) return sfd.FileName;
+            try
+            {
+                File.Delete(sfd.FileName);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+            }
+
+            return sfd.FileName;
         }
     }
 }

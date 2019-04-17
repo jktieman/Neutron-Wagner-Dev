@@ -102,6 +102,7 @@
             this.MBFillStarters = new MetroFramework.Controls.MetroButton();
             this.MBFill = new MetroFramework.Controls.MetroButton();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.TextBoxPos1 = new System.Windows.Forms.TextBox();
             this.LabelPos8 = new System.Windows.Forms.Label();
             this.LabelPos7 = new System.Windows.Forms.Label();
             this.TextBoxPos8 = new System.Windows.Forms.TextBox();
@@ -324,7 +325,6 @@
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
-            this.TextBoxPos1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -515,6 +515,7 @@
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
             this.ComboBoxStationNumber.Size = new System.Drawing.Size(58, 32);
             this.ComboBoxStationNumber.TabIndex = 24;
+            this.ComboBoxStationNumber.SelectedIndexChanged += new System.EventHandler(this.ComboBoxStationNumber_SelectedIndexChanged);
             // 
             // MBCompress
             // 
@@ -941,6 +942,16 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1137, 104);
             this.panel2.TabIndex = 113;
+            // 
+            // TextBoxPos1
+            // 
+            this.TextBoxPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos1.Location = new System.Drawing.Point(18, 44);
+            this.TextBoxPos1.Name = "TextBoxPos1";
+            this.TextBoxPos1.Size = new System.Drawing.Size(112, 29);
+            this.TextBoxPos1.TabIndex = 182;
+            this.TextBoxPos1.Tag = "0";
+            this.TextBoxPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelPos8
             // 
@@ -3789,16 +3800,6 @@
             // ToolTipPickScreen
             // 
             this.ToolTipPickScreen.IsBalloon = true;
-            // 
-            // TextBoxPos1
-            // 
-            this.TextBoxPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos1.Location = new System.Drawing.Point(18, 44);
-            this.TextBoxPos1.Name = "TextBoxPos1";
-            this.TextBoxPos1.Size = new System.Drawing.Size(112, 29);
-            this.TextBoxPos1.TabIndex = 182;
-            this.TextBoxPos1.Tag = "0";
-            this.TextBoxPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FrmPick
             // 

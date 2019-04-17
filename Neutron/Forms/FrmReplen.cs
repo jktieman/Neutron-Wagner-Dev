@@ -1406,7 +1406,7 @@ namespace Neutron.Forms
                     item.Slot = item.CurrentInventoryLocation.Location.Slot;
                     item.SlotQty = item.TotalQuantityInInventory;
                     item.InventoryIndex = 0;
-                    item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? "";
+                    item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate;
 
                     pickableViews.Add(item);
                 }
@@ -1562,7 +1562,7 @@ namespace Neutron.Forms
                 pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
                 pickView.SlotQty = pickView.CurrentInventoryLocation.Quantity;
                 pickView.InventoryIndex = 0;
-                pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? "";
+                pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
             }
             else
             {
@@ -2291,7 +2291,7 @@ namespace Neutron.Forms
                 , arg0: currentPickStop.InventoryIndex + 1, arg1: currentPickStop.Inventory.Count);
             TextBoxLocationQuantity.Text = currentPickStop.CurrentInventoryLocation.Quantity.ToString();
             TextBoxTotalQuantity.Text = currentPickStop.TotalQuantityInInventory.ToString();
-            TextBoxReceivedDate.Text = currentPickStop.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? string.Empty;
+            TextBoxReceivedDate.Text = currentPickStop.CurrentInventoryLocation.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = currentPickStop.CurrentInventoryLocation.PrimeBin;
             Task.Run(() => _logger.Log($"UpdateInventoryLocation End : [{System.DateTime.Now.ToLongTimeString()}]"));
         }
@@ -3814,7 +3814,7 @@ namespace Neutron.Forms
                                 item.Slot = item.CurrentInventoryLocation.Location.Slot;
                                 item.SlotQty = item.CurrentInventoryLocation.Quantity;
                                 item.InventoryIndex = 0;
-                                item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? "";
+                                item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate;
                             }
                             else
                             {

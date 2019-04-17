@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -26,6 +29,8 @@ using NeutronCore.Global;
 using NeutronCore;
 using NeutronData.Interfaces;
 using NeutronCore.Enums;
+using NeutronEvents;
+using PrintRequest;
 using StorageType = Neutron.Enums.StorageType;
 
 namespace Neutron.Forms
@@ -40,19 +45,34 @@ namespace Neutron.Forms
         private readonly BindingSource _locationBindingSource = new BindingSource();
         private readonly BindingSource _newLocationBindingSource = new BindingSource();
 
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition =
+            new GenericRepository<ItemDefinition>(new NeutronDb());
+
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
-        private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
-        private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
+
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode =
+            new GenericRepository<VelocityCode>(new NeutronDb());
+
+        private readonly GenericRepository<HeightCode> _repoHeightCode =
+            new GenericRepository<HeightCode>(new NeutronDb());
+
+        private readonly GenericRepository<LocationCode> _repoLocationCode =
+            new GenericRepository<LocationCode>(new NeutronDb());
+
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<NeutronData.Models.Lookups.StorageType> _repoStorageType = new GenericRepository<NeutronData.Models.Lookups.StorageType>(new NeutronDb());
-        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
+
+        private readonly GenericRepository<NeutronData.Models.Lookups.StorageType> _repoStorageType =
+            new GenericRepository<NeutronData.Models.Lookups.StorageType>(new NeutronDb());
+
+        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue =
+            new GenericRepository<UnitOfIssue>(new NeutronDb());
 
         private readonly StationRepository _repoStation = new StationRepository();
+
         private readonly LocationsRepository _locationsRepository;
-       // private readonly HistoryManager GlobalVar.HistoryManager = new HistoryManager();
+
+        // private readonly HistoryManager GlobalVar.HistoryManager = new HistoryManager();
         private readonly InventoryRepository _inventoryRepository = new InventoryRepository();
 
         private readonly IJsonData _jsonData;
@@ -68,7 +88,8 @@ namespace Neutron.Forms
         public Inventory CurrentInventoryItem { get; set; }
         public bool CloseButtonPressed { get; set; }
 
-        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository, INomenclature nomenclature)
+        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
+            INomenclature nomenclature)
         {
             InitializeComponent();
 
@@ -100,6 +121,10 @@ namespace Neutron.Forms
             {
                 CheckBoxAllStations.Checked = true;
             }
+
+            ComboBoxStationNumber.SelectedIndex = 0;
+            //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
+            //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private void FrmInventory_Load(object sender, EventArgs e)
@@ -120,7 +145,9 @@ namespace Neutron.Forms
             string find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
 
-            views = CheckBoxAllStations.Checked ? _inventoryRepository.FindInventoryViews(find) : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
+            views = CheckBoxAllStations.Checked
+                ? _inventoryRepository.FindInventoryViews(find)
+                : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
 
             _bindingSourceEquin = new BindingListView<SqlInventoryView>(views.ToList());
             _bindingSource.DataSource = _bindingSourceEquin;
@@ -145,6 +172,7 @@ namespace Neutron.Forms
                 {
                     DataGridView1.ClearSelection();
                 }
+
                 DataGridView1.Refresh();
                 DataGridView1.ClearSelection();
                 SetCurrentInventoryItem();
@@ -185,7 +213,8 @@ namespace Neutron.Forms
         {
             if (_bindingSource.Current != null)
             {
-                int itemDefinitionId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).ItemDefinitionId;
+                int itemDefinitionId =
+                    (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).ItemDefinitionId;
                 CurrentItem = _repoItemDefinition.FindByKey(itemDefinitionId);
             }
         }
@@ -212,6 +241,7 @@ namespace Neutron.Forms
                     break;
                 }
             }
+
             return itemIndex;
         }
 
@@ -335,6 +365,7 @@ namespace Neutron.Forms
         }
 
         #region Find Functions
+
         private void MButtonFind_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -380,14 +411,17 @@ namespace Neutron.Forms
                 LoadInventory();
                 Cursor.Current = Cursors.Default;
             }
+
             if (e.KeyCode == Keys.Escape)
             {
                 TextBoxFind.Text = "";
             }
         }
+
         #endregion
 
         #region Button Clicks
+
         private void ButtonClear_Click(object sender, EventArgs e)
         {
             TextBoxFind.Text = string.Empty;
@@ -521,6 +555,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
+
         #endregion
 
         private void SaveNew()
@@ -529,7 +564,8 @@ namespace Neutron.Forms
             {
                 var rec = new Inventory
                 {
-                    ItemDefinitionId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).ItemDefinitionId,
+                    ItemDefinitionId =
+                        (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).ItemDefinitionId,
                 };
                 if (!ValidateFields(rec))
                 {
@@ -542,6 +578,7 @@ namespace Neutron.Forms
                     MessageBox.Show("Duplicate Entry.");
                     return;
                 }
+
                 _repoInventory.Insert(rec);
                 GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryAdd, rec);
                 LoadInventory(rec.Id);
@@ -569,6 +606,7 @@ namespace Neutron.Forms
                 MessageBox.Show("Invalid Entry.");
                 return;
             }
+
             _repoInventory.Update(rec);
             GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryModify, rec);
             LoadInventory(rec.Id);
@@ -614,6 +652,7 @@ namespace Neutron.Forms
                 return false;
             }
         }
+
         //validate integer 
         private bool IntegerValidator(int input)
         {
@@ -625,6 +664,7 @@ namespace Neutron.Forms
                     MessageBox.Show("Entry must be greater than zero.");
                     return false;
                 }
+
                 return true;
             }
             else
@@ -635,12 +675,16 @@ namespace Neutron.Forms
 
         private bool IsDuplicate(Inventory recIn)
         {
-            Inventory rec = _repoInventory.FindBy(f => f.LocationId == recIn.LocationId && f.ItemDefinitionId == recIn.ItemDefinitionId).FirstOrDefault();
+            Inventory rec = _repoInventory
+                .FindBy(f => f.LocationId == recIn.LocationId && f.ItemDefinitionId == recIn.ItemDefinitionId)
+                .FirstOrDefault();
             if (rec != null)
             {
-                MessageBox.Show("Record already exists.", "Duplicate Entry", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Record already exists.", "Duplicate Entry", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return true;
             }
+
             return false;
         }
 
@@ -657,6 +701,7 @@ namespace Neutron.Forms
         //}
 
         #region Form Setup Grids
+
         private void SetupGrids()
         {
             DataGridView1.AutoGenerateColumns = false;
@@ -672,7 +717,7 @@ namespace Neutron.Forms
                 Name = "Position",
                 Text = "Position",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 UseColumnTextForButtonValue = true
             };
             DataGridView1.Columns.Add(bCol);
@@ -682,7 +727,7 @@ namespace Neutron.Forms
                 DataPropertyName = "StationName",
                 HeaderText = "Station",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationName"
             };
             DataGridView1.Columns.Add(col);
@@ -692,7 +737,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Item",
                 HeaderText = "Item",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Item"
             };
             DataGridView1.Columns.Add(col);
@@ -702,7 +747,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Description",
                 HeaderText = "Description",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
             };
             DataGridView1.Columns.Add(col);
@@ -712,7 +757,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Quantity",
                 HeaderText = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity"
             };
             DataGridView1.Columns.Add(col);
@@ -722,7 +767,7 @@ namespace Neutron.Forms
                 DataPropertyName = "ReceivedDate",
                 HeaderText = "Received Date",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
             };
             DataGridView1.Columns.Add(col);
@@ -733,7 +778,7 @@ namespace Neutron.Forms
                 HeaderText = "Slot",
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Slot"
             };
             DataGridView1.Columns.Add(col);
@@ -743,7 +788,7 @@ namespace Neutron.Forms
                 DataPropertyName = "SizeCodeName",
                 HeaderText = "Size Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SizeCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -753,7 +798,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc1",
                 HeaderText = _nomenclature.LabelDevice,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc1"
             };
             DataGridView1.Columns.Add(col);
@@ -763,7 +808,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc2",
                 HeaderText = _nomenclature.LabelTray,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc2"
             };
             DataGridView1.Columns.Add(col);
@@ -773,7 +818,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc3",
                 HeaderText = _nomenclature.LabelOver,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc3"
             };
             DataGridView1.Columns.Add(col);
@@ -783,7 +828,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc4",
                 HeaderText = _nomenclature.LabelBack,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc4"
             };
             DataGridView1.Columns.Add(col);
@@ -793,7 +838,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc5",
                 HeaderText = "Tag",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc5"
             };
             DataGridView1.Columns.Add(col);
@@ -803,7 +848,7 @@ namespace Neutron.Forms
                 DataPropertyName = "VelocityCodeName",
                 HeaderText = "Velocity Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "VelocityCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -813,7 +858,7 @@ namespace Neutron.Forms
                 DataPropertyName = "HeightCodeName",
                 HeaderText = "Height Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "HeightCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -823,7 +868,7 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationCodeName",
                 HeaderText = "User Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LocationCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -833,7 +878,7 @@ namespace Neutron.Forms
                 DataPropertyName = "StorageTypeName",
                 HeaderText = "Storage Type",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StorageTypeName"
             };
             DataGridView1.Columns.Add(col);
@@ -844,14 +889,17 @@ namespace Neutron.Forms
                 HeaderText = "Prime Bin",
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "PrimeBin"
             };
             DataGridView1.Columns.Add(xcol);
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Id", HeaderText = "Id", Visible = false, Name = "Id"
+                DataPropertyName = "Id",
+                HeaderText = "Id",
+                Visible = false,
+                Name = "Id"
             };
             DataGridView1.Columns.Add(col);
 
@@ -876,7 +924,7 @@ namespace Neutron.Forms
                 Name = "Position",
                 Text = "Position",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 UseColumnTextForButtonValue = true
             };
             DataGridViewInventoryLocations.Columns.Add(bCol);
@@ -897,7 +945,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Quantity",
                 HeaderText = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -918,7 +966,7 @@ namespace Neutron.Forms
                 HeaderText = "Slot",
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Slot"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -938,7 +986,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc1",
                 HeaderText = _nomenclature.LabelDevice,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc1"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -948,7 +996,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc2",
                 HeaderText = _nomenclature.LabelTray,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc2"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -958,7 +1006,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc3",
                 HeaderText = _nomenclature.LabelOver,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc3"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -968,7 +1016,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc4",
                 HeaderText = _nomenclature.LabelBack,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc4"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -978,19 +1026,19 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc5",
                 HeaderText = "Tag",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc5"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
 
-         
+
 
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
                 HeaderText = "Velocity Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "VelocityCodeName"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -1000,7 +1048,7 @@ namespace Neutron.Forms
                 DataPropertyName = "HeightCodeName",
                 HeaderText = "Height Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "HeightCodeName"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -1020,7 +1068,7 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationCodeName",
                 HeaderText = "User Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LocationCodeName"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
@@ -1039,7 +1087,10 @@ namespace Neutron.Forms
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Id", HeaderText = "Id", Visible = false, Name = "Id"
+                DataPropertyName = "Id",
+                HeaderText = "Id",
+                Visible = false,
+                Name = "Id"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
 
@@ -1065,7 +1116,7 @@ namespace Neutron.Forms
                 Name = "Position",
                 Text = "Position",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 UseColumnTextForButtonValue = true
             };
             DataGridViewInventoryNewLocations.Columns.Add(bCol);
@@ -1075,7 +1126,7 @@ namespace Neutron.Forms
                 DataPropertyName = "InUse",
                 HeaderText = "In Use",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "InUse"
             };
             DataGridViewInventoryNewLocations.Columns.Add(xcol);
@@ -1085,7 +1136,7 @@ namespace Neutron.Forms
                 DataPropertyName = "StationName",
                 HeaderText = "Station",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "StationName",
                 ReadOnly = true
             };
@@ -1099,7 +1150,7 @@ namespace Neutron.Forms
                 HeaderText = "Slot",
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Slot"
             };
             DataGridViewInventoryNewLocations.Columns.Add(col);
@@ -1110,7 +1161,7 @@ namespace Neutron.Forms
                 DataPropertyName = "SizeCodeName",
                 HeaderText = "Size Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "SizeCodeName",
                 ReadOnly = true
             };
@@ -1121,7 +1172,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc1",
                 HeaderText = _nomenclature.LabelDevice,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc1",
                 ReadOnly = true
             };
@@ -1132,7 +1183,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc2",
                 HeaderText = _nomenclature.LabelTray,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc2",
                 ReadOnly = true
             };
@@ -1143,7 +1194,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc3",
                 HeaderText = _nomenclature.LabelOver,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc3",
                 ReadOnly = true
             };
@@ -1154,7 +1205,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc4",
                 HeaderText = _nomenclature.LabelBack,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc4",
                 ReadOnly = true
             };
@@ -1165,7 +1216,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Loc5",
                 HeaderText = "Tag",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc5",
                 ReadOnly = true
             };
@@ -1176,7 +1227,7 @@ namespace Neutron.Forms
                 DataPropertyName = "VelocityCodeName",
                 HeaderText = "Velocity Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "VelocityCodeName",
                 ReadOnly = true
             };
@@ -1187,7 +1238,7 @@ namespace Neutron.Forms
                 DataPropertyName = "HeightCodeName",
                 HeaderText = "Height Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "HeightCodeName",
                 ReadOnly = true
             };
@@ -1198,14 +1249,17 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationCodeName",
                 HeaderText = "User Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LocationCodeName"
             };
             DataGridViewInventoryNewLocations.Columns.Add(col);
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Id", HeaderText = "Id", Visible = false, Name = "Id"
+                DataPropertyName = "Id",
+                HeaderText = "Id",
+                Visible = false,
+                Name = "Id"
             };
             DataGridViewInventoryNewLocations.Columns.Add(col);
 
@@ -1296,9 +1350,11 @@ namespace Neutron.Forms
         {
 
         }
+
         #endregion
 
         #region Return Key Functions
+
         //private void TextBoxNewLoc1_KeyDown(object sender, KeyEventArgs e)
         //{
         //    if (e.KeyCode == Keys.Return)
@@ -1439,6 +1495,7 @@ namespace Neutron.Forms
         //    //    TextBoxNewLoc1.Focus();
         //    //}
         //}
+
         #endregion
 
         private void MbViewEditDelete_Click(object sender, EventArgs e)
@@ -1450,7 +1507,7 @@ namespace Neutron.Forms
 
                 if (locView != null)
                 {
-                   // var invId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).Id;
+                    // var invId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).Id;
 
 
                     DeleteInventoryItem(locView.Id, false);
@@ -1513,6 +1570,7 @@ namespace Neutron.Forms
                 ComboBoxInventoryNewLocationsStorageType.SelectedIndex = 1;
                 GetAvailableLocations(itemDefinition);
             }
+
             tabControl1.SelectedTab = tabPage4;
         }
 
@@ -1524,9 +1582,12 @@ namespace Neutron.Forms
             {
                 return;
             }
+
             bool inUse = false;
 
-            views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(itemDefinition.StationId, itemDefinition.SizeCodeId, itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId, itemDefinition.LocationCodeId, inUse));
+            views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(itemDefinition.StationId,
+                itemDefinition.SizeCodeId, itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId,
+                itemDefinition.LocationCodeId, inUse));
             _newLocationBindingSourceEquin = new BindingListView<LocationView>(views.ToList());
             _newLocationBindingSource.DataSource = _newLocationBindingSourceEquin;
 
@@ -1538,7 +1599,9 @@ namespace Neutron.Forms
                 {
                     idx = IndexOf(_newLocationBindingSource, recId);
                 }
-                DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex = DataGridViewInventoryNewLocations.Rows[idx].Index;
+
+                DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex =
+                    DataGridViewInventoryNewLocations.Rows[idx].Index;
                 DataGridViewInventoryNewLocations.Refresh();
                 DataGridViewInventoryNewLocations.CurrentCell = DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
                 DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
@@ -1564,7 +1627,9 @@ namespace Neutron.Forms
                 {
                     idx = IndexOf(_newLocationBindingSource, recId);
                 }
-                DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex = DataGridViewInventoryNewLocations.Rows[idx].Index;
+
+                DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex =
+                    DataGridViewInventoryNewLocations.Rows[idx].Index;
                 DataGridViewInventoryNewLocations.Refresh();
                 DataGridViewInventoryNewLocations.CurrentCell = DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
                 DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
@@ -1633,6 +1698,7 @@ namespace Neutron.Forms
                 TextBoxInventoryNewLocationsDescription.Text = CurrentItem.Description;
                 GetAvailableLocations(CurrentItem);
             }
+
             tabControl1.SelectedTab = tabPage4;
         }
 
@@ -1654,10 +1720,13 @@ namespace Neutron.Forms
 
         private void MbNewLocationsSave_Click(object sender, EventArgs e)
         {
-            if (TextBoxInventoryNewLocationsQuantity.Text.ParseInt() == 0 && ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString().ParseInt() == (int)StorageType.Release)
+            if (TextBoxInventoryNewLocationsQuantity.Text.ParseInt() == 0 &&
+                ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString().ParseInt() ==
+                (int)StorageType.Release)
             {
                 MessageBox.Show(
-                    @"You can't create an Inventory Item with a Release storage type and (0) quantity.", @"Inventory Manager", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    @"You can't create an Inventory Item with a Release storage type and (0) quantity.",
+                    @"Inventory Manager", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 TextBoxInventoryNewLocationsQuantity.Focus();
             }
             else
@@ -1667,7 +1736,9 @@ namespace Neutron.Forms
 
                 if (locView != null)
                 {
-                    Inventory inv = _repoInventory.FindBy(r => r.ItemDefinitionId == CurrentItem.Id && r.LocationId == locView.Id).FirstOrDefault();
+                    Inventory inv = _repoInventory
+                        .FindBy(r => r.ItemDefinitionId == CurrentItem.Id && r.LocationId == locView.Id)
+                        .FirstOrDefault();
                     if (inv == null)
                     {
                         var inventory = new Inventory()
@@ -1676,7 +1747,8 @@ namespace Neutron.Forms
                             LocationId = locView.Id,
                             Quantity = TextBoxInventoryNewLocationsQuantity.Text.ParseInt(),
                             ReceivedDate = DateTimePickerInventoryNewLocationsReceivedDate.Value,
-                            StorageTypeId = ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString().ParseInt(),
+                            StorageTypeId =
+                                ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString().ParseInt(),
                             PrimeBin = CheckBoxInventoryNewLocationsPrimeBin.Checked,
                             StationId = _station.StationId
                         };
@@ -1691,7 +1763,8 @@ namespace Neutron.Forms
                     }
                     else
                     {
-                        MessageBox.Show(@"That Inventory Item Already Exists.", caption: @"Inventory Manager", buttons: MessageBoxButtons.OK);
+                        MessageBox.Show(@"That Inventory Item Already Exists.", caption: @"Inventory Manager",
+                            buttons: MessageBoxButtons.OK);
                         TextBoxInventoryNewLocationsQuantity.Focus();
                     }
                 }
@@ -1711,9 +1784,11 @@ namespace Neutron.Forms
             using (var context = new NeutronDb())
             {
                 var findItemId = new SqlParameter("@ItemId", itemId);
-                projection = context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewByItem @ItemId", findItemId).ToList();
+                projection = context.Database
+                    .SqlQuery<SqlInventoryView>("usp_GetInventoryViewByItem @ItemId", findItemId).ToList();
 
             }
+
             return projection;
         }
 
@@ -1725,6 +1800,7 @@ namespace Neutron.Forms
             {
                 projection = context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryView").ToList();
             }
+
             return projection;
         }
 
@@ -1756,7 +1832,8 @@ namespace Neutron.Forms
                 //update
                 inventory = _repoInventory.FindByKey(inventoryId.ParseInt());
                 inventory.Quantity = (TextBoxAddDetailQuantity.Text).ParseInt();
-                inventory.StorageTypeId = (ComboBoxAddDetailStorageType.SelectedItem as NeutronData.Models.Lookups.StorageType).Id;
+                inventory.StorageTypeId =
+                    (ComboBoxAddDetailStorageType.SelectedItem as NeutronData.Models.Lookups.StorageType).Id;
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
                 inventory.StationId = _station.StationId;
@@ -1769,13 +1846,15 @@ namespace Neutron.Forms
                 inventory.ItemDefinitionId = (TextBoxAddDetailItemDefinitionId.Text).ParseInt();
                 inventory.LocationId = (TextBoxAddDetailLocationId.Text).ParseInt();
                 inventory.Quantity = (TextBoxAddDetailQuantity.Text).ParseInt();
-                inventory.StorageTypeId = (ComboBoxAddDetailStorageType.SelectedItem as NeutronData.Models.Lookups.StorageType).Id;
+                inventory.StorageTypeId =
+                    (ComboBoxAddDetailStorageType.SelectedItem as NeutronData.Models.Lookups.StorageType).Id;
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
                 inventory.StationId = _station.StationId;
                 _repoInventory.Insert(inventory);
                 GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryAdd, inventory);
             }
+
             if (inventory.Quantity == 0 && inventory.StorageTypeId == (int)StorageType.Release)
             {
                 DeleteInventoryItem(inventory.Id, releaseOnly: true);
@@ -1860,10 +1939,7 @@ namespace Neutron.Forms
 
         public bool AllAvailable
         {
-            get
-            {
-                return _allAvailable;
-            }
+            get { return _allAvailable; }
             set
             {
                 _allAvailable = value;
@@ -1928,7 +2004,8 @@ namespace Neutron.Forms
                     var display = string.Empty;
                     if (_neutronVariables.ShuttleEnabled)
                     {
-                        HardwareDevice hardwareDevice = _station.HardwareDevices.Where(s => s.DeviceNumber == deviceNumber).FirstOrDefault();
+                        HardwareDevice hardwareDevice = _station.HardwareDevices
+                            .Where(s => s.DeviceNumber == deviceNumber).FirstOrDefault();
                         if (hardwareDevice != null)
                         {
                             if (hardwareDevice.Enabled == true)
@@ -1936,10 +2013,13 @@ namespace Neutron.Forms
 
                                 if (GlobalVar.Shuttle != null)
                                 {
-                                    Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, quantity, display));
+                                    Task<DeviceResponse> response = Task.Run(() =>
+                                        GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part,
+                                            quantity, display));
                                     if (response.Result != DeviceResponse.Success)
                                     {
-                                        MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: "Device Information"
+                                        MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                                            caption: "Device Information"
                                             , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                                     }
                                 }
@@ -1961,6 +2041,7 @@ namespace Neutron.Forms
 
                         }
                     }
+
                     if (_neutronVariables.DisplaysEnabled)
                     {
                         if (GlobalVar.Displays != null)
@@ -2004,6 +2085,50 @@ namespace Neutron.Forms
         private void CheckBoxAllStations_CheckedChanged(object sender, EventArgs e)
         {
             FindRecord();
+        }
+
+        private void MBCreateInventoryFile_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            MBCreateInventoryFile.Enabled = false;
+            var comboBoxValue = ComboBoxStationNumber.Text;
+            CreateInventoryFileByStation(comboBoxValue);
+            Cursor.Current = Cursors.Default;
+            MBCreateInventoryFile.Enabled = true;
+        }
+
+        private void CreateInventoryFileByStation(string stationNumber)
+        {
+            var fileName = GetFileName();
+            Task.Run(() => CsvUtility.SaveToCsv(fileName, stationNumber));
+        }
+
+        private static string GetFileName()
+        {
+            var rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\CSV\");
+            if (!Directory.Exists(rootDirectory))
+            {
+                Directory.CreateDirectory(rootDirectory);
+            }
+            var sfd = new SaveFileDialog
+            {
+                InitialDirectory = rootDirectory,
+                Filter = "CSV (*.csv)|*.csv",
+                FileName = "Output.csv"
+            };
+            if (sfd.ShowDialog() != DialogResult.OK) return sfd.FileName;
+            MessageBox.Show("Data will be exported and you will be notified when it is ready.");
+            if (!File.Exists(sfd.FileName)) return sfd.FileName;
+            try
+            {
+                File.Delete(sfd.FileName);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+            }
+
+            return sfd.FileName;
         }
     }
 }

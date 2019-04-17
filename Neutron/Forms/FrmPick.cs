@@ -2829,7 +2829,7 @@ namespace Neutron.Forms
                     item.Slot = item.CurrentInventoryLocation.Location.Slot;
                     item.SlotQty = item.TotalQuantityInInventory;
                     item.InventoryIndex = 0;
-                    item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? "";
+                    item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate;
                     pickableViews.Add(item);
                 }
                 else
@@ -3113,7 +3113,7 @@ namespace Neutron.Forms
             pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
             pickView.SlotQty = pickView.TotalQuantityInInventory;
             pickView.InventoryIndex = 0;
-            pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? "";
+            pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
 
             Task.Run(() => _logger.Log($"CreatePickView End: [{DateTime.Now.ToLongTimeString()}]"));
             return pickView;
@@ -4007,7 +4007,7 @@ namespace Neutron.Forms
                 , arg0: _currentPickStop.InventoryIndex + 1, arg1: _currentPickStop.Inventory.Count);
             TextBoxLocationQuantity.Text = _currentPickStop.CurrentInventoryLocation.Quantity.ToString();
             TextBoxTotalQuantity.Text = _currentPickStop.TotalQuantityInInventory.ToString();
-            TextBoxReceivedDate.Text = _currentPickStop.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? string.Empty;
+            TextBoxReceivedDate.Text = _currentPickStop.CurrentInventoryLocation.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = _currentPickStop.CurrentInventoryLocation.PrimeBin;
             LabelStaticRelease.Text = _currentPickStop.CurrentInventoryLocation.StorageType.Name;
 
@@ -5896,7 +5896,7 @@ namespace Neutron.Forms
                                 pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
                                 pickView.SlotQty = pickView.TotalQuantityInInventory;
                                 pickView.InventoryIndex = 0;
-                                pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate?.ToShortDateString() ?? "";
+                                pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
                                 success = true;
                             }
                         }
@@ -7769,6 +7769,11 @@ namespace Neutron.Forms
         {
             _deviceManager.Reset();
             Task.Run(() => _logger.Log($"Reset After Reset Carousel Button Pushed : [{DateTime.Now.ToLongTimeString()}]"));
+        }
+
+        private void ComboBoxStationNumber_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

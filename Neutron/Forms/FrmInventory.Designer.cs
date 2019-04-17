@@ -34,6 +34,10 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.GroupBoxInventoryFile = new System.Windows.Forms.GroupBox();
+            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
+            this.MBCreateInventoryFile = new MetroFramework.Controls.MetroButton();
+            this.label37 = new System.Windows.Forms.Label();
             this.CheckBoxAllStations = new System.Windows.Forms.CheckBox();
             this.MBPrintInventory = new MetroFramework.Controls.MetroButton();
             this.LabelFindDescription = new System.Windows.Forms.Label();
@@ -165,6 +169,7 @@
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.GroupBoxInventoryFile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -235,6 +240,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.RoyalBlue;
+            this.tabPage1.Controls.Add(this.GroupBoxInventoryFile);
             this.tabPage1.Controls.Add(this.CheckBoxAllStations);
             this.tabPage1.Controls.Add(this.MBPrintInventory);
             this.tabPage1.Controls.Add(this.LabelFindDescription);
@@ -252,6 +258,57 @@
             this.tabPage1.Size = new System.Drawing.Size(1147, 644);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
+            // 
+            // GroupBoxInventoryFile
+            // 
+            this.GroupBoxInventoryFile.Controls.Add(this.ComboBoxStationNumber);
+            this.GroupBoxInventoryFile.Controls.Add(this.MBCreateInventoryFile);
+            this.GroupBoxInventoryFile.Controls.Add(this.label37);
+            this.GroupBoxInventoryFile.Location = new System.Drawing.Point(875, 5);
+            this.GroupBoxInventoryFile.Name = "GroupBoxInventoryFile";
+            this.GroupBoxInventoryFile.Size = new System.Drawing.Size(135, 83);
+            this.GroupBoxInventoryFile.TabIndex = 27;
+            this.GroupBoxInventoryFile.TabStop = false;
+            // 
+            // ComboBoxStationNumber
+            // 
+            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxStationNumber.FormattingEnabled = true;
+            this.ComboBoxStationNumber.Items.AddRange(new object[] {
+            "ALL",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "8"});
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(68, 12);
+            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(59, 24);
+            this.ComboBoxStationNumber.TabIndex = 29;
+            // 
+            // MBCreateInventoryFile
+            // 
+            this.MBCreateInventoryFile.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBCreateInventoryFile.Location = new System.Drawing.Point(6, 44);
+            this.MBCreateInventoryFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBCreateInventoryFile.Name = "MBCreateInventoryFile";
+            this.MBCreateInventoryFile.Size = new System.Drawing.Size(122, 30);
+            this.MBCreateInventoryFile.TabIndex = 28;
+            this.MBCreateInventoryFile.Text = "Inventory File";
+            this.MBCreateInventoryFile.UseSelectable = true;
+            this.MBCreateInventoryFile.Click += new System.EventHandler(this.MBCreateInventoryFile_Click);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(6, 15);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(56, 16);
+            this.label37.TabIndex = 27;
+            this.label37.Text = "Station";
+            this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CheckBoxAllStations
             // 
@@ -281,7 +338,7 @@
             // 
             this.LabelFindDescription.Location = new System.Drawing.Point(431, 43);
             this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(280, 20);
+            this.LabelFindDescription.Size = new System.Drawing.Size(267, 20);
             this.LabelFindDescription.TabIndex = 18;
             this.LabelFindDescription.Text = "Search For";
             this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -289,10 +346,10 @@
             // TextBoxFind
             // 
             this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(433, 10);
+            this.TextBoxFind.Location = new System.Drawing.Point(429, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(278, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(269, 29);
             this.TextBoxFind.TabIndex = 17;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
@@ -324,7 +381,7 @@
             // ButtonClear
             // 
             this.ButtonClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClear.Location = new System.Drawing.Point(717, 10);
+            this.ButtonClear.Location = new System.Drawing.Point(704, 10);
             this.ButtonClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(34, 38);
@@ -337,10 +394,10 @@
             // 
             this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClose.Location = new System.Drawing.Point(1006, 10);
+            this.MButtonClose.Location = new System.Drawing.Point(1022, 10);
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
-            this.MButtonClose.Size = new System.Drawing.Size(135, 76);
+            this.MButtonClose.Size = new System.Drawing.Size(120, 76);
             this.MButtonClose.TabIndex = 12;
             this.MButtonClose.Text = "Home";
             this.MButtonClose.UseSelectable = true;
@@ -349,10 +406,10 @@
             // MButtonSearch
             // 
             this.MButtonSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonSearch.Location = new System.Drawing.Point(758, 10);
+            this.MButtonSearch.Location = new System.Drawing.Point(743, 10);
             this.MButtonSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSearch.Name = "MButtonSearch";
-            this.MButtonSearch.Size = new System.Drawing.Size(135, 76);
+            this.MButtonSearch.Size = new System.Drawing.Size(120, 76);
             this.MButtonSearch.TabIndex = 12;
             this.MButtonSearch.Text = "Search";
             this.MButtonSearch.UseSelectable = true;
@@ -1735,6 +1792,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.GroupBoxInventoryFile.ResumeLayout(false);
+            this.GroupBoxInventoryFile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -1898,5 +1957,9 @@
         private System.Windows.Forms.Label LabelAvailableLocations;
         private System.Windows.Forms.CheckBox CheckBoxInUse;
         private System.Windows.Forms.CheckBox CheckBoxAllStations;
+        private System.Windows.Forms.GroupBox GroupBoxInventoryFile;
+        private System.Windows.Forms.ComboBox ComboBoxStationNumber;
+        private MetroFramework.Controls.MetroButton MBCreateInventoryFile;
+        private System.Windows.Forms.Label label37;
     }
 }
