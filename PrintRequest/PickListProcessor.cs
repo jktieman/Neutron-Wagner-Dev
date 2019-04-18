@@ -19,7 +19,7 @@ namespace PrintRequest
         private const int HeaderPadding = 5;
         private int _printedRows = 0;
         private bool _firsttime = true;
-        private PickList _prevRec;
+
         private int lineLength = 1050;
 
         private readonly int[] _columnWidths = new int[]
@@ -52,7 +52,7 @@ namespace PrintRequest
         private PickList _pickListHeader;
         private PrintDocument _printDoc;
 
-        public OperationResult PrintPickListDocument(IList<PickList> recs, DocumentPrinterPreferences printer)
+        public OperationResult PrintPickListDocument(IList<PickList> recs, DocumentPrinterPreferences printer, bool printPreview = false)
         {
             var operationResult = new OperationResult();
             _transferRecs = recs;
@@ -68,11 +68,16 @@ namespace PrintRequest
                 _printDoc.DefaultPageSettings.Landscape = true;
                 var margins = new Margins(50, 50, 50, 50);
                 _printDoc.DefaultPageSettings.Margins = margins;
-
-                 _printDoc.Print();
-                //var preview = new PrintPreviewDialog { Document = _printDoc };
-
-                //preview.ShowDialog();
+                
+                if (printPreview)
+                {
+                    var preview = new PrintPreviewDialog { Document = _printDoc };
+                    preview.ShowDialog();
+                }
+                else
+                {
+                    _printDoc.Print();
+                }
             }
             catch (Exception ex)
             {
@@ -92,7 +97,7 @@ namespace PrintRequest
                 DrawTitleDetail(e.Graphics, ref rowPosition);
             }
 
-            rowPosition += 2;  
+            rowPosition += 2;
             DrawHeader(e.Graphics, ref rowPosition);
             rowPosition += 5;
             if (_pickListHeader != null)
@@ -183,34 +188,39 @@ namespace PrintRequest
         private void DrawBody(Graphics g, int yValue)
         {
             var format = new StringFormat() { Alignment = StringAlignment.Far };
-
+            var counter = 0;
+            var prevRec = string.Empty;
             for (var i = 0; (i < NumRowsPerPage) && ((i + _printedRows) < _transferRecs.Count); i++)
             {
 
                 var rec = _transferRecs[i + _printedRows];
+
                 if (_firsttime)
                 {
-                    _prevRec = rec;
+                     counter = 0;
+                    prevRec = rec.OrderDetailId;
                     _firsttime = false;
                 }
                 else
                 {
-                    if (rec.Item == _prevRec.Item)
+                    if (rec.OrderDetailId == prevRec)
                     {
+                        counter++;
                         rec.Station = string.Empty;
                         rec.Item = string.Empty;
-                        rec.Description = string.Empty;
+                        rec.Description = ($"Additional Location [ {counter} ]");
                         rec.Ordered = string.Empty;
                     }
 
                     else
                     {
-                        _prevRec = rec;
+                        counter = 0;
+                        prevRec = rec.OrderDetailId;
                     }
                 }
 
                 var xValue = 25;
-               
+
                 //Station
                 var rect = new RectangleF(xValue, yValue, _columnWidths[0], RowHeight);
 

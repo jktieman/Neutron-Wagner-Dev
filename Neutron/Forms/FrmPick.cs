@@ -4827,7 +4827,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var anticipatedOuts = GetAnticipatedOuts();
-            DocumentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter);
+            DocumentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private void MBPrintPick_Click(object sender, EventArgs e)
@@ -4857,7 +4857,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var packingList = GetPackingList(orderId);
-            DocumentToPrint.PrintPackingList(packingList, _documentPrinter);
+            DocumentToPrint.PrintPackingList(packingList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<PackingList> GetPackingList(int orderId)
@@ -4905,7 +4905,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var pickList = GetPickList(orderId);
-            DocumentToPrint.PrintPickList(pickList, _documentPrinter);
+            DocumentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<PickList> GetPickList(int orderId)
@@ -4923,7 +4923,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var pickList = GetPickListByStation(orderId, stationId);
-            DocumentToPrint.PrintPickList(pickList, _documentPrinter);
+            DocumentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<PickList> GetPickListByStation(int orderId, int stationId)

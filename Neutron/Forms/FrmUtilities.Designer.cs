@@ -195,6 +195,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.CheckBoxPrintPreview = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -1294,6 +1295,7 @@
             this.DisplayListing.Controls.Add(this.CheckBoxUsePr1StyleOutputProcessor);
             this.DisplayListing.Controls.Add(this.CheckBoxUsePr1StyleInputProcessor);
             this.DisplayListing.Controls.Add(this.CheckBoxParkPositionAfterBatch);
+            this.DisplayListing.Controls.Add(this.CheckBoxPrintPreview);
             this.DisplayListing.Controls.Add(this.CheckBoxEnableLabelPrinter);
             this.DisplayListing.Controls.Add(this.CheckBoxEnableDocumentPrinter);
             this.DisplayListing.Controls.Add(this.ComboBoxSlotFormat);
@@ -1492,7 +1494,7 @@
             // 
             this.CheckBoxUsePr1Processor.AutoSize = true;
             this.CheckBoxUsePr1Processor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePr1Processor.Location = new System.Drawing.Point(349, 523);
+            this.CheckBoxUsePr1Processor.Location = new System.Drawing.Point(349, 559);
             this.CheckBoxUsePr1Processor.Name = "CheckBoxUsePr1Processor";
             this.CheckBoxUsePr1Processor.Size = new System.Drawing.Size(146, 20);
             this.CheckBoxUsePr1Processor.TabIndex = 18;
@@ -1503,7 +1505,7 @@
             // 
             this.CheckBoxUsePr1StyleOutputProcessor.AutoSize = true;
             this.CheckBoxUsePr1StyleOutputProcessor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePr1StyleOutputProcessor.Location = new System.Drawing.Point(349, 487);
+            this.CheckBoxUsePr1StyleOutputProcessor.Location = new System.Drawing.Point(349, 523);
             this.CheckBoxUsePr1StyleOutputProcessor.Name = "CheckBoxUsePr1StyleOutputProcessor";
             this.CheckBoxUsePr1StyleOutputProcessor.Size = new System.Drawing.Size(180, 20);
             this.CheckBoxUsePr1StyleOutputProcessor.TabIndex = 18;
@@ -1514,7 +1516,7 @@
             // 
             this.CheckBoxUsePr1StyleInputProcessor.AutoSize = true;
             this.CheckBoxUsePr1StyleInputProcessor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePr1StyleInputProcessor.Location = new System.Drawing.Point(349, 451);
+            this.CheckBoxUsePr1StyleInputProcessor.Location = new System.Drawing.Point(349, 487);
             this.CheckBoxUsePr1StyleInputProcessor.Name = "CheckBoxUsePr1StyleInputProcessor";
             this.CheckBoxUsePr1StyleInputProcessor.Size = new System.Drawing.Size(170, 20);
             this.CheckBoxUsePr1StyleInputProcessor.TabIndex = 18;
@@ -1525,7 +1527,7 @@
             // 
             this.CheckBoxParkPositionAfterBatch.AutoSize = true;
             this.CheckBoxParkPositionAfterBatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxParkPositionAfterBatch.Location = new System.Drawing.Point(349, 415);
+            this.CheckBoxParkPositionAfterBatch.Location = new System.Drawing.Point(349, 451);
             this.CheckBoxParkPositionAfterBatch.Name = "CheckBoxParkPositionAfterBatch";
             this.CheckBoxParkPositionAfterBatch.Size = new System.Drawing.Size(173, 20);
             this.CheckBoxParkPositionAfterBatch.TabIndex = 18;
@@ -2082,6 +2084,17 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // CheckBoxPrintPreview
+            // 
+            this.CheckBoxPrintPreview.AutoSize = true;
+            this.CheckBoxPrintPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 415);
+            this.CheckBoxPrintPreview.Name = "CheckBoxPrintPreview";
+            this.CheckBoxPrintPreview.Size = new System.Drawing.Size(193, 20);
+            this.CheckBoxPrintPreview.TabIndex = 18;
+            this.CheckBoxPrintPreview.Text = "Print Preview All Documents";
+            this.CheckBoxPrintPreview.UseVisualStyleBackColor = true;
+            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2293,5 +2306,6 @@
         private System.Windows.Forms.CheckBox CheckBoxLoadRackOrders;
         private System.Windows.Forms.CheckBox CheckBoxSerialPicking;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox CheckBoxPrintPreview;
     }
 }

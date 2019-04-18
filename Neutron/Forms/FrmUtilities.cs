@@ -549,6 +549,7 @@ namespace Neutron.Forms
             neutronVariables.IptiDisplays = CheckBoxIptiDisplays.Checked;
             neutronVariables.LoadRackOrders = CheckBoxLoadRackOrders.Checked;
             neutronVariables.SerialPicking = CheckBoxSerialPicking.Checked;
+            neutronVariables.PrintPreview = CheckBoxPrintPreview.Checked;
 
             jsonData.SaveFile<NeutronVariables>(neutronVariables);
         }
@@ -594,6 +595,7 @@ namespace Neutron.Forms
             CheckBoxIptiDisplays.Checked = neutronVariables.IptiDisplays;
             CheckBoxLoadRackOrders.Checked = neutronVariables.LoadRackOrders;
             CheckBoxSerialPicking.Checked = neutronVariables.SerialPicking;
+            CheckBoxPrintPreview.Checked = neutronVariables.PrintPreview;
 
             SetPickMethod(neutronVariables.PickMethod);
         }

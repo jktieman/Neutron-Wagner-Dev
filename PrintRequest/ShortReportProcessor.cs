@@ -12,7 +12,7 @@ namespace PrintRequest
 {
     public partial class ShortReportProcessor
     {
-        public ShortReportProcessor(BindingSource pickStops, LabelPrinterPreferences printer)
+        public ShortReportProcessor(BindingSource pickStops, LabelPrinterPreferences printer, bool printPreview = false)
         {
 
             DateTime date = DateTime.MinValue;

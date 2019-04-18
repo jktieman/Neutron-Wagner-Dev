@@ -646,7 +646,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var locations = GetAvailableLocations();
-            DocumentToPrint.PrintAvailableLocations(locations, _documentPrinter);
+            DocumentToPrint.PrintAvailableLocations(locations, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<Location> GetAvailableLocations()

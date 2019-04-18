@@ -53,7 +53,7 @@ namespace PrintRequest
 
         private PrintDocument _printDoc;
 
-        public OperationResult PrintAnticipatedOutsDocument(IList<AnticipatedOut> recs, DocumentPrinterPreferences printer)
+        public OperationResult PrintAnticipatedOutsDocument(IList<AnticipatedOut> recs, DocumentPrinterPreferences printer, bool printPreview = false)
         {
             var operationResult = new OperationResult();
             _transferRecs = recs;
@@ -66,10 +66,16 @@ namespace PrintRequest
                 var margins = new Margins(50,50,50,50);
                 _printDoc.DefaultPageSettings.Margins = margins;
 
-                 _printDoc.Print();
-                //var preview = new PrintPreviewDialog { Document = _printDoc };
 
-                //preview.ShowDialog();
+                if (printPreview)
+                {
+                    var preview = new PrintPreviewDialog { Document = _printDoc };
+                    preview.ShowDialog();
+                }
+                else
+                {
+                    _printDoc.Print();
+                }
             }
             catch (Exception ex)
             {

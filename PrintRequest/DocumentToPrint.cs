@@ -66,27 +66,27 @@ namespace PrintRequest
         }
 
         public static void PrintAnticipatedOuts(List<AnticipatedOut> anticipatedOuts,
-            DocumentPrinterPreferences printer)
+            DocumentPrinterPreferences printer, bool printPreview)
         {
-            var result = new AnticipatedOutsProcessor().PrintAnticipatedOutsDocument(anticipatedOuts, printer);
+            var result = new AnticipatedOutsProcessor().PrintAnticipatedOutsDocument(anticipatedOuts, printer, printPreview);
         }
 
         public static void PrintPackingList(List<PackingList> packingLists,
-            DocumentPrinterPreferences printer)
+            DocumentPrinterPreferences printer, bool printPreview)
         {
-            var result = new PackingListProcessor().PrintPackingListDocument(packingLists, printer);
+            var result = new PackingListProcessor().PrintPackingListDocument(packingLists, printer, printPreview);
         }
 
         public static void PrintAvailableLocations(List<Location> locations,
-            DocumentPrinterPreferences printer)
+            DocumentPrinterPreferences printer, bool printPreview)
         {
-            var result = new AvailableLocationsProcessor().PrintAvailableLocationsDocument(locations, printer);
+            var result = new AvailableLocationsProcessor().PrintAvailableLocationsDocument(locations, printer, printPreview);
         }
 
         public static void PrintPickList(List<PickList> pickLists,
-            DocumentPrinterPreferences printer)
+            DocumentPrinterPreferences printer, bool printPreview)
         {
-            var result = new PickListProcessor().PrintPickListDocument(pickLists, printer);
+            var result = new PickListProcessor().PrintPickListDocument(pickLists, printer, printPreview);
         }
     }
 }

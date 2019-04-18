@@ -40,5 +40,6 @@ namespace NeutronCore.Global
         public bool IptiDisplays { get; set; }
         public bool LoadRackOrders { get; set; }
         public bool SerialPicking { get; set; }
+        public bool PrintPreview { get; set; }
     }
 }
