@@ -2751,8 +2751,11 @@ namespace Neutron.Forms
 
         private void MBGo_Click(object sender, EventArgs e)
         {
-
-            if (GetCheckedAvailableOrderIds().Count > 0)
+            TextBoxFindAvailableOrders.Text = string.Empty;
+            ShowAvailableOrders();
+            var numOrders = _ordersToPick.Where(o => o.OrderId != null).Count();
+            if(numOrders > 0)
+           // if (GetCheckedAvailableOrderIds().Count > 0)
             {
                 Task.Run(() => _logger.Log($"Batch Start: [{DateTime.Now.ToLongTimeString()}]"));
 
