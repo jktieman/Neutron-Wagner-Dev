@@ -16,7 +16,7 @@ namespace Neutron.Models
     {
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly LocationsRepository _locationsRepository;
-        private NeutronDb db = new NeutronDb();  
+        private readonly NeutronDb _db = new NeutronDb();  
 
         public InventoryManager(GenericRepository<Inventory> repoInventory, LocationsRepository locationsRepository)
         {
@@ -24,11 +24,9 @@ namespace Neutron.Models
             _locationsRepository = locationsRepository;
         }
 
-
         public void DeleteInventoryRecord(int invId, bool releaseOnly = false)
         {
-            var inventory = db.Inventory.Find(invId);
-            //var inventory = _repoInventory.FindByKey(invId);
+            var inventory = _db.Inventory.Find(invId);
             if (inventory == null) return;
             if (releaseOnly)
             {
@@ -36,18 +34,16 @@ namespace Neutron.Models
                 {
                     GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                     _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-                   // _repoInventory.Delete(inventory.Id);
-                    db.Inventory.Remove(inventory);
-                    db.SaveChanges();
+                    _db.Inventory.Remove(inventory);
+                    _db.SaveChanges();
                 }
             }
             else
             {
                 GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                 _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-               // _repoInventory.Delete(inventory.Id);
-                db.Inventory.Remove(inventory);
-                db.SaveChanges();
+                _db.Inventory.Remove(inventory);
+                _db.SaveChanges();
             }
         }
 

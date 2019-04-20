@@ -76,7 +76,7 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public IEnumerable<LocationView> FindLocationViewsByStation(string find = "", int stationId = 0)
+        public IEnumerable<LocationView> FindLocationViewsByStation(int stationId = 0)
         {
             var recs = new List<LocationView>();
             if (stationId != 0)
@@ -87,15 +87,13 @@ namespace NeutronData.Repositories
                 {
                     using (var context = new NeutronDb())
                     {
-                        var param = new SqlParameter("@Find", find);
-                        var paramInUse = new SqlParameter("@StationId", stationId);
-                        recs = context.Database.SqlQuery<LocationView>("usp_GetLocationViewsFindByStation @Find, @StationId", param, paramInUse).ToList();
+                        var paramStation = new SqlParameter("@StationId", stationId);
+                        recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByStation @StationId", paramStation).ToList();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Task.Run(
-                        () => _logger.Log($"Get All Location Views Error.   {ex.Message} \r\n {ex.InnerException}"));
+                    Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
                 }
 
                 Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));

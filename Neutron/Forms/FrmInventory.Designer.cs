@@ -544,6 +544,7 @@
             this.TextBoxViewEditDescription.Location = new System.Drawing.Point(534, 28);
             this.TextBoxViewEditDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditDescription.Name = "TextBoxViewEditDescription";
+            this.TextBoxViewEditDescription.ReadOnly = true;
             this.TextBoxViewEditDescription.Size = new System.Drawing.Size(516, 29);
             this.TextBoxViewEditDescription.TabIndex = 12;
             this.TextBoxViewEditDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -554,6 +555,7 @@
             this.TextBoxViewEditItem.Location = new System.Drawing.Point(175, 27);
             this.TextBoxViewEditItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditItem.Name = "TextBoxViewEditItem";
+            this.TextBoxViewEditItem.ReadOnly = true;
             this.TextBoxViewEditItem.Size = new System.Drawing.Size(140, 29);
             this.TextBoxViewEditItem.TabIndex = 11;
             this.TextBoxViewEditItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -638,6 +640,7 @@
             this.MbNewListing.TabIndex = 3;
             this.MbNewListing.Text = "Listing";
             this.MbNewListing.UseSelectable = true;
+            this.MbNewListing.Visible = false;
             this.MbNewListing.Click += new System.EventHandler(this.MbNewListing_Click);
             // 
             // MbNewClose
@@ -1211,6 +1214,7 @@
             this.TextBoxInventoryNewLocationsDescription.Location = new System.Drawing.Point(414, 13);
             this.TextBoxInventoryNewLocationsDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxInventoryNewLocationsDescription.Name = "TextBoxInventoryNewLocationsDescription";
+            this.TextBoxInventoryNewLocationsDescription.ReadOnly = true;
             this.TextBoxInventoryNewLocationsDescription.Size = new System.Drawing.Size(516, 29);
             this.TextBoxInventoryNewLocationsDescription.TabIndex = 1;
             this.TextBoxInventoryNewLocationsDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1221,6 +1225,7 @@
             this.TextBoxInventoryNewLocationsItem.Location = new System.Drawing.Point(143, 13);
             this.TextBoxInventoryNewLocationsItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxInventoryNewLocationsItem.Name = "TextBoxInventoryNewLocationsItem";
+            this.TextBoxInventoryNewLocationsItem.ReadOnly = true;
             this.TextBoxInventoryNewLocationsItem.Size = new System.Drawing.Size(140, 29);
             this.TextBoxInventoryNewLocationsItem.TabIndex = 0;
             this.TextBoxInventoryNewLocationsItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;

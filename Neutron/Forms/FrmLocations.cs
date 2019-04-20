@@ -154,16 +154,14 @@ namespace Neutron.Forms
             var idx = 0;
             var find = TextBoxFind.Text.ToLower().Trim();
 
-            if (CheckBoxAllStations.Checked)
-                views = _locationRepository.FindLocationViews(find);
-            else
-                views = _locationRepository.FindLocationViewsByStation(find, _station.StationId);
+            views = CheckBoxAllStations.Checked 
+                ? _locationRepository.FindLocationViews(find) 
+                : _locationRepository.FindLocationViewsByStation(_station.StationId);
 
 
-            if (MButtonAllLocations.Text == "Available")
-                recs = views;
-            else
-                recs = views.Where(v => v.InUse == false).ToList();
+            recs = MButtonAllLocations.Text == "Available" 
+                ? views 
+                : views.Where(v => v.InUse == false).ToList();
 
             var blv = new BindingListView<LocationView>(recs.ToList());
 
@@ -203,20 +201,22 @@ namespace Neutron.Forms
 
         private void SetupViewEditBindings()
         {
-            TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
-            ComboBoxViewEditStation.DataBindings.Add("SelectedValue", _bindingSource, "StationId");
-            ComboBoxViewEditDevice.DataBindings.Add("SelectedValue", _bindingSource, "Loc1");
-            TextBoxViewEditLoc2.DataBindings.Add("Text", _bindingSource, "Loc2");
-            TextBoxViewEditLoc3.DataBindings.Add("Text", _bindingSource, "Loc3");
-            TextBoxViewEditLoc4.DataBindings.Add("Text", _bindingSource, "Loc4");
-            TextBoxViewEditLoc5.DataBindings.Add("Text", _bindingSource, "Loc5");
-            TextBoxViewEditSlot.DataBindings.Add("Text", _bindingSource, "Slot");
-            ComboBoxViewEditSizeCode.DataBindings.Add("SelectedValue", _bindingSource, "SizeCodeId");
-            ComboBoxViewEditVelocityCode.DataBindings.Add("SelectedValue", _bindingSource, "VelocityCodeId");
-            ComboBoxViewEditHeightCode.DataBindings.Add("SelectedValue", _bindingSource, "HeightCodeId");
-            ComboBoxViewEditLocationCode.DataBindings.Add("SelectedValue", _bindingSource, "LocationCodeId");
-            CheckBoxInUse.DataBindings.Add("Checked", _bindingSource, "InUse");
+            //TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
+            //ComboBoxViewEditStation.DataBindings.Add("SelectedValue", _bindingSource, "StationId");
+            //ComboBoxViewEditDevice.DataBindings.Add("SelectedValue", _bindingSource, "Loc1");
+            //TextBoxViewEditLoc2.DataBindings.Add("Text", _bindingSource, "Loc2");
+            //TextBoxViewEditLoc3.DataBindings.Add("Text", _bindingSource, "Loc3");
+            //TextBoxViewEditLoc4.DataBindings.Add("Text", _bindingSource, "Loc4");
+            //TextBoxViewEditLoc5.DataBindings.Add("Text", _bindingSource, "Loc5");
+            //TextBoxViewEditSlot.DataBindings.Add("Text", _bindingSource, "Slot");
+            //ComboBoxViewEditSizeCode.DataBindings.Add("SelectedValue", _bindingSource, "SizeCodeId");
+            //ComboBoxViewEditVelocityCode.DataBindings.Add("SelectedValue", _bindingSource, "VelocityCodeId");
+            //ComboBoxViewEditHeightCode.DataBindings.Add("SelectedValue", _bindingSource, "HeightCodeId");
+            //ComboBoxViewEditLocationCode.DataBindings.Add("SelectedValue", _bindingSource, "LocationCodeId");
+            //CheckBoxInUse.DataBindings.Add("Checked", _bindingSource, "InUse");
         }
+
+
 
         private int GetRecordCount()
         {
@@ -318,8 +318,12 @@ namespace Neutron.Forms
 
         private void SaveNew()
         {
-            var stId = ((Station) ComboBoxNewStation.SelectedItem).Id;
-            var deviceNumber = ((HardwareDeviceLookup) ComboBoxNewDevice.SelectedItem).Id;
+            var station = ((Station)ComboBoxNewStation.SelectedItem);
+            if (station == null) return;
+            var stId = station.Id;
+            var device = ((HardwareDeviceLookup)ComboBoxNewDevice.SelectedItem);
+            if (device == null) return;
+            var deviceNumber = device.Id;
 
             if (IntegerValidator(TextBoxNewLoc2.Text.ParseInt()))
             {
@@ -333,13 +337,20 @@ namespace Neutron.Forms
                         if (IntegerValidator(TextBoxNewLoc5.Text.ParseInt()))
                         {
                             var loc5 = TextBoxNewLoc5.Text.ParseInt();
-                            var rec = _repoLocation.All().Where(r =>
-                                r.StationId == stId && r.Loc1 == deviceNumber && r.Loc2 == loc2
-                                && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5).FirstOrDefault();
+                            var rec = _repoLocation.All().FirstOrDefault(r => r.StationId == stId && r.Loc1 == deviceNumber && r.Loc2 == loc2
+                                                                              && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5);
                             if (rec == null)
                             {
-                                _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
-
+                                string slotName;
+                                if (stId != 8)
+                                {
+                                    _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
+                                    slotName = _slotName.SlotName;
+                                }
+                                else
+                                {
+                                    slotName = TextBoxNewSlot.Text;
+                                }
                                 var loc = new Location
                                 {
                                     StationId = stId,
@@ -348,15 +359,15 @@ namespace Neutron.Forms
                                     Loc3 = loc3,
                                     Loc4 = loc4,
                                     Loc5 = loc5,
-                                    Slot = _slotName.SlotName,
+                                    Slot = slotName,
                                     InUse = CheckBoxInUseNew.Checked,
-                                    SizeCodeId = (ComboBoxNewSizeCode.SelectedItem as SizeCode).Id,
-                                    VelocityCodeId = (ComboBoxNewVelocityCode.SelectedItem as VelocityCode).Id,
-                                    HeightCodeId = (ComboBoxNewHeightCode.SelectedItem as HeightCode).Id,
-                                    LocationCodeId = (ComboBoxNewLocationCode.SelectedItem as LocationCode).Id
+                                    SizeCodeId = ((SizeCode) ComboBoxNewSizeCode.SelectedItem).Id,
+                                    VelocityCodeId = ((VelocityCode) ComboBoxNewVelocityCode.SelectedItem).Id,
+                                    HeightCodeId = ((HeightCode) ComboBoxNewHeightCode.SelectedItem).Id,
+                                    LocationCodeId = ((LocationCode) ComboBoxNewLocationCode.SelectedItem).Id
                                 };
 
-                                TextBoxNewSlot.Text = _slotName.SlotName;
+                                TextBoxNewSlot.Text = slotName;
                                 try
                                 {
                                     _repoLocation.Insert(loc);
@@ -399,9 +410,15 @@ namespace Neutron.Forms
 
         private void UpdateViewEdit()
         {
-            var id = ((ObjectView<LocationView>) _bindingSource.Current).Object.Id;
-            var stId = ((Station) ComboBoxViewEditStation.SelectedItem).Id;
-            var deviceNumber = ((HardwareDeviceLookup) ComboBoxViewEditDevice.SelectedItem).Id;
+            var locationView = ((ObjectView<LocationView>) _bindingSource.Current).Object;
+            if (locationView == null) return;
+            var id = locationView.Id;
+            var station = ((Station) ComboBoxViewEditStation.SelectedItem);
+            if (station == null) return;
+            var stId = station.Id;
+            var device = ((HardwareDeviceLookup) ComboBoxViewEditDevice.SelectedItem);
+            if (device == null) return;
+            var deviceNumber = device.Id;
             if (IntegerValidator(TextBoxViewEditLoc2.Text.ParseInt()))
             {
                 var loc2 = TextBoxViewEditLoc2.Text.ParseInt();
@@ -414,8 +431,17 @@ namespace Neutron.Forms
                         if (IntegerValidator(TextBoxViewEditLoc5.Text.ParseInt()))
                         {
                             var loc5 = TextBoxViewEditLoc5.Text.ParseInt();
+                            string slotName;
+                            if (stId != 8)
+                            {
+                                _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
+                                slotName = _slotName.SlotName;
+                            }
+                            else
+                            {
+                                slotName = TextBoxViewEditSlot.Text;
+                            }
 
-                            _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
                             var rec = new Location
                             {
                                 Id = id,
@@ -425,15 +451,15 @@ namespace Neutron.Forms
                                 Loc3 = loc3,
                                 Loc4 = loc4,
                                 Loc5 = loc5,
-                                Slot = _slotName.SlotName,
+                                Slot = slotName,
                                 InUse = CheckBoxInUse.Checked,
-                                SizeCodeId = (ComboBoxViewEditSizeCode.SelectedItem as SizeCode).Id,
-                                VelocityCodeId = (ComboBoxViewEditVelocityCode.SelectedItem as VelocityCode).Id,
-                                HeightCodeId = (ComboBoxViewEditHeightCode.SelectedItem as HeightCode).Id,
-                                LocationCodeId = (ComboBoxViewEditLocationCode.SelectedItem as LocationCode).Id
+                                SizeCodeId = ((SizeCode) ComboBoxViewEditSizeCode.SelectedItem).Id,
+                                VelocityCodeId = ((VelocityCode) ComboBoxViewEditVelocityCode.SelectedItem).Id,
+                                HeightCodeId = ((HeightCode) ComboBoxViewEditHeightCode.SelectedItem).Id,
+                                LocationCodeId = ((LocationCode) ComboBoxViewEditLocationCode.SelectedItem).Id
                             };
 
-                            TextBoxViewEditSlot.Text = _slotName.SlotName;
+                            TextBoxViewEditSlot.Text = slotName;
 
                             try
                             {
@@ -449,22 +475,22 @@ namespace Neutron.Forms
                         }
                         else
                         {
-                            MessageBox.Show("Invalid Entry.");
+                            MessageBox.Show("Invalid Tag Entry.");
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Invalid Entry.");
+                        MessageBox.Show("Invalid Partition Entry.");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Entry.");
+                    MessageBox.Show("Invalid Level/Shelf Entry.");
                 }
             }
             else
             {
-                MessageBox.Show("Invalid Entry.");
+                MessageBox.Show("Invalid Tray/Bin  Entry.");
             }
         }
 
@@ -510,9 +536,8 @@ namespace Neutron.Forms
             Location rec;
             try
             {
-                rec = _repoLocation.All().Where(r =>
-                    r.StationId == loc.StationId && r.Loc1 == loc.Loc1 && r.Loc2 == loc.Loc2
-                    && r.Loc3 == loc.Loc3 && r.Loc4 == loc.Loc4 && r.Loc5 == loc.Loc5).FirstOrDefault();
+                rec = _repoLocation.All().FirstOrDefault(r => r.StationId == loc.StationId && r.Loc1 == loc.Loc1 && r.Loc2 == loc.Loc2
+                                                              && r.Loc3 == loc.Loc3 && r.Loc4 == loc.Loc4 && r.Loc5 == loc.Loc5);
                 if (rec != null)
                 {
                     MessageBox.Show("Location already exists.", "Duplicate Entry", MessageBoxButtons.OK,
@@ -669,6 +694,8 @@ namespace Neutron.Forms
         private void ComboBoxNewStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var stationId = ((Station) ComboBoxNewStation.SelectedItem)?.Id ?? 1;
+            TextBoxNewSlot.ReadOnly = stationId != 8;
+
             var sv = _repoStation.GetStationView(stationId);
 
             ComboBoxNewDevice.DataSource = sv.HardwareDevices
@@ -681,6 +708,8 @@ namespace Neutron.Forms
         private void ComboBoxViewEditStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var stationId = ((Station) ComboBoxViewEditStation.SelectedItem)?.Id ?? 1;
+            TextBoxViewEditSlot.ReadOnly = stationId != 8;
+
             var sv = _repoStation.GetStationView(stationId);
 
             ComboBoxViewEditDevice.DataSource = sv.HardwareDevices
@@ -726,7 +755,39 @@ namespace Neutron.Forms
 
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
+            LoadViewEditData();
+
+
+
+            //var grid = (LocationView)DataGridView1;
+            //if (grid.CurrentRow != null)
+            //{
+            //    var location = (LocationView) grid.CurrentRow.DataBoundItem;
+            //}
+
+
             tabControl1.SelectedTab = tabPage2;
+        }
+
+        private void LoadViewEditData()
+        {
+            var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
+            var location = _repoLocation.FindByKey(id);
+
+            TextBoxViewEditId.Text = location.Id.ToString();
+            ComboBoxViewEditStation.SelectedValue = location.StationId;
+            ComboBoxViewEditDevice.SelectedValue = location.Loc1;
+            TextBoxViewEditLoc2.Text= location.Loc2.ToString();
+            TextBoxViewEditLoc3.Text= location.Loc3.ToString();
+            TextBoxViewEditLoc4.Text= location.Loc4.ToString();
+            TextBoxViewEditLoc5.Text= location.Loc5.ToString();
+            TextBoxViewEditSlot.Text= location.Slot;
+            ComboBoxViewEditSizeCode.SelectedValue = location.SizeCodeId;
+            ComboBoxViewEditVelocityCode.SelectedValue = location.VelocityCodeId;
+            ComboBoxViewEditHeightCode.SelectedValue = location.HeightCodeId;
+            ComboBoxViewEditLocationCode.SelectedValue = location.LocationCodeId;
+            CheckBoxInUse.Checked = location.InUse;
+
         }
 
         private void MButtonNew_Click(object sender, EventArgs e)

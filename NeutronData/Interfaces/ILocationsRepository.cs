@@ -10,7 +10,7 @@ namespace NeutronData.Interfaces
         IEnumerable<Location> AvailableLocations();
         IEnumerable<Location> AvailableLocationsAll();
         Task<IEnumerable<LocationView>> GetAllLocationViewsExact(int stationId, int sizeCodeId, int velocityCodeId, int heightCodeId, int locationCodeId, bool inUse );
-        IEnumerable<LocationView> FindLocationViewsByStation(string find = "", int stationId = 0);
+        IEnumerable<LocationView> FindLocationViewsByStation(int stationId = 0);
         IEnumerable<LocationView> FindLocationViews(string find = "");
         void SetLocationInUse(int locationId, bool b);
     }

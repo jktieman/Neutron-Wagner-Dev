@@ -5269,7 +5269,12 @@ namespace Neutron.Forms
 
         private void MBMainOrderManager_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
+            LoadOrderManagerScreen();
+        }
+
+        private void LoadOrderManagerScreen()
+        {
+ Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"Job Manager Main Screen Start"));
             var watch = new Stopwatch();
             watch.Start();
@@ -6959,9 +6964,7 @@ namespace Neutron.Forms
 
         private void MBRackBack_Click(object sender, EventArgs e)
         {
-            LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = OrderListing;
+            LoadOrderManagerScreen();
         }
 
         private void MBPrintToteLabel_Click(object sender, EventArgs e)

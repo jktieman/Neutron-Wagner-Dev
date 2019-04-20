@@ -34,6 +34,7 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.CheckBoxAllStations = new System.Windows.Forms.CheckBox();
             this.LabelFindDescription = new System.Windows.Forms.Label();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
@@ -109,7 +110,6 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
-            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -191,6 +191,22 @@
             this.tabPage1.Size = new System.Drawing.Size(1147, 644);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
+            // 
+            // ComboBoxStationNumber
+            // 
+            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxStationNumber.FormattingEnabled = true;
+            this.ComboBoxStationNumber.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "8"});
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(587, 50);
+            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(58, 32);
+            this.ComboBoxStationNumber.TabIndex = 25;
             // 
             // CheckBoxAllStations
             // 
@@ -625,7 +641,6 @@
             this.TextBoxViewEditSlot.Location = new System.Drawing.Point(640, 144);
             this.TextBoxViewEditSlot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditSlot.Name = "TextBoxViewEditSlot";
-            this.TextBoxViewEditSlot.ReadOnly = true;
             this.TextBoxViewEditSlot.Size = new System.Drawing.Size(190, 28);
             this.TextBoxViewEditSlot.TabIndex = 1;
             this.TextBoxViewEditSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1035,22 +1050,6 @@
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // ComboBoxStationNumber
-            // 
-            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxStationNumber.FormattingEnabled = true;
-            this.ComboBoxStationNumber.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "8"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(587, 50);
-            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(58, 32);
-            this.ComboBoxStationNumber.TabIndex = 25;
             // 
             // FrmLocations
             // 

@@ -224,9 +224,19 @@ namespace Neutron.Forms
 
         private void LoadCurrent(ItemDefinitionView item)
         {
+            var stationNumber = _station.StationNumber;
+            if (_station.StationNumber >= 10)
+            {
+                var station = _repoStation.FindBy(r => r.StationNumber == 8).FirstOrDefault();
+                if (station != null)
+                {
+                    stationNumber = station.StationNumber;
+                }
+            }
+
             _currentItemDefinition = item;
 
-            var recs = _repoInv.FindInventoryViewsByStation(item.Item, _station.StationId).ToList();
+            var recs = _repoInv.FindInventoryViewsByStation(item.Item, stationNumber).ToList();
             var blv = new BindingListView<SqlInventoryView>(recs);
             _bindingSourceCurrent.DataSource = blv;
             MBCurrentLocations.Text = $"Current Locations ({_bindingSourceCurrent.Count})";
@@ -246,16 +256,32 @@ namespace Neutron.Forms
 
         private async Task LoadNewLocations(ItemDefinitionView item)
         {
-
-            if (CheckBoxAll.Checked)
+            var stationNumber = _station.StationNumber;
+            if (_station.StationNumber >= 10)
             {
-                var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(string.Empty, item.StationId));
+                var station = _repoStation.FindBy(r => r.StationNumber == 8).FirstOrDefault();
+                if (station != null)
+                {
+                    stationNumber = station.StationNumber;
+                    CheckBoxAll.Checked = true;
+                    CheckBoxAll.Visible = false;
+                }
+            }
+            else
+            {
+                CheckBoxAll.Visible = true;
+            }
+
+
+           if (CheckBoxAll.Checked)
+            {
+                var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(stationNumber));
                 var blvAll = new BindingListView<LocationView>(views.ToList());
                 _bindingSourceNewLocations.DataSource = blvAll;
             }
             else
             {
-                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(item.StationId,
+                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(stationNumber,
                      item.SizeCodeId, item.VelocityCodeId, item.HeightCodeId, item.LocationCodeId, inUse: false));
                 var blv = new BindingListView<LocationView>(views.ToList());
                 _bindingSourceNewLocations.DataSource = blv;
@@ -292,7 +318,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void LoadItemDefinitions(int recId = 0)
+        private async Task LoadItemDefinitions(int recId = 0)
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -332,19 +358,21 @@ namespace Neutron.Forms
 
             DataGridViewHot.DataSource = _bindingSourceItemDefinitions;
             // UpdateDataGrid(_bindingSourceItemDefinitions);
-
-            if (GetRecordCount(_bindingSourceItemDefinitions) > 0)
+            var recordCount = GetRecordCount(_bindingSourceItemDefinitions);
+            if (recordCount > 0)
             {
                 if (recId != 0)
                 {
                     idx = IndexOf(_bindingSourceItemDefinitions, recId);
                 }
-                DataGridViewHot.FirstDisplayedScrollingRowIndex = DataGridViewHot.Rows[idx].Index;
-                DataGridViewHot.Refresh();
+
+                DataGridViewHot.FirstDisplayedScrollingRowIndex = idx; // DataGridViewHot.Rows[idx].Index;
+                DataGridViewHot.Update();
                 DataGridViewHot.CurrentCell = DataGridViewHot.Rows[idx].Cells[1];
                 DataGridViewHot.Rows[idx].Selected = true;
                 _currentItemDefinition =
                      ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
+                if(recordCount == 1) await LoadCurrentAndNew();
             }
             else
             {
@@ -353,12 +381,28 @@ namespace Neutron.Forms
                 {
                     MessageBox.Show($"{item.Item} is on Station {item.Station.StationNumber}");
                 }
+                ClearCurrentAndNew();
             }
             stopwatch.Stop();
             Console.WriteLine($"Item Definition Views Time: {stopwatch.ElapsedMilliseconds.ToString()}");
 
             DataGridViewHot.ClearSelection();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void ClearCurrentAndNew()
+        {
+            //_bindingSourceCurrent.  .Clear();
+            MBCurrentLocations.Text = $"Current Locations (0)";
+            MBHotPick.Enabled = false;
+            MBHotStore.Enabled = false;
+            MBCurrentLocations.Enabled = false;
+            
+           // _bindingSourceNewLocations.Clear();
+            MBNewLocations.Text = $"New Locations (0)";
+            MBHotPick.Enabled = false;
+            MBHotStore.Enabled = false;
+            MBNewLocations.Enabled = false;
         }
 
         public int IndexOf(BindingSource bs, int value)
@@ -577,16 +621,16 @@ namespace Neutron.Forms
             DataGridViewHot.AutoGenerateColumns = false;
             DataGridViewHot.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            var bCol = new DataGridViewButtonColumn
-            {
-                HeaderText = "",
-                Visible = true,
-                Name = "Position",
-                Text = "Position",
-                UseColumnTextForButtonValue = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            };
-            DataGridViewHot.Columns.Add(bCol);
+            //var bCol = new DataGridViewButtonColumn
+            //{
+            //    HeaderText = "",
+            //    Visible = true,
+            //    Name = "Position",
+            //    Text = "Position",
+            //    UseColumnTextForButtonValue = true,
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            //};
+            //DataGridViewHot.Columns.Add(bCol);
 
             var xcol = new DataGridViewCheckBoxColumn
             {
@@ -610,6 +654,20 @@ namespace Neutron.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
                 ,
                 Name = "StationName"
+            };
+            DataGridViewHot.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Slot"
+                ,
+                HeaderText = "Slot"
+                ,
+                Visible = true
+                ,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                ,
+                Name = "Slot"
             };
             DataGridViewHot.Columns.Add(col);
 
@@ -735,19 +793,7 @@ namespace Neutron.Forms
             };
             DataGridViewHot.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Slot"
-                ,
-                HeaderText = "Slot"
-                ,
-                Visible = true
-                ,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                ,
-                Name = "Slot"
-            };
-            DataGridViewHot.Columns.Add(col);
+           
 
             foreach (DataGridViewColumn column in DataGridViewHot.Columns)
             {
@@ -824,7 +870,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "ReceivedDate",
                 HeaderText = @"Received Date",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
             };
@@ -836,7 +882,7 @@ namespace Neutron.Forms
                 DataPropertyName = "StorageTypeName",
                 HeaderText = @"Storage Type",
                 Name = "StorageTypeName",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
             DataGridViewHot.Columns.Add(col);
@@ -1044,6 +1090,7 @@ namespace Neutron.Forms
             TextBoxFindCostCenter.Visible = false;
             RadioButtonCostCenter.Visible = false;
             MBHotAccept.Text = _nomenclature.MBStoreAccept;
+            MBHotAccept.Enabled = true;
             RadioButtonPick.Text = "Store";
             if (_currentGridDataType == GridDataType.Current)
             {
@@ -1136,6 +1183,7 @@ namespace Neutron.Forms
                     TextBoxHotPickLoc3.Text = location.Loc3.ToString();
                     TextBoxHotPickLoc4.Text = location.Loc4.ToString();
                     TextBoxHotPickLoc5.Text = location.Loc5.ToString();
+                    LabelSlot.Text = location.Slot;
 
                     ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
                     ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
