@@ -16,7 +16,7 @@ namespace NeutronData.ModelViews
         public int Priority { get; set; }
         public int Lines { get; set; }
         public int Pieces { get; set; }
-        public string LoadDate { get; set; }
+        public DateTime LoadDate { get; set; }
         public Order Order { get; set; }
     }
 }

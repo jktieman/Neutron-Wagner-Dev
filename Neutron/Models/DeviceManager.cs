@@ -168,7 +168,7 @@ namespace Neutron.Models
                                         Task.Run(() => _logger.Log($"{sb1}"));
 
                                         var num = deviceMover.MoverNumber;
-                                       await Task.Run(() => ProcessInMotion(num, loc2));
+                                        await Task.Run(() => ProcessInMotion(num, loc2));
                                         //ProcessInMotion(num, loc2);
                                     }
                                     else
@@ -226,7 +226,7 @@ namespace Neutron.Models
                             {
                                 sb.AppendLine($"Device {deviceMover.MoverNumber} is in Motion.");
                                 var sb1 = sb;
-                                Task.Run(() => _logger.Log($"{sb1.ToString()}"));
+                                _logger.Log($"{sb1.ToString()}");
                                 await Task.Run(() => ProcessInMotion(deviceMover.MoverNumber, loc2));
                                 //ProcessInMotion(deviceMover.MoverNumber, loc2);
                             }
@@ -243,12 +243,12 @@ namespace Neutron.Models
                                 sb.AppendLine();
                                 sb.AppendLine($"Device {deviceMover.MoverNumber} is in Stopped.");
                                 var sb1 = sb;
-                                Task.Run(() => _logger.Log($"{sb1}"));
+                                _logger.Log($"{sb1}");
                                 await Task.Run(() => VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2));
                                 //VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2);
                             }
                             var sb2 = sb;
-                            Task.Run(() => _logger.Log($"{sb2}"));
+                            _logger.Log($"{sb2}");
                         }
                     }
                 }
@@ -295,7 +295,7 @@ namespace Neutron.Models
             {
                 sb.AppendLine($"VML-Verify Move Location: Carousel in Position. {deviceMoverMoverNumber}--{currentTray}--{loc2}");
             }
-            Task.Run(() => _logger.Log($"{sb}"));
+            _logger.Log($"{sb}");
         }
 
         private void ProcessInMotion(int deviceMoverMoverNumber, int loc2)
@@ -359,7 +359,7 @@ namespace Neutron.Models
                 sb.AppendLine($"PIM-Process In Motion - Carousel in Position. {deviceMoverMoverNumber}--{loc2}");
             }
 EXITNOW:
-            Task.Run(() => _logger.Log($"{sb}"));
+            _logger.Log($"{sb}");
         }
 
         public void Reset()
@@ -378,7 +378,7 @@ EXITNOW:
                             var loc1 = location.Loc1;
                             var loc2 = location.Loc2;
 
-                            sb.AppendLine($"RESET FUNCTION Position Device: {loc1}-{loc2}");
+                            sb.AppendLine($"RESET FUNCTION Position Device Back To: {loc1}-{loc2}");
 
                             var status = GlobalVar.Shuttle.GetDeviceStatus(loc1);
 
@@ -426,7 +426,7 @@ EXITNOW:
                     }
                 }
             }
-            Task.Run(() => _logger.Log($"{sb}"));
+            _logger.Log($"{sb}");
         }
     }
 }

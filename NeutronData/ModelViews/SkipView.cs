@@ -24,7 +24,7 @@ namespace NeutronData.ModelViews
         public string OrderStatusName { get; set; }
         public int Quantity { get; set; }
         public int Picked { get; set; }
-        public string LoadDate { get; set; }
+        public DateTime LoadDate { get; set; }
         public OrderDetail OrderDetail { get; set; }
         public List<PickLocation> PickLocations { get; set; }
     }

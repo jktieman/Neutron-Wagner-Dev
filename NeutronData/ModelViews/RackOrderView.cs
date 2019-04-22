@@ -17,7 +17,7 @@ namespace NeutronData.ModelViews
         private int _lines;
         private int _pieces;
         private string _searchField;
-        public string LoadDate { get; set; }
+        public DateTime LoadDate { get; set; }
         public Order Order { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
 

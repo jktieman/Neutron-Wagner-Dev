@@ -178,7 +178,7 @@ namespace Neutron.Forms
             {
                 if (bp.OrderId != order.Id) continue;
                 string pos = bp.PositionNumber.ToString();
-                Control c = Controls.Find("Pos" + pos + "Display", true).Single();
+                Control c = Controls.Find("Pos" + pos + "Display", true).First();
                 if (c != null)
                 {
                     var panel = ((Panel)c);
@@ -1759,7 +1759,7 @@ namespace Neutron.Forms
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
             };
-            col.DefaultCellStyle.Format = "{0:dd.MM.yyyy}";
+            //col.DefaultCellStyle.Format = "{0:dd.MM.yyyy}";
             DataGridPickView.Columns.Add(col);
 
             col = new DataGridViewTextBoxColumn
@@ -2754,8 +2754,8 @@ namespace Neutron.Forms
             TextBoxFindAvailableOrders.Text = string.Empty;
             ShowAvailableOrders();
             var numOrders = _ordersToPick.Where(o => o.OrderId != null).Count();
-            if(numOrders > 0)
-           // if (GetCheckedAvailableOrderIds().Count > 0)
+            if (numOrders > 0)
+            // if (GetCheckedAvailableOrderIds().Count > 0)
             {
                 Task.Run(() => _logger.Log($"Batch Start: [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -2932,11 +2932,7 @@ namespace Neutron.Forms
             if (recs.Count > 0)
             {
                 //sequence the inventory Recs by Received Date
-                var sortedRecs = recs.OrderBy(o => o.ReceivedDate).ToList();
-                foreach (var inv in sortedRecs)
-                {
-                    inventorySequence.Add(inv);
-                }
+                inventorySequence = recs.OrderBy(o => o.ReceivedDate).ToList();
             }
             return inventorySequence;
         }
@@ -2976,8 +2972,8 @@ namespace Neutron.Forms
                 var details = currentItem.Order.OrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
                 {
-                    if (detail.LineStatusId != (int) LineStatus.Available &&
-                        detail.LineStatusId != (int) LineStatus.Skipped) continue;
+                    if (detail.LineStatusId != (int)LineStatus.Available &&
+                        detail.LineStatusId != (int)LineStatus.Skipped) continue;
                     //key builder makes each line of orderdetails unique so that an order with the same item
                     // will be picked separately
                     // PickStops will be grouped by key, not item number
@@ -3412,7 +3408,7 @@ namespace Neutron.Forms
             for (var i = 0; i < _ordersToPick.Count; i++)
             {
                 var pos = (i + 1).ToString();
-                Control c = Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
+                Control c = Controls.Find("TextBoxPickPos" + pos, true).First() as TextBox;
                 if (c == null) continue;
                 c.Font = font;
                 c.Height = 43;
@@ -3599,10 +3595,10 @@ namespace Neutron.Forms
 
             Task.Run(() => _deviceManager.FirstMoveAsync());
 
-           //Task.Run(() => _deviceManager.MoveNext(1));
-           //Task.Run(() => _deviceManager.MoveNext(2));
-           //Task.Run(() => _deviceManager.MoveNext(3));
-           //Task.Run(() => _deviceManager.MoveNext(4));
+            //Task.Run(() => _deviceManager.MoveNext(1));
+            //Task.Run(() => _deviceManager.MoveNext(2));
+            //Task.Run(() => _deviceManager.MoveNext(3));
+            //Task.Run(() => _deviceManager.MoveNext(4));
 
             Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
             Task.Run(() => _logger.Log($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -3995,16 +3991,11 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.Log($"UpdateInventoryLocation Start : [{DateTime.Now.ToLongTimeString()}]"));
 
-            var loc1 = TextBoxPickLoc1.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc1.ToString();
-            var loc2 = TextBoxPickLoc2.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc2.ToString();
-            var loc3 = TextBoxPickLoc3.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc3.ToString();
-            var loc4 = TextBoxPickLoc4.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
-            var loc5 = TextBoxPickLoc5.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc5.ToString();
-
-
-
-            _logger.Log($"Update Inventory Location: {loc1}-{loc2}");
-
+            TextBoxPickLoc1.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc1.ToString();
+            TextBoxPickLoc2.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc2.ToString();
+            TextBoxPickLoc3.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc3.ToString();
+            TextBoxPickLoc4.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
+            TextBoxPickLoc5.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc5.ToString();
 
             LabelLocationNumber.Text = string.Format(format: "{0} of {1}"
                 , arg0: _currentPickStop.InventoryIndex + 1, arg1: _currentPickStop.Inventory.Count);
@@ -4013,9 +4004,6 @@ namespace Neutron.Forms
             TextBoxReceivedDate.Text = _currentPickStop.CurrentInventoryLocation.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = _currentPickStop.CurrentInventoryLocation.PrimeBin;
             LabelStaticRelease.Text = _currentPickStop.CurrentInventoryLocation.StorageType.Name;
-
-         //   PositionDevice(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4.ParseInt(), true);
-            ShowShi(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4, _currentPickStop.QuantityToBePicked.ToString());
 
             Task.Run(() => _logger.Log($"UpdateInventoryLocation End : [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -4201,38 +4189,76 @@ namespace Neutron.Forms
 
         private void ClearOrderPositions()
         {
-            TextBoxPos1.Text = string.Empty;
-            TextBoxPos2.Text = string.Empty;
-            TextBoxPos3.Text = string.Empty;
-            TextBoxPos4.Text = string.Empty;
-            TextBoxPos5.Text = string.Empty;
-            TextBoxPos6.Text = string.Empty;
-            TextBoxPos7.Text = string.Empty;
-            TextBoxPos8.Text = string.Empty;
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"TextBoxPos{pos}", true).First();
+                if (c != null)
+                {
+                    var textBox = ((TextBox)c);
+                    textBox.Text = string.Empty;
+                }
+            }
+
+            //TextBoxPos1.Text = string.Empty;
+            //TextBoxPos2.Text = string.Empty;
+            //TextBoxPos3.Text = string.Empty;
+            //TextBoxPos4.Text = string.Empty;
+            //TextBoxPos5.Text = string.Empty;
+            //TextBoxPos6.Text = string.Empty;
+            //TextBoxPos7.Text = string.Empty;
+            //TextBoxPos8.Text = string.Empty;
         }
 
         private void ClearPickPositions()
         {
-            TextBoxPickPos1.Text = _ordersToPick[0].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos2.Text = _ordersToPick[1].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos3.Text = _ordersToPick[2].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos4.Text = _ordersToPick[3].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos5.Text = _ordersToPick[4].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos6.Text = _ordersToPick[5].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos7.Text = _ordersToPick[6].OrderComplete ? "END" : string.Empty;
-            TextBoxPickPos8.Text = _ordersToPick[7].OrderComplete ? "END" : string.Empty;
+            var font = new Font("Microsoft San Serif", 24);
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"TextBoxPickPos{pos}", true).First();
+                if (c != null)
+                {
+                    var textBox = ((TextBox)c);
+                    textBox.Font = font;
+                    textBox.Text = bp.OrderComplete ? "END" : string.Empty;
+                }
+            }
+
+
+
+            //TextBoxPickPos1.Text = _ordersToPick[0].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos2.Text = _ordersToPick[1].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos3.Text = _ordersToPick[2].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos4.Text = _ordersToPick[3].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos5.Text = _ordersToPick[4].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos6.Text = _ordersToPick[5].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos7.Text = _ordersToPick[6].OrderComplete ? "END" : string.Empty;
+            //TextBoxPickPos8.Text = _ordersToPick[7].OrderComplete ? "END" : string.Empty;
         }
 
         private void ClearPickDisplays()
         {
-            Pos1Display.BackColor = _ordersToPick[0].OrderComplete ? Color.Green : Color.Transparent;
-            Pos2Display.BackColor = _ordersToPick[1].OrderComplete ? Color.Green : Color.Transparent;
-            Pos3Display.BackColor = _ordersToPick[2].OrderComplete ? Color.Green : Color.Transparent;
-            Pos4Display.BackColor = _ordersToPick[3].OrderComplete ? Color.Green : Color.Transparent;
-            Pos5Display.BackColor = _ordersToPick[4].OrderComplete ? Color.Green : Color.Transparent;
-            Pos6Display.BackColor = _ordersToPick[5].OrderComplete ? Color.Green : Color.Transparent;
-            Pos7Display.BackColor = _ordersToPick[6].OrderComplete ? Color.Green : Color.Transparent;
-            Pos8Display.BackColor = _ordersToPick[7].OrderComplete ? Color.Green : Color.Transparent;
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"Pos{pos}Display", true).First();
+                if (c != null)
+                {
+                    var panel = ((Panel)c);
+                    panel.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+                }
+            }
+
+
+            //Pos1Display.BackColor = _ordersToPick[0].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos2Display.BackColor = _ordersToPick[1].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos3Display.BackColor = _ordersToPick[2].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos4Display.BackColor = _ordersToPick[3].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos5Display.BackColor = _ordersToPick[4].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos6Display.BackColor = _ordersToPick[5].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos7Display.BackColor = _ordersToPick[6].OrderComplete ? Color.Green : Color.Transparent;
+            //Pos8Display.BackColor = _ordersToPick[7].OrderComplete ? Color.Green : Color.Transparent;
 
 
             //foreach (var bp in _ordersToPick)
@@ -4291,18 +4317,18 @@ namespace Neutron.Forms
             //Pos8Display.BackColor = Color.Transparent;
         }
 
-        private int GetTotalRequiredThisStop(PickStop currentPickStop)
-        {
-            var total = TextBoxPickPos1.Text.ParseInt();
-            total += TextBoxPickPos2.Text.ParseInt();
-            total += TextBoxPickPos3.Text.ParseInt();
-            total += TextBoxPickPos4.Text.ParseInt();
-            total += TextBoxPickPos5.Text.ParseInt();
-            total += TextBoxPickPos6.Text.ParseInt();
-            total += TextBoxPickPos7.Text.ParseInt();
-            total += TextBoxPickPos8.Text.ParseInt();
-            return total;
-        }
+        //private int GetTotalRequiredThisStop(PickStop currentPickStop)
+        //{
+        //    var total = TextBoxPickPos1.Text.ParseInt();
+        //    total += TextBoxPickPos2.Text.ParseInt();
+        //    total += TextBoxPickPos3.Text.ParseInt();
+        //    total += TextBoxPickPos4.Text.ParseInt();
+        //    total += TextBoxPickPos5.Text.ParseInt();
+        //    total += TextBoxPickPos6.Text.ParseInt();
+        //    total += TextBoxPickPos7.Text.ParseInt();
+        //    total += TextBoxPickPos8.Text.ParseInt();
+        //    return total;
+        //}
 
 
         private void MBPickSkip_Click(object sender, EventArgs e)
@@ -5047,6 +5073,18 @@ namespace Neutron.Forms
             {
                 _currentPickStop.InventoryIndex += 1;
                 _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[_currentPickStop.InventoryIndex];
+                
+                var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1.ToString();
+                var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2.ToString();
+                var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3.ToString();
+                var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
+                var loc5 = _currentPickStop.CurrentInventoryLocation.Location.Loc5.ToString();
+
+                _logger.Log($"Get Next Inventory Location: {loc1}-{loc2}");
+
+                PositionDevice(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4.ParseInt(), true);
+                ShowShi(loc1.ParseInt(), loc2.ParseInt(), loc3.ParseInt(), loc4, _currentPickStop.QuantityToBePicked.ToString());
+
                 UpdateInventoryLocation();
                 result = true;
             }
@@ -5091,12 +5129,15 @@ namespace Neutron.Forms
             {
                 if (pickView.PickPosition == pos)
                 {
-                    pickView.QuantityToBePicked = newQty;
+                    if (newQty <= pickView.GetQuantityToBePicked())
+                    {
+                        pickView.QuantityToBePicked = newQty;
+                        _currentPickStop.QuantityToBePicked = _currentPickStop.GetTotalQuantityToBePicked();
+                        LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
+                        UpdatePickScreen();
+                    }
                 }
             }
-            _currentPickStop.QuantityToBePicked = _currentPickStop.GetTotalQuantityToBePicked();
-            LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
-            UpdatePickScreen();
         }
 
         private void ButtonMove_Click(object sender, EventArgs e)
@@ -5274,7 +5315,7 @@ namespace Neutron.Forms
 
         private void LoadOrderManagerScreen()
         {
- Cursor.Current = Cursors.WaitCursor;
+            Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"Job Manager Main Screen Start"));
             var watch = new Stopwatch();
             watch.Start();
@@ -6585,9 +6626,9 @@ namespace Neutron.Forms
 
                 //var location = _currentPickStop.CurrentInventoryLocation.Location;
 
-               // _logger.Log($"After Reset get _currentPickStop.CurrentInventoryLocation.Location: {location.Slot}");
+                // _logger.Log($"After Reset get _currentPickStop.CurrentInventoryLocation.Location: {location.Slot}");
 
-               // PositionDevice(location.Loc1, location.Loc2, location.Loc3, location.Loc4, true);
+                // PositionDevice(location.Loc1, location.Loc2, location.Loc3, location.Loc4, true);
             }
         }
 
@@ -6760,14 +6801,26 @@ namespace Neutron.Forms
 
         private void ClearTextBoxPosBackColor()
         {
-            TextBoxPos1.BackColor = Color.White;
-            TextBoxPos2.BackColor = Color.White;
-            TextBoxPos3.BackColor = Color.White;
-            TextBoxPos4.BackColor = Color.White;
-            TextBoxPos5.BackColor = Color.White;
-            TextBoxPos6.BackColor = Color.White;
-            TextBoxPos7.BackColor = Color.White;
-            TextBoxPos8.BackColor = Color.White;
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"TextBoxPos{pos}", true).First();
+                if (c != null)
+                {
+                    var textBox = ((TextBox)c);
+                    textBox.BackColor = Color.White;
+                }
+            }
+
+
+            //TextBoxPos1.BackColor = Color.White;
+            //TextBoxPos2.BackColor = Color.White;
+            //TextBoxPos3.BackColor = Color.White;
+            //TextBoxPos4.BackColor = Color.White;
+            //TextBoxPos5.BackColor = Color.White;
+            //TextBoxPos6.BackColor = Color.White;
+            //TextBoxPos7.BackColor = Color.White;
+            //TextBoxPos8.BackColor = Color.White;
         }
 
         private void MBFillStarters_Click(object sender, EventArgs e)

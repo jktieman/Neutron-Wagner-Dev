@@ -59,7 +59,7 @@ namespace NeutronData.Repositories
                     Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
                     Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
                     Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-                    LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                    LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 })
@@ -87,7 +87,7 @@ namespace NeutronData.Repositories
                     Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
                     Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
                     Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-                    LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                    LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 })
@@ -116,7 +116,7 @@ namespace NeutronData.Repositories
                     Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
                     Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
                     Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-                    LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                    LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 })
@@ -142,7 +142,7 @@ namespace NeutronData.Repositories
                 Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
                 Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
                 Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId
             })
@@ -199,7 +199,7 @@ namespace NeutronData.Repositories
                              ,
                              Pieces = r.Sum(s => s.Quantity)
                              ,
-                             LoadDate = r.Key.LoadDate.ToString("G")
+                             LoadDate = r.Key.LoadDate
                             
 
                          }).ToList();
@@ -219,7 +219,7 @@ namespace NeutronData.Repositories
                     //        ,
                     //        Pieces = r.Order.OrderDetails.Sum(s => s.Quantity)
                     //        ,
-                    //        LoadDate = r.Order.LoadDate.ToString("G")
+                    //        LoadDate = r.Order.LoadDate)
                     //        , Order = r.Order
 
                     //    }).Where(s => s.Ord1.Contains(search) || s.Ord2.Contains(search)) .ToList();
@@ -301,7 +301,7 @@ namespace NeutronData.Repositories
                     Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
                     Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
                     FirstPickStation = GetFirstPickStation(s.OrderDetails),
-                    LoadDate = s.LoadDate.ToString("d"),
+                    LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 })
@@ -553,7 +553,7 @@ namespace NeutronData.Repositories
                 Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
                 Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
                 Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId
             }).Where(r => r.OrderStatusId == 6)
@@ -579,7 +579,7 @@ namespace NeutronData.Repositories
                     Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
                     Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
                     Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                    LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                    LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 }).Where(r => r.OrderStatusId == 6 && r.SearchField.Contains(search))
@@ -680,7 +680,7 @@ namespace NeutronData.Repositories
                 Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
                 Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
                 Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId,
             }).Where(r => statusToGet.Contains(r.OrderStatusId))
@@ -1022,7 +1022,7 @@ namespace NeutronData.Repositories
                 skip.Picked = rec.PickedQuantity;
                 skip.Quantity = rec.Quantity;
                 skip.OrderId = rec.OrderId;
-                skip.LoadDate = rec.Order.LoadDate.ToString("G");
+                skip.LoadDate = rec.Order.LoadDate;
 
                 skipViews.Add(skip);
             }
@@ -1047,7 +1047,7 @@ namespace NeutronData.Repositories
             //        Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
             //        Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
             //        Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-            //        LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+            //        LoadDate = s.LoadDate,
             //        OrderStatusId = s.OrderStatusId,
             //        ShipMethodId = s.ShipMethodId
             //    })
@@ -1074,7 +1074,7 @@ namespace NeutronData.Repositories
                 Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
                 Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
                 Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId
             }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
@@ -1100,7 +1100,7 @@ namespace NeutronData.Repositories
                     Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
                     Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
                     Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                    LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                    LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
@@ -1118,7 +1118,7 @@ namespace NeutronData.Repositories
                     Ord2 = s.Ord2,
                     Priority = s.Priority,
                     Order = s,
-                    LoadDate = s.LoadDate.ToString(CultureInfo.CurrentCulture),
+                    LoadDate = s.LoadDate,
                     StatusName = s.OrderDetails.FirstOrDefault()?.LineStatus.Name,
                     OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == 8).ToList()
                 }).Where(o => o.Order.OrderStatusId != 6)
