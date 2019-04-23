@@ -7206,7 +7206,7 @@ namespace Neutron.Forms
         private void MBSearchAvailableOrdersRack_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            ShowAvailableOrders(0, TextBoxFindAvailableOrdersRack.Text.Trim().ToLower());
+            ShowAvailableOrdersRack(0, TextBoxFindAvailableOrdersRack.Text.Trim().ToLower());
             Cursor.Current = Cursors.Default;
         }
 
@@ -7215,7 +7215,7 @@ namespace Neutron.Forms
             // MessageBox.Show($" TextBoxFindAvailableOrdersRack Key code: {e.KeyCode}");
             if (e.KeyCode == Keys.Return)
             {
-                ShowAvailableOrders(0, TextBoxFindAvailableOrdersRack.Text.Trim().ToLower());
+                ShowAvailableOrdersRack(0, TextBoxFindAvailableOrdersRack.Text.Trim().ToLower());
             }
             if (e.KeyCode == Keys.Escape)
             {

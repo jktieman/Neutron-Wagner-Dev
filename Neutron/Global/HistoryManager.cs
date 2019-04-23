@@ -117,10 +117,11 @@ namespace Neutron.Global
         {
             var cCenter = "          ";
             var orderDetailInfo = string.Empty;
-            var info = value.OrderDetailInfo.Trim();
 
-            if (!string.IsNullOrEmpty(info))
+
+            if (!string.IsNullOrEmpty(value.OrderDetailInfo))
             {
+                var info = value.OrderDetailInfo.Trim();
                 if (info.EndsWith("261") || info.Length == 24)
                 {
                     orderDetailInfo = cCenter + info;
