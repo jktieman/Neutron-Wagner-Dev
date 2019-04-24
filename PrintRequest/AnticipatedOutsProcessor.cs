@@ -15,11 +15,12 @@ namespace PrintRequest
     {
         private const int SpaceAboveTitle = 10;
         private const int SpaceAboveHeader = 75;
-        private const int NumRowsPerPage = 23;
+        private const int NumRowsPerPage = 25;
         private const int RowHeight = 22;
         private const int HeaderPadding = 5;
         private int _printedRows = 0;
         private int lineLength = 1050;
+        private int _pageCount = 1;
 
         private readonly int[] _columnWidths = new int[]
         {
@@ -96,6 +97,7 @@ namespace PrintRequest
             DrawBody(e.Graphics, rowPosition);
             if (MoreRowToPrint())
             {
+                _pageCount++;
                 e.HasMorePages = true;
             }
             else
@@ -198,6 +200,13 @@ namespace PrintRequest
             }
 
             _printedRows += NumRowsPerPage;
+
+            var pageNumberFormat = new StringFormat() { Alignment = StringAlignment.Center };
+            var pageNumberString = $"Page {_pageCount}";
+            var stringSize = g.MeasureString(pageNumberString, _bodyFont);
+
+            var pageNumberRect = new RectangleF(0F, 775F, 1050F, stringSize.Height);
+            g.DrawString(pageNumberString, _bodyFont, Brushes.Black, pageNumberRect, pageNumberFormat);
         }
 
         private bool MoreRowToPrint()

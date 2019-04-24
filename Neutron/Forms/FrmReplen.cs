@@ -155,8 +155,6 @@ namespace Neutron.Forms
 
         private void UpdateNomenclature()
         {
-            MBHotAccept.Text = _nomenclature.MBPickAccept;
-            MBHotStore.Text = _nomenclature.MBStoreAccept;
             MBStoreAccept.Text = _nomenclature.MBStoreAccept;
             LabelTray.Text = _nomenclature.LabelTray;
             LabelOver.Text = _nomenclature.LabelOver;
@@ -867,72 +865,7 @@ namespace Neutron.Forms
             col.Name = "Id";
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            //**********************************************************************************************           
-            //DataGridViewInventory
-
-            DataGridViewInventory.AutoGenerateColumns = false;
-            DataGridViewInventory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            DataGridViewInventory.DefaultCellStyle.ForeColor = Color.Black;
-            DataGridViewInventory.DefaultCellStyle.BackColor = Color.White;
-
-            var bCol = new DataGridViewButtonColumn();
-            bCol.HeaderText = "   ";
-            bCol.Visible = false;
-            bCol.Name = "HotPick";
-            bCol.Text = "Hot Pick";
-            bCol.FlatStyle = FlatStyle.Popup;
-            col.Width = w;
-            bCol.UseColumnTextForButtonValue = true;
-            DataGridViewInventory.Columns.Add(bCol);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Item";
-            col.HeaderText = "Item";
-            col.Width = w * 3;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Item";
-            DataGridViewInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Description";
-            col.HeaderText = "Description";
-            col.Width = w * 4;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "Description";
-            DataGridViewInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Quantity";
-            col.HeaderText = "Quantity";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Quantity";
-            DataGridViewInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Slot";
-            col.HeaderText = "Slot";
-            col.Name = "Slot";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            DataGridViewInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "ReceivedDate";
-            col.HeaderText = "Received Date";
-            col.Width = w * 2;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "ReceivedDate";
-            col.DefaultCellStyle.Format = "MM-dd-yyyy";
-            DataGridViewInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Id";
-            col.HeaderText = "Id";
-            col.Visible = false;
-            col.Name = "Id";
-            DataGridViewInventory.Columns.Add(col);
-
+            
             //********************************************************************
             // DataGridViewNewOrder
 
@@ -941,7 +874,7 @@ namespace Neutron.Forms
             DataGridViewNewOrder.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewNewOrder.DefaultCellStyle.BackColor = Color.White;
 
-            bCol = new DataGridViewButtonColumn();
+            var bCol = new DataGridViewButtonColumn();
             bCol.HeaderText = "   ";
             bCol.Visible = true;
             bCol.Name = "AddItem";
@@ -2245,37 +2178,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"UpdateImages End : [{System.DateTime.Now.ToLongTimeString()}]"));
         }
 
-        private void UpdateHotImage(string image)
-        {
-
-            Task.Run(() => _logger.Log($"Update Hot Images Start : [{System.DateTime.Now.ToLongTimeString()}]"));
-            if (!string.IsNullOrEmpty(_imagesDirectory))
-            {
-                try
-                {
-                    string path = string.Concat(_imagesDirectory, image, str2: @".jpg");
-                    if (File.Exists(path))
-                    {
-                        PictureBoxItemHotImage.Load(path);
-                    }
-                    else
-                    {
-                        path = string.Concat(_imagesDirectory, str1: @"Unknown.jpg");
-                        if (File.Exists(path))
-                        {
-                            PictureBoxItemHotImage.Load(path);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error getting Hot Image.  {ex.Message} \r\n {ex.InnerException}");
-                }
-            }
-            Task.Run(() => _logger.Log($"Update Hot Images End : [{System.DateTime.Now.ToLongTimeString()}]"));
-        }
-
-        private void UpdateInventoryLocation()
+       private void UpdateInventoryLocation()
         {
             Task.Run(() => _logger.Log($"UpdateInventoryLocation Start : [{System.DateTime.Now.ToLongTimeString()}]"));
 
@@ -3124,13 +3027,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void MBMainHotPick_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "Hot Action";
-            LabelFormTitle.BackColor = Color.Red;
-            tabControl1.SelectedTab = HotPick;
-        }
-        //New ReplenOrder
+    //New ReplenOrder
         private void MBMainNewOrder_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "New Job";
@@ -3208,13 +3105,6 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBHotPickPickBack_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "Hot Search";
-            LabelFormTitle.BackColor = Color.Green;
-            tabControl1.SelectedTab = HotPick;
-        }
-
         private void MBNewOrderClose_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Job Listing";
@@ -3229,57 +3119,6 @@ namespace Neutron.Forms
             LabelFormTitle.BackColor = Color.Green;
             tabControl1.SelectedTab = OrderListing;
         }
-
-        private void DataGridViewInventory_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == 0)
-            {
-                currentInventoryView = (SqlInventoryView)bindingSourceHot.Current;
-                int loc1 = currentInventoryView.Loc1;
-                int loc2 = currentInventoryView.Loc2;
-                int loc3 = currentInventoryView.Loc3;
-                int loc4 = currentInventoryView.Loc4;
-                PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-
-                ShowShi(loc1, loc2, currentInventoryView.Loc3, currentInventoryView.Loc4.ToString()
-                  , currentInventoryView.Quantity.ToString());
-
-                UpdateHotPickScreen(currentInventoryView);
-                LabelFormTitle.BackColor = Color.Red;
-                LabelFormTitle.Text = "Hot Pick";
-                tabControl1.SelectedTab = HotPickPick;
-            }
-        }
-
-        private void UpdateHotPickScreen(SqlInventoryView invItem)
-        {
-            LabelHotPickDescription.Text = invItem.Description;
-            LabelHotPickItem.Text = invItem.Item;
-            LabelHotPickUOI.Text = invItem.UnitOfIssueName;
-            TextBoxHotPickLoc1.Text = invItem.Loc1.ToString();
-            TextBoxHotPickLoc2.Text = invItem.Loc2.ToString();
-            TextBoxHotPickLoc3.Text = invItem.Loc3.ToString();
-            TextBoxHotPickLoc4.Text = invItem.Loc4.ToString();
-            TextBoxHotPickLoc5.Text = invItem.Loc5.ToString();
-            TextBoxHotPickLocationQuantity.Text = invItem.Quantity.ToString();
-            UpdateHotImage(invItem.Item);
-        }
-
-        //Hot Pick Screen
-        private void ButtonLocationCount_Click(object sender, EventArgs e)
-        {
-            //int inventoryId = currentInventoryView.Id;
-            //int qty = OpenLocationCountForm(inventoryId);
-            ////refresh the datasource using the Search function
-            //if (qty >= 0)
-            //{
-            //    FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            //    SetCurrentInventoryView(inventoryId);
-
-            //    UpdateHotPickScreen(currentInventoryView);
-            //}
-        }
-
 
         private void MBLocationCount_Click(object sender, EventArgs e)
         {
@@ -3345,183 +3184,7 @@ namespace Neutron.Forms
             currentInventoryView = (SqlInventoryView)bindingSourceHot.Current;
         }
 
-        private void MBHotPickAccept_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-            Inventory inv = repoInventory.FindByKey(currentInventoryView.Id);
-            inv.Quantity -= pickQty;
-            repoInventory.Update(inv);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.PickHot, inv);
-
-            LabelFormTitle.Text = "Hot Search";
-            LabelFormTitle.BackColor = Color.Green;
-            tabControl1.SelectedTab = HotPick;
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void MBHotStoreAccept_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-            Inventory inv = repoInventory.FindByKey(currentInventoryView.Id);
-            inv.Quantity += pickQty;
-            repoInventory.Update(inv);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.StoreHot, inv);
-
-            LabelFormTitle.Text = "Hot Search";
-            LabelFormTitle.BackColor = Color.Green;
-            tabControl1.SelectedTab = HotPick;
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void MBHotAccept_Click(object sender, EventArgs e)
-        {
-            Inventory inv;
-            ClearAllShi();
-            ActionCode actionCode = GetHotActionCode();
-            Cursor.Current = Cursors.WaitCursor;
-            int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-            inv = repoInventory.FindByKey(currentInventoryView.Id);
-
-            if (RadioButtonPick.Text == "Pick")
-            {
-                inv.Quantity -= pickQty;
-                if (currentInventoryView.Item == currentPickStop.Item)
-                {
-                    TextBoxLocationQuantity.Text = inv.Quantity.ToString(); // TextBoxHotPickLocationQuantity.Text;
-                    TextBoxTotalQuantity.Text = (int.Parse(TextBoxTotalQuantity.Text) - pickQty).ToString();
-                }
-            }
-            else if (RadioButtonPick.Text == "Store")
-            {
-                inv.Quantity += pickQty;
-                if (currentInventoryView.Item == currentPickStop.Item)
-                {
-                    TextBoxLocationQuantity.Text = inv.Quantity.ToString(); //  TextBoxHotPickLocationQuantity.Text;
-                    TextBoxTotalQuantity.Text = (int.Parse(TextBoxTotalQuantity.Text) + pickQty).ToString();
-                }
-            }
-            TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
-            repoInventory.Update(inv);
-            GlobalVar.HistoryManager.SaveHistory(actionCode, inv);
-            FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            DataGridViewInventory.Refresh();
-            LabelFormTitle.Text = "Hot Search";
-            LabelFormTitle.BackColor = Color.Green;
-            Cursor.Current = Cursors.Default;
-            tabControl1.SelectedTab = HotPick;
-
-            //---------------------------
-            //if (MBHotAccept.Text == "Pick")
-            //{
-            //    Cursor.Current = Cursors.WaitCursor;
-            //    int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-            //    Inventory inv = repoInventory.FindByKey(currentInventoryView.Id);
-            //    inv.Quantity -= pickQty;
-            //    TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
-            //    repoInventory.Update(inv);
-            //    GlobalVar.HistoryManager.SaveHistory(3, inv);
-            //    //FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            //    LabelFormTitle.Text = "Hot Search";
-            //    LabelFormTitle.BackColor = Color.Green;
-            //    tabControl1.SelectedTab = HotPick;
-            //    if (currentInventoryView.Item == currentPickStop.Item)
-            //    {
-            //        TextBoxLocationQuantity.Text = TextBoxHotPickLocationQuantity.Text;
-            //        TextBoxTotalQuantity.Text = (int.Parse(TextBoxTotalQuantity.Text) - pickQty).ToString();
-            //    }
-
-            //    Cursor.Current = Cursors.Default;
-            //}
-            //else
-            //{
-            //    Cursor.Current = Cursors.WaitCursor;
-            //    int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-            //    Inventory inv = repoInventory.FindByKey(currentInventoryView.Id);
-            //    inv.Quantity += pickQty;
-            //    TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
-            //    repoInventory.Update(inv);
-            //    GlobalVar.HistoryManager.SaveHistory(4, inv);
-            //    //FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            //    LabelFormTitle.Text = "Hot Search";
-            //    LabelFormTitle.BackColor = Color.Green;
-            //    tabControl1.SelectedTab = HotPick;
-            //    if (currentInventoryView.Item == currentPickStop.Item)
-            //    {
-            //        TextBoxLocationQuantity.Text = TextBoxHotPickLocationQuantity.Text;
-            //        TextBoxTotalQuantity.Text = (int.Parse(TextBoxTotalQuantity.Text) + pickQty).ToString();
-            //    }
-
-            //    Cursor.Current = Cursors.Default;
-            //}
-
-
-        }
-
-        private ActionCode GetHotActionCode()
-        {
-            ActionCode result = ActionCode.PickHot;
-            var radioButtons = new List<RadioButton> { RadioButtonPick, RadioButtonWarranty, RadioButtonScrap, RadioButtonOther };
-
-            if (RadioButtonPick.Text == "Pick")
-            {
-                foreach (RadioButton item in radioButtons)
-                {
-                    if (item.Checked)
-                    {
-                        switch (item.Text)
-                        {
-                            case "Pick":
-                                result = ActionCode.PickHot;
-                                break;
-                            case "Warranty":
-                                result = ActionCode.WarrantyHotPick;
-                                break;
-                            case "Scrap":
-                                result = ActionCode.ScrapHotPick;
-                                break;
-                            case "Other":
-                                result = ActionCode.OtherHotPick;
-                                break;
-                            default:
-                                result = ActionCode.PickHot;
-                                break;
-                        }
-                    }
-                }
-            }
-            else if (RadioButtonPick.Text == "Store")
-            {
-                foreach (RadioButton item in radioButtons)
-                {
-                    if (item.Checked)
-                    {
-                        switch (item.Text)
-                        {
-                            case "Store":
-                                result = ActionCode.StoreHot;
-                                break;
-                            case "Warranty":
-                                result = ActionCode.WarrantyHotStore;
-                                break;
-                            case "Scrap":
-                                result = ActionCode.ScrapHotStore;
-                                break;
-                            case "Other":
-                                result = ActionCode.OtherHotStore;
-                                break;
-                            default:
-                                result = ActionCode.StoreHot;
-                                break;
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
+     
         private void MBCompleted_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -4018,62 +3681,6 @@ namespace Neutron.Forms
 
         #endregion
 
-        #region Find Functions Hot 
-
-        private void MBFindItem_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void FindHotRecord(string findWhat = @"")
-        {
-            string find = _akaRepository.Get(findWhat);
-            TextBoxFindItem.Text = find;
-
-            try
-            {
-                //if (string.IsNullOrEmpty(s))
-                //{
-                //    bindingSourceHot.DataSource = repoInv.GetInventoryViewAll();
-                //    DataGridViewInventory.DataSource = bindingSourceHot;
-                //}
-                //else
-                //{
-                bindingSourceHot.DataSource = repoInv.FindInventoryViewsByStation(find, _station.StationId);
-                //IEnumerable<InventoryView> task = repoInv.GetInventoryViewAll();
-                //bindingSourceHot.DataSource = task
-                //    .Where(d => d.Item.ToLower().Contains(s) || d.Description.ToLower().Contains(s) || d.Slot.Contains(s)).ToList();
-                DataGridViewInventory.DataSource = bindingSourceHot;
-                //}
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Hot Find Error: " + ex.Message);
-            }
-        }
-
-        private void TextBoxFindItem_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return)
-            {
-                FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            }
-            if (e.KeyCode == Keys.Escape)
-            {
-                TextBoxFindItem.Text = "";
-            }
-        }
-
-        private void ButtonHotPickClear_Click(object sender, EventArgs e)
-        {
-            TextBoxFindItem.Text = string.Empty;
-            TextBoxFindItem.Focus();
-        }
-
-        #endregion
-
         private void MBAvailableOrdersRefresh_Click(object sender, EventArgs e)
         {
             ShowAvailableOrders();
@@ -4480,14 +4087,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBHotStoreStoreBack_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "Hot Store";
-            LabelFormTitle.BackColor = Color.Green;
-            tabControl1.SelectedTab = HotStore;
-        }
-
-        private void TextBoxPos_Click(object sender, EventArgs e)
+      private void TextBoxPos_Click(object sender, EventArgs e)
         {
             //if you click directly in a textboxpos, you override the
             //automatic get of the next empty textbox
@@ -4560,111 +4160,13 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBHotPick_Click(object sender, EventArgs e)
-        {
-            //open the Hot Action Tab with Pick or Store underlying action
-            //Backcolor Red
-            //Accept button subtracts from inventory
-            RadioButtonPick.Checked = true;
-            HotPickPick.BackColor = Color.Red;
-            LabelFormTitle.BackColor = Color.Red;
-            LabelFormTitle.Text = "Hot Pick";
-            MBHotAccept.Text = "Pick";
-            RadioButtonPick.Text = "Pick";
-            currentInventoryView = (SqlInventoryView)bindingSourceHot.Current;
-            int loc1 = currentInventoryView.Loc1;
-            int loc2 = currentInventoryView.Loc2;
-            int loc3 = currentInventoryView.Loc3;
-            int loc4 = currentInventoryView.Loc4;
-            PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-
-            ShowShi(currentInventoryView.Loc1, currentInventoryView.Loc2, currentInventoryView.Loc3
-              , currentInventoryView.Loc4.ToString(), 1.ToString());
-
-            UpdateHotPickScreen(currentInventoryView);
-            tabControl1.SelectedTab = HotPickPick;
-        }
-
-        private void MBHotStore_Click(object sender, EventArgs e)
-        {
-            //open the Hot Action Tab with Pick or Store underlying action
-            //Backcolor green
-            //Accept adds to inventory
-            RadioButtonPick.Checked = true;
-            HotPickPick.BackColor = Color.Green;
-            LabelFormTitle.BackColor = Color.Green;
-            LabelFormTitle.Text = "Hot Store";
-            MBHotAccept.Text = "Store";
-            RadioButtonPick.Text = "Store";
-            currentInventoryView = (SqlInventoryView)bindingSourceHot.Current;
-
-            int loc1 = currentInventoryView.Loc1;
-            int loc2 = currentInventoryView.Loc2;
-            int loc3 = currentInventoryView.Loc3;
-            int loc4 = currentInventoryView.Loc4;
-            PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-
-            ShowShi(currentInventoryView.Loc1, currentInventoryView.Loc2, currentInventoryView.Loc3
-              , currentInventoryView.Loc4.ToString(), 1.ToString());
-            UpdateHotPickScreen(currentInventoryView);
-            tabControl1.SelectedTab = HotPickPick;
-        }
 
         private void label4_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void DataGridViewInventory_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-            MBHotPick.Enabled = true;
-            MBHotStore.Enabled = true;
-        }
-
-        private void RadioButtonStoreAction(object sender, EventArgs e)
-        {
-            var radioButton = sender as RadioButton;
-
-            if (RadioButtonStore.Checked)
-            {
-                MBHotStoreAccept.Text = RadioButtonStore.Text;
-            }
-            else if (RadioButtonStoreWarranty.Checked)
-            {
-                MBHotStoreAccept.Text = RadioButtonStoreWarranty.Text;
-            }
-            else if (RadioButtonStoreScrap.Checked)
-            {
-                MBHotStoreAccept.Text = RadioButtonStoreScrap.Text;
-            }
-            else if (RadioButtonStoreOther.Checked)
-            {
-                MBHotStoreAccept.Text = RadioButtonStoreOther.Text;
-            }
-        }
-
-        private void RadioButtonHotAction(object sender, EventArgs e)
-        {
-            var radioButton = sender as RadioButton;
-
-            if (RadioButtonPick.Checked)
-            {
-                MBHotAccept.Text = RadioButtonPick.Text;
-            }
-            else if (RadioButtonWarranty.Checked)
-            {
-                MBHotAccept.Text = RadioButtonWarranty.Text;
-            }
-            else if (RadioButtonScrap.Checked)
-            {
-                MBHotAccept.Text = RadioButtonScrap.Text;
-            }
-            else if (RadioButtonOther.Checked)
-            {
-                MBHotAccept.Text = RadioButtonOther.Text;
-            }
-        }
-
+      
         private void FrmReplen_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F12)

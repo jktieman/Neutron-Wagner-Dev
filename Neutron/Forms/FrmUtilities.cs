@@ -21,6 +21,7 @@ using System.IO;
 using Newtonsoft.Json;
 using PrintRequest;
 using System.Deployment.Application;
+using Neutron.Extensions;
 using NeutronCore.Enums;
 
 namespace Neutron.Forms
@@ -527,7 +528,7 @@ namespace Neutron.Forms
             neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
             neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
             neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
-            neutronVariables.LogLevel = int.Parse(NumericUpDownLogLevel.Value.ToString());
+            neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
             neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
             neutronVariables.CheckForUsedItem = CheckBoxCheckForUsedItem.Checked;
@@ -536,8 +537,8 @@ namespace Neutron.Forms
             neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
             neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
             neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
-            neutronVariables.PickBatchSize = Convert.ToInt32(NumericUpDownPickBatchSize.Value);
-            neutronVariables.StoreBatchSize = Convert.ToInt32(NumericUpDownStoreBatchSize.Value);
+            neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();  
+            neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt(); 
             neutronVariables.BliEnabled = CheckBoxBliEnabled.Checked;
             neutronVariables.ShiEnabled = CheckBoxShiEnabled.Checked;
             neutronVariables.ParkPositionAfterBatch = CheckBoxParkPositionAfterBatch.Checked;
@@ -582,8 +583,8 @@ namespace Neutron.Forms
             CheckBoxEnableDocumentPrinter.Checked = neutronVariables.EnableDocumentPrinter;
             CheckBoxEnableLabelPrinter.Checked = neutronVariables.EnableLabelPrinter;
             CheckBoxPinLoginOnly.Checked = neutronVariables.PinLoginOnly;
-            NumericUpDownPickBatchSize.Value = neutronVariables.PickBatchSize;
-            NumericUpDownStoreBatchSize.Value = neutronVariables.StoreBatchSize;
+            ComboBoxPickBatchSize.SelectedIndex = ComboBoxPickBatchSize.FindStringExact(neutronVariables.PickBatchSize.ToString());
+            ComboBoxStoreBatchSize.SelectedIndex = ComboBoxStoreBatchSize.FindStringExact(neutronVariables.StoreBatchSize.ToString());
             CheckBoxBliEnabled.Checked = neutronVariables.BliEnabled;
             CheckBoxShiEnabled.Checked = neutronVariables.ShiEnabled;
             CheckBoxParkPositionAfterBatch.Checked = neutronVariables.ParkPositionAfterBatch;

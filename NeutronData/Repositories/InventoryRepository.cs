@@ -199,7 +199,7 @@ namespace NeutronData.Repositories
                 using (var context = new NeutronDb())
                 {
                     var param = new SqlParameter("@Find", find);
-                    recs = context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToList();
+                   recs = context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToList();
                 }
             }
             catch (Exception ex)

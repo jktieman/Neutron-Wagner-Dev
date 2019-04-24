@@ -87,6 +87,7 @@ namespace Neutron.Forms
         public Location CurrentLocation { get; set; }
         public Inventory CurrentInventoryItem { get; set; }
         public bool CloseButtonPressed { get; set; }
+        private bool _firstTime = true;
 
         public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
             INomenclature nomenclature)
@@ -123,6 +124,7 @@ namespace Neutron.Forms
             }
 
             ComboBoxStationNumber.SelectedIndex = 0;
+            _firstTime = false;
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
@@ -137,16 +139,18 @@ namespace Neutron.Forms
         // Set the focus to the passed in recId if it's passed in
         private void LoadInventory(int recId = 0)
         {
-            int idx;
             //ItemDefinition itemDefinition;
-            IEnumerable<SqlInventoryView> recs = new List<SqlInventoryView>();
             var findWhat = TextBoxFind.Text.ToLower().Trim();
             var find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
 
-            IEnumerable<SqlInventoryView> views = CheckBoxAllStations.Checked
-                ? _inventoryRepository.FindInventoryViews(find)
+            IEnumerable<SqlInventoryView> views = CheckBoxAllStations.Checked 
+                ? _inventoryRepository.FindInventoryViews(find) 
                 : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
+
+            //Task<IEnumerable<SqlInventoryView>> views = CheckBoxAllStations.Checked
+            //    ?  _inventoryRepository.FindInventoryViews(find)
+            //    : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
 
             _bindingSourceEquin = new BindingListView<SqlInventoryView>(views.ToList());
             _bindingSource.DataSource = _bindingSourceEquin;
@@ -164,7 +168,7 @@ namespace Neutron.Forms
 
                 if (recId != 0)
                 {
-                    idx = IndexOf(_bindingSource, recId);
+                    var idx = IndexOf(_bindingSource, recId);
                     DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
                     DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
                     DataGridView1.Rows[idx].Selected = true;
@@ -728,7 +732,7 @@ namespace Neutron.Forms
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.AllowUserToAddRows = false;
 
-            var w = (DataGridView1.Width - 60) / 14;
+            //var w = (DataGridView1.Width - 60) / 14;
 
             var bCol = new DataGridViewButtonColumn
             {
@@ -2111,7 +2115,7 @@ namespace Neutron.Forms
 
         private void CheckBoxAllStations_CheckedChanged(object sender, EventArgs e)
         {
-            FindRecord();
+            if(!_firstTime) FindRecord();
         }
 
         private void MBCreateInventoryFile_Click(object sender, EventArgs e)

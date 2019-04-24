@@ -203,9 +203,9 @@ namespace Neutron.Forms
                         this.LabelPickPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         this.LabelPickPos1.ForeColor = System.Drawing.SystemColors.ControlText;
-                        this.LabelPickPos1.Location = new System.Drawing.Point(82, 12);
+                        this.LabelPickPos1.Location = new System.Drawing.Point(77, 107);
                         this.LabelPickPos1.Name = "LabelPickPos1";
-                        this.LabelPickPos1.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos1.Size = new System.Drawing.Size(36, 26);
                         this.LabelPickPos1.TabIndex = 120;
                         this.LabelPickPos1.Text = "1";
                         this.LabelPickPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -214,9 +214,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPickPos2.Location = new System.Drawing.Point(272, 12);
+                        this.LabelPickPos2.Location = new System.Drawing.Point(267, 107);
                         this.LabelPickPos2.Name = "LabelPickPos2";
-                        this.LabelPickPos2.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos2.Size = new System.Drawing.Size(36, 26);
                         this.LabelPickPos2.TabIndex = 122;
                         this.LabelPickPos2.Text = "2";
                         this.LabelPickPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -226,9 +226,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPickPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPickPos3.Location = new System.Drawing.Point(462, 12);
+                        this.LabelPickPos3.Location = new System.Drawing.Point(457, 107);
                         this.LabelPickPos3.Name = "LabelPickPos3";
-                        this.LabelPickPos3.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos3.Size = new System.Drawing.Size(36, 26);
                         this.LabelPickPos3.TabIndex = 124;
                         this.LabelPickPos3.Text = "3";
                         this.LabelPickPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -239,9 +239,9 @@ namespace Neutron.Forms
                         this.LabelPickPos4.BackColor = System.Drawing.Color.RoyalBlue;
                         this.LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPickPos4.Location = new System.Drawing.Point(652, 12);
+                        this.LabelPickPos4.Location = new System.Drawing.Point(647, 107);
                         this.LabelPickPos4.Name = "LabelPickPos4";
-                        this.LabelPickPos4.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos4.Size = new System.Drawing.Size(36, 26);
                         this.LabelPickPos4.TabIndex = 126;
                         this.LabelPickPos4.Text = "4";
                         this.LabelPickPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -251,9 +251,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPickPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPickPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPickPos5.Location = new System.Drawing.Point(842, 12);
+                        this.LabelPickPos5.Location = new System.Drawing.Point(837, 107);
                         this.LabelPickPos5.Name = "LabelPickPos5";
-                        this.LabelPickPos5.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos5.Size = new System.Drawing.Size(36, 26);
                         this.LabelPickPos5.TabIndex = 128;
                         this.LabelPickPos5.Text = "5";
                         this.LabelPickPos5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -263,9 +263,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPickPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPickPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPickPos6.Location = new System.Drawing.Point(1032, 12);
+                        this.LabelPickPos6.Location = new System.Drawing.Point(1027, 107);
                         this.LabelPickPos6.Name = "LabelPickPos6";
-                        this.LabelPickPos6.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPickPos6.Size = new System.Drawing.Size(36, 26);
                         this.LabelPickPos6.TabIndex = 130;
                         this.LabelPickPos6.Text = "6";
                         this.LabelPickPos6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -295,12 +295,21 @@ namespace Neutron.Forms
                         //this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
                         this.LabelPickPos8.Visible = false;
 
+                        this.LabelPickPos9.Visible = false;
+                        this.LabelPickPos10.Visible = false;
+                        this.LabelPickPos11.Visible = false;
+                        this.LabelPickPos12.Visible = false;
+                        this.LabelPickPos13.Visible = false;
+                        this.LabelPickPos14.Visible = false;
+                        this.LabelPickPos15.Visible = false;
+                        this.LabelPickPos16.Visible = false;
+
                         // 
                         // TextBoxPickPos1
                         // 
                         this.TextBoxPickPos1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
                         this.TextBoxPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPickPos1.Location = new System.Drawing.Point(28, 44);
+                        this.TextBoxPickPos1.Location = new System.Drawing.Point(28, 139);
                         this.TextBoxPickPos1.Multiline = true;
                         this.TextBoxPickPos1.Name = "TextBoxPickPos1";
                         this.TextBoxPickPos1.ReadOnly = true;
@@ -314,7 +323,7 @@ namespace Neutron.Forms
                         // 
                         this.TextBoxPickPos2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
                         this.TextBoxPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPickPos2.Location = new System.Drawing.Point(218, 44);
+                        this.TextBoxPickPos2.Location = new System.Drawing.Point(218, 139);
                         this.TextBoxPickPos2.Multiline = true;
                         this.TextBoxPickPos2.Name = "TextBoxPickPos2";
                         this.TextBoxPickPos2.ReadOnly = true;
@@ -328,7 +337,7 @@ namespace Neutron.Forms
                         // 
                         this.TextBoxPickPos3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
                         this.TextBoxPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPickPos3.Location = new System.Drawing.Point(408, 44);
+                        this.TextBoxPickPos3.Location = new System.Drawing.Point(408, 139);
                         this.TextBoxPickPos3.Multiline = true;
                         this.TextBoxPickPos3.Name = "TextBoxPickPos3";
                         this.TextBoxPickPos3.ReadOnly = true;
@@ -342,7 +351,7 @@ namespace Neutron.Forms
                         // 
                         this.TextBoxPickPos4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
                         this.TextBoxPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPickPos4.Location = new System.Drawing.Point(598, 44);
+                        this.TextBoxPickPos4.Location = new System.Drawing.Point(598, 139);
                         this.TextBoxPickPos4.Multiline = true;
                         this.TextBoxPickPos4.Name = "TextBoxPickPos4";
                         this.TextBoxPickPos4.ReadOnly = true;
@@ -356,7 +365,7 @@ namespace Neutron.Forms
                         // 
                         this.TextBoxPickPos5.BackColor = System.Drawing.SystemColors.ButtonHighlight;
                         this.TextBoxPickPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPickPos5.Location = new System.Drawing.Point(788, 44);
+                        this.TextBoxPickPos5.Location = new System.Drawing.Point(788, 139);
                         this.TextBoxPickPos5.Multiline = true;
                         this.TextBoxPickPos5.Name = "TextBoxPickPos5";
                         this.TextBoxPickPos5.ReadOnly = true;
@@ -370,7 +379,7 @@ namespace Neutron.Forms
                         // 
                         this.TextBoxPickPos6.BackColor = System.Drawing.SystemColors.ButtonHighlight;
                         this.TextBoxPickPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPickPos6.Location = new System.Drawing.Point(978, 44);
+                        this.TextBoxPickPos6.Location = new System.Drawing.Point(978, 139);
                         this.TextBoxPickPos6.Multiline = true;
                         this.TextBoxPickPos6.Name = "TextBoxPickPos6";
                         this.TextBoxPickPos6.ReadOnly = true;
@@ -407,12 +416,20 @@ namespace Neutron.Forms
                         //this.TextBoxPickPos8.Tag = "7";
                         //this.TextBoxPickPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
                         this.TextBoxPickPos8.Visible = false;
+                        this.TextBoxPickPos9.Visible = false;
+                        this.TextBoxPickPos10.Visible = false;
+                        this.TextBoxPickPos11.Visible = false;
+                        this.TextBoxPickPos12.Visible = false;
+                        this.TextBoxPickPos13.Visible = false;
+                        this.TextBoxPickPos14.Visible = false;
+                        this.TextBoxPickPos15.Visible = false;
+                        this.TextBoxPickPos16.Visible = false;
 
                         // 
                         // Pos1Display
                         // 
                         this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos1Display.Location = new System.Drawing.Point(20, 44);
+                        this.Pos1Display.Location = new System.Drawing.Point(20, 139);
                         this.Pos1Display.Name = "Pos1Display";
                         this.Pos1Display.Size = new System.Drawing.Size(150, 53);
                         this.Pos1Display.TabIndex = 153;
@@ -420,7 +437,7 @@ namespace Neutron.Forms
                         // Pos2Display
                         // 
                         this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos2Display.Location = new System.Drawing.Point(210, 44);
+                        this.Pos2Display.Location = new System.Drawing.Point(210, 139);
                         this.Pos2Display.Name = "Pos2Display";
                         this.Pos2Display.Size = new System.Drawing.Size(150, 53);
                         this.Pos2Display.TabIndex = 154;
@@ -429,7 +446,7 @@ namespace Neutron.Forms
                         // Pos3Display
                         // 
                         this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos3Display.Location = new System.Drawing.Point(400, 44);
+                        this.Pos3Display.Location = new System.Drawing.Point(400, 139);
                         this.Pos3Display.Name = "Pos3Display";
                         this.Pos3Display.Size = new System.Drawing.Size(150, 53);
                         this.Pos3Display.TabIndex = 155;
@@ -438,7 +455,7 @@ namespace Neutron.Forms
                         // Pos4Display
                         // 
                         this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos4Display.Location = new System.Drawing.Point(590, 44);
+                        this.Pos4Display.Location = new System.Drawing.Point(590, 139);
                         this.Pos4Display.Name = "Pos4Display";
                         this.Pos4Display.Size = new System.Drawing.Size(150, 53);
                         this.Pos4Display.TabIndex = 156;
@@ -447,7 +464,7 @@ namespace Neutron.Forms
                         // Pos5Display
                         // 
                         this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos5Display.Location = new System.Drawing.Point(780, 44);
+                        this.Pos5Display.Location = new System.Drawing.Point(780, 139);
                         this.Pos5Display.Name = "Pos5Display";
                         this.Pos5Display.Size = new System.Drawing.Size(150, 53);
                         this.Pos5Display.TabIndex = 157;
@@ -456,7 +473,7 @@ namespace Neutron.Forms
                         // Pos6Display
                         // 
                         this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos6Display.Location = new System.Drawing.Point(970, 44);
+                        this.Pos6Display.Location = new System.Drawing.Point(970, 139);
                         this.Pos6Display.Name = "Pos6Display";
                         this.Pos6Display.Size = new System.Drawing.Size(150, 53);
                         this.Pos6Display.TabIndex = 158;
@@ -470,6 +487,7 @@ namespace Neutron.Forms
                         //this.Pos7Display.Size = new System.Drawing.Size(128, 53);
                         //this.Pos7Display.TabIndex = 162;
                         this.Pos7Display.Visible = false;
+
                         // 
                         // Pos8Display
                         // 
@@ -479,6 +497,14 @@ namespace Neutron.Forms
                         //this.Pos8Display.Size = new System.Drawing.Size(128, 53);
                         //this.Pos8Display.TabIndex = 165;
                         this.Pos8Display.Visible = false;
+                        this.Pos9Display.Visible = false;
+                        this.Pos10Display.Visible = false;
+                        this.Pos11Display.Visible = false;
+                        this.Pos12Display.Visible = false;
+                        this.Pos13Display.Visible = false;
+                        this.Pos14Display.Visible = false;
+                        this.Pos15Display.Visible = false;
+                        this.Pos16Display.Visible = false;
 
                         //-----------------Induction Screen ----------------------
                         // 
@@ -691,77 +717,77 @@ namespace Neutron.Forms
                         //this.TextBoxPos8.Tag = "7";
                         //this.TextBoxPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
                         this.TextBoxPos8.Visible = false;
-                        // 
-                        // Pos1Display
-                        // 
-                        this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos1Display.Location = new System.Drawing.Point(20, 44);
-                        this.Pos1Display.Name = "Pos1Display";
-                        this.Pos1Display.Size = new System.Drawing.Size(150, 53);
-                        this.Pos1Display.TabIndex = 153;
-                        // 
-                        // Pos2Display
-                        // 
-                        this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos2Display.Location = new System.Drawing.Point(210, 44);
-                        this.Pos2Display.Name = "Pos2Display";
-                        this.Pos2Display.Size = new System.Drawing.Size(150, 53);
-                        this.Pos2Display.TabIndex = 154;
-                        this.Pos2Display.Visible = false;
-                        // 
-                        // Pos3Display
-                        // 
-                        this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos3Display.Location = new System.Drawing.Point(400, 44);
-                        this.Pos3Display.Name = "Pos3Display";
-                        this.Pos3Display.Size = new System.Drawing.Size(150, 53);
-                        this.Pos3Display.TabIndex = 155;
-                        this.Pos3Display.Visible = false;
-                        // 
-                        // Pos4Display
-                        // 
-                        this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos4Display.Location = new System.Drawing.Point(590, 44);
-                        this.Pos4Display.Name = "Pos4Display";
-                        this.Pos4Display.Size = new System.Drawing.Size(150, 53);
-                        this.Pos4Display.TabIndex = 156;
-                        this.Pos4Display.Visible = false;
-                        // 
-                        // Pos5Display
-                        // 
-                        this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos5Display.Location = new System.Drawing.Point(780, 44);
-                        this.Pos5Display.Name = "Pos5Display";
-                        this.Pos5Display.Size = new System.Drawing.Size(150, 53);
-                        this.Pos5Display.TabIndex = 157;
-                        this.Pos5Display.Visible = false;
-                        // 
-                        // Pos6Display
-                        // 
-                        this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
-                        this.Pos6Display.Location = new System.Drawing.Point(960, 44);
-                        this.Pos6Display.Name = "Pos6Display";
-                        this.Pos6Display.Size = new System.Drawing.Size(150, 53);
-                        this.Pos6Display.TabIndex = 158;
-                        this.Pos6Display.Visible = false;
-                        // 
-                        // Pos7Display
-                        // 
-                        //this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos7Display.Location = new System.Drawing.Point(856, 44);
-                        //this.Pos7Display.Name = "Pos7Display";
-                        //this.Pos7Display.Size = new System.Drawing.Size(128, 53);
-                        //this.Pos7Display.TabIndex = 162;
-                        this.Pos7Display.Visible = false;
-                        // 
-                        // Pos8Display
-                        // 
-                        //this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos8Display.Location = new System.Drawing.Point(997, 44);
-                        //this.Pos8Display.Name = "Pos8Display";
-                        //this.Pos8Display.Size = new System.Drawing.Size(128, 53);
-                        //this.Pos8Display.TabIndex = 165;
-                        this.Pos8Display.Visible = false;
+                        //// 
+                        //// Pos1Display
+                        //// 
+                        //this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos1Display.Location = new System.Drawing.Point(20, 44);
+                        //this.Pos1Display.Name = "Pos1Display";
+                        //this.Pos1Display.Size = new System.Drawing.Size(150, 53);
+                        //this.Pos1Display.TabIndex = 153;
+                        //// 
+                        //// Pos2Display
+                        //// 
+                        //this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos2Display.Location = new System.Drawing.Point(210, 44);
+                        //this.Pos2Display.Name = "Pos2Display";
+                        //this.Pos2Display.Size = new System.Drawing.Size(150, 53);
+                        //this.Pos2Display.TabIndex = 154;
+                        //this.Pos2Display.Visible = false;
+                        //// 
+                        //// Pos3Display
+                        //// 
+                        //this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos3Display.Location = new System.Drawing.Point(400, 44);
+                        //this.Pos3Display.Name = "Pos3Display";
+                        //this.Pos3Display.Size = new System.Drawing.Size(150, 53);
+                        //this.Pos3Display.TabIndex = 155;
+                        //this.Pos3Display.Visible = false;
+                        //// 
+                        //// Pos4Display
+                        //// 
+                        //this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos4Display.Location = new System.Drawing.Point(590, 44);
+                        //this.Pos4Display.Name = "Pos4Display";
+                        //this.Pos4Display.Size = new System.Drawing.Size(150, 53);
+                        //this.Pos4Display.TabIndex = 156;
+                        //this.Pos4Display.Visible = false;
+                        //// 
+                        //// Pos5Display
+                        //// 
+                        //this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos5Display.Location = new System.Drawing.Point(780, 44);
+                        //this.Pos5Display.Name = "Pos5Display";
+                        //this.Pos5Display.Size = new System.Drawing.Size(150, 53);
+                        //this.Pos5Display.TabIndex = 157;
+                        //this.Pos5Display.Visible = false;
+                        //// 
+                        //// Pos6Display
+                        //// 
+                        //this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
+                        //this.Pos6Display.Location = new System.Drawing.Point(960, 44);
+                        //this.Pos6Display.Name = "Pos6Display";
+                        //this.Pos6Display.Size = new System.Drawing.Size(150, 53);
+                        //this.Pos6Display.TabIndex = 158;
+                        //this.Pos6Display.Visible = false;
+                        //// 
+                        //// Pos7Display
+                        //// 
+                        ////this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
+                        ////this.Pos7Display.Location = new System.Drawing.Point(856, 44);
+                        ////this.Pos7Display.Name = "Pos7Display";
+                        ////this.Pos7Display.Size = new System.Drawing.Size(128, 53);
+                        ////this.Pos7Display.TabIndex = 162;
+                        //this.Pos7Display.Visible = false;
+                        //// 
+                        //// Pos8Display
+                        //// 
+                        ////this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
+                        ////this.Pos8Display.Location = new System.Drawing.Point(997, 44);
+                        ////this.Pos8Display.Name = "Pos8Display";
+                        ////this.Pos8Display.Size = new System.Drawing.Size(128, 53);
+                        ////this.Pos8Display.TabIndex = 165;
+                        //this.Pos8Display.Visible = false;
 
 
 
@@ -838,6 +864,88 @@ namespace Neutron.Forms
                         //this.AvailablePos8Display.Size = new System.Drawing.Size(126, 53);
                         //this.AvailablePos8Display.TabIndex = 174;
                         this.AvailablePos8Display.Visible = false;
+                        break;
+                    }
+                case 8:
+                    {
+                        // 
+                        // LabelPickPos1
+                        // 
+                        this.LabelPickPos9.Visible = false;
+                        this.LabelPickPos10.Visible = false;
+                        this.LabelPickPos11.Visible = false;
+                        this.LabelPickPos12.Visible = false;
+                        this.LabelPickPos13.Visible = false;
+                        this.LabelPickPos14.Visible = false;
+                        this.LabelPickPos15.Visible = false;
+                        this.LabelPickPos16.Visible = false;
+
+                        // 
+                        // TextBoxPickPos1
+                        // 
+
+                        this.TextBoxPickPos9.Visible = false;
+                        this.TextBoxPickPos10.Visible = false;
+                        this.TextBoxPickPos11.Visible = false;
+                        this.TextBoxPickPos12.Visible = false;
+                        this.TextBoxPickPos13.Visible = false;
+                        this.TextBoxPickPos14.Visible = false;
+                        this.TextBoxPickPos15.Visible = false;
+                        this.TextBoxPickPos16.Visible = false;
+
+                        // 
+                        // Pos1Display
+                        // 
+
+                        this.Pos9Display.Visible = false;
+                        this.Pos10Display.Visible = false;
+                        this.Pos11Display.Visible = false;
+                        this.Pos12Display.Visible = false;
+                        this.Pos13Display.Visible = false;
+                        this.Pos14Display.Visible = false;
+                        this.Pos15Display.Visible = false;
+                        this.Pos16Display.Visible = false;
+
+                        //-----------------Induction Screen ----------------------
+                        // 
+                        // LabelPos1
+                        // 
+
+                        this.LabelPos9.Visible = false;
+                        this.LabelPos10.Visible = false;
+                        this.LabelPos11.Visible = false;
+                        this.LabelPos12.Visible = false;
+                        this.LabelPos13.Visible = false;
+                        this.LabelPos14.Visible = false;
+                        this.LabelPos15.Visible = false;
+                        this.LabelPos16.Visible = false;
+
+                        // 
+                        // TextBoxPos1
+                        // 
+
+                        this.TextBoxPos9.Visible = false;
+                        this.TextBoxPos10.Visible = false;
+                        this.TextBoxPos11.Visible = false;
+                        this.TextBoxPos12.Visible = false;
+                        this.TextBoxPos13.Visible = false;
+                        this.TextBoxPos14.Visible = false;
+                        this.TextBoxPos15.Visible = false;
+                        this.TextBoxPos16.Visible = false;
+
+                        // 
+                        // AvailablePos1Display
+                        // 
+
+                        this.AvailablePos9Display.Visible = false;
+                        this.AvailablePos10Display.Visible = false;
+                        this.AvailablePos11Display.Visible = false;
+                        this.AvailablePos12Display.Visible = false;
+                        this.AvailablePos13Display.Visible = false;
+                        this.AvailablePos14Display.Visible = false;
+                        this.AvailablePos15Display.Visible = false;
+                        this.AvailablePos16Display.Visible = false;
+
                         break;
                     }
             }
@@ -1149,6 +1257,7 @@ namespace Neutron.Forms
                     //   DataGridViewAvailableOrdersRack.Update();
                 }
                 CheckMarkSelectedAvailableOrders();
+                ClearTextBoxPosBackColor();
                 SetBatchPositionToFirstEmpty();
                 DataGridViewAvailableOrders.Refresh();
                 //  DataGridViewAvailableOrdersRack.Refresh();
@@ -3277,37 +3386,41 @@ namespace Neutron.Forms
 
         private void SetCurrentTextBoxPos(int batchPositionNumber)
         {
-            switch (batchPositionNumber)
-            {
-                case 1:
-                    CurrentTextBoxPos = TextBoxPos1;
-                    break;
-                case 2:
-                    CurrentTextBoxPos = TextBoxPos2;
-                    break;
-                case 3:
-                    CurrentTextBoxPos = TextBoxPos3;
-                    break;
-                case 4:
-                    CurrentTextBoxPos = TextBoxPos4;
-                    break;
-                case 5:
-                    CurrentTextBoxPos = TextBoxPos5;
-                    break;
-                case 6:
-                    CurrentTextBoxPos = TextBoxPos6;
-                    break;
-                case 7:
-                    CurrentTextBoxPos = TextBoxPos7;
-                    break;
-                case 8:
-                    CurrentTextBoxPos = TextBoxPos8;
-                    break;
-                default:
-                    CurrentTextBoxPos = TextBoxPos1;
-                    break;
-            }
+            Control c = Controls.Find($"TextBoxPos{batchPositionNumber}", true).Single() as TextBox;
+            if (c != null) CurrentTextBoxPos = (TextBox)c;
             CurrentTextBoxPos.BackColor = Color.Yellow;
+
+            //switch (batchPositionNumber)
+            //{
+            //    case 1:
+            //        CurrentTextBoxPos = TextBoxPos1;
+            //        break;
+            //    case 2:
+            //        CurrentTextBoxPos = TextBoxPos2;
+            //        break;
+            //    case 3:
+            //        CurrentTextBoxPos = TextBoxPos3;
+            //        break;
+            //    case 4:
+            //        CurrentTextBoxPos = TextBoxPos4;
+            //        break;
+            //    case 5:
+            //        CurrentTextBoxPos = TextBoxPos5;
+            //        break;
+            //    case 6:
+            //        CurrentTextBoxPos = TextBoxPos6;
+            //        break;
+            //    case 7:
+            //        CurrentTextBoxPos = TextBoxPos7;
+            //        break;
+            //    case 8:
+            //        CurrentTextBoxPos = TextBoxPos8;
+            //        break;
+            //    default:
+            //        CurrentTextBoxPos = TextBoxPos1;
+            //        break;
+            //}
+
         }
 
         private void UpdateTextBoxPosition(BatchPosition bp)
@@ -3316,48 +3429,52 @@ namespace Neutron.Forms
             var orderNumber = bp.Ord1;
             var pos = bp.PositionNumber;
 
-            switch (pos)
-            {
-                case 1:
-                    TextBoxPos1.Text = orderNumber;
-                    // SendKeys.Send("{TAB}");
-                    break;
-                case 2:
-                    TextBoxPos2.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos3;
-                    //  SendKeys.Send("{TAB}");
-                    break;
-                case 3:
-                    TextBoxPos3.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos4;
-                    //  SendKeys.Send("{TAB}");
-                    break;
-                case 4:
-                    TextBoxPos4.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos5;
-                    //  SendKeys.Send("{TAB}");
-                    break;
-                case 5:
-                    TextBoxPos5.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos6;
-                    //   SendKeys.Send("{TAB}");
-                    break;
-                case 6:
-                    TextBoxPos6.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos7;
-                    //    SendKeys.Send("{TAB}");
-                    break;
-                case 7:
-                    TextBoxPos7.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos8;
-                    //    SendKeys.Send("{TAB}");
-                    break;
-                case 8:
-                    TextBoxPos8.Text = orderNumber;
-                    //CurrentTextBoxPos = TextBoxPos1;
-                    //    SendKeys.Send("{TAB}");
-                    break;
-            }
+            Control c = Controls.Find($"TextBoxPos{pos}", true).Single() as TextBox;
+            if (c != null) c.Text = orderNumber;
+
+
+            //switch (pos)
+            //{
+            //    case 1:
+            //        TextBoxPos1.Text = orderNumber;
+            //        // SendKeys.Send("{TAB}");
+            //        break;
+            //    case 2:
+            //        TextBoxPos2.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos3;
+            //        //  SendKeys.Send("{TAB}");
+            //        break;
+            //    case 3:
+            //        TextBoxPos3.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos4;
+            //        //  SendKeys.Send("{TAB}");
+            //        break;
+            //    case 4:
+            //        TextBoxPos4.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos5;
+            //        //  SendKeys.Send("{TAB}");
+            //        break;
+            //    case 5:
+            //        TextBoxPos5.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos6;
+            //        //   SendKeys.Send("{TAB}");
+            //        break;
+            //    case 6:
+            //        TextBoxPos6.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos7;
+            //        //    SendKeys.Send("{TAB}");
+            //        break;
+            //    case 7:
+            //        TextBoxPos7.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos8;
+            //        //    SendKeys.Send("{TAB}");
+            //        break;
+            //    case 8:
+            //        TextBoxPos8.Text = orderNumber;
+            //        //CurrentTextBoxPos = TextBoxPos1;
+            //        //    SendKeys.Send("{TAB}");
+            //        break;
+            //}
             Task.Run(() => _logger.Log($"UpdateTextBoxPosition End: [{DateTime.Now.ToLongTimeString()}]"));
         }
 
@@ -4224,17 +4341,6 @@ namespace Neutron.Forms
                     textBox.Text = bp.OrderComplete ? "END" : string.Empty;
                 }
             }
-
-
-
-            //TextBoxPickPos1.Text = _ordersToPick[0].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos2.Text = _ordersToPick[1].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos3.Text = _ordersToPick[2].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos4.Text = _ordersToPick[3].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos5.Text = _ordersToPick[4].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos6.Text = _ordersToPick[5].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos7.Text = _ordersToPick[6].OrderComplete ? "END" : string.Empty;
-            //TextBoxPickPos8.Text = _ordersToPick[7].OrderComplete ? "END" : string.Empty;
         }
 
         private void ClearPickDisplays()
@@ -4249,87 +4355,7 @@ namespace Neutron.Forms
                     panel.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
                 }
             }
-
-
-            //Pos1Display.BackColor = _ordersToPick[0].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos2Display.BackColor = _ordersToPick[1].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos3Display.BackColor = _ordersToPick[2].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos4Display.BackColor = _ordersToPick[3].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos5Display.BackColor = _ordersToPick[4].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos6Display.BackColor = _ordersToPick[5].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos7Display.BackColor = _ordersToPick[6].OrderComplete ? Color.Green : Color.Transparent;
-            //Pos8Display.BackColor = _ordersToPick[7].OrderComplete ? Color.Green : Color.Transparent;
-
-
-            //foreach (var bp in _ordersToPick)
-            //{
-            //    switch (bp.PositionNumber)
-            //    {
-            //        case 1:
-            //        {
-            //            Pos1Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //            break;
-            //        }
-            //        case 2:
-            //            {
-            //                Pos2Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //        case 3:
-            //            {
-            //                Pos3Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //        case 4:
-            //            {
-            //                Pos4Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //        case 5:
-            //            {
-            //                Pos5Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //        case 6:
-            //            {
-            //                Pos6Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //        case 7:
-            //            {
-            //                Pos7Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //        case 8:
-            //            {
-            //                Pos8Display.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
-            //                break;
-            //            }
-            //    }
-            //}
-
-            //Pos2Display.BackColor = Color.Transparent;
-            //Pos3Display.BackColor = Color.Transparent;
-            //Pos4Display.BackColor = Color.Transparent;
-            //Pos5Display.BackColor = Color.Transparent;
-            //Pos6Display.BackColor = Color.Transparent;
-            //Pos7Display.BackColor = Color.Transparent;
-            //Pos8Display.BackColor = Color.Transparent;
         }
-
-        //private int GetTotalRequiredThisStop(PickStop currentPickStop)
-        //{
-        //    var total = TextBoxPickPos1.Text.ParseInt();
-        //    total += TextBoxPickPos2.Text.ParseInt();
-        //    total += TextBoxPickPos3.Text.ParseInt();
-        //    total += TextBoxPickPos4.Text.ParseInt();
-        //    total += TextBoxPickPos5.Text.ParseInt();
-        //    total += TextBoxPickPos6.Text.ParseInt();
-        //    total += TextBoxPickPos7.Text.ParseInt();
-        //    total += TextBoxPickPos8.Text.ParseInt();
-        //    return total;
-        //}
-
 
         private void MBPickSkip_Click(object sender, EventArgs e)
         {
@@ -4731,50 +4757,42 @@ namespace Neutron.Forms
                     break;
             }
 
-            List<int> locs = new List<int>();
             using (var db = new NeutronDb())
             {
-                locs = db.Inventory.Where(r => r.Quantity == 0).Select(l => l.LocationId).ToList();
-                var invs = db.Inventory.Where(r => r.Quantity == 0).ToList();
-                foreach (var inv in invs)
+                var locationIds = new List<int>();
+                var invs = db.Inventory.Where(r => r.Quantity == 0 && r.StationId == _station.StationId && r.StorageTypeId == (int)StorageType.Release).ToList();
+                if (invs.Count > 0)
                 {
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
-                    db.Inventory.Remove(inv);
-                }
-
-                db.SaveChanges();
-
-            }
-
-            using (var db = new NeutronDb())
-            {
-                foreach (var rec in locs)
-                {
-                    var loc = db.Locations.Find(rec);
-                    if (loc != null)
+                    foreach (var inv in invs)
                     {
-                        loc.InUse = false;
+                        locationIds.Add(inv.LocationId);
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
+                        db.Inventory.Remove(inv);
                     }
+
+                    db.SaveChanges();
                 }
 
-                db.SaveChanges();
+                if (locationIds.Count > 0)
+                {
+                    foreach (var locationId in locationIds)
+                    {
+                        // Look for other items in inventory where the location is the same.
+                        // Don't want to change InUse to False is there are other items using this location.
+
+                        var item = db.Inventory.Where(r => r.LocationId == locationId).FirstOrDefault();
+                        if (item == null)
+                        {
+                            var location = db.Locations.Find(locationId);
+                            if (location != null)
+                            {      
+                                location.InUse = false;
+                            }
+                        }
+                    }
+                    db.SaveChanges();
+                }
             }
-
-
-            //if (inv.Quantity <= 0 && inv.StorageTypeId == (int)StorageType.Release)
-            //{
-            //    try
-            //    {
-            //        Task.Run(() => _logger.Log($"Item: {inv.ItemDefinition.Item} and Location: {inv.Location.Slot} has been removed."));
-            //        var inventoryManager = new InventoryManager(_repoInventory, GlobalVar.HistoryManager , _locationsRepository);
-            //        inventoryManager.DeleteInventoryRecord(inv.Id, releaseOnly: true);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Task.Run(() => _logger.Log($"Update Inventory Quantity Inv Id: {inv.Id} \r\n {ex.Message}"));
-            //    }
-            //}
-
 
             if (_neutronLicense.CompanyCode == "SFH")
             {
@@ -5073,7 +5091,7 @@ namespace Neutron.Forms
             {
                 _currentPickStop.InventoryIndex += 1;
                 _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[_currentPickStop.InventoryIndex];
-                
+
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1.ToString();
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2.ToString();
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3.ToString();
@@ -5833,6 +5851,7 @@ namespace Neutron.Forms
             ListViewNewItems.Refresh();
 
             ClearNewOrderDetail();
+            ButtonAddDetail.Enabled = false;
         }
 
         private void ClearNewOrderDetail()
@@ -5886,6 +5905,7 @@ namespace Neutron.Forms
                         PartNum = itemDefinition.Item,
                         PartDesc = itemDefinition.Description,
                         Qty = ListViewNewItems.Items[i].SubItems[3].Text.Trim(),
+                        OrderDetailInfo = TextBoxNewOrderCostCenter.Text.PadRight(36),
                         TroubleBit = "0"
                     };
 
@@ -6805,27 +6825,12 @@ namespace Neutron.Forms
             {
                 string pos = bp.PositionNumber.ToString();
                 Control c = Controls.Find($"TextBoxPos{pos}", true).First();
-                if (c != null)
-                {
-                    var textBox = ((TextBox)c);
-                    textBox.BackColor = Color.White;
-                }
+                if (c != null) c.BackColor = Color.White;
             }
-
-
-            //TextBoxPos1.BackColor = Color.White;
-            //TextBoxPos2.BackColor = Color.White;
-            //TextBoxPos3.BackColor = Color.White;
-            //TextBoxPos4.BackColor = Color.White;
-            //TextBoxPos5.BackColor = Color.White;
-            //TextBoxPos6.BackColor = Color.White;
-            //TextBoxPos7.BackColor = Color.White;
-            //TextBoxPos8.BackColor = Color.White;
         }
 
         private void MBFillStarters_Click(object sender, EventArgs e)
         {
-
             if (DataGridViewAvailableOrders.Rows.Count > 0)
             {
                 foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
@@ -6876,105 +6881,6 @@ namespace Neutron.Forms
             }
         }
 
-        //private void MBHotPick_Click(object sender, EventArgs e)
-        //{
-        //    RadioButtonPick.Checked = true;
-        //    HotPickPickToDelete.BackColor = Color.Red;
-        //    LabelFormTitle.BackColor = Color.Red;
-        //    LabelFormTitle.Text = _resourceManager.GetString($"Hot");
-        //    MBHotAccept.Text = _resourceManager.GetString($"Pick");
-        //    RadioButtonPick.Text = _resourceManager.GetString($"Pick");
-        //    _currentInventoryView = (SqlInventoryView)_bindingSourceHot.Current;
-        //    int loc1 = _currentInventoryView.Loc1;
-        //    int loc2 = _currentInventoryView.Loc2;
-        //    int loc3 = _currentInventoryView.Loc3;
-        //    int loc4 = _currentInventoryView.Loc4;
-
-        //    PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-        //    ShowShi(loc1, loc2, _currentInventoryView.Loc3
-        //      , _currentInventoryView.Loc4.ToString(), 1.ToString());
-
-        //    UpdateHotPickScreen(_currentInventoryView);
-        //    tabControl1.SelectedTab = HotPickPickToDelete;
-        //}
-
-        //private void MBHotStore_Click(object sender, EventArgs e)
-        //{
-        //    RadioButtonPick.Checked = true;
-        //    HotPickPickToDelete.BackColor = Color.Green;
-        //    LabelFormTitle.BackColor = Color.Green;
-        //    LabelFormTitle.Text = _resourceManager.GetString($"HotStore");
-        //    MBHotAccept.Text = _resourceManager.GetString($"Store");
-        //    RadioButtonPick.Text = _resourceManager.GetString($"Store");
-        //    _currentInventoryView = (SqlInventoryView)_bindingSourceHot.Current;
-
-        //    int loc1 = _currentInventoryView.Loc1;
-        //    int loc2 = _currentInventoryView.Loc2;
-        //    int loc3 = _currentInventoryView.Loc3;
-        //    int loc4 = _currentInventoryView.Loc4;
-
-        //    PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-        //    ShowShi(loc1, loc2, _currentInventoryView.Loc3
-        //      , _currentInventoryView.Loc4.ToString(), 1.ToString());
-
-        //    UpdateHotPickScreen(_currentInventoryView);
-        //    tabControl1.SelectedTab = HotPickPickToDelete;
-        //}
-
-        //private void label4_Click(object sender, EventArgs e)
-        //{
-
-        //}
-
-        //private void DataGridViewInventory_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        //{
-        //    MBHotPick.Enabled = true;
-        //    MBHotStore.Enabled = true;
-        //}
-
-        //private void RadioButtonStoreAction(object sender, EventArgs e)
-        //{
-        //    var radioButton = sender as RadioButton;
-
-        //    if (RadioButtonStore.Checked)
-        //    {
-        //        MBHotStoreAccept.Text = RadioButtonStore.Text;
-        //    }
-        //    else if (RadioButtonStoreWarranty.Checked)
-        //    {
-        //        MBHotStoreAccept.Text = RadioButtonStoreWarranty.Text;
-        //    }
-        //    else if (RadioButtonStoreScrap.Checked)
-        //    {
-        //        MBHotStoreAccept.Text = RadioButtonStoreScrap.Text;
-        //    }
-        //    else if (RadioButtonStoreOther.Checked)
-        //    {
-        //        MBHotStoreAccept.Text = RadioButtonStoreOther.Text;
-        //    }
-        //}
-
-        //private void RadioButtonHotAction(object sender, EventArgs e)
-        //{
-        //    var radioButton = sender as RadioButton;
-
-        //    if (RadioButtonPick.Checked)
-        //    {
-        //        MBHotAccept.Text = RadioButtonPick.Text;
-        //    }
-        //    else if (RadioButtonWarranty.Checked)
-        //    {
-        //        MBHotAccept.Text = RadioButtonWarranty.Text;
-        //    }
-        //    else if (RadioButtonScrap.Checked)
-        //    {
-        //        MBHotAccept.Text = RadioButtonScrap.Text;
-        //    }
-        //    else if (RadioButtonOther.Checked)
-        //    {
-        //        MBHotAccept.Text = RadioButtonOther.Text;
-        //    }
-        //}
 
         private void FrmPick_KeyDown(object sender, KeyEventArgs e)
         {
@@ -7011,7 +6917,6 @@ namespace Neutron.Forms
                 {
                     AvailableOrdersBack();
                 }
-
             }
         }
 
@@ -7037,34 +6942,6 @@ namespace Neutron.Forms
                 }
             }
         }
-
-        //private void MBOrderComplete_Click(object sender, EventArgs e)
-        //{
-        //    List<Order> orders = GetCheckedOrdersRack();
-        //    if (orders.Count > 0)
-        //    {
-        //        foreach (Order order in orders)
-        //        {
-        //            //Mark OrderDetails and Order Status to 6
-        //            foreach (var detail in order.OrderDetails)
-        //            {
-        //                detail.LineStatusId = 6;
-        //                detail.EmpId = GlobalVar.User.EmpId;
-        //                GlobalVar.HistoryManager.SaveHistory(ActionCode.PickRack, value: detail);
-        //                _repoOrderDetails.Update(detail);
-        //            }
-
-        //            CheckForOrderComplete(order);
-        //        }
-
-        //        var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
-        //        uploadProcessor.CreateHostFileRack(orders);
-
-        //        ShowAvailableOrders();
-        //        TextBoxFindAvailableOrdersRack.Focus();
-        //    }
-
-        //}
 
         private void CheckForOrderComplete(Order order)
         {
@@ -7239,7 +7116,6 @@ namespace Neutron.Forms
             }
         }
 
-
         private void Main_Enter(object sender, EventArgs e)
         {
             MBMainAvailableOrders.Focus();
@@ -7279,7 +7155,6 @@ namespace Neutron.Forms
         public void ProcessDataReceived(object sender, IptiController.MySerialDataReceivedEventArgs args)
         {
             _logger.Log($"ProcessDataReceived:  {args.FormText}");
-            // MessageBox.Show(args.FormText);
             var t = args.FormText;
             var response = new IptiButtonResponse();
             if (t.Length > 14)
@@ -7833,6 +7708,46 @@ namespace Neutron.Forms
         private void ComboBoxStationNumber_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void LabelPos16_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LabelPos15_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LabelPos10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LabelPos11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LabelPos12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LabelPos13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LabelPos14_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TextBoxNewOrderQuantity_TextChanged(object sender, EventArgs e)
+        {
+            ButtonAddDetail.Enabled = TextBoxNewOrderQuantity.Text.ParseInt() > 0;
         }
     }
 }

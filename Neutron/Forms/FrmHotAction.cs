@@ -1713,7 +1713,8 @@ namespace Neutron.Forms
 
         private async void CheckBoxAll_CheckedChanged(object sender, EventArgs e)
         {
-            await LoadNewLocations(_currentItemDefinition);
+            FindItem();
+            //await LoadNewLocations(_currentItemDefinition);
         }
 
         private void ButtonHotActionCount_Click(object sender, EventArgs e)

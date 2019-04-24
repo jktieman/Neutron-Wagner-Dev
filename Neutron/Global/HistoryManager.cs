@@ -115,16 +115,34 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, OrderDetail value)
         {
+            //var cCenter = "          ";
+            //var orderDetailInfo = string.Empty;
+
+
+            //if (!string.IsNullOrEmpty(value.OrderDetailInfo))
+            //{
+            //    var info = value.OrderDetailInfo.Trim();
+            //    if (info.EndsWith("261") || info.Length == 24)
+            //    {
+            //        orderDetailInfo = cCenter + info;
+            //    }
+
+            //    if (info.Length == 36)
+            //    {
+            //        cCenter = info.Substring(0, 10);
+            //        orderDetailInfo = info;
+            //    }
+            //}
+
             var cCenter = "          ";
             var orderDetailInfo = string.Empty;
+            var info = value.OrderDetailInfo;
 
-
-            if (!string.IsNullOrEmpty(value.OrderDetailInfo))
+            if (!string.IsNullOrEmpty(info))
             {
-                var info = value.OrderDetailInfo.Trim();
                 if (info.EndsWith("261") || info.Length == 24)
                 {
-                    orderDetailInfo = cCenter + info;
+                    orderDetailInfo = $"{info}";
                 }
 
                 if (info.Length == 36)
@@ -133,6 +151,7 @@ namespace Neutron.Global
                     orderDetailInfo = info;
                 }
             }
+
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -191,7 +210,7 @@ namespace Neutron.Global
         {
             var cCenter = "          ";
             var orderDetailInfo = string.Empty;
-            var info = pickView.OrderDetail.OrderDetailInfo.Trim();
+            var info = pickView.OrderDetail.OrderDetailInfo;
 
             if (!string.IsNullOrEmpty(info))
             {

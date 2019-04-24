@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmUtilities));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -140,8 +140,6 @@
             this.RadioButtonPrimeBinFirst = new System.Windows.Forms.RadioButton();
             this.CheckBoxShiEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxBliEnabled = new System.Windows.Forms.CheckBox();
-            this.NumericUpDownStoreBatchSize = new System.Windows.Forms.NumericUpDown();
-            this.NumericUpDownPickBatchSize = new System.Windows.Forms.NumericUpDown();
             this.LabelFieldDelimiter = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
@@ -149,6 +147,7 @@
             this.CheckBoxUsePr1StyleOutputProcessor = new System.Windows.Forms.CheckBox();
             this.CheckBoxUsePr1StyleInputProcessor = new System.Windows.Forms.CheckBox();
             this.CheckBoxParkPositionAfterBatch = new System.Windows.Forms.CheckBox();
+            this.CheckBoxPrintPreview = new System.Windows.Forms.CheckBox();
             this.CheckBoxEnableLabelPrinter = new System.Windows.Forms.CheckBox();
             this.CheckBoxEnableDocumentPrinter = new System.Windows.Forms.CheckBox();
             this.ComboBoxSlotFormat = new System.Windows.Forms.ComboBox();
@@ -195,7 +194,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxPrintPreview = new System.Windows.Forms.CheckBox();
+            this.ComboBoxPickBatchSize = new System.Windows.Forms.ComboBox();
+            this.ComboBoxStoreBatchSize = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -208,8 +208,6 @@
             this.PanelNew.SuspendLayout();
             this.DisplayListing.SuspendLayout();
             this.GroupBoxPickMethod.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownStoreBatchSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownPickBatchSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).BeginInit();
             this.HardwareDevices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -1283,11 +1281,11 @@
             // DisplayListing
             // 
             this.DisplayListing.BackColor = System.Drawing.Color.RoyalBlue;
+            this.DisplayListing.Controls.Add(this.ComboBoxStoreBatchSize);
+            this.DisplayListing.Controls.Add(this.ComboBoxPickBatchSize);
             this.DisplayListing.Controls.Add(this.GroupBoxPickMethod);
             this.DisplayListing.Controls.Add(this.CheckBoxShiEnabled);
             this.DisplayListing.Controls.Add(this.CheckBoxBliEnabled);
-            this.DisplayListing.Controls.Add(this.NumericUpDownStoreBatchSize);
-            this.DisplayListing.Controls.Add(this.NumericUpDownPickBatchSize);
             this.DisplayListing.Controls.Add(this.LabelFieldDelimiter);
             this.DisplayListing.Controls.Add(this.label43);
             this.DisplayListing.Controls.Add(this.label40);
@@ -1412,54 +1410,6 @@
             this.CheckBoxBliEnabled.Text = "Batch Light Indicators Enabled";
             this.CheckBoxBliEnabled.UseVisualStyleBackColor = true;
             // 
-            // NumericUpDownStoreBatchSize
-            // 
-            this.NumericUpDownStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumericUpDownStoreBatchSize.Location = new System.Drawing.Point(197, 313);
-            this.NumericUpDownStoreBatchSize.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.NumericUpDownStoreBatchSize.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.NumericUpDownStoreBatchSize.Name = "NumericUpDownStoreBatchSize";
-            this.NumericUpDownStoreBatchSize.Size = new System.Drawing.Size(55, 22);
-            this.NumericUpDownStoreBatchSize.TabIndex = 20;
-            this.NumericUpDownStoreBatchSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.NumericUpDownStoreBatchSize.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            // 
-            // NumericUpDownPickBatchSize
-            // 
-            this.NumericUpDownPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumericUpDownPickBatchSize.Location = new System.Drawing.Point(197, 276);
-            this.NumericUpDownPickBatchSize.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.NumericUpDownPickBatchSize.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.NumericUpDownPickBatchSize.Name = "NumericUpDownPickBatchSize";
-            this.NumericUpDownPickBatchSize.Size = new System.Drawing.Size(55, 22);
-            this.NumericUpDownPickBatchSize.TabIndex = 20;
-            this.NumericUpDownPickBatchSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.NumericUpDownPickBatchSize.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            // 
             // LabelFieldDelimiter
             // 
             this.LabelFieldDelimiter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1533,6 +1483,17 @@
             this.CheckBoxParkPositionAfterBatch.TabIndex = 18;
             this.CheckBoxParkPositionAfterBatch.Text = "Park Position After Batch";
             this.CheckBoxParkPositionAfterBatch.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxPrintPreview
+            // 
+            this.CheckBoxPrintPreview.AutoSize = true;
+            this.CheckBoxPrintPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 415);
+            this.CheckBoxPrintPreview.Name = "CheckBoxPrintPreview";
+            this.CheckBoxPrintPreview.Size = new System.Drawing.Size(193, 20);
+            this.CheckBoxPrintPreview.TabIndex = 18;
+            this.CheckBoxPrintPreview.Text = "Print Preview All Documents";
+            this.CheckBoxPrintPreview.UseVisualStyleBackColor = true;
             // 
             // CheckBoxEnableLabelPrinter
             // 
@@ -1904,37 +1865,37 @@
             this.DataGridView1.AllowUserToAddRows = false;
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.DataGridView1.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
             this.DataGridView1.Location = new System.Drawing.Point(6, 107);
             this.DataGridView1.MultiSelect = false;
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
@@ -2084,16 +2045,33 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxPrintPreview
+            // ComboBoxPickBatchSize
             // 
-            this.CheckBoxPrintPreview.AutoSize = true;
-            this.CheckBoxPrintPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 415);
-            this.CheckBoxPrintPreview.Name = "CheckBoxPrintPreview";
-            this.CheckBoxPrintPreview.Size = new System.Drawing.Size(193, 20);
-            this.CheckBoxPrintPreview.TabIndex = 18;
-            this.CheckBoxPrintPreview.Text = "Print Preview All Documents";
-            this.CheckBoxPrintPreview.UseVisualStyleBackColor = true;
+            this.ComboBoxPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxPickBatchSize.FormattingEnabled = true;
+            this.ComboBoxPickBatchSize.Items.AddRange(new object[] {
+            "4",
+            "6",
+            "8",
+            "16"});
+            this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(197, 274);
+            this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
+            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(65, 24);
+            this.ComboBoxPickBatchSize.TabIndex = 24;
+            // 
+            // ComboBoxStoreBatchSize
+            // 
+            this.ComboBoxStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxStoreBatchSize.FormattingEnabled = true;
+            this.ComboBoxStoreBatchSize.Items.AddRange(new object[] {
+            "4",
+            "6",
+            "8",
+            "16"});
+            this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(197, 311);
+            this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
+            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
+            this.ComboBoxStoreBatchSize.TabIndex = 24;
             // 
             // FrmUtilities
             // 
@@ -2132,8 +2110,6 @@
             this.DisplayListing.PerformLayout();
             this.GroupBoxPickMethod.ResumeLayout(false);
             this.GroupBoxPickMethod.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownStoreBatchSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownPickBatchSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).EndInit();
             this.HardwareDevices.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
@@ -2274,8 +2250,6 @@
         private System.Windows.Forms.CheckBox CheckBoxEnableLabelPrinter;
         private System.Windows.Forms.CheckBox CheckBoxEnableDocumentPrinter;
         private System.Windows.Forms.CheckBox CheckBoxPinLoginOnly;
-        private System.Windows.Forms.NumericUpDown NumericUpDownStoreBatchSize;
-        private System.Windows.Forms.NumericUpDown NumericUpDownPickBatchSize;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.CheckBox CheckBoxShiEnabled;
@@ -2307,5 +2281,7 @@
         private System.Windows.Forms.CheckBox CheckBoxSerialPicking;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox CheckBoxPrintPreview;
+        private System.Windows.Forms.ComboBox ComboBoxStoreBatchSize;
+        private System.Windows.Forms.ComboBox ComboBoxPickBatchSize;
     }
 }

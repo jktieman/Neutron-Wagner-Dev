@@ -509,11 +509,13 @@ namespace Neutron
         {
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory])
             {
-                Hide();
+                var main = this;
+                
                 using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
                 {
+                    main.Hide();
                     frm.ShowDialog();
-                    Show();
+                    main.Show();
                 }
             }
         }
