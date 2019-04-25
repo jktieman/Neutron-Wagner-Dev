@@ -243,22 +243,7 @@ namespace NeutronData.Repositories
                         }
                     }
 
-                    if (!string.IsNullOrEmpty(search))
-                    {
-                        recs = ords.Where(o => o.Ord1.Contains(search) || o.Ord2.Contains(search)).ToList();
-
-                        //foreach (var ord in ords)
-                        //{
-                        //    if (ord.Ord1.Contains(search))
-                        //    {
-                        //        recs.Add(ord);
-                        //    }
-                        //}
-                    }
-                    else
-                    {
-                        recs = ords;
-                    }
+                    recs = !string.IsNullOrEmpty(search) ? ords.Where(o => o.Ord1.ToLower().Contains(search) || o.Ord2.ToLower().Contains(search)).ToList() : ords;
                 }
             }
             catch (Exception ex)

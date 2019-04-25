@@ -514,9 +514,9 @@ namespace Neutron.Forms
                         this.LabelPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         this.LabelPos1.ForeColor = System.Drawing.SystemColors.ControlText;
-                        this.LabelPos1.Location = new System.Drawing.Point(82, 12);
+                        this.LabelPos1.Location = new System.Drawing.Point(77,107);
                         this.LabelPos1.Name = "LabelPos1";
-                        this.LabelPos1.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos1.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos1.TabIndex = 151;
                         this.LabelPos1.Text = "1";
                         this.LabelPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -525,9 +525,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPos2.Location = new System.Drawing.Point(271, 13);
+                        this.LabelPos2.Location = new System.Drawing.Point(267, 107);
                         this.LabelPos2.Name = "LabelPos2";
-                        this.LabelPos2.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos2.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos2.TabIndex = 152;
                         this.LabelPos2.Text = "2";
                         this.LabelPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -537,9 +537,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPos3.Location = new System.Drawing.Point(459, 13);
+                        this.LabelPos3.Location = new System.Drawing.Point(457,107);
                         this.LabelPos3.Name = "LabelPos3";
-                        this.LabelPos3.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos3.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos3.TabIndex = 153;
                         this.LabelPos3.Text = "3";
                         this.LabelPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -550,9 +550,9 @@ namespace Neutron.Forms
                         this.LabelPos4.BackColor = System.Drawing.Color.RoyalBlue;
                         this.LabelPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPos4.Location = new System.Drawing.Point(647, 12);
+                        this.LabelPos4.Location = new System.Drawing.Point(647, 107);
                         this.LabelPos4.Name = "LabelPos4";
-                        this.LabelPos4.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos4.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos4.TabIndex = 154;
                         this.LabelPos4.Text = "4";
                         this.LabelPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -562,9 +562,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPos5.Location = new System.Drawing.Point(835, 12);
+                        this.LabelPos5.Location = new System.Drawing.Point(837, 107);
                         this.LabelPos5.Name = "LabelPos5";
-                        this.LabelPos5.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos5.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos5.TabIndex = 155;
                         this.LabelPos5.Text = "5";
                         this.LabelPos5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -574,9 +574,9 @@ namespace Neutron.Forms
                         // 
                         this.LabelPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPos6.Location = new System.Drawing.Point(1023, 13);
+                        this.LabelPos6.Location = new System.Drawing.Point(1027, 107);
                         this.LabelPos6.Name = "LabelPos6";
-                        this.LabelPos6.Size = new System.Drawing.Size(26, 26);
+                        this.LabelPos6.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos6.TabIndex = 156;
                         this.LabelPos6.Text = "6";
                         this.LabelPos6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -605,13 +605,21 @@ namespace Neutron.Forms
                         //this.LabelPos8.Text = "8";
                         //this.LabelPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
                         this.LabelPos8.Visible = false;
+                        this.LabelPos9.Visible = false;
+                        this.LabelPos10.Visible = false;
+                        this.LabelPos11.Visible = false;
+                        this.LabelPos12.Visible = false;
+                        this.LabelPos13.Visible = false;
+                        this.LabelPos14.Visible = false;
+                        this.LabelPos15.Visible = false;
+                        this.LabelPos16.Visible = false;
                         // 
                         // TextBoxPos1
                         // 
                         this.TextBoxPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPos1.Location = new System.Drawing.Point(28, 44);
+                        this.TextBoxPos1.Location = new System.Drawing.Point(28, 139);
                         this.TextBoxPos1.Name = "TextBoxPos1";
-                        this.TextBoxPos1.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos1.Size = new System.Drawing.Size(134, 44);
                         this.TextBoxPos1.TabIndex = 0;
                         this.TextBoxPos1.Tag = "0";
                         this.TextBoxPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -624,9 +632,9 @@ namespace Neutron.Forms
                         // 
                         this.TextBoxPos2.BackColor = System.Drawing.SystemColors.Control;
                         this.TextBoxPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPos2.Location = new System.Drawing.Point(216, 44);
+                        this.TextBoxPos2.Location = new System.Drawing.Point(218, 139);
                         this.TextBoxPos2.Name = "TextBoxPos2";
-                        this.TextBoxPos2.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos2.Size = new System.Drawing.Size(134, 44);
                         this.TextBoxPos2.TabIndex = 1;
                         this.TextBoxPos2.Tag = "1";
                         this.TextBoxPos2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -639,9 +647,9 @@ namespace Neutron.Forms
                         // TextBoxPos3
                         // 
                         this.TextBoxPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPos3.Location = new System.Drawing.Point(404, 44);
+                        this.TextBoxPos3.Location = new System.Drawing.Point(408, 139);
                         this.TextBoxPos3.Name = "TextBoxPos3";
-                        this.TextBoxPos3.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos3.Size = new System.Drawing.Size(134, 44);
                         this.TextBoxPos3.TabIndex = 2;
                         this.TextBoxPos3.Tag = "2";
                         this.TextBoxPos3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -654,9 +662,9 @@ namespace Neutron.Forms
                         // TextBoxPos4
                         // 
                         this.TextBoxPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPos4.Location = new System.Drawing.Point(592, 44);
+                        this.TextBoxPos4.Location = new System.Drawing.Point(598, 139);
                         this.TextBoxPos4.Name = "TextBoxPos4";
-                        this.TextBoxPos4.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos4.Size = new System.Drawing.Size(134, 44);
                         this.TextBoxPos4.TabIndex = 3;
                         this.TextBoxPos4.Tag = "3";
                         this.TextBoxPos4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -669,9 +677,9 @@ namespace Neutron.Forms
                         // TextBoxPos5
                         // 
                         this.TextBoxPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPos5.Location = new System.Drawing.Point(780, 44);
+                        this.TextBoxPos5.Location = new System.Drawing.Point(788, 139);
                         this.TextBoxPos5.Name = "TextBoxPos5";
-                        this.TextBoxPos5.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos5.Size = new System.Drawing.Size(134, 44);
                         this.TextBoxPos5.TabIndex = 4;
                         this.TextBoxPos5.Tag = "4";
                         this.TextBoxPos5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -684,9 +692,9 @@ namespace Neutron.Forms
                         // TextBoxPos6
                         // 
                         this.TextBoxPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.TextBoxPos6.Location = new System.Drawing.Point(968, 44);
+                        this.TextBoxPos6.Location = new System.Drawing.Point(978, 139);
                         this.TextBoxPos6.Name = "TextBoxPos6";
-                        this.TextBoxPos6.Size = new System.Drawing.Size(134, 29);
+                        this.TextBoxPos6.Size = new System.Drawing.Size(134, 44);
                         this.TextBoxPos6.TabIndex = 5;
                         this.TextBoxPos6.Tag = "5";
                         this.TextBoxPos6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -717,86 +725,21 @@ namespace Neutron.Forms
                         //this.TextBoxPos8.Tag = "7";
                         //this.TextBoxPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
                         this.TextBoxPos8.Visible = false;
-                        //// 
-                        //// Pos1Display
-                        //// 
-                        //this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos1Display.Location = new System.Drawing.Point(20, 44);
-                        //this.Pos1Display.Name = "Pos1Display";
-                        //this.Pos1Display.Size = new System.Drawing.Size(150, 53);
-                        //this.Pos1Display.TabIndex = 153;
-                        //// 
-                        //// Pos2Display
-                        //// 
-                        //this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos2Display.Location = new System.Drawing.Point(210, 44);
-                        //this.Pos2Display.Name = "Pos2Display";
-                        //this.Pos2Display.Size = new System.Drawing.Size(150, 53);
-                        //this.Pos2Display.TabIndex = 154;
-                        //this.Pos2Display.Visible = false;
-                        //// 
-                        //// Pos3Display
-                        //// 
-                        //this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos3Display.Location = new System.Drawing.Point(400, 44);
-                        //this.Pos3Display.Name = "Pos3Display";
-                        //this.Pos3Display.Size = new System.Drawing.Size(150, 53);
-                        //this.Pos3Display.TabIndex = 155;
-                        //this.Pos3Display.Visible = false;
-                        //// 
-                        //// Pos4Display
-                        //// 
-                        //this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos4Display.Location = new System.Drawing.Point(590, 44);
-                        //this.Pos4Display.Name = "Pos4Display";
-                        //this.Pos4Display.Size = new System.Drawing.Size(150, 53);
-                        //this.Pos4Display.TabIndex = 156;
-                        //this.Pos4Display.Visible = false;
-                        //// 
-                        //// Pos5Display
-                        //// 
-                        //this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos5Display.Location = new System.Drawing.Point(780, 44);
-                        //this.Pos5Display.Name = "Pos5Display";
-                        //this.Pos5Display.Size = new System.Drawing.Size(150, 53);
-                        //this.Pos5Display.TabIndex = 157;
-                        //this.Pos5Display.Visible = false;
-                        //// 
-                        //// Pos6Display
-                        //// 
-                        //this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos6Display.Location = new System.Drawing.Point(960, 44);
-                        //this.Pos6Display.Name = "Pos6Display";
-                        //this.Pos6Display.Size = new System.Drawing.Size(150, 53);
-                        //this.Pos6Display.TabIndex = 158;
-                        //this.Pos6Display.Visible = false;
-                        //// 
-                        //// Pos7Display
-                        //// 
-                        ////this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
-                        ////this.Pos7Display.Location = new System.Drawing.Point(856, 44);
-                        ////this.Pos7Display.Name = "Pos7Display";
-                        ////this.Pos7Display.Size = new System.Drawing.Size(128, 53);
-                        ////this.Pos7Display.TabIndex = 162;
-                        //this.Pos7Display.Visible = false;
-                        //// 
-                        //// Pos8Display
-                        //// 
-                        ////this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
-                        ////this.Pos8Display.Location = new System.Drawing.Point(997, 44);
-                        ////this.Pos8Display.Name = "Pos8Display";
-                        ////this.Pos8Display.Size = new System.Drawing.Size(128, 53);
-                        ////this.Pos8Display.TabIndex = 165;
-                        //this.Pos8Display.Visible = false;
-
-
+                        this.TextBoxPos9.Visible = false;
+                        this.TextBoxPos10.Visible = false;
+                        this.TextBoxPos11.Visible = false;
+                        this.TextBoxPos12.Visible = false;
+                        this.TextBoxPos13.Visible = false;
+                        this.TextBoxPos14.Visible = false;
+                        this.TextBoxPos15.Visible = false;
+                        this.TextBoxPos16.Visible = false;
 
 
                         // 
                         // AvailablePos1Display
                         // 
                         // this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
-                        this.AvailablePos1Display.Location = new System.Drawing.Point(20, 44);
+                        this.AvailablePos1Display.Location = new System.Drawing.Point(20, 139);
                         //  this.AvailablePos1Display.Name = "Pos1Display";
                         this.AvailablePos1Display.Size = new System.Drawing.Size(150, 53);
                         //  this.AvailablePos1Display.TabIndex = 161;
@@ -805,7 +748,7 @@ namespace Neutron.Forms
                         // AvailablePos2Display
                         // 
                         // this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
-                        this.AvailablePos2Display.Location = new System.Drawing.Point(208, 44);
+                        this.AvailablePos2Display.Location = new System.Drawing.Point(210, 139);
                         // this.AvailablePos2Display.Name = "Pos2Display";
                         this.AvailablePos2Display.Size = new System.Drawing.Size(150, 53);
                         // this.AvailablePos2Display.TabIndex = 162;
@@ -814,7 +757,7 @@ namespace Neutron.Forms
                         // AvailablePos3Display
                         // 
                         //  this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
-                        this.AvailablePos3Display.Location = new System.Drawing.Point(396, 44);
+                        this.AvailablePos3Display.Location = new System.Drawing.Point(400, 139);
                         //   this.AvailablePos3Display.Name = "Pos3Display";
                         this.AvailablePos3Display.Size = new System.Drawing.Size(150, 53);
                         //  this.AvailablePos3Display.TabIndex = 163;
@@ -823,7 +766,7 @@ namespace Neutron.Forms
                         // AvailablePos4Display
                         // 
                         //  this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
-                        this.AvailablePos4Display.Location = new System.Drawing.Point(584, 44);
+                        this.AvailablePos4Display.Location = new System.Drawing.Point(590, 139);
                         //  this.AvailablePos4Display.Name = "Pos4Display";
                         this.AvailablePos4Display.Size = new System.Drawing.Size(150, 53);
                         //  this.AvailablePos4Display.TabIndex = 164;
@@ -832,7 +775,7 @@ namespace Neutron.Forms
                         // AvailablePos5Display
                         // 
                         // this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
-                        this.AvailablePos5Display.Location = new System.Drawing.Point(772, 44);
+                        this.AvailablePos5Display.Location = new System.Drawing.Point(780, 139);
                         //  this.AvailablePos5Display.Name = "Pos5Display";
                         this.AvailablePos5Display.Size = new System.Drawing.Size(150, 53);
                         // this.AvailablePos5Display.TabIndex = 165;
@@ -841,7 +784,7 @@ namespace Neutron.Forms
                         // AvailablePos6Display
                         // 
                         // this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
-                        this.AvailablePos6Display.Location = new System.Drawing.Point(960, 44);
+                        this.AvailablePos6Display.Location = new System.Drawing.Point(970, 139);
                         // this.AvailablePos6Display.Name = "Pos6Display";
                         this.AvailablePos6Display.Size = new System.Drawing.Size(150, 53);
                         //  this.AvailablePos6Display.TabIndex = 166;
@@ -864,6 +807,15 @@ namespace Neutron.Forms
                         //this.AvailablePos8Display.Size = new System.Drawing.Size(126, 53);
                         //this.AvailablePos8Display.TabIndex = 174;
                         this.AvailablePos8Display.Visible = false;
+                        this.AvailablePos9Display.Visible = false;
+                        this.AvailablePos10Display.Visible = false;
+                        this.AvailablePos11Display.Visible = false;
+                        this.AvailablePos12Display.Visible = false;
+                        this.AvailablePos13Display.Visible = false;
+                        this.AvailablePos14Display.Visible = false;
+                        this.AvailablePos15Display.Visible = false;
+                        this.AvailablePos16Display.Visible = false;
+
                         break;
                     }
                 case 8:
@@ -5450,9 +5402,7 @@ namespace Neutron.Forms
 
         private void MBNewOrderClose_Click(object sender, EventArgs e)
         {
-            LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = OrderListing;
+            AvailableOrdersScreen();
         }
 
         private void MBOrderDetailsBack_Click(object sender, EventArgs e)
