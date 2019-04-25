@@ -4823,8 +4823,18 @@ namespace Neutron.Forms
         private void PrintAnticipatedOuts()
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
+            List<AnticipatedOut> outs = new List<AnticipatedOut>();
+            var comboBoxValue = ComboBoxStationNumber.Text;
             var anticipatedOuts = GetAnticipatedOuts();
-            DocumentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+
+            if (anticipatedOuts.Count <= 0) return;
+
+            if (comboBoxValue != "ALL")
+            {
+                var stationId = comboBoxValue.ParseInt();
+                outs = anticipatedOuts.Where(r => r.Station == stationId).ToList();
+            }
+            DocumentToPrint.PrintAnticipatedOuts(outs, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private void MBPrintPick_Click(object sender, EventArgs e)
