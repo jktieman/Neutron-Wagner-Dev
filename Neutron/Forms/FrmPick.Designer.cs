@@ -102,6 +102,30 @@
             this.MBFillStarters = new MetroFramework.Controls.MetroButton();
             this.MBFill = new MetroFramework.Controls.MetroButton();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.TextBoxPos9 = new System.Windows.Forms.TextBox();
+            this.LabelPos16 = new System.Windows.Forms.Label();
+            this.LabelPos15 = new System.Windows.Forms.Label();
+            this.TextBoxPos16 = new System.Windows.Forms.TextBox();
+            this.TextBoxPos15 = new System.Windows.Forms.TextBox();
+            this.AvailablePos15Display = new System.Windows.Forms.Panel();
+            this.AvailablePos16Display = new System.Windows.Forms.Panel();
+            this.LabelPos10 = new System.Windows.Forms.Label();
+            this.LabelPos11 = new System.Windows.Forms.Label();
+            this.LabelPos12 = new System.Windows.Forms.Label();
+            this.LabelPos13 = new System.Windows.Forms.Label();
+            this.LabelPos14 = new System.Windows.Forms.Label();
+            this.LabelPos9 = new System.Windows.Forms.Label();
+            this.TextBoxPos10 = new System.Windows.Forms.TextBox();
+            this.TextBoxPos11 = new System.Windows.Forms.TextBox();
+            this.TextBoxPos12 = new System.Windows.Forms.TextBox();
+            this.TextBoxPos13 = new System.Windows.Forms.TextBox();
+            this.TextBoxPos14 = new System.Windows.Forms.TextBox();
+            this.AvailablePos9Display = new System.Windows.Forms.Panel();
+            this.AvailablePos10Display = new System.Windows.Forms.Panel();
+            this.AvailablePos11Display = new System.Windows.Forms.Panel();
+            this.AvailablePos12Display = new System.Windows.Forms.Panel();
+            this.AvailablePos13Display = new System.Windows.Forms.Panel();
+            this.AvailablePos14Display = new System.Windows.Forms.Panel();
             this.TextBoxPos1 = new System.Windows.Forms.TextBox();
             this.LabelPos8 = new System.Windows.Forms.Label();
             this.LabelPos7 = new System.Windows.Forms.Label();
@@ -146,6 +170,32 @@
             this.ButtonStopMoveFirst = new System.Windows.Forms.Button();
             this.ButtonStopMovePrevious = new System.Windows.Forms.Button();
             this.PanelOrderPositions = new System.Windows.Forms.Panel();
+            this.LabelNotify = new System.Windows.Forms.Label();
+            this.LabelPickMessages = new System.Windows.Forms.Label();
+            this.TextBoxPickPos9 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos9 = new System.Windows.Forms.Label();
+            this.LabelPickPos10 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos10 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos11 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos11 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos12 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos12 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos13 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos13 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos14 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos14 = new System.Windows.Forms.TextBox();
+            this.TextBoxPickPos15 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos15 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos16 = new System.Windows.Forms.TextBox();
+            this.LabelPickPos16 = new System.Windows.Forms.Label();
+            this.Pos9Display = new System.Windows.Forms.Panel();
+            this.Pos10Display = new System.Windows.Forms.Panel();
+            this.Pos11Display = new System.Windows.Forms.Panel();
+            this.Pos12Display = new System.Windows.Forms.Panel();
+            this.Pos13Display = new System.Windows.Forms.Panel();
+            this.Pos14Display = new System.Windows.Forms.Panel();
+            this.Pos15Display = new System.Windows.Forms.Panel();
+            this.Pos16Display = new System.Windows.Forms.Panel();
             this.TextBoxPickPos1 = new System.Windows.Forms.TextBox();
             this.LabelPickPos1 = new System.Windows.Forms.Label();
             this.LabelPickPos2 = new System.Windows.Forms.Label();
@@ -237,6 +287,8 @@
             this.label27 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.TextBoxNewOrderCostCenter = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.TextBoxNewOrderPriority = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.TextBoxNewOrderOrd2 = new System.Windows.Forms.TextBox();
@@ -322,58 +374,6 @@
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
-            this.TextBoxPickPos9 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos9 = new System.Windows.Forms.Label();
-            this.LabelPickPos10 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos10 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos11 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos11 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos12 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos12 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos13 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos13 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos14 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos14 = new System.Windows.Forms.TextBox();
-            this.TextBoxPickPos15 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos15 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos16 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos16 = new System.Windows.Forms.Label();
-            this.Pos9Display = new System.Windows.Forms.Panel();
-            this.Pos10Display = new System.Windows.Forms.Panel();
-            this.Pos11Display = new System.Windows.Forms.Panel();
-            this.Pos12Display = new System.Windows.Forms.Panel();
-            this.Pos13Display = new System.Windows.Forms.Panel();
-            this.Pos14Display = new System.Windows.Forms.Panel();
-            this.Pos15Display = new System.Windows.Forms.Panel();
-            this.Pos16Display = new System.Windows.Forms.Panel();
-            this.LabelPickMessages = new System.Windows.Forms.Label();
-            this.LabelNotify = new System.Windows.Forms.Label();
-            this.TextBoxPos9 = new System.Windows.Forms.TextBox();
-            this.LabelPos16 = new System.Windows.Forms.Label();
-            this.LabelPos15 = new System.Windows.Forms.Label();
-            this.TextBoxPos16 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos15 = new System.Windows.Forms.TextBox();
-            this.AvailablePos15Display = new System.Windows.Forms.Panel();
-            this.AvailablePos16Display = new System.Windows.Forms.Panel();
-            this.LabelPos10 = new System.Windows.Forms.Label();
-            this.LabelPos11 = new System.Windows.Forms.Label();
-            this.LabelPos12 = new System.Windows.Forms.Label();
-            this.LabelPos13 = new System.Windows.Forms.Label();
-            this.LabelPos14 = new System.Windows.Forms.Label();
-            this.LabelPos9 = new System.Windows.Forms.Label();
-            this.TextBoxPos10 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos11 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos12 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos13 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos14 = new System.Windows.Forms.TextBox();
-            this.AvailablePos9Display = new System.Windows.Forms.Panel();
-            this.AvailablePos10Display = new System.Windows.Forms.Panel();
-            this.AvailablePos11Display = new System.Windows.Forms.Panel();
-            this.AvailablePos12Display = new System.Windows.Forms.Panel();
-            this.AvailablePos13Display = new System.Windows.Forms.Panel();
-            this.AvailablePos14Display = new System.Windows.Forms.Panel();
-            this.TextBoxNewOrderCostCenter = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -544,7 +544,7 @@
             this.OrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.OrderListing.Name = "OrderListing";
             this.OrderListing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.OrderListing.Size = new System.Drawing.Size(1147, 644);
+            this.OrderListing.Size = new System.Drawing.Size(1147, 739);
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
@@ -560,7 +560,7 @@
             "4",
             "5",
             "8"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(335, 557);
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(335, 651);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
             this.ComboBoxStationNumber.Size = new System.Drawing.Size(58, 32);
             this.ComboBoxStationNumber.TabIndex = 24;
@@ -570,7 +570,7 @@
             // 
             this.MBCompress.Enabled = false;
             this.MBCompress.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCompress.Location = new System.Drawing.Point(615, 600);
+            this.MBCompress.Location = new System.Drawing.Point(615, 694);
             this.MBCompress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCompress.Name = "MBCompress";
             this.MBCompress.Size = new System.Drawing.Size(125, 37);
@@ -582,7 +582,7 @@
             // MBPrintOrderListing
             // 
             this.MBPrintOrderListing.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 556);
+            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 650);
             this.MBPrintOrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderListing.Name = "MBPrintOrderListing";
             this.MBPrintOrderListing.Size = new System.Drawing.Size(125, 79);
@@ -594,7 +594,7 @@
             // MBJobDetails
             // 
             this.MBJobDetails.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBJobDetails.Location = new System.Drawing.Point(882, 556);
+            this.MBJobDetails.Location = new System.Drawing.Point(882, 650);
             this.MBJobDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBJobDetails.Name = "MBJobDetails";
             this.MBJobDetails.Size = new System.Drawing.Size(125, 79);
@@ -607,7 +607,7 @@
             // MBPriority
             // 
             this.MBPriority.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPriority.Location = new System.Drawing.Point(615, 557);
+            this.MBPriority.Location = new System.Drawing.Point(615, 651);
             this.MBPriority.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPriority.Name = "MBPriority";
             this.MBPriority.Size = new System.Drawing.Size(125, 37);
@@ -619,7 +619,7 @@
             // MBHold
             // 
             this.MBHold.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHold.Location = new System.Drawing.Point(527, 556);
+            this.MBHold.Location = new System.Drawing.Point(527, 650);
             this.MBHold.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHold.Name = "MBHold";
             this.MBHold.Size = new System.Drawing.Size(82, 36);
@@ -631,7 +631,7 @@
             // MBRelease
             // 
             this.MBRelease.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRelease.Location = new System.Drawing.Point(527, 600);
+            this.MBRelease.Location = new System.Drawing.Point(527, 694);
             this.MBRelease.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRelease.Name = "MBRelease";
             this.MBRelease.Size = new System.Drawing.Size(82, 36);
@@ -700,7 +700,7 @@
             // MBSelectAll
             // 
             this.MBSelectAll.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSelectAll.Location = new System.Drawing.Point(7, 556);
+            this.MBSelectAll.Location = new System.Drawing.Point(7, 650);
             this.MBSelectAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSelectAll.Name = "MBSelectAll";
             this.MBSelectAll.Size = new System.Drawing.Size(134, 36);
@@ -724,7 +724,7 @@
             // MButtonClearSelection
             // 
             this.MButtonClearSelection.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClearSelection.Location = new System.Drawing.Point(7, 599);
+            this.MButtonClearSelection.Location = new System.Drawing.Point(7, 693);
             this.MButtonClearSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClearSelection.Name = "MButtonClearSelection";
             this.MButtonClearSelection.Size = new System.Drawing.Size(134, 36);
@@ -761,7 +761,7 @@
             // MBOffCarousel
             // 
             this.MBOffCarousel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOffCarousel.Location = new System.Drawing.Point(334, 600);
+            this.MBOffCarousel.Location = new System.Drawing.Point(334, 694);
             this.MBOffCarousel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOffCarousel.Name = "MBOffCarousel";
             this.MBOffCarousel.Size = new System.Drawing.Size(187, 36);
@@ -773,7 +773,7 @@
             // MBPrintPick
             // 
             this.MBPrintPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintPick.Location = new System.Drawing.Point(399, 558);
+            this.MBPrintPick.Location = new System.Drawing.Point(399, 652);
             this.MBPrintPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintPick.Name = "MBPrintPick";
             this.MBPrintPick.Size = new System.Drawing.Size(122, 36);
@@ -785,7 +785,7 @@
             // ButtonPrintPacking
             // 
             this.ButtonPrintPacking.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonPrintPacking.Location = new System.Drawing.Point(147, 600);
+            this.ButtonPrintPacking.Location = new System.Drawing.Point(147, 694);
             this.ButtonPrintPacking.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonPrintPacking.Name = "ButtonPrintPacking";
             this.ButtonPrintPacking.Size = new System.Drawing.Size(181, 36);
@@ -797,7 +797,7 @@
             // ButtonPrintAO
             // 
             this.ButtonPrintAO.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonPrintAO.Location = new System.Drawing.Point(147, 557);
+            this.ButtonPrintAO.Location = new System.Drawing.Point(147, 651);
             this.ButtonPrintAO.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonPrintAO.Name = "ButtonPrintAO";
             this.ButtonPrintAO.Size = new System.Drawing.Size(181, 36);
@@ -857,7 +857,7 @@
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridView1.Size = new System.Drawing.Size(1131, 447);
+            this.DataGridView1.Size = new System.Drawing.Size(1131, 545);
             this.DataGridView1.TabIndex = 0;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             this.DataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DataGridView1_KeyUp);
@@ -865,7 +865,7 @@
             // MBDeleteOrder
             // 
             this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 600);
+            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 694);
             this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDeleteOrder.Name = "MBDeleteOrder";
             this.MBDeleteOrder.Size = new System.Drawing.Size(130, 36);
@@ -877,7 +877,7 @@
             // MBReturnToStock
             // 
             this.MBReturnToStock.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStock.Location = new System.Drawing.Point(746, 556);
+            this.MBReturnToStock.Location = new System.Drawing.Point(746, 650);
             this.MBReturnToStock.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReturnToStock.Name = "MBReturnToStock";
             this.MBReturnToStock.Size = new System.Drawing.Size(130, 36);
@@ -1015,6 +1015,281 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1137, 202);
             this.panel2.TabIndex = 113;
+            // 
+            // TextBoxPos9
+            // 
+            this.TextBoxPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos9.Location = new System.Drawing.Point(18, 39);
+            this.TextBoxPos9.Name = "TextBoxPos9";
+            this.TextBoxPos9.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos9.TabIndex = 8;
+            this.TextBoxPos9.Tag = "8";
+            this.TextBoxPos9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos9.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos9.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos9.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos9.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // LabelPos16
+            // 
+            this.LabelPos16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos16.Location = new System.Drawing.Point(1043, 7);
+            this.LabelPos16.Name = "LabelPos16";
+            this.LabelPos16.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos16.TabIndex = 203;
+            this.LabelPos16.Text = "16";
+            this.LabelPos16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos16.Click += new System.EventHandler(this.LabelPos16_Click);
+            // 
+            // LabelPos15
+            // 
+            this.LabelPos15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos15.Location = new System.Drawing.Point(902, 7);
+            this.LabelPos15.Name = "LabelPos15";
+            this.LabelPos15.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos15.TabIndex = 202;
+            this.LabelPos15.Text = "15";
+            this.LabelPos15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos15.Click += new System.EventHandler(this.LabelPos15_Click);
+            // 
+            // TextBoxPos16
+            // 
+            this.TextBoxPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos16.Location = new System.Drawing.Point(1005, 39);
+            this.TextBoxPos16.Name = "TextBoxPos16";
+            this.TextBoxPos16.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos16.TabIndex = 15;
+            this.TextBoxPos16.Tag = "15";
+            this.TextBoxPos16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos16.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos16.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos16.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos16.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // TextBoxPos15
+            // 
+            this.TextBoxPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos15.Location = new System.Drawing.Point(864, 39);
+            this.TextBoxPos15.Name = "TextBoxPos15";
+            this.TextBoxPos15.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos15.TabIndex = 14;
+            this.TextBoxPos15.Tag = "14";
+            this.TextBoxPos15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos15.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos15.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos15.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos15.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // AvailablePos15Display
+            // 
+            this.AvailablePos15Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos15Display.Location = new System.Drawing.Point(856, 39);
+            this.AvailablePos15Display.Name = "AvailablePos15Display";
+            this.AvailablePos15Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos15Display.TabIndex = 204;
+            // 
+            // AvailablePos16Display
+            // 
+            this.AvailablePos16Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos16Display.Location = new System.Drawing.Point(997, 39);
+            this.AvailablePos16Display.Name = "AvailablePos16Display";
+            this.AvailablePos16Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos16Display.TabIndex = 205;
+            // 
+            // LabelPos10
+            // 
+            this.LabelPos10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos10.Location = new System.Drawing.Point(197, 7);
+            this.LabelPos10.Name = "LabelPos10";
+            this.LabelPos10.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos10.TabIndex = 189;
+            this.LabelPos10.Text = "10";
+            this.LabelPos10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos10.Click += new System.EventHandler(this.LabelPos10_Click);
+            // 
+            // LabelPos11
+            // 
+            this.LabelPos11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos11.Location = new System.Drawing.Point(338, 7);
+            this.LabelPos11.Name = "LabelPos11";
+            this.LabelPos11.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos11.TabIndex = 190;
+            this.LabelPos11.Text = "11";
+            this.LabelPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos11.Click += new System.EventHandler(this.LabelPos11_Click);
+            // 
+            // LabelPos12
+            // 
+            this.LabelPos12.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelPos12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos12.Location = new System.Drawing.Point(479, 7);
+            this.LabelPos12.Name = "LabelPos12";
+            this.LabelPos12.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos12.TabIndex = 191;
+            this.LabelPos12.Text = "12";
+            this.LabelPos12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos12.Click += new System.EventHandler(this.LabelPos12_Click);
+            // 
+            // LabelPos13
+            // 
+            this.LabelPos13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos13.Location = new System.Drawing.Point(620, 7);
+            this.LabelPos13.Name = "LabelPos13";
+            this.LabelPos13.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos13.TabIndex = 192;
+            this.LabelPos13.Text = "13";
+            this.LabelPos13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos13.Click += new System.EventHandler(this.LabelPos13_Click);
+            // 
+            // LabelPos14
+            // 
+            this.LabelPos14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos14.Location = new System.Drawing.Point(761, 7);
+            this.LabelPos14.Name = "LabelPos14";
+            this.LabelPos14.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos14.TabIndex = 193;
+            this.LabelPos14.Text = "14";
+            this.LabelPos14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPos14.Click += new System.EventHandler(this.LabelPos14_Click);
+            // 
+            // LabelPos9
+            // 
+            this.LabelPos9.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelPos9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPos9.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LabelPos9.Location = new System.Drawing.Point(56, 7);
+            this.LabelPos9.Name = "LabelPos9";
+            this.LabelPos9.Size = new System.Drawing.Size(36, 26);
+            this.LabelPos9.TabIndex = 188;
+            this.LabelPos9.Text = "9";
+            this.LabelPos9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPos10
+            // 
+            this.TextBoxPos10.BackColor = System.Drawing.SystemColors.Control;
+            this.TextBoxPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos10.Location = new System.Drawing.Point(159, 39);
+            this.TextBoxPos10.Name = "TextBoxPos10";
+            this.TextBoxPos10.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos10.TabIndex = 9;
+            this.TextBoxPos10.Tag = "9";
+            this.TextBoxPos10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos10.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos10.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos10.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos10.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // TextBoxPos11
+            // 
+            this.TextBoxPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos11.Location = new System.Drawing.Point(300, 39);
+            this.TextBoxPos11.Name = "TextBoxPos11";
+            this.TextBoxPos11.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos11.TabIndex = 10;
+            this.TextBoxPos11.Tag = "10";
+            this.TextBoxPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos11.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos11.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos11.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos11.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // TextBoxPos12
+            // 
+            this.TextBoxPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos12.Location = new System.Drawing.Point(441, 39);
+            this.TextBoxPos12.Name = "TextBoxPos12";
+            this.TextBoxPos12.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos12.TabIndex = 11;
+            this.TextBoxPos12.Tag = "11";
+            this.TextBoxPos12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos12.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos12.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos12.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos12.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // TextBoxPos13
+            // 
+            this.TextBoxPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos13.Location = new System.Drawing.Point(582, 39);
+            this.TextBoxPos13.Name = "TextBoxPos13";
+            this.TextBoxPos13.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos13.TabIndex = 12;
+            this.TextBoxPos13.Tag = "12";
+            this.TextBoxPos13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos13.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos13.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos13.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos13.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // TextBoxPos14
+            // 
+            this.TextBoxPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPos14.Location = new System.Drawing.Point(723, 39);
+            this.TextBoxPos14.Name = "TextBoxPos14";
+            this.TextBoxPos14.Size = new System.Drawing.Size(112, 22);
+            this.TextBoxPos14.TabIndex = 13;
+            this.TextBoxPos14.Tag = "13";
+            this.TextBoxPos14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPos14.Click += new System.EventHandler(this.TextBoxPos_Click);
+            this.TextBoxPos14.Enter += new System.EventHandler(this.TextBoxEnter);
+            this.TextBoxPos14.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
+            this.TextBoxPos14.Leave += new System.EventHandler(this.TextBoxPosLeave);
+            // 
+            // AvailablePos9Display
+            // 
+            this.AvailablePos9Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos9Display.Location = new System.Drawing.Point(10, 39);
+            this.AvailablePos9Display.Name = "AvailablePos9Display";
+            this.AvailablePos9Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos9Display.TabIndex = 194;
+            // 
+            // AvailablePos10Display
+            // 
+            this.AvailablePos10Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos10Display.Location = new System.Drawing.Point(151, 39);
+            this.AvailablePos10Display.Name = "AvailablePos10Display";
+            this.AvailablePos10Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos10Display.TabIndex = 195;
+            // 
+            // AvailablePos11Display
+            // 
+            this.AvailablePos11Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos11Display.Location = new System.Drawing.Point(292, 39);
+            this.AvailablePos11Display.Name = "AvailablePos11Display";
+            this.AvailablePos11Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos11Display.TabIndex = 196;
+            // 
+            // AvailablePos12Display
+            // 
+            this.AvailablePos12Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos12Display.Location = new System.Drawing.Point(433, 39);
+            this.AvailablePos12Display.Name = "AvailablePos12Display";
+            this.AvailablePos12Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos12Display.TabIndex = 197;
+            // 
+            // AvailablePos13Display
+            // 
+            this.AvailablePos13Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos13Display.Location = new System.Drawing.Point(574, 39);
+            this.AvailablePos13Display.Name = "AvailablePos13Display";
+            this.AvailablePos13Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos13Display.TabIndex = 198;
+            // 
+            // AvailablePos14Display
+            // 
+            this.AvailablePos14Display.BackColor = System.Drawing.Color.Transparent;
+            this.AvailablePos14Display.Location = new System.Drawing.Point(715, 39);
+            this.AvailablePos14Display.Name = "AvailablePos14Display";
+            this.AvailablePos14Display.Size = new System.Drawing.Size(128, 53);
+            this.AvailablePos14Display.TabIndex = 199;
             // 
             // TextBoxPos1
             // 
@@ -1478,7 +1753,7 @@
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
-            this.DataGridPickView.Size = new System.Drawing.Size(1135, 519);
+            this.DataGridPickView.Size = new System.Drawing.Size(1135, 635);
             this.DataGridPickView.TabIndex = 3;
             this.DataGridPickView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridPickView_CellFormatting);
             // 
@@ -1670,6 +1945,285 @@
             this.PanelOrderPositions.Name = "PanelOrderPositions";
             this.PanelOrderPositions.Size = new System.Drawing.Size(1140, 251);
             this.PanelOrderPositions.TabIndex = 112;
+            // 
+            // LabelNotify
+            // 
+            this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.LabelNotify.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelNotify.Location = new System.Drawing.Point(398, 199);
+            this.LabelNotify.Name = "LabelNotify";
+            this.LabelNotify.Size = new System.Drawing.Size(339, 19);
+            this.LabelNotify.TabIndex = 191;
+            this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelPickMessages
+            // 
+            this.LabelPickMessages.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickMessages.Location = new System.Drawing.Point(10, 218);
+            this.LabelPickMessages.Name = "LabelPickMessages";
+            this.LabelPickMessages.Size = new System.Drawing.Size(1115, 22);
+            this.LabelPickMessages.TabIndex = 190;
+            this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos9
+            // 
+            this.TextBoxPickPos9.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos9.Location = new System.Drawing.Point(18, 39);
+            this.TextBoxPickPos9.Multiline = true;
+            this.TextBoxPickPos9.Name = "TextBoxPickPos9";
+            this.TextBoxPickPos9.ReadOnly = true;
+            this.TextBoxPickPos9.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos9.TabIndex = 167;
+            this.TextBoxPickPos9.Tag = "8";
+            this.TextBoxPickPos9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos9
+            // 
+            this.LabelPickPos9.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelPickPos9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos9.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.LabelPickPos9.Location = new System.Drawing.Point(56, 7);
+            this.LabelPickPos9.Name = "LabelPickPos9";
+            this.LabelPickPos9.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos9.TabIndex = 166;
+            this.LabelPickPos9.Text = "9";
+            this.LabelPickPos9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelPickPos10
+            // 
+            this.LabelPickPos10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos10.Location = new System.Drawing.Point(197, 7);
+            this.LabelPickPos10.Name = "LabelPickPos10";
+            this.LabelPickPos10.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos10.TabIndex = 168;
+            this.LabelPickPos10.Text = "10";
+            this.LabelPickPos10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos10
+            // 
+            this.TextBoxPickPos10.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos10.Location = new System.Drawing.Point(159, 39);
+            this.TextBoxPickPos10.Multiline = true;
+            this.TextBoxPickPos10.Name = "TextBoxPickPos10";
+            this.TextBoxPickPos10.ReadOnly = true;
+            this.TextBoxPickPos10.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos10.TabIndex = 169;
+            this.TextBoxPickPos10.Tag = "9";
+            this.TextBoxPickPos10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos11
+            // 
+            this.LabelPickPos11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos11.Location = new System.Drawing.Point(338, 7);
+            this.LabelPickPos11.Name = "LabelPickPos11";
+            this.LabelPickPos11.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos11.TabIndex = 170;
+            this.LabelPickPos11.Text = "11";
+            this.LabelPickPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos11
+            // 
+            this.TextBoxPickPos11.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos11.Location = new System.Drawing.Point(300, 39);
+            this.TextBoxPickPos11.Multiline = true;
+            this.TextBoxPickPos11.Name = "TextBoxPickPos11";
+            this.TextBoxPickPos11.ReadOnly = true;
+            this.TextBoxPickPos11.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos11.TabIndex = 171;
+            this.TextBoxPickPos11.Tag = "10";
+            this.TextBoxPickPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos12
+            // 
+            this.LabelPickPos12.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelPickPos12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos12.Location = new System.Drawing.Point(479, 7);
+            this.LabelPickPos12.Name = "LabelPickPos12";
+            this.LabelPickPos12.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos12.TabIndex = 172;
+            this.LabelPickPos12.Text = "12";
+            this.LabelPickPos12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos12
+            // 
+            this.TextBoxPickPos12.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos12.Location = new System.Drawing.Point(441, 39);
+            this.TextBoxPickPos12.Multiline = true;
+            this.TextBoxPickPos12.Name = "TextBoxPickPos12";
+            this.TextBoxPickPos12.ReadOnly = true;
+            this.TextBoxPickPos12.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos12.TabIndex = 173;
+            this.TextBoxPickPos12.Tag = "11";
+            this.TextBoxPickPos12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos13
+            // 
+            this.LabelPickPos13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos13.Location = new System.Drawing.Point(620, 7);
+            this.LabelPickPos13.Name = "LabelPickPos13";
+            this.LabelPickPos13.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos13.TabIndex = 174;
+            this.LabelPickPos13.Text = "13";
+            this.LabelPickPos13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos13
+            // 
+            this.TextBoxPickPos13.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos13.Location = new System.Drawing.Point(582, 39);
+            this.TextBoxPickPos13.Multiline = true;
+            this.TextBoxPickPos13.Name = "TextBoxPickPos13";
+            this.TextBoxPickPos13.ReadOnly = true;
+            this.TextBoxPickPos13.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos13.TabIndex = 175;
+            this.TextBoxPickPos13.Tag = "12";
+            this.TextBoxPickPos13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos14
+            // 
+            this.LabelPickPos14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos14.Location = new System.Drawing.Point(761, 7);
+            this.LabelPickPos14.Name = "LabelPickPos14";
+            this.LabelPickPos14.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos14.TabIndex = 176;
+            this.LabelPickPos14.Text = "14";
+            this.LabelPickPos14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos14
+            // 
+            this.TextBoxPickPos14.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos14.Location = new System.Drawing.Point(723, 39);
+            this.TextBoxPickPos14.Multiline = true;
+            this.TextBoxPickPos14.Name = "TextBoxPickPos14";
+            this.TextBoxPickPos14.ReadOnly = true;
+            this.TextBoxPickPos14.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos14.TabIndex = 177;
+            this.TextBoxPickPos14.Tag = "13";
+            this.TextBoxPickPos14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxPickPos15
+            // 
+            this.TextBoxPickPos15.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos15.Location = new System.Drawing.Point(864, 39);
+            this.TextBoxPickPos15.Multiline = true;
+            this.TextBoxPickPos15.Name = "TextBoxPickPos15";
+            this.TextBoxPickPos15.ReadOnly = true;
+            this.TextBoxPickPos15.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos15.TabIndex = 184;
+            this.TextBoxPickPos15.Tag = "14";
+            this.TextBoxPickPos15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos15
+            // 
+            this.LabelPickPos15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos15.Location = new System.Drawing.Point(902, 7);
+            this.LabelPickPos15.Name = "LabelPickPos15";
+            this.LabelPickPos15.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos15.TabIndex = 185;
+            this.LabelPickPos15.Text = "15";
+            this.LabelPickPos15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxPickPos16
+            // 
+            this.TextBoxPickPos16.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos16.Location = new System.Drawing.Point(1005, 39);
+            this.TextBoxPickPos16.Multiline = true;
+            this.TextBoxPickPos16.Name = "TextBoxPickPos16";
+            this.TextBoxPickPos16.ReadOnly = true;
+            this.TextBoxPickPos16.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos16.TabIndex = 188;
+            this.TextBoxPickPos16.Tag = "15";
+            this.TextBoxPickPos16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelPickPos16
+            // 
+            this.LabelPickPos16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos16.Location = new System.Drawing.Point(1043, 7);
+            this.LabelPickPos16.Name = "LabelPickPos16";
+            this.LabelPickPos16.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos16.TabIndex = 187;
+            this.LabelPickPos16.Text = "16";
+            this.LabelPickPos16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // Pos9Display
+            // 
+            this.Pos9Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos9Display.Location = new System.Drawing.Point(10, 39);
+            this.Pos9Display.Name = "Pos9Display";
+            this.Pos9Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos9Display.TabIndex = 178;
+            // 
+            // Pos10Display
+            // 
+            this.Pos10Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos10Display.Location = new System.Drawing.Point(151, 39);
+            this.Pos10Display.Name = "Pos10Display";
+            this.Pos10Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos10Display.TabIndex = 179;
+            // 
+            // Pos11Display
+            // 
+            this.Pos11Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos11Display.Location = new System.Drawing.Point(292, 39);
+            this.Pos11Display.Name = "Pos11Display";
+            this.Pos11Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos11Display.TabIndex = 180;
+            // 
+            // Pos12Display
+            // 
+            this.Pos12Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos12Display.Location = new System.Drawing.Point(433, 39);
+            this.Pos12Display.Name = "Pos12Display";
+            this.Pos12Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos12Display.TabIndex = 181;
+            // 
+            // Pos13Display
+            // 
+            this.Pos13Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos13Display.Location = new System.Drawing.Point(574, 39);
+            this.Pos13Display.Name = "Pos13Display";
+            this.Pos13Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos13Display.TabIndex = 182;
+            // 
+            // Pos14Display
+            // 
+            this.Pos14Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos14Display.Location = new System.Drawing.Point(715, 39);
+            this.Pos14Display.Name = "Pos14Display";
+            this.Pos14Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos14Display.TabIndex = 183;
+            // 
+            // Pos15Display
+            // 
+            this.Pos15Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos15Display.Location = new System.Drawing.Point(856, 39);
+            this.Pos15Display.Name = "Pos15Display";
+            this.Pos15Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos15Display.TabIndex = 186;
+            // 
+            // Pos16Display
+            // 
+            this.Pos16Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos16Display.Location = new System.Drawing.Point(997, 39);
+            this.Pos16Display.Name = "Pos16Display";
+            this.Pos16Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos16Display.TabIndex = 189;
             // 
             // TextBoxPickPos1
             // 
@@ -2513,7 +3067,7 @@
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
             this.OrderDetails.Location = new System.Drawing.Point(4, 22);
             this.OrderDetails.Name = "OrderDetails";
-            this.OrderDetails.Size = new System.Drawing.Size(1147, 644);
+            this.OrderDetails.Size = new System.Drawing.Size(1147, 739);
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
@@ -2627,7 +3181,7 @@
             this.DataGridViewOrderDetails.RowTemplate.Height = 28;
             this.DataGridViewOrderDetails.RowTemplate.ReadOnly = true;
             this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1106, 536);
+            this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1106, 639);
             this.DataGridViewOrderDetails.TabIndex = 42;
             this.DataGridViewOrderDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellClick);
             // 
@@ -2792,6 +3346,24 @@
             this.groupBox1.TabIndex = 66;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Order Information";
+            // 
+            // TextBoxNewOrderCostCenter
+            // 
+            this.TextBoxNewOrderCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewOrderCostCenter.Location = new System.Drawing.Point(150, 102);
+            this.TextBoxNewOrderCostCenter.Name = "TextBoxNewOrderCostCenter";
+            this.TextBoxNewOrderCostCenter.Size = new System.Drawing.Size(200, 26);
+            this.TextBoxNewOrderCostCenter.TabIndex = 58;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(43, 105);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 26);
+            this.label1.TabIndex = 57;
+            this.label1.Text = "Cost Center";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxNewOrderPriority
             // 
@@ -3035,7 +3607,7 @@
             this.DataGridViewAvailableOrdersRack.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrdersRack.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrdersRack.RowTemplate.ReadOnly = true;
-            this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1136, 444);
+            this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1136, 539);
             this.DataGridViewAvailableOrdersRack.TabIndex = 122;
             this.DataGridViewAvailableOrdersRack.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrdersRack_CellClick);
             // 
@@ -3043,7 +3615,7 @@
             // 
             this.MBPrintToteLabel.Enabled = false;
             this.MBPrintToteLabel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintToteLabel.Location = new System.Drawing.Point(312, 558);
+            this.MBPrintToteLabel.Location = new System.Drawing.Point(312, 653);
             this.MBPrintToteLabel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintToteLabel.Name = "MBPrintToteLabel";
             this.MBPrintToteLabel.Size = new System.Drawing.Size(238, 76);
@@ -3055,7 +3627,7 @@
             // MBPrintDocument
             // 
             this.MBPrintDocument.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintDocument.Location = new System.Drawing.Point(27, 558);
+            this.MBPrintDocument.Location = new System.Drawing.Point(27, 653);
             this.MBPrintDocument.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintDocument.Name = "MBPrintDocument";
             this.MBPrintDocument.Size = new System.Drawing.Size(238, 76);
@@ -3405,7 +3977,7 @@
             // 
             this.MBAdjustOrder.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBAdjustOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAdjustOrder.Location = new System.Drawing.Point(882, 558);
+            this.MBAdjustOrder.Location = new System.Drawing.Point(882, 653);
             this.MBAdjustOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAdjustOrder.Name = "MBAdjustOrder";
             this.MBAdjustOrder.Size = new System.Drawing.Size(238, 76);
@@ -3419,7 +3991,7 @@
             // 
             this.MBRackOrderComplete.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBRackOrderComplete.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRackOrderComplete.Location = new System.Drawing.Point(597, 558);
+            this.MBRackOrderComplete.Location = new System.Drawing.Point(597, 653);
             this.MBRackOrderComplete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRackOrderComplete.Name = "MBRackOrderComplete";
             this.MBRackOrderComplete.Size = new System.Drawing.Size(238, 76);
@@ -3463,7 +4035,7 @@
             this.AdjustOrder.Location = new System.Drawing.Point(4, 22);
             this.AdjustOrder.Name = "AdjustOrder";
             this.AdjustOrder.Padding = new System.Windows.Forms.Padding(3);
-            this.AdjustOrder.Size = new System.Drawing.Size(1147, 644);
+            this.AdjustOrder.Size = new System.Drawing.Size(1147, 739);
             this.AdjustOrder.TabIndex = 12;
             this.AdjustOrder.Text = "Adjust Order";
             // 
@@ -3516,7 +4088,7 @@
             this.Skip.Location = new System.Drawing.Point(4, 22);
             this.Skip.Name = "Skip";
             this.Skip.Padding = new System.Windows.Forms.Padding(3);
-            this.Skip.Size = new System.Drawing.Size(1147, 644);
+            this.Skip.Size = new System.Drawing.Size(1147, 739);
             this.Skip.TabIndex = 13;
             this.Skip.Text = "Skip";
             // 
@@ -3525,7 +4097,7 @@
             this.panel11.Controls.Add(this.DataGridViewSkip);
             this.panel11.Location = new System.Drawing.Point(21, 105);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(1104, 533);
+            this.panel11.Size = new System.Drawing.Size(1104, 628);
             this.panel11.TabIndex = 56;
             // 
             // DataGridViewSkip
@@ -3568,7 +4140,7 @@
             this.DataGridViewSkip.RowTemplate.Height = 28;
             this.DataGridViewSkip.RowTemplate.ReadOnly = true;
             this.DataGridViewSkip.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewSkip.Size = new System.Drawing.Size(1104, 533);
+            this.DataGridViewSkip.Size = new System.Drawing.Size(1104, 628);
             this.DataGridViewSkip.TabIndex = 50;
             this.DataGridViewSkip.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewSkip_CellClick);
             // 
@@ -3686,7 +4258,7 @@
             this.SkipInventory.Location = new System.Drawing.Point(4, 22);
             this.SkipInventory.Name = "SkipInventory";
             this.SkipInventory.Padding = new System.Windows.Forms.Padding(3);
-            this.SkipInventory.Size = new System.Drawing.Size(1147, 644);
+            this.SkipInventory.Size = new System.Drawing.Size(1147, 739);
             this.SkipInventory.TabIndex = 14;
             this.SkipInventory.Text = "Skip Inventory";
             // 
@@ -3857,17 +4429,17 @@
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
             this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(156, 62);
+            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "Jobs";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(793, 10);
+            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
             this.mlUserInfo.TabIndex = 21;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3888,578 +4460,6 @@
             // ToolTipPickScreen
             // 
             this.ToolTipPickScreen.IsBalloon = true;
-            // 
-            // TextBoxPickPos9
-            // 
-            this.TextBoxPickPos9.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos9.Location = new System.Drawing.Point(18, 39);
-            this.TextBoxPickPos9.Multiline = true;
-            this.TextBoxPickPos9.Name = "TextBoxPickPos9";
-            this.TextBoxPickPos9.ReadOnly = true;
-            this.TextBoxPickPos9.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos9.TabIndex = 167;
-            this.TextBoxPickPos9.Tag = "8";
-            this.TextBoxPickPos9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos9
-            // 
-            this.LabelPickPos9.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickPos9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPickPos9.Location = new System.Drawing.Point(56, 7);
-            this.LabelPickPos9.Name = "LabelPickPos9";
-            this.LabelPickPos9.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos9.TabIndex = 166;
-            this.LabelPickPos9.Text = "9";
-            this.LabelPickPos9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPickPos10
-            // 
-            this.LabelPickPos10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos10.Location = new System.Drawing.Point(197, 7);
-            this.LabelPickPos10.Name = "LabelPickPos10";
-            this.LabelPickPos10.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos10.TabIndex = 168;
-            this.LabelPickPos10.Text = "10";
-            this.LabelPickPos10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos10
-            // 
-            this.TextBoxPickPos10.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos10.Location = new System.Drawing.Point(159, 39);
-            this.TextBoxPickPos10.Multiline = true;
-            this.TextBoxPickPos10.Name = "TextBoxPickPos10";
-            this.TextBoxPickPos10.ReadOnly = true;
-            this.TextBoxPickPos10.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos10.TabIndex = 169;
-            this.TextBoxPickPos10.Tag = "9";
-            this.TextBoxPickPos10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos11
-            // 
-            this.LabelPickPos11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos11.Location = new System.Drawing.Point(338, 7);
-            this.LabelPickPos11.Name = "LabelPickPos11";
-            this.LabelPickPos11.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos11.TabIndex = 170;
-            this.LabelPickPos11.Text = "11";
-            this.LabelPickPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos11
-            // 
-            this.TextBoxPickPos11.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos11.Location = new System.Drawing.Point(300, 39);
-            this.TextBoxPickPos11.Multiline = true;
-            this.TextBoxPickPos11.Name = "TextBoxPickPos11";
-            this.TextBoxPickPos11.ReadOnly = true;
-            this.TextBoxPickPos11.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos11.TabIndex = 171;
-            this.TextBoxPickPos11.Tag = "10";
-            this.TextBoxPickPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos12
-            // 
-            this.LabelPickPos12.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickPos12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos12.Location = new System.Drawing.Point(479, 7);
-            this.LabelPickPos12.Name = "LabelPickPos12";
-            this.LabelPickPos12.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos12.TabIndex = 172;
-            this.LabelPickPos12.Text = "12";
-            this.LabelPickPos12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos12
-            // 
-            this.TextBoxPickPos12.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos12.Location = new System.Drawing.Point(441, 39);
-            this.TextBoxPickPos12.Multiline = true;
-            this.TextBoxPickPos12.Name = "TextBoxPickPos12";
-            this.TextBoxPickPos12.ReadOnly = true;
-            this.TextBoxPickPos12.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos12.TabIndex = 173;
-            this.TextBoxPickPos12.Tag = "11";
-            this.TextBoxPickPos12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos13
-            // 
-            this.LabelPickPos13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos13.Location = new System.Drawing.Point(620, 7);
-            this.LabelPickPos13.Name = "LabelPickPos13";
-            this.LabelPickPos13.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos13.TabIndex = 174;
-            this.LabelPickPos13.Text = "13";
-            this.LabelPickPos13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos13
-            // 
-            this.TextBoxPickPos13.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos13.Location = new System.Drawing.Point(582, 39);
-            this.TextBoxPickPos13.Multiline = true;
-            this.TextBoxPickPos13.Name = "TextBoxPickPos13";
-            this.TextBoxPickPos13.ReadOnly = true;
-            this.TextBoxPickPos13.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos13.TabIndex = 175;
-            this.TextBoxPickPos13.Tag = "12";
-            this.TextBoxPickPos13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos14
-            // 
-            this.LabelPickPos14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos14.Location = new System.Drawing.Point(761, 7);
-            this.LabelPickPos14.Name = "LabelPickPos14";
-            this.LabelPickPos14.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos14.TabIndex = 176;
-            this.LabelPickPos14.Text = "14";
-            this.LabelPickPos14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos14
-            // 
-            this.TextBoxPickPos14.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos14.Location = new System.Drawing.Point(723, 39);
-            this.TextBoxPickPos14.Multiline = true;
-            this.TextBoxPickPos14.Name = "TextBoxPickPos14";
-            this.TextBoxPickPos14.ReadOnly = true;
-            this.TextBoxPickPos14.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos14.TabIndex = 177;
-            this.TextBoxPickPos14.Tag = "13";
-            this.TextBoxPickPos14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TextBoxPickPos15
-            // 
-            this.TextBoxPickPos15.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos15.Location = new System.Drawing.Point(864, 39);
-            this.TextBoxPickPos15.Multiline = true;
-            this.TextBoxPickPos15.Name = "TextBoxPickPos15";
-            this.TextBoxPickPos15.ReadOnly = true;
-            this.TextBoxPickPos15.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos15.TabIndex = 184;
-            this.TextBoxPickPos15.Tag = "14";
-            this.TextBoxPickPos15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos15
-            // 
-            this.LabelPickPos15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos15.Location = new System.Drawing.Point(902, 7);
-            this.LabelPickPos15.Name = "LabelPickPos15";
-            this.LabelPickPos15.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos15.TabIndex = 185;
-            this.LabelPickPos15.Text = "15";
-            this.LabelPickPos15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos16
-            // 
-            this.TextBoxPickPos16.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos16.Location = new System.Drawing.Point(1005, 39);
-            this.TextBoxPickPos16.Multiline = true;
-            this.TextBoxPickPos16.Name = "TextBoxPickPos16";
-            this.TextBoxPickPos16.ReadOnly = true;
-            this.TextBoxPickPos16.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos16.TabIndex = 188;
-            this.TextBoxPickPos16.Tag = "15";
-            this.TextBoxPickPos16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos16
-            // 
-            this.LabelPickPos16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos16.Location = new System.Drawing.Point(1043, 7);
-            this.LabelPickPos16.Name = "LabelPickPos16";
-            this.LabelPickPos16.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos16.TabIndex = 187;
-            this.LabelPickPos16.Text = "16";
-            this.LabelPickPos16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Pos9Display
-            // 
-            this.Pos9Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos9Display.Location = new System.Drawing.Point(10, 39);
-            this.Pos9Display.Name = "Pos9Display";
-            this.Pos9Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos9Display.TabIndex = 178;
-            // 
-            // Pos10Display
-            // 
-            this.Pos10Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos10Display.Location = new System.Drawing.Point(151, 39);
-            this.Pos10Display.Name = "Pos10Display";
-            this.Pos10Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos10Display.TabIndex = 179;
-            // 
-            // Pos11Display
-            // 
-            this.Pos11Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos11Display.Location = new System.Drawing.Point(292, 39);
-            this.Pos11Display.Name = "Pos11Display";
-            this.Pos11Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos11Display.TabIndex = 180;
-            // 
-            // Pos12Display
-            // 
-            this.Pos12Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos12Display.Location = new System.Drawing.Point(433, 39);
-            this.Pos12Display.Name = "Pos12Display";
-            this.Pos12Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos12Display.TabIndex = 181;
-            // 
-            // Pos13Display
-            // 
-            this.Pos13Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos13Display.Location = new System.Drawing.Point(574, 39);
-            this.Pos13Display.Name = "Pos13Display";
-            this.Pos13Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos13Display.TabIndex = 182;
-            // 
-            // Pos14Display
-            // 
-            this.Pos14Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos14Display.Location = new System.Drawing.Point(715, 39);
-            this.Pos14Display.Name = "Pos14Display";
-            this.Pos14Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos14Display.TabIndex = 183;
-            // 
-            // Pos15Display
-            // 
-            this.Pos15Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos15Display.Location = new System.Drawing.Point(856, 39);
-            this.Pos15Display.Name = "Pos15Display";
-            this.Pos15Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos15Display.TabIndex = 186;
-            // 
-            // Pos16Display
-            // 
-            this.Pos16Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos16Display.Location = new System.Drawing.Point(997, 39);
-            this.Pos16Display.Name = "Pos16Display";
-            this.Pos16Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos16Display.TabIndex = 189;
-            // 
-            // LabelPickMessages
-            // 
-            this.LabelPickMessages.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickMessages.Location = new System.Drawing.Point(10, 218);
-            this.LabelPickMessages.Name = "LabelPickMessages";
-            this.LabelPickMessages.Size = new System.Drawing.Size(1115, 22);
-            this.LabelPickMessages.TabIndex = 190;
-            this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelNotify
-            // 
-            this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LabelNotify.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelNotify.Location = new System.Drawing.Point(398, 199);
-            this.LabelNotify.Name = "LabelNotify";
-            this.LabelNotify.Size = new System.Drawing.Size(339, 19);
-            this.LabelNotify.TabIndex = 191;
-            this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPos9
-            // 
-            this.TextBoxPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos9.Location = new System.Drawing.Point(18, 39);
-            this.TextBoxPos9.Name = "TextBoxPos9";
-            this.TextBoxPos9.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos9.TabIndex = 8;
-            this.TextBoxPos9.Tag = "8";
-            this.TextBoxPos9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos9.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos9.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos9.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos9.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // LabelPos16
-            // 
-            this.LabelPos16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos16.Location = new System.Drawing.Point(1043, 7);
-            this.LabelPos16.Name = "LabelPos16";
-            this.LabelPos16.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos16.TabIndex = 203;
-            this.LabelPos16.Text = "16";
-            this.LabelPos16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos16.Click += new System.EventHandler(this.LabelPos16_Click);
-            // 
-            // LabelPos15
-            // 
-            this.LabelPos15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos15.Location = new System.Drawing.Point(902, 7);
-            this.LabelPos15.Name = "LabelPos15";
-            this.LabelPos15.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos15.TabIndex = 202;
-            this.LabelPos15.Text = "15";
-            this.LabelPos15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos15.Click += new System.EventHandler(this.LabelPos15_Click);
-            // 
-            // TextBoxPos16
-            // 
-            this.TextBoxPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos16.Location = new System.Drawing.Point(1005, 39);
-            this.TextBoxPos16.Name = "TextBoxPos16";
-            this.TextBoxPos16.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos16.TabIndex = 15;
-            this.TextBoxPos16.Tag = "15";
-            this.TextBoxPos16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos16.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos16.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos16.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos16.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos15
-            // 
-            this.TextBoxPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos15.Location = new System.Drawing.Point(864, 39);
-            this.TextBoxPos15.Name = "TextBoxPos15";
-            this.TextBoxPos15.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos15.TabIndex = 14;
-            this.TextBoxPos15.Tag = "14";
-            this.TextBoxPos15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos15.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos15.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos15.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos15.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // AvailablePos15Display
-            // 
-            this.AvailablePos15Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos15Display.Location = new System.Drawing.Point(856, 39);
-            this.AvailablePos15Display.Name = "AvailablePos15Display";
-            this.AvailablePos15Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos15Display.TabIndex = 204;
-            // 
-            // AvailablePos16Display
-            // 
-            this.AvailablePos16Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos16Display.Location = new System.Drawing.Point(997, 39);
-            this.AvailablePos16Display.Name = "AvailablePos16Display";
-            this.AvailablePos16Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos16Display.TabIndex = 205;
-            // 
-            // LabelPos10
-            // 
-            this.LabelPos10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos10.Location = new System.Drawing.Point(197, 7);
-            this.LabelPos10.Name = "LabelPos10";
-            this.LabelPos10.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos10.TabIndex = 189;
-            this.LabelPos10.Text = "10";
-            this.LabelPos10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos10.Click += new System.EventHandler(this.LabelPos10_Click);
-            // 
-            // LabelPos11
-            // 
-            this.LabelPos11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos11.Location = new System.Drawing.Point(338, 7);
-            this.LabelPos11.Name = "LabelPos11";
-            this.LabelPos11.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos11.TabIndex = 190;
-            this.LabelPos11.Text = "11";
-            this.LabelPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos11.Click += new System.EventHandler(this.LabelPos11_Click);
-            // 
-            // LabelPos12
-            // 
-            this.LabelPos12.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPos12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos12.Location = new System.Drawing.Point(479, 7);
-            this.LabelPos12.Name = "LabelPos12";
-            this.LabelPos12.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos12.TabIndex = 191;
-            this.LabelPos12.Text = "12";
-            this.LabelPos12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos12.Click += new System.EventHandler(this.LabelPos12_Click);
-            // 
-            // LabelPos13
-            // 
-            this.LabelPos13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos13.Location = new System.Drawing.Point(620, 7);
-            this.LabelPos13.Name = "LabelPos13";
-            this.LabelPos13.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos13.TabIndex = 192;
-            this.LabelPos13.Text = "13";
-            this.LabelPos13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos13.Click += new System.EventHandler(this.LabelPos13_Click);
-            // 
-            // LabelPos14
-            // 
-            this.LabelPos14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos14.Location = new System.Drawing.Point(761, 7);
-            this.LabelPos14.Name = "LabelPos14";
-            this.LabelPos14.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos14.TabIndex = 193;
-            this.LabelPos14.Text = "14";
-            this.LabelPos14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos14.Click += new System.EventHandler(this.LabelPos14_Click);
-            // 
-            // LabelPos9
-            // 
-            this.LabelPos9.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPos9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPos9.Location = new System.Drawing.Point(56, 7);
-            this.LabelPos9.Name = "LabelPos9";
-            this.LabelPos9.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos9.TabIndex = 188;
-            this.LabelPos9.Text = "9";
-            this.LabelPos9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPos10
-            // 
-            this.TextBoxPos10.BackColor = System.Drawing.SystemColors.Control;
-            this.TextBoxPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos10.Location = new System.Drawing.Point(159, 39);
-            this.TextBoxPos10.Name = "TextBoxPos10";
-            this.TextBoxPos10.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos10.TabIndex = 9;
-            this.TextBoxPos10.Tag = "9";
-            this.TextBoxPos10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos10.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos10.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos10.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos10.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos11
-            // 
-            this.TextBoxPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos11.Location = new System.Drawing.Point(300, 39);
-            this.TextBoxPos11.Name = "TextBoxPos11";
-            this.TextBoxPos11.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos11.TabIndex = 10;
-            this.TextBoxPos11.Tag = "10";
-            this.TextBoxPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos11.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos11.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos11.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos11.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos12
-            // 
-            this.TextBoxPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos12.Location = new System.Drawing.Point(441, 39);
-            this.TextBoxPos12.Name = "TextBoxPos12";
-            this.TextBoxPos12.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos12.TabIndex = 11;
-            this.TextBoxPos12.Tag = "11";
-            this.TextBoxPos12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos12.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos12.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos12.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos12.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos13
-            // 
-            this.TextBoxPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos13.Location = new System.Drawing.Point(582, 39);
-            this.TextBoxPos13.Name = "TextBoxPos13";
-            this.TextBoxPos13.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos13.TabIndex = 12;
-            this.TextBoxPos13.Tag = "12";
-            this.TextBoxPos13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos13.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos13.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos13.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos13.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos14
-            // 
-            this.TextBoxPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos14.Location = new System.Drawing.Point(723, 39);
-            this.TextBoxPos14.Name = "TextBoxPos14";
-            this.TextBoxPos14.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos14.TabIndex = 13;
-            this.TextBoxPos14.Tag = "13";
-            this.TextBoxPos14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos14.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos14.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos14.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos14.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // AvailablePos9Display
-            // 
-            this.AvailablePos9Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos9Display.Location = new System.Drawing.Point(10, 39);
-            this.AvailablePos9Display.Name = "AvailablePos9Display";
-            this.AvailablePos9Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos9Display.TabIndex = 194;
-            // 
-            // AvailablePos10Display
-            // 
-            this.AvailablePos10Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos10Display.Location = new System.Drawing.Point(151, 39);
-            this.AvailablePos10Display.Name = "AvailablePos10Display";
-            this.AvailablePos10Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos10Display.TabIndex = 195;
-            // 
-            // AvailablePos11Display
-            // 
-            this.AvailablePos11Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos11Display.Location = new System.Drawing.Point(292, 39);
-            this.AvailablePos11Display.Name = "AvailablePos11Display";
-            this.AvailablePos11Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos11Display.TabIndex = 196;
-            // 
-            // AvailablePos12Display
-            // 
-            this.AvailablePos12Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos12Display.Location = new System.Drawing.Point(433, 39);
-            this.AvailablePos12Display.Name = "AvailablePos12Display";
-            this.AvailablePos12Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos12Display.TabIndex = 197;
-            // 
-            // AvailablePos13Display
-            // 
-            this.AvailablePos13Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos13Display.Location = new System.Drawing.Point(574, 39);
-            this.AvailablePos13Display.Name = "AvailablePos13Display";
-            this.AvailablePos13Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos13Display.TabIndex = 198;
-            // 
-            // AvailablePos14Display
-            // 
-            this.AvailablePos14Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos14Display.Location = new System.Drawing.Point(715, 39);
-            this.AvailablePos14Display.Name = "AvailablePos14Display";
-            this.AvailablePos14Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos14Display.TabIndex = 199;
-            // 
-            // TextBoxNewOrderCostCenter
-            // 
-            this.TextBoxNewOrderCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxNewOrderCostCenter.Location = new System.Drawing.Point(150, 102);
-            this.TextBoxNewOrderCostCenter.Name = "TextBoxNewOrderCostCenter";
-            this.TextBoxNewOrderCostCenter.Size = new System.Drawing.Size(200, 26);
-            this.TextBoxNewOrderCostCenter.TabIndex = 58;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(43, 105);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 26);
-            this.label1.TabIndex = 57;
-            this.label1.Text = "Cost Center";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FrmPick
             // 
