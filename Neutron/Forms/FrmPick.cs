@@ -163,6 +163,7 @@ namespace Neutron.Forms
             InitListView();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
+            if (_station.StationNumber >= 8) MBMainAvailableOrders.Text = "Off Carousel";
             //var logFilePath = LoaderSettings.GetLogFileDirectory() + "FrmPick.log";
             // _locationsRepository = new LocationsRepository();
             //Mediator.GetInstance().IptiButtonPressed += (s, e) => SetFocus(e.ResponseInfo);
@@ -514,7 +515,7 @@ namespace Neutron.Forms
                         this.LabelPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         this.LabelPos1.ForeColor = System.Drawing.SystemColors.ControlText;
-                        this.LabelPos1.Location = new System.Drawing.Point(77,107);
+                        this.LabelPos1.Location = new System.Drawing.Point(77, 107);
                         this.LabelPos1.Name = "LabelPos1";
                         this.LabelPos1.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos1.TabIndex = 151;
@@ -537,7 +538,7 @@ namespace Neutron.Forms
                         // 
                         this.LabelPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         this.LabelPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        this.LabelPos3.Location = new System.Drawing.Point(457,107);
+                        this.LabelPos3.Location = new System.Drawing.Point(457, 107);
                         this.LabelPos3.Name = "LabelPos3";
                         this.LabelPos3.Size = new System.Drawing.Size(36, 26);
                         this.LabelPos3.TabIndex = 153;
@@ -4737,7 +4738,7 @@ namespace Neutron.Forms
                         {
                             var location = db.Locations.Find(locationId);
                             if (location != null)
-                            {      
+                            {
                                 location.InUse = false;
                             }
                         }
@@ -5299,7 +5300,15 @@ namespace Neutron.Forms
 
         private void MBMainAvailableOrders_Click(object sender, EventArgs e)
         {
-            AvailableOrdersScreen();
+            if (_station.StationNumber >= 8)
+            {
+                ShowAvailableRackScreen();
+
+            }
+            else
+            {
+                AvailableOrdersScreen();
+            }
         }
 
         public void AvailableOrdersScreen()
@@ -7558,6 +7567,11 @@ namespace Neutron.Forms
         }
 
         private void MBOffCarousel_Click(object sender, EventArgs e)
+        {
+            ShowAvailableRackScreen();
+        }
+
+        private void ShowAvailableRackScreen()
         {
             ShowAvailableOrdersRack();
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
