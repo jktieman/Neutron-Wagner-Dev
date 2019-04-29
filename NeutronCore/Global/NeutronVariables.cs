@@ -41,5 +41,6 @@ namespace NeutronCore.Global
         public bool LoadRackOrders { get; set; }
         public bool SerialPicking { get; set; }
         public bool PrintPreview { get; set; }
+        public bool UpdateItemDefinitionDescription { get; set; }
     }
 }
