@@ -956,7 +956,7 @@ namespace Neutron.Forms
 
                         Task.Run(() => _logger.Log($"ShowShi HotAction {loc2} {loc3}"));
 
-                        Task.Run(() => GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text));
+                        GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text);
                     }
                 }
             }
@@ -1395,7 +1395,7 @@ namespace Neutron.Forms
 
             if (inv != null) TextBoxFindItem.Text = inv.ItemDefinition.Item;
 
-            LoadItemDefinitions();
+            await LoadItemDefinitions();
             await LoadCurrentAndNew();
             LabelFormTitle.Text = "Hot Search";
             LabelFormTitle.BackColor = Color.RoyalBlue;
