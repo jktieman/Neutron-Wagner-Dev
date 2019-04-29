@@ -9,18 +9,31 @@ namespace NeutronData.ModelViews
 {
     public class RackOrderView
     {
-     public int Id { get; set; }
+        public int Id { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
         public int Priority { get; set; }
-        public string StatusName { get; set; }
+
+
         private int _lines;
         private int _pieces;
         private string _searchField;
+        private string _statusName;
+
         public DateTime LoadDate { get; set; }
         public Order Order { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
-
+        public string StatusName
+        {
+            get
+            {
+                return string.IsNullOrEmpty(_statusName) ? OrderDetails.FirstOrDefault()?.LineStatus.Name : _statusName;
+            }
+            set
+            {
+                _statusName = value;
+            }
+        }
         public string SearchField
         {
             get

@@ -1109,7 +1109,7 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.Log($"ShowAvailableOrdersRack: [{DateTime.Now.ToLongTimeString()}]"));
             var idx = 0;
-            var station = _stationRepository.GetStationView(8);
+           // var station = _stationRepository.GetStationView(8);
             if (string.IsNullOrEmpty(findWhat))
             {
                 findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();

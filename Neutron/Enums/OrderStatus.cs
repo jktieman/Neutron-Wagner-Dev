@@ -1,7 +1,6 @@
 ﻿
 using System.ComponentModel;
 
-
 namespace Neutron.Enums
 {
     public enum OrderStatus

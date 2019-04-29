@@ -1,5 +1,4 @@
-﻿using IPTI_Tester.Models;
-using Neutron.Builders.Interfaces;
+﻿using Neutron.Builders.Interfaces;
 using Neutron.Extensions;
 using Neutron.Models;
 using NeutronEvents;

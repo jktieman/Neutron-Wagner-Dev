@@ -1096,7 +1096,26 @@ namespace NeutronData.Repositories
 
         public IEnumerable<RackOrderView> GetRackOrdersView(string search)
         {
-            IEnumerable<RackOrderView> recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
+            IEnumerable<RackOrderView> recs;
+
+            //using (var db = new NeutronDb())
+            //{
+            //  recs = db.Orders.Select(s => new RackOrderView()
+            //    {
+            //        Id = s.Id
+            //        , Order = s
+            //        , LoadDate = s.LoadDate
+            //        , Ord1 = s.Ord1
+            //        , Ord2 = s.Ord2
+            //        , Priority = s.Priority
+            //        , OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == 8).ToList()
+            //    }).Where(o => o.Order.OrderStatusId != 6 && o.OrderDetails.Count > 0)
+            //        .OrderBy(o => o.Ord2).ToList();
+            //}
+
+
+
+            recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
             {
                     Id = s.Id,
                     Ord1 = s.Ord1,
@@ -1104,7 +1123,6 @@ namespace NeutronData.Repositories
                     Priority = s.Priority,
                     Order = s,
                     LoadDate = s.LoadDate,
-                    StatusName = s.OrderDetails.FirstOrDefault()?.LineStatus.Name,
                     OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == 8).ToList()
                 }).Where(o => o.Order.OrderStatusId != 6)
                 .OrderBy(o => o.Ord2).ToList();

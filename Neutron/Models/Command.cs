@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using IPTI_Tester.Enums;
-using IPTI_Tester.Models;
+﻿using System.Collections.Generic;
 
-namespace IPTI_Tester
+namespace Neutron.Models
 {
     public class Command
     {

@@ -1,6 +1,4 @@
-﻿using IPTI_Tester.Models;
-using Neutron.Builders.Interfaces;
-using Neutron.Models;
+﻿using Neutron.Builders.Interfaces;
 using NeutronEvents;
 
 namespace Neutron.Builders.Rules.ControllerTypeRules

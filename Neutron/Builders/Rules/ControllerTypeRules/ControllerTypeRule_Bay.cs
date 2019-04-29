@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using IPTI_Tester.Models;
 using Neutron.Builders.Interfaces;
 using Neutron.Models;
 using NeutronEvents;
