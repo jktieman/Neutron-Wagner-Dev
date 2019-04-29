@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MetroFramework.Forms;
 using Neutron.Global;
@@ -12,13 +10,9 @@ using NeutronData.DataContexts;
 using NeutronData.ModelViews;
 using NeutronData.Models;
 using NeutronData.Repositories;
-using System.Data.SqlClient;
-using System.Configuration;
 using System.Reflection;
 using JsonManager;
 using NeutronCore.Global;
-using System.IO;
-using Newtonsoft.Json;
 using PrintRequest;
 using System.Deployment.Application;
 using Neutron.Extensions;
@@ -28,25 +22,23 @@ namespace Neutron.Forms
 {
     public partial class FrmUtilities : MetroForm
     {
-        private GenericRepository<HardwareDevice> repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-        //private GenericRepository<Station> repoStation = new GenericRepository<Station>(new NeutronDb());
-        private GenericRepository<Order> repoOrders = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
 
-        private BindingSource bindingSourceHardwareDevices = new BindingSource();
+        private readonly BindingSource _bindingSourceHardwareDevices = new BindingSource();
         public bool CloseButtonPressed { get; set; }
         //public bool CloseForm = false;
-        private IJsonData jsonData;
+        private readonly IJsonData _jsonData;
         public HardwareDeviceView CurrentItem;
         public DocumentPrinterPreferences DocumentPrinter;
         public LabelPrinterPreferences LabelPrinter;
-        // private string documentPreferencesFilename = @"C:\Neutron\Json\DocumentPreferences.json";
-        // private string labelPreferencesFilename = @"C:\Neutron\Json\LabelPreferences.json";
+        private NeutronVariables _neutronVariables;
 
         public FrmUtilities(IJsonData jsonData)
         {
             InitializeComponent();
-            this.KeyPreview = true;
-            this.jsonData = jsonData;
+            KeyPreview = true;
+            _jsonData = jsonData;
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
@@ -89,12 +81,36 @@ namespace Neutron.Forms
             };
             DataGridView1.Columns.Add(colx);
 
-            var col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "DeviceNumber";
-            col.HeaderText = @"Device Number";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            col.Name = "DeviceNumber";
+            colx = new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "SimulationMode",
+                HeaderText = @"Simulation",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "SimulationMode",
+                TrueValue = true,
+                FalseValue = false
+            };
+            DataGridView1.Columns.Add(colx);
+
+            var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationName",
+                HeaderText = @"Station Name",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "StationName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "DeviceNumber",
+                HeaderText = @"Device Number",
+                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "DeviceNumber"
+            };
             DataGridView1.Columns.Add(col);
 
             col = new DataGridViewTextBoxColumn
@@ -107,16 +123,7 @@ namespace Neutron.Forms
             };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "StationName",
-                HeaderText = @"Station Name",
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Name = "StationName"
-            };
-            DataGridView1.Columns.Add(col);
-
+           
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "NumberOfCarriers",
@@ -144,6 +151,16 @@ namespace Neutron.Forms
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "CarrierHeight"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LogLevel",
+                HeaderText = @"Log Level",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "LogLevel"
             };
             DataGridView1.Columns.Add(col);
 
@@ -251,7 +268,7 @@ namespace Neutron.Forms
 
         private void FrmUtilities_Load(object sender, EventArgs e)
         {
-            int result = LoadHardwareDevices();
+            var result = LoadHardwareDevices();
 
             try
             {
@@ -285,42 +302,37 @@ namespace Neutron.Forms
         // Set the focus to the passed in recId if it's passed in
         private int LoadHardwareDevices(int recId = 0)
         {
-            int idx = 0;
+            var idx = 0;
             // var hardwareDeviceViews = new List<HardwareDeviceView>();
-            List<HardwareDevice> recs = repoHardwareDevices.AllInclude(r => r.Station, r => r.DeviceType).ToList();
+            var recs = _repoHardwareDevices.AllInclude(r => r.Station, r => r.DeviceType).ToList();
             //create the view
             if (recs.Count > 0)
             {
-                List<HardwareDeviceView> hardwareDeviceViews = recs.Select(r => new HardwareDeviceView
+                var hardwareDeviceViews = recs.Select(r => new HardwareDeviceView
                 {
                     Id = r.Id
-                    ,
-                    DeviceNumber = r.DeviceNumber
-                    ,
-                    Name = r.Name
-                    ,
-                    StationName = r.Station.Name
-                    ,
-                    NumberOfCarriers = int.Parse(r.NumberOfCarriers.ToString())
-                    ,
-                    CarrierWidth = r.CarrierWidth
-                    ,
-                    CarrierDepth = r.CarrierDepth
-                    ,
-                    DeviceTypeName = r.DeviceType.Name
-                    ,
-                    Enabled = r.Enabled
+                    , DeviceNumber = r.DeviceNumber
+                    , Name = r.Name
+                    , StationName = r.Station.Name
+                    , NumberOfCarriers = int.Parse(r.NumberOfCarriers.ToString())
+                    , CarrierWidth = r.CarrierWidth
+                    , CarrierDepth = r.CarrierDepth
+                    , DeviceTypeName = r.DeviceType.Name
+                    , Enabled = r.Enabled
+                    , SimulationMode = r.SimulationMode
+                    , LogLevel = r.LogLevel
+                    , 
                 }).ToList();
 
-                bindingSourceHardwareDevices.DataSource = hardwareDeviceViews;
+                _bindingSourceHardwareDevices.DataSource = hardwareDeviceViews;
 
-                DataGridView1.DataSource = bindingSourceHardwareDevices;
+                DataGridView1.DataSource = _bindingSourceHardwareDevices;
 
-                if (GetRecordCount(bindingSourceHardwareDevices) > 0)
+                if (GetRecordCount(_bindingSourceHardwareDevices) > 0)
                 {
                     if (recId != 0)
                     {
-                        idx = IndexOf(bindingSourceHardwareDevices, recId);
+                        idx = IndexOf(_bindingSourceHardwareDevices, recId);
                         DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
                     }
                     else
@@ -329,7 +341,7 @@ namespace Neutron.Forms
                     }
                     DataGridView1.Refresh();
 
-                    CurrentItem = ((HardwareDeviceView)bindingSourceHardwareDevices.Current);
+                    CurrentItem = ((HardwareDeviceView)_bindingSourceHardwareDevices.Current);
                 }
             }
             return idx;
@@ -337,11 +349,11 @@ namespace Neutron.Forms
 
         public int IndexOf(BindingSource bs, int value)
         {
-            int count = bs.Count;
-            int itemIndex = -1;
-            for (int i = 0; i < count; i++)
+            var count = bs.Count;
+            var itemIndex = -1;
+            for (var i = 0; i < count; i++)
             {
-                int rec = ((OrderView)bs[i]).Id;
+                var rec = ((OrderView)bs[i]).Id;
                 if (rec == value)
                 {
                     itemIndex = i;
@@ -354,7 +366,7 @@ namespace Neutron.Forms
 
         private int GetRecordCount(BindingSource bs)
         {
-            int count = bs.Count;
+            var count = bs.Count;
             LabelRecordCount.Text = string.Format("Records: {0}", count.ToString());
             return count;
         }
@@ -377,8 +389,7 @@ namespace Neutron.Forms
             LabelFormTitle.Text = "Device Listing";
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = HardwareDevices;
-            var device = new HardwareDevice { Id = 7, Name = "Device" };
-            jsonData.SaveFile<HardwareDevice>(device);
+            LoadHardwareDevices();
         }
 
         private void MBDeviceListingBack_Click(object sender, EventArgs e)
@@ -488,7 +499,7 @@ namespace Neutron.Forms
 
         private string GetPickMethod()
         {
-            IEnumerable<string> a = from RadioButton r in GroupBoxPickMethod.Controls where r.Checked == true select r.Name;
+            var a = from RadioButton r in GroupBoxPickMethod.Controls where r.Checked == true select r.Name;
             return a.First();
         }
 
@@ -516,43 +527,69 @@ namespace Neutron.Forms
 
         private void MBSaveVariables_Click(object sender, EventArgs e)
         {
-            var neutronVariables = new NeutronVariables();
-            neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
-            neutronVariables.ShuttleEnabled = CheckBoxShuttleEnabled.Checked;
-            neutronVariables.SendAllPicksToHost = CheckBoxSendAllPicksToHost.Checked;
-            neutronVariables.UsePrimeBin = CheckBoxUsePrimeBin.Checked;
-            neutronVariables.PickMethod = GetPickMethod();
-            neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
-            neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
-            neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
-            neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
-            neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
-            neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
-            neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
-            neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
-            neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
-            neutronVariables.CheckForUsedItem = CheckBoxCheckForUsedItem.Checked;
-            neutronVariables.RunLoaderOnStartup = CheckBoxRunLoaderOnStartup.Checked;
-            neutronVariables.DisplaysEnabled = CheckBoxDisplaysEnabled.Checked;
-            neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
-            neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
-            neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
-            neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();  
-            neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt(); 
-            neutronVariables.BliEnabled = CheckBoxBliEnabled.Checked;
-            neutronVariables.ShiEnabled = CheckBoxShiEnabled.Checked;
-            neutronVariables.ParkPositionAfterBatch = CheckBoxParkPositionAfterBatch.Checked;
-            neutronVariables.UsePr1Processor = CheckBoxUsePr1Processor.Checked;
-            neutronVariables.UsePr1StyleInputProcessor = CheckBoxUsePr1StyleInputProcessor.Checked;
-            neutronVariables.UsePr1StyleOutputProcessor = CheckBoxUsePr1StyleOutputProcessor.Checked;
-            neutronVariables.FieldDelimiter = TextBoxFieldDelimiter.Text;
-            neutronVariables.AutoEnlargeImage = CheckBoxAutoEnlargeImage.Checked;
-            neutronVariables.IptiDisplays = CheckBoxIptiDisplays.Checked;
-            neutronVariables.LoadRackOrders = CheckBoxLoadRackOrders.Checked;
-            neutronVariables.SerialPicking = CheckBoxSerialPicking.Checked;
-            neutronVariables.PrintPreview = CheckBoxPrintPreview.Checked;
+            _neutronVariables = new NeutronVariables();
+            _neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
+            _neutronVariables.ShuttleEnabled = CheckBoxShuttleEnabled.Checked;
+            _neutronVariables.SendAllPicksToHost = CheckBoxSendAllPicksToHost.Checked;
+            _neutronVariables.UsePrimeBin = CheckBoxUsePrimeBin.Checked;
+            _neutronVariables.PickMethod = GetPickMethod();
+            _neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
+            _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
+            _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
+            _neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
+            _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
+            _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
+            _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
+            _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
+            _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
+            _neutronVariables.CheckForUsedItem = CheckBoxCheckForUsedItem.Checked;
+            _neutronVariables.RunLoaderOnStartup = CheckBoxRunLoaderOnStartup.Checked;
+            _neutronVariables.DisplaysEnabled = CheckBoxDisplaysEnabled.Checked;
+            _neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
+            _neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
+            _neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
+            _neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();
+            _neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt();
+            _neutronVariables.BliEnabled = CheckBoxBliEnabled.Checked;
+            _neutronVariables.ShiEnabled = CheckBoxShiEnabled.Checked;
+            _neutronVariables.ParkPositionAfterBatch = CheckBoxParkPositionAfterBatch.Checked;
+            _neutronVariables.UsePr1Processor = CheckBoxUsePr1Processor.Checked;
+            _neutronVariables.UsePr1StyleInputProcessor = CheckBoxUsePr1StyleInputProcessor.Checked;
+            _neutronVariables.UsePr1StyleOutputProcessor = CheckBoxUsePr1StyleOutputProcessor.Checked;
+            _neutronVariables.FieldDelimiter = TextBoxFieldDelimiter.Text;
+            _neutronVariables.AutoEnlargeImage = CheckBoxAutoEnlargeImage.Checked;
+            _neutronVariables.IptiDisplays = CheckBoxIptiDisplays.Checked;
+            _neutronVariables.LoadRackOrders = CheckBoxLoadRackOrders.Checked;
+            _neutronVariables.SerialPicking = CheckBoxSerialPicking.Checked;
+            _neutronVariables.PrintPreview = CheckBoxPrintPreview.Checked;
 
-            jsonData.SaveFile<NeutronVariables>(neutronVariables);
+            _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
+
+            UpdateSimulationMode();
+
+        }
+
+        private void UpdateSimulationMode()
+        {
+            var recs = _repoHardwareDevices.All().ToList();
+            if (_neutronVariables.SimulationMode)
+            {
+                foreach (var rec in recs)
+                {
+                    rec.SimulationMode = true;
+                    rec.LogLevel = 8;
+                    _repoHardwareDevices.Update(rec);
+                }
+            }
+            else
+            {
+                foreach (var rec in recs)
+                {
+                    rec.SimulationMode = false;
+                    rec.LogLevel = 2;
+                    _repoHardwareDevices.Update(rec);
+                }
+            }
         }
 
         private void MBVariables_Click(object sender, EventArgs e)
@@ -562,7 +599,7 @@ namespace Neutron.Forms
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = DisplayListing;
 
-            NeutronVariables neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            var neutronVariables = _jsonData.LoadFile<NeutronVariables>();
 
             CheckBoxCreateStoreOrderWithRts.Checked = neutronVariables.CreateStoreOrderWithRts;
             CheckBoxShuttleEnabled.Checked = neutronVariables.ShuttleEnabled;
@@ -603,11 +640,6 @@ namespace Neutron.Forms
 
         private void MBUtilitiesSpare1_Click(object sender, EventArgs e)
         {
-            //var neutronVariables = new NeutronVariables();
-            //neutronVariables = jsonData.LoadFile<NeutronVariables>();
-
-            //MessageBox.Show("Use Prime Bin: " + neutronVariables.UsePrimeBin.ToString());
-
         }
 
         private void MButtonViewEdit_Click(object sender, EventArgs e)
@@ -627,7 +659,7 @@ namespace Neutron.Forms
             };
             try
             {
-                jsonData.SaveFile<DocumentPrinterPreferences>(DocumentPrinter);
+                _jsonData.SaveFile<DocumentPrinterPreferences>(DocumentPrinter);
 
                 //using (StreamWriter file = File.CreateText(documentPreferencesFilename))
                 //{
@@ -650,7 +682,7 @@ namespace Neutron.Forms
             };
             try
             {
-                jsonData.SaveFile<LabelPrinterPreferences>(LabelPrinter);
+                _jsonData.SaveFile<LabelPrinterPreferences>(LabelPrinter);
 
                 //using (StreamWriter file = File.CreateText(labelPreferencesFilename))
                 //{
@@ -683,7 +715,7 @@ namespace Neutron.Forms
         public DocumentPrinterPreferences LoadDocumentPrinterPreferences()
         {
             var result = new DocumentPrinterPreferences();
-            result = jsonData.LoadFile<DocumentPrinterPreferences>();
+            result = _jsonData.LoadFile<DocumentPrinterPreferences>();
 
             //using (StreamReader r = new StreamReader(this.documentPreferencesFilename))
             //{
@@ -696,7 +728,7 @@ namespace Neutron.Forms
         public LabelPrinterPreferences LoadLabelPrinterPreferences()
         {
             var result = new LabelPrinterPreferences();
-            result = jsonData.LoadFile<LabelPrinterPreferences>();
+            result = _jsonData.LoadFile<LabelPrinterPreferences>();
 
             //using (StreamReader r = new StreamReader(this.labelPreferencesFilename))
             //{
@@ -722,7 +754,7 @@ namespace Neutron.Forms
 
         private void ButtonPrintTextDocument_Click(object sender, EventArgs e)
         {
-            string order = TextBoxTestOrderNumber.Text;
+            var order = TextBoxTestOrderNumber.Text;
             DocumentToPrint.Print(1, order, DocumentPrinter);
         }
 
@@ -730,8 +762,8 @@ namespace Neutron.Forms
         {
             try
             {
-                string order = TextBoxTestOrderNumber.Text;
-                Order ord = repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
+                var order = TextBoxTestOrderNumber.Text;
+                var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
                 if (ord != null)
                 {
                     ToteToPrint.Print(1, ord, LabelPrinter);
@@ -757,11 +789,11 @@ namespace Neutron.Forms
         private void MBLookups_Click(object sender, EventArgs e)
         {
 
-            this.Hide();
+            Hide();
             using (MetroForm frm = new FrmLookups())
             {
-                DialogResult result = frm.ShowDialog();
-                this.Show();
+                var result = frm.ShowDialog();
+                Show();
             }
 
         }
@@ -773,7 +805,7 @@ namespace Neutron.Forms
 
         private void ButtonNomenclature_Click(object sender, EventArgs e)
         {
-            var nomenclature = jsonData.LoadFile<Nomenclature>();
+            var nomenclature = _jsonData.LoadFile<Nomenclature>();
             TextBoxPickAccept.Text = nomenclature.MBPickAccept;
             TextBoxStoreAccept.Text = nomenclature.MBStoreAccept;
             TextBoxDelete.Text = nomenclature.MBDelete;
@@ -796,7 +828,7 @@ namespace Neutron.Forms
             nomenclature.LabelOver = TextBoxOver.Text;
             nomenclature.LabelBack = TextBoxBack.Text;
 
-            jsonData.SaveFile<Nomenclature>(nomenclature);
+            _jsonData.SaveFile<Nomenclature>(nomenclature);
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -845,19 +877,19 @@ namespace Neutron.Forms
             }
         }
 
-        private void CheckForOrderComplete(Order order)
-        {
-            var repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
-            var repoOrders = new GenericRepository<Order>(new NeutronDb());
+        //private void CheckForOrderComplete(Order order)
+        //{
+        //    var repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
+        //    var repoOrders = new GenericRepository<Order>(new NeutronDb());
 
-            var linesNotComplete = repoOrderDetails.FindBy(r => r.OrderId == order.Id).Where(r => r.LineStatusId != 6)
-                .ToList();
-            if (linesNotComplete.Count != 0) return;
-            order.OrderStatusId = 6;
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order: order);
-            repoOrders.Update(order);
+        //    var linesNotComplete = repoOrderDetails.FindBy(r => r.OrderId == order.Id).Where(r => r.LineStatusId != 6)
+        //        .ToList();
+        //    if (linesNotComplete.Count != 0) return;
+        //    order.OrderStatusId = 6;
+        //    GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order: order);
+        //    repoOrders.Update(order);
 
-        }
+        //}
     }
 
 }

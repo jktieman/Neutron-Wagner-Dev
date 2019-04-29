@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmUtilities));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -133,6 +133,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.DisplayListing = new System.Windows.Forms.TabPage();
+            this.ComboBoxStoreBatchSize = new System.Windows.Forms.ComboBox();
+            this.ComboBoxPickBatchSize = new System.Windows.Forms.ComboBox();
             this.GroupBoxPickMethod = new System.Windows.Forms.GroupBox();
             this.RadioButtonLifo = new System.Windows.Forms.RadioButton();
             this.RadioButtonFifo = new System.Windows.Forms.RadioButton();
@@ -179,9 +181,6 @@
             this.MBSaveVariables = new MetroFramework.Controls.MetroButton();
             this.MBInterfaceFilesBack = new MetroFramework.Controls.MetroButton();
             this.HardwareDevices = new System.Windows.Forms.TabPage();
-            this.DataGridView1 = new System.Windows.Forms.DataGridView();
-            this.MBPrintPickList = new MetroFramework.Controls.MetroButton();
-            this.MBStart = new MetroFramework.Controls.MetroButton();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.ManageLookups = new System.Windows.Forms.TabPage();
             this.ListBoxCodeNames = new System.Windows.Forms.ListBox();
@@ -194,8 +193,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ComboBoxPickBatchSize = new System.Windows.Forms.ComboBox();
-            this.ComboBoxStoreBatchSize = new System.Windows.Forms.ComboBox();
+            this.PanelHardwareDevices = new System.Windows.Forms.Panel();
+            this.DataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -210,9 +209,10 @@
             this.GroupBoxPickMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).BeginInit();
             this.HardwareDevices.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
             this.ManageLookups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.PanelHardwareDevices.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -623,9 +623,9 @@
             // ButtonSave
             // 
             this.ButtonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(868, 10);
+            this.ButtonSave.Location = new System.Drawing.Point(828, 10);
             this.ButtonSave.Name = "ButtonSave";
-            this.ButtonSave.Size = new System.Drawing.Size(135, 76);
+            this.ButtonSave.Size = new System.Drawing.Size(155, 76);
             this.ButtonSave.TabIndex = 44;
             this.ButtonSave.Text = "Save Settings";
             this.ButtonSave.UseVisualStyleBackColor = true;
@@ -666,10 +666,10 @@
             // 
             this.MBPrintSetUpBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPrintSetUpBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintSetUpBack.Location = new System.Drawing.Point(1009, 10);
+            this.MBPrintSetUpBack.Location = new System.Drawing.Point(989, 10);
             this.MBPrintSetUpBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintSetUpBack.Name = "MBPrintSetUpBack";
-            this.MBPrintSetUpBack.Size = new System.Drawing.Size(135, 76);
+            this.MBPrintSetUpBack.Size = new System.Drawing.Size(155, 76);
             this.MBPrintSetUpBack.TabIndex = 39;
             this.MBPrintSetUpBack.Text = "Back";
             this.MBPrintSetUpBack.UseSelectable = true;
@@ -1100,7 +1100,7 @@
             // 
             this.MbNomenclatureClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MbNomenclatureClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MbNomenclatureClose.Location = new System.Drawing.Point(933, 7);
+            this.MbNomenclatureClose.Location = new System.Drawing.Point(985, 7);
             this.MbNomenclatureClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNomenclatureClose.Name = "MbNomenclatureClose";
             this.MbNomenclatureClose.Size = new System.Drawing.Size(155, 76);
@@ -1112,7 +1112,7 @@
             // MbNomenclatureSave
             // 
             this.MbNomenclatureSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MbNomenclatureSave.Location = new System.Drawing.Point(771, 7);
+            this.MbNomenclatureSave.Location = new System.Drawing.Point(823, 7);
             this.MbNomenclatureSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNomenclatureSave.Name = "MbNomenclatureSave";
             this.MbNomenclatureSave.Size = new System.Drawing.Size(155, 76);
@@ -1331,6 +1331,34 @@
             this.DisplayListing.Size = new System.Drawing.Size(1147, 644);
             this.DisplayListing.TabIndex = 2;
             this.DisplayListing.Text = "Display Listing";
+            // 
+            // ComboBoxStoreBatchSize
+            // 
+            this.ComboBoxStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxStoreBatchSize.FormattingEnabled = true;
+            this.ComboBoxStoreBatchSize.Items.AddRange(new object[] {
+            "4",
+            "6",
+            "8",
+            "16"});
+            this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(197, 311);
+            this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
+            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
+            this.ComboBoxStoreBatchSize.TabIndex = 24;
+            // 
+            // ComboBoxPickBatchSize
+            // 
+            this.ComboBoxPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxPickBatchSize.FormattingEnabled = true;
+            this.ComboBoxPickBatchSize.Items.AddRange(new object[] {
+            "4",
+            "6",
+            "8",
+            "16"});
+            this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(197, 274);
+            this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
+            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(65, 24);
+            this.ComboBoxPickBatchSize.TabIndex = 24;
             // 
             // GroupBoxPickMethod
             // 
@@ -1849,9 +1877,7 @@
             // HardwareDevices
             // 
             this.HardwareDevices.BackColor = System.Drawing.Color.RoyalBlue;
-            this.HardwareDevices.Controls.Add(this.DataGridView1);
-            this.HardwareDevices.Controls.Add(this.MBPrintPickList);
-            this.HardwareDevices.Controls.Add(this.MBStart);
+            this.HardwareDevices.Controls.Add(this.PanelHardwareDevices);
             this.HardwareDevices.Controls.Add(this.MBPickListBack);
             this.HardwareDevices.Location = new System.Drawing.Point(4, 22);
             this.HardwareDevices.Name = "HardwareDevices";
@@ -1860,78 +1886,14 @@
             this.HardwareDevices.TabIndex = 9;
             this.HardwareDevices.Text = "Hardware Devices";
             // 
-            // DataGridView1
-            // 
-            this.DataGridView1.AllowUserToAddRows = false;
-            this.DataGridView1.AllowUserToDeleteRows = false;
-            this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
-            this.DataGridView1.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
-            this.DataGridView1.Location = new System.Drawing.Point(6, 107);
-            this.DataGridView1.MultiSelect = false;
-            this.DataGridView1.Name = "DataGridView1";
-            this.DataGridView1.ReadOnly = true;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle8;
-            this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowTemplate.Height = 28;
-            this.DataGridView1.RowTemplate.ReadOnly = true;
-            this.DataGridView1.Size = new System.Drawing.Size(1135, 519);
-            this.DataGridView1.TabIndex = 41;
-            // 
-            // MBPrintPickList
-            // 
-            this.MBPrintPickList.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintPickList.Location = new System.Drawing.Point(796, 18);
-            this.MBPrintPickList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBPrintPickList.Name = "MBPrintPickList";
-            this.MBPrintPickList.Size = new System.Drawing.Size(162, 76);
-            this.MBPrintPickList.TabIndex = 38;
-            this.MBPrintPickList.Text = "Save To File";
-            this.MBPrintPickList.UseSelectable = true;
-            // 
-            // MBStart
-            // 
-            this.MBStart.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStart.Location = new System.Drawing.Point(6, 18);
-            this.MBStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBStart.Name = "MBStart";
-            this.MBStart.Size = new System.Drawing.Size(162, 76);
-            this.MBStart.TabIndex = 39;
-            this.MBStart.Text = "Start";
-            this.MBStart.UseSelectable = true;
-            // 
             // MBPickListBack
             // 
             this.MBPickListBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickListBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickListBack.Location = new System.Drawing.Point(964, 20);
+            this.MBPickListBack.Location = new System.Drawing.Point(986, 7);
             this.MBPickListBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickListBack.Name = "MBPickListBack";
-            this.MBPickListBack.Size = new System.Drawing.Size(177, 76);
+            this.MBPickListBack.Size = new System.Drawing.Size(155, 76);
             this.MBPickListBack.TabIndex = 40;
             this.MBPickListBack.Text = "Back";
             this.MBPickListBack.UseSelectable = true;
@@ -2045,33 +2007,56 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // ComboBoxPickBatchSize
+            // PanelHardwareDevices
             // 
-            this.ComboBoxPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxPickBatchSize.FormattingEnabled = true;
-            this.ComboBoxPickBatchSize.Items.AddRange(new object[] {
-            "4",
-            "6",
-            "8",
-            "16"});
-            this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(197, 274);
-            this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
-            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(65, 24);
-            this.ComboBoxPickBatchSize.TabIndex = 24;
+            this.PanelHardwareDevices.Controls.Add(this.DataGridView1);
+            this.PanelHardwareDevices.Location = new System.Drawing.Point(7, 112);
+            this.PanelHardwareDevices.Name = "PanelHardwareDevices";
+            this.PanelHardwareDevices.Size = new System.Drawing.Size(1134, 526);
+            this.PanelHardwareDevices.TabIndex = 42;
             // 
-            // ComboBoxStoreBatchSize
+            // DataGridView1
             // 
-            this.ComboBoxStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxStoreBatchSize.FormattingEnabled = true;
-            this.ComboBoxStoreBatchSize.Items.AddRange(new object[] {
-            "4",
-            "6",
-            "8",
-            "16"});
-            this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(197, 311);
-            this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
-            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
-            this.ComboBoxStoreBatchSize.TabIndex = 24;
+            this.DataGridView1.AllowUserToAddRows = false;
+            this.DataGridView1.AllowUserToDeleteRows = false;
+            this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.DataGridView1.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle10;
+            this.DataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.DataGridView1.MultiSelect = false;
+            this.DataGridView1.Name = "DataGridView1";
+            this.DataGridView1.ReadOnly = true;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowTemplate.Height = 28;
+            this.DataGridView1.RowTemplate.ReadOnly = true;
+            this.DataGridView1.Size = new System.Drawing.Size(1134, 526);
+            this.DataGridView1.TabIndex = 42;
             // 
             // FrmUtilities
             // 
@@ -2112,9 +2097,10 @@
             this.GroupBoxPickMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).EndInit();
             this.HardwareDevices.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.ManageLookups.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.PanelHardwareDevices.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2235,9 +2221,6 @@
         private System.Windows.Forms.TextBox TextBoxDocumentPrinter;
         private System.Windows.Forms.Label LabelCheckPrinter;
         private System.Windows.Forms.TabPage HardwareDevices;
-        private System.Windows.Forms.DataGridView DataGridView1;
-        private MetroFramework.Controls.MetroButton MBPrintPickList;
-        private MetroFramework.Controls.MetroButton MBStart;
         private MetroFramework.Controls.MetroButton MBPickListBack;
         private System.Windows.Forms.TextBox TextBoxTestOrderNumber;
         private System.Windows.Forms.Button ButtonPrintTestToteLabel;
@@ -2283,5 +2266,7 @@
         private System.Windows.Forms.CheckBox CheckBoxPrintPreview;
         private System.Windows.Forms.ComboBox ComboBoxStoreBatchSize;
         private System.Windows.Forms.ComboBox ComboBoxPickBatchSize;
+        private System.Windows.Forms.Panel PanelHardwareDevices;
+        private System.Windows.Forms.DataGridView DataGridView1;
     }
 }

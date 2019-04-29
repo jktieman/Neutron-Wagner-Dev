@@ -18,6 +18,9 @@ namespace NeutronData.ModelViews
         public int CarrierDepth { get; set; }
         public string DeviceTypeName { get; set; }
         public bool Enabled { get; set; }
+        public bool SimulationMode { get; set; }
+        public int LogLevel { get; set; }
+
 
     }
 }
