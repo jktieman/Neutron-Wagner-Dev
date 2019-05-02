@@ -51,6 +51,8 @@ namespace PrintRequest
         private IList<PickList> _transferRecs = new List<PickList>();
         private PickList _pickListHeader;
         private PrintDocument _printDoc;
+        private string _prevRec = string.Empty;
+        private int _counter = 0;
 
         public OperationResult PrintPickListDocument(IList<PickList> recs, DocumentPrinterPreferences printer, bool printPreview = false)
         {
@@ -188,8 +190,8 @@ namespace PrintRequest
         private void DrawBody(Graphics g, int yValue)
         {
             var format = new StringFormat() { Alignment = StringAlignment.Far };
-            var counter = 0;
-            var prevRec = string.Empty;
+            
+            
             for (var i = 0; (i < NumRowsPerPage) && ((i + _printedRows) < _transferRecs.Count); i++)
             {
 
@@ -197,25 +199,25 @@ namespace PrintRequest
 
                 if (_firsttime)
                 {
-                     counter = 0;
-                    prevRec = rec.OrderDetailId;
+                     _counter = 0;
+                    _prevRec = rec.OrderDetailId;
                     _firsttime = false;
                 }
                 else
                 {
-                    if (rec.OrderDetailId == prevRec)
+                    if (rec.OrderDetailId == _prevRec)
                     {
-                        counter++;
+                        _counter++;
                         rec.Station = string.Empty;
                         rec.Item = string.Empty;
-                        rec.Description = ($"Additional Location [ {counter} ]");
+                        rec.Description = ($"Additional Location [ {_counter} ]");
                         rec.Ordered = string.Empty;
                     }
 
                     else
                     {
-                        counter = 0;
-                        prevRec = rec.OrderDetailId;
+                        _counter = 0;
+                        _prevRec = rec.OrderDetailId;
                     }
                 }
 

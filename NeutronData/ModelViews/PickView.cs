@@ -38,12 +38,8 @@ namespace NeutronData.ModelViews
         public int StationNumber { get; set; }
         public int GetQuantityToBePicked()
         {
-            int result = Quantity - PickedQty;
-            if (result > 0)
-            {
-                return result;
-            }
-            return 0;
+            var result = Quantity - PickedQty;
+            return result > 0 ? result : 0;
         }
     }
 }

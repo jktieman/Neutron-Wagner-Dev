@@ -68,7 +68,7 @@ namespace Neutron.Forms
         private readonly BindingSource _bindingSourceSkipView = new BindingSource();
         //New Order
         private readonly BindingSource _bindingSourceItems = new BindingSource();
-        //private BindingSource _bindingSourceNewItems = new BindingSource();
+        private BindingSource _bindingSourceNewItems = new BindingSource();
         //----
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
@@ -83,9 +83,6 @@ namespace Neutron.Forms
         private List<BatchPosition> _ordersToPick = new List<BatchPosition>();
         private PickStop _currentPickStop = new PickStop();
         private SqlInventoryView _currentInventoryView = new SqlInventoryView();
-        // private readonly Global.HistoryManager _historyManager = new Global.HistoryManager();
-        // private bool _gridClickedAvailableOrders = false;
-        // private string _textToFind = string.Empty;
         private bool _openHotPickFromPickScreen;
         private bool _openHotStoreFromPickScreen;
         private bool _showSkipped;
@@ -160,7 +157,7 @@ namespace Neutron.Forms
             }
             ComboBoxStationNumber.SelectedIndex = 5;
             InitOrdersToPick(_neutronVariables.PickBatchSize);
-            InitListView();
+            InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
             if (_station.StationNumber >= 8) MBMainAvailableOrders.Text = "Off Carousel";
@@ -1109,7 +1106,7 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.Log($"ShowAvailableOrdersRack: [{DateTime.Now.ToLongTimeString()}]"));
             var idx = 0;
-           // var station = _stationRepository.GetStationView(8);
+            // var station = _stationRepository.GetStationView(8);
             if (string.IsNullOrEmpty(findWhat))
             {
                 findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
@@ -2191,17 +2188,15 @@ namespace Neutron.Forms
             DataGridViewNewOrder.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewNewOrder.DefaultCellStyle.BackColor = Color.White;
 
-            var bCol = new DataGridViewButtonColumn
+            col = new DataGridViewTextBoxColumn
             {
-                HeaderText = @"   ",
-                Visible = true,
-                Name = "AddItem",
-                Text = _resourceManager.GetString(@"AddItem"),
-                FlatStyle = FlatStyle.Popup,
-                UseColumnTextForButtonValue = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                DataPropertyName = "StationNumber",
+                HeaderText = _resourceManager.GetString("Station"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "StationNumber"
             };
-            DataGridViewNewOrder.Columns.Add(bCol);
+            DataGridViewNewOrder.Columns.Add(col);
 
             col = new DataGridViewTextBoxColumn
             {
@@ -2215,33 +2210,32 @@ namespace Neutron.Forms
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString("Quantity"),
-                Name = "Quantity",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
-            };
-            DataGridViewNewOrder.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
                 DataPropertyName = "Description",
                 HeaderText = _resourceManager.GetString("Description"),
                 Name = "Description",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
             };
             DataGridViewNewOrder.Columns.Add(col);
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Id",
-                HeaderText = @"Id",
-                Visible = false,
-                Name = "Id"
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString("Quantity"),
+                Name = "Quantity",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
             DataGridViewNewOrder.Columns.Add(col);
 
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "ItemDefinitionId",
+                HeaderText = @"Id",
+                Visible = false,
+                Name = "ItemDefinitionId"
+            };
+            DataGridViewNewOrder.Columns.Add(col);
 
             foreach (DataGridViewColumn column in DataGridViewNewOrder.Columns)
             {
@@ -2511,6 +2505,71 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
+
+            //********************************************************************
+            //DataGridViewNewItems
+
+            DataGridViewNewItems.AutoGenerateColumns = false;
+            DataGridViewNewItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewNewItems.DefaultCellStyle.ForeColor = Color.Black;
+            DataGridViewNewItems.DefaultCellStyle.BackColor = Color.White;
+            DataGridViewNewItems.ScrollBars = ScrollBars.Both;
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationNumber",
+                HeaderText = _resourceManager.GetString("Station"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "StationNumber"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _resourceManager.GetString(@"Item"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _resourceManager.GetString(@"Description"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "Description"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString(@"Quantity"),
+                Name = "Quantity",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                HeaderText = @"Id",
+                Visible = false,
+                Name = "Id"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            foreach (DataGridViewColumn column in DataGridViewNewItems.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
+
         }
 
         private void FrmPick_FormClosing(object sender, FormClosingEventArgs e)
@@ -4462,8 +4521,6 @@ namespace Neutron.Forms
 
             var thisPick = LabelPickQty.Text.ParseInt();
 
-
-
             Task.Run(() => _logger.Log($"PickAccept_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
             var pick = false;
 
@@ -4479,7 +4536,6 @@ namespace Neutron.Forms
                 _currentPickStop.UpdatePickViews(GlobalVar.User);  //good
                 _currentPickStop.PickedQty = GetPickedSoFar(_currentPickStop.PickViews);
                 _currentPickStop.QuantityToBePicked = GetTotalQuantityToBePicked(_currentPickStop.PickViews);  // QuantityToBePicked on ALL PickViews
-                //_currentPickStop.CurrentInventoryLocation.Quantity -= thisPick;
 
                 var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
                 _currentPickStop.TotalQuantityInInventory = total;
@@ -4517,7 +4573,7 @@ namespace Neutron.Forms
 
                     Task.Run(() => _logger.Log($"History Done"));
 
-                    _currentPickStop.SetPickViewsComplete(GlobalVar.User);
+                    _currentPickStop.SetPickViewsComplete(GlobalVar.User, _logger);
 
                     foreach (var pickView in _currentPickStop.PickViews)
                     {
@@ -4626,25 +4682,34 @@ namespace Neutron.Forms
 
         private void UpdateInventoryQuantity(PickStop pickStop)
         {
+            var sb = new StringBuilder();
             //currentPickStop.CurrentInventoryLocation.Quantity -= currentPickStop.PickedQty;
             // repoInventory.Update(currentPickStop.CurrentInventoryLocation);
-            Task.Run(() => _logger.Log($"UpdateInventoryQuantity for PickStop: {pickStop.Item} - Start"));
+            sb.AppendLine($"Update Inventory Quantity for PickStop Item: {pickStop.Item} - Start");
 
             foreach (var pickView in pickStop.PickViews)
             {
+                sb.AppendLine($"PickView: {pickView.Ord1}  {pickView.Ord2}");
                 foreach (var pickLocation in pickView.PickLocations)
                 {
+                    sb.AppendLine($"Pick Location: {pickLocation.Inventory.Location.Slot}");
                     //  pickLocation.Inventory.Quantity -= pickLocation.Quantity;
 
                     var inv = _repoInventory.FindByKey(pickLocation.Inventory.Id);
                     if (inv != null)
                     {
+                        sb.AppendLine($"Inventory Qty: {inv.Quantity}  Pick Location Qty: {pickLocation.Quantity}");
                         inv.Quantity -= pickLocation.Quantity;
 
                         _repoInventory.Update(inv);
+                        sb.AppendLine("Update Inventory");
                         GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inv, pickLocation.Quantity, pickView);
+                        sb.AppendLine("Write Pick Order to History");
                     }
-
+                    else
+                    {
+                        sb.AppendLine($"Inventory is NULL.");
+                    }
 
                     //Task.Run(() => _logger.Log($"pickLocation.Inventory: {pickLocation.Inventory.Id}"));
                     //Task.Run(() => _logger.Log($"pickLocation.Inventory: {pickLocation.Inventory.ItemDefinitionId}"));
@@ -4658,6 +4723,7 @@ namespace Neutron.Forms
 
                 }
             }
+            _logger.Log($"{sb.ToString()}");
         }
 
         private void CloseBatch()
@@ -4832,9 +4898,9 @@ namespace Neutron.Forms
             if (comboBoxValue != "ALL")
             {
                 var stationId = comboBoxValue.ParseInt();
-                outs = anticipatedOuts.Where(r => r.Station == stationId).ToList();
+                anticipatedOuts = anticipatedOuts.Where(r => r.Station == stationId).ToList();
             }
-            DocumentToPrint.PrintAnticipatedOuts(outs, _documentPrinter, _neutronVariables.PrintPreview);
+            DocumentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private void MBPrintPick_Click(object sender, EventArgs e)
@@ -5367,28 +5433,14 @@ namespace Neutron.Forms
         {
             LabelFormTitle.Text = _resourceManager.GetString($"NewJob");
             LabelFormTitle.BackColor = Color.RoyalBlue;
-            _bindingSourceItems.DataSource = GetItemsList();
-            DataGridViewNewOrder.DataSource = _bindingSourceItems;
+            // _bindingSourceItems.DataSource = GetItemsList(string.Empty);
+            //  DataGridViewNewOrder.DataSource = _bindingSourceItems;
+            ClearNewOrderForm();
             tabControl1.SelectedTab = NewOrder;
-            DataGridViewNewOrder.ClearSelection();
-            DataGridViewNewOrder.Update();
+            //  DataGridViewNewOrder.ClearSelection();
+            //  DataGridViewNewOrder.Update();
         }
-        //New Order
-        private List<NewItemView> GetItemsList()
-        {
-            var recs = new List<NewItemView>();
-            recs = _repoInventory.AllInclude(r => r.ItemDefinition).Select(d => new NewItemView()
-            {
-                InventoryId = d.Id
-                ,
-                ItemDefinitionId = d.ItemDefinition.Id,
-                Description = d.ItemDefinition.Description
-                ,
-                Item = d.ItemDefinition.Item,
-                Quantity = d.Quantity
-            }).ToList();
-            return recs;
-        }
+
 
         private void MBMainClose_Click(object sender, EventArgs e)
         {
@@ -5741,6 +5793,7 @@ namespace Neutron.Forms
             MBDeleteOrder.Visible = false;
         }
 
+        #region New Order
         //New Order
         private void MBNewOrderSearch_Click(object sender, EventArgs e)
         {
@@ -5751,18 +5804,21 @@ namespace Neutron.Forms
         {
             try
             {
-                if (string.IsNullOrEmpty(s))
-                {
-                    _bindingSourceItems.DataSource = GetItemsList();
-                    DataGridViewNewOrder.DataSource = _bindingSourceItems;
-                }
-                else
-                {
-                    IEnumerable<NewItemView> projection = GetItemsList();
-                    _bindingSourceItems.DataSource = projection
-                        .Where(d => d.Item.ToLower().Contains(s) || d.Description.ToLower().Contains(s)).ToList();
-                    DataGridViewNewOrder.DataSource = _bindingSourceItems;
-                }
+                _bindingSourceItems.DataSource = GetItemsList(s);
+                DataGridViewNewOrder.DataSource = _bindingSourceItems;
+
+                //if (string.IsNullOrEmpty(s))
+                //{
+                //    _bindingSourceItems.DataSource = GetItemsList();
+                //    DataGridViewNewOrder.DataSource = _bindingSourceItems;
+                //}
+                //else
+                //{
+                //    IEnumerable<NewItemView> projection = GetItemsList();
+                //    _bindingSourceItems.DataSource = projection
+                //        .Where(d => d.Item.ToLower().Contains(s) || d.Description.ToLower().Contains(s)).ToList();
+                //    DataGridViewNewOrder.DataSource = _bindingSourceItems;
+                //}
                 DataGridViewNewOrder.ClearSelection();
                 DataGridViewNewOrder.Update();
             }
@@ -5770,6 +5826,12 @@ namespace Neutron.Forms
             {
                 MessageBox.Show("Find Error: " + ex.Message);
             }
+        }
+
+        private void ButtonRemoveLine_Click(object sender, EventArgs e)
+        {
+            _bindingSourceNewItems.RemoveCurrent();
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
         }
 
         private void TextBoxNewOrderFind_KeyDown(object sender, KeyEventArgs e)
@@ -5785,62 +5847,103 @@ namespace Neutron.Forms
             }
         }
 
+        private void TextBoxNewOrderQuantity_TextChanged(object sender, EventArgs e)
+        {
+            ButtonAddDetail.Enabled = TextBoxNewOrderQuantity.Text.ParseInt() > 0;
+        }
+
+        private void TextBoxNewOrderQuantity_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                AddDetail();
+            }
+        }
+
         private void ButtonNewOrderClear_Click(object sender, EventArgs e)
         {
             TextBoxNewOrderFind.Text = string.Empty;
             TextBoxNewOrderFind.Focus();
+            FindItemRecord(string.Empty);
         }
 
         private void DataGridViewNewOrder_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
+            if (e.RowIndex >= 0)
             {
                 var currentItem = (NewItemView)_bindingSourceItems.Current;
                 LabelNewOrderItemId.Text = currentItem.ItemDefinitionId.ToString();
-                LabelNewOrderItem.Text = currentItem.Item;
-                LabelNewOrderDescription.Text = currentItem.Description;
+                LabelNewOrderStationNumber.Text = currentItem.StationNumber.ToString();
+                TextBoxNewOrderItem.Text = currentItem.Item;
+                TextBoxNewOrderDescription.Text = currentItem.Description;
                 TextBoxNewOrderQuantity.Focus();
             }
         }
 
         private void ButtonAddDetail_Click(object sender, EventArgs e)
         {
+            AddDetail();
+        }
+
+        private void AddDetail()
+        {
             var rec = new NewItemView()
             {
                 ItemDefinitionId = (LabelNewOrderItemId.Text).ParseInt()
                 ,
-                Item = LabelNewOrderItem.Text,
-                Description = LabelNewOrderDescription.Text
+                StationNumber = LabelNewOrderStationNumber.Text.ParseInt()
+                ,
+                Item = TextBoxNewOrderItem.Text
+                ,
+                Description = TextBoxNewOrderDescription.Text
                 ,
                 Quantity = (TextBoxNewOrderQuantity.Text).ParseInt()
             };
-            var item = new ListViewItem(new[] { rec.ItemDefinitionId.ToString(), rec.Item, rec.Description, rec.Quantity.ToString() });
 
-            ListViewNewItems.Items.Add(item);
-            ListViewNewItems.Refresh();
+            _bindingSourceNewItems.Add(rec);
 
             ClearNewOrderDetail();
             ButtonAddDetail.Enabled = false;
+            TextBoxNewOrderFind.Focus();
+
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
+
+
         }
 
         private void ClearNewOrderDetail()
         {
-            LabelNewOrderItem.Text = "";
-            LabelNewOrderDescription.Text = "";
+
+            TextBoxNewOrderItem.Text = "";
+            TextBoxNewOrderDescription.Text = "";
             TextBoxNewOrderQuantity.Text = "";
+            TextBoxNewOrderFind.Text = "";
+            LabelNewOrderStationNumber.Text = "";
+            LabelNewOrderItemId.Text = "";
         }
 
-        private void InitListView()
+        private void ClearNewOrderForm()
         {
-            ListViewNewItems.Columns.Add("Id", 80, HorizontalAlignment.Left);
-            ListViewNewItems.Columns.Add("Item", 80, HorizontalAlignment.Left);
-            ListViewNewItems.Columns.Add("Description", 200, HorizontalAlignment.Left);
-            ListViewNewItems.Columns.Add("Quantity", 80, HorizontalAlignment.Left);
+            ClearNewOrderDetail();
+            _bindingSourceNewItems.Clear();
+            _bindingSourceItems.Clear();
+            TextBoxNewOrderOrd1.Text = "";
+            TextBoxNewOrderOrd2.Text = "";
+            TextBoxNewOrderPriority.Text = "99";
+            TextBoxNewOrderItem.Text = "";
+            TextBoxNewOrderDescription.Text = "";
+            TextBoxNewOrderQuantity.Text = "";
+            TextBoxNewOrderOrd1.Focus();
+        }
+
+        private void InitDataGridViewNewItems()
+        {
+            DataGridViewNewItems.DataSource = _bindingSourceNewItems;
         }
 
         private void MBNewOrderSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(TextBoxNewOrderOrd1.Text) && ListViewNewItems.Items.Count > 0)
+            if (!string.IsNullOrEmpty(TextBoxNewOrderOrd1.Text) && _bindingSourceNewItems.Count > 0)
             {
                 var orderDetails = new List<OrderDetail>();
 
@@ -5848,7 +5951,7 @@ namespace Neutron.Forms
                 {
                     Ord1 = TextBoxNewOrderOrd1.Text,
                     Ord2 = TextBoxNewOrderOrd2.Text,
-                    Priority = (TextBoxNewOrderPriority.Text).ParseInt(),
+                    Priority = TextBoxNewOrderPriority.Text.ParseInt(),
                     LoadDate = DateTime.Now,
                     ShipperId = 1,
                     ShipMethodId = 1,
@@ -5856,25 +5959,27 @@ namespace Neutron.Forms
                 };
                 _repoOrders.Insert(order);
 
-                for (var i = 0; i < ListViewNewItems.Items.Count; i++)
+                foreach (DataGridViewRow row in DataGridViewNewItems.Rows)
                 {
-                    var itemDefinitionId = (ListViewNewItems.Items[i].SubItems[0].Text).ParseInt();
+                    NewItemView view = row.DataBoundItem as NewItemView;
+                    if (view == null) continue;
+                    var itemDefinitionId = view.ItemDefinitionId;
                     var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
                     if (itemDefinition == null) continue;
                     var rec = new OrderDetail()
                     {
                         ItemDefinitionId = itemDefinitionId,
                         OrderId = order.Id,
-                        Quantity = (ListViewNewItems.Items[i].SubItems[3].Text).ParseInt(),
-                        StationNumber = _repoInv.GetStationNumber(itemDefinitionId),
+                        Quantity = view.Quantity,
+                        StationNumber = view.StationNumber,
                         LineStatusId = 1,
                         DateTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(),
                         EmpId = GlobalVar.User.EmpId,
                         JobNum = TextBoxNewOrderOrd1.Text,
                         PartNum = itemDefinition.Item,
                         PartDesc = itemDefinition.Description,
-                        Qty = ListViewNewItems.Items[i].SubItems[3].Text.Trim(),
-                        OrderDetailInfo = TextBoxNewOrderCostCenter.Text.PadRight(36),
+                        Qty = view.Quantity.ToString(),
+                        OrderDetailInfo = string.Empty,
                         TroubleBit = "0"
                     };
 
@@ -5882,9 +5987,56 @@ namespace Neutron.Forms
                 }
                 TextBoxNewOrderOrd1.Text = string.Empty;
                 TextBoxNewOrderOrd2.Text = string.Empty;
-                ListViewNewItems.Items.Clear();
+                _bindingSourceNewItems.Clear();
+                DataGridViewNewItems.Update();
+                ClearNewOrderForm();
             }
         }
+
+        private List<NewItemView> GetItemsList(string s)
+        {
+            var recs = new List<NewItemView>();
+            using (var db = new NeutronDb())
+            {
+                recs = db.Inventory.Include("ItemDefinition")
+                    .Where(d => d.ItemDefinition.Item.ToLower().Contains(s) || d.ItemDefinition.Description.ToLower().Contains(s))
+                .GroupBy(g => new
+                {
+                    g.ItemDefinitionId
+                    ,
+                    g.ItemDefinition.Station.StationNumber
+                    ,
+                    g.ItemDefinition.Item
+                    ,
+                    g.ItemDefinition.Description
+                })
+                        .Select(r => new NewItemView()
+                        {
+                            ItemDefinitionId = r.Key.ItemDefinitionId
+                            ,
+                            StationNumber = r.Key.StationNumber
+                            ,
+                            Item = r.Key.Item
+                            ,
+                            Description = r.Key.Description
+                            ,
+                            Quantity = r.Sum(t => t.Quantity)
+                        })
+                    .ToList();
+            }
+
+            //recs = _repoInventory.AllInclude(r => r.ItemDefinition).Select(d => new NewItemView()
+            //{
+            //    InventoryId = d.Id
+            //    , ItemDefinitionId = d.ItemDefinition.Id
+            //    , Description = d.ItemDefinition.Description
+            //    , Item = d.ItemDefinition.Item
+            //    , Quantity = d.Quantity
+            //}).ToList();
+            return recs;
+        }
+        #endregion
+        //New Order
 
         private void MBPickNewItem_Click(object sender, EventArgs e)
         {
@@ -7719,9 +7871,6 @@ namespace Neutron.Forms
 
         }
 
-        private void TextBoxNewOrderQuantity_TextChanged(object sender, EventArgs e)
-        {
-            ButtonAddDetail.Enabled = TextBoxNewOrderQuantity.Text.ParseInt() > 0;
-        }
+
     }
 }

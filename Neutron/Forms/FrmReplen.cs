@@ -3043,8 +3043,8 @@ namespace Neutron.Forms
             var recs = new List<NewItemView>();
             recs = repoInventory.AllInclude(r => r.ItemDefinition).Select(d => new NewItemView()
             {
-                InventoryId = d.Id
-                ,
+                //InventoryId = d.Id
+                //,
                 ItemDefinitionId = d.ItemDefinition.Id,
                 Description = d.ItemDefinition.Description
                 ,

@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AlliedLogger;
 
 namespace NeutronData.ModelViews
 {
     public class PickStop : PickStopBase
     {
-        private readonly GenericRepository<Order> repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
 
         public PickStop()
         {
@@ -29,11 +29,7 @@ namespace NeutronData.ModelViews
 
         public bool StopComplete()
         {
-            if (QuantityToBePicked == 0)
-            {
-                return true;
-            }
-            return false;
+            return QuantityToBePicked == 0;
         }
 
         public void UpdatePickViews(User user)
@@ -56,7 +52,7 @@ namespace NeutronData.ModelViews
 
         public int GetTotalQuantityToBePicked()
         {
-            int total = 0;
+            var total = 0;
             foreach (var pickview in PickViews)
             {
                 total += pickview.QuantityToBePicked;
@@ -66,7 +62,7 @@ namespace NeutronData.ModelViews
 
         private int GetPickedSoFar()
         {
-            int total = 0;
+            var total = 0;
             foreach (var pickview in PickViews)
             {
                 total += GetPickViewTotal(pickview);
@@ -76,7 +72,7 @@ namespace NeutronData.ModelViews
 
         private int GetPickViewTotal(PickView pickview)
         {
-            int total = 0;
+            var total = 0;
             foreach (var pickLocation in pickview.PickLocations)
             {
                 total += pickLocation.Quantity;
@@ -84,41 +80,28 @@ namespace NeutronData.ModelViews
             return total;
         }
 
-        public void SetPickViewsComplete(User user)
+        public void SetPickViewsComplete(User user, DynamicLogger logger)
         {
+            var sb = new StringBuilder();
+            sb.AppendLine($"Set Pick Views Complete, Update OrderDetail Record");
             try
             {
                 foreach (var item in PickViews)
                 {
-                    int total = GetPickViewTotal(item);
+                    var total = GetPickViewTotal(item);
                     item.OrderDetail.PickedQuantity = total;
                     item.OrderDetail.LineStatusId = 6;
                     item.OrderDetail.EmpId = user.EmpId;
-                    repoOrderDetails.Update(item.OrderDetail);
-
-                   // SetOrderComplete(item.OrderId);
+                    _repoOrderDetails.Update(item.OrderDetail);
+                    sb.AppendLine(
+                        $"Item: {item.Item}  Picked Qty: {item.OrderDetail.PickedQuantity} Line Status: {item.OrderDetail.LineStatusId}  Emp: {user.Fullname} ");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Updating Order Details.  " + ex.Message);
+                logger.Log($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
             }
+            logger.Log($"{sb.ToString()}");
         }
-
-        public void SetPickViewsSkipped(User user)
-        {
-
-        }
-
-        //private void SetOrderComplete(int orderId)
-        //{
-        //    Order order = repoOrders.FindByKey(orderId);
-        //    List<OrderDetail> recs = repoOrderDetails.All().Where(d => d.OrderId == orderId && d.LineStatusId != 6).ToList();
-        //    if (recs.Count == 0)
-        //    {
-        //        order.OrderStatusId = 6;
-        //        repoOrders.Update(order);
-        //    }
-        //}
     }
 }
