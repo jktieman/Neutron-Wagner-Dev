@@ -123,6 +123,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
+            this.LabelViewEditChangeStationWarning = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Listing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -403,6 +404,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.panel1.Controls.Add(this.LabelViewEditChangeStationWarning);
             this.panel1.Controls.Add(this.PictureBoxViewEditImage);
             this.panel1.Controls.Add(this.TextBoxViewEditWeight);
             this.panel1.Controls.Add(this.label22);
@@ -605,13 +607,13 @@
             // 
             // ComboBoxViewEditStation
             // 
+            this.ComboBoxViewEditStation.Enabled = false;
             this.ComboBoxViewEditStation.FormattingEnabled = true;
-            this.ComboBoxViewEditStation.Location = new System.Drawing.Point(11, 38);
+            this.ComboBoxViewEditStation.Location = new System.Drawing.Point(222, 70);
             this.ComboBoxViewEditStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditStation.Name = "ComboBoxViewEditStation";
-            this.ComboBoxViewEditStation.Size = new System.Drawing.Size(235, 30);
+            this.ComboBoxViewEditStation.Size = new System.Drawing.Size(222, 30);
             this.ComboBoxViewEditStation.TabIndex = 0;
-            this.ComboBoxViewEditStation.Visible = false;
             // 
             // TextBoxViewEditId
             // 
@@ -677,11 +679,11 @@
             // 
             // TextBoxViewEditStation
             // 
-            this.TextBoxViewEditStation.Location = new System.Drawing.Point(524, 41);
+            this.TextBoxViewEditStation.Location = new System.Drawing.Point(11, 134);
             this.TextBoxViewEditStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStation.Name = "TextBoxViewEditStation";
             this.TextBoxViewEditStation.ReadOnly = true;
-            this.TextBoxViewEditStation.Size = new System.Drawing.Size(167, 28);
+            this.TextBoxViewEditStation.Size = new System.Drawing.Size(127, 28);
             this.TextBoxViewEditStation.TabIndex = 1;
             this.TextBoxViewEditStation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditStation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditItem_KeyDown);
@@ -745,7 +747,7 @@
             // LabelViewEditStation
             // 
             this.LabelViewEditStation.AutoSize = true;
-            this.LabelViewEditStation.Location = new System.Drawing.Point(440, 44);
+            this.LabelViewEditStation.Location = new System.Drawing.Point(150, 73);
             this.LabelViewEditStation.Name = "LabelViewEditStation";
             this.LabelViewEditStation.Size = new System.Drawing.Size(66, 24);
             this.LabelViewEditStation.TabIndex = 0;
@@ -1187,6 +1189,13 @@
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
+            // LabelViewEditChangeStationWarning
+            // 
+            this.LabelViewEditChangeStationWarning.Location = new System.Drawing.Point(526, 15);
+            this.LabelViewEditChangeStationWarning.Name = "LabelViewEditChangeStationWarning";
+            this.LabelViewEditChangeStationWarning.Size = new System.Drawing.Size(576, 97);
+            this.LabelViewEditChangeStationWarning.TabIndex = 38;
+            // 
             // FrmItemDefinitions
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1316,5 +1325,6 @@
         private MetroFramework.Controls.MetroButton MbLoadDefault;
         private System.Windows.Forms.CheckBox CheckBoxAllStations;
         private System.Windows.Forms.TextBox TextBoxViewEditStation;
+        private System.Windows.Forms.Label LabelViewEditChangeStationWarning;
     }
 }

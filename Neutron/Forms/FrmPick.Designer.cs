@@ -930,7 +930,7 @@
             // 
             this.MBGo2.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBGo2.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBGo2.Location = new System.Drawing.Point(1006, 658);
+            this.MBGo2.Location = new System.Drawing.Point(1006, 688);
             this.MBGo2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBGo2.Name = "MBGo2";
             this.MBGo2.Size = new System.Drawing.Size(135, 76);
@@ -942,7 +942,7 @@
             // MBShowSkipped
             // 
             this.MBShowSkipped.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShowSkipped.Location = new System.Drawing.Point(359, 655);
+            this.MBShowSkipped.Location = new System.Drawing.Point(359, 685);
             this.MBShowSkipped.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShowSkipped.Name = "MBShowSkipped";
             this.MBShowSkipped.Size = new System.Drawing.Size(155, 76);
@@ -954,7 +954,7 @@
             // MBFillStarters
             // 
             this.MBFillStarters.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFillStarters.Location = new System.Drawing.Point(187, 655);
+            this.MBFillStarters.Location = new System.Drawing.Point(187, 685);
             this.MBFillStarters.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBFillStarters.Name = "MBFillStarters";
             this.MBFillStarters.Size = new System.Drawing.Size(155, 76);
@@ -967,7 +967,7 @@
             // MBFill
             // 
             this.MBFill.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFill.Location = new System.Drawing.Point(6, 655);
+            this.MBFill.Location = new System.Drawing.Point(6, 685);
             this.MBFill.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBFill.Name = "MBFill";
             this.MBFill.Size = new System.Drawing.Size(155, 76);
@@ -1671,7 +1671,7 @@
             this.DataGridViewAvailableOrders.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrders.RowTemplate.ReadOnly = true;
             this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1136, 346);
+            this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1136, 376);
             this.DataGridViewAvailableOrders.TabIndex = 7;
             this.DataGridViewAvailableOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrders_CellClick);
             // 
@@ -1768,7 +1768,7 @@
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
-            this.DataGridPickView.Size = new System.Drawing.Size(1135, 635);
+            this.DataGridPickView.Size = new System.Drawing.Size(1135, 666);
             this.DataGridPickView.TabIndex = 3;
             this.DataGridPickView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridPickView_CellFormatting);
             // 

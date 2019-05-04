@@ -4509,8 +4509,7 @@ namespace Neutron.Forms
 
         private void PickAccept()
         {
-            MBPickAccept.Enabled = false;
-            Cursor.Current = Cursors.WaitCursor;
+           
 
             if (InvokeRequired)
             {
@@ -4519,6 +4518,8 @@ namespace Neutron.Forms
                 return;
             }
 
+ MBPickAccept.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
             var thisPick = LabelPickQty.Text.ParseInt();
 
             Task.Run(() => _logger.Log($"PickAccept_Click Start : [{DateTime.Now.ToLongTimeString()}]"));

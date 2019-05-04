@@ -25,6 +25,7 @@ using NeutronCore.Global;
 using System.Diagnostics;
 using System.Globalization;
 using AlliedLogger;
+using Microsoft.VisualBasic;
 using NeutronCore;
 using NeutronData.Interfaces;
 
@@ -45,6 +46,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<StorageType> _repoStorageType = new GenericRepository<StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
 
         DynamicLogger _logger;
         readonly IJsonData _jsonData;
@@ -139,7 +141,7 @@ namespace Neutron.Forms
         {
             TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
             TextBoxViewEditStation.DataBindings.Add("Text", _bindingSource, "StationName");
-            //ComboBoxViewEditStation.DataBindings.Add("SelectedValue", _bindingSource, "StationId");
+            ComboBoxViewEditStation.DataBindings.Add("SelectedValue", _bindingSource, "StationId");
             TextBoxViewEditItem.DataBindings.Add("Text", _bindingSource, "Item");
             TextBoxViewEditDescription.DataBindings.Add("Text", _bindingSource, "Description");
             TextBoxViewEditLocationMax.DataBindings.Add("Text", _bindingSource, "LocationMax");
@@ -201,11 +203,33 @@ namespace Neutron.Forms
         private void MButtonClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
-           // this.Close();
+            // this.Close();
         }
 
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
+            // Check Inventory and OrderDetails for this item
+            var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
+            //var id = TextBoxViewEditId.Text.ParseInt();
+            var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == id).ToList();
+            var msg = $"There are {recs.Count} inventory locations. {Environment.NewLine}";
+            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == id).ToList();
+            msg += $"There are {recs2.Count} lines to be picked from this station. {Environment.NewLine}";
+            if (recs.Count == 0 && recs2.Count == 0)
+            {
+                ComboBoxViewEditStation.Enabled = true;
+                LabelViewEditChangeStationWarning.ForeColor = Color.Green;
+                msg += "Moving the Item Definition is Allowed.";
+            }
+            else
+            {
+                ComboBoxViewEditStation.Enabled = false;
+                LabelViewEditChangeStationWarning.ForeColor = Color.Red;
+                msg += "Moving the Item Definition is Not Allowed.";
+            }
+
+            LabelViewEditChangeStationWarning.Text = msg;
+
             tabControl1.SelectedTab = ViewEdit;
         }
 
@@ -218,6 +242,7 @@ namespace Neutron.Forms
             TextBoxNewSystemMax.Text = string.Empty;
             TextBoxNewSystemMin.Text = string.Empty;
             TextBoxNewWeight.Text = string.Empty;
+            ComboBoxNewStation.SelectedIndex = 0;
             ComboBoxNewHeightCode.SelectedIndex = 0;
             ComboBoxNewSizeCode.SelectedIndex = 0;
             ComboBoxNewVelocityCode.SelectedIndex = 0;
@@ -275,7 +300,7 @@ namespace Neutron.Forms
 
         private void SaveNew()
         {
-            var stationId = ((Station) ComboBoxNewStation.SelectedItem).Id;
+            var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
             var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
             var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
             var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
@@ -299,12 +324,12 @@ namespace Neutron.Forms
                             LocationMin = (locationMin).ParseInt(),
                             SystemMax = (systemMax).ParseInt(),
                             SystemMin = (systemMin).ParseInt(),
-                            SizeCodeId = ((SizeCode) ComboBoxNewSizeCode.SelectedItem).Id,
-                            VelocityCodeId = ((VelocityCode) ComboBoxNewVelocityCode.SelectedItem).Id,
-                            HeightCodeId = ((HeightCode) ComboBoxNewHeightCode.SelectedItem).Id,
-                            LocationCodeId = ((LocationCode) ComboBoxNewLocationCode.SelectedItem).Id,
-                            StorageTypeId = ((StorageType) ComboBoxNewStorageType.SelectedItem).Id,
-                            UnitOfIssueId = ((UnitOfIssue) ComboBoxNewUnitOfIssue.SelectedItem).Id,
+                            SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
+                            VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
+                            HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
+                            LocationCodeId = ((LocationCode)ComboBoxNewLocationCode.SelectedItem).Id,
+                            StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
+                            UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
                             Weight = float.Parse(weight),
                             Scale = CheckBoxNewScale.Checked
                         };
@@ -339,8 +364,8 @@ namespace Neutron.Forms
         private void UpdateViewEdit()
         {
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
-            //var stationId = ((Station) ComboBoxViewEditStation.SelectedItem).Id;
-            var stationId = _repoStation.FindBy(s => s.Name == TextBoxViewEditStation.Text).FirstOrDefault().Id;
+            var stationId = ((Station)ComboBoxViewEditStation.SelectedItem).Id;
+           // stationId = _repoStation.FindBy(s => s.Name == TextBoxViewEditStation.Text).FirstOrDefault().Id;
             var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
             var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text) ? "0" : TextBoxViewEditLocationMax.Text;
             var locationMin = string.IsNullOrEmpty(TextBoxViewEditLocationMin.Text) ? "0" : TextBoxViewEditLocationMin.Text;
@@ -363,12 +388,12 @@ namespace Neutron.Forms
                         itemDef.LocationMin = (locationMin).ParseInt();
                         itemDef.SystemMax = (systemMax).ParseInt();
                         itemDef.SystemMin = (systemMin).ParseInt();
-                        itemDef.SizeCodeId = ((SizeCode) ComboBoxViewEditSizeCode.SelectedItem).Id;
-                        itemDef.VelocityCodeId = ((VelocityCode) ComboBoxViewEditVelocityCode.SelectedItem).Id;
-                        itemDef.HeightCodeId = ((HeightCode) ComboBoxViewEditHeightCode.SelectedItem).Id;
-                        itemDef.LocationCodeId = ((LocationCode) ComboBoxViewEditLocationCode.SelectedItem).Id;
-                        itemDef.StorageTypeId = ((StorageType) ComboBoxViewEditStorageType.SelectedItem).Id;
-                        itemDef.UnitOfIssueId = ((UnitOfIssue) ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
+                        itemDef.SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
+                        itemDef.VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
+                        itemDef.HeightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
+                        itemDef.LocationCodeId = ((LocationCode)ComboBoxViewEditLocationCode.SelectedItem).Id;
+                        itemDef.StorageTypeId = ((StorageType)ComboBoxViewEditStorageType.SelectedItem).Id;
+                        itemDef.UnitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
                         itemDef.Weight = float.Parse(weight);
                         itemDef.Scale = CheckBoxViewEditScale.Checked;
 
@@ -494,7 +519,7 @@ namespace Neutron.Forms
                 DataPropertyName = "StationName",
                 HeaderText = "Station",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "StationName"
             };
             DataGridView1.Columns.Add(col);
@@ -504,7 +529,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Item",
                 HeaderText = "Item",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
             };
             DataGridView1.Columns.Add(col);
@@ -514,7 +539,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Description",
                 HeaderText = "Description",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Description"
             };
             DataGridView1.Columns.Add(col);
@@ -535,7 +560,7 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationMax",
                 HeaderText = "Location Max",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationMax"
             };
             DataGridView1.Columns.Add(col);
@@ -545,7 +570,7 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationMin",
                 HeaderText = "Location Min",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationMin"
             };
             DataGridView1.Columns.Add(col);
@@ -555,7 +580,7 @@ namespace Neutron.Forms
                 DataPropertyName = "SystemMax",
                 HeaderText = "System Max",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SystemMax"
             };
             DataGridView1.Columns.Add(col);
@@ -566,7 +591,7 @@ namespace Neutron.Forms
                 HeaderText = "System Min",
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SystemMin"
             };
             DataGridView1.Columns.Add(col);
@@ -576,7 +601,7 @@ namespace Neutron.Forms
                 DataPropertyName = "SizeCodeName",
                 HeaderText = "Size Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SizeCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -586,7 +611,7 @@ namespace Neutron.Forms
                 DataPropertyName = "VelocityCodeName",
                 HeaderText = "Velocity Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "VelocityCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -596,7 +621,7 @@ namespace Neutron.Forms
                 DataPropertyName = "HeightCodeName",
                 HeaderText = "Height Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "HeightCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -606,7 +631,7 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationCodeName",
                 HeaderText = "Location Code",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationCodeName"
             };
             DataGridView1.Columns.Add(col);
@@ -616,17 +641,17 @@ namespace Neutron.Forms
                 DataPropertyName = "StorageTypeName",
                 HeaderText = "Storage Type",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "StorageTypeName"
             };
             DataGridView1.Columns.Add(col);
 
-           col = new DataGridViewTextBoxColumn
+            col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Weight",
                 HeaderText = "Weight",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleRight},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Weight"
             };
             DataGridView1.Columns.Add(col);
@@ -636,7 +661,7 @@ namespace Neutron.Forms
                 DataPropertyName = "Scale",
                 HeaderText = "Scale",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter},
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Scale"
             };
             DataGridView1.Columns.Add(ckcol);
@@ -644,10 +669,14 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id"
-                , HeaderText = "Id"
-                , Visible = false
-                , Name = "Id"
-                , AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                ,
+                HeaderText = "Id"
+                ,
+                Visible = false
+                ,
+                Name = "Id"
+                ,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
 
@@ -925,7 +954,7 @@ namespace Neutron.Forms
 
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
-            var stationId = ((Station) ComboBoxNewStation.SelectedItem).Id;
+            var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
             var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
             var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
             var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
@@ -942,12 +971,12 @@ namespace Neutron.Forms
                 LocationMin = (locationMin).ParseInt(),
                 SystemMax = (systemMax).ParseInt(),
                 SystemMin = (systemMin).ParseInt(),
-                SizeCodeId = ((SizeCode) ComboBoxNewSizeCode.SelectedItem).Id,
-                VelocityCodeId = ((VelocityCode) ComboBoxNewVelocityCode.SelectedItem).Id,
-                HeightCodeId = ((HeightCode) ComboBoxNewHeightCode.SelectedItem).Id,
-                LocationCodeId = ((LocationCode) ComboBoxNewLocationCode.SelectedItem).Id,
-                StorageTypeId = ((StorageType) ComboBoxNewStorageType.SelectedItem).Id,
-                UnitOfIssueId = ((UnitOfIssue) ComboBoxNewUnitOfIssue.SelectedItem).Id,
+                SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
+                VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
+                HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
+                LocationCodeId = ((LocationCode)ComboBoxNewLocationCode.SelectedItem).Id,
+                StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
+                UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
                 Weight = float.Parse(weight),
                 Scale = CheckBoxNewScale.Checked
             };
