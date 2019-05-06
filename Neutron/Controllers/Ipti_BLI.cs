@@ -56,7 +56,7 @@
             }
         }
 
-        public string TurnOff => _bayId + _turnOff + BLI_Address;
+        public string TurnOff => _bayId + _turnOff + BLI_Address.ToString().PadLeft(2, '0');
         
         public string TurnOn => _bayId + _turnOn + BLI_Address.ToString().PadLeft(2, '0') 
                    + BLI_Text.PadLeft(4, ' ') 

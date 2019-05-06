@@ -46,6 +46,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -58,10 +62,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -277,9 +277,21 @@
             this.DataGridViewOrderDetails = new System.Windows.Forms.DataGridView();
             this.MBOrderDetailsBack = new MetroFramework.Controls.MetroButton();
             this.NewOrder = new System.Windows.Forms.TabPage();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.MBNewOrderSearch = new MetroFramework.Controls.MetroButton();
+            this.label31 = new System.Windows.Forms.Label();
+            this.TextBoxNewOrderFind = new System.Windows.Forms.TextBox();
+            this.ButtonNewOrderClear = new System.Windows.Forms.Button();
+            this.DataGridViewNewOrder = new System.Windows.Forms.DataGridView();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.ButtonRemoveLine = new System.Windows.Forms.Button();
+            this.DataGridViewNewItems = new System.Windows.Forms.DataGridView();
             this.LabelNewOrderOrderId = new System.Windows.Forms.Label();
+            this.LabelNewOrderStationNumber = new System.Windows.Forms.Label();
             this.LabelNewOrderItemId = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.TextBoxNewOrderDescription = new System.Windows.Forms.TextBox();
+            this.TextBoxNewOrderItem = new System.Windows.Forms.TextBox();
             this.ButtonAddDetail = new System.Windows.Forms.Button();
             this.TextBoxNewOrderQuantity = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
@@ -365,18 +377,6 @@
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
-            this.TextBoxNewOrderItem = new System.Windows.Forms.TextBox();
-            this.TextBoxNewOrderDescription = new System.Windows.Forms.TextBox();
-            this.LabelNewOrderStationNumber = new System.Windows.Forms.Label();
-            this.panel13 = new System.Windows.Forms.Panel();
-            this.DataGridViewNewItems = new System.Windows.Forms.DataGridView();
-            this.ButtonRemoveLine = new System.Windows.Forms.Button();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.MBNewOrderSearch = new MetroFramework.Controls.MetroButton();
-            this.label31 = new System.Windows.Forms.Label();
-            this.TextBoxNewOrderFind = new System.Windows.Forms.TextBox();
-            this.ButtonNewOrderClear = new System.Windows.Forms.Button();
-            this.DataGridViewNewOrder = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -394,6 +394,10 @@
             this.OrderDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewOrderDetails)).BeginInit();
             this.NewOrder.SuspendLayout();
+            this.panel14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewOrder)).BeginInit();
+            this.panel13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewItems)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.AvailableRack.SuspendLayout();
@@ -406,10 +410,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkip)).BeginInit();
             this.SkipInventory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkipInventory)).BeginInit();
-            this.panel13.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewItems)).BeginInit();
-            this.panel14.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewOrder)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -3231,6 +3231,144 @@
             this.NewOrder.TabIndex = 6;
             this.NewOrder.Text = "New Order";
             // 
+            // panel14
+            // 
+            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel14.Controls.Add(this.MBNewOrderSearch);
+            this.panel14.Controls.Add(this.label31);
+            this.panel14.Controls.Add(this.TextBoxNewOrderFind);
+            this.panel14.Controls.Add(this.ButtonNewOrderClear);
+            this.panel14.Controls.Add(this.DataGridViewNewOrder);
+            this.panel14.Location = new System.Drawing.Point(503, 111);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(631, 644);
+            this.panel14.TabIndex = 72;
+            // 
+            // MBNewOrderSearch
+            // 
+            this.MBNewOrderSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBNewOrderSearch.Location = new System.Drawing.Point(433, 13);
+            this.MBNewOrderSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBNewOrderSearch.Name = "MBNewOrderSearch";
+            this.MBNewOrderSearch.Size = new System.Drawing.Size(161, 76);
+            this.MBNewOrderSearch.TabIndex = 66;
+            this.MBNewOrderSearch.Text = "Search";
+            this.MBNewOrderSearch.UseSelectable = true;
+            this.MBNewOrderSearch.Click += new System.EventHandler(this.MBNewOrderSearch_Click);
+            // 
+            // label31
+            // 
+            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Location = new System.Drawing.Point(18, 19);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(343, 22);
+            this.label31.TabIndex = 68;
+            this.label31.Text = "Search for Item";
+            this.label31.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // TextBoxNewOrderFind
+            // 
+            this.TextBoxNewOrderFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewOrderFind.Location = new System.Drawing.Point(7, 52);
+            this.TextBoxNewOrderFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewOrderFind.Name = "TextBoxNewOrderFind";
+            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(366, 37);
+            this.TextBoxNewOrderFind.TabIndex = 64;
+            this.TextBoxNewOrderFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxNewOrderFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewOrderFind_KeyDown);
+            // 
+            // ButtonNewOrderClear
+            // 
+            this.ButtonNewOrderClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonNewOrderClear.Location = new System.Drawing.Point(379, 51);
+            this.ButtonNewOrderClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ButtonNewOrderClear.Name = "ButtonNewOrderClear";
+            this.ButtonNewOrderClear.Size = new System.Drawing.Size(34, 38);
+            this.ButtonNewOrderClear.TabIndex = 65;
+            this.ButtonNewOrderClear.Text = "X";
+            this.ButtonNewOrderClear.UseVisualStyleBackColor = true;
+            this.ButtonNewOrderClear.Click += new System.EventHandler(this.ButtonNewOrderClear_Click);
+            // 
+            // DataGridViewNewOrder
+            // 
+            this.DataGridViewNewOrder.AllowUserToAddRows = false;
+            this.DataGridViewNewOrder.AllowUserToDeleteRows = false;
+            this.DataGridViewNewOrder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataGridViewNewOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewNewOrder.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            this.DataGridViewNewOrder.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewNewOrder.DefaultCellStyle = dataGridViewCellStyle18;
+            this.DataGridViewNewOrder.Location = new System.Drawing.Point(-2, 109);
+            this.DataGridViewNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DataGridViewNewOrder.MultiSelect = false;
+            this.DataGridViewNewOrder.Name = "DataGridViewNewOrder";
+            this.DataGridViewNewOrder.ReadOnly = true;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewNewOrder.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewNewOrder.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewNewOrder.RowTemplate.Height = 28;
+            this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
+            this.DataGridViewNewOrder.Size = new System.Drawing.Size(631, 533);
+            this.DataGridViewNewOrder.TabIndex = 67;
+            this.DataGridViewNewOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewNewOrder_CellContentClick);
+            // 
+            // panel13
+            // 
+            this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel13.Controls.Add(this.ButtonRemoveLine);
+            this.panel13.Controls.Add(this.DataGridViewNewItems);
+            this.panel13.Location = new System.Drawing.Point(19, 400);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(462, 356);
+            this.panel13.TabIndex = 71;
+            // 
+            // ButtonRemoveLine
+            // 
+            this.ButtonRemoveLine.Enabled = false;
+            this.ButtonRemoveLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonRemoveLine.Location = new System.Drawing.Point(139, 319);
+            this.ButtonRemoveLine.Name = "ButtonRemoveLine";
+            this.ButtonRemoveLine.Size = new System.Drawing.Size(157, 31);
+            this.ButtonRemoveLine.TabIndex = 1;
+            this.ButtonRemoveLine.Text = "Remove Line";
+            this.ButtonRemoveLine.UseVisualStyleBackColor = true;
+            this.ButtonRemoveLine.Click += new System.EventHandler(this.ButtonRemoveLine_Click);
+            // 
+            // DataGridViewNewItems
+            // 
+            this.DataGridViewNewItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataGridViewNewItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridViewNewItems.Location = new System.Drawing.Point(-2, -2);
+            this.DataGridViewNewItems.MultiSelect = false;
+            this.DataGridViewNewItems.Name = "DataGridViewNewItems";
+            this.DataGridViewNewItems.ReadOnly = true;
+            this.DataGridViewNewItems.Size = new System.Drawing.Size(462, 318);
+            this.DataGridViewNewItems.TabIndex = 0;
+            // 
             // LabelNewOrderOrderId
             // 
             this.LabelNewOrderOrderId.AutoSize = true;
@@ -3242,6 +3380,18 @@
             this.LabelNewOrderOrderId.Text = "JobId";
             this.LabelNewOrderOrderId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LabelNewOrderOrderId.Visible = false;
+            // 
+            // LabelNewOrderStationNumber
+            // 
+            this.LabelNewOrderStationNumber.AutoSize = true;
+            this.LabelNewOrderStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewOrderStationNumber.Location = new System.Drawing.Point(528, 65);
+            this.LabelNewOrderStationNumber.Name = "LabelNewOrderStationNumber";
+            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(102, 17);
+            this.LabelNewOrderStationNumber.TabIndex = 68;
+            this.LabelNewOrderStationNumber.Text = "StationNumber";
+            this.LabelNewOrderStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewOrderStationNumber.Visible = false;
             // 
             // LabelNewOrderItemId
             // 
@@ -3271,6 +3421,21 @@
             this.groupBox2.TabIndex = 67;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Detail Information";
+            // 
+            // TextBoxNewOrderDescription
+            // 
+            this.TextBoxNewOrderDescription.Enabled = false;
+            this.TextBoxNewOrderDescription.Location = new System.Drawing.Point(150, 71);
+            this.TextBoxNewOrderDescription.Name = "TextBoxNewOrderDescription";
+            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(306, 26);
+            this.TextBoxNewOrderDescription.TabIndex = 66;
+            // 
+            // TextBoxNewOrderItem
+            // 
+            this.TextBoxNewOrderItem.Location = new System.Drawing.Point(150, 30);
+            this.TextBoxNewOrderItem.Name = "TextBoxNewOrderItem";
+            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 26);
+            this.TextBoxNewOrderItem.TabIndex = 66;
             // 
             // ButtonAddDetail
             // 
@@ -4338,171 +4503,6 @@
             // 
             this.ToolTipPickScreen.IsBalloon = true;
             // 
-            // TextBoxNewOrderItem
-            // 
-            this.TextBoxNewOrderItem.Location = new System.Drawing.Point(150, 30);
-            this.TextBoxNewOrderItem.Name = "TextBoxNewOrderItem";
-            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 26);
-            this.TextBoxNewOrderItem.TabIndex = 66;
-            // 
-            // TextBoxNewOrderDescription
-            // 
-            this.TextBoxNewOrderDescription.Enabled = false;
-            this.TextBoxNewOrderDescription.Location = new System.Drawing.Point(150, 71);
-            this.TextBoxNewOrderDescription.Name = "TextBoxNewOrderDescription";
-            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(306, 26);
-            this.TextBoxNewOrderDescription.TabIndex = 66;
-            // 
-            // LabelNewOrderStationNumber
-            // 
-            this.LabelNewOrderStationNumber.AutoSize = true;
-            this.LabelNewOrderStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewOrderStationNumber.Location = new System.Drawing.Point(528, 65);
-            this.LabelNewOrderStationNumber.Name = "LabelNewOrderStationNumber";
-            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(102, 17);
-            this.LabelNewOrderStationNumber.TabIndex = 68;
-            this.LabelNewOrderStationNumber.Text = "StationNumber";
-            this.LabelNewOrderStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LabelNewOrderStationNumber.Visible = false;
-            // 
-            // panel13
-            // 
-            this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel13.Controls.Add(this.ButtonRemoveLine);
-            this.panel13.Controls.Add(this.DataGridViewNewItems);
-            this.panel13.Location = new System.Drawing.Point(19, 400);
-            this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(462, 356);
-            this.panel13.TabIndex = 71;
-            // 
-            // DataGridViewNewItems
-            // 
-            this.DataGridViewNewItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DataGridViewNewItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridViewNewItems.Location = new System.Drawing.Point(-2, -2);
-            this.DataGridViewNewItems.MultiSelect = false;
-            this.DataGridViewNewItems.Name = "DataGridViewNewItems";
-            this.DataGridViewNewItems.ReadOnly = true;
-            this.DataGridViewNewItems.Size = new System.Drawing.Size(462, 318);
-            this.DataGridViewNewItems.TabIndex = 0;
-            // 
-            // ButtonRemoveLine
-            // 
-            this.ButtonRemoveLine.Enabled = false;
-            this.ButtonRemoveLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonRemoveLine.Location = new System.Drawing.Point(139, 319);
-            this.ButtonRemoveLine.Name = "ButtonRemoveLine";
-            this.ButtonRemoveLine.Size = new System.Drawing.Size(157, 31);
-            this.ButtonRemoveLine.TabIndex = 1;
-            this.ButtonRemoveLine.Text = "Remove Line";
-            this.ButtonRemoveLine.UseVisualStyleBackColor = true;
-            this.ButtonRemoveLine.Click += new System.EventHandler(this.ButtonRemoveLine_Click);
-            // 
-            // panel14
-            // 
-            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel14.Controls.Add(this.MBNewOrderSearch);
-            this.panel14.Controls.Add(this.label31);
-            this.panel14.Controls.Add(this.TextBoxNewOrderFind);
-            this.panel14.Controls.Add(this.ButtonNewOrderClear);
-            this.panel14.Controls.Add(this.DataGridViewNewOrder);
-            this.panel14.Location = new System.Drawing.Point(503, 111);
-            this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(631, 644);
-            this.panel14.TabIndex = 72;
-            // 
-            // MBNewOrderSearch
-            // 
-            this.MBNewOrderSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBNewOrderSearch.Location = new System.Drawing.Point(433, 13);
-            this.MBNewOrderSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBNewOrderSearch.Name = "MBNewOrderSearch";
-            this.MBNewOrderSearch.Size = new System.Drawing.Size(161, 76);
-            this.MBNewOrderSearch.TabIndex = 66;
-            this.MBNewOrderSearch.Text = "Search";
-            this.MBNewOrderSearch.UseSelectable = true;
-            this.MBNewOrderSearch.Click += new System.EventHandler(this.MBNewOrderSearch_Click);
-            // 
-            // label31
-            // 
-            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(18, 19);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(343, 22);
-            this.label31.TabIndex = 68;
-            this.label31.Text = "Search for Item";
-            this.label31.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // TextBoxNewOrderFind
-            // 
-            this.TextBoxNewOrderFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxNewOrderFind.Location = new System.Drawing.Point(7, 52);
-            this.TextBoxNewOrderFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxNewOrderFind.Name = "TextBoxNewOrderFind";
-            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(366, 37);
-            this.TextBoxNewOrderFind.TabIndex = 64;
-            this.TextBoxNewOrderFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxNewOrderFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewOrderFind_KeyDown);
-            // 
-            // ButtonNewOrderClear
-            // 
-            this.ButtonNewOrderClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonNewOrderClear.Location = new System.Drawing.Point(379, 51);
-            this.ButtonNewOrderClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ButtonNewOrderClear.Name = "ButtonNewOrderClear";
-            this.ButtonNewOrderClear.Size = new System.Drawing.Size(34, 38);
-            this.ButtonNewOrderClear.TabIndex = 65;
-            this.ButtonNewOrderClear.Text = "X";
-            this.ButtonNewOrderClear.UseVisualStyleBackColor = true;
-            this.ButtonNewOrderClear.Click += new System.EventHandler(this.ButtonNewOrderClear_Click);
-            // 
-            // DataGridViewNewOrder
-            // 
-            this.DataGridViewNewOrder.AllowUserToAddRows = false;
-            this.DataGridViewNewOrder.AllowUserToDeleteRows = false;
-            this.DataGridViewNewOrder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DataGridViewNewOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewNewOrder.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
-            this.DataGridViewNewOrder.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewNewOrder.DefaultCellStyle = dataGridViewCellStyle18;
-            this.DataGridViewNewOrder.Location = new System.Drawing.Point(-2, 109);
-            this.DataGridViewNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.DataGridViewNewOrder.MultiSelect = false;
-            this.DataGridViewNewOrder.Name = "DataGridViewNewOrder";
-            this.DataGridViewNewOrder.ReadOnly = true;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewNewOrder.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewNewOrder.RowsDefaultCellStyle = dataGridViewCellStyle20;
-            this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewNewOrder.RowTemplate.Height = 28;
-            this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
-            this.DataGridViewNewOrder.Size = new System.Drawing.Size(631, 533);
-            this.DataGridViewNewOrder.TabIndex = 67;
-            this.DataGridViewNewOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewNewOrder_CellContentClick);
-            // 
             // FrmPick
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4547,6 +4547,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewOrderDetails)).EndInit();
             this.NewOrder.ResumeLayout(false);
             this.NewOrder.PerformLayout();
+            this.panel14.ResumeLayout(false);
+            this.panel14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewOrder)).EndInit();
+            this.panel13.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewItems)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -4564,11 +4569,6 @@
             this.SkipInventory.ResumeLayout(false);
             this.SkipInventory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkipInventory)).EndInit();
-            this.panel13.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewItems)).EndInit();
-            this.panel14.ResumeLayout(false);
-            this.panel14.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewOrder)).EndInit();
             this.ResumeLayout(false);
 
         }

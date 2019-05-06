@@ -30,7 +30,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>356</ApplicationRevision>
+    <ApplicationRevision>357</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -220,6 +220,12 @@
     </Compile>
     <Compile Include="Forms\FrmChangeQuantity.Designer.cs">
       <DependentUpon>FrmChangeQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmCommunication.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmCommunication.Designer.cs">
+      <DependentUpon>FrmCommunication.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmDevices.cs">
       <SubType>Form</SubType>
@@ -438,6 +444,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeQuantity.resx">
       <DependentUpon>FrmChangeQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmCommunication.resx">
+      <DependentUpon>FrmCommunication.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDevices.resx">
       <DependentUpon>FrmDevices.cs</DependentUpon>

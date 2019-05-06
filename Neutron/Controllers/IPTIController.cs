@@ -25,16 +25,11 @@ using NeutronEvents;
 
 namespace Neutron.Controllers
 {
-    public partial class IptiController : IDisplayController
+    public class IptiController : IDisplayController
     {
         private const string Bayid = "01";
         private const string DisplayOc = "27";
-        //private const string Turnon = "33";
-        //private const string Turnoff = "14";
-        //private const string FourSpaces = "    ";
-        //private const string EndOfLine = "00000000120012000";
         public CancellationTokenSource Token = new CancellationTokenSource();
-        //Added 1/29
         private static readonly BlockingCollection<byte[]>
             ResponseBlockingCollection = new BlockingCollection<byte[]>();
 
@@ -44,7 +39,7 @@ namespace Neutron.Controllers
         private static readonly BlockingCollection<byte[]>
             ReceivedBlockingCollection = new BlockingCollection<byte[]>();
 
-        private readonly bool _bliEnabled = true;
+
         private readonly List<Ipti_BLI> _bliList = new List<Ipti_BLI>();
         private readonly NeutronVariables _neutronVariables;
 
@@ -52,36 +47,29 @@ namespace Neutron.Controllers
         private readonly GenericRepository<HardwareDevice> _repoHardwareDevice = new GenericRepository<HardwareDevice>(new NeutronDb());
 
         private readonly ResponseManager _responseManager;
-        private readonly bool _shiEnabled = true;
-       // private readonly List<Ipti_SHI> _shiList = new List<Ipti_SHI>();
+
+        private readonly bool _bliEnabled;
+        private readonly bool _shiEnabled;
+
         private readonly StationView _station;
 
-       // private List<Ipti_BLI> _blisOn = new List<Ipti_BLI>();
         private DynamicLogger _logger;
-        private Thread _responseProcessor;
-        private readonly int _serialConfigurationId = 4;
 
         private SerialPort _serialPort;
-
-        private List<Ipti_SHI> _shisOn = new List<Ipti_SHI>();
-
         public bool Transmit { get; set; }
-        // private Thread _transmitterSending;
-        // private readonly char ACK = Convert.ToChar(6);
-
         private string _cError = string.Empty;
-        // private readonly char ETX = Convert.ToChar(3);
         private int _lBeacon;
         private int _rBeacon;
-        // private readonly char SOH = Convert.ToChar(1);
-        //  private char STX = Convert.ToChar(2);
-
         private Dictionary<int, TowerLevelInfo> _towerLevelInfoList;
+
+        public event EventHandler<MySerialDataReceivedEventArgs> MySerialDataReceived;
+        public bool Ready { get; set; }
 
         public IptiController(IJsonData jsonData, StationView station, NeutronVariables neutronVariables)
         {
             _station = station;
             _neutronVariables = neutronVariables;
+
             _bliEnabled = _neutronVariables.BliEnabled;
             _shiEnabled = _neutronVariables.ShiEnabled;
 
@@ -92,21 +80,10 @@ namespace Neutron.Controllers
             if (_shiEnabled) GetTowerLevelInfoList();
 
             _responseManager = new ResponseManager(ResponseBlockingCollection, RequestBlockingCollection,
-                ReceivedBlockingCollection, _logger);
-            _responseManager.Transmit = false;
+                ReceivedBlockingCollection, _logger)
+            { Transmit = false };
 
             IptiControllerInit();
-
-            //if (IptiControllerInit())
-            //{
-            //    Ready = true;
-            //}
-            //else
-            //{
-            //    Task.Run(() => _logger.Log(@"IPTIControllerInit failed Initialization"));
-            //    MessageBox.Show(@"IPTI Controller Failed to Initialize.");
-            //    Ready = false;
-            //}
         }
 
         public void SetTransmit(bool value)
@@ -115,9 +92,6 @@ namespace Neutron.Controllers
             _responseManager.Transmit = value;
         }
 
-        public event EventHandler<MySerialDataReceivedEventArgs> MySerialDataReceived;
-
-        public bool Ready { get; set; }
 
         public void CloseController()
         {
@@ -139,44 +113,25 @@ namespace Neutron.Controllers
 
         public void ClearAllBli()
         {
-            if (_bliEnabled)
+            if (!_bliEnabled) return;
+            foreach (var bli in _bliList)
             {
-                foreach (var bli in _bliList)
-                {
-                    Task.Run(() => _logger.Log($"BLI Clear All Displays.  {bli.BLI_Address}"));
-                    // Thread.Sleep(10);
-                    // var cmd = Bayid + Turnoff + bli.BLI_Address.ToString().PadLeft(2, '0');
-                    SendData(bli.TurnOff);
-                }
+                Task.Run(() => _logger.Log($"BLI Clear All Displays.  {bli.BLI_Address}"));
+                SendData(bli.TurnOff);
             }
         }
 
         public void ClearAllShi()
         {
-            if (_shiEnabled)
+            if (!_shiEnabled) return;
+            for (var i = 2; i < 6; i++)
             {
-                foreach (var towerLevelInfo in _towerLevelInfoList)
+                for (var j = 1; j < 5; j++)
                 {
-                    ClearShi(new Ipti_SHI(towerLevelInfo.Value, 0, 0, "", ""));
+                    var cmd = i.ToString().PadLeft(2, '0') + "39" + j.ToString().PadLeft(2, '0');
+                    SendData(cmd);
                 }
             }
-
-            //int[] devices = { 1, 2, 3, 4 };
-            //for (var x = 1; x < devices.Length; x++)
-            //{
-            //    for (var i = 1; i < 9; i++)
-            //    {
-            //        var t = GetShiAddress(x, i);
-            //        ClearShi(new Ipti_SHI(t, 0, 0, "", ""));
-            //    }
-            //}
-
-            //device = 3;
-            //for (var i = 1; i < 9; i++)
-            //{
-            //    var t = GetShiAddress(device, i);
-            //    ClearShi(new Ipti_SHI(t, 0, 0, "", ""));
-            //}
         }
 
         public void ShowShi(Ipti_SHI shi)
@@ -196,11 +151,9 @@ namespace Neutron.Controllers
 
         public void ShowBli(int address, int beacon, string text)
         {
-            if (_bliEnabled)
-            {
-                var bli = new Ipti_BLI(address, beacon, text);
-                ShowBli(bli);
-            }
+            if (!_bliEnabled) return;
+            var bli = new Ipti_BLI(address, beacon, text);
+            ShowBli(bli);
         }
 
         public void ShowBli(Hart_BLI bli)
@@ -210,51 +163,34 @@ namespace Neutron.Controllers
 
         public void ShowBli(Ipti_BLI bli)
         {
-            if (_bliEnabled)
-            {
-                //if (_bliList.Contains(bli))
-                //{
-                Task.Run(() => _logger.Log($"Ipti BLI Address: {bli.BLI_Address}"));
-                //Thread.Sleep(10);
-                //var cmd = Bayid + Turnon + bli.BLI_Address.ToString().PadLeft(2, '0') + bli.BLI_Text.PadLeft(4, ' ') +
-                //          FourSpaces + EndOfLine;
-
-                SendData(bli.TurnOn);
-                // }
-            }
+            if (!_bliEnabled) return;
+            Task.Run(() => _logger.Log($"Ipti BLI Address: {bli.BLI_Address}"));
+            SendData(bli.TurnOn);
         }
 
         public void ClearOc(int address)
         {
-            if (_bliEnabled)
-            {
-                Task.Run(() => _logger.Log($"Ipti OC Address Clear: {address}"));
-               // Thread.Sleep(10);
-                var cmd = Bayid + DisplayOc + "0100" + "            ";
-                SendData(cmd);
-            }
+            if (!_bliEnabled) return;
+            Task.Run(() => _logger.Log($"Ipti OC Address Clear: {address}"));
+            var cmd = Bayid + DisplayOc + "0100" + "            ";
+            SendData(cmd);
         }
 
         public void ShowOc(int address, int beacon, string text)
         {
-            if (_bliEnabled)
-            {
-                Task.Run(() => _logger.Log($"Ipti OC Address: {address}"));
-                //Thread.Sleep(10);
-                var cmd = Bayid + DisplayOc + "0100" + text;
-                SendData(cmd);
-            }
+            if (!_bliEnabled) return;
+            Task.Run(() => _logger.Log($"Ipti OC Address: {address}"));
+            var cmd = Bayid + DisplayOc + "0100" + text;
+            SendData(cmd);
         }
 
         public void ShowShi(int device, int bin, int level, string part, string text)
         {
-            if (_shiEnabled)
-            {
-                Task.Run(() => _logger.Log($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
-                var towerLevelInfo = GetShiAddress(device, level);
-                var shi = new Ipti_SHI(towerLevelInfo, _lBeacon, _rBeacon, part, text);
-                SendData(shi.TurnOn());
-            }
+            if (!_shiEnabled) return;
+            Task.Run(() => _logger.Log($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
+            var towerLevelInfo = GetShiAddress(device, level);
+            var shi = new Ipti_SHI(towerLevelInfo, _lBeacon, _rBeacon, part, text);
+            SendData(shi.TurnOn());
         }
 
         public void ShowShi(Hart_SHI shi)
@@ -274,26 +210,17 @@ namespace Neutron.Controllers
 
         public void ClearBli(Ipti_BLI bli)
         {
-            if (_bliEnabled)
-            { 
-            //    if (_bliList.Contains(bli))
-            //    {
-                    Task.Run(() => _logger.Log($"BLI Clear Single Display. {bli.BLI_Address}"));
-            // Thread.Sleep(10);
-            // var cmd = Bayid + Turnoff + bli.BLI_Address;
-
+            if (!_bliEnabled) return;
+            Task.Run(() => _logger.Log($"BLI Clear Single Display. {bli.BLI_Address}"));
             SendData(bli.TurnOff);
-                }
         }
 
         public void ShowBli(int address, string text)
         {
-            if (_bliEnabled)
-            {
-                Task.Run(() => _logger.Log($"BLI Address: {address}"));
-                var bli = new Ipti_BLI(address, text);
-                ShowBli(bli);
-            }
+            if (!_bliEnabled) return;
+            Task.Run(() => _logger.Log($"BLI Address: {address}"));
+            var bli = new Ipti_BLI(address, text);
+            ShowBli(bli);
         }
 
         public int GetInitStatus()
@@ -301,18 +228,18 @@ namespace Neutron.Controllers
             throw new NotImplementedException();
         }
 
-        private void FileShiList()
-        {
-        }
-
         private void FillBliList()
         {
-            _bliList.Add(new Ipti_BLI(1, 0, "1"));
-            _bliList.Add(new Ipti_BLI(2, 0, "2"));
-            _bliList.Add(new Ipti_BLI(3, 0, "3"));
-            _bliList.Add(new Ipti_BLI(4, 0, "4"));
-            _bliList.Add(new Ipti_BLI(5, 0, "5"));
-            _bliList.Add(new Ipti_BLI(6, 0, "6"));
+            for (var i = 1; i <= _neutronVariables.PickBatchSize; i++)
+            {
+                _bliList.Add(new Ipti_BLI(i, 0, i.ToString()));
+            }
+            //_bliList.Add(new Ipti_BLI(1, 0, "1"));
+            //_bliList.Add(new Ipti_BLI(2, 0, "2"));
+            //_bliList.Add(new Ipti_BLI(3, 0, "3"));
+            //_bliList.Add(new Ipti_BLI(4, 0, "4"));
+            //_bliList.Add(new Ipti_BLI(5, 0, "5"));
+            //_bliList.Add(new Ipti_BLI(6, 0, "6"));
             // _bliList.Add(new Ipti_BLI(7, 0, "7"));
             // _bliList.Add(new Ipti_BLI(8, 0, "8"));
         }
@@ -344,9 +271,31 @@ namespace Neutron.Controllers
                             }
 
                             _logger.Log($"Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
-                            //UpdateTextBox($"Start Transmitting: {request.ByteArrayToStringX2()}");
+
+                            //for (var i = 1; i <= 100; i++)
+                            //{
+                            //    if (!_responseManager.Transmitting)
+                            //    {
+
+                            var trans = _responseManager.Transmitting;
+
+                            Mediator.GetInstance().OnSerialPortWrite(this, $"Write Command:  {trans.ToString()} - {request.ByteArrayToStringX2()}");
+
                             _serialPort.Write(request, 0, request.Length);
+                            _responseManager.Transmitting = true;
                             Thread.Sleep(50);
+                           
+                            
+                            // break;
+                            //    }
+                            //    Thread.Sleep(i * 20);
+                            //    if (i != 100) continue;
+                            //    Mediator.GetInstance().OnSerialPortWrite(this, "Serial Timeout.");
+                            //    _logger.Log("SerialPort Write Request Time Out.");
+                            //}
+
+
+
                         }
                     }
                 }
@@ -509,11 +458,13 @@ namespace Neutron.Controllers
             {
                 if (!serialPort.IsOpen) return;
 
+                _responseManager.Transmitting = false;
+               
                 var actualLength = _serialPort.BaseStream.EndRead(result);
                 var received = new byte[actualLength];
                 Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
                 _logger.Log($"OnResult: {received.ByteArrayToStringX2()}");
-                //Debug.Print($"OnResult: {received.ByteArrayToStringX2()}");
+                 Mediator.GetInstance().OnSerialPortWrite(this, $"OnResult False  {received.ByteArrayToStringX2()}");
                 ReceivedBlockingCollection.Add(received);
             }
             catch (IOException ex)
@@ -609,8 +560,9 @@ namespace Neutron.Controllers
                     var command = Models.Global.SOH + baseCommand + ToHex(baseCommand) + Models.Global.ETX;
                     var bytes = command.StringToByteArray();
                     RequestBlockingCollection.TryAdd(bytes);
-
+                    Mediator.GetInstance().OnSerialPortWrite(this, "Command to Queue - " + command);
                     //_serialPort.Write(command);
+                    //Mediator.GetInstance().OnSerialPortWrite(this, bytes.ByteArrayToHumanString());
                 }
             }
             catch (Exception ex)

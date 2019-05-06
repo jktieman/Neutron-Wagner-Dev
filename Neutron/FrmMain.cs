@@ -66,7 +66,7 @@ namespace Neutron
             _nomenclature = nomenclature;
             _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
-            _startStopLoaderManager = new StartStopLoaderManager(_jsonData,_logger);
+            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger);
             GlobalVar.HistoryManager = new HistoryManager();
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -75,8 +75,13 @@ namespace Neutron
             Mediator.GetInstance().InventoryFileCreatedError += (s, e) => MessageBox.Show(e.Text, "Inventory File Error"
                 , MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
+
             LogOnOff();
-            if (InitForm()) return;
+            if (InitForm())
+            {
+
+                return;
+            }
             LogOnOff();
             MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.",
                 "Main Form Error", MessageBoxButtons.OK);
@@ -87,6 +92,7 @@ namespace Neutron
             var result = false;
             try
             {
+               
                 //if (LoaderSettings.Init(Settings.Default.ConfigFilePath))
                 //{
                 LoaderSettings.Init(Settings.Default.ConfigFilePath);
@@ -510,7 +516,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory])
             {
                 var main = this;
-                
+
                 using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
                 {
                     main.Hide();
@@ -774,7 +780,7 @@ namespace Neutron
 
         public void ProcessDataReceived(object sender, IptiController.MySerialDataReceivedEventArgs args)
         {
-            // MessageBox.Show(args.FormText);
+            MessageBox.Show(args.FormText);
             var t = args.FormText;
         }
 

@@ -36,6 +36,34 @@ namespace Neutron.Extensions
             return bytes.ToString();
         }
 
+        public static string ByteArrayToHumanString(this byte[] bytes)
+        {
+            var txt = string.Empty;
+            var result = string.Empty;
+            var arr = System.Text.Encoding.UTF8.GetString(bytes);
+            var len = arr.Length;
+            var txtLen = len - 10;
+            if (arr.Substring(3, 2) == "39")
+            {
+                if (len == 21)
+                {
+txt = arr.Substring(8, txtLen -1);
+                }
+                txt = arr.Substring(7, txtLen);
+            }
+
+            if (txtLen > 0)
+            {
+                txt = arr.Substring(7);
+            }  
+
+            result =
+                $"Bay: {arr.Substring(1, 2)} Cmd: {arr.Substring(3, 2)}" +
+                $" Dis: {arr.Substring(5, 2)} Text: {txt}";
+
+            return result;
+        }
+
         public static string GetCheckDigit(this string command)
         {
             var values = command.ToCharArray();

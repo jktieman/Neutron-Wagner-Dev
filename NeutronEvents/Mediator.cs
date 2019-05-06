@@ -30,6 +30,14 @@ namespace NeutronEvents
                 ?.Invoke(sender, new SerialPortChangedEventArgs { Port = port });
         }
 
+        public event EventHandler<SerialPortWriteEventArgs> SerialPortWrite;
+
+        public void OnSerialPortWrite(object sender, string request)
+        {
+            (SerialPortWrite as EventHandler<SerialPortWriteEventArgs>)
+                ?.Invoke(sender, new SerialPortWriteEventArgs { Request = request });
+        }
+
 
 
         public event EventHandler<TransmitStateChangedEventArgs> TransmitStateChanged;

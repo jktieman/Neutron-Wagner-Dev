@@ -25,6 +25,7 @@ namespace Neutron.Models
 
 
         public bool Transmit { get; set; }
+        public bool Transmitting { get; set; }
 
         public ResponseManager(BlockingCollection<byte[]> responseBlockingCollection,
             BlockingCollection<byte[]> requestBlockingCollection, BlockingCollection<byte[]> receivedBlockingCollection,
@@ -97,6 +98,7 @@ namespace Neutron.Models
                             var message = Encoding.UTF8.GetString(bArray);
                             _logger.Log($"Add [ {message} ] to ResponseBlockingCollection.");
                             _responseBlockingCollection.TryAdd(bArray, 50);
+                            Mediator.GetInstance().OnBatchComplete($"Process Received - {message}");
                             buildingArray = false;
                             _logger.Log($"Process Received - byte array added: {message}");
                         }
@@ -141,17 +143,18 @@ namespace Neutron.Models
                             return;
                         }
 
-                        if (response != null)
+                        if (response == null) continue;
+                        _logger.Log(
+                            $"Start Response Processor - ResponseBlockingCollection Loop: {response.ByteArrayToStringX2()}");
+                        var responseInfo = new ResponseInfo();
+                        new ResponseBuilder().BuildInfo(response.ByteArrayToString(), responseInfo);
+                        if (responseInfo.RespondCommand != null)
                         {
-                            _logger.Log(
-                                $"Start Response Processor - ResponseBlockingCollection Loop: {response.ByteArrayToStringX2()}");
-                            var responseInfo = new ResponseInfo();
-                            new ResponseBuilder().BuildInfo(response.ByteArrayToString(), responseInfo);
-                            if (responseInfo.RespondCommand != null)
-                            {
-                                CreateRequest(responseInfo);
-                            }
+                            CreateRequest(responseInfo);
                         }
+
+                        Mediator.GetInstance().OnSerialPortWrite(this, $"No Response Needed  {responseInfo.ControllerNumber} - {responseInfo.DisplayNumber}");
+                        Transmitting = false;
                     }
                 }
                 catch (OperationCanceledException)
@@ -166,6 +169,7 @@ namespace Neutron.Models
         {
             if (responseInfo.RespondCommand != null)
             {
+                Mediator.GetInstance().OnSerialPortWrite(this, "Response Created - {responseInfo.RespondCommand}");
                 _requestBlockingCollection.TryAdd(responseInfo.RespondCommand.StringToByteArray(), 50);
             }
             _logger.Log($"Create Request: {Environment.NewLine} {responseInfo.Information}");
