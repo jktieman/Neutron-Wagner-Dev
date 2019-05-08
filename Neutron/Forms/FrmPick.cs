@@ -175,10 +175,10 @@ namespace Neutron.Forms
 
         private void ShowCommand(string request)
         {
-            if (IsHandleCreated)
-            {
-                ListBoxRequests.Invoke(new Action(() => ListBoxRequests.Items.Add(request)));
-            }
+            //if (IsHandleCreated)
+            //{
+            //    ListBoxRequests.Invoke(new Action(() => ListBoxRequests.Items.Add(request)));
+            //}
 
         }
 
@@ -4629,7 +4629,8 @@ namespace Neutron.Forms
                     var numberOfStops = _bindingSourcePickStops.Count;
                     if (_currentPickStop.Sequence < numberOfStops)
                     {
-                        _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                        //Use the first carousel location for the movenext in case multiple picks are required for stop
+                        _deviceManager.MoveNext(_currentPickStop.Inventory[0].Location.Loc1);
                         _bindingSourcePickStops.MoveNext();
                         _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                         UpdatePickScreen();

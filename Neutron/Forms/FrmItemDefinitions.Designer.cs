@@ -51,6 +51,7 @@
             this.MbViewEditClose = new MetroFramework.Controls.MetroButton();
             this.MbViewEditSave = new MetroFramework.Controls.MetroButton();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.LabelViewEditChangeStationWarning = new System.Windows.Forms.Label();
             this.PictureBoxViewEditImage = new System.Windows.Forms.PictureBox();
             this.TextBoxViewEditWeight = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -123,7 +124,6 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
-            this.LabelViewEditChangeStationWarning = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Listing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -444,6 +444,13 @@
             this.panel1.Size = new System.Drawing.Size(1141, 536);
             this.panel1.TabIndex = 0;
             // 
+            // LabelViewEditChangeStationWarning
+            // 
+            this.LabelViewEditChangeStationWarning.Location = new System.Drawing.Point(526, 15);
+            this.LabelViewEditChangeStationWarning.Name = "LabelViewEditChangeStationWarning";
+            this.LabelViewEditChangeStationWarning.Size = new System.Drawing.Size(576, 97);
+            this.LabelViewEditChangeStationWarning.TabIndex = 38;
+            // 
             // PictureBoxViewEditImage
             // 
             this.PictureBoxViewEditImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -686,6 +693,7 @@
             this.TextBoxViewEditStation.Size = new System.Drawing.Size(127, 28);
             this.TextBoxViewEditStation.TabIndex = 1;
             this.TextBoxViewEditStation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxViewEditStation.Visible = false;
             this.TextBoxViewEditStation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditItem_KeyDown);
             // 
             // TextBoxViewEditItem
@@ -809,6 +817,7 @@
             // 
             // MbSaveAsDefault
             // 
+            this.MbSaveAsDefault.Enabled = false;
             this.MbSaveAsDefault.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.MbSaveAsDefault.Location = new System.Drawing.Point(288, 48);
             this.MbSaveAsDefault.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1188,13 +1197,6 @@
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // LabelViewEditChangeStationWarning
-            // 
-            this.LabelViewEditChangeStationWarning.Location = new System.Drawing.Point(526, 15);
-            this.LabelViewEditChangeStationWarning.Name = "LabelViewEditChangeStationWarning";
-            this.LabelViewEditChangeStationWarning.Size = new System.Drawing.Size(576, 97);
-            this.LabelViewEditChangeStationWarning.TabIndex = 38;
             // 
             // FrmItemDefinitions
             // 

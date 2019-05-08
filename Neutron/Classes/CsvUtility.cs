@@ -133,9 +133,10 @@ namespace Neutron.Classes
                     sb.Append(inv.Location.Loc3.ToString() + ",");
                     sb.Append(inv.Location.Loc4.ToString() + ",");
                     sb.Append(inv.Quantity.ToString() + ",");
-                    sb.Append(inv.ReceivedDate.ToString("G") + ",");
+                    sb.Append(
+                        $@"{inv.ReceivedDate.Month.ToString().PadLeft(2, '0')}-{inv.ReceivedDate.Day.ToString().PadLeft(2, '0')}-{inv.ReceivedDate.Year},");
                     sb.Append(string.Empty + ",");
-                    sb.Append(inv.StorageType.Name + ",");
+                    sb.Append("Random,");
                     sb.Append("No" + ",");
                     sb.Append(inv.ItemDefinition.VelocityCode.Name + ",");
                     sb.Append(inv.ItemDefinition.SizeCode.Name + ",");
@@ -151,7 +152,7 @@ namespace Neutron.Classes
                     sb.Append(inv.ItemDefinition.LocationMin.ToString() + ",");
                     sb.Append(inv.ItemDefinition.SystemMax.ToString() + ",");
                     sb.Append(inv.ItemDefinition.SystemMin.ToString() + ",");
-                    sb.Append("No" + ",");
+                    sb.Append("No");
 
                     output.Add(sb.ToString());
 

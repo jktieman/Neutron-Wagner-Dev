@@ -213,9 +213,9 @@ namespace Neutron.Forms
             //var id = TextBoxViewEditId.Text.ParseInt();
             var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == id).ToList();
             var msg = $"There are {recs.Count} inventory locations. {Environment.NewLine}";
-            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == id).ToList();
+            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == id && r.LineStatusId != 6).ToList();
             msg += $"There are {recs2.Count} lines to be picked from this station. {Environment.NewLine}";
-            if (recs.Count == 0 && recs2.Count == 0)
+            if (recs.Count == 0)
             {
                 ComboBoxViewEditStation.Enabled = true;
                 LabelViewEditChangeStationWarning.ForeColor = Color.Green;
@@ -235,21 +235,65 @@ namespace Neutron.Forms
 
         private void MButtonNew_Click(object sender, EventArgs e)
         {
+            NewItem();
+            //TextBoxNewItem.Text = string.Empty;
+            //TextBoxNewDescription.Text = string.Empty;
+            //TextBoxNewLocationMax.Text = string.Empty;
+            //TextBoxNewLocationMin.Text = string.Empty;
+            //TextBoxNewSystemMax.Text = string.Empty;
+            //TextBoxNewSystemMin.Text = string.Empty;
+            //TextBoxNewWeight.Text = string.Empty;
+            //ComboBoxNewStation.SelectedIndex = 0;
+            //ComboBoxNewHeightCode.SelectedIndex = 0;
+            //ComboBoxNewSizeCode.SelectedIndex = 0;
+            //ComboBoxNewVelocityCode.SelectedIndex = 0;
+            //ComboBoxNewLocationCode.SelectedIndex = 0;
+            //ComboBoxNewStorageType.SelectedIndex = 1;
+            //ComboBoxNewUnitOfIssue.SelectedIndex = 0;
+            //CheckBoxNewScale.Checked = false;
+            //tabControl1.SelectedTab = New;
+        }
+
+        private void NewItem()
+        {
+            MbNewSave.Enabled = true;
+            MbSaveAsDefault.Enabled = false;
+            TextBoxNewItem.Visible = true;
+            TextBoxNewDescription.Visible = true;
+            label16.Visible = true;
+            label17.Visible = true;
+
+            var item = _jsonData.LoadFile<ItemDefinition>();
+            ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
             TextBoxNewItem.Text = string.Empty;
             TextBoxNewDescription.Text = string.Empty;
-            TextBoxNewLocationMax.Text = string.Empty;
-            TextBoxNewLocationMin.Text = string.Empty;
-            TextBoxNewSystemMax.Text = string.Empty;
-            TextBoxNewSystemMin.Text = string.Empty;
-            TextBoxNewWeight.Text = string.Empty;
-            ComboBoxNewStation.SelectedIndex = 0;
-            ComboBoxNewHeightCode.SelectedIndex = 0;
-            ComboBoxNewSizeCode.SelectedIndex = 0;
-            ComboBoxNewVelocityCode.SelectedIndex = 0;
-            ComboBoxNewLocationCode.SelectedIndex = 0;
-            ComboBoxNewStorageType.SelectedIndex = 1;
-            ComboBoxNewUnitOfIssue.SelectedIndex = 0;
-            CheckBoxNewScale.Checked = false;
+            TextBoxNewLocationMax.Text = string.IsNullOrEmpty(item.LocationMax.ToString()) ? "0" : item.LocationMax.ToString();                // item.LocationMax.ToString();
+            TextBoxNewLocationMin.Text = string.IsNullOrEmpty(item.LocationMin.ToString()) ? "0" : item.LocationMin.ToString();
+            TextBoxNewSystemMax.Text = string.IsNullOrEmpty(item.SystemMax.ToString()) ? "0" : item.SystemMax.ToString();
+            TextBoxNewSystemMin.Text = string.IsNullOrEmpty(item.SystemMin.ToString()) ? "0" : item.SystemMin.ToString();
+            ComboBoxNewSizeCode.SelectedValue = string.IsNullOrEmpty(item.SizeCodeId.ToString())
+                ? ((SizeCode)ComboBoxNewSizeCode.Items[0]).Id
+                : item.SizeCodeId;
+            ComboBoxNewVelocityCode.SelectedValue = string.IsNullOrEmpty(item.VelocityCodeId.ToString())
+                ? ((VelocityCode)ComboBoxNewVelocityCode.Items[0]).Id
+                : item.VelocityCodeId;
+            ComboBoxNewHeightCode.SelectedValue = string.IsNullOrEmpty(item.HeightCodeId.ToString())
+                ? ((HeightCode)ComboBoxNewHeightCode.Items[0]).Id
+                : item.HeightCodeId;
+            ComboBoxNewLocationCode.SelectedValue = string.IsNullOrEmpty(item.LocationCodeId.ToString())
+                ? ((LocationCode)ComboBoxNewLocationCode.Items[0]).Id
+                : item.LocationCodeId;
+            ComboBoxNewStorageType.SelectedValue = string.IsNullOrEmpty(item.StorageTypeId.ToString())
+                ? ((StorageType)ComboBoxNewStorageType.Items[0]).Id
+                : item.StorageTypeId;
+            ComboBoxNewUnitOfIssue.SelectedValue = string.IsNullOrEmpty(item.UnitOfIssueId.ToString())
+                ? ((UnitOfIssue)ComboBoxNewUnitOfIssue.Items[0]).Id
+                : item.UnitOfIssueId;
+
+            TextBoxNewWeight.Text = string.IsNullOrEmpty(item.Weight.ToString(CultureInfo.InvariantCulture))
+                ? "0"
+                : item.Weight.ToString(CultureInfo.InvariantCulture);
+            CheckBoxNewScale.Checked = item.Scale;
             tabControl1.SelectedTab = New;
         }
 
@@ -363,9 +407,14 @@ namespace Neutron.Forms
 
         private void UpdateViewEdit()
         {
+            int stationNumber = 1;
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
             var stationId = ((Station)ComboBoxViewEditStation.SelectedItem).Id;
-           // stationId = _repoStation.FindBy(s => s.Name == TextBoxViewEditStation.Text).FirstOrDefault().Id;
+            var station = _repoStation.FindBy(s => s.Id == stationId).FirstOrDefault();
+            if (station != null)
+            {
+                stationNumber = station.StationNumber;
+            }
             var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
             var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text) ? "0" : TextBoxViewEditLocationMax.Text;
             var locationMin = string.IsNullOrEmpty(TextBoxViewEditLocationMin.Text) ? "0" : TextBoxViewEditLocationMin.Text;
@@ -400,6 +449,13 @@ namespace Neutron.Forms
                         try
                         {
                             _repoItemDefinition.Update(itemDef);
+
+                            var recs = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != 6).ToList();
+                            foreach (var rec in recs)
+                            {
+                                rec.StationNumber = stationNumber;
+                                _repoOrderDetails.Update(rec);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -960,13 +1016,12 @@ namespace Neutron.Forms
             var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
             var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
             var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
-            var item = TextBoxNewItem.Text;
-            var description = TextBoxNewDescription.Text;
+          
             var rec = new ItemDefinition()
             {
                 StationId = stationId,
-                Item = item,
-                Description = description,
+                Item = string.Empty,
+                Description = string.Empty,
                 LocationMax = (locationMax).ParseInt(),
                 LocationMin = (locationMin).ParseInt(),
                 SystemMax = (systemMax).ParseInt(),
@@ -989,25 +1044,48 @@ namespace Neutron.Forms
             {
                 MessageBox.Show("Error Saving Default Item Definition.  " + ex.Message + "\n\r" + ex.InnerException);
             }
+            NewItem();
         }
 
         private void MbLoadDefault_Click(object sender, EventArgs e)
         {
+            MbNewSave.Enabled = false;
+            MbSaveAsDefault.Enabled = true;
+            TextBoxNewItem.Visible = false;
+            TextBoxNewDescription.Visible = false;
+            label16.Visible = false;
+            label17.Visible = false;
+
             var item = _jsonData.LoadFile<ItemDefinition>();
-            ComboBoxNewStation.SelectedValue = item.StationId;
-            TextBoxNewItem.Text = item.Item;
-            TextBoxNewDescription.Text = item.Description;
-            TextBoxNewLocationMax.Text = item.LocationMax.ToString();
-            TextBoxNewLocationMin.Text = item.LocationMin.ToString();
-            TextBoxNewSystemMax.Text = item.SystemMax.ToString();
-            TextBoxNewSystemMin.Text = item.SystemMin.ToString();
-            ComboBoxNewSizeCode.SelectedValue = item.SizeCodeId;
-            ComboBoxNewVelocityCode.SelectedValue = item.VelocityCodeId;
-            ComboBoxNewHeightCode.SelectedValue = item.HeightCodeId;
-            ComboBoxNewLocationCode.SelectedValue = item.LocationCodeId;
-            ComboBoxNewStorageType.SelectedValue = item.StorageTypeId;
-            ComboBoxNewUnitOfIssue.SelectedValue = item.UnitOfIssueId;
-            TextBoxNewWeight.Text = item.Weight.ToString(CultureInfo.InvariantCulture);
+            ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
+            TextBoxNewItem.Text = string.Empty;
+            TextBoxNewDescription.Text = string.Empty;
+            TextBoxNewLocationMax.Text = string.IsNullOrEmpty(item.LocationMax.ToString()) ? "0" : item.LocationMax.ToString();                // item.LocationMax.ToString();
+            TextBoxNewLocationMin.Text = string.IsNullOrEmpty(item.LocationMin.ToString()) ? "0" : item.LocationMin.ToString();
+            TextBoxNewSystemMax.Text = string.IsNullOrEmpty(item.SystemMax.ToString()) ? "0" : item.SystemMax.ToString();
+            TextBoxNewSystemMin.Text = string.IsNullOrEmpty(item.SystemMin.ToString()) ? "0" : item.SystemMin.ToString();
+            ComboBoxNewSizeCode.SelectedValue = string.IsNullOrEmpty(item.SizeCodeId.ToString())
+                ? ((SizeCode)ComboBoxNewSizeCode.Items[0]).Id
+                : item.SizeCodeId;
+            ComboBoxNewVelocityCode.SelectedValue = string.IsNullOrEmpty(item.VelocityCodeId.ToString())
+                ? ((VelocityCode) ComboBoxNewVelocityCode.Items[0]).Id
+                : item.VelocityCodeId;
+            ComboBoxNewHeightCode.SelectedValue = string.IsNullOrEmpty(item.HeightCodeId.ToString())
+                ? ((HeightCode) ComboBoxNewHeightCode.Items[0]).Id
+                : item.HeightCodeId;
+            ComboBoxNewLocationCode.SelectedValue = string.IsNullOrEmpty(item.LocationCodeId.ToString())
+                ? ((LocationCode) ComboBoxNewLocationCode.Items[0]).Id
+                : item.LocationCodeId;
+            ComboBoxNewStorageType.SelectedValue = string.IsNullOrEmpty(item.StorageTypeId.ToString())
+                ? ((StorageType) ComboBoxNewStorageType.Items[0]).Id
+                : item.StorageTypeId;
+            ComboBoxNewUnitOfIssue.SelectedValue = string.IsNullOrEmpty(item.UnitOfIssueId.ToString())
+                ? ((UnitOfIssue) ComboBoxNewUnitOfIssue.Items[0]).Id
+                : item.UnitOfIssueId;
+
+            TextBoxNewWeight.Text = string.IsNullOrEmpty(item.Weight.ToString(CultureInfo.InvariantCulture))
+                ? "0"
+                : item.Weight.ToString(CultureInfo.InvariantCulture);
             CheckBoxNewScale.Checked = item.Scale;
         }
 

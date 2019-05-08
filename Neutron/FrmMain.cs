@@ -83,8 +83,8 @@ namespace Neutron
                 return;
             }
             LogOnOff();
-            MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.",
-                "Main Form Error", MessageBoxButtons.OK);
+            //MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.",
+            //    "Main Form Error", MessageBoxButtons.OK);
         }
 
         private bool InitForm()
@@ -432,15 +432,6 @@ namespace Neutron
                                 _currentUser = frm.CurrentUser;
 
                                 mlUserInfo.Text = $"{currentUserLabel}{_currentUser.UserInfo}";
-                                //var sw = new Stopwatch();
-                                //sw.Start();
-                                //var w = new Form() {Size = new Size(0,0), ControlBox = false};
-                                //Task.Delay(TimeSpan.FromMilliseconds(2500))
-                                //    .ContinueWith((t) => w.Close(), TaskScheduler.FromCurrentSynchronizationContext());
-                                //MessageBox.Show(w, "Close Enough", "Login");
-                                //sw.Stop();
-                                //var elapsed = sw.ElapsedMilliseconds;
-                                //MessageBox.Show($"Elapsed Milliseconds: {elapsed}");
                             }
                         }
                     }
