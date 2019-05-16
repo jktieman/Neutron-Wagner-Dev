@@ -139,6 +139,7 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -226,6 +227,18 @@
     </Compile>
     <Compile Include="Forms\FrmCommunication.Designer.cs">
       <DependentUpon>FrmCommunication.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDefineActionGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDefineActionGroup.Designer.cs">
+      <DependentUpon>FrmDefineActionGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDefineUserGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDefineUserGroup.Designer.cs">
+      <DependentUpon>FrmDefineUserGroup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmDevices.cs">
       <SubType>Form</SubType>
@@ -323,6 +336,12 @@
     <Compile Include="Forms\FrmPin.Designer.cs">
       <DependentUpon>FrmPin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmProductivity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmProductivity.Designer.cs">
+      <DependentUpon>FrmProductivity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmReplen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -401,6 +420,7 @@
     <Compile Include="Forms\FrmTcpConfiguration.Designer.cs">
       <DependentUpon>FrmTcpConfiguration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ActionIdString.cs" />
     <Compile Include="Models\Command.cs" />
     <Compile Include="Models\Global.cs" />
     <Compile Include="Models\IptiButtonResponse.cs" />
@@ -431,6 +451,7 @@
     <Compile Include="Models\ReplenDeviceManager.cs" />
     <Compile Include="Models\ResponseManager.cs" />
     <Compile Include="Models\RuleResult.cs" />
+    <Compile Include="Models\UserIdString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\BaseForm.resx">
@@ -447,6 +468,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmCommunication.resx">
       <DependentUpon>FrmCommunication.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDefineActionGroup.resx">
+      <DependentUpon>FrmDefineActionGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmDefineUserGroup.resx">
+      <DependentUpon>FrmDefineUserGroup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDevices.resx">
       <DependentUpon>FrmDevices.cs</DependentUpon>
@@ -497,6 +524,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmPin.resx">
       <DependentUpon>FrmPin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmProductivity.resx">
+      <DependentUpon>FrmProductivity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmReplen.resx">
       <DependentUpon>FrmReplen.cs</DependentUpon>

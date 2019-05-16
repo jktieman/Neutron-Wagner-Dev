@@ -10,8 +10,8 @@ namespace NeutronCore.Extensions
     {
         public static DateTime FirstDayOfWeek(this DateTime dt)
         {
-            System.Globalization.CultureInfo culture = System.Threading.Thread.CurrentThread.CurrentCulture;
-            int diff = dt.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
+            var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            var diff = dt.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
             if (diff < 0)
                 diff += 7;
             return dt.AddDays(-diff).Date;

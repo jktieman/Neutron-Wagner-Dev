@@ -371,6 +371,7 @@
             this.Controls.Add(this.LabelFormHeaderText);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmHistory";
+            this.Text = "History";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

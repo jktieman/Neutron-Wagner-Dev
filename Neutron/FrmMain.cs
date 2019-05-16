@@ -591,6 +591,19 @@ namespace Neutron
             }
         }
 
+        private void MtProductivity_Click(object sender, EventArgs e)
+        {
+            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers])
+            {
+                Hide();
+                using (MetroForm frm = new FrmProductivity(_jsonData))
+                {
+                    frm.ShowDialog();
+                    Show();
+                }
+            }
+        }
+
         private void MtStore_Click(object sender, EventArgs e)
         {
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.StoreItemsandOrders])
@@ -785,5 +798,7 @@ namespace Neutron
 
             GlobalVar.Displays.ClearBli(bli);
         }
+
+      
     }
 }

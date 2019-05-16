@@ -13,18 +13,18 @@ namespace NeutronCore.Extensions
     {
         public static DataTable MakeDataTable<T>(this IList<T> data)
         {
-            PropertyDescriptorCollection props =
+            var props =
             TypeDescriptor.GetProperties(typeof(T));
-            DataTable table = new DataTable();
-            for (int i = 0; i < props.Count; i++)
+            var table = new DataTable();
+            for (var i = 0; i < props.Count; i++)
             {
-                PropertyDescriptor prop = props[i];
+                var prop = props[i];
                 table.Columns.Add(prop.Name, prop.PropertyType);
             }
-            object[] values = new object[props.Count];
-            foreach (T item in data)
+            var values = new object[props.Count];
+            foreach (var item in data)
             {
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                 {
                     values[i] = props[i].GetValue(item);
                 }
@@ -37,7 +37,7 @@ namespace NeutronCore.Extensions
         {
             //example usage: [List<Location> | var] locations = dataGridViewLocations.SelectedRows.ToList<Location>();
             var list = new List<T>();
-            for (int i = 0; i < rows.Count; i++)
+            for (var i = 0; i < rows.Count; i++)
             {
                 list.Add((T) rows[i].DataBoundItem);
             }

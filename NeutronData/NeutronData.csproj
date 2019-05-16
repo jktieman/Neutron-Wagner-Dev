@@ -144,6 +144,8 @@
     <Compile Include="ModelViews\LocationView.cs" />
     <Compile Include="ModelViews\NewItemView.cs" />
     <Compile Include="ModelViews\OrderDetailsView.cs" />
+    <Compile Include="ModelViews\ProductivityDetail.cs" />
+    <Compile Include="ModelViews\ProductivitySummary.cs" />
     <Compile Include="ModelViews\RackOrderView.cs" />
     <Compile Include="ModelViews\PickLocation.cs" />
     <Compile Include="ModelViews\PickLocationSkip.cs" />

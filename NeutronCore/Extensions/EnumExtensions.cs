@@ -13,14 +13,14 @@ namespace NeutronCore.Extensions
         public static string GetEnumDescription<TEnum>(this TEnum value)
                  where TEnum : struct
         {
-            Type type = value.GetType();
+            var type = value.GetType();
             if (!type.IsEnum)
             {
                 throw new ArgumentException(message: "Enumeration Value must be of the Enum Type"
                     , paramName: "enumValue");
             }
 
-            FieldInfo fi = value.GetType().GetField(value.ToString());
+            var fi = value.GetType().GetField(value.ToString());
 
             var attributes =
                 (DescriptionAttribute[]) fi.GetCustomAttributes(

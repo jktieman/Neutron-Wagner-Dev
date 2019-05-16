@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Neutron.Models;
 using NeutronCore;
 using NeutronData.Models;
+using NeutronData.ModelViews;
 
 namespace PrintRequest
 {
@@ -86,7 +87,21 @@ namespace PrintRequest
         public static void PrintPickList(List<PickList> pickLists,
             DocumentPrinterPreferences printer, bool printPreview)
         {
-            var result = new PickListProcessor().PrintPickListDocument(pickLists, printer, printPreview);
+            var result = new PickListProcessor()
+                .PrintPickListDocument(pickLists, printer, printPreview);
+        }
+
+        public static void PrintSummary(List<ProductivitySummary> summaries ,
+            DocumentPrinterPreferences printer, bool printPreview)
+        {
+            var result = new ProductivitySummaryProcessor()
+                .PrintProductivitySummaryDocument(summaries, printer, printPreview);
+        }
+
+        public static void PrintDetail(List<ProductivityDetail> details, DocumentPrinterPreferences printer, bool printPreview)
+        {
+            var result = new ProductivityDetailProcessor()
+                .PrintProductivityDetailDocument(details, printer, printPreview);
         }
     }
 }

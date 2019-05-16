@@ -82,8 +82,8 @@ namespace NeutronCore.Extensions
         {
             var op = new OperationResult();
             op.Success = false;
-            int waitTime = 100;
-            int maxWaitTime = 500;
+            var waitTime = 100;
+            var maxWaitTime = 500;
 
             while (fileInfo.IsFileLocked().Success)
             {

@@ -1,0 +1,729 @@
+﻿namespace Neutron.Forms
+{
+    partial class FrmProductivity
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.LabelRecordCount = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.ButtonConfigureUsers = new System.Windows.Forms.Button();
+            this.ButtonClearAllUsers = new System.Windows.Forms.Button();
+            this.ButtonCheckAllUsers = new System.Windows.Forms.Button();
+            this.CheckedListBoxUsers = new System.Windows.Forms.CheckedListBox();
+            this.ButtonConfigureActions = new System.Windows.Forms.Button();
+            this.ButtonClearAllActions = new System.Windows.Forms.Button();
+            this.ButtonCheckAllActions = new System.Windows.Forms.Button();
+            this.CheckedListBoxActionCodes = new System.Windows.Forms.CheckedListBox();
+            this.SplitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.TextBoxTotalOrdersSummary = new System.Windows.Forms.TextBox();
+            this.TextBoxTotalPiecesSummary = new System.Windows.Forms.TextBox();
+            this.TextBoxTotalLinesSummary = new System.Windows.Forms.TextBox();
+            this.ButtonPrintSummary = new System.Windows.Forms.Button();
+            this.LabelTotalOrders = new System.Windows.Forms.Label();
+            this.LabelTotalPieces = new System.Windows.Forms.Label();
+            this.LabelTotalLines = new System.Windows.Forms.Label();
+            this.DataGridView1 = new System.Windows.Forms.DataGridView();
+            this.TextBoxTotalOrdersDetail = new System.Windows.Forms.TextBox();
+            this.TextBoxTotalPiecesDetail = new System.Windows.Forms.TextBox();
+            this.TextBoxTotalLinesDetail = new System.Windows.Forms.TextBox();
+            this.ButtonPrintDetail = new System.Windows.Forms.Button();
+            this.LabelTotalOrdersDetail = new System.Windows.Forms.Label();
+            this.LabelTotalPiecesDetail = new System.Windows.Forms.Label();
+            this.LabelTotalLinesDetail = new System.Windows.Forms.Label();
+            this.DataGridView2 = new System.Windows.Forms.DataGridView();
+            this.PanelDateRanges = new System.Windows.Forms.Panel();
+            this.label27 = new System.Windows.Forms.Label();
+            this.DateTimePickerTo = new System.Windows.Forms.DateTimePicker();
+            this.label26 = new System.Windows.Forms.Label();
+            this.DateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
+            this.RadioButtonDateRange = new System.Windows.Forms.RadioButton();
+            this.RadioButtonMonth = new System.Windows.Forms.RadioButton();
+            this.RadioButtonWeek = new System.Windows.Forms.RadioButton();
+            this.RadioButtonToday = new System.Windows.Forms.RadioButton();
+            this.TextBoxFind = new System.Windows.Forms.TextBox();
+            this.MButtonClose = new MetroFramework.Controls.MetroButton();
+            this.MBPrintAll = new MetroFramework.Controls.MetroButton();
+            this.MBSaveHistory = new MetroFramework.Controls.MetroButton();
+            this.MButtonRun = new MetroFramework.Controls.MetroButton();
+            this.LabelFormTitle = new System.Windows.Forms.Label();
+            this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
+            this.LabelFormHeaderText = new System.Windows.Forms.Label();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer1)).BeginInit();
+            this.SplitContainer1.Panel1.SuspendLayout();
+            this.SplitContainer1.Panel2.SuspendLayout();
+            this.SplitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView2)).BeginInit();
+            this.PanelDateRanges.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // LabelRecordCount
+            // 
+            this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
+            this.LabelRecordCount.Name = "LabelRecordCount";
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
+            this.LabelRecordCount.TabIndex = 29;
+            this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Location = new System.Drawing.Point(22, 77);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(1155, 796);
+            this.tabControl1.TabIndex = 28;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.Color.RoyalBlue;
+            this.tabPage1.Controls.Add(this.splitContainer2);
+            this.tabPage1.Controls.Add(this.SplitContainer1);
+            this.tabPage1.Controls.Add(this.PanelDateRanges);
+            this.tabPage1.Controls.Add(this.TextBoxFind);
+            this.tabPage1.Controls.Add(this.MButtonClose);
+            this.tabPage1.Controls.Add(this.MBPrintAll);
+            this.tabPage1.Controls.Add(this.MBSaveHistory);
+            this.tabPage1.Controls.Add(this.MButtonRun);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabPage1.Size = new System.Drawing.Size(1147, 770);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Listing";
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Location = new System.Drawing.Point(3, 99);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.BackColor = System.Drawing.Color.AliceBlue;
+            this.splitContainer2.Panel1.Controls.Add(this.ButtonConfigureUsers);
+            this.splitContainer2.Panel1.Controls.Add(this.ButtonClearAllUsers);
+            this.splitContainer2.Panel1.Controls.Add(this.ButtonCheckAllUsers);
+            this.splitContainer2.Panel1.Controls.Add(this.CheckedListBoxUsers);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.BackColor = System.Drawing.Color.AliceBlue;
+            this.splitContainer2.Panel2.Controls.Add(this.ButtonConfigureActions);
+            this.splitContainer2.Panel2.Controls.Add(this.ButtonClearAllActions);
+            this.splitContainer2.Panel2.Controls.Add(this.ButtonCheckAllActions);
+            this.splitContainer2.Panel2.Controls.Add(this.CheckedListBoxActionCodes);
+            this.splitContainer2.Size = new System.Drawing.Size(173, 653);
+            this.splitContainer2.SplitterDistance = 325;
+            this.splitContainer2.TabIndex = 27;
+            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer2_SplitterMoved);
+            // 
+            // ButtonConfigureUsers
+            // 
+            this.ButtonConfigureUsers.Location = new System.Drawing.Point(6, 295);
+            this.ButtonConfigureUsers.Name = "ButtonConfigureUsers";
+            this.ButtonConfigureUsers.Size = new System.Drawing.Size(160, 23);
+            this.ButtonConfigureUsers.TabIndex = 32;
+            this.ButtonConfigureUsers.Text = "Configure Users";
+            this.ButtonConfigureUsers.UseVisualStyleBackColor = true;
+            this.ButtonConfigureUsers.Click += new System.EventHandler(this.ButtonConfigureUsers_Click);
+            // 
+            // ButtonClearAllUsers
+            // 
+            this.ButtonClearAllUsers.Location = new System.Drawing.Point(97, 267);
+            this.ButtonClearAllUsers.Name = "ButtonClearAllUsers";
+            this.ButtonClearAllUsers.Size = new System.Drawing.Size(70, 23);
+            this.ButtonClearAllUsers.TabIndex = 30;
+            this.ButtonClearAllUsers.Text = "Clear All";
+            this.ButtonClearAllUsers.UseVisualStyleBackColor = true;
+            this.ButtonClearAllUsers.Click += new System.EventHandler(this.ButtonClearAllUsers_Click);
+            // 
+            // ButtonCheckAllUsers
+            // 
+            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(6, 267);
+            this.ButtonCheckAllUsers.Name = "ButtonCheckAllUsers";
+            this.ButtonCheckAllUsers.Size = new System.Drawing.Size(70, 23);
+            this.ButtonCheckAllUsers.TabIndex = 31;
+            this.ButtonCheckAllUsers.Text = "Check All";
+            this.ButtonCheckAllUsers.UseVisualStyleBackColor = true;
+            this.ButtonCheckAllUsers.Click += new System.EventHandler(this.ButtonCheckAllUsers_Click);
+            // 
+            // CheckedListBoxUsers
+            // 
+            this.CheckedListBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CheckedListBoxUsers.FormattingEnabled = true;
+            this.CheckedListBoxUsers.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxUsers.Name = "CheckedListBoxUsers";
+            this.CheckedListBoxUsers.Size = new System.Drawing.Size(173, 244);
+            this.CheckedListBoxUsers.TabIndex = 29;
+            this.CheckedListBoxUsers.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
+            this.CheckedListBoxUsers.SelectedIndexChanged += new System.EventHandler(this.CheckedListBoxUsers_SelectedIndexChanged);
+            // 
+            // ButtonConfigureActions
+            // 
+            this.ButtonConfigureActions.Location = new System.Drawing.Point(6, 295);
+            this.ButtonConfigureActions.Name = "ButtonConfigureActions";
+            this.ButtonConfigureActions.Size = new System.Drawing.Size(160, 23);
+            this.ButtonConfigureActions.TabIndex = 34;
+            this.ButtonConfigureActions.Text = "Configure Actions";
+            this.ButtonConfigureActions.UseVisualStyleBackColor = true;
+            this.ButtonConfigureActions.Click += new System.EventHandler(this.ButtonConfigureActions_Click);
+            // 
+            // ButtonClearAllActions
+            // 
+            this.ButtonClearAllActions.Location = new System.Drawing.Point(97, 267);
+            this.ButtonClearAllActions.Name = "ButtonClearAllActions";
+            this.ButtonClearAllActions.Size = new System.Drawing.Size(70, 23);
+            this.ButtonClearAllActions.TabIndex = 32;
+            this.ButtonClearAllActions.Text = "Clear All";
+            this.ButtonClearAllActions.UseVisualStyleBackColor = true;
+            this.ButtonClearAllActions.Click += new System.EventHandler(this.ButtonClearAllActions_Click);
+            // 
+            // ButtonCheckAllActions
+            // 
+            this.ButtonCheckAllActions.Location = new System.Drawing.Point(6, 267);
+            this.ButtonCheckAllActions.Name = "ButtonCheckAllActions";
+            this.ButtonCheckAllActions.Size = new System.Drawing.Size(70, 23);
+            this.ButtonCheckAllActions.TabIndex = 33;
+            this.ButtonCheckAllActions.Text = "Check All";
+            this.ButtonCheckAllActions.UseVisualStyleBackColor = true;
+            this.ButtonCheckAllActions.Click += new System.EventHandler(this.ButtonCheckAllActions_Click);
+            // 
+            // CheckedListBoxActionCodes
+            // 
+            this.CheckedListBoxActionCodes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CheckedListBoxActionCodes.CheckOnClick = true;
+            this.CheckedListBoxActionCodes.FormattingEnabled = true;
+            this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(173, 259);
+            this.CheckedListBoxActionCodes.TabIndex = 1;
+            this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
+            this.CheckedListBoxActionCodes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxActionCodes_ItemCheck);
+            // 
+            // SplitContainer1
+            // 
+            this.SplitContainer1.Location = new System.Drawing.Point(179, 99);
+            this.SplitContainer1.Name = "SplitContainer1";
+            this.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // SplitContainer1.Panel1
+            // 
+            this.SplitContainer1.Panel1.BackColor = System.Drawing.Color.AliceBlue;
+            this.SplitContainer1.Panel1.Controls.Add(this.TextBoxTotalOrdersSummary);
+            this.SplitContainer1.Panel1.Controls.Add(this.TextBoxTotalPiecesSummary);
+            this.SplitContainer1.Panel1.Controls.Add(this.TextBoxTotalLinesSummary);
+            this.SplitContainer1.Panel1.Controls.Add(this.ButtonPrintSummary);
+            this.SplitContainer1.Panel1.Controls.Add(this.LabelTotalOrders);
+            this.SplitContainer1.Panel1.Controls.Add(this.LabelTotalPieces);
+            this.SplitContainer1.Panel1.Controls.Add(this.LabelTotalLines);
+            this.SplitContainer1.Panel1.Controls.Add(this.DataGridView1);
+            // 
+            // SplitContainer1.Panel2
+            // 
+            this.SplitContainer1.Panel2.BackColor = System.Drawing.Color.White;
+            this.SplitContainer1.Panel2.Controls.Add(this.TextBoxTotalOrdersDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.TextBoxTotalPiecesDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.TextBoxTotalLinesDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.ButtonPrintDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.LabelTotalOrdersDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.LabelTotalPiecesDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.LabelTotalLinesDetail);
+            this.SplitContainer1.Panel2.Controls.Add(this.DataGridView2);
+            this.SplitContainer1.Size = new System.Drawing.Size(961, 653);
+            this.SplitContainer1.SplitterDistance = 325;
+            this.SplitContainer1.TabIndex = 26;
+            this.SplitContainer1.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.SplitContainer1_SplitterMoving);
+            this.SplitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer1_SplitterMoved);
+            // 
+            // TextBoxTotalOrdersSummary
+            // 
+            this.TextBoxTotalOrdersSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalOrdersSummary.Location = new System.Drawing.Point(601, 294);
+            this.TextBoxTotalOrdersSummary.Name = "TextBoxTotalOrdersSummary";
+            this.TextBoxTotalOrdersSummary.ReadOnly = true;
+            this.TextBoxTotalOrdersSummary.Size = new System.Drawing.Size(100, 22);
+            this.TextBoxTotalOrdersSummary.TabIndex = 4;
+            this.TextBoxTotalOrdersSummary.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxTotalPiecesSummary
+            // 
+            this.TextBoxTotalPiecesSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalPiecesSummary.Location = new System.Drawing.Point(380, 294);
+            this.TextBoxTotalPiecesSummary.Name = "TextBoxTotalPiecesSummary";
+            this.TextBoxTotalPiecesSummary.ReadOnly = true;
+            this.TextBoxTotalPiecesSummary.Size = new System.Drawing.Size(100, 22);
+            this.TextBoxTotalPiecesSummary.TabIndex = 4;
+            this.TextBoxTotalPiecesSummary.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxTotalLinesSummary
+            // 
+            this.TextBoxTotalLinesSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalLinesSummary.Location = new System.Drawing.Point(157, 294);
+            this.TextBoxTotalLinesSummary.Name = "TextBoxTotalLinesSummary";
+            this.TextBoxTotalLinesSummary.ReadOnly = true;
+            this.TextBoxTotalLinesSummary.Size = new System.Drawing.Size(100, 22);
+            this.TextBoxTotalLinesSummary.TabIndex = 4;
+            this.TextBoxTotalLinesSummary.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // ButtonPrintSummary
+            // 
+            this.ButtonPrintSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrintSummary.Location = new System.Drawing.Point(805, 292);
+            this.ButtonPrintSummary.Name = "ButtonPrintSummary";
+            this.ButtonPrintSummary.Size = new System.Drawing.Size(142, 23);
+            this.ButtonPrintSummary.TabIndex = 3;
+            this.ButtonPrintSummary.Text = "Print Summary";
+            this.ButtonPrintSummary.UseVisualStyleBackColor = true;
+            this.ButtonPrintSummary.Click += new System.EventHandler(this.ButtonPrintSummary_Click);
+            // 
+            // LabelTotalOrders
+            // 
+            this.LabelTotalOrders.AutoSize = true;
+            this.LabelTotalOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTotalOrders.Location = new System.Drawing.Point(500, 297);
+            this.LabelTotalOrders.Name = "LabelTotalOrders";
+            this.LabelTotalOrders.Size = new System.Drawing.Size(95, 16);
+            this.LabelTotalOrders.TabIndex = 2;
+            this.LabelTotalOrders.Text = "Total Orders";
+            // 
+            // LabelTotalPieces
+            // 
+            this.LabelTotalPieces.AutoSize = true;
+            this.LabelTotalPieces.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTotalPieces.Location = new System.Drawing.Point(278, 297);
+            this.LabelTotalPieces.Name = "LabelTotalPieces";
+            this.LabelTotalPieces.Size = new System.Drawing.Size(96, 16);
+            this.LabelTotalPieces.TabIndex = 2;
+            this.LabelTotalPieces.Text = "Total Pieces";
+            // 
+            // LabelTotalLines
+            // 
+            this.LabelTotalLines.AutoSize = true;
+            this.LabelTotalLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTotalLines.Location = new System.Drawing.Point(68, 297);
+            this.LabelTotalLines.Name = "LabelTotalLines";
+            this.LabelTotalLines.Size = new System.Drawing.Size(85, 16);
+            this.LabelTotalLines.TabIndex = 2;
+            this.LabelTotalLines.Text = "Total Lines";
+            // 
+            // DataGridView1
+            // 
+            this.DataGridView1.AllowUserToAddRows = false;
+            this.DataGridView1.AllowUserToDeleteRows = false;
+            this.DataGridView1.AllowUserToOrderColumns = true;
+            this.DataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DataGridView1.Name = "DataGridView1";
+            this.DataGridView1.ReadOnly = true;
+            this.DataGridView1.RowTemplate.Height = 24;
+            this.DataGridView1.Size = new System.Drawing.Size(961, 284);
+            this.DataGridView1.TabIndex = 1;
+            this.DataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentClick);
+            this.DataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_RowEnter);
+            // 
+            // TextBoxTotalOrdersDetail
+            // 
+            this.TextBoxTotalOrdersDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalOrdersDetail.Location = new System.Drawing.Point(601, 294);
+            this.TextBoxTotalOrdersDetail.Name = "TextBoxTotalOrdersDetail";
+            this.TextBoxTotalOrdersDetail.ReadOnly = true;
+            this.TextBoxTotalOrdersDetail.Size = new System.Drawing.Size(100, 22);
+            this.TextBoxTotalOrdersDetail.TabIndex = 30;
+            this.TextBoxTotalOrdersDetail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxTotalPiecesDetail
+            // 
+            this.TextBoxTotalPiecesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalPiecesDetail.Location = new System.Drawing.Point(380, 294);
+            this.TextBoxTotalPiecesDetail.Name = "TextBoxTotalPiecesDetail";
+            this.TextBoxTotalPiecesDetail.ReadOnly = true;
+            this.TextBoxTotalPiecesDetail.Size = new System.Drawing.Size(100, 22);
+            this.TextBoxTotalPiecesDetail.TabIndex = 31;
+            this.TextBoxTotalPiecesDetail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxTotalLinesDetail
+            // 
+            this.TextBoxTotalLinesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalLinesDetail.Location = new System.Drawing.Point(157, 294);
+            this.TextBoxTotalLinesDetail.Name = "TextBoxTotalLinesDetail";
+            this.TextBoxTotalLinesDetail.ReadOnly = true;
+            this.TextBoxTotalLinesDetail.Size = new System.Drawing.Size(100, 22);
+            this.TextBoxTotalLinesDetail.TabIndex = 32;
+            this.TextBoxTotalLinesDetail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // ButtonPrintDetail
+            // 
+            this.ButtonPrintDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrintDetail.Location = new System.Drawing.Point(805, 292);
+            this.ButtonPrintDetail.Name = "ButtonPrintDetail";
+            this.ButtonPrintDetail.Size = new System.Drawing.Size(142, 23);
+            this.ButtonPrintDetail.TabIndex = 29;
+            this.ButtonPrintDetail.Text = "Print Detail";
+            this.ButtonPrintDetail.UseVisualStyleBackColor = true;
+            this.ButtonPrintDetail.Click += new System.EventHandler(this.ButtonPrintDetail_Click);
+            // 
+            // LabelTotalOrdersDetail
+            // 
+            this.LabelTotalOrdersDetail.AutoSize = true;
+            this.LabelTotalOrdersDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTotalOrdersDetail.Location = new System.Drawing.Point(500, 297);
+            this.LabelTotalOrdersDetail.Name = "LabelTotalOrdersDetail";
+            this.LabelTotalOrdersDetail.Size = new System.Drawing.Size(95, 16);
+            this.LabelTotalOrdersDetail.TabIndex = 26;
+            this.LabelTotalOrdersDetail.Text = "Total Orders";
+            // 
+            // LabelTotalPiecesDetail
+            // 
+            this.LabelTotalPiecesDetail.AutoSize = true;
+            this.LabelTotalPiecesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTotalPiecesDetail.Location = new System.Drawing.Point(278, 297);
+            this.LabelTotalPiecesDetail.Name = "LabelTotalPiecesDetail";
+            this.LabelTotalPiecesDetail.Size = new System.Drawing.Size(96, 16);
+            this.LabelTotalPiecesDetail.TabIndex = 27;
+            this.LabelTotalPiecesDetail.Text = "Total Pieces";
+            // 
+            // LabelTotalLinesDetail
+            // 
+            this.LabelTotalLinesDetail.AutoSize = true;
+            this.LabelTotalLinesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTotalLinesDetail.Location = new System.Drawing.Point(68, 297);
+            this.LabelTotalLinesDetail.Name = "LabelTotalLinesDetail";
+            this.LabelTotalLinesDetail.Size = new System.Drawing.Size(85, 16);
+            this.LabelTotalLinesDetail.TabIndex = 28;
+            this.LabelTotalLinesDetail.Text = "Total Lines";
+            // 
+            // DataGridView2
+            // 
+            this.DataGridView2.AllowUserToAddRows = false;
+            this.DataGridView2.AllowUserToDeleteRows = false;
+            this.DataGridView2.AllowUserToResizeColumns = false;
+            this.DataGridView2.AllowUserToResizeRows = false;
+            this.DataGridView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridView2.Location = new System.Drawing.Point(0, 0);
+            this.DataGridView2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DataGridView2.MultiSelect = false;
+            this.DataGridView2.Name = "DataGridView2";
+            this.DataGridView2.ReadOnly = true;
+            this.DataGridView2.RowTemplate.Height = 24;
+            this.DataGridView2.Size = new System.Drawing.Size(961, 284);
+            this.DataGridView2.TabIndex = 25;
+            // 
+            // PanelDateRanges
+            // 
+            this.PanelDateRanges.Controls.Add(this.label27);
+            this.PanelDateRanges.Controls.Add(this.DateTimePickerTo);
+            this.PanelDateRanges.Controls.Add(this.label26);
+            this.PanelDateRanges.Controls.Add(this.DateTimePickerFrom);
+            this.PanelDateRanges.Controls.Add(this.RadioButtonDateRange);
+            this.PanelDateRanges.Controls.Add(this.RadioButtonMonth);
+            this.PanelDateRanges.Controls.Add(this.RadioButtonWeek);
+            this.PanelDateRanges.Controls.Add(this.RadioButtonToday);
+            this.PanelDateRanges.Location = new System.Drawing.Point(6, 8);
+            this.PanelDateRanges.Name = "PanelDateRanges";
+            this.PanelDateRanges.Size = new System.Drawing.Size(418, 80);
+            this.PanelDateRanges.TabIndex = 21;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(223, 47);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(23, 15);
+            this.label27.TabIndex = 24;
+            this.label27.Text = "To";
+            // 
+            // DateTimePickerTo
+            // 
+            this.DateTimePickerTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DateTimePickerTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.DateTimePickerTo.Location = new System.Drawing.Point(263, 43);
+            this.DateTimePickerTo.Name = "DateTimePickerTo";
+            this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
+            this.DateTimePickerTo.TabIndex = 23;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.Location = new System.Drawing.Point(202, 14);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(40, 15);
+            this.label26.TabIndex = 22;
+            this.label26.Text = "From";
+            // 
+            // DateTimePickerFrom
+            // 
+            this.DateTimePickerFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DateTimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.DateTimePickerFrom.Location = new System.Drawing.Point(263, 9);
+            this.DateTimePickerFrom.Name = "DateTimePickerFrom";
+            this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
+            this.DateTimePickerFrom.TabIndex = 21;
+            this.DateTimePickerFrom.Value = new System.DateTime(2018, 1, 1, 5, 20, 0, 0);
+            // 
+            // RadioButtonDateRange
+            // 
+            this.RadioButtonDateRange.AutoSize = true;
+            this.RadioButtonDateRange.Checked = true;
+            this.RadioButtonDateRange.Location = new System.Drawing.Point(95, 47);
+            this.RadioButtonDateRange.Name = "RadioButtonDateRange";
+            this.RadioButtonDateRange.Size = new System.Drawing.Size(83, 17);
+            this.RadioButtonDateRange.TabIndex = 0;
+            this.RadioButtonDateRange.TabStop = true;
+            this.RadioButtonDateRange.Text = "Date Range";
+            this.RadioButtonDateRange.UseVisualStyleBackColor = true;
+            // 
+            // RadioButtonMonth
+            // 
+            this.RadioButtonMonth.AutoSize = true;
+            this.RadioButtonMonth.Location = new System.Drawing.Point(95, 14);
+            this.RadioButtonMonth.Name = "RadioButtonMonth";
+            this.RadioButtonMonth.Size = new System.Drawing.Size(55, 17);
+            this.RadioButtonMonth.TabIndex = 0;
+            this.RadioButtonMonth.Text = "Month";
+            this.RadioButtonMonth.UseVisualStyleBackColor = true;
+            // 
+            // RadioButtonWeek
+            // 
+            this.RadioButtonWeek.AutoSize = true;
+            this.RadioButtonWeek.Location = new System.Drawing.Point(8, 47);
+            this.RadioButtonWeek.Name = "RadioButtonWeek";
+            this.RadioButtonWeek.Size = new System.Drawing.Size(54, 17);
+            this.RadioButtonWeek.TabIndex = 0;
+            this.RadioButtonWeek.Text = "Week";
+            this.RadioButtonWeek.UseVisualStyleBackColor = true;
+            // 
+            // RadioButtonToday
+            // 
+            this.RadioButtonToday.AutoSize = true;
+            this.RadioButtonToday.Location = new System.Drawing.Point(8, 14);
+            this.RadioButtonToday.Name = "RadioButtonToday";
+            this.RadioButtonToday.Size = new System.Drawing.Size(55, 17);
+            this.RadioButtonToday.TabIndex = 0;
+            this.RadioButtonToday.Text = "Today";
+            this.RadioButtonToday.UseVisualStyleBackColor = true;
+            // 
+            // TextBoxFind
+            // 
+            this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxFind.Location = new System.Drawing.Point(572, 10);
+            this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxFind.Name = "TextBoxFind";
+            this.TextBoxFind.Size = new System.Drawing.Size(275, 29);
+            this.TextBoxFind.TabIndex = 17;
+            this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MButtonClose
+            // 
+            this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MButtonClose.Location = new System.Drawing.Point(1004, 8);
+            this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MButtonClose.Name = "MButtonClose";
+            this.MButtonClose.Size = new System.Drawing.Size(136, 80);
+            this.MButtonClose.TabIndex = 12;
+            this.MButtonClose.Text = "Close";
+            this.MButtonClose.UseSelectable = true;
+            // 
+            // MBPrintAll
+            // 
+            this.MBPrintAll.Enabled = false;
+            this.MBPrintAll.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBPrintAll.Location = new System.Drawing.Point(430, 55);
+            this.MBPrintAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBPrintAll.Name = "MBPrintAll";
+            this.MBPrintAll.Size = new System.Drawing.Size(136, 37);
+            this.MBPrintAll.TabIndex = 12;
+            this.MBPrintAll.Text = "Print All";
+            this.MBPrintAll.UseSelectable = true;
+            // 
+            // MBSaveHistory
+            // 
+            this.MBSaveHistory.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBSaveHistory.Location = new System.Drawing.Point(430, 10);
+            this.MBSaveHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBSaveHistory.Name = "MBSaveHistory";
+            this.MBSaveHistory.Size = new System.Drawing.Size(136, 37);
+            this.MBSaveHistory.TabIndex = 12;
+            this.MBSaveHistory.Text = "Save to File";
+            this.MBSaveHistory.UseSelectable = true;
+            // 
+            // MButtonRun
+            // 
+            this.MButtonRun.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MButtonRun.Location = new System.Drawing.Point(853, 8);
+            this.MButtonRun.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MButtonRun.Name = "MButtonRun";
+            this.MButtonRun.Size = new System.Drawing.Size(136, 80);
+            this.MButtonRun.TabIndex = 12;
+            this.MButtonRun.Text = "Run";
+            this.MButtonRun.UseSelectable = true;
+            this.MButtonRun.Click += new System.EventHandler(this.MButtonRun_Click);
+            // 
+            // LabelFormTitle
+            // 
+            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
+            this.LabelFormTitle.Name = "LabelFormTitle";
+            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
+            this.LabelFormTitle.TabIndex = 27;
+            this.LabelFormTitle.Text = "Productivity";
+            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // mlUserInfo
+            // 
+            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
+            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.mlUserInfo.Name = "mlUserInfo";
+            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
+            this.mlUserInfo.TabIndex = 26;
+            this.mlUserInfo.Text = "Login ?";
+            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelFormHeaderText
+            // 
+            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
+            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
+            this.LabelFormHeaderText.TabIndex = 25;
+            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
+            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // FrmProductivity
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.Controls.Add(this.LabelRecordCount);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.LabelFormTitle);
+            this.Controls.Add(this.mlUserInfo);
+            this.Controls.Add(this.LabelFormHeaderText);
+            this.Name = "FrmProductivity";
+            this.Text = "Productivity";
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.SplitContainer1.Panel1.ResumeLayout(false);
+            this.SplitContainer1.Panel1.PerformLayout();
+            this.SplitContainer1.Panel2.ResumeLayout(false);
+            this.SplitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer1)).EndInit();
+            this.SplitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridView2)).EndInit();
+            this.PanelDateRanges.ResumeLayout(false);
+            this.PanelDateRanges.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Label LabelRecordCount;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Panel PanelDateRanges;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.DateTimePicker DateTimePickerTo;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.DateTimePicker DateTimePickerFrom;
+        private System.Windows.Forms.RadioButton RadioButtonDateRange;
+        private System.Windows.Forms.RadioButton RadioButtonMonth;
+        private System.Windows.Forms.RadioButton RadioButtonWeek;
+        private System.Windows.Forms.RadioButton RadioButtonToday;
+        private System.Windows.Forms.TextBox TextBoxFind;
+        private MetroFramework.Controls.MetroButton MButtonClose;
+        private MetroFramework.Controls.MetroButton MBPrintAll;
+        private MetroFramework.Controls.MetroButton MBSaveHistory;
+        private MetroFramework.Controls.MetroButton MButtonRun;
+        private System.Windows.Forms.Label LabelFormTitle;
+        private MetroFramework.Controls.MetroLabel mlUserInfo;
+        private System.Windows.Forms.Label LabelFormHeaderText;
+        private System.Windows.Forms.SplitContainer SplitContainer1;
+        private System.Windows.Forms.DataGridView DataGridView1;
+        private System.Windows.Forms.DataGridView DataGridView2;
+        private System.Windows.Forms.TextBox TextBoxTotalOrdersSummary;
+        private System.Windows.Forms.TextBox TextBoxTotalPiecesSummary;
+        private System.Windows.Forms.TextBox TextBoxTotalLinesSummary;
+        private System.Windows.Forms.Button ButtonPrintSummary;
+        private System.Windows.Forms.Label LabelTotalOrders;
+        private System.Windows.Forms.Label LabelTotalPieces;
+        private System.Windows.Forms.Label LabelTotalLines;
+        private System.Windows.Forms.TextBox TextBoxTotalOrdersDetail;
+        private System.Windows.Forms.TextBox TextBoxTotalPiecesDetail;
+        private System.Windows.Forms.TextBox TextBoxTotalLinesDetail;
+        private System.Windows.Forms.Button ButtonPrintDetail;
+        private System.Windows.Forms.Label LabelTotalOrdersDetail;
+        private System.Windows.Forms.Label LabelTotalPiecesDetail;
+        private System.Windows.Forms.Label LabelTotalLinesDetail;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Button ButtonClearAllUsers;
+        private System.Windows.Forms.Button ButtonCheckAllUsers;
+        private System.Windows.Forms.CheckedListBox CheckedListBoxUsers;
+        private System.Windows.Forms.Button ButtonClearAllActions;
+        private System.Windows.Forms.Button ButtonCheckAllActions;
+        private System.Windows.Forms.CheckedListBox CheckedListBoxActionCodes;
+        private System.Windows.Forms.Button ButtonConfigureUsers;
+        private System.Windows.Forms.Button ButtonConfigureActions;
+    }
+}

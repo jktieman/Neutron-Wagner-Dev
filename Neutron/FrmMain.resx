@@ -192,6 +192,36 @@
   <data name="metroPanelMain.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
   </data>
+  <data name="MtProductivity.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 585</value>
+  </data>
+  <data name="MtProductivity.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 2, 2, 2</value>
+  </data>
+  <data name="MtProductivity.Size" type="System.Drawing.Size, System.Drawing">
+    <value>412, 66</value>
+  </data>
+  <data name="MtProductivity.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="MtProductivity.Text" xml:space="preserve">
+    <value>Productivity</value>
+  </data>
+  <data name="MtProductivity.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>BottomCenter</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.Name" xml:space="preserve">
+    <value>MtProductivity</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="MtHotAction.Location" type="System.Drawing.Point, System.Drawing">
     <value>447, 15</value>
   </data>
@@ -220,7 +250,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtHotAction.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="MtLogOff.Location" type="System.Drawing.Point, System.Drawing">
     <value>876, 15</value>
@@ -250,7 +280,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtLogOff.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="MtStore.Location" type="System.Drawing.Point, System.Drawing">
     <value>447, 343</value>
@@ -280,7 +310,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtStore.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="MtHistory.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 507</value>
@@ -289,7 +319,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtHistory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 66</value>
   </data>
   <data name="MtHistory.TabIndex" type="System.Int32, mscorlib">
     <value>20</value>
@@ -310,7 +340,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtHistory.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="MtPick.Location" type="System.Drawing.Point, System.Drawing">
     <value>447, 179</value>
@@ -340,7 +370,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtPick.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="MtUtilities.Location" type="System.Drawing.Point, System.Drawing">
     <value>876, 179</value>
@@ -370,7 +400,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtUtilities.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="MtSystem.Location" type="System.Drawing.Point, System.Drawing">
     <value>876, 343</value>
@@ -400,7 +430,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtSystem.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="MtLac.Location" type="System.Drawing.Point, System.Drawing">
     <value>876, 507</value>
@@ -430,7 +460,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtLac.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="MtUsers.Location" type="System.Drawing.Point, System.Drawing">
     <value>447, 507</value>
@@ -460,7 +490,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtUsers.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="MtItemDefinitions.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 179</value>
@@ -490,7 +520,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtItemDefinitions.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="MtLocations.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 343</value>
@@ -520,7 +550,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtLocations.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="MtInventory.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 15</value>
@@ -550,7 +580,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtInventory.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="metroPanelMain.Location" type="System.Drawing.Point, System.Drawing">
     <value>22, 173</value>
@@ -5015,9 +5045,6 @@
         /////////////////wAAB///////////////////////////////////////wAAP////////////////
         ///////////////////////wAD////////8=
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>19, 30, 19, 20</value>
