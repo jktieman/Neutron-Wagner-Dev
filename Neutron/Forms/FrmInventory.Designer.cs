@@ -272,6 +272,7 @@
             // 
             // ComboBoxStationNumber
             // 
+            this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxStationNumber.FormattingEnabled = true;
             this.ComboBoxStationNumber.Items.AddRange(new object[] {
@@ -750,6 +751,7 @@
             // 
             // ComboBoxNewUnitOfIssue
             // 
+            this.ComboBoxNewUnitOfIssue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewUnitOfIssue.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewUnitOfIssue.FormattingEnabled = true;
             this.ComboBoxNewUnitOfIssue.Location = new System.Drawing.Point(643, 271);
@@ -770,6 +772,7 @@
             // 
             // ComboBoxNewStorageType
             // 
+            this.ComboBoxNewStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewStorageType.FormattingEnabled = true;
             this.ComboBoxNewStorageType.Location = new System.Drawing.Point(642, 231);
@@ -843,6 +846,7 @@
             // 
             // ComboBoxNewLocationCode
             // 
+            this.ComboBoxNewLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewLocationCode.FormattingEnabled = true;
             this.ComboBoxNewLocationCode.Location = new System.Drawing.Point(234, 353);
@@ -863,6 +867,7 @@
             // 
             // ComboBoxNewHeightCode
             // 
+            this.ComboBoxNewHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewHeightCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewHeightCode.FormattingEnabled = true;
             this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(234, 311);
@@ -883,6 +888,7 @@
             // 
             // ComboBoxNewVelocityCode
             // 
+            this.ComboBoxNewVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewVelocityCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewVelocityCode.FormattingEnabled = true;
             this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(235, 271);
@@ -903,6 +909,7 @@
             // 
             // ComboBoxNewSizeCode
             // 
+            this.ComboBoxNewSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewSizeCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewSizeCode.FormattingEnabled = true;
             this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(234, 231);
@@ -923,6 +930,7 @@
             // 
             // ComboBoxNewStation
             // 
+            this.ComboBoxNewStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewStation.FormattingEnabled = true;
             this.ComboBoxNewStation.Location = new System.Drawing.Point(234, 117);
@@ -1151,6 +1159,7 @@
             // 
             // ComboBoxInventoryNewLocationsStorageType
             // 
+            this.ComboBoxInventoryNewLocationsStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxInventoryNewLocationsStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxInventoryNewLocationsStorageType.FormattingEnabled = true;
             this.ComboBoxInventoryNewLocationsStorageType.Location = new System.Drawing.Point(143, 89);
@@ -1443,6 +1452,7 @@
             // 
             // ComboBoxAddDetailStorageType
             // 
+            this.ComboBoxAddDetailStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailStorageType.FormattingEnabled = true;
             this.ComboBoxAddDetailStorageType.Location = new System.Drawing.Point(154, 89);
             this.ComboBoxAddDetailStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1523,6 +1533,7 @@
             // 
             // ComboBoxAddDetailLocationCode
             // 
+            this.ComboBoxAddDetailLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxAddDetailLocationCode.FormattingEnabled = true;
             this.ComboBoxAddDetailLocationCode.Location = new System.Drawing.Point(506, 228);
@@ -1543,6 +1554,7 @@
             // 
             // ComboBoxAddDetailHeightCode
             // 
+            this.ComboBoxAddDetailHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailHeightCode.FormattingEnabled = true;
             this.ComboBoxAddDetailHeightCode.Location = new System.Drawing.Point(506, 180);
             this.ComboBoxAddDetailHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1562,6 +1574,7 @@
             // 
             // ComboBoxAddDetailVelocityCode
             // 
+            this.ComboBoxAddDetailVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailVelocityCode.FormattingEnabled = true;
             this.ComboBoxAddDetailVelocityCode.Location = new System.Drawing.Point(506, 132);
             this.ComboBoxAddDetailVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1590,6 +1603,7 @@
             // 
             // ComboBoxAddDetailSizeCode
             // 
+            this.ComboBoxAddDetailSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailSizeCode.FormattingEnabled = true;
             this.ComboBoxAddDetailSizeCode.Location = new System.Drawing.Point(506, 84);
             this.ComboBoxAddDetailSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1609,6 +1623,7 @@
             // 
             // ComboBoxAddDetailStation
             // 
+            this.ComboBoxAddDetailStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailStation.FormattingEnabled = true;
             this.ComboBoxAddDetailStation.Location = new System.Drawing.Point(130, 39);
             this.ComboBoxAddDetailStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

@@ -493,6 +493,7 @@
             // 
             // ComboBoxViewEditUnitOfIssue
             // 
+            this.ComboBoxViewEditUnitOfIssue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditUnitOfIssue.FormattingEnabled = true;
             this.ComboBoxViewEditUnitOfIssue.Location = new System.Drawing.Point(630, 355);
             this.ComboBoxViewEditUnitOfIssue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -511,6 +512,7 @@
             // 
             // ComboBoxViewEditStorageType
             // 
+            this.ComboBoxViewEditStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditStorageType.FormattingEnabled = true;
             this.ComboBoxViewEditStorageType.Location = new System.Drawing.Point(630, 295);
             this.ComboBoxViewEditStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -529,6 +531,7 @@
             // 
             // ComboBoxViewEditLocationCode
             // 
+            this.ComboBoxViewEditLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditLocationCode.FormattingEnabled = true;
             this.ComboBoxViewEditLocationCode.Location = new System.Drawing.Point(222, 473);
             this.ComboBoxViewEditLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -548,6 +551,7 @@
             // 
             // ComboBoxViewEditHeightCode
             // 
+            this.ComboBoxViewEditHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditHeightCode.FormattingEnabled = true;
             this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(222, 415);
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -567,6 +571,7 @@
             // 
             // ComboBoxViewEditVelocityCode
             // 
+            this.ComboBoxViewEditVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditVelocityCode.FormattingEnabled = true;
             this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(222, 355);
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -595,6 +600,7 @@
             // 
             // ComboBoxViewEditSizeCode
             // 
+            this.ComboBoxViewEditSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditSizeCode.FormattingEnabled = true;
             this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(222, 295);
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -614,6 +620,7 @@
             // 
             // ComboBoxViewEditStation
             // 
+            this.ComboBoxViewEditStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditStation.Enabled = false;
             this.ComboBoxViewEditStation.FormattingEnabled = true;
             this.ComboBoxViewEditStation.Location = new System.Drawing.Point(222, 70);
@@ -919,6 +926,7 @@
             // 
             // ComboBoxNewLocationCode
             // 
+            this.ComboBoxNewLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewLocationCode.FormattingEnabled = true;
             this.ComboBoxNewLocationCode.Location = new System.Drawing.Point(222, 472);
             this.ComboBoxNewLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -937,6 +945,7 @@
             // 
             // ComboBoxNewUnitOfIssue
             // 
+            this.ComboBoxNewUnitOfIssue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewUnitOfIssue.FormattingEnabled = true;
             this.ComboBoxNewUnitOfIssue.Location = new System.Drawing.Point(630, 355);
             this.ComboBoxNewUnitOfIssue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -955,6 +964,7 @@
             // 
             // ComboBoxNewStorageType
             // 
+            this.ComboBoxNewStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewStorageType.FormattingEnabled = true;
             this.ComboBoxNewStorageType.Location = new System.Drawing.Point(630, 295);
             this.ComboBoxNewStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1020,6 +1030,7 @@
             // 
             // ComboBoxNewHeightCode
             // 
+            this.ComboBoxNewHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewHeightCode.FormattingEnabled = true;
             this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(222, 415);
             this.ComboBoxNewHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1039,6 +1050,7 @@
             // 
             // ComboBoxNewVelocityCode
             // 
+            this.ComboBoxNewVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewVelocityCode.FormattingEnabled = true;
             this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(222, 355);
             this.ComboBoxNewVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1058,6 +1070,7 @@
             // 
             // ComboBoxNewSizeCode
             // 
+            this.ComboBoxNewSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewSizeCode.FormattingEnabled = true;
             this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(222, 295);
             this.ComboBoxNewSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1077,6 +1090,7 @@
             // 
             // ComboBoxNewStation
             // 
+            this.ComboBoxNewStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewStation.FormattingEnabled = true;
             this.ComboBoxNewStation.Location = new System.Drawing.Point(474, 42);
             this.ComboBoxNewStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

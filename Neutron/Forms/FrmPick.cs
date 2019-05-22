@@ -170,7 +170,8 @@ namespace Neutron.Forms
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
-           // Mediator.GetInstance().SerialPortWrite += (s, e) => ShowCommand(e.Request);
+            // Mediator.GetInstance().SerialPortWrite += (s, e) => ShowCommand(e.Request);
+
         }
 
         private void ShowCommand(string request)
@@ -3598,6 +3599,11 @@ namespace Neutron.Forms
         }
         private void MBShowOrderOrQuantityToggle_Click(object sender, EventArgs e)
         {
+            ShowOrderOrQuantityToggle();
+        }
+
+        private void ShowOrderOrQuantityToggle()
+        {
             if (MBShowOrderOrQuantityToggle.Text == _resourceManager.GetString($"ShowJobs"))
             {
                 ShowOrdersToPick();
@@ -3705,6 +3711,7 @@ namespace Neutron.Forms
             // PrintAllToteLabels();
 
             tabControl1.SelectedTab = PickScreen;
+
             //feels good to here
             Task.Run(() => _logger.Log($"Start_Click End: [{DateTime.Now.ToLongTimeString()}]"));
         }
@@ -4061,7 +4068,7 @@ namespace Neutron.Forms
             var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
             var text = _currentPickStop.QuantityToBePicked.ToString();
-            ShowShi(loc1,loc2,loc3,loc4,text);
+            ShowShi(loc1, loc2, loc3, loc4, text);
 
         }
 
@@ -4070,18 +4077,18 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"UpdatePickScreenAfterChangeQuantity Start: [{DateTime.Now.ToLongTimeString()}]"));
             // MBPickNewItem.Visible = _neutronLicense.CompanyCode == "TOP" ? true : false;
             UpdatePickPosition();
-           // UpdateInventoryLocation();
-          //  UpdateImages();
-          //  LabelFormTitle.Text = _resourceManager.GetString($"Selection");
-          //  LabelPickDescription.Text = _currentPickStop.Description;
-          //  LabelPickItemNumber.Text = _currentPickStop.Item;
-          //  LabelPickUOI.Text = _currentPickStop.UnitOfIssue;
-          //  LabelLineOfLines.Text = string.Format("{0} of {1}"
-          //      , (_currentPickStop.Sequence).ToString(), _bindingSourcePickStops.Count);
-          //  TextBoxRequestedQty.Text = _currentPickStop.Quantity.ToString();
+            // UpdateInventoryLocation();
+            //  UpdateImages();
+            //  LabelFormTitle.Text = _resourceManager.GetString($"Selection");
+            //  LabelPickDescription.Text = _currentPickStop.Description;
+            //  LabelPickItemNumber.Text = _currentPickStop.Item;
+            //  LabelPickUOI.Text = _currentPickStop.UnitOfIssue;
+            //  LabelLineOfLines.Text = string.Format("{0} of {1}"
+            //      , (_currentPickStop.Sequence).ToString(), _bindingSourcePickStops.Count);
+            //  TextBoxRequestedQty.Text = _currentPickStop.Quantity.ToString();
 
-          //  var pickedSoFar = GetPickedSoFar(_currentPickStop.PickViews);
-          //  TextBoxPickedSoFar.Text = pickedSoFar.ToString();
+            //  var pickedSoFar = GetPickedSoFar(_currentPickStop.PickViews);
+            //  TextBoxPickedSoFar.Text = pickedSoFar.ToString();
 
             LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
             Task.Run(() => _logger.Log($"UpdatePickScreenAfterChangeQuantity End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -4414,26 +4421,26 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBPickSkip_Click(object sender, EventArgs e)
+        private void MBSkipPick_Click(object sender, EventArgs e)
         {
-            PickSkip();
+            SkipPick();
         }
 
-        private void PickSkip()
+        private void SkipPick()
         {
             Cursor.Current = Cursors.WaitCursor;
-            MBPickSkip.Enabled = false;
-            Task.Run(() => _logger.Log($"PickSkip_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
+            MBSkipPick.Enabled = false;
+            Task.Run(() => _logger.Log($"SkipPick_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
 
             _currentPickStop.Skipped = true;
             Task.Run(() => _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1));
             var pickViewCount = _currentPickStop.PickViews.Count;
             foreach (var pickView in _currentPickStop.PickViews)
             {
-                SetOrderDetailLineStatus(pickView.OrderDetail, 9, ActionCode.PickSkip);
+                SetOrderDetailLineStatus(pickView.OrderDetail, 9, ActionCode.Skip);
             }
 
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.PickSkip, _currentPickStop);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.Skip, _currentPickStop);
             Task.Run(() => _logger.Log($"History Done"));
 
             var numberOfStops = _bindingSourcePickStops.Count;
@@ -4449,9 +4456,9 @@ namespace Neutron.Forms
                 CloseBatchWithSkip();
             }
 
-            Task.Run(() => _logger.Log($"PickSkip_Click End : [{DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"SkipPick_Click End : [{DateTime.Now.ToLongTimeString()}]"));
             Cursor.Current = Cursors.Default;
-            MBPickSkip.Enabled = true;
+            MBSkipPick.Enabled = true;
         }
 
         private void CloseBatchWithSkip()
@@ -4606,7 +4613,7 @@ namespace Neutron.Forms
                     //Getting next location on the current device/ the one that was just picked from.
 
 
-                   // _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                    // _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
 
 
                     Task.Run(() => _logger.Log($"PickAccept_Click 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
@@ -4653,6 +4660,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"PickAccept_Click End : [{DateTime.Now.ToLongTimeString()}]"));
             Cursor.Current = Cursors.Default;
             MBPickAccept.Enabled = true;
+            MBPickAccept.Focus();
         }
 
         public int GetTotalQuantityToBePicked(IList<PickView> pickViews)
@@ -5176,6 +5184,11 @@ namespace Neutron.Forms
 
         private void MBPickChangeQuantity_Click(object sender, EventArgs e)
         {
+            ChangeQuantity();
+        }
+
+        private void ChangeQuantity()
+        {
             MBPickChangeQuantity.Enabled = false;
             using (var form = new FrmChangeQuantity(_currentPickStop))
             {
@@ -5556,6 +5569,11 @@ namespace Neutron.Forms
 
 
         private void MBLocationCount_Click(object sender, EventArgs e)
+        {
+            LocationCount();
+        }
+
+        private void LocationCount()
         {
             var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
             var qty = OpenLocationCountForm(inventoryId);
@@ -6773,6 +6791,11 @@ namespace Neutron.Forms
 
         private void MBPickScreenHotPick_Click(object sender, EventArgs e)
         {
+            HotAction();
+        }
+
+        private void HotAction()
+        {
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
             {
                 var item = LabelPickItemNumber.Text;
@@ -7023,43 +7046,7 @@ namespace Neutron.Forms
         }
 
 
-        private void FrmPick_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.F12)
-            {
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
-                {
-                    var result = frm.ShowDialog();
-                    Show();
-                }
-            }
-            if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
-            {
-                if (tabControl1.SelectedTab.Name == "PickScreen")
-                {
-                    PickAccept();
-                }
 
-            }
-
-            if (e.KeyCode == Keys.Escape)
-            {
-                if (tabControl1.SelectedTab.Name == "PickScreen")
-                {
-                    PickBack();
-                }
-
-                if (tabControl1.SelectedTab.Name == "PickList")
-                {
-                    PickListBack();
-                }
-
-                if (tabControl1.SelectedTab.Name == "AvailableOrders")
-                {
-                    AvailableOrdersBack();
-                }
-            }
-        }
 
         private void MBRackBack_Click(object sender, EventArgs e)
         {
@@ -7744,6 +7731,11 @@ namespace Neutron.Forms
 
         private void MBShortPick_Click(object sender, EventArgs e)
         {
+            ShortPick();
+        }
+
+        private void ShortPick()
+        {
             _shortPick = true;
             PickAccept();
         }
@@ -7891,6 +7883,105 @@ namespace Neutron.Forms
 
         }
 
+        private void FrmPick_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (tabControl1.SelectedTab.Name)
+            {
+                case "PickScreen":
+                    {
+                        switch (e.KeyCode)
+                        {
+                            case Keys.Enter:
+                                {
+                                    PickAccept();
+                                    break;
+                                }
+                            case Keys.Space:
+                                {
+                                    PickAccept();
+                                    break;
+                                }
+                            case Keys.L:
+                                {
+                                    LocationCount();
+                                    break;
+                                }
+                            case Keys.A:
+                                {
+                                    HotAction();
+                                    break;
+                                }
+                            case Keys.S:
+                                {
+                                    ShowOrderOrQuantityToggle();
+                                    break;
+                                }
+                            case Keys.Q:
+                            {
+                                ChangeQuantity();
+                                break;
+                            }
+                            case Keys.K:
+                            {
+                                SkipPick();
+                                break;
+                            }
+                            case Keys.H:
+                            {
+                                ShortPick();
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                case "AvailableOrders":
+                    {
+                        break;
+                    }
+            }
 
+
+
+
+            if (e.KeyCode == Keys.F12)
+            {
+                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
+                {
+                    var result = frm.ShowDialog();
+                    Show();
+                }
+            }
+            //if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
+            //{
+            //    if (tabControl1.SelectedTab.Name == "PickScreen")
+            //    {
+            //        PickAccept();
+            //    }
+
+            //}
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                if (tabControl1.SelectedTab.Name == "PickScreen")
+                {
+                    PickBack();
+                }
+
+                if (tabControl1.SelectedTab.Name == "PickList")
+                {
+                    PickListBack();
+                }
+
+                if (tabControl1.SelectedTab.Name == "AvailableOrders")
+                {
+                    AvailableOrdersBack();
+                }
+            }
+        }
+
+        private void FrmPick_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //MessageBox.Show($"KeyPress: {e.KeyChar.ToString()}");
+        }
     }
 }

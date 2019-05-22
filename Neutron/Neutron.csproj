@@ -30,7 +30,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>366</ApplicationRevision>
+    <ApplicationRevision>367</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -446,6 +446,7 @@
     <Compile Include="Models\MyFileInfo.cs" />
     <Compile Include="Models\Nomenclature.cs" />
     <Compile Include="Models\OperationResult.cs" />
+    <Compile Include="Models\ProductivityGroup.cs" />
     <Compile Include="Models\Prompt.cs" />
     <Compile Include="Models\RectangleControl.cs" />
     <Compile Include="Models\ReplenDeviceManager.cs" />

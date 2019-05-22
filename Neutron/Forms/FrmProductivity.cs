@@ -33,16 +33,46 @@ namespace Neutron.Forms
         private DateTime _toDate;
         private readonly IJsonData _jsonData;
         private DocumentPrinterPreferences _documentPrinter;
+        private ProductivityGroup _currentGroup = null;
+        private bool _formInitialized;
+        private bool _groupItemCheckEnabled = true;
+        private bool _userItemCheckEnabled = true;
+        private readonly string _fileName = "ProductivityGroups";
 
         public FrmProductivity(IJsonData jsonData)
         {
             _jsonData = jsonData;
             InitializeComponent();
             HideTabControlTabs();
+            DisableEvents();
+
+            SetupCheckedListBoxGroups();
             SetupCheckedListBoxActionCodes();
             SetupGrids();
+            SetInitialDateTimePickers();
+
             SetupCheckedListBoxUsers();
+
+            EnableEvents();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
+            _formInitialized = true;
+        }
+
+        private void EnableEvents()
+        {
+            CheckedListBoxUsers.ItemCheck += new ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
+        }
+
+        private void DisableEvents()
+        {
+            CheckedListBoxUsers.ItemCheck -= new ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
+        }
+
+        private void SetInitialDateTimePickers()
+        {
+            var today = DateTime.Today;
+            DateTimePickerFrom.Value = today.FirstDayOfMonth();
+            DateTimePickerTo.Value = today;
         }
 
         private void HideTabControlTabs()
@@ -51,20 +81,41 @@ namespace Neutron.Forms
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SizeMode = TabSizeMode.Fixed;
         }
+        #region SetupCheckedListBoxes
+
+        private void SetupCheckedListBoxGroups()
+        {
+            CheckedListBoxGroups.Items.Clear();
+            var currentGroups = _jsonData.LoadFile<List<ProductivityGroup>>(_fileName);
+            if (currentGroups.Count == 0) return;
+            foreach (var productivityGroup in currentGroups)
+            {
+                CheckedListBoxGroups.Items.Add(productivityGroup);
+            }
+
+            CheckedListBoxGroups.DisplayMember = "Name";
+            CheckedListBoxGroups.ValueMember = "Name";
+
+            CheckedListBoxGroups.SetItemCheckState(0, CheckState.Checked);
+            _currentGroup = (ProductivityGroup)CheckedListBoxGroups.Items[0];
+        }
 
         private void SetupCheckedListBoxUsers()
         {
-            var currentUserIds = _jsonData.LoadFile<UserIdString>().CsvIdString;
-            if (!string.IsNullOrEmpty(currentUserIds))
+            var users = new List<User>();
+
+            if (_currentGroup != null)
             {
-                var nums = currentUserIds.Split(',').Select(int.Parse).ToArray();
-                if (nums.Length > 0)
+                var currentUserIds = _currentGroup.UserIdString.CsvIdString;
+                if (!string.IsNullOrEmpty(currentUserIds))
                 {
-                    using (var db = new NeutronDb())
+                    var nums = currentUserIds.Split(',').Select(int.Parse).ToArray();
+                    if (nums.Length > 0)
                     {
-                        CheckedListBoxUsers.DataSource = db.Users.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Lastname).ToList();
-                        CheckedListBoxUsers.DisplayMember = "FullName";
-                        CheckedListBoxUsers.ValueMember = "Id";
+                        using (var db = new NeutronDb())
+                        {
+                            users = db.Users.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Lastname).ToList();
+                        }
                     }
                 }
             }
@@ -72,14 +123,50 @@ namespace Neutron.Forms
             {
                 using (var db = new NeutronDb())
                 {
-                    CheckedListBoxUsers.DataSource = db.Users.OrderBy(o => o.Lastname).ToList();
-                    CheckedListBoxUsers.DisplayMember = "FullName";
-                    CheckedListBoxUsers.ValueMember = "Id";
+                    users = db.Users.OrderBy(o => o.Lastname).ToList();
                 }
             }
 
+            CheckedListBoxUsers.Items.Clear();
+            foreach (var user in users)
+            {
+                CheckedListBoxUsers.Items.Add(user);
+            }
+            CheckedListBoxUsers.DisplayMember = "FullName";
+            CheckedListBoxUsers.ValueMember = "Id";
+
+            for (var i = 0; i < CheckedListBoxUsers.Items.Count; i++)
+            {
+                CheckedListBoxUsers.SetItemChecked(i, true);
+            }
 
         }
+
+        private void SetupCheckedListBoxActionCodes()
+        {
+
+            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
+                .Select(r => new EnumModel() { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
+
+            var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+            if (!string.IsNullOrEmpty(currentIds))
+            {
+                var nums = currentIds.Split(',').Select(int.Parse).ToArray();
+                if (nums.Length > 0)
+                {
+                    CheckedListBoxActionCodes.DataSource = actionCodes.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Name).ToList();
+                    CheckedListBoxActionCodes.DisplayMember = "Name";
+                    CheckedListBoxActionCodes.ValueMember = "Id";
+                }
+            }
+            else
+            {
+                CheckedListBoxActionCodes.DataSource = new BindingSource(actionCodes, null);
+                CheckedListBoxActionCodes.DisplayMember = "Name";
+                CheckedListBoxActionCodes.ValueMember = "Id";
+            }
+        }
+        #endregion
 
         private void SetupGrids()
         {
@@ -386,30 +473,7 @@ namespace Neutron.Forms
 
         }
 
-        private void SetupCheckedListBoxActionCodes()
-        {
 
-            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
-                .Select(r => new EnumModel() { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
-
-            var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
-            if (!string.IsNullOrEmpty(currentIds))
-            {
-                var nums = currentIds.Split(',').Select(int.Parse).ToArray();
-                if (nums.Length > 0)
-                {
-                    CheckedListBoxActionCodes.DataSource = actionCodes.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Name).ToList();
-                    CheckedListBoxActionCodes.DisplayMember = "Name";
-                    CheckedListBoxActionCodes.ValueMember = "Id";
-                }
-            }
-            else
-            {
-                CheckedListBoxActionCodes.DataSource = new BindingSource(actionCodes, null);
-                CheckedListBoxActionCodes.DisplayMember = "Name";
-                CheckedListBoxActionCodes.ValueMember = "Id";
-            }
-        }
 
         //private void ButtonCheckAll_Click(object sender, EventArgs e)
         //{
@@ -504,23 +568,23 @@ namespace Neutron.Forms
 
             if (RadioButtonToday.Checked)
             {
-                toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 999);
+                toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 500);
             }
             else if (RadioButtonWeek.Checked)
             {
                 var date = today.LastDayOfWeek();
-                toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
+                toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 500);
             }
             else if (RadioButtonMonth.Checked)
             {
-                var date = DateTimePickerFrom.Value;
-                var lastDay = date.LastDayOfMonth();
-                toDate = new DateTime(lastDay.Year, lastDay.Month, lastDay.Day, 23, 59, 59, 999);
+                // var date = DateTimePickerFrom.Value;
+                var lastDay = today.LastDayOfMonth();
+                toDate = new DateTime(lastDay.Year, lastDay.Month, lastDay.Day, 23, 59, 59, 500);
             }
             else if (RadioButtonDateRange.Checked)
             {
                 var date = DateTimePickerTo.Value;
-                toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
+                toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 500);
             }
 
             return toDate;
@@ -542,8 +606,8 @@ namespace Neutron.Forms
             }
             else if (RadioButtonMonth.Checked)
             {
-                var date = DateTimePickerFrom.Value;
-                fromDate = new DateTime(date.Year, 1, date.Day, 0, 0, 0, 0);
+                var date = today.FirstDayOfMonth();
+                fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
             }
             else if (RadioButtonDateRange.Checked)
             {
@@ -583,6 +647,16 @@ namespace Neutron.Forms
             CsvUtility.SaveToCsv(DataGridView1);
         }
 
+        private void MBSaveSummary_Click(object sender, EventArgs e)
+        {
+            CsvUtility.SaveToCsv(DataGridView1);
+        }
+
+        private void MBSaveDetail_Click(object sender, EventArgs e)
+        {
+            CsvUtility.SaveToCsv(DataGridView2);
+        }
+
         private void MButtonRun_Click(object sender, EventArgs e)
         {
             var userIds = GetUserIds();
@@ -591,42 +665,13 @@ namespace Neutron.Forms
             GetData(userIds, codes);
         }
 
-        //private void GetData()
-        //{
-        //    var userIds = GetUserIds();
-        //    if (userIds.Length > 0)
-        //    {
-        //        _fromDate = GetFromDate();
-        //        _toDate = GetToDate();
-        //        var codes = GetCodes();
+        private void GetData()
+        {
+            var userIds = GetUserIds();
+            var codes = GetCodes();
 
-        //        if (codes.Length > 0)
-        //        {
-        //            var recs = GetProductivitySummaryRecords(codes, _fromDate, _toDate, userIds);
-        //            if (recs.Count > 0)
-        //            {
-        //                var blv = new BindingListView<ProductivitySummary>(recs);
-        //                _bindingSourceSummary = new BindingSource { DataSource = blv };
-        //                DataGridView1.DataSource = _bindingSourceSummary;
-        //                DataGridView1.Refresh();
-        //                UpdateSummaryTotals(recs);
-        //                UpdateDetailGrid();
-        //            }
-        //            else
-        //            {
-        //                ClearAll();
-        //            }
-        //        }
-        //        else
-        //        {
-        //            ClearAll();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ClearAll();
-        //    }
-        //}
+            GetData(userIds, codes);
+        }
 
         private void UpdateSummaryTotals(List<ProductivitySummary> recs)
         {
@@ -822,18 +867,21 @@ namespace Neutron.Forms
         private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
             //Users
-            var yValue = CheckedListBoxUsers.Height + 8;
-            var yValueConfigure = CheckedListBoxUsers.Height + 36;
+            var yValue = CheckedListBoxUsers.Height + CheckedListBoxUsers.Location.Y + 8;
+            var yValueConfigure = CheckedListBoxUsers.Height + CheckedListBoxUsers.Location.Y + 36;
             ButtonCheckAllUsers.Location = new Point { X = ButtonCheckAllUsers.Location.X, Y = yValue };
             ButtonClearAllUsers.Location = new Point { X = ButtonClearAllUsers.Location.X, Y = yValue };
             ButtonConfigureUsers.Location = new Point { X = ButtonConfigureUsers.Location.X, Y = yValueConfigure };
 
             //Actions
-            yValue = CheckedListBoxActionCodes.Height + 8;
-            yValueConfigure = CheckedListBoxActionCodes.Height + 36;
+            yValue = CheckedListBoxActionCodes.Height + CheckedListBoxActionCodes.Location.Y + 8;
+            yValueConfigure = CheckedListBoxActionCodes.Height + CheckedListBoxActionCodes.Location.Y + 36;
             ButtonCheckAllActions.Location = new Point { X = ButtonCheckAllActions.Location.X, Y = yValue };
             ButtonClearAllActions.Location = new Point { X = ButtonClearAllActions.Location.X, Y = yValue };
             ButtonConfigureActions.Location = new Point { X = ButtonConfigureActions.Location.X, Y = yValueConfigure };
+
+            yValue = CheckedListBoxUsers.Location.Y - 8;
+            CheckedListBoxGroups.Height = yValue;
         }
 
         private void ButtonConfigureUsers_Click(object sender, EventArgs e)
@@ -842,7 +890,11 @@ namespace Neutron.Forms
             {
                 frm.ShowDialog();
                 Show();
-                SetupCheckedListBoxUsers();
+                _groupItemCheckEnabled = false;
+                SetupCheckedListBoxGroups();
+                _groupItemCheckEnabled = true;
+                // SetupCheckedListBoxUsers();
+                UpdateCheckedListBoxUsers();
             }
         }
 
@@ -869,21 +921,7 @@ namespace Neutron.Forms
             UpdateDetailGrid();
         }
 
-        private void CheckedListBoxUsers_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            var checkedItems = new List<string>();
-            foreach (User item in CheckedListBoxUsers.CheckedItems)
-                checkedItems.Add(item.Id.ToString());
 
-            if (e.NewValue == CheckState.Checked)
-                checkedItems.Add(((User)CheckedListBoxUsers.Items[e.Index]).Id.ToString());
-            else
-                checkedItems.Remove(((User)CheckedListBoxUsers.Items[e.Index]).Id.ToString());
-
-            var codes = GetCodes();
-
-            GetData(checkedItems, codes);
-        }
 
         private void GetData(List<string> checkedUserItems, List<string> checkedActionCodes)
         {
@@ -995,31 +1033,121 @@ namespace Neutron.Forms
             }
         }
 
-
-        private void zUpdateDetailGrid()
+        private void DateTimePicker_Enter(object sender, EventArgs e)
         {
-            var currentItem = ((ObjectView<ProductivitySummary>)_bindingSourceSummary.Current).Object;
+            RadioButtonDateRange.Checked = true;
+        }
 
-            var recs = GetProductivityDetailRecords(currentItem.ActionCodeId, _fromDate, _toDate, currentItem.UserId,
-                currentItem.StationId);
-            var blv = new BindingListView<ProductivityDetail>(recs);
-            _bindingSourceDetail = new BindingSource { DataSource = blv };
-            DataGridView2.DataSource = _bindingSourceDetail;
-            DataGridView2.Refresh();
-            if (_bindingSourceDetail.Count > 0)
+        private void DateTimePickerFrom_ValueChanged(object sender, EventArgs e)
+        {
+            if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
             {
-                UpdateDetailTotals(recs);
+                DateTimePickerTo.Value = DateTimePickerFrom.Value;
             }
-            DataGridView2.ClearSelection();
+            GetData();
         }
 
-        private void zUpdateDetailTotals(List<ProductivityDetail> recs)
+        private void RadioButtonDate(object sender, EventArgs e)
         {
-            TextBoxTotalLinesDetail.Text = recs.Count.ToString();
-            TextBoxTotalPiecesDetail.Text = recs.Sum(r => r.Issued).ToString();
-            TextBoxTotalOrdersDetail.Text = recs.Select(r => r.OrderId).Distinct().Count().ToString();
+            GetData();
         }
 
+        private void DateTimePickerTo_ValueChanged(object sender, EventArgs e)
+        {
+            if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
+            {
+                DateTimePickerTo.Value = DateTimePickerFrom.Value;
+            }
+            GetData();
+        }
 
+        private void CheckedListBoxGroups_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // _groupItemCheckEnabled = true;
+            if (!_formInitialized || !_groupItemCheckEnabled) return;
+
+            
+
+            if (e.NewValue != CheckState.Checked)
+            {
+                _currentGroup = null;
+                _groupItemCheckEnabled = true;
+                return;
+            }
+
+            var selectedIndexes = CheckedListBoxGroups.CheckedIndices;
+            if (selectedIndexes.Count > 0)
+            {
+                _groupItemCheckEnabled = false;
+                CheckedListBoxGroups.SetItemChecked(selectedIndexes[0], false);
+                _groupItemCheckEnabled = true;
+            }
+
+            _currentGroup = (ProductivityGroup)CheckedListBoxGroups.SelectedItem;
+           // SetupCheckedListBoxUsers();
+            UpdateCheckedListBoxUsers();
+            var checkedItems = _currentGroup.UserIdString.CsvIdString.Split(',').ToList();
+
+            //var checkedItems = new List<string>();
+            //foreach (ProductivityGroup item in CheckedListBoxGroups.CheckedItems)
+            //    checkedItems.Add(item.UserIdString.CsvIdString);
+
+
+            //if (e.NewValue == CheckState.Checked)
+            //    checkedItems.Add(((ProductivityGroup)CheckedListBoxGroups.Items[e.Index]).UserIdString.CsvIdString);
+            //else
+            //    checkedItems.Remove(((ProductivityGroup)CheckedListBoxGroups.Items[e.Index]).UserIdString.CsvIdString);
+
+
+
+
+
+
+            var codes = GetCodes();
+
+            GetData(checkedItems, codes);
+        }
+
+        private void CheckedListBoxUsers_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // _userItemCheckEnabled = true;
+
+            if (!_formInitialized || !_userItemCheckEnabled) return;
+            var checkedItems = new List<string>();
+            foreach (User item in CheckedListBoxUsers.CheckedItems)
+                checkedItems.Add(item.Id.ToString());
+
+            if (e.NewValue == CheckState.Checked)
+                checkedItems.Add(((User)CheckedListBoxUsers.Items[e.Index]).Id.ToString());
+            else
+                checkedItems.Remove(((User)CheckedListBoxUsers.Items[e.Index]).Id.ToString());
+
+            var codes = GetCodes();
+
+            GetData(checkedItems, codes);
+        }
+
+        private void UpdateCheckedListBoxUsers()
+        {
+            CheckedListBoxUsers.Items.Clear();
+            if (_currentGroup == null) return;
+            var currentUserIds = _currentGroup.UserIdString.CsvIdString;
+            if (string.IsNullOrEmpty(currentUserIds)) return;
+            var nums = currentUserIds.Split(',').Select(int.Parse).ToArray();
+            if (nums.Length <= 0) return;
+            List<User> users;
+            using (var db = new NeutronDb())
+            {
+                users = db.Users.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Lastname).ToList();
+            }
+            foreach (var user in users)
+            {
+                CheckedListBoxUsers.Items.Add(user);
+            }
+            for (var i = 0; i < CheckedListBoxUsers.Items.Count; i++)
+            {
+                CheckedListBoxUsers.SetItemChecked(i, true);
+            }
+        }
     }
 }

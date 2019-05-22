@@ -31,13 +31,13 @@ namespace PrintRequest
             60,
             80,
             110,
-            70,
+            75,
             60,
             60,
             195,
             35,
             35,
-            35
+            30
         };
         private readonly string[] _headerNames = new string[]
         {

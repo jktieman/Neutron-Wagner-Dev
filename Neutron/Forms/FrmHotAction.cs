@@ -75,6 +75,7 @@ namespace Neutron.Forms
         private bool _hotStoreButtonPressed = false;
         private InventoryManager _inventoryManager;
         private Stopwatch stopwatch;
+        private string _newLocationButtonText = "New Locations";
 
         private string _currentGrid;
 
@@ -117,7 +118,9 @@ namespace Neutron.Forms
             FillComboBoxes();
             _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
             InitialSearch(item);
-
+            if (_station.StationNumber < 8) return;
+            _newLocationButtonText = "All Locations";
+            MBNewLocations.Text = _newLocationButtonText;
 
         }
 
@@ -290,7 +293,7 @@ namespace Neutron.Forms
             //var blv = new BindingListView<LocationView>(views.ToList());
             //_bindingSourceNewLocations.DataSource = blv;
 
-            MBNewLocations.Text = $"New Locations ({_bindingSourceNewLocations.Count})";
+            MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
             if (_bindingSourceNewLocations.Count > 0)
             {
                 MBHotStore.Enabled = true;
@@ -399,7 +402,7 @@ namespace Neutron.Forms
             MBCurrentLocations.Enabled = false;
             
            // _bindingSourceNewLocations.Clear();
-            MBNewLocations.Text = $"New Locations (0)";
+            MBNewLocations.Text = $"{_newLocationButtonText} (0)";
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
             MBNewLocations.Enabled = false;
@@ -1038,7 +1041,7 @@ namespace Neutron.Forms
             MBCurrentLocations.Text = $"Current Locations ({_bindingSourceCurrent.Count})";
 
             _bindingSourceNewLocations.DataSource = null;
-            MBNewLocations.Text = $"New Locations ({_bindingSourceNewLocations.Count})";
+            MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
 
             TextBoxFindItem.Text = string.Empty;
             LoadItemDefinitions();

@@ -81,14 +81,20 @@ namespace NeutronData.Repositories
             var recs = new List<LocationView>();
             if (stationId != 0)
             {
-
                 Task.Run(() => _logger.Log(@"Get All Location Views Start"));
                 try
                 {
                     using (var context = new NeutronDb())
                     {
                         var paramStation = new SqlParameter("@StationId", stationId);
-                        recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByStation @StationId", paramStation).ToList();
+                        if (stationId == 8)
+                        {
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllRackLocationViews @StationId", paramStation).ToList();
+                        }
+                        else
+                        {
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByStation @StationId", paramStation).ToList();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -113,7 +119,7 @@ namespace NeutronData.Repositories
                 {
                     var param = new SqlParameter("@Find", find);
                     recs = context.Database.SqlQuery<LocationView>(sql: "usp_GetLocationViewsFind @Find "
-                        , parameters: new object[] {param}).ToList();
+                        , parameters: new object[] { param }).ToList();
                 }
             }
             catch (Exception ex)

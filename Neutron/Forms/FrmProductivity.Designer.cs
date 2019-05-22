@@ -66,14 +66,14 @@
             this.RadioButtonMonth = new System.Windows.Forms.RadioButton();
             this.RadioButtonWeek = new System.Windows.Forms.RadioButton();
             this.RadioButtonToday = new System.Windows.Forms.RadioButton();
-            this.TextBoxFind = new System.Windows.Forms.TextBox();
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
-            this.MBPrintAll = new MetroFramework.Controls.MetroButton();
-            this.MBSaveHistory = new MetroFramework.Controls.MetroButton();
+            this.MBSaveSummary = new MetroFramework.Controls.MetroButton();
             this.MButtonRun = new MetroFramework.Controls.MetroButton();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
+            this.MBSaveDetail = new MetroFramework.Controls.MetroButton();
+            this.CheckedListBoxGroups = new System.Windows.Forms.CheckedListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -114,10 +114,9 @@
             this.tabPage1.Controls.Add(this.splitContainer2);
             this.tabPage1.Controls.Add(this.SplitContainer1);
             this.tabPage1.Controls.Add(this.PanelDateRanges);
-            this.tabPage1.Controls.Add(this.TextBoxFind);
             this.tabPage1.Controls.Add(this.MButtonClose);
-            this.tabPage1.Controls.Add(this.MBPrintAll);
-            this.tabPage1.Controls.Add(this.MBSaveHistory);
+            this.tabPage1.Controls.Add(this.MBSaveDetail);
+            this.tabPage1.Controls.Add(this.MBSaveSummary);
             this.tabPage1.Controls.Add(this.MButtonRun);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -129,6 +128,7 @@
             // 
             // splitContainer2
             // 
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer2.Location = new System.Drawing.Point(3, 99);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -139,6 +139,7 @@
             this.splitContainer2.Panel1.Controls.Add(this.ButtonConfigureUsers);
             this.splitContainer2.Panel1.Controls.Add(this.ButtonClearAllUsers);
             this.splitContainer2.Panel1.Controls.Add(this.ButtonCheckAllUsers);
+            this.splitContainer2.Panel1.Controls.Add(this.CheckedListBoxGroups);
             this.splitContainer2.Panel1.Controls.Add(this.CheckedListBoxUsers);
             // 
             // splitContainer2.Panel2
@@ -149,13 +150,13 @@
             this.splitContainer2.Panel2.Controls.Add(this.ButtonCheckAllActions);
             this.splitContainer2.Panel2.Controls.Add(this.CheckedListBoxActionCodes);
             this.splitContainer2.Size = new System.Drawing.Size(173, 653);
-            this.splitContainer2.SplitterDistance = 325;
+            this.splitContainer2.SplitterDistance = 419;
             this.splitContainer2.TabIndex = 27;
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer2_SplitterMoved);
             // 
             // ButtonConfigureUsers
             // 
-            this.ButtonConfigureUsers.Location = new System.Drawing.Point(6, 295);
+            this.ButtonConfigureUsers.Location = new System.Drawing.Point(6, 390);
             this.ButtonConfigureUsers.Name = "ButtonConfigureUsers";
             this.ButtonConfigureUsers.Size = new System.Drawing.Size(160, 23);
             this.ButtonConfigureUsers.TabIndex = 32;
@@ -165,7 +166,7 @@
             // 
             // ButtonClearAllUsers
             // 
-            this.ButtonClearAllUsers.Location = new System.Drawing.Point(97, 267);
+            this.ButtonClearAllUsers.Location = new System.Drawing.Point(97, 362);
             this.ButtonClearAllUsers.Name = "ButtonClearAllUsers";
             this.ButtonClearAllUsers.Size = new System.Drawing.Size(70, 23);
             this.ButtonClearAllUsers.TabIndex = 30;
@@ -175,7 +176,7 @@
             // 
             // ButtonCheckAllUsers
             // 
-            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(6, 267);
+            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(6, 362);
             this.ButtonCheckAllUsers.Name = "ButtonCheckAllUsers";
             this.ButtonCheckAllUsers.Size = new System.Drawing.Size(70, 23);
             this.ButtonCheckAllUsers.TabIndex = 31;
@@ -188,17 +189,17 @@
             this.CheckedListBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.CheckedListBoxUsers.CheckOnClick = true;
             this.CheckedListBoxUsers.FormattingEnabled = true;
-            this.CheckedListBoxUsers.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxUsers.Location = new System.Drawing.Point(0, 150);
             this.CheckedListBoxUsers.Name = "CheckedListBoxUsers";
-            this.CheckedListBoxUsers.Size = new System.Drawing.Size(173, 244);
+            this.CheckedListBoxUsers.Size = new System.Drawing.Size(173, 199);
             this.CheckedListBoxUsers.TabIndex = 29;
             this.CheckedListBoxUsers.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
-            this.CheckedListBoxUsers.SelectedIndexChanged += new System.EventHandler(this.CheckedListBoxUsers_SelectedIndexChanged);
             // 
             // ButtonConfigureActions
             // 
-            this.ButtonConfigureActions.Location = new System.Drawing.Point(6, 295);
+            this.ButtonConfigureActions.Location = new System.Drawing.Point(6, 203);
             this.ButtonConfigureActions.Name = "ButtonConfigureActions";
             this.ButtonConfigureActions.Size = new System.Drawing.Size(160, 23);
             this.ButtonConfigureActions.TabIndex = 34;
@@ -208,7 +209,7 @@
             // 
             // ButtonClearAllActions
             // 
-            this.ButtonClearAllActions.Location = new System.Drawing.Point(97, 267);
+            this.ButtonClearAllActions.Location = new System.Drawing.Point(97, 175);
             this.ButtonClearAllActions.Name = "ButtonClearAllActions";
             this.ButtonClearAllActions.Size = new System.Drawing.Size(70, 23);
             this.ButtonClearAllActions.TabIndex = 32;
@@ -218,7 +219,7 @@
             // 
             // ButtonCheckAllActions
             // 
-            this.ButtonCheckAllActions.Location = new System.Drawing.Point(6, 267);
+            this.ButtonCheckAllActions.Location = new System.Drawing.Point(6, 175);
             this.ButtonCheckAllActions.Name = "ButtonCheckAllActions";
             this.ButtonCheckAllActions.Size = new System.Drawing.Size(70, 23);
             this.ButtonCheckAllActions.TabIndex = 33;
@@ -235,7 +236,7 @@
             this.CheckedListBoxActionCodes.FormattingEnabled = true;
             this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(0, 0);
             this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
-            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(173, 259);
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(173, 169);
             this.CheckedListBoxActionCodes.TabIndex = 1;
             this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
             this.CheckedListBoxActionCodes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxActionCodes_ItemCheck);
@@ -488,6 +489,8 @@
             this.DateTimePickerTo.Name = "DateTimePickerTo";
             this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerTo.TabIndex = 23;
+            this.DateTimePickerTo.ValueChanged += new System.EventHandler(this.DateTimePickerTo_ValueChanged);
+            this.DateTimePickerTo.Enter += new System.EventHandler(this.DateTimePicker_Enter);
             // 
             // label26
             // 
@@ -508,6 +511,8 @@
             this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerFrom.TabIndex = 21;
             this.DateTimePickerFrom.Value = new System.DateTime(2018, 1, 1, 5, 20, 0, 0);
+            this.DateTimePickerFrom.ValueChanged += new System.EventHandler(this.DateTimePickerFrom_ValueChanged);
+            this.DateTimePickerFrom.Enter += new System.EventHandler(this.DateTimePicker_Enter);
             // 
             // RadioButtonDateRange
             // 
@@ -520,6 +525,7 @@
             this.RadioButtonDateRange.TabStop = true;
             this.RadioButtonDateRange.Text = "Date Range";
             this.RadioButtonDateRange.UseVisualStyleBackColor = true;
+            this.RadioButtonDateRange.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // RadioButtonMonth
             // 
@@ -530,6 +536,7 @@
             this.RadioButtonMonth.TabIndex = 0;
             this.RadioButtonMonth.Text = "Month";
             this.RadioButtonMonth.UseVisualStyleBackColor = true;
+            this.RadioButtonMonth.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // RadioButtonWeek
             // 
@@ -540,6 +547,7 @@
             this.RadioButtonWeek.TabIndex = 0;
             this.RadioButtonWeek.Text = "Week";
             this.RadioButtonWeek.UseVisualStyleBackColor = true;
+            this.RadioButtonWeek.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // RadioButtonToday
             // 
@@ -550,16 +558,7 @@
             this.RadioButtonToday.TabIndex = 0;
             this.RadioButtonToday.Text = "Today";
             this.RadioButtonToday.UseVisualStyleBackColor = true;
-            // 
-            // TextBoxFind
-            // 
-            this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(572, 10);
-            this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(275, 29);
-            this.TextBoxFind.TabIndex = 17;
-            this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.RadioButtonToday.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // MButtonClose
             // 
@@ -573,28 +572,17 @@
             this.MButtonClose.Text = "Close";
             this.MButtonClose.UseSelectable = true;
             // 
-            // MBPrintAll
+            // MBSaveSummary
             // 
-            this.MBPrintAll.Enabled = false;
-            this.MBPrintAll.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintAll.Location = new System.Drawing.Point(430, 55);
-            this.MBPrintAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBPrintAll.Name = "MBPrintAll";
-            this.MBPrintAll.Size = new System.Drawing.Size(136, 37);
-            this.MBPrintAll.TabIndex = 12;
-            this.MBPrintAll.Text = "Print All";
-            this.MBPrintAll.UseSelectable = true;
-            // 
-            // MBSaveHistory
-            // 
-            this.MBSaveHistory.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSaveHistory.Location = new System.Drawing.Point(430, 10);
-            this.MBSaveHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSaveHistory.Name = "MBSaveHistory";
-            this.MBSaveHistory.Size = new System.Drawing.Size(136, 37);
-            this.MBSaveHistory.TabIndex = 12;
-            this.MBSaveHistory.Text = "Save to File";
-            this.MBSaveHistory.UseSelectable = true;
+            this.MBSaveSummary.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBSaveSummary.Location = new System.Drawing.Point(511, 10);
+            this.MBSaveSummary.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBSaveSummary.Name = "MBSaveSummary";
+            this.MBSaveSummary.Size = new System.Drawing.Size(245, 37);
+            this.MBSaveSummary.TabIndex = 12;
+            this.MBSaveSummary.Text = "Save Summary to File";
+            this.MBSaveSummary.UseSelectable = true;
+            this.MBSaveSummary.Click += new System.EventHandler(this.MBSaveSummary_Click);
             // 
             // MButtonRun
             // 
@@ -604,7 +592,7 @@
             this.MButtonRun.Name = "MButtonRun";
             this.MButtonRun.Size = new System.Drawing.Size(136, 80);
             this.MButtonRun.TabIndex = 12;
-            this.MButtonRun.Text = "Run";
+            this.MButtonRun.Text = "Refresh";
             this.MButtonRun.UseSelectable = true;
             this.MButtonRun.Click += new System.EventHandler(this.MButtonRun_Click);
             // 
@@ -644,6 +632,30 @@
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // MBSaveDetail
+            // 
+            this.MBSaveDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBSaveDetail.Location = new System.Drawing.Point(511, 54);
+            this.MBSaveDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBSaveDetail.Name = "MBSaveDetail";
+            this.MBSaveDetail.Size = new System.Drawing.Size(245, 37);
+            this.MBSaveDetail.TabIndex = 12;
+            this.MBSaveDetail.Text = "Save Detail to File";
+            this.MBSaveDetail.UseSelectable = true;
+            this.MBSaveDetail.Click += new System.EventHandler(this.MBSaveDetail_Click);
+            // 
+            // CheckedListBoxGroups
+            // 
+            this.CheckedListBoxGroups.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CheckedListBoxGroups.CheckOnClick = true;
+            this.CheckedListBoxGroups.FormattingEnabled = true;
+            this.CheckedListBoxGroups.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxGroups.Name = "CheckedListBoxGroups";
+            this.CheckedListBoxGroups.Size = new System.Drawing.Size(173, 139);
+            this.CheckedListBoxGroups.TabIndex = 29;
+            this.CheckedListBoxGroups.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxGroups_ItemCheck);
+            // 
             // FrmProductivity
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -658,7 +670,6 @@
             this.Text = "Productivity";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -691,10 +702,8 @@
         private System.Windows.Forms.RadioButton RadioButtonMonth;
         private System.Windows.Forms.RadioButton RadioButtonWeek;
         private System.Windows.Forms.RadioButton RadioButtonToday;
-        private System.Windows.Forms.TextBox TextBoxFind;
         private MetroFramework.Controls.MetroButton MButtonClose;
-        private MetroFramework.Controls.MetroButton MBPrintAll;
-        private MetroFramework.Controls.MetroButton MBSaveHistory;
+        private MetroFramework.Controls.MetroButton MBSaveSummary;
         private MetroFramework.Controls.MetroButton MButtonRun;
         private System.Windows.Forms.Label LabelFormTitle;
         private MetroFramework.Controls.MetroLabel mlUserInfo;
@@ -725,5 +734,7 @@
         private System.Windows.Forms.CheckedListBox CheckedListBoxActionCodes;
         private System.Windows.Forms.Button ButtonConfigureUsers;
         private System.Windows.Forms.Button ButtonConfigureActions;
+        private MetroFramework.Controls.MetroButton MBSaveDetail;
+        private System.Windows.Forms.CheckedListBox CheckedListBoxGroups;
     }
 }

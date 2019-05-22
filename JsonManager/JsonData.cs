@@ -85,5 +85,45 @@ namespace JsonManager
             }
             return data;
         }
+
+        public void SaveFile<T>(string file, T data)
+        {
+            if (string.IsNullOrEmpty(file)) return;
+            var fileName = ($"{file}.json");
+            var fileInfo = new FileInfo(rootDirectory + fileName);
+
+            try
+            {
+                using (TextWriter writer = new StreamWriter(fileInfo.FullName, append: false))
+                {
+                    writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                }
+            }
+            catch (Exception)
+            {
+                Console.Write("Error writing to Json file.");
+            }
+        }
+
+        public T LoadFile<T>(string file) where T : new()
+        {
+            var data = new T();
+            if (string.IsNullOrEmpty(file)) return data;
+            var fileName = ($"{file}.json");
+            var fileInfo = new FileInfo(rootDirectory + fileName);
+            if (!fileInfo.Exists) return data;
+            try
+            {
+                using (TextReader reader = new StreamReader(fileInfo.FullName))
+                {
+                    data = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+                }
+            }
+            catch (Exception)
+            {
+                Console.Write($"Error reading from Json file.  {fileInfo.FullName}");
+            }
+            return data;
+        }
     }
 }

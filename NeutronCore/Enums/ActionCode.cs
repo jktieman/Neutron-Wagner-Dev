@@ -89,7 +89,7 @@ namespace NeutronCore.Enums
         [Description("Other - Hot Store")]
         OtherHotStore = 44,
         [Description("Skip")]
-        PickSkip = 45,
+        Skip = 45,
         [Description("Cost Center - Hot Pick")]
         CostCenterHotPick = 46,
         [Description("Cost Center - Hot Store")]
