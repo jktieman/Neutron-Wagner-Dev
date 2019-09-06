@@ -19,18 +19,19 @@ namespace Neutron.Forms
 {
     public partial class FrmReprintOrder : Form
     {
-        private GenericRepository<Order> repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private NeutronVariables neutronVariables;
-        private DocumentPrinterPreferences documentPrinter;
-        private LabelPrinterPreferences labelPrinter;
+        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
+        private readonly NeutronVariables _neutronVariables;
+        private readonly DocumentPrinterPreferences _documentPrinter;
+        private readonly LabelPrinterPreferences _labelPrinter;
+        private readonly IJsonData _jsonData;
 
-        public FrmReprintOrder()
+        public FrmReprintOrder(IJsonData jsonData)
         {
             InitializeComponent();
-            IJsonData jsonData = new JsonData();
-            neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            documentPrinter = jsonData.LoadFile<DocumentPrinterPreferences>();
-            labelPrinter = jsonData.LoadFile<LabelPrinterPreferences>();
+            _jsonData = jsonData;
+            _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
+            _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
+            _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
         }
 
         private void MBReprintPrint_Click(object sender, EventArgs e)
@@ -38,7 +39,7 @@ namespace Neutron.Forms
             string ord = TextBoxReprintOrder.Text.Trim();
             if (!string.IsNullOrEmpty(ord))
             {
-                Order order = repoOrders.FindBy(r => r.Ord1 == ord).FirstOrDefault();
+                Order order = _repoOrders.FindBy(r => r.Ord1 == ord).FirstOrDefault();
                 if (order != null)
                 {
                     if (CheckBoxDocument.Checked)
@@ -62,9 +63,9 @@ namespace Neutron.Forms
         private void PrintTote(Order order)
         {
             //Task.Run(() => logger.Log($"Printing Tote Label. {order.Ord1}"));
-            if (neutronVariables.EnableLabelPrinter)
+            if (_neutronVariables.EnableLabelPrinter)
             {
-                Task.Run(() => ToteToPrint.Print(order, labelPrinter));
+                Task.Run(() => ToteToPrint.Print(order, _labelPrinter));
             }
         }
 
@@ -72,9 +73,9 @@ namespace Neutron.Forms
         private void PrintDoc(Order order)
         {
             //Task.Run(() => logger.Log($"Printing Document. {order.Ord1}"));
-            if (neutronVariables.EnableDocumentPrinter)
+            if (_neutronVariables.EnableDocumentPrinter)
             {
-                Task.Run(() => DocumentToPrint.Print(order.Ord1, documentPrinter, order.Ord2));
+                Task.Run(() => DocumentToPrint.Print(order.Ord1, _documentPrinter, order.Ord2));
             }
         }
 

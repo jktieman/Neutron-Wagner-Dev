@@ -164,7 +164,9 @@
     <Compile Include="Repositories\AkaRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Interfaces\ILocationsRepository.cs" />
+    <Compile Include="Repositories\IGenericRepository.cs" />
     <Compile Include="Repositories\InventoryRepository.cs" />
+    <Compile Include="Interfaces\IStationRepository.cs" />
     <Compile Include="Repositories\ItemDefinitionsRepository.cs" />
     <Compile Include="Repositories\LocationsRepository.cs" />
     <Compile Include="Repositories\OrderDetailsRepository.cs" />

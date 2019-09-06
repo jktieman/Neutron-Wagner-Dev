@@ -220,7 +220,7 @@
     <value>metroPanelMain</value>
   </data>
   <data name="&gt;&gt;MtProductivity.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="MtHotAction.Location" type="System.Drawing.Point, System.Drawing">
     <value>447, 15</value>

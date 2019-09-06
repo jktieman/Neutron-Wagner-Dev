@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using NeutronCore.Extensions;
 
 namespace NeutronCore
 {
     public static class LoaderSettings
     {
         private static string _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+        private const string SubDirectory = @"Configuration\";
+        private const string FileName = @"ConfigFile.Csv";
         private static readonly string backSlash = @"\";
         private static string _imagesDirectory;
         private static string _hostOrderDirectory;
@@ -28,6 +26,8 @@ namespace NeutronCore
         public static bool Initialized { get; set; }
         public static string EnableLogging { get; set; }
 
+        public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
+       
         public static string GetImagesDirectory()
         {
             return PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory;
@@ -213,36 +213,42 @@ namespace NeutronCore
             }
         }
 
-        public static void Save(string configFilePath)
+        public static void Save()
         {
-            using (StreamWriter sw = new StreamWriter(configFilePath))
+            var path = $"{GetRootDirectory()}{SubDirectory}";
+            if (PathExists(path))
             {
-                sw.Write($"{_imagesDirectory}{'|'}");
-                sw.Write($"{_hostOrderDirectory}{'|'}");
-                sw.Write($"{_hostOrderFile}{'|'}");
-                sw.Write($"{_hostUploadDirectory}{'|'}");
-                sw.Write($"{_hostUploadFile}{'|'}");
-                sw.Write($"{EnableLogging}{'|'}");
-                sw.Write($"{_logFileDirectory}{'|'}");
-                sw.Write($"{_hostOrderFileFilter}{'|'}");
-                sw.Write($"{_maintenanceFileFilter}{'|'}");
-                sw.Write($"{_documentsDirectory}{'|'}");
-                sw.Write($"{_maintenanceFileDirectory}{'|'}");
-                sw.Write($"{_costCenterDirectory}{'|'}");
-                sw.Write($"{_costCenterFile}{'|'}");
-                sw.Write($"{_languageDirectory}");
-                sw.WriteLine();
+                using (StreamWriter sw = new StreamWriter(ConfigFilePath))
+                {
+                    sw.Write($"{_imagesDirectory}{'|'}");
+                    sw.Write($"{_hostOrderDirectory}{'|'}");
+                    sw.Write($"{_hostOrderFile}{'|'}");
+                    sw.Write($"{_hostUploadDirectory}{'|'}");
+                    sw.Write($"{_hostUploadFile}{'|'}");
+                    sw.Write($"{EnableLogging}{'|'}");
+                    sw.Write($"{_logFileDirectory}{'|'}");
+                    sw.Write($"{_hostOrderFileFilter}{'|'}");
+                    sw.Write($"{_maintenanceFileFilter}{'|'}");
+                    sw.Write($"{_documentsDirectory}{'|'}");
+                    sw.Write($"{_maintenanceFileDirectory}{'|'}");
+                    sw.Write($"{_costCenterDirectory}{'|'}");
+                    sw.Write($"{_costCenterFile}{'|'}");
+                    sw.Write($"{_languageDirectory}");
+                    sw.WriteLine();
+                } 
             }
         }
 
-        public static void Init(string configFilePath)
+        public static bool Init()
         {
-           // var result = false;
-            try
+            var result = false;
+
+            var path = $"{GetRootDirectory()}{SubDirectory}";
+            if (PathExists(path))
             {
-                if (PathExists(_rootDirectory))
+                try
                 {
-                    if (!File.Exists(configFilePath))
+                    if (!File.Exists(ConfigFilePath))
                     {
                         SetImagesDirectory(string.Empty);
                         SetHostOrderDirectory(string.Empty);
@@ -258,10 +264,10 @@ namespace NeutronCore
                         SetCostCenterDirectory(string.Empty);
                         SetCostCenterFile(string.Empty);
                         SetLanguageDirectory(string.Empty);
-                        Save(configFilePath);
+                        Save();
                     }
 
-                    using (var sr = new StreamReader(configFilePath))
+                    using (var sr = new StreamReader(ConfigFilePath))
                     {
                         var line = sr.ReadLine();
                         if (line != null)
@@ -283,15 +289,19 @@ namespace NeutronCore
                             SetLanguageDirectory(tokens[13]);
                         }
                     }
-                    //result = true;
+
+                    result = true;
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Check the Loader Settings file for missing fields.  {ex.Message}  {ex.InnerException}");
+                    result = false;
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Check the Loader Settings file for missing fields.  {ex.Message}  {ex.InnerException}");
-               // result = false;
-            }
-            //return result;
+
+            return result;
         }
 
         public static bool PathExists(string path)
@@ -317,6 +327,6 @@ namespace NeutronCore
             return result;
         }
 
-       
+
     }
 }

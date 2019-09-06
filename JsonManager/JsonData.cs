@@ -11,14 +11,33 @@ namespace JsonManager
 {
     public class JsonData : IJsonData
     {
-        readonly string rootDirectory;
+        private string _rootDirectory;
+        private const string SubDirectory = @"Json\";
 
         public JsonData()
         {
-            rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\Json\");
-            if (!Directory.Exists(rootDirectory))
+            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\Json\");
+            if (!Directory.Exists(_rootDirectory))
             {
-                Directory.CreateDirectory(rootDirectory);
+                Directory.CreateDirectory(_rootDirectory);
+            }
+        }
+
+        public JsonData(string rootDirectory)
+        {
+            RootDirectory = $"{rootDirectory}{SubDirectory}";
+        }
+
+        public string RootDirectory
+        {
+            get { return _rootDirectory;}
+            set
+            {
+                _rootDirectory = $"{value}{SubDirectory}";
+                if (!Directory.Exists(_rootDirectory))
+                {
+                    Directory.CreateDirectory(_rootDirectory);
+                }
             }
         }
 
@@ -37,7 +56,7 @@ namespace JsonManager
                 fileName = ($"{typeof(T).Name}.json"); //single class
             }
 
-            var fileInfo = new FileInfo(rootDirectory + fileName);
+            var fileInfo = new FileInfo(_rootDirectory + fileName);
 
             try
             {
@@ -68,7 +87,7 @@ namespace JsonManager
                 fileName = ($"{typeof(T).Name}.json"); //single class
             }
 
-            var fileInfo = new FileInfo(rootDirectory + fileName);
+            var fileInfo = new FileInfo(_rootDirectory + fileName);
             if (fileInfo.Exists)
             {
                 try
@@ -90,7 +109,7 @@ namespace JsonManager
         {
             if (string.IsNullOrEmpty(file)) return;
             var fileName = ($"{file}.json");
-            var fileInfo = new FileInfo(rootDirectory + fileName);
+            var fileInfo = new FileInfo(_rootDirectory + fileName);
 
             try
             {
@@ -110,7 +129,7 @@ namespace JsonManager
             var data = new T();
             if (string.IsNullOrEmpty(file)) return data;
             var fileName = ($"{file}.json");
-            var fileInfo = new FileInfo(rootDirectory + fileName);
+            var fileInfo = new FileInfo(_rootDirectory + fileName);
             if (!fileInfo.Exists) return data;
             try
             {

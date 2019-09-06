@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject.Modules;
-using Ninject;
+﻿using Ninject.Modules;
 using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
@@ -21,6 +15,7 @@ namespace Neutron
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();
             Bind<ILacProcessor>().To<LacProcessor>().InSingletonScope();
+            Bind<IStationRepository>().To<StationRepository>();
         }
     }
 }

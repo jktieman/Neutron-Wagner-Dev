@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NeutronCore;
 
 namespace NeutronData.Repositories
 {
-    public class StationRepository
+    public class StationRepository : IStationRepository
     {
         private readonly GenericRepository<HardwareDevice> repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
         private readonly GenericRepository<Station> repoStation = new GenericRepository<Station>(new NeutronDb());
@@ -20,7 +21,8 @@ namespace NeutronData.Repositories
 
         public StationView GetStationView(int stationNumber)
         {
-            var logger = new AlliedLogger.DynamicLogger(@"C:\neutron\logs\", "StationView", "true");
+            var logFileDirectory = LoaderSettings.GetLogFileDirectory();
+            var logger = new AlliedLogger.DynamicLogger(logFileDirectory, @"StationView", @"true");
             var stationView = new StationView();
             Station station;
             try

@@ -18,6 +18,7 @@ using Neutron.Models;
 using System.Globalization;
 using System.Resources;
 using EnumsNET;
+using NeutronCore;
 
 namespace Neutron
 {
@@ -53,15 +54,32 @@ namespace Neutron
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(defaultValue: false);
             //Database.SetInitializer(new NullDatabaseInitializer<NeutronDb>());
-            var kernel = new StandardKernel();
+
+
+            //var kernel = new StandardKernel();
+            //kernel.Load(Assembly.GetExecutingAssembly());
+            //var jsonData = kernel.Get<IJsonData>();
+            //jsonData.RootDirectory =  $"{Properties.Settings.Default.RootDirectory}";
+            //LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
+            //var akaRepository = kernel.Get<IAkaRepository>();
+            //var securityProcessor = kernel.Get<ISecurityProcessor>();
+            //var lacProcessor = kernel.Get<ILacProcessor>();
+
+            IKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
             var jsonData = kernel.Get<IJsonData>();
+            jsonData.RootDirectory = $"{Properties.Settings.Default.RootDirectory}";
+            LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
             var akaRepository = kernel.Get<IAkaRepository>();
             var securityProcessor = kernel.Get<ISecurityProcessor>();
             var lacProcessor = kernel.Get<ILacProcessor>();
+
+
+            var stationRepository = kernel.Get<IStationRepository>();
+
             INomenclature nomenclature = jsonData.LoadFile<Nomenclature>();
 
-            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, nomenclature));
+            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, nomenclature, stationRepository));
 
         }
     }

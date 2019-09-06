@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace NeutronData.Repositories
 {
-    public class GenericRepository<TEntity> where TEntity : class, IEntity
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IEntity
     {
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
@@ -34,7 +34,7 @@ namespace NeutronData.Repositories
             return GetAllIncluding(includeProperties).ToList();
         }
 
-        private IQueryable<TEntity> GetAllIncluding(Expression<Func<TEntity, object>>[] includeProperties)
+        public IQueryable<TEntity> GetAllIncluding(Expression<Func<TEntity, object>>[] includeProperties)
         {
             IQueryable<TEntity> queryable = _dbSet.AsNoTracking();
             return includeProperties.Aggregate(

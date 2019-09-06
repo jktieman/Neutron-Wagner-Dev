@@ -1865,11 +1865,10 @@ namespace Neutron.Forms
                 //update
                 inventory = _repoInventory.FindByKey(inventoryId.ParseInt());
                 inventory.Quantity = (TextBoxAddDetailQuantity.Text).ParseInt();
-                inventory.StorageTypeId =
-                    (ComboBoxAddDetailStorageType.SelectedItem as NeutronData.Models.Lookups.StorageType).Id;
+                inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType) ComboBoxAddDetailStorageType.SelectedItem).Id;
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
-                inventory.StationId = _station.StationId;
+                inventory.StationId = (int)ComboBoxAddDetailStation.SelectedValue;
                 _repoInventory.Update(inventory);
                 GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryModify, inventory);
             }
@@ -1879,11 +1878,10 @@ namespace Neutron.Forms
                 inventory.ItemDefinitionId = (TextBoxAddDetailItemDefinitionId.Text).ParseInt();
                 inventory.LocationId = (TextBoxAddDetailLocationId.Text).ParseInt();
                 inventory.Quantity = (TextBoxAddDetailQuantity.Text).ParseInt();
-                inventory.StorageTypeId =
-                    (ComboBoxAddDetailStorageType.SelectedItem as NeutronData.Models.Lookups.StorageType).Id;
+                inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType) ComboBoxAddDetailStorageType.SelectedItem).Id;
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
-                inventory.StationId = _station.StationId;
+                inventory.StationId = (int)ComboBoxAddDetailStation.SelectedValue;
                 _repoInventory.Insert(inventory);
                 GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryAdd, inventory);
             }
@@ -1891,7 +1889,6 @@ namespace Neutron.Forms
             if (inventory.Quantity == 0 && inventory.StorageTypeId == (int)StorageType.Release)
             {
                 DeleteInventoryItem(inventory.Id, releaseOnly: true);
-                // GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
             }
             else
             {
@@ -2133,7 +2130,8 @@ namespace Neutron.Forms
         private void CreateInventoryFileByStation(string stationNumber)
         {
             var fileName = GetFileName();
-            Task.Run(() => CsvUtility.SaveToCsv(fileName, stationNumber));
+            //Task.Run(() => CsvUtility.SaveToCsv(fileName, stationNumber));
+            CsvUtility.SaveToCsv(fileName, stationNumber);
         }
 
         private static string GetFileName()

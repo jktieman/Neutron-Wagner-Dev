@@ -32,10 +32,9 @@ namespace Neutron
     public partial class FrmMain
     {
         private static User _currentUser;
-        private string currentUserLabel = @"Current User: ";
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
-        private readonly StationRepository _stationRepository = new StationRepository();
+        private readonly IStationRepository _stationRepository;
         private readonly IJsonData _jsonData;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
@@ -52,18 +51,32 @@ namespace Neutron
         private string _errorCaption = "Error Message";
         private StartStopLoaderManager _startStopLoaderManager;
 
+        /// <summary>
+        /// Passed from NInject Kernel
+        /// </summary>
+        /// <param name="jsonData"></param>
+        /// <param name="akaRepository"></param>
+        /// <param name="securityProcessor"></param>
+        /// <param name="lacProcessor"></param>
+        /// <param name="nomenclature"></param>
+        /// <param name="stationRepository"></param>
+
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
-            , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor, INomenclature nomenclature)
+            , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
+            , INomenclature nomenclature, IStationRepository stationRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             KeyPreview = true;
+
             _jsonData = jsonData;
             _akaRepository = akaRepository;
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
             _nomenclature = nomenclature;
+            _stationRepository = stationRepository;
+
             _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger);
@@ -77,14 +90,14 @@ namespace Neutron
 
 
             LogOnOff();
-            if (InitForm())
+            if (!InitForm())
             {
-
+               MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
+                // Close();
             }
             LogOnOff();
-            //MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.",
-            //    "Main Form Error", MessageBoxButtons.OK);
+           
         }
 
         private bool InitForm()
@@ -92,72 +105,69 @@ namespace Neutron
             var result = false;
             try
             {
-               
-                //if (LoaderSettings.Init(Settings.Default.ConfigFilePath))
-                //{
-                LoaderSettings.Init(Settings.Default.ConfigFilePath);
-                _stationNumber = _neutronVariables.StationNumber;
-
-                if (CreateLog("Main", _stationNumber))
+                if (LoaderSettings.Init())
                 {
-                    _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+                    _stationNumber = _neutronVariables.StationNumber;
 
-                    if (_stationNumber > 0)
+                    if (CreateLog("Main", _stationNumber))
                     {
-                        _station = _stationRepository.GetStationView(_stationNumber);
-                        if (_station != null)
+                        _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+
+                        if (_stationNumber > 0)
                         {
-                            if (SetupShuttle())
+                            _station = _stationRepository.GetStationView(_stationNumber);
+                            if (_station != null)
                             {
-                                if (SetupDisplay())
+                                if (SetupShuttle())
                                 {
-                                    if (SetupSlotFactory())
+                                    if (SetupDisplay())
                                     {
-                                        if (StartLoader())
+                                        if (SetupSlotFactory())
                                         {
-                                            result = true;
+                                            if (StartLoader())
+                                            {
+                                                result = true;
+                                            }
+                                            else
+                                            {
+                                                MessageBox.Show("Main Form: Auto Loader Initialization Error.");
+                                            }
                                         }
                                         else
                                         {
-                                            MessageBox.Show("Main Form: Auto Loader Initialization Error.");
+                                            MessageBox.Show("Main Form: Slot Factory Initialization Error.");
                                         }
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Main Form: Slot Factory Initialization Error.");
+                                        MessageBox.Show("Main Form: Display Initialization Error.");
                                     }
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Main Form: Display Initialization Error.");
+                                    MessageBox.Show("Main Form: Device Initialization Error.");
                                 }
                             }
                             else
                             {
-                                MessageBox.Show("Main Form: Device Initialization Error.");
+                                MessageBox.Show("Main Form: Station Initialization Error.");
                             }
                         }
                         else
                         {
-                            MessageBox.Show("Main Form: Station Initialization Error.");
+                            MessageBox.Show("Station has not been configured.   Neutron Exiting.",
+                                caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
                         }
                     }
-                    else
-                    {
-                        MessageBox.Show("Station has not been configured.   Neutron Exiting.",
-                            caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
-                    }
                 }
-                //}
-                //else
-                //{
-                //    MessageBox.Show("Main Form: LoaderSettings Initialization Error.");
-                //}
+                else
+                {
+                    MessageBox.Show("Main Form: LoaderSettings Initialization Error.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Main Form Initialization Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                result = false;
             }
 
             return result;
@@ -431,7 +441,7 @@ namespace Neutron
                             {
                                 _currentUser = frm.CurrentUser;
 
-                                mlUserInfo.Text = $"{currentUserLabel}{_currentUser.UserInfo}";
+                                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
                             }
                         }
                     }
@@ -443,7 +453,7 @@ namespace Neutron
                             if (result == DialogResult.OK)
                             {
                                 _currentUser = frm.CurrentUser;
-                                mlUserInfo.Text = $"{currentUserLabel}{_currentUser.UserInfo}";
+                                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
                             }
                         }
                     }
@@ -751,7 +761,6 @@ namespace Neutron
                 MtStore.Text = _resourceManager.GetString("Store");
                 MtUsers.Text = _resourceManager.GetString("Users");
                 MtLogOff.Text = _resourceManager.GetString("LogOn");
-                // MtLogOff.Text = _resourceManager.GetString("LogOff");
                 MtUtilities.Text = _resourceManager.GetString("Utilities");
                 MtSystem.Text = _resourceManager.GetString("System");
                 MtLac.Text = _resourceManager.GetString("LocationAccessControl");
@@ -799,6 +808,6 @@ namespace Neutron
             GlobalVar.Displays.ClearBli(bli);
         }
 
-      
+
     }
 }

@@ -38,6 +38,7 @@ namespace Neutron
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.metroStyleManager1 = new MetroFramework.Components.MetroStyleManager(this.components);
             this.metroPanelMain = new MetroFramework.Controls.MetroPanel();
+            this.MtProductivity = new MetroFramework.Controls.MetroTile();
             this.MtHotAction = new MetroFramework.Controls.MetroTile();
             this.MtLogOff = new MetroFramework.Controls.MetroTile();
             this.MtStore = new MetroFramework.Controls.MetroTile();
@@ -59,7 +60,6 @@ namespace Neutron
             this.ButtonPortTest = new System.Windows.Forms.Button();
             this.ButtonPortTestOff = new System.Windows.Forms.Button();
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
-            this.MtProductivity = new MetroFramework.Controls.MetroTile();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.metroPanelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).BeginInit();
@@ -120,6 +120,17 @@ namespace Neutron
             this.metroPanelMain.VerticalScrollbarBarColor = true;
             this.metroPanelMain.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanelMain.VerticalScrollbarSize = 9;
+            // 
+            // MtProductivity
+            // 
+            this.MtProductivity.ActiveControl = null;
+            resources.ApplyResources(this.MtProductivity, "MtProductivity");
+            this.MtProductivity.Name = "MtProductivity";
+            this.MtProductivity.Style = MetroFramework.MetroColorStyle.Blue;
+            this.MtProductivity.TileTextFontSize = MetroFramework.MetroTileTextSize.Tall;
+            this.MtProductivity.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Bold;
+            this.MtProductivity.UseSelectable = true;
+            this.MtProductivity.Click += new System.EventHandler(this.MtProductivity_Click);
             // 
             // MtHotAction
             // 
@@ -302,17 +313,6 @@ namespace Neutron
             this.ButtonPortTestOff.Name = "ButtonPortTestOff";
             this.ButtonPortTestOff.UseVisualStyleBackColor = true;
             this.ButtonPortTestOff.Click += new System.EventHandler(this.ButtonPortTestOff_Click);
-            // 
-            // MtProductivity
-            // 
-            this.MtProductivity.ActiveControl = null;
-            resources.ApplyResources(this.MtProductivity, "MtProductivity");
-            this.MtProductivity.Name = "MtProductivity";
-            this.MtProductivity.Style = MetroFramework.MetroColorStyle.Blue;
-            this.MtProductivity.TileTextFontSize = MetroFramework.MetroTileTextSize.Tall;
-            this.MtProductivity.TileTextFontWeight = MetroFramework.MetroTileTextWeight.Bold;
-            this.MtProductivity.UseSelectable = true;
-            this.MtProductivity.Click += new System.EventHandler(this.MtProductivity_Click);
             // 
             // FrmMain
             // 

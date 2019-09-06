@@ -7237,7 +7237,7 @@ namespace Neutron.Forms
 
         private void MBReprintOrder_Click(object sender, EventArgs e)
         {
-            using (Form frm = new FrmReprintOrder())
+            using (Form frm = new FrmReprintOrder(_jsonData))
             {
                 var result = frm.ShowDialog();
                 Show();

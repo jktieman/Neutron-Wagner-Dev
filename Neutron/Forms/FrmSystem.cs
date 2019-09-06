@@ -22,12 +22,12 @@ namespace Neutron.Forms
 {
     public partial class FrmSystem : MetroForm
     {
-
         private bool CloseButtonPressed { get; set; }
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private string _configFilePath;
+        private string _rootDirectory;
         private readonly DynamicLogger _logger;
 
         public FrmSystem(IJsonData jsonData, DynamicLogger logger)
@@ -167,9 +167,12 @@ namespace Neutron.Forms
         private void FrmSystem_Load(object sender, EventArgs e)
         {
             GetConnectionString();
-            _configFilePath = $"{Properties.Settings.Default.ConfigFilePath}";
+           // _configFilePath = $"{Properties.Settings.Default.ConfigFilePath}";
+            _rootDirectory = $"{Properties.Settings.Default.RootDirectory}";
+            LoaderSettings.SetRootDirectory(_rootDirectory);
+           // _configFilePath = $"{LoaderSettings.GetRootDirectory()}Configuration\\ConfigFile.Csv";
 
-            LoaderSettings.Init(_configFilePath);
+            LoaderSettings.Init();
             RootDirectory.Text = LoaderSettings.GetRootDirectory();
             ImagesDirectory.Text = LoaderSettings.GetImagesDirectory();
             HostOrderDirectory.Text = LoaderSettings.GetHostOrderDirectory();
@@ -302,8 +305,12 @@ namespace Neutron.Forms
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            string configFilePath = Properties.Settings.Default.ConfigFilePath;
             LoaderSettings.SetRootDirectory(RootDirectory.Text);
+            Properties.Settings.Default.RootDirectory = LoaderSettings.GetRootDirectory();
+            Properties.Settings.Default.Save();
+           // _configFilePath = $"{LoaderSettings.GetRootDirectory()}Configuration\\ConfigFile.Csv";
+           // string configFilePath = Properties.Settings.Default.ConfigFilePath;
+            
             LoaderSettings.SetImagesDirectory(ImagesDirectory.Text);
             LoaderSettings.SetHostOrderDirectory(HostOrderDirectory.Text);
             LoaderSettings.SetHostOrderFile(HostOrderFile.Text);
@@ -318,7 +325,7 @@ namespace Neutron.Forms
             LoaderSettings.SetCostCenterDirectory(CostCenterDirectory.Text);
             LoaderSettings.SetCostCenterFile(CostCenterFileName.Text);
             LoaderSettings.SetLanguageDirectory(LanguageDirectory.Text);
-            LoaderSettings.Save(configFilePath);
+            LoaderSettings.Save();
         }
 
         private void ButtonFindHostOrderFile_Click(object sender, EventArgs e)
