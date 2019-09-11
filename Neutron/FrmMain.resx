@@ -651,6 +651,9 @@
   <data name="ButtonPark.Text" xml:space="preserve">
     <value>Park</value>
   </data>
+  <data name="ButtonPark.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="&gt;&gt;ButtonPark.Name" xml:space="preserve">
     <value>ButtonPark</value>
   </data>

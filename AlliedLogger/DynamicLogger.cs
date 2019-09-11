@@ -9,70 +9,64 @@ namespace AlliedLogger
 {
     public class DynamicLogger
     {
-        private string _filePath;
         private readonly object _myLock = new object();
-        private static bool _init;
+        private static bool _validLocation;
+
+        private readonly string _baseFolder;
+        private readonly string _folderName;
 
         public bool LogActivity { get; set; }
         public string FileName { get; set; }
 
-        public DynamicLogger(string logFileDir, string folderName, string logActivity)
+        public DynamicLogger(string logFileDir, string folderName = @"General\\", string logActivity = "true")
         {
-            string baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
-            baseFolder = baseFolder.EndsWith(@"\") ? baseFolder : baseFolder + @"\";
-            folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
+            _baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
+            _baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
+            _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
             LogActivity = logActivity == "true" ? true : false;
-            FilePath = baseFolder + folderName + GetFileName();
+            IsValidLocation();
         }
 
-        public string FilePath
+        public string FilePath => _baseFolder + _folderName + GetFileName();
+
+        private void IsValidLocation()
         {
-            get
+            _validLocation = false;
+            var path = new FileInfo(FilePath);
+            try
             {
-                return _filePath;
-            }
-            set
-            {
-                if (value.Length > 0)
+                // ... If the directory doesn't exist, create it.
+                if (!Directory.Exists(path.DirectoryName))
                 {
-                    _filePath = value;
-                    var path = new FileInfo(_filePath);
-                    try
-                    {
-                        // ... If the directory doesn't exist, create it.
-                        if (!Directory.Exists(path.DirectoryName))
-                        {
-                            Directory.CreateDirectory(path.DirectoryName);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        _init = false;
-                    }
+                    if (path.DirectoryName != null) Directory.CreateDirectory(path.DirectoryName);
                 }
-                _init = true;
+                    _validLocation = true;
+            }
+            catch (Exception)
+            {
+                _validLocation = false;
             }
         }
 
         public void Flush()
         {
-            File.WriteAllText(_filePath, string.Empty);
+            File.WriteAllText(FilePath, string.Empty);
         }
 
         public void Log(string msg)
         {
-            string time = DateTime.Now.ToString("HH:mm:ss.fff");
-            CultureInfo ci = CultureInfo.InvariantCulture;
+            var time = DateTime.Now.ToString("HH:mm:ss.fff");
+            var ci = CultureInfo.InvariantCulture;
 
             lock (_myLock)
             {
                 if (msg.Length > 0)
                 {
-                    if (_init)
+                    if (_validLocation)
                     {
                         try
                         {
-                            using (StreamWriter sw = File.AppendText(_filePath))
+                            using (var sw = File.AppendText(FilePath))
                             {
                                 sw.WriteLine("{0} {1}: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToString("hh:mm:ss.FFF", ci), msg);
                                 sw.Flush();
@@ -89,8 +83,8 @@ namespace AlliedLogger
 
         private string GetFileName()
         {
-            DateTime now = DateTime.Now;
-            string date = now.ToString("yyyyMMdd");
+            var now = DateTime.Now;
+            var date = now.ToString("yyyyMMdd");
 
             return string.Concat(new string[] { date, ".Log" });
         }
