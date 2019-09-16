@@ -7,6 +7,7 @@ using NeutronCore.Models;
 using NeutronData.DataContexts;
 using NeutronLoader;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
@@ -15,6 +16,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using AlliedLogger;
+using Neutron.Models;
 using NeutronEvents;
 using Timer = System.Threading.Timer;
 
@@ -74,7 +76,7 @@ namespace Neutron.Forms
         private void MBStartLoader_Click(object sender, EventArgs e)
         {
             Mediator.GetInstance().OnStartStopLoader(this, !GlobalVar.LoaderRunning ? "Start" : "Stop");
-           
+
         }
 
         private void MBCreateHostUploadFile_Click(object sender, EventArgs e)
@@ -166,11 +168,19 @@ namespace Neutron.Forms
 
         private void FrmSystem_Load(object sender, EventArgs e)
         {
-            GetConnectionString();
-           // _configFilePath = $"{Properties.Settings.Default.ConfigFilePath}";
-            _rootDirectory = $"{Properties.Settings.Default.RootDirectory}";
+            var connectionString = GetConnectionString();
+
+            TextBoxDataSource.Text = connectionString.DataSource;
+            TextBoxInitialCatalog.Text = connectionString.InitialCatalog;
+            TextBoxUserId.Text = connectionString.UserID;
+            TextBoxPassword.Text = connectionString.Password;
+
+            LabelConnectionString.Text = connectionString.ConnectionString;
+
+            var neutronConfig = _jsonData.LoadFile<NeutronRootDirectory>();
+            _rootDirectory = neutronConfig.RootDirectory;
+
             LoaderSettings.SetRootDirectory(_rootDirectory);
-           // _configFilePath = $"{LoaderSettings.GetRootDirectory()}Configuration\\ConfigFile.Csv";
 
             LoaderSettings.Init();
             RootDirectory.Text = LoaderSettings.GetRootDirectory();
@@ -187,16 +197,22 @@ namespace Neutron.Forms
             MaintenanceFileDirectory.Text = LoaderSettings.GetMaintenanceFileDirectory();
             CostCenterDirectory.Text = LoaderSettings.GetCostCenterDirectory();
             CostCenterFileName.Text = LoaderSettings.GetCostCenterFile();
+            LanguageDirectory.Text = LoaderSettings.GetLanguageDirectory();
         }
 
         private void ButtonSaveConnectionString_Click(object sender, EventArgs e)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["Neutron"].ConnectionString;
-            var builder = new SqlConnectionStringBuilder(connectionString)
-            {
-                DataSource = TextBoxDataSource.Text,
-                InitialCatalog = TextBoxInitialCatalog.Text
-            };
+            SaveConnectionString();
+            ButtonSaveConnectionString.Enabled = false;
+        }
+
+        private void SaveConnectionString()
+        {
+            var builder = GetConnectionString();
+
+            builder.DataSource = TextBoxDataSource.Text;
+            builder.InitialCatalog = TextBoxInitialCatalog.Text;
+
             if (CheckBoxSqlServerAuthentication.Checked)
             {
                 builder.UserID = TextBoxUserId.Text;
@@ -210,42 +226,80 @@ namespace Neutron.Forms
                 builder.Remove("Password");
                 builder.IntegratedSecurity = true;
             }
-            Configuration config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
+
+            var config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
             var connSection = (ConnectionStringsSection)config.GetSection(sectionName: "connectionStrings");
             connSection.ConnectionStrings["Neutron"].ConnectionString = builder.ConnectionString;
             config.Save(ConfigurationSaveMode.Modified);
-            ButtonSaveConnectionString.Enabled = false;
 
             LabelConnectionString.Text = builder.ConnectionString;
         }
 
-        private void GetConnectionString()
+        private SqlConnectionStringBuilder GetConnectionString()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["Neutron"].ConnectionString;
-            var builder = new SqlConnectionStringBuilder(connectionString);
-            TextBoxDataSource.Text = builder.DataSource;
-            TextBoxInitialCatalog.Text = builder.InitialCatalog;
-            TextBoxUserId.Text = builder.UserID;
-            TextBoxPassword.Text = builder.Password;
+            var builder = new SqlConnectionStringBuilder();
 
-            LabelConnectionString.Text = builder.ConnectionString;
+            try
+            {
+                var connectionString = ConfigurationManager.ConnectionStrings["Neutron"].ConnectionString;
+                builder = new SqlConnectionStringBuilder(connectionString);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                _logger.Log($"Get Connection String Configuration Error {Environment.NewLine} {ex.Message}");
+                if (ex.InnerException != null)
+                    _logger.Log($"Get Connection String Configuration Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.Log($"Get Connection String Key Not Found {Environment.NewLine} {ex.Message}");
+                if (ex.InnerException != null)
+                    _logger.Log($"Get Connection String Key Not Found - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+            }
+            catch (FormatException ex)
+            {
+                _logger.Log($"Get Connection String Format Error {Environment.NewLine} {ex.Message}");
+                if (ex.InnerException != null)
+                    _logger.Log($"Get Connection String Format Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.Log($"Get Connection String Argument Error {Environment.NewLine} {ex.Message}");
+                if (ex.InnerException != null)
+                    _logger.Log($"Get Connection String Argument Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Get Connection String Unknown Error {Environment.NewLine} {ex.Message}");
+                if (ex.InnerException != null)
+                    _logger.Log($"Get Connection String Unknown Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+            }
+
+            return builder;
         }
 
         private void ButtonTest_Click(object sender, EventArgs e)
         {
-            SqlConnectionStringBuilder builder;
+            ButtonSaveConnectionString.Enabled = TestDatabaseConnection();
+        }
+
+        private bool TestDatabaseConnection()
+        {
+            var result = false;
+            var builder = GetConnectionString();
             try
             {
                 errorProvider.Clear();
                 if (string.IsNullOrEmpty(TextBoxDataSource.Text))
                 {
                     errorProvider.SetError(TextBoxDataSource, "Required");
-                    return;
+                    return false;
                 }
+
                 if (string.IsNullOrEmpty(TextBoxInitialCatalog.Text))
                 {
                     errorProvider.SetError(TextBoxInitialCatalog, "Required");
-                    return;
+                    return false;
                 }
 
                 if (CheckBoxSqlServerAuthentication.Checked)
@@ -253,18 +307,16 @@ namespace Neutron.Forms
                     if (string.IsNullOrEmpty(TextBoxUserId.Text))
                     {
                         errorProvider.SetError(TextBoxUserId, "Required");
-                        return;
+                        return false;
                     }
+
                     if (string.IsNullOrEmpty(TextBoxPassword.Text))
                     {
                         errorProvider.SetError(TextBoxPassword, "Required");
-                        return;
+                        return false;
                     }
                 }
 
-
-                string connectionString = ConfigurationManager.ConnectionStrings["Neutron"].ConnectionString;
-                builder = new SqlConnectionStringBuilder(connectionString);
                 builder.DataSource = TextBoxDataSource.Text;
                 builder.InitialCatalog = TextBoxInitialCatalog.Text;
                 if (CheckBoxSqlServerAuthentication.Checked)
@@ -280,37 +332,56 @@ namespace Neutron.Forms
                     builder.Remove("Password");
                     builder.IntegratedSecurity = true;
                 }
+
                 LabelConnectionString.Text = builder.ConnectionString;
             }
             catch (Exception ex)
             {
+                _logger.Log($"Connection Test Error {Environment.NewLine}{ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    _logger.Log(
+                        $"Connection Test Error Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                }
 
-                MessageBox.Show("Text Error  " + ex.Message + " Inner:  " + ex.InnerException);
-                throw;
+                MessageBox.Show($"Connection Test Error {Environment.NewLine}{ex.Message}");
             }
+
             try
             {
                 using (var connection = new SqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
                     MessageBox.Show(@"Connection Established.  Save Configuration.");
-                    ButtonSaveConnectionString.Enabled = true;
+                    result = true;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Connection Failed: " + ex.Message + "  Inner:  " + ex.InnerException);
+                _logger.Log($"Connection Test Failed {Environment.NewLine}{ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    _logger.Log(
+                        $"Connection Test Failed Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                }
+
+                MessageBox.Show($"Connection Test Failed {Environment.NewLine}{ex.Message}");
             }
+
+            return result;
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
+            var root = new NeutronRootDirectory { RootDirectory = RootDirectory.Text };
+            _jsonData.SaveFile(root);
+
             LoaderSettings.SetRootDirectory(RootDirectory.Text);
-            Properties.Settings.Default.RootDirectory = LoaderSettings.GetRootDirectory();
-            Properties.Settings.Default.Save();
-           // _configFilePath = $"{LoaderSettings.GetRootDirectory()}Configuration\\ConfigFile.Csv";
-           // string configFilePath = Properties.Settings.Default.ConfigFilePath;
-            
+            //Properties.Settings.Default.RootDirectory = LoaderSettings.GetRootDirectory();
+            //Properties.Settings.Default.Save();
+            // _configFilePath = $"{LoaderSettings.GetRootDirectory()}Configuration\\ConfigFile.Csv";
+            // string configFilePath = Properties.Settings.Default.ConfigFilePath;
+
             LoaderSettings.SetImagesDirectory(ImagesDirectory.Text);
             LoaderSettings.SetHostOrderDirectory(HostOrderDirectory.Text);
             LoaderSettings.SetHostOrderFile(HostOrderFile.Text);
@@ -382,9 +453,9 @@ namespace Neutron.Forms
             }
         }
 
-     
 
-       
+
+
 
         private void ButtonLogFileDirectory_Click(object sender, EventArgs e)
         {

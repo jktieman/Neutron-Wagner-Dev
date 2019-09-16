@@ -51,7 +51,7 @@ namespace Neutron.Forms
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
 
-        private BindingListView<ItemDefinitionView> bindingSourceItemDefinitionViewEquin = null;
+        private BindingListView<ItemDefinitionView> _bindingSourceItemDefinitionViewEquin = null;
 
         private readonly BindingSource _bindingSourceCurrent = new BindingSource();
         private readonly BindingSource _bindingSourceItemDefinitions = new BindingSource();
@@ -346,18 +346,18 @@ namespace Neutron.Forms
                 if (station != null)
                 {
                     views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, station.Id);
-                    bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
+                    _bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
                 }
             }
             else
             {
                 views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _station.StationId);
-                bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
+                _bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
             }
 
 
 
-            _bindingSourceItemDefinitions.DataSource = bindingSourceItemDefinitionViewEquin;
+            _bindingSourceItemDefinitions.DataSource = _bindingSourceItemDefinitionViewEquin;
 
             DataGridViewHot.DataSource = _bindingSourceItemDefinitions;
             // UpdateDataGrid(_bindingSourceItemDefinitions);

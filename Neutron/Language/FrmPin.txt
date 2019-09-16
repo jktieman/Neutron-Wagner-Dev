@@ -1,0 +1,4 @@
+EmployeePin=Employee PIN
+Login=Login
+LogOn=Log On
+NeutronLogin=Neutron Login

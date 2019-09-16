@@ -1,0 +1,4 @@
+EmployeePin=Code PIN employé
+Login=S'identifier
+LogOn=Se connecter
+NeutronLogin=Neutron S'identifier

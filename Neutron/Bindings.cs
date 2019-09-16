@@ -2,6 +2,7 @@
 using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
+using Neutron.Models;
 using NeutronData.Interfaces;
 using NeutronData.Repositories;
 
@@ -11,11 +12,13 @@ namespace Neutron
     {
         public override void Load()
         {
-            Bind<IJsonData>().To<JsonData>().InSingletonScope();
+
+            Bind<IJsonData>().To<JsonData>();
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();
             Bind<ILacProcessor>().To<LacProcessor>().InSingletonScope();
             Bind<IStationRepository>().To<StationRepository>();
+            Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
         }
     }
 }

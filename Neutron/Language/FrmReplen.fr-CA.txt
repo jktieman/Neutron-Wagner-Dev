@@ -1,0 +1,71 @@
+AvailableJobs=Emplois disponibles
+Home=Accueil
+JobManager=Gestionnaire de commandes
+Jobs=Emplois
+LoadJobs=Charger \r les commandes
+NewJob=Nouvel ordre
+JobListing=Offres \r d'emploi
+SelectAll=Tout sélectionner
+ClearSelection=Effacer \r la sélection
+Available=Disponible
+Search=Chercher
+Back=Arrière
+Compress=Compresse
+Refresh=Rafraîchir
+Hold=Tenir
+Release=Libération
+ReturnToStock=Return To Stock
+Archive=Archiver
+JobDetails=Détails \r du poste
+SaveToFile=Enregistrer \r dans un fichier
+Fill=Remplir
+Fill Starters=Remplir \r les démarreurs
+SearchFor=Rechercher
+Records=Des dossiers
+Next=Prochain
+
+# Messages
+NoJobsSelected=Aucun travail sélectionné.
+PickList=Liste de sélection
+NothingtoPick=Rien à choisir
+
+# Title Text
+Selection=Sélection
+HotSearch=Recherche Chaude
+HotPick=Chaud Choisir
+Pick=Choisir
+Store=le magasin
+StartLoader=Start Loader
+StopLoader=Stop Loader
+Loader=Loader
+Doyouwanttostoptheloader=Voulez-vous arrêter le chargeur?
+
+# RadioButtons
+Warranty=Garantie
+Scrap=Ferraille
+Other=Autre
+
+ShowJobs=Afficher \r les emplois
+ShowQuantity=Montrer \r la quantité
+
+# Column Headers
+Ord1=Ordre
+Ord2=Facture d'achat
+Priority=Priorité
+JobStatus=Statut de travail
+Lines=Lignes
+Pieces=Pièces
+LoadDate=Date de chargement
+ShipMethod=Méthode du navire
+Position=Position
+Item=Article
+Quantity=Quantité
+Slot=Fente
+InvQty=Quantité d'inv
+Description=La description
+ReceivedDate=Date de réception
+Starter=Entrée
+AddItem=Ajouter un item
+Station=Gare
+PickedQuantity=Quantité prélevée
+LineStatus=Statut de la ligne

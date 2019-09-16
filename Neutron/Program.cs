@@ -16,9 +16,11 @@ using NeutronCore.Models;
 using NeutronData.Interfaces;
 using Neutron.Models;
 using System.Globalization;
+using System.IO;
 using System.Resources;
 using EnumsNET;
 using NeutronCore;
+using Newtonsoft.Json;
 
 namespace Neutron
 {
@@ -67,9 +69,16 @@ namespace Neutron
 
             IKernel kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
+            var rootDirectory = kernel.Get<INeutronRootDirectory>().RootDirectory;
+
             var jsonData = kernel.Get<IJsonData>();
-            jsonData.RootDirectory = $"{Properties.Settings.Default.RootDirectory}";
-            LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
+            jsonData.RootDirectory = rootDirectory;
+            LoaderSettings.SetRootDirectory(rootDirectory);
+
+            //jsonData.RootDirectory = $"{Properties.Settings.Default.RootDirectory}";
+            //LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
+
+
             var akaRepository = kernel.Get<IAkaRepository>();
             var securityProcessor = kernel.Get<ISecurityProcessor>();
             var lacProcessor = kernel.Get<ILacProcessor>();
@@ -81,6 +90,54 @@ namespace Neutron
 
             Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, nomenclature, stationRepository));
 
+        }
+
+        private static string GetRootDirectory()
+        {
+            var data = new NeutronRootDirectory();
+            var fileName = ($"{typeof(NeutronRootDirectory).Name}.json");
+
+            var fileInfo = new FileInfo($"Json\\{fileName}");
+            if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
+            {
+                if (fileInfo.DirectoryName != null) Directory.CreateDirectory(fileInfo.DirectoryName);
+            }
+
+            if (!fileInfo.Exists)
+            {
+                SaveNew(fileInfo, data);
+            }
+
+            if (fileInfo.Exists)
+            {
+                try
+                {
+                    using (TextReader reader = new StreamReader(fileInfo.FullName))
+                    {
+                        data = JsonConvert.DeserializeObject<NeutronRootDirectory>(reader.ReadToEnd());
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.Write($"Error reading from Json file.  {fileInfo.FullName}");
+                }
+            }
+            return data.RootDirectory;
+        }
+
+        public static void SaveNew(FileInfo fileInfo, NeutronRootDirectory data)
+        {
+            try
+            {
+                using (TextWriter writer = new StreamWriter(fileInfo.FullName, append: false))
+                {
+                    writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                }
+            }
+            catch (Exception)
+            {
+                Console.Write("Error writing NeutronRootDirectory to Json file.");
+            }
         }
     }
 }

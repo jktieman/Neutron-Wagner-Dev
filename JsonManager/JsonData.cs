@@ -12,20 +12,21 @@ namespace JsonManager
     public class JsonData : IJsonData
     {
         private string _rootDirectory;
-        private const string SubDirectory = @"Json\";
-
+        
         public JsonData()
         {
-            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\Json\");
+            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+           
             if (!Directory.Exists(_rootDirectory))
             {
-                Directory.CreateDirectory(_rootDirectory);
+                _rootDirectory = string.Empty;
+                //Directory.CreateDirectory(_rootDirectory);
             }
         }
 
         public JsonData(string rootDirectory)
         {
-            RootDirectory = $"{rootDirectory}{SubDirectory}";
+            RootDirectory = $"{rootDirectory}";
         }
 
         public string RootDirectory
@@ -33,13 +34,20 @@ namespace JsonManager
             get { return _rootDirectory;}
             set
             {
-                _rootDirectory = $"{value}{SubDirectory}";
-                if (!Directory.Exists(_rootDirectory))
+
+                if (!string.IsNullOrEmpty(value) && !Directory.Exists(value))
                 {
-                    Directory.CreateDirectory(_rootDirectory);
+                    Directory.CreateDirectory(value);
                 }
+                if (!Directory.Exists(JsonDirectory))
+                {
+                    Directory.CreateDirectory(JsonDirectory);
+                }
+                _rootDirectory = $"{value}";
             }
         }
+
+        public string JsonDirectory => $"{_rootDirectory}Json\\";
 
         public void SaveFile<T>(T data)
         {
@@ -56,7 +64,7 @@ namespace JsonManager
                 fileName = ($"{typeof(T).Name}.json"); //single class
             }
 
-            var fileInfo = new FileInfo(_rootDirectory + fileName);
+            var fileInfo = new FileInfo(JsonDirectory + fileName);
 
             try
             {
@@ -87,7 +95,7 @@ namespace JsonManager
                 fileName = ($"{typeof(T).Name}.json"); //single class
             }
 
-            var fileInfo = new FileInfo(_rootDirectory + fileName);
+            var fileInfo = new FileInfo(JsonDirectory + fileName);
             if (fileInfo.Exists)
             {
                 try
@@ -109,7 +117,7 @@ namespace JsonManager
         {
             if (string.IsNullOrEmpty(file)) return;
             var fileName = ($"{file}.json");
-            var fileInfo = new FileInfo(_rootDirectory + fileName);
+            var fileInfo = new FileInfo(JsonDirectory + fileName);
 
             try
             {
@@ -129,7 +137,7 @@ namespace JsonManager
             var data = new T();
             if (string.IsNullOrEmpty(file)) return data;
             var fileName = ($"{file}.json");
-            var fileInfo = new FileInfo(_rootDirectory + fileName);
+            var fileInfo = new FileInfo(JsonDirectory + fileName);
             if (!fileInfo.Exists) return data;
             try
             {

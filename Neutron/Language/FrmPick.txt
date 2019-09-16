@@ -1,0 +1,216 @@
+# Main
+LabelFormHeaderText=Neutron Warehouse Management
+LabelFormTitle=Jobs
+MBMainClose=Home
+MBMainAvailableOrders=Available Jobs
+MBMainOrderManager=Job Manager
+MBMainNewOrder=New Job
+MBMainLoadOrders=Start Loader
+
+# Order Listing
+MBSkipped=Skipped
+MBShowAvailable=Available
+MBCompleted=Complete
+MBShowRackOrders=Rack
+LabelFindDescription=Search For
+MButtonSearch=Search
+MButtonClose=Back
+MBSelectAll=Select All
+MButtonClearSelection=Clear Selection
+ButtonPrintAO=Print Anticipated Outs
+ButtonPrintPacking=Print Packing List
+MBPrintPick=Print Pick List
+MBOffCarousel=Off Carousel
+MBHold=Hold
+MBRelease=Release
+MBPriority=Priority
+MBCompress=Compress
+MBReturnToStock=Return To Stock
+MBDeleteOrder=Delete
+MBJobDetails=Job Details
+MBPrintOrderListing=Save To File
+
+# Available Orders
+MbPrintAvailableOrders=Save To File
+MBAvailableOrdersRefresh=Refresh
+MBGo=Next
+LabelAvailableOrdersSearchFor=Search For
+MBSearchAvailableOrders=Search
+MBAvailableOrdersBack=Back
+MBFill=Fill
+MBFillStarters=Fill Starters
+MBShowSkipped=Show Skipped
+MBGo2=Next
+
+# Pick List
+MBPrintPickList=Save To File
+MBStart=Start
+MBPickListBack=Back
+
+# Pick Screen
+MBLocationCount=Location Count
+MBShowOrderOrQuantityToggle=Show Jobs
+MBPickScreenHotPick=Hot Action
+MBResetCarousels=Reset Carousels
+MBPrint=Print
+MBPickNewItem=New Item
+MBPickBack=Back
+LabelItem=Item
+LabelUOI=Unit Of Issue
+LabelQty=Qty
+GroupBoxLocation=Location Information
+LabelDevice=Carousel
+LabelTray=Bin
+LabelOver=Level
+LabelBack=Partition
+LabelReceivedDate=Received Date
+LabelLocationQty=Loc Qty
+LabelTotalQty=Total Qty
+LabelReqQty=Req Qty
+LabelPickedSoFar=Picked So Far
+MBPickChangeQuantity=Change Quantity
+MBSkipPick=Skip Pick
+MBShortPick=Short Pick
+MBPickAccept=Pick
+
+# Order Details
+MBSelectAllDetail=Select All
+MBClearSelectionDetail=Clear Selection
+MBReturnToStockOrderDetail=Return To Stock
+MBHoldDetail=Hold
+MBReleaseDetail=Release
+MBPrintOrderDetails=Save To File
+MBOrderDetailsBack=Back
+
+# New Order
+GroupBoxOrderInformation=Order Information
+LabelJob=Job
+LabelInvoice=Invoice
+LabelPriority=Priority
+MBNewOrderSave=Create Job
+MBNewOrderClose=Back
+GroupBoxDetailInformation=Detail Information
+LabelNewOrderItem=Item
+LabelNewOrderDescription=Description
+LabelNewOrderQuantity=Quantity
+ButtonAddDetail=Add Detail
+LabelSearchForItem=Search For Item
+MBNewOrderSearch=Search
+ButtonRemoveLine=Remove Line
+
+# Available Rack
+MbPrintAvailableOrdersRack=Save To File
+MBRefreshRack=Refresh
+LabelSearchForRack=Search For
+MBSearchAvailableOrdersRack=Search
+MBRackHotAction=Hot Action
+MBRackBack=Back
+MBPrintDocument=Print Pick List
+MBPrintToteLabel=Print Tote Label
+MBRackOrderComplete=Close Order
+MBAdjustOrder=Adjust Order and Close
+
+# Adjust Order
+MBAdjustOrderSave=Save
+MBAdjustOrderBack=Back
+
+# Skip
+MBSelectAllSkip=Select All
+MBClearSelectionSkip=Clear Selection
+MBInventorySkip=Inventory
+MBPrintSkip=Print
+MBPickComplete=Pick Complete
+MBAdjustQuantity=Adjust Quantity
+MBPickZero=Pick Zero
+MBBackSkip=Back
+
+
+
+# Column Headers
+Ord1=Order
+Ord2=Reservation
+Priority=Priority
+OrderStatusName=Job Status
+Off=Off
+Lines=Lines
+Pieces=Pieces
+LoadDate=Load Date
+ShipMethodName=Ship Method
+Id=Id
+StationNumber=St
+Item=Item
+Quantity=Qty
+Picked=Pk
+Description=Description
+OrderId=Order Id
+Sequence=Seq
+PickPosition=Pick Position
+Slot=Slot
+TotalQuantityInInventory=Inv Qty
+ReceivedDate=Received Date
+Starter=Starter
+StatusName=Status
+ItemDefinitionId=Item Definition Id
+PickedQuantity=Picked Quantity
+LineStatusName=Line Status
+OrderDetailId=Order Detail Id
+PartNum=Item
+PartDesc=Description
+StorageType=Storage Type
+Required=Required
+InventoryId=Inventory Id
+
+#Tool Tips
+GetBin=Get Bin
+
+#Text
+OffCarousel=Off Carousel
+OnFloor=On Floor
+Records=Records
+Inventory=Inventory
+CurrentUser=Current User:
+ALL=ALL
+JobDetails=Job Details
+NewJob=New Job
+JobListing=Job Listing 
+ShowSkipped=Show Skipped
+HideSkipped=Hide Skipped
+
+#Loader Button Captions
+StartLoader=Start Loader
+StopLoader=Stop Loader
+
+#Title Text
+Jobs=Jobs
+AvailableJobs=Available Jobs
+PickList=Pick List
+Selection=Selection
+SkipManager=Skip Manager
+
+# Messages
+NoJobsSelected=No Jobs Selected
+NoInventoryForItem=No Inventory For Item
+ItemWillBeSkipped=Item Will Be Skipped
+ErrorGettingImage=Error Getting Image
+DeviceInformation=Device Information
+PickExceedsInventory=Pick Exceeds Inventory at this location.  Add Inventory or Change Quantity before continuing.
+OverPickItem=Do you want to over pick this item?
+OverPickCaption=Over Pick Question
+ShortPickQuestion=No more locations, Pick Short?
+ShortPickCaption=Short Pick
+ErrorSettingOrderDetailStatusCode=Error Setting Order Detail Status Code.
+InsertStoreOrderError=Insert Store Order Error
+InsertStoreItemError=Insert Store Item Error
+BuildStoreOrderNoItemDefintion=Build Store Order - No Item Definition
+BuildStoreOrderNoInventoryItem=Build Store Order - No Inventory Item Definition
+NoDetailLinesSelected=No Detail Lines Selected
+ErrorLoadingLanguages=Error Loading Languages - FrmPick
+NothingtoPick=Nothing to Pick
+
+# Button Captions Pick Screen Toggle Job/Quantity
+ShowJobs=Show Jobs
+ShowQuantity=Show Qty
+
+
+
+

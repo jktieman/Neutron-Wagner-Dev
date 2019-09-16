@@ -1,0 +1,213 @@
+# Main
+LabelFormHeaderText=Neutron Gestion d'entrepôt
+LabelFormTitle=Emplois
+MBMainClose=Accueil
+MBMainAvailableOrders=Emplois disponibles
+MBMainOrderManager= Gestionnaire de commandes
+MBMainNewOrder= Nouvel ordre
+MBMainLoadOrders=Démarrer le chargeur
+
+# Order Listing
+MBSkipped=Sauté
+MBShowAvailable=Disponible
+MBCompleted=Achevé
+MBShowRackOrders=Étagère
+LabelFindDescription=Rechercher
+MButtonSearch=Chercher
+MButtonClose=Arrière
+MBSelectAll=Tout sélectionner
+MButtonClearSelection=Effacer la sélection
+ButtonPrintAO=Imprimer les impressions anticipées
+ButtonPrintPacking=Imprimer la liste de colisage
+MBPrintPick=Imprimer la liste de sélection
+MBOffCarousel=Hors carrousel
+MBHold=Tenir
+MBRelease=Libération
+MBPriority=Priorité
+MBCompress=Compresse
+MBReturnToStock=Retour au stock
+MBDeleteOrder=Effacer
+MBJobDetails=Détails du poste
+MBPrintOrderListing=Enregistrer dans un fichier
+
+# Available Orders
+MbPrintAvailableOrders=Enregistrer dans un fichier
+MBAvailableOrdersRefresh=Rafraîchir
+MBGo=Suivant
+LabelAvailableOrdersSearchFor=Rechercher
+MBSearchAvailableOrders=Chercher
+MBAvailableOrdersBack=Retour
+MBFill=Remplir
+MBFillStarters=Remplir les démarreurs
+MBShowSkipped=Afficher ignoré
+MBGo2=Suivant
+
+# Pick List
+MBPrintPickList=Enregistrer dans un fichier
+MBStart=Début
+MBPickListBack=Retour
+
+# Pick Screen
+MBLocationCount=Nombre d'emplacement
+MBShowOrderOrQuantityToggle=Afficher les emplois
+MBPickScreenHotPick=Action Chaude
+MBResetCarousels=Réinitialiser les carrousels
+MBPrint=Impression
+MBPickNewItem=Nouvel article
+MBPickBack=Arrière
+LabelItem=Article
+LabelUOI=Unité d'émission
+LabelQty=Qté
+GroupBoxLocation=Information de Lieu
+LabelDevice=Carrousel
+LabelTray=Poubelle
+LabelOver=Niveau
+LabelBack=Cloison
+LabelReceivedDate=Date de réception
+LabelLocationQty=Qté Loc
+LabelTotalQty=Quantité totale
+LabelReqQty=Quantité requise
+LabelPickedSoFar=Choisi jusqu'ici
+MBPickChangeQuantity=Changer la quantité
+MBSkipPick=Passer le choix
+MBShortPick=Choix court
+MBPickAccept=Choisir
+
+# Order Details
+MBSelectAllDetail=Tout sélectionner
+MBClearSelectionDetail=Effacer la sélection
+MBReturnToStockOrderDetail=Retour au stock
+MBHoldDetail=Tenir
+MBReleaseDetail=Libération
+MBPrintOrderDetails=Enregistrer dans un fichier
+MBOrderDetailsBack=Arrière
+
+# New Order
+GroupBoxOrderInformation=Informations sur la commande
+LabelJob=Emploi
+LabelInvoice=Facture d'achat
+LabelPriority=Priorité
+MBNewOrderSave=Créer un emploi
+MBNewOrderClose=Arrière
+GroupBoxDetailInformation=Informations détaillées
+LabelNewOrderItem=Article
+LabelNewOrderDescription=La description
+LabelNewOrderQuantity=Quantité
+ButtonAddDetail=Ajouter un détail
+LabelSearchForItem=Rechercher un article
+MBNewOrderSearch=Chercher
+ButtonRemoveLine=Supprimer la ligne
+
+# Available Rack
+MbPrintAvailableOrdersRack=Enregistrer dans un fichier
+MBRefreshRack=Rafraîchir
+LabelSearchForRack=Rechercher
+MBSearchAvailableOrdersRack=Chercher
+MBRackHotAction=Action Chaude
+MBRackBack=Arrière
+MBPrintDocument=Imprimer la liste de sélection
+MBPrintToteLabel=Étiquette fourre-tout
+MBRackOrderComplete=Fermer la commande
+MBAdjustOrder=Ajuster la commande et fermer
+
+# Adjust Order
+MBAdjustOrderSave=enregistrer
+MBAdjustOrderBack=Arrière
+
+# Skip
+MBSelectAllSkip=Tout sélectionner
+MBClearSelectionSkip=Effacer la sélection
+MBInventorySkip=Inventaire
+MBPrintSkip=Impression
+MBPickComplete=Choisissez complète
+MBAdjustQuantity=Ajuster la quantité
+MBPickZero=Choisissez zéro
+MBBackSkip=Arrière
+
+# Column Headers
+Ord1=Ordre
+Ord2=Réservation
+Priority=Priorité
+OrderStatusName=Statut du travail
+Off=De
+Lines=Lignes
+Pieces=Pièces
+LoadDate=Date de chargement
+ShipMethodName=Méthode d'expédition
+Id=Id
+StationNumber=St
+Item=Article
+Quantity=Qté
+Picked=Pk
+Description=La description
+OrderId=Numéro de commande
+Sequence=Seq
+PickPosition=Choisir la position
+Slot=Fente
+TotalQuantityInInventory=Qté Inv
+ReceivedDate=Date de réception
+Starter=Entrée
+StatusName=Statut
+ItemDefinitionId=ID de définition d'élément
+PickedQuantity=Quantité choisie
+LineStatusName=Etat de la ligne
+OrderDetailId=Numéro de commande
+PartNum=Article
+PartDesc=La description
+StorageType=Type de stockage
+Required=Champs obligatoires
+InventoryId=Identifiant d'inventaire
+
+#Tool Tips
+GetBin=Obtenir bin
+
+#Text
+OffCarousel=Hors carrousel
+OnFloor=Par terre
+Records=Records
+Inventory=Inventaire
+CurrentUser=Utilisateur actuel:
+ALL=TOUT
+JobDetails=Détails du poste
+NewJob=Nouveau travail
+JobListing=Offres d'emploi
+ShowSkipped=Afficher ignoré
+HideSkipped=Masquer ignoré
+
+#Loader Button Captions
+StartLoader=Démarrer le chargeur
+StopLoader=Arrêter le chargeur
+
+#Title Text
+Jobs=Emplois
+AvailableJobs=Emplois disponibles
+PickList=Liste de sélection
+Selection=Sélection
+SkipManager=Gestionnaire de saut
+
+# Messages
+NoJobsSelected=Aucun emploi sélectionné
+NoInventoryForItem=Aucun inventaire pour l'article
+ItemWillBeSkipped=L'article sera ignoré
+ErrorGettingImage=Erreur lors de l'obtention d'une image
+DeviceInformation=Informations sur le périphérique
+PickExceedsInventory=Choisir dépasse l'inventaire à cet endroit.  Ajoutez l'inventaire ou changez la quantité avant de continuer.
+OverPickItem=Voulez-vous plus choisir cet article?
+OverPickCaption=Plus de choix
+ShortPickQuestion=Pas plus d'endroits, Choisissez court?
+ShortPickCaption=Choix court
+ErrorSettingOrderDetailStatusCode=Erreur de définition du code d'état des détails de la commande.
+InsertStoreOrderError=Erreur d'insertion de commande
+InsertStoreItemError=Item Insert Error
+BuildStoreOrderNoItemDefintion=Créer une commande de magasin - Aucune définition d'élément
+BuildStoreOrderNoInventoryItem=Créer une commande de magasin - Aucune définition d'élément d'inventaire
+NoDetailLinesSelected=Aucune ligne de détail sélectionnée
+ErrorLoadingLanguages=Erreur de chargement des langues - FrmPick
+NothingtoPick=Rien à choisir
+
+# Button Captions Pick Screen Toggle Job/Quantity
+ShowJobs=Afficher les emplois
+ShowQuantity=Afficher la quantité
+
+
+

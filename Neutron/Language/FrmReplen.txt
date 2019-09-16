@@ -1,0 +1,79 @@
+AvailableJobs=Available Jobs
+Home=Home
+NeutronWarehouseManagement=Neutron Warehouse Management
+JobManager=Job Manager
+Jobs=Jobs
+LoadJobs=Load Jobs
+NewJob=Create Job
+JobListing=Job Listing
+SelectAll=Select All
+ClearSelection=Clear Selection
+Available=Available
+Search=Search
+Back=Back
+Compress=Compress
+Delete=Delete
+Refresh=Refresh
+Hold=Hold
+Release=Release
+ReturnToStock=Return To Stock
+Archive=Archive
+Complete=Complete
+ShowAll=Show All
+JobDetails=Job Details
+SaveToFile=Save To File
+Fill=Fill
+FillStarters=Fill Starters
+SearchFor=Search For
+Records=Records
+Next=Next
+PickPosition=Pick Position
+
+# Messages
+NoJobsSelected=No Jobs Selected.
+PickList=Pick List
+NothingtoPick=Nothing to Pick.
+
+# Title Text
+Selection=Selection
+HotSearch=Hot Search
+HotPick=Hot Pick
+Pick=Pick
+Store=Store
+StartLoader=Start Loader
+StopLoader=Stop Loader
+Loader=Loader
+Doyouwanttostoptheloader=Do you want to stop the loader?
+
+# RadioButtons
+Warranty=Warranty
+Scrap=Scrap
+Other=Other
+
+ShowJobs=Show Jobs
+ShowQuantity=Show Qty
+
+# Column Headers
+Ord1=Order
+Ord2=Invoice
+Priority=Priority
+JobStatus=Job Status
+Lines=Lines
+Pieces=Pieces
+LoadDate=Load Date
+ShipMethod=Ship Method
+Pos=Pos
+Item=Item
+Quantity=Qty
+Slot=Slot
+InvQty=Inv Qty
+Description=Description
+ReceivedDate=Received Date
+Starter=Starter
+AddItem=Add Item
+Station=Station
+PickedQuantity=Picked Quantity
+LineStatus=Line Status
+
+#Tool Tips
+GetBin=Get Bin

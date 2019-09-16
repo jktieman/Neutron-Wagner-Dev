@@ -1,0 +1,4 @@
+EmployeePin=PIN del empleado
+Login=Iniciar sesión
+LogOn=Acceder
+NeutronLogin=Inicio de sesión de Neutron
