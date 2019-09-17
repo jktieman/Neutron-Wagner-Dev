@@ -533,7 +533,6 @@
             this.ButtonLanguageDirectory.TabIndex = 104;
             this.ButtonLanguageDirectory.Text = "&Browse";
             this.ButtonLanguageDirectory.UseVisualStyleBackColor = true;
-            this.ButtonLanguageDirectory.Visible = false;
             this.ButtonLanguageDirectory.Click += new System.EventHandler(this.ButtonLanguageDirectory_Click);
             // 
             // label15
@@ -545,7 +544,6 @@
             this.label15.TabIndex = 103;
             this.label15.Text = "Language Directory";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label15.Visible = false;
             // 
             // LanguageDirectory
             // 
@@ -555,7 +553,6 @@
             this.LanguageDirectory.Size = new System.Drawing.Size(505, 26);
             this.LanguageDirectory.TabIndex = 102;
             this.LanguageDirectory.Text = "Language\\";
-            this.LanguageDirectory.Visible = false;
             // 
             // ButtonFindCostCenterFile
             // 

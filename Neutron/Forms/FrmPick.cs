@@ -159,7 +159,7 @@ namespace Neutron.Forms
                 GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
             }
 
-            FillComboBoxStationNumber();
+            //FillComboBoxStationNumber();
 
             InitOrdersToPick(_neutronVariables.PickBatchSize);
             InitDataGridViewNewItems();
@@ -177,7 +177,14 @@ namespace Neutron.Forms
         private void FillComboBoxStationNumber()
         {
             var stationNumbers = _stationRepository.GetPickStationIds();
-            stationNumbers.Insert(0, _resourceManager.GetString($"ALL"));
+            if (stationNumbers.Count > 0)
+            {
+                stationNumbers.Insert(0, _resourceManager.GetString($"ALL"));
+            }
+            else
+            {
+                stationNumbers = new List<string> {"All", "1", "2", "3", "4", "5", "8"};
+            }
             ComboBoxStationNumber.DataSource = stationNumbers;
             ComboBoxStationNumber.SelectedIndex = 0;
         }
@@ -7957,20 +7964,20 @@ namespace Neutron.Forms
                                     break;
                                 }
                             case Keys.Q:
-                            {
-                                ChangeQuantity();
-                                break;
-                            }
+                                {
+                                    ChangeQuantity();
+                                    break;
+                                }
                             case Keys.K:
-                            {
-                                SkipPick();
-                                break;
-                            }
+                                {
+                                    SkipPick();
+                                    break;
+                                }
                             case Keys.H:
-                            {
-                                ShortPick();
-                                break;
-                            }
+                                {
+                                    ShortPick();
+                                    break;
+                                }
                         }
                         break;
                     }
