@@ -87,15 +87,16 @@ namespace Neutron
             Mediator.GetInstance().InventoryFileCreatedError += (s, e) => MessageBox.Show(e.Text, "Inventory File Error"
                 , MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-
+         
             LogOnOff();
+
             if (!InitForm())
             {
                MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
                 // Close();
             }
-            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger);
+
 
            // LogOnOff();
            
@@ -125,6 +126,7 @@ namespace Neutron
                                     {
                                         if (SetupSlotFactory())
                                         {
+                                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger);
                                             if (StartLoader())
                                             {
                                                 result = true;
