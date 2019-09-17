@@ -152,7 +152,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}"; //GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
             CurrentTextBoxPos = TextBoxPos1;
-            ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
+            ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString("GetBin"));
             if (_neutronVariables.IptiDisplays)
             {
                 GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
@@ -1944,7 +1944,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Lines",
-                HeaderText = _resourceManager.GetString($"Lines"),
+                HeaderText = _resourceManager.GetString("Lines"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Lines"
@@ -1954,7 +1954,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Pieces",
-                HeaderText = _resourceManager.GetString($"Pieces"),
+                HeaderText = _resourceManager.GetString("Pieces"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Pieces"
@@ -1964,7 +1964,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LoadDate",
-                HeaderText = _resourceManager.GetString($"LoadDate"),
+                HeaderText = _resourceManager.GetString("LoadDate"),
                 Name = "LoadDate",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
@@ -1986,7 +1986,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = @"Id",
                 Visible = false,
                 Name = "Id"
             };
@@ -2022,7 +2022,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _resourceManager.GetString(@"Ord1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord1"
@@ -2032,7 +2032,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _resourceManager.GetString(@"Ord2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord2"
@@ -2042,7 +2042,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StatusName",
-                HeaderText = _resourceManager.GetString($"StatusName"),
+                HeaderText = @"Status",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StatusName",
@@ -2053,7 +2053,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Priority",
-                HeaderText = _resourceManager.GetString($"Priority"),
+                HeaderText = _resourceManager.GetString(@"Priority"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Priority"
@@ -2063,7 +2063,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Lines",
-                HeaderText = _resourceManager.GetString($"Lines"),
+                HeaderText = _resourceManager.GetString(@"Lines"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Lines"
@@ -2073,7 +2073,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Pieces",
-                HeaderText = _resourceManager.GetString($"Pieces"),
+                HeaderText = _resourceManager.GetString(@"Pieces"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Pieces"
@@ -2083,7 +2083,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LoadDate",
-                HeaderText = _resourceManager.GetString($"LoadDate"),
+                HeaderText = _resourceManager.GetString(@"LoadDate"),
                 Name = "LoadDate",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
@@ -2106,7 +2106,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = @"Id",
                 Visible = false,
                 Name = "Id"
             };
@@ -2219,7 +2219,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                HeaderText = _resourceManager.GetString("Station"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationNumber"
@@ -2229,7 +2229,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _resourceManager.GetString("Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -2239,7 +2239,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _resourceManager.GetString("Description"),
                 Name = "Description",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
@@ -2249,7 +2249,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _resourceManager.GetString("Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -2259,7 +2259,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ItemDefinitionId",
-                HeaderText = _resourceManager.GetString($"ItemDefinitionId"),
+                HeaderText = @"Id",
                 Visible = false,
                 Name = "ItemDefinitionId"
             };
@@ -2294,7 +2294,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                HeaderText = _resourceManager.GetString("Station"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationNumber"
@@ -2304,7 +2304,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _resourceManager.GetString(@"Ord1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord1"
@@ -2314,7 +2314,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _resourceManager.GetString(@"Ord2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord2"
@@ -2324,7 +2324,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _resourceManager.GetString(@"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -2334,7 +2334,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _resourceManager.GetString(@"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -2344,7 +2344,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PickedQuantity",
-                HeaderText = _resourceManager.GetString($"PickedQuantity"),
+                HeaderText = _resourceManager.GetString(@"PickedQuantity"),
                 Name = "PickedQuantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -2354,7 +2354,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _resourceManager.GetString(@"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -2364,7 +2364,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LineStatusName",
-                HeaderText = _resourceManager.GetString($"LineStatusName"),
+                HeaderText = _resourceManager.GetString(@"LineStatus"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LineStatusName"
@@ -2374,7 +2374,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _resourceManager.GetString($"OrderId"),
+                HeaderText = @"OrderId",
                 Visible = false,
                 Name = "OrderId"
             };
@@ -2383,7 +2383,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailId",
-                HeaderText = _resourceManager.GetString($"OrderDetailId"),
+                HeaderText = @"OrderDetailId",
                 Visible = false,
                 Name = "OrderDetailId"
             };
@@ -2422,7 +2422,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                HeaderText = _resourceManager.GetString("Station"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationNumber",
@@ -2431,10 +2431,32 @@ namespace Neutron.Forms
             };
             DataGridViewAdjust.Columns.Add(col);
 
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Ord1",
+            //    HeaderText = _resourceManager.GetString(@"Ord1"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+            //    Name = "Ord1",
+            //    ReadOnly = true
+            //};
+            //DataGridViewAdjustOrder.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Ord2",
+            //    HeaderText = _resourceManager.GetString(@"Ord2"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+            //    Name = "Ord2",
+            //    ReadOnly = true
+            //};
+            //DataGridViewAdjustOrder.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PartNum",
-                HeaderText = _resourceManager.GetString($"PartNum"),
+                HeaderText = _resourceManager.GetString(@"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "PartNum",
@@ -2445,7 +2467,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PartDesc",
-                HeaderText = _resourceManager.GetString($"PartDesc"),
+                HeaderText = _resourceManager.GetString(@"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "PartDesc",
@@ -2456,7 +2478,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _resourceManager.GetString(@"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
@@ -2467,7 +2489,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PickedQuantity",
-                HeaderText = _resourceManager.GetString($"PickedQuantity"),
+                HeaderText = _resourceManager.GetString(@"PickedQuantity"),
                 Name = "PickedQuantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
@@ -2478,7 +2500,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LineStatusName",
-                HeaderText = _resourceManager.GetString($"LineStatusName"),
+                HeaderText = _resourceManager.GetString(@"LineStatus"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LineStatusName",
@@ -2490,7 +2512,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _resourceManager.GetString($"OrderId"),
+                HeaderText = @"OrderId",
                 Visible = false,
                 Name = "OrderId"
             };
@@ -2499,7 +2521,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailId",
-                HeaderText = _resourceManager.GetString($"OrderDetailId"),
+                HeaderText = @"OrderDetailId",
                 Visible = false,
                 Name = "OrderDetailId"
             };
@@ -2524,7 +2546,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                HeaderText = _resourceManager.GetString("Station"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationNumber"
@@ -2534,7 +2556,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _resourceManager.GetString(@"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -2544,7 +2566,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _resourceManager.GetString(@"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -2554,7 +2576,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _resourceManager.GetString(@"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -2564,7 +2586,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = @"Id",
                 Visible = false,
                 Name = "Id"
             };
@@ -2577,7 +2599,6 @@ namespace Neutron.Forms
             }
 
         }
-        #endregion
 
         private void FrmPick_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -2590,6 +2611,8 @@ namespace Neutron.Forms
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SizeMode = TabSizeMode.Fixed;
         }
+
+
 
         private void MButtonClearSelection_Click(object sender, EventArgs e)
         {
@@ -2771,7 +2794,7 @@ namespace Neutron.Forms
             }
             if (!orderIds.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                MessageBox.Show(_resourceManager.GetString("NoJobsSelected"));
             }
             return orderIds;
         }
@@ -2794,7 +2817,7 @@ namespace Neutron.Forms
             }
             if (!ordViews.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                MessageBox.Show(_resourceManager.GetString("NoJobsSelected"));
             }
             return ordViews;
         }
@@ -2816,7 +2839,7 @@ namespace Neutron.Forms
             }
             if (!orders.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                MessageBox.Show(_resourceManager.GetString("NoJobsSelected"));
             }
             return orders;
         }
@@ -2834,7 +2857,7 @@ namespace Neutron.Forms
             }
             if (!orderIds.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                MessageBox.Show(_resourceManager.GetString("NoJobsSelected"));
             }
             return orderIds;
         }
@@ -2846,7 +2869,7 @@ namespace Neutron.Forms
 
         private void PickListBack()
         {
-            LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+            LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = AvailableOrders;
         }
@@ -2870,7 +2893,7 @@ namespace Neutron.Forms
         private void AvailableOrdersBack()
         {
             ClearBatchPositions();
-            LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
+            LabelFormTitle.Text = _resourceManager.GetString("Jobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
@@ -2885,7 +2908,7 @@ namespace Neutron.Forms
             {
                 Task.Run(() => _logger.Log($"Batch Start: [{DateTime.Now.ToLongTimeString()}]"));
 
-                LabelFormTitle.Text = _resourceManager.GetString($"PickList");
+                LabelFormTitle.Text = _resourceManager.GetString("PickList");
                 LabelFormTitle.BackColor = Color.RoyalBlue;
 
                 var itemShort = PickListLoad();
@@ -2964,7 +2987,9 @@ namespace Neutron.Forms
                 else
                 {
                     //if (item.OrderDetail.LineStatusId == 9) continue;
-                    MessageBox.Show($"{_resourceManager.GetString($"NoInventoryForItem")}: {item.Item}. {Environment.NewLine} {_resourceManager.GetString($"ItemWillBeSkipped")}");
+                    MessageBox.Show($"No Inventory for Item: {item.Item}." + Environment.NewLine +
+                                    "Item will be Skipped.");
+
                     item.OrderDetail.LineStatusId = 9;
                     _repoOrderDetails.Update(item.OrderDetail);
                 }
@@ -2982,9 +3007,9 @@ namespace Neutron.Forms
             }
             else
             {
-                MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+                //  MessageBox.Show(_resourceManager.GetString("NothingtoPick."));
                 ClearAllSelectOrdersToPick();
-                LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+                LabelFormTitle.Text = _resourceManager.GetString("AvailableJobs");
                 LabelFormTitle.BackColor = Color.RoyalBlue;
                 tabControl1.SelectedTab = AvailableOrders;
             }
@@ -4102,7 +4127,7 @@ namespace Neutron.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($" {_resourceManager.GetString($"ErrorGettingImage")}. {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    MessageBox.Show($"Error getting Image.  {ex.Message} \r\n {ex.InnerException}");
                 }
             }
             Task.Run(() => _logger.Log($"UpdateImages End : [{DateTime.Now.ToLongTimeString()}]"));
@@ -4351,6 +4376,15 @@ namespace Neutron.Forms
                     textBox.Text = string.Empty;
                 }
             }
+
+            //TextBoxPos1.Text = string.Empty;
+            //TextBoxPos2.Text = string.Empty;
+            //TextBoxPos3.Text = string.Empty;
+            //TextBoxPos4.Text = string.Empty;
+            //TextBoxPos5.Text = string.Empty;
+            //TextBoxPos6.Text = string.Empty;
+            //TextBoxPos7.Text = string.Empty;
+            //TextBoxPos8.Text = string.Empty;
         }
 
         private void SetOrderCompleteThisStation()
@@ -4505,11 +4539,12 @@ namespace Neutron.Forms
                             }
                             else
                             {
-                                MessageBox.Show(response.AsString(EnumFormat.Description)
-                                    , caption: _resourceManager.GetString($"DeviceInformation")
+                                MessageBox.Show(response.AsString(EnumFormat.Description),
+                                    caption: "Device Information"
                                     , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                             }
                         }
+
                     }
                 }
             }
@@ -4629,7 +4664,7 @@ namespace Neutron.Forms
             }
             else
             {
-                MessageBox.Show(text: _resourceManager.GetString($"PickExceedsInventory"), caption: _resourceManager.GetString($"Inventory"), buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Stop);
+                MessageBox.Show(text: "Pick Exceeds Inventory at this location.  Add Inventory or Change Quantity before continuing.", caption: "Inventory", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Stop);
             }
             Task.Run(() => _logger.Log($"PickAccept_Click End : [{DateTime.Now.ToLongTimeString()}]"));
             Cursor.Current = Cursors.Default;
@@ -4675,7 +4710,7 @@ namespace Neutron.Forms
             }
             else if (_currentPickStop.QuantityToBePicked < 0)
             {
-                var result = MessageBox.Show(_resourceManager.GetString($"OverPickItem"), _resourceManager.GetString($"OverPickCaption")
+                var result = MessageBox.Show("Do you want to overpick this item?", "Overpick Question"
                     , MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return false;
                 return true;
@@ -4691,7 +4726,7 @@ namespace Neutron.Forms
                 }
                 else  // no more locations
                 {
-                    var result = MessageBox.Show(_resourceManager.GetString($"ShortPickQuestion"), _resourceManager.GetString($"ShortPickCaption"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var result = MessageBox.Show("No more locations, Pick Short?", "Short Pick", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
                         return true;
@@ -4833,10 +4868,11 @@ namespace Neutron.Forms
                             else
                             {
                                 MessageBox.Show(response.AsString(EnumFormat.Description),
-                                    caption: _resourceManager.GetString($"DeviceInformation")
+                                    caption: "Device Response Move Next"
                                     , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                             }
                         }
+
                     }
                 }
             }
@@ -4893,7 +4929,7 @@ namespace Neutron.Forms
 
             if (anticipatedOuts.Count <= 0) return;
 
-            if (comboBoxValue != _resourceManager.GetString($"ALL"))
+            if (comboBoxValue != "ALL")
             {
                 var stationId = IntegerExtensions.ParseInt(comboBoxValue);
                 anticipatedOuts = anticipatedOuts.Where(r => r.Station == stationId).ToList();
@@ -4907,7 +4943,7 @@ namespace Neutron.Forms
             var orderViews = GetCheckedOrders();
             if (orderViews.Count <= 0) return;
 
-            if (comboBoxValue == _resourceManager.GetString($"ALL"))
+            if (comboBoxValue == "ALL")
             {
                 foreach (var orderView in orderViews)
                 {
@@ -5300,7 +5336,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{_resourceManager.GetString($"ErrorSettingOrderDetailStatusCode")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                MessageBox.Show("Error setting Order Detail Status Code. " + ex.Message);
             }
         }
 
@@ -6405,8 +6441,10 @@ namespace Neutron.Forms
         private void MBRefresh_Click(object sender, EventArgs e)
         {
             ShowAllOrders();
-            MBCompleted.Text = "MBCompleted";
+            MBCompleted.Text = "Completed";
         }
+
+
 
         private void MBClearSelectionDetail_Click(object sender, EventArgs e)
         {
@@ -6439,6 +6477,12 @@ namespace Neutron.Forms
                             _repoOrderDetails.Update(orderDetail);
                             GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderRts, orderDetail);
                         }
+                        //else
+                        //{
+                        //    orderDetail.LineStatusId = 8;  //Archive
+                        //    _repoOrderDetails.Update(orderDetail);
+                        //    GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderArchived, orderDetail);
+                        //}
                         if (_neutronVariables.CreateStoreOrderWithRts)
                         {
                             CreateStoreOrderFromOrderDetailLine(orderDetail);
@@ -6489,7 +6533,7 @@ namespace Neutron.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"{_resourceManager.GetString($"InsertStoreOrderError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    MessageBox.Show("Insert Replen Order Error " + ex.Message);
                 }
 
                 var storeItemDefinition = _repoItemDefinition.FindBy(r => r.Item == detailLine.PartNum).FirstOrDefault();
@@ -6522,18 +6566,19 @@ namespace Neutron.Forms
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show($"{_resourceManager.GetString($"InsertStoreItemError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                            MessageBox.Show("Insert Store Item Error " + ex.Message);
                         }
                     }
                     else
                     {
-                        MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoItemDefintion")}");
+                        MessageBox.Show("Build Store Order, no Item Defintion");
                     }
                 }
                 else
                 {
-                    MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoInventoryItem")}");
+                    MessageBox.Show("Build Store Order, no Inventory Item");
                 }
+
             }
         }
 
@@ -6564,7 +6609,7 @@ namespace Neutron.Forms
             }
             if (!orderDetailIds.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                MessageBox.Show(text: "No Jobs Selected.");
             }
             return orderDetailIds;
         }
@@ -6586,7 +6631,7 @@ namespace Neutron.Forms
             }
             if (!orderDetails.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoDetailLinesSelected"));
+                MessageBox.Show(text: "No Detail Lines Selected.");
             }
             return orderDetails;
         }
@@ -6628,7 +6673,7 @@ namespace Neutron.Forms
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"{_resourceManager.GetString($"InsertStoreOrderError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                        MessageBox.Show("Insert Replen Order Error " + ex.Message);
                     }
 
                     foreach (var hostOrder in hostOrderLines)
@@ -6663,17 +6708,17 @@ namespace Neutron.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show($"{_resourceManager.GetString($"InsertStoreItemError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                                    MessageBox.Show("Insert Store Item Error " + ex.Message);
                                 }
                             }
                             else
                             {
-                                MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoItemDefintion")}");
+                                MessageBox.Show("Build Store Order, no Item Defintion");
                             }
                         }
                         else
                         {
-                            MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoInventoryItem")}");
+                            MessageBox.Show("Build Store Order, no Inventory Item");
                         }
                     }
                 }
@@ -7008,6 +7053,9 @@ namespace Neutron.Forms
                 }
             }
         }
+
+
+
 
         private void MBRackBack_Click(object sender, EventArgs e)
         {
@@ -7378,15 +7426,15 @@ namespace Neutron.Forms
 
         private void MBShowSkipped_Click(object sender, EventArgs e)
         {
-            if (MBShowSkipped.Text == _resourceManager.GetString($"ShowSkipped"))
+            if (MBShowSkipped.Text == "Show Skipped")
             {
                 _showSkipped = true;
-                MBShowSkipped.Text = _resourceManager.GetString($"HideSkipped");
+                MBShowSkipped.Text = "Hide Skipped";
             }
             else
             {
                 _showSkipped = false;
-                MBShowSkipped.Text = _resourceManager.GetString($"ShowSkipped");
+                MBShowSkipped.Text = "Show Skipped";
             }
             ShowAvailableOrders();
         }
@@ -7409,7 +7457,7 @@ namespace Neutron.Forms
             DataGridViewSkip.DataSource = _bindingSourceSkipView;
             GetRecordCount(_bindingSourceSkipView);
             DataGridViewSkip.ClearSelection();
-            LabelFormTitle.Text = _resourceManager.GetString($"SkipManager");
+            LabelFormTitle.Text = "Skip Manager";
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Skip;
         }
@@ -7489,7 +7537,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                HeaderText = _resourceManager.GetString("Station"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -7500,7 +7548,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageType",
-                HeaderText = _resourceManager.GetString($"StorageType"),
+                HeaderText = _resourceManager.GetString("StorageType"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -7511,7 +7559,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-                HeaderText = _resourceManager.GetString($"Slot"),
+                HeaderText = _resourceManager.GetString("Slot"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -7522,7 +7570,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _resourceManager.GetString("Item"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -7533,7 +7581,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _resourceManager.GetString(@"Description"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description",
                 ReadOnly = true,
@@ -7544,7 +7592,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _resourceManager.GetString(@"Quantity"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity",
                 ReadOnly = true,
@@ -7556,7 +7604,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "Picked",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = _resourceManager.GetString($"Picked"),
+                HeaderText = _resourceManager.GetString(@"Picked"),
                 Name = "Picked",
                 ReadOnly = false,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -7566,7 +7614,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Required",
-                HeaderText = _resourceManager.GetString($"Required"),
+                HeaderText = _resourceManager.GetString(@"Required"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Required",
                 ReadOnly = true,
@@ -7577,7 +7625,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "InventoryId",
-                HeaderText = _resourceManager.GetString($"InventoryId"),
+                HeaderText = @"Id",
                 Visible = false,
                 Name = "InventoryId"
             };
@@ -7867,14 +7915,12 @@ namespace Neutron.Forms
 
                 //Skip Inventory
 
-
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"{_resourceManager.GetString($"ErrorLoadingLanguages")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
+
         }
 
         private void MBResetCarousels_Click(object sender, EventArgs e)

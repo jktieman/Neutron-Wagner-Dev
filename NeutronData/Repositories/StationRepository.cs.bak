@@ -219,16 +219,5 @@ namespace NeutronData.Repositories
             List<Station> stations = repoStation.All().ToList();
             return stations;
         }
-
-        public List<string> GetPickStationIds()
-        {
-            var result = new List<string>();
-            var stations = repoStation.All().Where(r => r.Id <= 8).Select(s => s.Id.ToString()).OrderBy(s => s).ToList();
-            if (stations.Count > 0)
-            {
-                result = stations;
-            }
-            return result;
-        }
     }
 }
