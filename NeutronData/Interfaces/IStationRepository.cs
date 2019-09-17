@@ -9,5 +9,6 @@ namespace NeutronData.Interfaces
         StationView GetStationView(int stationNumber);
         int GetStationId(int stationNumber);
         List<Station> Lookup();
+        List<string> GetPickStationIds();
     }
 }
