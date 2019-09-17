@@ -6,7 +6,7 @@ namespace NeutronCore
 {
     public static class LoaderSettings
     {
-        private static string _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+        private static string _rootDirectory;
         private const string SubDirectory = @"Configuration\";
         private const string FileName = @"ConfigFile.Csv";
         private static readonly string backSlash = @"\";
@@ -26,8 +26,19 @@ namespace NeutronCore
         public static bool Initialized { get; set; }
         public static string EnableLogging { get; set; }
 
+        static LoaderSettings()
+        {
+            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+
+            if (!Directory.Exists(_rootDirectory))
+            {
+                _rootDirectory = string.Empty;
+            }
+        }
+
+
         public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
-       
+
         public static string GetImagesDirectory()
         {
             return PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory;
@@ -150,7 +161,7 @@ namespace NeutronCore
 
         public static string GetLogFileDirectory()
         {
-            return PathExists(_logFileDirectory) ? _logFileDirectory : _rootDirectory;
+            return PathExists(_logFileDirectory) ? _logFileDirectory : _rootDirectory + @"Logs\"; ;
         }
 
         public static void SetLogFileDirectory(string value)
@@ -199,7 +210,8 @@ namespace NeutronCore
         {
             if (string.IsNullOrEmpty(_languageDirectory))
             {
-                _languageDirectory = _rootDirectory + @"Language\";
+                _languageDirectory = @"Language\";
+               // _languageDirectory = _rootDirectory + @"Language\";
             }
             return _languageDirectory;
         }
@@ -235,7 +247,7 @@ namespace NeutronCore
                     sw.Write($"{_costCenterFile}{'|'}");
                     sw.Write($"{_languageDirectory}");
                     sw.WriteLine();
-                } 
+                }
             }
         }
 
@@ -311,10 +323,30 @@ namespace NeutronCore
             {
                 if (path.Length > 0)
                 {
+                    if (Directory.Exists(path))
+                    {
+                        result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Directory does not exists. Add in System Interface. " + ex.Message + " " + ex.InnerException);
+                result = false;
+            }
+            return result;
+        }
+
+        public static bool PathExistsCreate(string path)
+        {
+            var result = false;
+            try
+            {
+                if (path.Length > 0)
+                {
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
-
                     }
                     result = true;
                 }
@@ -326,7 +358,6 @@ namespace NeutronCore
             }
             return result;
         }
-
 
     }
 }

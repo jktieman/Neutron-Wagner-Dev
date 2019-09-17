@@ -1453,7 +1453,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderStatusName",
-                HeaderText = _resourceManager.GetString(@"JobStatus"),
+                HeaderText = _resourceManager.GetString(@"OrderStatusName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "OrderStatusName",
                 Visible = true,
@@ -1651,7 +1651,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderStatusName",
-                HeaderText = _resourceManager.GetString(@"JobStatus"),
+                HeaderText = _resourceManager.GetString(@"OrderStatusName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "OrderStatusName",
                 Visible = true,
@@ -1662,7 +1662,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = "Qty",  // _resourceManager.GetString(@"Quantity"),
+                HeaderText = _resourceManager.GetString(@"Quantity"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1673,7 +1673,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "Picked",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = "Pk",  // _resourceManager.GetString(@"Picked"),
+                HeaderText = _resourceManager.GetString(@"Picked"),
                 Name = "Picked",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
@@ -1812,7 +1812,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "TotalQuantityInInventory",
-                HeaderText = _resourceManager.GetString(@"InvQty"),
+                HeaderText = _resourceManager.GetString(@"TotalQuantityInInventory"),
                 Name = "TotalQuantityInInventory",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -1833,7 +1833,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "ReceivedDate",
                 HeaderText = _resourceManager.GetString(@"ReceivedDate"),
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
             };
@@ -1924,7 +1924,7 @@ namespace Neutron.Forms
             //col = new DataGridViewTextBoxColumn
             //{
             //    DataPropertyName = "OrderStatusName",
-            //    HeaderText = _resourceManager.GetString("JobStatus"),
+            //    HeaderText = _resourceManager.GetString("OrderStatusName"),
             //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
             //    Name = "OrderStatusName",
@@ -6437,7 +6437,7 @@ namespace Neutron.Forms
 
 
 
-        private void MBClearSelectionReturntoStockDetail_Click(object sender, EventArgs e)
+        private void MBClearSelectionDetail_Click(object sender, EventArgs e)
         {
             DataGridViewOrderDetails.ClearSelection();
             foreach (DataGridViewRow row in DataGridViewOrderDetails.Rows)
@@ -6573,7 +6573,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBSelectAllReturntoStockDetail_Click(object sender, EventArgs e)
+        private void MBSelectAllDetail_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in DataGridViewOrderDetails.Rows)
             {
@@ -7778,62 +7778,139 @@ namespace Neutron.Forms
                 var languageDirectory = LoaderSettings.GetLanguageDirectory();
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmPick", resourceDir: languageDirectory, usingResourceSet: null);
-                MBMainOrderManager.Text = _resourceManager.GetString($"JobManager");
-                MBMainAvailableOrders.Text = _resourceManager.GetString($"AvailableJobs");
-                LabelFormHeaderText.Text = _resourceManager.GetString($"NeutronWarehouseManagement");
-                MBMainNewOrder.Text = _resourceManager.GetString($"NewJob");
-                // MBMainLoadOrders.Text = _resourceManager.GetString($"LoadJobs");
-                MBMainClose.Text = _resourceManager.GetString($"Home");
-                LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
-                MBSelectAll.Text = _resourceManager.GetString($"SelectAll");
-                MButtonClearSelection.Text = _resourceManager.GetString($"ClearSelection");
-                //  MBOrderListingAvailable.Text = _resourceManager.GetString($"Available");
-                MButtonSearch.Text = _resourceManager.GetString($"Search");
-                MButtonClose.Text = _resourceManager.GetString($"Back");
-                MBShowAvailable.Text = _resourceManager.GetString($"ShowAll");
-                MBHold.Text = _resourceManager.GetString($"Hold");
-                MBRelease.Text = _resourceManager.GetString($"Release");
-                MBPriority.Text = _resourceManager.GetString($"Priority");
-                MBReturnToStock.Text = _resourceManager.GetString($"ReturnToStock");
-                MBDeleteOrder.Text = _resourceManager.GetString($"Delete");
-                MBPrintOrderListing.Text = _resourceManager.GetString($"SaveToFile");
-                MBJobDetails.Text = _resourceManager.GetString($"JobDetails");
-                LabelFindDescription.Text = _resourceManager.GetString($"SearchFor");
+                //Main Panel
+                LabelFormHeaderText.Text = _resourceManager.GetString($"LabelFormHeaderText");
+                LabelFormTitle.Text = _resourceManager.GetString($"LabelFormTitle");
+                MBMainClose.Text = _resourceManager.GetString($"MBMainClose");
+                MBMainAvailableOrders.Text = _resourceManager.GetString($"MBMainAvailableOrders");
+                MBMainOrderManager.Text = _resourceManager.GetString($"MBMainOrderManager");
+                MBMainNewOrder.Text = _resourceManager.GetString($"MBMainNewOrder");
+                MBMainLoadOrders.Text = _resourceManager.GetString($"MBMainLoadOrders");
+
+                //Order Listing Panel
+                MBSkipped.Text = _resourceManager.GetString($"MBSkipped");
+                MBShowAvailable.Text = _resourceManager.GetString($"MBShowAvailable");
+                MBCompleted.Text = _resourceManager.GetString($"MBCompleted");
+                MBShowRackOrders.Text = _resourceManager.GetString($"MBShowRackOrders");
+                LabelFindDescription.Text = _resourceManager.GetString($"LabelFindDescription");
+                MButtonSearch.Text = _resourceManager.GetString($"MButtonSearch");
+                MButtonClose.Text = _resourceManager.GetString($"MButtonClose");
+                MBSelectAll.Text = _resourceManager.GetString($"MBSelectAll");
+                MButtonClearSelection.Text = _resourceManager.GetString($"MButtonClearSelection");
+                ButtonPrintAO.Text = _resourceManager.GetString($"ButtonPrintAO");
+                ButtonPrintPacking.Text = _resourceManager.GetString($"ButtonPrintPacking");
+                MBPrintPick.Text = _resourceManager.GetString($"MBPrintPick");
+                MBOffCarousel.Text = _resourceManager.GetString($"MBOffCarousel");
+                MBHold.Text = _resourceManager.GetString($"MBHold");
+                MBRelease.Text = _resourceManager.GetString($"MBRelease");
+                MBPriority.Text = _resourceManager.GetString($"MBPriority");
+                MBCompress.Text = _resourceManager.GetString($"MBCompress");
+                MBReturnToStock.Text = _resourceManager.GetString($"MBReturnToStock");
+                MBDeleteOrder.Text = _resourceManager.GetString($"MBDeleteOrder");
+                MBJobDetails.Text = _resourceManager.GetString($"MBJobDetails");
+                MBPrintOrderListing.Text = _resourceManager.GetString($"MBPrintOrderListing");
+
                 //Available Orders
-                MbPrintAvailableOrders.Text = _resourceManager.GetString($"SaveToFile");
-                MBAvailableOrdersRefresh.Text = _resourceManager.GetString($"Refresh");
-                MBGo.Text = _resourceManager.GetString($"Next");
-                LabelAvailableOrdersSearchFor.Text = _resourceManager.GetString($"SearchFor");
-                MBSearchAvailableOrders.Text = _resourceManager.GetString($"Search");
-                MBFill.Text = _resourceManager.GetString($"Fill");
+                MbPrintAvailableOrders.Text = _resourceManager.GetString($"MbPrintAvailableOrders");
+                MBAvailableOrdersRefresh.Text = _resourceManager.GetString($"MBAvailableOrdersRefresh");
+                MBGo.Text = _resourceManager.GetString($"MBGo");
+                LabelAvailableOrdersSearchFor.Text = _resourceManager.GetString($"LabelAvailableOrdersSearchFor");
+                MBSearchAvailableOrders.Text = _resourceManager.GetString($"MBSearchAvailableOrders");
+                MBAvailableOrdersBack.Text = _resourceManager.GetString($"MBAvailableOrdersBack");
+                MBFill.Text = _resourceManager.GetString($"MBFill");
+                MBFillStarters.Text = _resourceManager.GetString($"MBFillStarters");
+                MBShowSkipped.Text = _resourceManager.GetString($"MBShowSkipped");
+                MBGo2.Text = _resourceManager.GetString($"MBGo2");
+
+                //Pick List
+                MBPrintPickList.Text = _resourceManager.GetString($"MBPrintPickList");
+                MBStart.Text = _resourceManager.GetString($"MBStart");
+                MBPickListBack.Text = _resourceManager.GetString($"MBPickListBack");
+
+                //Pick Screen
+                MBLocationCount.Text = _resourceManager.GetString($"MBLocationCount");
+                MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"MBShowOrderOrQuantityToggle");
+                MBPickScreenHotPick.Text = _resourceManager.GetString($"MBPickScreenHotPick");
+                MBResetCarousels.Text = _resourceManager.GetString($"MBResetCarousels");
+                MBPrint.Text = _resourceManager.GetString($"MBPrint");
+                MBPickNewItem.Text = _resourceManager.GetString($"MBPickNewItem");
+                MBPickBack.Text = _resourceManager.GetString($"MBPickBack");
+                LabelItem.Text = _resourceManager.GetString($"LabelItem");
+                LabelUOI.Text = _resourceManager.GetString($"LabelUOI");
+                LabelQty.Text = _resourceManager.GetString($"LabelQty");
+                GroupBoxLocation.Text = _resourceManager.GetString($"GroupBoxLocation");
+                LabelDevice.Text = _resourceManager.GetString($"LabelDevice");
+                LabelTray.Text = _resourceManager.GetString($"LabelTray");
+                LabelOver.Text = _resourceManager.GetString($"LabelOver");
+                LabelBack.Text = _resourceManager.GetString($"LabelBack");
+                LabelReceivedDate.Text = _resourceManager.GetString($"LabelReceivedDate");
+                LabelLocationQty.Text = _resourceManager.GetString($"LabelLocationQty");
+                LabelTotalQty.Text = _resourceManager.GetString($"LabelTotalQty");
+                LabelReqQty.Text = _resourceManager.GetString($"LabelReqQty");
+                LabelPickedSoFar.Text = _resourceManager.GetString($"LabelPickedSoFar");
+                MBPickChangeQuantity.Text = _resourceManager.GetString($"MBPickChangeQuantity");
+                MBSkipPick.Text = _resourceManager.GetString($"MBSkipPick");
+                MBShortPick.Text = _resourceManager.GetString($"MBShortPick");
+                MBPickAccept.Text = _resourceManager.GetString($"MBPickAccept");
+
+                //Order Details
+                MBSelectAllDetail.Text = _resourceManager.GetString($"MBSelectAllDetail");
+                MBClearSelectionDetail.Text = _resourceManager.GetString($"MBClearSelectionDetail");
+                MBReturnToStockOrderDetail.Text = _resourceManager.GetString($"MBReturnToStockOrderDetail");
+                MBHoldDetail.Text = _resourceManager.GetString($"MBHoldDetail");
+                MBReleaseDetail.Text = _resourceManager.GetString($"MBReleaseDetail");
+                MBPrintOrderDetails.Text = _resourceManager.GetString($"MBPrintOrderDetails");
+                MBOrderDetailsBack.Text = _resourceManager.GetString($"MBOrderDetailsBack");
+
+                //New Order
+                GroupBoxOrderInformation.Text = _resourceManager.GetString($"GroupBoxOrderInformation");
+                LabelJob.Text = _resourceManager.GetString($"LabelJob");
+                LabelInvoice.Text = _resourceManager.GetString($"LabelInvoice");
+                LabelPriority.Text = _resourceManager.GetString($"LabelPriority");
+                MBNewOrderSave.Text = _resourceManager.GetString($"MBNewOrderSave");
+                MBNewOrderClose.Text = _resourceManager.GetString($"MBNewOrderClose");
+                GroupBoxDetailInformation.Text = _resourceManager.GetString($"GroupBoxDetailInformation");
+                LabelNewOrderItem.Text = _resourceManager.GetString($"LabelNewOrderItem");
+                LabelNewOrderDescription.Text = _resourceManager.GetString($"LabelNewOrderDescription");
+                LabelNewOrderQuantity.Text = _resourceManager.GetString($"LabelNewOrderQuantity");
+                ButtonAddDetail.Text = _resourceManager.GetString($"ButtonAddDetail");
+                LabelSearchForItem.Text = _resourceManager.GetString($"LabelSearchForItem");
+                MBNewOrderSearch.Text = _resourceManager.GetString($"MBNewOrderSearch");
+                ButtonRemoveLine.Text = _resourceManager.GetString($"ButtonRemoveLine");
+
+                //Available Rack
+                MbPrintAvailableOrdersRack.Text = _resourceManager.GetString($"MbPrintAvailableOrdersRack");
+                MBRefreshRack.Text = _resourceManager.GetString($"MBRefreshRack");
+                LabelSearchForRack.Text = _resourceManager.GetString($"LabelSearchForRack");
+                MBSearchAvailableOrdersRack.Text = _resourceManager.GetString($"MBSearchAvailableOrdersRack");
+                MBRackHotAction.Text = _resourceManager.GetString($"MBRackHotAction");
+                MBRackBack.Text = _resourceManager.GetString($"MBRackBack");
+                MBPrintDocument.Text = _resourceManager.GetString($"MBPrintDocument");
+                MBPrintToteLabel.Text = _resourceManager.GetString($"MBPrintToteLabel");
+                MBRackOrderComplete.Text = _resourceManager.GetString($"MBRackOrderComplete");
+                MBAdjustOrder.Text = _resourceManager.GetString($"MBAdjustOrder");
+
+                //Adjust Order
+                MBAdjustOrderSave.Text = _resourceManager.GetString($"MBAdjustOrderSave");
+                MBAdjustOrderBack.Text = _resourceManager.GetString($"MBAdjustOrderBack");
+
+                //Skip
+                MBSelectAllSkip.Text = _resourceManager.GetString($"MBSelectAllSkip");
+                MBClearSelectionSkip.Text = _resourceManager.GetString($"MBClearSelectionSkip");
+                MBInventorySkip.Text = _resourceManager.GetString($"MBInventorySkip");
+                MBPrintSkip.Text = _resourceManager.GetString($"MBPrintSkip");
+                MBPickComplete.Text = _resourceManager.GetString($"MBPickComplete");
+                MBAdjustQuantity.Text = _resourceManager.GetString($"MBAdjustQuantity");
+                MBPickZero.Text = _resourceManager.GetString($"MBPickZero");
+                MBBackSkip.Text = _resourceManager.GetString($"MBBackSkip");
+
+                //Skip Inventory
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading languages.  FrmPick  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                MessageBox.Show($"{_resourceManager.GetString($"ErrorLoadingLanguages")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
-
-
-            // MBFillStarters.Text = _resourceManager.GetString($"FillStarters");
-
-            //MBHotAccept.Text = nomenclature.MBPickAccept;
-            //MBHotStore.Text = nomenclature.MBStoreAccept;
-            //MBPickAccept.Text = nomenclature.MBPickAccept;
-            //LabelTray.Text = nomenclature.LabelTray;
-            //LabelOver.Text = nomenclature.LabelOver;
-            //LabelBack.Text = nomenclature.LabelBack;
-            //LabelDevice.Text = nomenclature.LabelDevice;
-
-            //MtHotAction.Text = resourceManager.GetString($"");
-            //MtPick.Text = resourceManager.GetString($"Pick");
-            //MtStore.Text = resourceManager.GetString($"Store");
-            //MtUsers.Text = resourceManager.GetString($"Users");
-            //MtLogOff.Text = resourceManager.GetString($"LogOn");
-            //MtUtilities.Text = resourceManager.GetString($"Utilities");
-            //MtSystem.Text = resourceManager.GetString($"System");
-            //MtLac.Text = resourceManager.GetString($"LocationAccessControl");
-            //ButtonClearDisplays.Text = resourceManager.GetString($"ClearDisplays");
-            //ButtonPark.Text = resourceManager.GetString($"Park");
-            //ButtonClose.Text = resourceManager.GetString($"Close");
 
         }
 

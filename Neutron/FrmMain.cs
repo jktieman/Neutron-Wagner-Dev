@@ -757,6 +757,7 @@ namespace Neutron
                 MtItemDefinitions.Text = _resourceManager.GetString("ItemDefinitions");
                 MtLocations.Text = _resourceManager.GetString("Locations");
                 MtHistory.Text = _resourceManager.GetString("History");
+                MtProductivity.Text = _resourceManager.GetString("Productivity");
                 MtHotAction.Text = _resourceManager.GetString("HotAction");
                 MtPick.Text = _resourceManager.GetString("Pick");
                 MtStore.Text = _resourceManager.GetString("Store");

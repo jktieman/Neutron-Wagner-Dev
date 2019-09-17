@@ -61,6 +61,9 @@
             this.MBSqlServerBack = new MetroFramework.Controls.MetroButton();
             this.InterfaceFiles = new System.Windows.Forms.TabPage();
             this.PanelFile = new System.Windows.Forms.Panel();
+            this.ButtonLanguageDirectory = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.LanguageDirectory = new System.Windows.Forms.TextBox();
             this.ButtonFindCostCenterFile = new System.Windows.Forms.Button();
             this.ButtonCostCenterDirectory = new System.Windows.Forms.Button();
             this.ButtonMaintenanceFileDirectory = new System.Windows.Forms.Button();
@@ -88,7 +91,6 @@
             this.LogFileDirectory = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.EnableLogging = new System.Windows.Forms.CheckBox();
-            this.ButtonSave = new System.Windows.Forms.Button();
             this.ButtonFindHostUploadDirectory = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.HostUploadDirectory = new System.Windows.Forms.TextBox();
@@ -103,6 +105,7 @@
             this.HostOrderFile = new System.Windows.Forms.TextBox();
             this.MBInterfaceFilesBack = new MetroFramework.Controls.MetroButton();
             this.LabelInterfaceFiles = new System.Windows.Forms.Label();
+            this.ButtonSave = new System.Windows.Forms.Button();
             this.Spare1 = new System.Windows.Forms.TabPage();
             this.MBSpare1Back = new MetroFramework.Controls.MetroButton();
             this.Spare2 = new System.Windows.Forms.TabPage();
@@ -113,9 +116,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ButtonLanguageDirectory = new System.Windows.Forms.Button();
-            this.label15 = new System.Windows.Forms.Label();
-            this.LanguageDirectory = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -524,6 +524,39 @@
             this.PanelFile.Size = new System.Drawing.Size(1076, 532);
             this.PanelFile.TabIndex = 32;
             // 
+            // ButtonLanguageDirectory
+            // 
+            this.ButtonLanguageDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonLanguageDirectory.Location = new System.Drawing.Point(862, 466);
+            this.ButtonLanguageDirectory.Name = "ButtonLanguageDirectory";
+            this.ButtonLanguageDirectory.Size = new System.Drawing.Size(100, 26);
+            this.ButtonLanguageDirectory.TabIndex = 104;
+            this.ButtonLanguageDirectory.Text = "&Browse";
+            this.ButtonLanguageDirectory.UseVisualStyleBackColor = true;
+            this.ButtonLanguageDirectory.Visible = false;
+            this.ButtonLanguageDirectory.Click += new System.EventHandler(this.ButtonLanguageDirectory_Click);
+            // 
+            // label15
+            // 
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(18, 465);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(320, 26);
+            this.label15.TabIndex = 103;
+            this.label15.Text = "Language Directory";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label15.Visible = false;
+            // 
+            // LanguageDirectory
+            // 
+            this.LanguageDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LanguageDirectory.Location = new System.Drawing.Point(351, 465);
+            this.LanguageDirectory.Name = "LanguageDirectory";
+            this.LanguageDirectory.Size = new System.Drawing.Size(505, 26);
+            this.LanguageDirectory.TabIndex = 102;
+            this.LanguageDirectory.Text = "Language\\";
+            this.LanguageDirectory.Visible = false;
+            // 
             // ButtonFindCostCenterFile
             // 
             this.ButtonFindCostCenterFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -623,6 +656,7 @@
             this.ButtonRootDirectory.TabIndex = 97;
             this.ButtonRootDirectory.Text = "&Browse";
             this.ButtonRootDirectory.UseVisualStyleBackColor = true;
+            this.ButtonRootDirectory.Visible = false;
             this.ButtonRootDirectory.Click += new System.EventHandler(this.ButtonRootDirectory_Click);
             // 
             // label10
@@ -634,6 +668,7 @@
             this.label10.TabIndex = 96;
             this.label10.Text = "Root Directory";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label10.Visible = false;
             // 
             // RootDirectory
             // 
@@ -642,7 +677,7 @@
             this.RootDirectory.Name = "RootDirectory";
             this.RootDirectory.Size = new System.Drawing.Size(505, 26);
             this.RootDirectory.TabIndex = 95;
-            this.RootDirectory.Text = "C:\\Neutron\\";
+            this.RootDirectory.Visible = false;
             // 
             // TextBoxMaintenanceFileFilter
             // 
@@ -791,17 +826,6 @@
             this.EnableLogging.TabIndex = 83;
             this.EnableLogging.UseVisualStyleBackColor = true;
             // 
-            // ButtonSave
-            // 
-            this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(849, 10);
-            this.ButtonSave.Name = "ButtonSave";
-            this.ButtonSave.Size = new System.Drawing.Size(137, 76);
-            this.ButtonSave.TabIndex = 60;
-            this.ButtonSave.Text = "Save";
-            this.ButtonSave.UseVisualStyleBackColor = true;
-            this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
-            // 
             // ButtonFindHostUploadDirectory
             // 
             this.ButtonFindHostUploadDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -943,6 +967,17 @@
             this.LabelInterfaceFiles.TabIndex = 82;
             this.LabelInterfaceFiles.Text = "Interface Settings";
             // 
+            // ButtonSave
+            // 
+            this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSave.Location = new System.Drawing.Point(849, 10);
+            this.ButtonSave.Name = "ButtonSave";
+            this.ButtonSave.Size = new System.Drawing.Size(137, 76);
+            this.ButtonSave.TabIndex = 60;
+            this.ButtonSave.Text = "Save";
+            this.ButtonSave.UseVisualStyleBackColor = true;
+            this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
+            // 
             // Spare1
             // 
             this.Spare1.BackColor = System.Drawing.Color.Turquoise;
@@ -1032,36 +1067,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // ButtonLanguageDirectory
-            // 
-            this.ButtonLanguageDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonLanguageDirectory.Location = new System.Drawing.Point(862, 466);
-            this.ButtonLanguageDirectory.Name = "ButtonLanguageDirectory";
-            this.ButtonLanguageDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonLanguageDirectory.TabIndex = 104;
-            this.ButtonLanguageDirectory.Text = "&Browse";
-            this.ButtonLanguageDirectory.UseVisualStyleBackColor = true;
-            this.ButtonLanguageDirectory.Click += new System.EventHandler(this.ButtonLanguageDirectory_Click);
-            // 
-            // label15
-            // 
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(18, 465);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(320, 26);
-            this.label15.TabIndex = 103;
-            this.label15.Text = "Language Directory";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LanguageDirectory
-            // 
-            this.LanguageDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LanguageDirectory.Location = new System.Drawing.Point(351, 465);
-            this.LanguageDirectory.Name = "LanguageDirectory";
-            this.LanguageDirectory.Size = new System.Drawing.Size(505, 26);
-            this.LanguageDirectory.TabIndex = 102;
-            this.LanguageDirectory.Text = "C:\\Neutron\\Language";
             // 
             // FrmSystem
             // 
