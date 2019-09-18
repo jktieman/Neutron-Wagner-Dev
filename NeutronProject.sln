@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronEvents", "NeutronEve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neutron", "Neutron\Neutron.csproj", "{0BEF7888-448B-49B0-B8D5-8DCEB8DB5F3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronLoader", "..\Neutron-Loaders\TMG\NeutronLoader\NeutronLoader.csproj", "{2748BDF0-D6ED-48C5-9230-F18E33779E67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronLoader", "NeutronLoader\NeutronLoader.csproj", "{2748BDF0-D6ED-48C5-9230-F18E33779E67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
