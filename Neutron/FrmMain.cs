@@ -812,6 +812,22 @@ namespace Neutron
             GlobalVar.Displays.ClearBli(bli);
         }
 
+        private void RadioButtonLanguage_CheckedChanged(object sender, EventArgs e)
+        {
+            if (RadioButtonEnglish.Checked)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            }
 
+            if (RadioButtonFrenchCanadian.Checked)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
+            }
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
+            mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+        }
     }
 }

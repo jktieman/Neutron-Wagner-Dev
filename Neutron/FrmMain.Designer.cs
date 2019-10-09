@@ -60,11 +60,15 @@ namespace Neutron
             this.ButtonPortTest = new System.Windows.Forms.Button();
             this.ButtonPortTestOff = new System.Windows.Forms.Button();
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
+            this.GroupBoxLanguage = new System.Windows.Forms.GroupBox();
+            this.RadioButtonFrenchCanadian = new System.Windows.Forms.RadioButton();
+            this.RadioButtonEnglish = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.metroPanelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).BeginInit();
+            this.GroupBoxLanguage.SuspendLayout();
             this.SuspendLayout();
             // 
             // htmlToolTip1
@@ -314,11 +318,37 @@ namespace Neutron
             this.ButtonPortTestOff.UseVisualStyleBackColor = true;
             this.ButtonPortTestOff.Click += new System.EventHandler(this.ButtonPortTestOff_Click);
             // 
+            // GroupBoxLanguage
+            // 
+            this.GroupBoxLanguage.Controls.Add(this.RadioButtonFrenchCanadian);
+            this.GroupBoxLanguage.Controls.Add(this.RadioButtonEnglish);
+            this.GroupBoxLanguage.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            resources.ApplyResources(this.GroupBoxLanguage, "GroupBoxLanguage");
+            this.GroupBoxLanguage.Name = "GroupBoxLanguage";
+            this.GroupBoxLanguage.TabStop = false;
+            // 
+            // RadioButtonFrenchCanadian
+            // 
+            resources.ApplyResources(this.RadioButtonFrenchCanadian, "RadioButtonFrenchCanadian");
+            this.RadioButtonFrenchCanadian.Name = "RadioButtonFrenchCanadian";
+            this.RadioButtonFrenchCanadian.UseVisualStyleBackColor = true;
+            this.RadioButtonFrenchCanadian.CheckedChanged += new System.EventHandler(this.RadioButtonLanguage_CheckedChanged);
+            // 
+            // RadioButtonEnglish
+            // 
+            resources.ApplyResources(this.RadioButtonEnglish, "RadioButtonEnglish");
+            this.RadioButtonEnglish.Checked = true;
+            this.RadioButtonEnglish.Name = "RadioButtonEnglish";
+            this.RadioButtonEnglish.TabStop = true;
+            this.RadioButtonEnglish.UseVisualStyleBackColor = true;
+            this.RadioButtonEnglish.CheckedChanged += new System.EventHandler(this.RadioButtonLanguage_CheckedChanged);
+            // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             resources.ApplyResources(this, "$this");
+            this.Controls.Add(this.GroupBoxLanguage);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.ButtonPortTestOff);
             this.Controls.Add(this.ButtonPortTest);
@@ -340,6 +370,8 @@ namespace Neutron
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).EndInit();
+            this.GroupBoxLanguage.ResumeLayout(false);
+            this.GroupBoxLanguage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -374,6 +406,9 @@ namespace Neutron
         private System.Windows.Forms.Button ButtonPortTest;
         private System.Windows.Forms.Button ButtonPortTestOff;
         private MetroFramework.Controls.MetroTile MtProductivity;
+        private System.Windows.Forms.GroupBox GroupBoxLanguage;
+        private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;
+        private System.Windows.Forms.RadioButton RadioButtonEnglish;
     }
 }
 

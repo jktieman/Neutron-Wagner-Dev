@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronCore", "NeutronCore\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintRequest", "PrintRequest\PrintRequest.csproj", "{AC64B1BD-E3E7-49F5-8DDF-103FCA0970FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlotNameFactory", "..\SlotNameFactory\SlotNameFactory.csproj", "{68DAC5EF-FE13-4541-A233-A5897A0A3016}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlotNameFactory", "SlotNameFactory\SlotNameFactory.csproj", "{68DAC5EF-FE13-4541-A233-A5897A0A3016}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronMaintenance", "NeutronMaintenance\NeutronMaintenance.csproj", "{D3E5D83E-1327-4346-B811-C86BD4F297FB}"
 EndProject

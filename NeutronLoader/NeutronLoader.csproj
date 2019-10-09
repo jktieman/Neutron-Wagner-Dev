@@ -33,6 +33,10 @@
     <Reference Include="AlliedLogger">
       <HintPath>..\..\..\Neutron-Dev\AlliedLogger\bin\Debug\AlliedLogger.dll</HintPath>
     </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -44,16 +48,18 @@
     <Reference Include="JsonManager">
       <HintPath>..\..\..\Neutron-SaintFrancis-367 - Demo\JsonManager\bin\Debug\JsonManager.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="NeutronCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Neutron-Dev\NeutronCore\bin\Debug\NeutronCore.dll</HintPath>
+    <Reference Include="Remotion, Version=1.18.0.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Remotion">
-      <HintPath>..\AlliedLogger\bin\Debug\Remotion.dll</HintPath>
-    </Reference>
-    <Reference Include="SlotNameFactory">
-      <HintPath>..\..\..\SlotNameFactory\bin\Debug\SlotNameFactory.dll</HintPath>
+    <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -68,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileProcessor.cs" />
-    <Compile Include="HistoryManager_old.cs" />
     <Compile Include="HostFile.cs" />
     <Compile Include="HostOrderListProcessor.cs" />
     <Compile Include="IInterfaceProcessor.cs" />
@@ -102,6 +107,10 @@
       <Project>{A8C533EF-F9B0-4B04-A1BA-53AAF5354A2B}</Project>
       <Name>AlliedFileSystemWatcher</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
+      <Name>NeutronCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeutronData\NeutronData.csproj">
       <Project>{E325F3E2-6660-451F-B9B2-D8866447BE4D}</Project>
       <Name>NeutronData</Name>
@@ -109,6 +118,10 @@
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
+      <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>
+      <Name>SlotNameFactory</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

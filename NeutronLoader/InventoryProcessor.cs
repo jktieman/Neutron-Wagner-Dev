@@ -2,7 +2,6 @@
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
-using SlotNameFactory;
 using System;
 using System.Linq;
 using System.Windows.Forms;
