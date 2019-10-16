@@ -4285,6 +4285,55 @@ namespace Neutron.Forms
                         Pos8Display.BackColor = Color.Red;
                         TurnOnBatchPositionDisplay(position: 8, beacon: 2, text: pickView.QuantityToBePicked.ToString());
                         break;
+
+                    case 9:
+                        TextBoxPickPos9.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos9.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos9Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 9, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 10:
+                        TextBoxPickPos10.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos10.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos10Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 10, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 11:
+                        TextBoxPickPos11.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos11.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos11Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 11, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 12:
+                        TextBoxPickPos12.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos12.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos12Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 12, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 13:
+                        TextBoxPickPos13.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos13.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos13Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 13, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 14:
+                        TextBoxPickPos14.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos14.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos14Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 14, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 15:
+                        TextBoxPickPos15.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos15.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos15Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 15, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
+                    case 16:
+                        TextBoxPickPos16.Text = pickView.QuantityToBePicked.ToString();
+                        LabelPickPos16.BackColor = GetBackColor(pickView.QuantityToBePicked);
+                        Pos16Display.BackColor = Color.Red;
+                        TurnOnBatchPositionDisplay(position: 16, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+                        break;
                     default:
                         break;
                 }
