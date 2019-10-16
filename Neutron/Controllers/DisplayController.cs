@@ -52,16 +52,16 @@ namespace Neutron.Controllers
 
             CreateLog();
 
-            if (station.StationNumber == 4 || station.StationNumber == 5)
-            {
-                if (bliEnabled)
-                {
-                    FillBliListStations4_5();
-                }
-            }
+            //if (station.StationNumber == 4 || station.StationNumber == 5)
+            //{
+            //    if (bliEnabled)
+            //    {
+            //        FillBliListStations4_5();
+            //    }
+            //}
 
-            else
-            {
+            //else
+            //{
                 if (bliEnabled)
                 {
                     FillBliList();
@@ -70,7 +70,7 @@ namespace Neutron.Controllers
                 {
                     FileShiList();
                 }
-            }
+           // }
 
             string hartLog = ($"{logFileDir}Hart");
             HartDisplayController = new Hart_DisplayController(Hart_DisplayController.Controller_Type_Remstar_BPI_SHI(), hartLog);
@@ -498,7 +498,7 @@ namespace Neutron.Controllers
 
         private void FillBliList()
         {
-            for (int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 16; i++)
             {
                 var bli = new Hart_BLI(i, 2, @"------");
                 bliList.Add(bli);
@@ -511,20 +511,20 @@ namespace Neutron.Controllers
             Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
         }
 
-        private void FillBliListStations4_5()
-        {
-            for (int i = 1; i <= 4; i++)
-            {
-                var bli = new Hart_BLI(i, 2, @"------");
-                bliList.Add(bli);
-            }
-            var sb = new StringBuilder();
-            foreach (var item in bliList)
-            {
-                sb.AppendLine($"BLI - {item.BLI_Address}");
-            }
-            Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
-        }
+        //private void FillBliListStations4_5()
+        //{
+        //    for (int i = 1; i <= 4; i++)
+        //    {
+        //        var bli = new Hart_BLI(i, 2, @"------");
+        //        bliList.Add(bli);
+        //    }
+        //    var sb = new StringBuilder();
+        //    foreach (var item in bliList)
+        //    {
+        //        sb.AppendLine($"BLI - {item.BLI_Address}");
+        //    }
+        //    Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
+        //}
 
         private int GetAddress(int device, int level)
         {
