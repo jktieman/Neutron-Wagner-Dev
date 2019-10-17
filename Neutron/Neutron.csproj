@@ -30,7 +30,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>375</ApplicationRevision>
+    <ApplicationRevision>376</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -378,6 +378,12 @@
     <Compile Include="Forms\FrmSecurity.Designer.cs">
       <DependentUpon>FrmSecurity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmShortCut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmShortCut.Designer.cs">
+      <DependentUpon>FrmShortCut.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmUtilities.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -469,6 +475,9 @@
     <Compile Include="Models\UserIdString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FrmShortCut.resx">
+      <DependentUpon>FrmShortCut.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Language\ResGen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
