@@ -1,5 +1,4 @@
-﻿#region
-
+﻿
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,18 +15,17 @@ using NeutronCore.Models;
 using NeutronEvents;
 using Timer = System.Threading.Timer;
 
-#endregion
 
 namespace NeutronLoader
 {
-    public class InterfaceProcessor
+    class InterfaceProcessorSfh : IInterfaceProcessor
     {
         private BlockingCollection<FileInfo> _interfaceFileQueue;
         private static BackgroundWorker _backgroundWorker;
         private DirectoryInfo _hostOrderDirectory;
         private string _inputFileFilter;
 
-       // private AlliedFileWatcher _interfaceWatcher;
+        // private AlliedFileWatcher _interfaceWatcher;
         private DynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
@@ -36,8 +34,9 @@ namespace NeutronLoader
         private Timer _downTimer;
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
+        private IFileProcessor _fileProcessor;
 
-        public InterfaceProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData)
+        public InterfaceProcessorSfh(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -52,9 +51,9 @@ namespace NeutronLoader
             _hostOrderDirectory = new DirectoryInfo(LoaderSettings.GetHostOrderDirectory());
             _inputFileFilter = LoaderSettings.GetHostOrderFileFilter();
             var logFileDir = LoaderSettings.GetLogFileDirectory();
-
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
+            _fileProcessor = new Pr1FileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData);
         }
 
         public void StartProcessingInterfaceFiles()
@@ -63,35 +62,6 @@ namespace NeutronLoader
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromMinutes(5);
             _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
-            
-            ////Don't run watcher at Saint Francis Hospital
-            //if (_neutronLicense.CompanyCode != "SFH")
-            //{
-            //    // get any existing files first
-            //    FileInfo[] files = GetFiles();
-
-            //    foreach (var file in files)
-            //    {
-            //        _logger.Log($"Add File to Interface File Queue: {file.FullName} ");
-            //        _interfaceFileQueue.Add(file);
-            //    }
-
-            //    var startTimeSpan = TimeSpan.Zero;
-            //    var periodTimeSpan = TimeSpan.FromMinutes(5);
-            //    _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
-
-            //    //_interfaceWatcher = new AlliedFileWatcher(_hostOrderDirectory.ToString(), _inputFileFilter,
-            //    //includeSubdirectories: false);
-            //    //_interfaceWatcher.FileCreated += FileCreated;
-            //    //_interfaceWatcher.Start();
-            //}
-            //else
-            //{
-            //  var startTimeSpan = TimeSpan.Zero;
-            //  var periodTimeSpan = TimeSpan.FromMinutes(5);
-            //  _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
-           //}
-
         }
 
         private void LoadOrders()
@@ -99,7 +69,6 @@ namespace NeutronLoader
             if (_loadOrdersBusy) return;
             _loadOrdersBusy = true;
             _logger.Log("Load Orders");
-
 
             try
             {
@@ -134,8 +103,8 @@ namespace NeutronLoader
         {
             StopBackgroundWorker();
             _interfaceFileQueue.CompleteAdding();
-           // _upTimer?.Dispose();
-          //  _interfaceWatcher?.Stop();
+            // _upTimer?.Dispose();
+            //  _interfaceWatcher?.Stop();
 
         }
 
@@ -192,7 +161,7 @@ namespace NeutronLoader
             if (_backgroundWorker.CancellationPending)
             {
                 _logger.Log($"BackgroundWorker Cancel.");
-               e.Cancel = true;
+                e.Cancel = true;
                 return;
             }
 
@@ -204,25 +173,8 @@ namespace NeutronLoader
                 if (!File.Exists(fileInfo.FullName)) continue;
                 files.Add(fileInfo);
                 Thread.Sleep(millisecondsTimeout: 100);
-                switch (_neutronLicense.CompanyCode)
-                {
-                    case "TMG":
-                        _logger.Log($"TMGFileProcessor: Number of Files: {files.Count}");
-                        var fileProcessor = new FileProcessor(files, _neutronVariables, _neutronLicense, _jsonData,
-                            _logger);
-                        break;
-                    case "SFH":
-                        _logger.Log($"SFHFileProcessor: Number of Files: {files.Count}");
-                        var pr1FileProcessor = new Pr1FileProcessor(files, _neutronVariables, _neutronLicense, _logger, _jsonData);
-                        break;
-                    case "AES":
-                        _logger.Log($"AESFileProcessor: Number of Files: {files.Count}");
-                        break;
-                    case "TOP":
-                        _logger.Log($"TOPFileProcessor: Number of Files: {files.Count}");
-                        var topFileProcessor = new TopFileProcessor(files, _neutronVariables, _neutronLicense);
-                        break;
-                }
+                _logger.Log($"SFHFileProcessor: Number of Files: {files.Count}");
+                _fileProcessor.LoadFiles(files);
             }
         }
 

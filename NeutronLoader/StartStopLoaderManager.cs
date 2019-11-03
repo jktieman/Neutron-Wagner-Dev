@@ -17,7 +17,7 @@ namespace NeutronLoader
     {
         private readonly IJsonData _jsonData;
         private readonly DynamicLogger _logger;
-        private InterfaceProcessor _interfaceProcessor;
+        private IInterfaceProcessor _interfaceProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private static Timer _upTimer;
@@ -48,13 +48,32 @@ namespace NeutronLoader
 
         private void StartProcessingInterfaceFiles()
         {
+            switch (_neutronLicense.CompanyCode)
+            {
+                case "SFH":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor.StartProcessingInterfaceFiles();
 
-           _interfaceProcessor = new InterfaceProcessor(_neutronVariables, _neutronLicense, _jsonData);
-            _interfaceProcessor.StartProcessingInterfaceFiles();
+                        var startTimeSpan = TimeSpan.Zero;
+                        var periodTimeSpan = TimeSpan.FromMinutes(5);
+                        _upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
+                        break;
+                    }
+                case "TOP":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor.StartProcessingInterfaceFiles();
+                        break;
+                    }
+                case "TMG":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor.StartProcessingInterfaceFiles();
+                        break;
+                    }
+            }
 
-            var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(5);
-            _upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
         }
 
         private void StopProcessingInterfaceFiles()

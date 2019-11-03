@@ -73,13 +73,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileProcessor.cs" />
+    <Compile Include="TmgFileProcessor.cs" />
     <Compile Include="HostFile.cs" />
+    <Compile Include="HostFileTop.cs" />
     <Compile Include="HostOrderListProcessor.cs" />
     <Compile Include="IInterfaceProcessor.cs" />
-    <Compile Include="InterfaceProcessor.cs" />
+    <Compile Include="InterfaceProcessorTmg.cs" />
+    <Compile Include="InterfaceProcessorSfh.cs" />
+    <Compile Include="InterfaceProcessorTop.cs" />
     <Compile Include="InventoryProcessor.cs" />
     <Compile Include="ItemDefinitionProcessor.cs" />
+    <Compile Include="IFileProcessor.cs" />
     <Compile Include="LocationProcessor.cs" />
     <Compile Include="Pr1FileProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

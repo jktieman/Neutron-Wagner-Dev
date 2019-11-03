@@ -39,7 +39,7 @@ namespace Neutron
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private InterfaceProcessor _interfaceProcessor;
+        private IInterfaceProcessor _interfaceProcessor;
         private StationView _station;
         private int _stationNumber;
         private DynamicLogger _logger;
@@ -79,6 +79,7 @@ namespace Neutron
 
             _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
+
             GlobalVar.HistoryManager = new HistoryManager();
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -107,6 +108,8 @@ namespace Neutron
             var result = false;
             try
             {
+                ButtonPark.Visible = _neutronLicense.CompanyCode == "TOP";
+                ButtonClearDisplays.Visible = _neutronLicense.CompanyCode == "TOP";
                 if (LoaderSettings.Init())
                 {
                     _stationNumber = _neutronVariables.StationNumber;

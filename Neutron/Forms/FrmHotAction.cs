@@ -28,8 +28,6 @@ using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
-using NeutronEvents;
-using HistoryManager = Neutron.Global.HistoryManager;
 
 namespace Neutron.Forms
 {
@@ -46,7 +44,6 @@ namespace Neutron.Forms
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
 
-        // private readonly HistoryManager _historyManager = new HistoryManager();
         private LocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
@@ -74,7 +71,7 @@ namespace Neutron.Forms
         private bool _hotPickButtonPressed = false;
         private bool _hotStoreButtonPressed = false;
         private InventoryManager _inventoryManager;
-        private Stopwatch stopwatch;
+        private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
 
         private string _currentGrid;
@@ -336,8 +333,8 @@ namespace Neutron.Forms
             var findWhat = TextBoxFindItem.Text.ToLower().Trim();
             //var find = _akaRepository.Get(findWhat);
             //TextBoxFindItem.Text = find;
-            stopwatch.Restart();
-            IEnumerable<ItemDefinitionView> views = new ItemDefinitionView[] { };
+            _stopwatch.Restart();
+            IEnumerable<ItemDefinitionView> views;   // = new ItemDefinitionView[] { };
 
 
             if (_station.StationNumber >= 10)
@@ -386,8 +383,8 @@ namespace Neutron.Forms
                 }
                 ClearCurrentAndNew();
             }
-            stopwatch.Stop();
-            Console.WriteLine($"Item Definition Views Time: {stopwatch.ElapsedMilliseconds.ToString()}");
+            _stopwatch.Stop();
+            Console.WriteLine($"Item Definition Views Time: {_stopwatch.ElapsedMilliseconds.ToString()}");
 
             DataGridViewHot.ClearSelection();
             Cursor.Current = Cursors.Default;
@@ -431,8 +428,8 @@ namespace Neutron.Forms
 
         private void SetupGridItemDefinition()
         {
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
 
             if (_currentGridDataType == GridDataType.Item) return;
             DataGridViewHot.Columns.Clear();
@@ -611,8 +608,8 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
 
-            stopwatch.Stop();
-            Console.WriteLine($"Time to build Item Grid: {stopwatch.ElapsedMilliseconds.ToString()}");
+            _stopwatch.Stop();
+            Console.WriteLine($"Time to build Item Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
         }
 
         private void SetupGridNew()
@@ -807,8 +804,8 @@ namespace Neutron.Forms
 
         private void SetupGridCurrent()
         {
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
 
             if (_currentGridDataType == GridDataType.Current) return;
             DataGridViewHot.Columns.Clear();
@@ -1242,8 +1239,8 @@ namespace Neutron.Forms
 
         private async void DataGridViewHot_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
             Cursor.Current = Cursors.WaitCursor;
             switch (_currentGridDataType)
             {
@@ -1267,44 +1264,44 @@ namespace Neutron.Forms
                 {
                     var s = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
                     TextBoxFindItem.Text = s.Item;
-                    stopwatch.Stop();
-                    Console.WriteLine($"Speed: LoadCurrentAndNew: {stopwatch.ElapsedMilliseconds.ToString()}");
-                    stopwatch.Restart();
+                    _stopwatch.Stop();
+                    Console.WriteLine($"Speed: LoadCurrentAndNew: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    _stopwatch.Restart();
                     // LoadItemDefinitions();
-                    stopwatch.Stop();
-                    Console.WriteLine($"Speed: LoadItemDefinitions: {stopwatch.ElapsedMilliseconds.ToString()}");
-                    stopwatch.Restart();
+                    _stopwatch.Stop();
+                    Console.WriteLine($"Speed: LoadItemDefinitions: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    _stopwatch.Restart();
                     LoadCurrent(s);
                     //LoadCurrent(_currentItemDefinition);
-                    stopwatch.Stop();
-                    Console.WriteLine($"Speed: LoadCurrent: {stopwatch.ElapsedMilliseconds.ToString()}");
-                    stopwatch.Restart();
+                    _stopwatch.Stop();
+                    Console.WriteLine($"Speed: LoadCurrent: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    _stopwatch.Restart();
                     // await LoadNewLocations(_currentItemDefinition);
                     await LoadNewLocations(s);
-                    stopwatch.Stop();
-                    Console.WriteLine($"Speed: await LoadNewLocations: {stopwatch.ElapsedMilliseconds.ToString()}");
-                    stopwatch.Restart();
+                    _stopwatch.Stop();
+                    Console.WriteLine($"Speed: await LoadNewLocations: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    _stopwatch.Restart();
                     if (_bindingSourceCurrent.Count > 0)
                     {
                         SetupGridCurrent();
-                        stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource Current Setup Grid: {stopwatch.ElapsedMilliseconds.ToString()}");
-                        stopwatch.Restart();
+                        _stopwatch.Stop();
+                        Console.WriteLine($"Speed: BindingSource Current Setup Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        _stopwatch.Restart();
                         DataGridViewHot.DataSource = _bindingSourceCurrent;
-                        stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource Current DataSource: {stopwatch.ElapsedMilliseconds.ToString()}");
-                        stopwatch.Restart();
+                        _stopwatch.Stop();
+                        Console.WriteLine($"Speed: BindingSource Current DataSource: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        _stopwatch.Restart();
                         DataGridViewHot.ClearSelection();
-                        stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource Current Clear Selection: {stopwatch.ElapsedMilliseconds.ToString()}");
+                        _stopwatch.Stop();
+                        Console.WriteLine($"Speed: BindingSource Current Clear Selection: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     }
                     else if (_bindingSourceNewLocations.Count > 0)
                     {
                         SetupGridNew();
                         DataGridViewHot.DataSource = _bindingSourceNewLocations;
                         DataGridViewHot.ClearSelection();
-                        stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource New Locations: {stopwatch.ElapsedMilliseconds.ToString()}");
+                        _stopwatch.Stop();
+                        Console.WriteLine($"Speed: BindingSource New Locations: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     }
                 }
             }

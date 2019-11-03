@@ -16,32 +16,28 @@ using NeutronCore.Global;
 
 namespace NeutronLoader
 {
-    public class Pr1FileProcessor
+    public class Pr1FileProcessor : IFileProcessor
     {
-        private readonly GenericRepository<Order> repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Station> repoStation = new GenericRepository<Station>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly DynamicLogger _logger;
         private readonly IJsonData _jsonData;
 
-        public Pr1FileProcessor(List<FileInfo> files, NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
+        public Pr1FileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
-            logger.Log($"Pr1 File Processor - File Count: {files.Count()} ");
-
-            ProcessFiles(files);
-            
         }
 
-        private void ProcessFiles(IEnumerable<FileInfo> files)
+        public void LoadFiles(List<FileInfo> files)
         {
             foreach (var file in files)
             {
@@ -92,7 +88,7 @@ namespace NeutronLoader
                         //time to write the Order record and get Order Id.
                         try
                         {
-                            repoOrder.Insert(order);
+                            _repoOrder.Insert(order);
                             orderId = order.Id;
                             order = null;
                         }
@@ -123,7 +119,7 @@ namespace NeutronLoader
                         {
                             try
                             {
-                                repoOrderDetail.Insert(detail);
+                                _repoOrderDetail.Insert(detail);
                                 detail = null;
                             }
                             catch (Exception ex)
@@ -172,7 +168,7 @@ namespace NeutronLoader
                             }
 
                             _logger.Log($"Station Id: {itemDef.StationId}");
-                            var stationNumber = repoStation.FindByKey(itemDef.StationId).StationNumber;
+                            var stationNumber = _repoStation.FindByKey(itemDef.StationId).StationNumber;
                             var primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
                             detail = new OrderDetail
                             {
@@ -222,7 +218,7 @@ namespace NeutronLoader
                     {
                         if (detail != null)
                         {
-                            repoOrderDetail.Insert(detail);
+                            _repoOrderDetail.Insert(detail);
                             detail = null;
                         }
 
@@ -255,7 +251,7 @@ namespace NeutronLoader
                         //time to write the Order record and get Order Id.
                         try
                         {
-                            repoReplenOrder.Insert(order);
+                            _repoReplenOrder.Insert(order);
                             orderId = order.Id;
                             order = null;
                         }
@@ -289,7 +285,7 @@ namespace NeutronLoader
                         {
                             try
                             {
-                                repoReplenOrderDetail.Insert(replenDetail);
+                                _repoReplenOrderDetail.Insert(replenDetail);
                                 replenDetail = null;
                             }
                             catch (Exception ex)
@@ -360,7 +356,7 @@ namespace NeutronLoader
                     //last record in file.  Write the last OrderDetail to database.
                     try
                     {
-                        repoReplenOrderDetail.Insert(replenDetail);
+                        _repoReplenOrderDetail.Insert(replenDetail);
                     }
                     catch (Exception ex)
                     {
@@ -380,7 +376,7 @@ namespace NeutronLoader
                 {
                     int stationId = GetStationId(stationNumber: 8);
                     //try to find it anywhere first
-                    item = repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault();
+                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault();
                     if (item == null)
                     {
                         //didn't find it anywhere so create it in Station 8, OC
@@ -396,7 +392,7 @@ namespace NeutronLoader
             {
                 try
                 {
-                    item = repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault();
+                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault();
                     if (item == null)
                     {
                         item = new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description);
@@ -421,7 +417,7 @@ namespace NeutronLoader
             {
                 try
                 {
-                    item = repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == sku).FirstOrDefault() ?? new ItemDefinitionProcessor(_jsonData).GetOrCreate(sku, des);
+                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == sku).FirstOrDefault() ?? new ItemDefinitionProcessor(_jsonData).GetOrCreate(sku, des);
                 }
                 catch (Exception ex)
                 {
@@ -433,11 +429,11 @@ namespace NeutronLoader
 
         private ItemDefinition UpdateItemDefinitionDescription(ItemDefinition itemDefinition, string description)
         {
-            var itemDef = repoItemDefinition.FindByKey(itemDefinition.Id);
+            var itemDef = _repoItemDefinition.FindByKey(itemDefinition.Id);
             if (itemDef != null)
             {
                 itemDef.Description = description;
-                repoItemDefinition.Update(itemDef);
+                _repoItemDefinition.Update(itemDef);
             }
             return itemDef;
         }
@@ -448,7 +444,7 @@ namespace NeutronLoader
 
             try
             {
-                Station station = repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
+                Station station = _repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
                
                 if (station != null)
                 {
@@ -470,7 +466,7 @@ namespace NeutronLoader
 
             try
             {
-                Station station = repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
+                Station station = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
                 if (station != null)
                 {
                     stationId = station.Id;

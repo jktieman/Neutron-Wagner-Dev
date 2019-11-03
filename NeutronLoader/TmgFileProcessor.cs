@@ -15,34 +15,40 @@ using NeutronCore.Global;
 
 namespace NeutronLoader
 {
-    public class FileProcessor
+    public class TmgFileProcessor : IFileProcessor
     {
-        private readonly List<FileInfo> _files;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         readonly DynamicLogger _logger;
+        private readonly IJsonData _jsonData;
 
-        public FileProcessor(List<FileInfo> files, NeutronVariables neutronVariables
-            , NeutronLicense neutronLicense, IJsonData jsonData, DynamicLogger logger)
+        public TmgFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData, DynamicLogger logger)
         {
-            _files = files;
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
+            _jsonData = jsonData;
+        }
 
-            foreach (var file in files)
+        public void LoadFiles(List<FileInfo> files)
+        {
+            try
             {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                Task.Run(() => _logger.Log($"File Processor - Process File Start."));
-                List<HostOrder> hostOrderList = ProcessFile(file);
-                if (hostOrderList.Count > 0)
+                foreach (var file in files)
                 {
-                    var hostOrderListProcessor = new HostOrderListProcessor(hostOrderList, jsonData, logger);
+                    Task.Run(() => _logger.Log($"File Processor - Process File Start."));
+                    var hostOrderList = ProcessFile(file);
+                    if (hostOrderList.Count > 0)
+                    {
+                        var hostOrderListProcessor = new HostOrderListProcessor(hostOrderList, _jsonData, _logger);
+                    }
+                    ArchiveFile.Archive(file);
                 }
-                stopwatch.Stop();
-                Task.Run(() => _logger.Log($"Processing Time: {stopwatch.ElapsedMilliseconds.ToString()}"));
-                ArchiveFile.Archive(file);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Load Files Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+                            $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
         }
 
@@ -129,10 +135,8 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                if (ex.InnerException?.InnerException != null)
-                    _logger.Log("Process Interface File Error.  \r\n" + ex.Message + "\r\n" +
-                               ex.InnerException.Message +
-                               "\r\n" + ex.InnerException.InnerException.Message);
+                _logger.Log($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+                            $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
             return hostOrderList;
         }
@@ -147,5 +151,6 @@ namespace NeutronLoader
             result = v.Substring(0, 5);
             return result;
         }
+
     }
 }

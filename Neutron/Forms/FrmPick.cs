@@ -91,7 +91,7 @@ namespace Neutron.Forms
         private bool _shortPick;
         static Timer _timer;
 
-        private InterfaceProcessor _interfaceProcessor;
+        private InterfaceProcessorTmg _interfaceProcessorTmg;
         readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
 
@@ -183,7 +183,7 @@ namespace Neutron.Forms
             }
             else
             {
-                stationNumbers = new List<string> {"All", "1", "2", "3", "4", "5", "8"};
+                stationNumbers = new List<string> { "All", "1", "2", "3", "4", "5", "8" };
             }
             ComboBoxStationNumber.DataSource = stationNumbers;
             ComboBoxStationNumber.SelectedIndex = 0;
@@ -4546,29 +4546,8 @@ namespace Neutron.Forms
                 var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
             }
 
-            if (_neutronVariables.ParkPositionAfterBatch)
-            {
-                if (_neutronVariables.ShuttleEnabled)
-                {
-                    if (GlobalVar.Shuttle != null)
-                    {
-                        var response = GlobalVar.Shuttle.Park();
-                        if (response != DeviceResponse.Success)
-                        {
-                            if (response == DeviceResponse.TrayDidNotArrive)
-                            {
+            ParkPositionAfterBatch();
 
-                            }
-                            else
-                            {
-                                MessageBox.Show(response.AsString(EnumFormat.Description)
-                                    , caption: _resourceManager.GetString($"DeviceInformation")
-                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                            }
-                        }
-                    }
-                }
-            }
             if (_neutronVariables.AutoLogOff)
             {
                 CloseButtonPressed = true;
@@ -4579,6 +4558,21 @@ namespace Neutron.Forms
                 ShowAllOrders();
                 ShowAvailableOrders();
                 tabControl1.SelectedTab = AvailableOrders;
+            }
+        }
+
+        private void ParkPositionAfterBatch()
+        {
+            if (!_neutronVariables.ParkPositionAfterBatch) return;
+            if (!_neutronVariables.ShuttleEnabled) return;
+            if (GlobalVar.Shuttle == null) return;
+            var response = GlobalVar.Shuttle.Park();
+            if (response == DeviceResponse.Success) return;
+            if (response != DeviceResponse.TrayDidNotArrive)
+            {
+                MessageBox.Show(response.AsString(EnumFormat.Description)
+                    , caption: _resourceManager.GetString($"DeviceInformation")
+                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
             }
         }
 
@@ -4873,29 +4867,8 @@ namespace Neutron.Forms
                 var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
             }
 
-            if (_neutronVariables.ParkPositionAfterBatch)
-            {
-                if (_neutronVariables.ShuttleEnabled)
-                {
-                    if (GlobalVar.Shuttle != null)
-                    {
-                        var response = GlobalVar.Shuttle.Park();
-                        if (response != DeviceResponse.Success)
-                        {
-                            if (response == DeviceResponse.TrayDidNotArrive)
-                            {
+            ParkPositionAfterBatch();
 
-                            }
-                            else
-                            {
-                                MessageBox.Show(response.AsString(EnumFormat.Description),
-                                    caption: _resourceManager.GetString($"DeviceInformation")
-                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                            }
-                        }
-                    }
-                }
-            }
             if (_neutronVariables.AutoLogOff)
             {
                 CloseButtonPressed = true;
@@ -8080,23 +8053,23 @@ namespace Neutron.Forms
 
         private void FrmPick_KeyPress(object sender, KeyPressEventArgs e)
         {
-           //e.KeyC Keys.A || Keys.
-           // if (e.KeyChar >= 48 && e.KeyChar <= 57)
-           // {
-           //     MessageBox.Show("Form.KeyPress: '" +
-           //                     e.KeyChar.ToString() + "' pressed.");
+            //e.KeyC Keys.A || Keys.
+            // if (e.KeyChar >= 48 && e.KeyChar <= 57)
+            // {
+            //     MessageBox.Show("Form.KeyPress: '" +
+            //                     e.KeyChar.ToString() + "' pressed.");
 
-           //     switch (e.KeyChar)
-           //     {
-           //         case (char)49:
-           //         case (char)52:
-           //         case (char)55:
-           //             MessageBox.Show("Form.KeyPress: '" +
-           //                             e.KeyChar.ToString() + "' consumed.");
-           //             e.Handled = true;
-           //             break;
-           //     }
-           // }
+            //     switch (e.KeyChar)
+            //     {
+            //         case (char)49:
+            //         case (char)52:
+            //         case (char)55:
+            //             MessageBox.Show("Form.KeyPress: '" +
+            //                             e.KeyChar.ToString() + "' consumed.");
+            //             e.Handled = true;
+            //             break;
+            //     }
+            // }
         }
 
         private void MBShortCut_Click(object sender, EventArgs e)

@@ -88,7 +88,7 @@ namespace Neutron.Forms
         private bool openHotPickFromPickScreen = false;
         private bool openHotStoreFromPickScreen = false;
 
-        private InterfaceProcessor interfaceProcessor;
+        private InterfaceProcessorTmg _interfaceProcessorTmg;
         private readonly NeutronVariables _neutronVariables;
         NeutronLicense neutronLicense;
         DynamicLogger _logger;
@@ -3063,9 +3063,9 @@ namespace Neutron.Forms
                 if (result == DialogResult.Yes)
                 {
                     MBMainLoadOrders.Text = "Start Loader";
-                    if (interfaceProcessor != null)
+                    if (_interfaceProcessorTmg != null)
                     {
-                        interfaceProcessor.StopProcessingInterfaceFiles();
+                        _interfaceProcessorTmg.StopProcessingInterfaceFiles();
 
                     }
 
@@ -3075,8 +3075,8 @@ namespace Neutron.Forms
             }
             else
             {
-                interfaceProcessor = new InterfaceProcessor(_neutronVariables, neutronLicense, _jsonData);
-                interfaceProcessor.StartProcessingInterfaceFiles();
+                _interfaceProcessorTmg = new InterfaceProcessorTmg(_neutronVariables, neutronLicense, _jsonData);
+                _interfaceProcessorTmg.StartProcessingInterfaceFiles();
                 MBMainLoadOrders.Text = "Stop Loader";
                 GlobalVar.LoaderRunning = true;
             }
