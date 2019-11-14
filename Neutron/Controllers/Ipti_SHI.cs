@@ -11,7 +11,7 @@ namespace Neutron.Controllers
         private readonly string _part;
         private int _rBeacon;
         private readonly string _text;
-        private const string ActionCode = "39";
+        private const string DisplayCommand = "39";
         private const string Space = " ";
         private const string Dash = "-";
         private readonly string _leftArrow = Convert.ToChar(19).ToString();
@@ -36,10 +36,10 @@ namespace Neutron.Controllers
                 switch (_towerLevelInfo.ArrowDirection)
                 {
                     case "Left":
-                        result = _towerLevelInfo.BayId.PadLeft(2, '0') + ActionCode + _towerLevelInfo.Display.PadLeft(2, '0') + _leftArrow + Dash + Space + _part + _text;
+                        result = _towerLevelInfo.BayId.PadLeft(2, '0') + DisplayCommand + _towerLevelInfo.Display.PadLeft(2, '0') + _leftArrow + Dash + Space + _part + _text;
                         break;
                     case "Right":
-                        result = _towerLevelInfo.BayId.PadLeft(2, '0') + ActionCode + _towerLevelInfo.Display.PadLeft(2, '0') + _part + Space + _text + Space + Dash + _rightArrow;
+                        result = _towerLevelInfo.BayId.PadLeft(2, '0') + DisplayCommand + _towerLevelInfo.Display.PadLeft(2, '0') + _part + Space + _text + Space + Dash + _rightArrow;
                         break;
                 }
             }

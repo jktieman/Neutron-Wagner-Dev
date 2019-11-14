@@ -3,6 +3,9 @@ using NeutronData.Models;
 using NeutronData.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
+using System.Data.Odbc;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,14 +14,22 @@ using NeutronData.ModelViews;
 using NeutronCore.Enums;
 using System.Data.SqlClient;
 using NeutronCore.Extensions;
+using NeutronData.BaseClasses;
 
 namespace Neutron.Global
 {
 
     public class HistoryManager
     {
-        readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
-        readonly InventoryRepository _repoInventory = new InventoryRepository();
+        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
+        private readonly InventoryRepository _repoInventory = new InventoryRepository();
+        private static bool _actionCodesInited = false;
+
+        public HistoryManager()
+        {
+            if (_actionCodesInited) return;
+            SaveActionCodesToDatabase();
+        }
 
         public void SaveHistory(ActionCode actionCode, Order order)
         {
@@ -40,9 +51,9 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, PickStop pickStop)
         {
-            foreach (PickView pickView in pickStop.PickViews)
+            foreach (var pickView in pickStop.PickViews)
             {
-                foreach (PickLocation pickLocation in pickView.PickLocations)
+                foreach (var pickLocation in pickView.PickLocations)
                 {
                     var cCenter = "          ";
                     if (pickView.OrderDetail.OrderDetailInfo.Length >= 10)
@@ -81,14 +92,14 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, ReplenPickStop pickStop)
         {
-            foreach (ReplenPickView pickView in pickStop.PickViews)
+            foreach (var pickView in pickStop.PickViews)
             {
-                foreach (PickLocation pickLocation in pickView.PickLocations)
+                foreach (var pickLocation in pickView.PickLocations)
                 {
                     var history = new History
                     {
                         ActionCode = (int)actionCode,
-                        ActionCodeName = EnumExtensions.GetEnumDescription(actionCode),
+                        ActionCodeName = actionCode.GetEnumDescription(),
                         ActionDateTime = pickLocation.PickDate,
                         Ord1 = pickView.Ord1,
                         Ord2 = pickView.Ord2,
@@ -177,7 +188,7 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, Inventory inventory)
         {
-            InventoryView inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -257,7 +268,7 @@ namespace Neutron.Global
         //Hot Action
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty)
         {
-            InventoryView inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -289,7 +300,7 @@ namespace Neutron.Global
         //Hot Action with Cost Center
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, string costCenter)
         {
-            InventoryView inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -320,7 +331,7 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, LocationCount cnt)
         {
-            InventoryView inv = _repoInventory.GetInventoryViewById(cnt.InventoryId);
+            var inv = _repoInventory.GetInventoryViewById(cnt.InventoryId);
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -498,11 +509,13 @@ namespace Neutron.Global
 
         public List<HistoryView> GetHistoryRecordsByUser(string empId)
         {
-            DateTime today = DateTime.Now;
+            var today = DateTime.Now;
             var fromDate = new DateTime(2015, 1, 1, 23, 59, 59, 999);
             var toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 999);
-            string codes = GetCodes();
-            string find = string.Empty;
+            var codes = GetCodes();
+            var find = string.Empty;
+
+
 
             var history = new List<HistoryView>();
             using (var context = new NeutronDb())
@@ -530,11 +543,11 @@ namespace Neutron.Global
 
         public List<HistoryView> GetHistoryRecords()
         {
-            DateTime today = DateTime.Now;
+            var today = DateTime.Now;
             var fromDate = new DateTime(2015, 1, 1, 23, 59, 59, 999);
             var toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 999);
-            string codes = GetCodes();
-            string find = string.Empty;
+            var codes = GetCodes();
+            var find = string.Empty;
 
             var history = new List<HistoryView>();
             using (var context = new NeutronDb())
@@ -576,7 +589,6 @@ namespace Neutron.Global
                     if (hist != null)
                     {
                         history = hist.ToList();
-
                     }
                 }
                 catch (Exception ex)
@@ -590,7 +602,7 @@ namespace Neutron.Global
         private static string GetCodes()
         {
             var sb = new StringBuilder();
-            string[] values = Enum.GetValues(typeof(ActionCode)).Cast<int>().Select(x => x.ToString()).ToArray();
+            var values = Enum.GetValues(typeof(ActionCode)).Cast<int>().Select(x => x.ToString()).ToArray();
             foreach (var item in values)
             {
                 sb.Append(item + ",");
@@ -623,6 +635,53 @@ namespace Neutron.Global
                 OrderDetailInfo = skipView.OrderDetail.OrderDetailInfo
             };
             Save(history);
+        }
+
+        public void SaveActionCodesToDatabase()
+        {
+            //Run this one time at startup
+            //break down the ActionCode Enum into a List and save to the database.
+
+            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
+                .Select(r => new ActionCodeItem { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
+
+            try
+            {
+                using (var db = new NeutronDb())
+                {
+                    var exists = db.Database
+                                      .SqlQuery<int?>(@"
+                         SELECT 1 FROM sys.tables AS T
+                         INNER JOIN sys.schemas AS S ON T.schema_id = S.schema_id
+                         WHERE S.Name = 'dbo' AND T.Name = 'ActionCodeItems'")
+                                      .SingleOrDefault() != null;
+
+                    if (!exists)
+                    {
+                        db.Database.ExecuteSqlCommand("CREATE TABLE [dbo].[ActionCodeItems] ([Id] [int] NOT NULL, Name varchar(64) not null)");
+
+                    }
+                    else
+                    {
+                        db.Database.ExecuteSqlCommand("TRUNCATE TABLE ActionCodeItems");
+                    }
+
+                    foreach (var actionCode in actionCodes)
+                    {
+                        db.ActionCodeItems.Add(actionCode);
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Save Action Codes to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
+                                $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
+            }
+
+            //set static variable to show the action codes have been created.
+            _actionCodesInited = true;
         }
     }
 }

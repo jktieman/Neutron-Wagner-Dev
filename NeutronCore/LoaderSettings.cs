@@ -34,6 +34,8 @@ namespace NeutronCore
             {
                 _rootDirectory = string.Empty;
             }
+
+            Init();
         }
 
 

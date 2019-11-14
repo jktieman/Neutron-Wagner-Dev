@@ -48,7 +48,7 @@
             this.LabelFindDescription = new System.Windows.Forms.Label();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
-            this.MBHistoryTransmitResults = new MetroFramework.Controls.MetroButton();
+            this.MBHistoryTransmitSelected = new MetroFramework.Controls.MetroButton();
             this.MBSaveHistory = new MetroFramework.Controls.MetroButton();
             this.MButtonRun = new MetroFramework.Controls.MetroButton();
             this.DataGridView1 = new System.Windows.Forms.DataGridView();
@@ -91,7 +91,7 @@
             this.tabPage1.Controls.Add(this.LabelFindDescription);
             this.tabPage1.Controls.Add(this.TextBoxFind);
             this.tabPage1.Controls.Add(this.MButtonClose);
-            this.tabPage1.Controls.Add(this.MBHistoryTransmitResults);
+            this.tabPage1.Controls.Add(this.MBHistoryTransmitSelected);
             this.tabPage1.Controls.Add(this.MBSaveHistory);
             this.tabPage1.Controls.Add(this.MButtonRun);
             this.tabPage1.Controls.Add(this.DataGridView1);
@@ -243,9 +243,9 @@
             // LabelFindDescription
             // 
             this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFindDescription.Location = new System.Drawing.Point(577, 50);
+            this.LabelFindDescription.Location = new System.Drawing.Point(615, 50);
             this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(270, 27);
+            this.LabelFindDescription.Size = new System.Drawing.Size(232, 27);
             this.LabelFindDescription.TabIndex = 18;
             this.LabelFindDescription.Text = "Search For Part of Order or Item";
             this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -253,10 +253,10 @@
             // TextBoxFind
             // 
             this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(572, 10);
+            this.TextBoxFind.Location = new System.Drawing.Point(615, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(275, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(232, 29);
             this.TextBoxFind.TabIndex = 17;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -272,19 +272,19 @@
             this.MButtonClose.Text = "Close";
             this.MButtonClose.UseSelectable = true;
             // 
-            // MBHistoryTransmitResults
+            // MBHistoryTransmitSelected
             // 
-            this.MBHistoryTransmitResults.Enabled = false;
-            this.MBHistoryTransmitResults.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHistoryTransmitResults.Location = new System.Drawing.Point(430, 55);
-            this.MBHistoryTransmitResults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBHistoryTransmitResults.Name = "MBHistoryTransmitResults";
-            this.MBHistoryTransmitResults.Size = new System.Drawing.Size(136, 37);
-            this.MBHistoryTransmitResults.TabIndex = 12;
-            this.MBHistoryTransmitResults.Text = "Transmit Results";
-            this.MBHistoryTransmitResults.UseSelectable = true;
-            this.MBHistoryTransmitResults.Visible = false;
-            this.MBHistoryTransmitResults.Click += new System.EventHandler(this.MBSaveHistory_Click);
+            this.MBHistoryTransmitSelected.Enabled = false;
+            this.MBHistoryTransmitSelected.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBHistoryTransmitSelected.Location = new System.Drawing.Point(430, 55);
+            this.MBHistoryTransmitSelected.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHistoryTransmitSelected.Name = "MBHistoryTransmitSelected";
+            this.MBHistoryTransmitSelected.Size = new System.Drawing.Size(179, 37);
+            this.MBHistoryTransmitSelected.TabIndex = 12;
+            this.MBHistoryTransmitSelected.Text = "Transmit Selected";
+            this.MBHistoryTransmitSelected.UseSelectable = true;
+            this.MBHistoryTransmitSelected.Visible = false;
+            this.MBHistoryTransmitSelected.Click += new System.EventHandler(this.MBSaveHistory_Click);
             // 
             // MBSaveHistory
             // 
@@ -292,7 +292,7 @@
             this.MBSaveHistory.Location = new System.Drawing.Point(430, 10);
             this.MBSaveHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveHistory.Name = "MBSaveHistory";
-            this.MBSaveHistory.Size = new System.Drawing.Size(136, 37);
+            this.MBSaveHistory.Size = new System.Drawing.Size(179, 37);
             this.MBSaveHistory.TabIndex = 12;
             this.MBSaveHistory.Text = "Save to File";
             this.MBSaveHistory.UseSelectable = true;
@@ -410,6 +410,6 @@
         private System.Windows.Forms.CheckedListBox CheckedListBoxActionCodes;
         private System.Windows.Forms.Button ButtonClearAll;
         private System.Windows.Forms.Button ButtonCheckAll;
-        private MetroFramework.Controls.MetroButton MBHistoryTransmitResults;
+        private MetroFramework.Controls.MetroButton MBHistoryTransmitSelected;
     }
 }

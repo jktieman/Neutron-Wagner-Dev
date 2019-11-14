@@ -2,6 +2,7 @@
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using System.Data.Entity;
+using NeutronData.BaseClasses;
 
 namespace NeutronData.DataContexts
 {
@@ -42,7 +43,7 @@ namespace NeutronData.DataContexts
         public DbSet<PickLocationSkip> PickLocationSkips { get; set; }
         //public DbSet<GroupActivity> GroupActivities { get; set; }
         public DbSet<History> History { get; set; }
-        //public DbSet<ActionCode> ActionCodes { get; set; }
+        public DbSet<ActionCodeItem> ActionCodeItems { get; set; }
         public DbSet<LineStatus> LineStatus { get; set; }
         //public DbSet<LocationGroup> LocationGroups { get; set; }
        // public DbSet<LocationGroupLocation> LocationGroupLocations { get; set; }

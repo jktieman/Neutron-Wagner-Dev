@@ -2031,7 +2031,7 @@ namespace Neutron.Forms
                     var level = grid["Loc3", rowIndex].Value.ToString().ParseInt();
                     var partition = grid["Loc4", rowIndex].Value.ToString();
                     var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
-                    var quantity = grid["Quantity", rowIndex].Value.ToString().ParseInt();
+
                     var display = string.Empty;
                     if (_neutronVariables.ShuttleEnabled)
                     {
@@ -2045,7 +2045,7 @@ namespace Neutron.Forms
                                 {
                                     var response = Task.Run(() =>
                                         GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part,
-                                            quantity, display));
+                                            0, display));
                                     if (response.Result != DeviceResponse.Success)
                                     {
                                         MessageBox.Show(response.Result.AsString(EnumFormat.Description),

@@ -1,4 +1,4 @@
-﻿namespace Neutron
+﻿namespace Neutron.Forms
 {
     partial class FrmSecurity
     {

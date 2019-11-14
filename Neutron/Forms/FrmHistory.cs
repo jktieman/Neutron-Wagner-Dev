@@ -332,15 +332,11 @@ namespace Neutron.Forms
 
         private void SetupCheckListBoxActionCodes()
         {
-            var actionCodes = ((ActionCode[]) Enum.GetValues(typeof(ActionCode))).ToList();                  // repoActionCodes.All();
-            //foreach (ActionCode code in (ActionCode[])Enum.GetValues(typeof(ActionCode)))
-            //{
-            //    actionCodes.Add(code);
-            //}
+            var actionCodes = ((ActionCode[]) Enum.GetValues(typeof(ActionCode))).ToList();
             var codes = new Dictionary<int, string>();
             foreach (var code in actionCodes)
             {
-                codes.Add((int)code, EnumExtensions.GetEnumDescription(code));
+                codes.Add((int)code, code.GetEnumDescription());
             }
             CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
             CheckedListBoxActionCodes.DisplayMember = "Value";
@@ -362,14 +358,6 @@ namespace Neutron.Forms
             for (var i = 0; i <= (CheckedListBoxActionCodes.Items.Count - 1); i++)
             {
                 CheckedListBoxActionCodes.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
-                //if (checkThem)
-                //{
-                //    CheckedListBoxActionCodes.SetItemCheckState(i, CheckState.Checked);
-                //}
-                //else
-                //{
-                //    CheckedListBoxActionCodes.SetItemCheckState(i, CheckState.Unchecked);
-                //}
             }
         }
 
@@ -487,12 +475,16 @@ namespace Neutron.Forms
 
         private void MBSaveHistory_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             CsvUtility.SaveToCsv(DataGridView1);
+            Cursor.Current = Cursors.Default;
         }
 
         private void MButtonRun_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             GetHistoryRecords();
+            Cursor.Current = Cursors.Default;
         }
     }
 

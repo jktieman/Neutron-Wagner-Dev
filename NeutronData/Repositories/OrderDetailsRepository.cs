@@ -16,34 +16,13 @@ namespace NeutronData.Repositories
         public List<OrderDetailsView> GetOrderDetailsView()
         {
             var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<OrderDetailsView> recs = repo.AllInclude(r => r.Order, r => r.ItemDefinition)
+            List<OrderDetailsView> recs = new List<OrderDetailsView>();
+            try
+            {
+
+                recs = repo.AllInclude(r => r.Order, r => r.ItemDefinition)
                 .Where(r => statusToGet.Contains(r.LineStatusId))
                 .Select(s => new OrderDetailsView
-            {
-                OrderId = s.OrderId,
-                Ord1 = s.Order.Ord1,
-                Ord2 = s.Order.Ord2,
-                OrderDetailId = s.Id,
-                ItemId = s.ItemDefinitionId,
-                Item = s.ItemDefinition.Item,
-                Description = s.ItemDefinition.Description,
-                Quantity = s.Quantity,
-                PickedQuantity = s.PickedQuantity,
-                LineStatusId = s.LineStatusId,
-                LineStatusName = s.LineStatus.Name,
-                StationNumber = s.StationNumber
-            }).Where(s => statusToGet.Contains(s.LineStatusId))
-            .OrderBy(o => o.Ord1);
-
-            return recs.ToList();
-        }
-
-        public List<OrderDetailsView> GetOrderDetailsViewByOrder(int orderId)
-        {
-            //var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<OrderDetailsView> recs = repo.AllInclude(r => r.Order, r => r.ItemDefinition)
-                .Where(r => r.OrderId == orderId).Select(s => new OrderDetailsView
-                //.Where(r => r.OrderId == orderId && statusToGet.Contains(r.LineStatusId)).Select(s => new OrderDetailsView
                 {
                     OrderId = s.OrderId,
                     Ord1 = s.Order.Ord1,
@@ -57,32 +36,76 @@ namespace NeutronData.Repositories
                     LineStatusId = s.LineStatusId,
                     LineStatusName = s.LineStatus.Name,
                     StationNumber = s.StationNumber
-                }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item);
+                }).Where(s => statusToGet.Contains(s.LineStatusId))
+            .OrderBy(o => o.Ord1).ToList();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+            return recs;
+        }
 
-            return recs.ToList();
+        public List<OrderDetailsView> GetOrderDetailsViewByOrder(int orderId)
+        {
+            List<OrderDetailsView> recs = new List<OrderDetailsView>();
+            try
+            {
+                recs = repo.AllInclude(r => r.Order, r => r.ItemDefinition)
+                             .Where(r => r.OrderId == orderId).Select(s => new OrderDetailsView
+                {
+                                 OrderId = s.OrderId,
+                                 Ord1 = s.Order.Ord1,
+                                 Ord2 = s.Order.Ord2,
+                                 OrderDetailId = s.Id,
+                                 ItemId = s.ItemDefinitionId,
+                                 Item = s.ItemDefinition.Item,
+                                 Description = s.ItemDefinition.Description,
+                                 Quantity = s.Quantity,
+                                 PickedQuantity = s.PickedQuantity,
+                                 LineStatusId = s.LineStatusId,
+                                 LineStatusName = s.LineStatus.Name,
+                                 StationNumber = s.StationNumber
+                             }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item).ToList();
+
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            return recs;
         }
 
         public List<OrderDetailsView> GetOrderDetailsViewByOrderAndStation(int orderId, int stationNumber)
         {
-            //var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<OrderDetailsView> recs = repo.AllInclude(r => r.Order, r => r.ItemDefinition)
+            List<OrderDetailsView> recs = new List<OrderDetailsView>();
+            try
+            {
+                recs = repo.AllInclude(r => r.Order, r => r.ItemDefinition)
                 .Where(r => r.OrderId == orderId && r.StationNumber == stationNumber).Select(s => new OrderDetailsView
-                    {
-                        OrderId = s.OrderId,
-                        Ord1 = s.Order.Ord1,
-                        Ord2 = s.Order.Ord2,
-                        OrderDetailId = s.Id,
-                        ItemId = s.ItemDefinitionId,
-                        Item = s.ItemDefinition.Item,
-                        Description = s.ItemDefinition.Description,
-                        Quantity = s.Quantity,
-                        PickedQuantity = s.PickedQuantity,
-                        LineStatusId = s.LineStatusId,
-                        LineStatusName = s.LineStatus.Name,
-                        StationNumber = s.StationNumber
-                    }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item);
+                {
+                    OrderId = s.OrderId,
+                    Ord1 = s.Order.Ord1,
+                    Ord2 = s.Order.Ord2,
+                    OrderDetailId = s.Id,
+                    ItemId = s.ItemDefinitionId,
+                    Item = s.ItemDefinition.Item,
+                    Description = s.ItemDefinition.Description,
+                    Quantity = s.Quantity,
+                    PickedQuantity = s.PickedQuantity,
+                    LineStatusId = s.LineStatusId,
+                    LineStatusName = s.LineStatus.Name,
+                    StationNumber = s.StationNumber
+                }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item).ToList();
 
-            return recs.ToList();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            return recs;
         }
 
         public List<OrderDetail> GetOrderDetailsByOrderAndStation(int orderId, int stationNumber)

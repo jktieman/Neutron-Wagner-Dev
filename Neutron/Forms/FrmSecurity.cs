@@ -10,41 +10,47 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using NeutronCore.Global;
+using NeutronData.ModelViews;
 
-namespace Neutron
+namespace Neutron.Forms
 {
     public partial class FrmSecurity : Form
     {
-        private readonly SecureDb context = new SecureDb();
-        private readonly NeutronDb contextNeutron = new NeutronDb();
+        private readonly SecureDb _context = new SecureDb();
+        private readonly NeutronDb _contextNeutron = new NeutronDb();
 
-        private bool checkAllUsers;
-        private bool checkAllSecureItems;
-        private SecureItem[] secureItems;
-        INomenclature nomenclature;
+        private bool _checkAllUsers;
+        private bool _checkAllSecureItems;
+        private SecureItem[] _secureItems;
+        readonly INomenclature _nomenclature;
+        private readonly NeutronVariables _neutronVariables;
+        private User _currentUser;
 
-        public FrmSecurity(INomenclature nomenclature)
+        public FrmSecurity(INomenclature nomenclature, NeutronVariables neutronVariables)
         {
             InitializeComponent();
-            this.nomenclature = nomenclature;
+            _nomenclature = nomenclature;
+            _neutronVariables = neutronVariables;
             ButtonDeleteEditUser.Enabled = false;
             SetupGrids();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            secureItems = ((NeutronSecurity[]) Enum.GetValues(typeof(NeutronSecurity)))
-                .Select(c => new SecureItem() { SecureItemId = (int) c, Name = c.GetEnumDescription() }).ToArray();
+            _secureItems = ((NeutronSecurity[])Enum.GetValues(typeof(NeutronSecurity)))
+                .Select(c => new SecureItem() { SecureItemId = (int)c, Name = c.GetEnumDescription() }).ToArray();
 
             // SecureItem[] secureItems = context.SecureItems.ToArray();
-            var groups = context.Groups.ToArray();
-            var users = context.Users.Where(u => u.Disabled == false).ToArray();
-            var allUsers = context.Users.ToList();
+            var groups = _context.Groups.ToArray();
+            var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
+            var allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
 
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
             ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
-            ListViewSecureItems.Items.AddRange(secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+            ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
 
             ComboBoxGroups.DataSource = groups.ToList();
             ComboBoxGroups.DisplayMember = "Name";
@@ -59,7 +65,7 @@ namespace Neutron
         private void LoadGroups()
         {
             ListViewGroups.Clear();
-            var groups = context.Groups.ToArray();
+            var groups = _context.Groups.ToArray();
             ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
             ComboBoxGroups.DataSource = groups.ToList();
         }
@@ -67,7 +73,7 @@ namespace Neutron
         private void LoadUsers()
         {
             ListViewUsers.Clear();
-            var users = context.Users.Where(u => u.Disabled == false).ToArray();
+            var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
         }
 
@@ -75,26 +81,23 @@ namespace Neutron
         {
             ListViewSecureItems.Clear();
             // SecureItem[] secureItems = context.SecureItems.ToArray();
-            ListViewSecureItems.Items.AddRange(secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+            ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
         }
 
         public bool CheckAllUsers
         {
-            get
-            {
-                return checkAllUsers;
-            }
+            get { return _checkAllUsers; }
             set
             {
-                checkAllUsers = value;
-                ButtonSelectUsers.Text = checkAllUsers ? "Clear All" : "Check All";
+                _checkAllUsers = value;
+                ButtonSelectUsers.Text = _checkAllUsers ? "Clear All" : "Check All";
             }
         }
 
         private void ButtonSelectUsers_Click(object sender, EventArgs e)
         {
             CheckAllUsers = !CheckAllUsers;
-            if (CheckAllUsers == true)
+            if (CheckAllUsers)
             {
                 CheckUsers();
             }
@@ -119,14 +122,12 @@ namespace Neutron
                 item.Checked = false;  // turn it off first 
                 foreach (var usr in users)
                 {
-                    if (((User) item.Tag).Id == usr.Id)
+                    if (((User)item.Tag).Id == usr.Id)
                     {
                         item.Checked = true;
                         break;
                     }
-
                 }
-
             }
         }
 
@@ -138,13 +139,12 @@ namespace Neutron
             }
         }
 
-        //------
         private void ButtonSaveNewGroup_Click(object sender, EventArgs e)
         {
             if (TextBoxNewGroup.Text.Length > 3)
             {
-                context.Groups.Add(new Group { Name = TextBoxNewGroup.Text });
-                context.SaveChanges();
+                _context.Groups.Add(new Group { Name = TextBoxNewGroup.Text });
+                _context.SaveChanges();
                 LoadGroups();
                 RefreshUsersAndSecureItems();
             }
@@ -172,9 +172,9 @@ namespace Neutron
 
         private void RefreshUsersAndSecureItems()
         {
-            var group = ComboBoxGroups.SelectedItem as Group;
-            var users = context.GroupUser.Where(r => r.GroupId == group.GroupId).Select(u => u.User).ToList();
-            var secureItems = context.GroupSecureItem.Where(r => r.GroupId == group.GroupId).Select(u => u.SecureItem).ToList();
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            var users = _context.GroupUser.Where(r => r.GroupId == group.GroupId).Select(u => u.User).ToList();
+            var secureItems = _context.GroupSecureItem.Where(r => r.GroupId == group.GroupId).Select(u => u.SecureItem).ToList();
             //var grup = context.Users.Where(u => u.)
             //group.Users = context.Users.Where(c => c.Groups == c.Id).ToList();
             //group.SecureItems = context.SecureItems.Where(c => c.GroupId == group.Id).ToList();
@@ -187,30 +187,30 @@ namespace Neutron
 
         private void UpdateInformation()
         {
-            var group = ComboBoxGroups.SelectedItem as Group;
+            var group = (Group)ComboBoxGroups.SelectedItem;
             if (TabControlSecurity.SelectedTab == TabControlSecurity.TabPages["TabPageUsers"])
             {
-                LabelUserGroupInformation.Text = $"Checked Users Are Members of the {group.Name} Group.";
+                LabelUserGroupInformation.Text = $"Checked Users Are Members of the {group?.Name} Group.";
             }
             else if (TabControlSecurity.SelectedTab == TabControlSecurity.TabPages["TabPageSecureItems"])
             {
-                LabelSecureItemsInformation.Text = $"The {group.Name} Group has Access to All Checked Items.";
+                LabelSecureItemsInformation.Text = $"The {group?.Name} Group has Access to All Checked Items.";
             }
         }
 
         private void ButtonSaveUsers_Click(object sender, EventArgs e)
         {
-            var group = ComboBoxGroups.SelectedItem as Group;
-            var users = context.Users.Where(u => u.Disabled == false).ToList();
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
             foreach (var user in users)
             {
-                var gu = context.GroupUser.Where(g => g.GroupId == group.GroupId && g.UserId == user.Id).FirstOrDefault();
+                var gu = _context.GroupUser.FirstOrDefault(g => g.GroupId == @group.GroupId && g.UserId == user.Id);
                 if (gu != null)
                 {
-                    context.GroupUser.Remove(gu);
+                    _context.GroupUser.Remove(gu);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedUsers(group);
 
         }
@@ -223,16 +223,16 @@ namespace Neutron
                 {
                     if (item.Checked)
                     {
-                        var user = (User) item.Tag;
+                        var user = (User)item.Tag;
                         var groupUser = new GroupUser { GroupId = group.GroupId, UserId = user.Id };
-                        var gu = context.GroupUser.Find(group.GroupId, user.Id);
+                        var gu = _context.GroupUser.Find(group.GroupId, user.Id);
                         if (gu == null)
                         {
-                            context.GroupUser.Add(groupUser);
+                            _context.GroupUser.Add(groupUser);
                         }
                     }
                 }
-                context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -246,38 +246,90 @@ namespace Neutron
             {
                 if (item.Checked)
                 {
-                    var user = (User) item.Tag;
+                    var user = (User)item.Tag;
                     user.Disabled = true;
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveNewUser_Click(object sender, EventArgs e)
         {
-            var group = ComboBoxGroups.SelectedItem as Group;
-
-            var user = new User
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            if (group != null)
             {
-                EmpId = TextBoxEmpId.Text,
-                Pin = TextBoxPin.Text,
-                Firstname = TextBoxFirstname.Text,
-                Lastname = TextBoxLastname.Text,
-                Username = TextBoxUsername.Text,
-                Password = TextBoxPassword.Text,
-                Disabled = CheckBoxDisabled.Checked,
-                HomeLocationId = contextNeutron.Locations.FirstOrDefault().Id,
-                // LocationGroupId = 1
+                if (VerifyFields())
+                {
+                    var user = new User
+                    {
+                        EmpId = TextBoxEmpId.Text.Trim(),
+                        Pin = TextBoxPin.Text.Trim(),
+                        Firstname = TextBoxFirstname.Text.Trim(),
+                        Lastname = TextBoxLastname.Text.Trim(),
+                        Username = TextBoxUsername.Text.Trim(),
+                        Password = TextBoxPassword.Text.Trim(),
+                        Disabled = CheckBoxDisabled.Checked,
+                        HomeLocationId = _contextNeutron.Locations.FirstOrDefault()?.Id,
+                    };
+                    _context.Users.Add(user);
+                    _context.GroupUser.Add(new GroupUser { GroupId = group.GroupId, UserId = user.Id });
+                    _context.SaveChanges();
 
-            };
-            context.Users.Add(user);
-            context.GroupUser.Add(new GroupUser { GroupId = group.GroupId, UserId = user.Id });
+                    ClearFields();
+                    LoadUsers();
+                    RefreshUsersAndSecureItems();
 
-            context.SaveChanges();
+                }
+            }
+        }
 
-            ClearFields();
-            LoadUsers();
-            RefreshUsersAndSecureItems();
+        private bool VerifyFields()
+        {
+            var result = true;
+            var sb = new StringBuilder();
+            if (string.IsNullOrEmpty(TextBoxFirstname.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a first name.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxLastname.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a last name.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxEmpId.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide an employee Id.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxPin.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a PIN number.");
+                result = false;
+            }
+
+            if (!_neutronVariables.PinLoginOnly)
+            {
+                if (string.IsNullOrEmpty(TextBoxUsername.Text.Trim()))
+                {
+                    sb.AppendLine("Login requires a user name and password.");
+                    sb.AppendLine($"You must provide a user name.");
+                    result = false;
+                }
+                if (string.IsNullOrEmpty(TextBoxPassword.Text.Trim()))
+                {
+                    sb.AppendLine("Login requires a user name and password.");
+                    sb.AppendLine($"You must provide a password.");
+                    result = false;
+                }
+            }
+
+            if (!result)
+            {
+                MessageBox.Show(sb.ToString());
+            }
+
+            return result;
         }
 
         private void ClearFields()
@@ -293,19 +345,19 @@ namespace Neutron
 
         private void ButtonSaveSecureItems_Click(object sender, EventArgs e)
         {
-            var group = ComboBoxGroups.SelectedItem as Group;
+            var group = (Group)ComboBoxGroups.SelectedItem;
 
-            //List<SecureItem> secureItems = this.secureItems.ToList(); //    context.SecureItems.ToList();
-            foreach (var item in secureItems)
+
+            foreach (var item in _secureItems)
             {
-                var gs = context.GroupSecureItem.Where(g => g.GroupId == group.GroupId
-                    && g.SecureItemId == item.SecureItemId).FirstOrDefault();
+                var gs = _context.GroupSecureItem.FirstOrDefault(g => g.GroupId == group.GroupId
+                                                                      && g.SecureItemId == item.SecureItemId);
                 if (gs != null)
                 {
-                    context.GroupSecureItem.Remove(gs);
+                    _context.GroupSecureItem.Remove(gs);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedSecureItems(group);
             RefreshUsersAndSecureItems();
 
@@ -317,28 +369,28 @@ namespace Neutron
             {
                 if (item.Checked)
                 {
-                    var secureItem = item.Tag as SecureItem;
-                    var groupSecureItem = new GroupSecureItem { GroupId = group.GroupId, SecureItemId = secureItem.SecureItemId };
-                    var gs = context.GroupSecureItem.Find(group.GroupId, secureItem.SecureItemId);
-                    if (gs == null)
+                    var secureItem = (SecureItem)item.Tag;
+                    if (secureItem != null)
                     {
-                        context.GroupSecureItem.Add(groupSecureItem);
+                        var groupSecureItem = new GroupSecureItem { GroupId = group.GroupId, SecureItemId = secureItem.SecureItemId };
+                        var gs = _context.GroupSecureItem.Find(group.GroupId, secureItem.SecureItemId);
+                        if (gs == null)
+                        {
+                            _context.GroupSecureItem.Add(groupSecureItem);
+                        }
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         public bool CheckAllSecureItems
         {
-            get
-            {
-                return checkAllSecureItems;
-            }
+            get { return _checkAllSecureItems; }
             set
             {
-                checkAllSecureItems = value;
-                ButtonSelectSecureItems.Text = checkAllSecureItems ? "Clear All" : "Check All";
+                _checkAllSecureItems = value;
+                ButtonSelectSecureItems.Text = _checkAllSecureItems ? "Clear All" : "Check All";
             }
         }
 
@@ -370,12 +422,11 @@ namespace Neutron
                 item.Checked = false;  // turn it off first 
                 foreach (var act in secureItems)
                 {
-                    if (((SecureItem) item.Tag).SecureItemId == act.SecureItemId)
+                    if (((SecureItem)item.Tag).SecureItemId == act.SecureItemId)
                     {
                         item.Checked = true;
                         break;
                     }
-
                 }
             }
         }
@@ -401,89 +452,84 @@ namespace Neutron
         private void ButtonFindEditUser_Click(object sender, EventArgs e)
         {
             FindEditUser();
-
-
         }
 
         private void FindEditUser()
         {
-            
+
             ButtonDeleteEditUser.Enabled = false;
-            var recs = new List<NeutronData.ModelViews.HistoryView>();
             var empId = TextBoxEmpIdEditUser.Text.Trim();
-            //var user = context.Users.FirstOrDefault(u => u.EmpId.ToLower() == empId.ToLower());
-            if (!string.IsNullOrEmpty(empId))
+            try
             {
-            //    TextBoxPinEditUser.Text = user.Pin;
-            //    TextBoxFirstnameEditUser.Text = user.Firstname;
-            //    TextBoxLastnameEditUser.Text = user.Lastname;
-            //    TextBoxUsernameEditUser.Text = user.Username;
-            //    TextBoxPasswordEditUser.Text = user.Password;
-            //    CheckBoxDisabledEditUser.Checked = user.Disabled;
-            recs = GlobalVar.HistoryManager.GetHistoryRecordsByUser(empId).Take(50)
-                .OrderByDescending(h => h.ActionDateTime).ToList();    
-                if (recs.Count() == 0)
+                var recs = GlobalVar.HistoryManager.GetHistoryRecordsByUser(empId).Take(50)
+                                 .OrderByDescending(h => h.ActionDateTime).ToList();
+                if (!recs.Any())
                 {
                     ButtonDeleteEditUser.Enabled = true;
                 }
 
                 DataGridView1.DataSource = recs;
             }
-            else
+            catch (Exception e)
             {
-                MessageBox.Show($"Unable To Find User.");
-                ComboBoxUsers.Focus();
-                ClearGrid();
+                MessageBox.Show($"Unable To Find User.  {Environment.NewLine} {e.Message}");
             }
+            ComboBoxUsers.Focus();
         }
 
         private void ClearGrid()
         {
-               DataGridView1.Rows.Clear();
-               DataGridView1.Refresh();
+            DataGridView1.Rows.Clear();
+            DataGridView1.Refresh();
         }
 
         private void ButtonDeleteEditUser_Click(object sender, EventArgs e)
         {
             var empId = TextBoxEmpIdEditUser.Text.Trim();
-            var user = context.Users.Where(u => u.EmpId.ToLower() == empId.ToLower()).FirstOrDefault();
-            if (user != null)
+            if (!string.IsNullOrEmpty(empId))
             {
-                context.Users.Remove(user);
-                context.SaveChanges();
-                ClearEditUserFields();
-                TextBoxEmpIdEditUser.Focus();
-                ButtonDeleteEditUser.Enabled = false;
+                var user = _context.Users.FirstOrDefault(u =>
+                    string.Equals(u.EmpId, empId, StringComparison.CurrentCultureIgnoreCase));
+                if (user != null)
+                {
+                    _context.Users.Remove(user);
+                    _context.SaveChanges();
+                    ClearEditUserFields();
+                    TextBoxEmpIdEditUser.Focus();
+                    ButtonDeleteEditUser.Enabled = false;
+                }
             }
+
             ButtonDeleteEditUser.Enabled = false;
         }
 
         private void ButtonSaveEditUser_Click(object sender, EventArgs e)
         {
-            var empId = TextBoxEmpIdEditUser.Text.Trim();
             try
             {
-                var user = context.Users.Where(u => u.EmpId.ToLower() == empId.ToLower()).FirstOrDefault();
-                if (user != null)
+                if (VerifyFields())
                 {
-                    user.Pin = TextBoxPinEditUser.Text;
-                    user.Firstname = TextBoxFirstnameEditUser.Text;
-                    user.Lastname = TextBoxLastnameEditUser.Text;
-                    user.Username = TextBoxUsernameEditUser.Text;
-                    user.Password = TextBoxPasswordEditUser.Text;
-                    user.Disabled = CheckBoxDisabledEditUser.Checked;
-                    context.SaveChanges();
+                    var user = _context.Users.Find(_currentUser.Id);
+                    if (user != null)
+                    {
+                        user.EmpId = TextBoxEmpId.Text.Trim();
+                        user.Pin = TextBoxPinEditUser.Text.Trim();
+                        user.Firstname = TextBoxFirstnameEditUser.Text.Trim();
+                        user.Lastname = TextBoxLastnameEditUser.Text.Trim();
+                        user.Username = TextBoxUsernameEditUser.Text.Trim();
+                        user.Password = TextBoxPasswordEditUser.Text.Trim();
+                        user.Disabled = CheckBoxDisabledEditUser.Checked;
+                        _context.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Unable To Save Changes.  {ex.Message}\r\n {ex.InnerException}");
+                MessageBox.Show($"Unable To Save Changes.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
                 TextBoxEmpIdEditUser.Focus();
             }
             ButtonDeleteEditUser.Enabled = false;
         }
-
-
 
         private void ButtonClearEditUserFields_Click(object sender, EventArgs e)
         {
@@ -505,12 +551,12 @@ namespace Neutron
 
         private void TextBoxEmpIdEditUser_Enter(object sender, EventArgs e)
         {
-            HighLightText((TextBox) sender); 
+            HighLightText((TextBox)sender);
         }
 
         private void HighLightText(TextBox textBox)
         {
-if (!String.IsNullOrEmpty(textBox.Text))
+            if (!String.IsNullOrEmpty(textBox.Text))
             {
                 textBox.SelectionStart = 0;
                 textBox.SelectionLength = textBox.Text.Length;
@@ -608,7 +654,7 @@ if (!String.IsNullOrEmpty(textBox.Text))
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Loc1";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.HeaderText = nomenclature.LabelDevice;
+            col.HeaderText = _nomenclature.LabelDevice;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Loc1";
             DataGridView1.Columns.Add(col);
@@ -616,7 +662,7 @@ if (!String.IsNullOrEmpty(textBox.Text))
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Loc2";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.HeaderText = nomenclature.LabelTray;
+            col.HeaderText = _nomenclature.LabelTray;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Loc2";
             DataGridView1.Columns.Add(col);
@@ -624,7 +670,7 @@ if (!String.IsNullOrEmpty(textBox.Text))
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Loc3";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.HeaderText = nomenclature.LabelOver;
+            col.HeaderText = _nomenclature.LabelOver;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Loc3";
             DataGridView1.Columns.Add(col);
@@ -632,7 +678,7 @@ if (!String.IsNullOrEmpty(textBox.Text))
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Loc4";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.HeaderText = nomenclature.LabelBack;
+            col.HeaderText = _nomenclature.LabelBack;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Loc4";
             DataGridView1.Columns.Add(col);
@@ -663,7 +709,10 @@ if (!String.IsNullOrEmpty(textBox.Text))
 
         private void ComboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var user = ((ComboBox) sender).SelectedItem as User;
+            var user = ((ComboBox)sender).SelectedItem as User;
+
+            if (user == null) return;
+            _currentUser = user;
             TextBoxEmpIdEditUser.Text = user.EmpId;
             TextBoxFirstnameEditUser.Text = user.Firstname;
             TextBoxLastnameEditUser.Text = user.Lastname;
@@ -672,6 +721,7 @@ if (!String.IsNullOrEmpty(textBox.Text))
             TextBoxUsernameEditUser.Text = user.Username;
             CheckBoxDisabledEditUser.Checked = user.Disabled;
 
+            //if (string.IsNullOrEmpty(user.EmpId)) return;
             FindEditUser();
         }
     }

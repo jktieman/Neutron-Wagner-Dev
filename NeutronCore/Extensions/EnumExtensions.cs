@@ -17,7 +17,7 @@ namespace NeutronCore.Extensions
             if (!type.IsEnum)
             {
                 throw new ArgumentException(message: "Enumeration Value must be of the Enum Type"
-                    , paramName: "enumValue");
+                    , paramName: nameof(value));
             }
 
             var fi = value.GetType().GetField(value.ToString());
@@ -25,7 +25,7 @@ namespace NeutronCore.Extensions
             var attributes =
                 (DescriptionAttribute[]) fi.GetCustomAttributes(
                     typeof(DescriptionAttribute), inherit: false);
-            if (attributes != null && attributes.Length > 0)
+            if (attributes.Length > 0)
             {
                 return attributes[0].Description;
             }

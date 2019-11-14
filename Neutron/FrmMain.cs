@@ -106,6 +106,7 @@ namespace Neutron
         private bool InitForm()
         {
             var result = false;
+            LineStatusManager.SaveLineStatusToDatabase();
             try
             {
                 ButtonPark.Visible = _neutronLicense.CompanyCode == "TOP";
@@ -639,7 +640,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers])
             {
                 Hide();
-                using (Form frm = new FrmSecurity(_nomenclature))
+                using (Form frm = new FrmSecurity(_nomenclature, _neutronVariables))
                 {
                     frm.ShowDialog();
                     Show();

@@ -82,6 +82,11 @@
     <Compile Include="Migrations\201903191238154_historychange.Designer.cs">
       <DependentUpon>201903191238154_historychange.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911122220341_ActionCodeItem.cs" />
+    <Compile Include="Migrations\201911122220341_ActionCodeItem.Designer.cs">
+      <DependentUpon>201911122220341_ActionCodeItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActionCodeItem.cs" />
     <Compile Include="Models\AkaType.cs" />
     <Compile Include="Models\Carrier.cs" />
     <Compile Include="Models\GroupUser.cs" />
@@ -215,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903191238154_historychange.resx">
       <DependentUpon>201903191238154_historychange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911122220341_ActionCodeItem.resx">
+      <DependentUpon>201911122220341_ActionCodeItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
