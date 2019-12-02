@@ -309,7 +309,7 @@ namespace Neutron.Models
             while (inMotion == true && inAlignment == false)
             {
                 counter++;
-                if (counter >= 30)
+                if (counter >= 60)
                 {
                     sb.AppendLine($"PIM-Device never stopped. Tried for {counter} seconds.");
                     goto EXITNOW;
