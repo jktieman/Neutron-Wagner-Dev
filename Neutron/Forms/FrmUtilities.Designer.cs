@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmUtilities));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -155,6 +155,7 @@
             this.ComboBoxSlotFormat = new System.Windows.Forms.ComboBox();
             this.NumericUpDownLogLevel = new System.Windows.Forms.NumericUpDown();
             this.CheckBoxPinLoginOnly = new System.Windows.Forms.CheckBox();
+            this.CheckBoxUpdateItemDefinitionDescription = new System.Windows.Forms.CheckBox();
             this.CheckBoxSerialPicking = new System.Windows.Forms.CheckBox();
             this.CheckBoxLoadRackOrders = new System.Windows.Forms.CheckBox();
             this.CheckBoxIptiDisplays = new System.Windows.Forms.CheckBox();
@@ -181,6 +182,8 @@
             this.MBSaveVariables = new MetroFramework.Controls.MetroButton();
             this.MBInterfaceFilesBack = new MetroFramework.Controls.MetroButton();
             this.HardwareDevices = new System.Windows.Forms.TabPage();
+            this.PanelHardwareDevices = new System.Windows.Forms.Panel();
+            this.DataGridView1 = new System.Windows.Forms.DataGridView();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.ManageLookups = new System.Windows.Forms.TabPage();
             this.ListBoxCodeNames = new System.Windows.Forms.ListBox();
@@ -193,9 +196,9 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.PanelHardwareDevices = new System.Windows.Forms.Panel();
-            this.DataGridView1 = new System.Windows.Forms.DataGridView();
-            this.CheckBoxUpdateItemDefinitionDescription = new System.Windows.Forms.CheckBox();
+            this.CheckBoxPrintPackingListStart = new System.Windows.Forms.CheckBox();
+            this.CheckBoxPrintPackingListEnd = new System.Windows.Forms.CheckBox();
+            this.CheckBoxPrintPackingListManual = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -210,10 +213,10 @@
             this.GroupBoxPickMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).BeginInit();
             this.HardwareDevices.SuspendLayout();
-            this.ManageLookups.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.PanelHardwareDevices.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
+            this.ManageLookups.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -1320,7 +1323,10 @@
             this.DisplayListing.Controls.Add(this.CheckBoxShuttleEnabled);
             this.DisplayListing.Controls.Add(this.CheckBoxCreateStoreOrderWithRts);
             this.DisplayListing.Controls.Add(this.label29);
+            this.DisplayListing.Controls.Add(this.CheckBoxPrintPackingListManual);
             this.DisplayListing.Controls.Add(this.CheckBoxRunLoaderOnStartup);
+            this.DisplayListing.Controls.Add(this.CheckBoxPrintPackingListEnd);
+            this.DisplayListing.Controls.Add(this.CheckBoxPrintPackingListStart);
             this.DisplayListing.Controls.Add(this.CheckBoxCheckForUsedItem);
             this.DisplayListing.Controls.Add(this.CheckBoxAutoLogOff);
             this.DisplayListing.Controls.Add(this.CheckBoxUseReturnToStock);
@@ -1595,6 +1601,19 @@
             this.CheckBoxPinLoginOnly.TabIndex = 14;
             this.CheckBoxPinLoginOnly.Text = "Pin Login Only";
             this.CheckBoxPinLoginOnly.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxUpdateItemDefinitionDescription
+            // 
+            this.CheckBoxUpdateItemDefinitionDescription.AutoSize = true;
+            this.CheckBoxUpdateItemDefinitionDescription.Checked = true;
+            this.CheckBoxUpdateItemDefinitionDescription.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxUpdateItemDefinitionDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUpdateItemDefinitionDescription.Location = new System.Drawing.Point(601, 559);
+            this.CheckBoxUpdateItemDefinitionDescription.Name = "CheckBoxUpdateItemDefinitionDescription";
+            this.CheckBoxUpdateItemDefinitionDescription.Size = new System.Drawing.Size(229, 20);
+            this.CheckBoxUpdateItemDefinitionDescription.TabIndex = 14;
+            this.CheckBoxUpdateItemDefinitionDescription.Text = "Update Item Definition Description";
+            this.CheckBoxUpdateItemDefinitionDescription.UseVisualStyleBackColor = true;
             // 
             // CheckBoxSerialPicking
             // 
@@ -1888,6 +1907,57 @@
             this.HardwareDevices.TabIndex = 9;
             this.HardwareDevices.Text = "Hardware Devices";
             // 
+            // PanelHardwareDevices
+            // 
+            this.PanelHardwareDevices.Controls.Add(this.DataGridView1);
+            this.PanelHardwareDevices.Location = new System.Drawing.Point(7, 112);
+            this.PanelHardwareDevices.Name = "PanelHardwareDevices";
+            this.PanelHardwareDevices.Size = new System.Drawing.Size(1134, 526);
+            this.PanelHardwareDevices.TabIndex = 42;
+            // 
+            // DataGridView1
+            // 
+            this.DataGridView1.AllowUserToAddRows = false;
+            this.DataGridView1.AllowUserToDeleteRows = false;
+            this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.DataGridView1.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            this.DataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.DataGridView1.MultiSelect = false;
+            this.DataGridView1.Name = "DataGridView1";
+            this.DataGridView1.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowTemplate.Height = 28;
+            this.DataGridView1.RowTemplate.ReadOnly = true;
+            this.DataGridView1.Size = new System.Drawing.Size(1134, 526);
+            this.DataGridView1.TabIndex = 42;
+            // 
             // MBPickListBack
             // 
             this.MBPickListBack.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -2009,69 +2079,38 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // PanelHardwareDevices
+            // CheckBoxPrintPackingListStart
             // 
-            this.PanelHardwareDevices.Controls.Add(this.DataGridView1);
-            this.PanelHardwareDevices.Location = new System.Drawing.Point(7, 112);
-            this.PanelHardwareDevices.Name = "PanelHardwareDevices";
-            this.PanelHardwareDevices.Size = new System.Drawing.Size(1134, 526);
-            this.PanelHardwareDevices.TabIndex = 42;
+            this.CheckBoxPrintPackingListStart.AutoSize = true;
+            this.CheckBoxPrintPackingListStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPackingListStart.Location = new System.Drawing.Point(841, 128);
+            this.CheckBoxPrintPackingListStart.Name = "CheckBoxPrintPackingListStart";
+            this.CheckBoxPrintPackingListStart.Size = new System.Drawing.Size(223, 20);
+            this.CheckBoxPrintPackingListStart.TabIndex = 8;
+            this.CheckBoxPrintPackingListStart.Text = "Print Packing List at Start of Order";
+            this.CheckBoxPrintPackingListStart.UseVisualStyleBackColor = true;
             // 
-            // DataGridView1
+            // CheckBoxPrintPackingListEnd
             // 
-            this.DataGridView1.AllowUserToAddRows = false;
-            this.DataGridView1.AllowUserToDeleteRows = false;
-            this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
-            this.DataGridView1.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
-            this.DataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.DataGridView1.MultiSelect = false;
-            this.DataGridView1.Name = "DataGridView1";
-            this.DataGridView1.ReadOnly = true;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle8;
-            this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowTemplate.Height = 28;
-            this.DataGridView1.RowTemplate.ReadOnly = true;
-            this.DataGridView1.Size = new System.Drawing.Size(1134, 526);
-            this.DataGridView1.TabIndex = 42;
+            this.CheckBoxPrintPackingListEnd.AutoSize = true;
+            this.CheckBoxPrintPackingListEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPackingListEnd.Location = new System.Drawing.Point(841, 164);
+            this.CheckBoxPrintPackingListEnd.Name = "CheckBoxPrintPackingListEnd";
+            this.CheckBoxPrintPackingListEnd.Size = new System.Drawing.Size(222, 20);
+            this.CheckBoxPrintPackingListEnd.TabIndex = 8;
+            this.CheckBoxPrintPackingListEnd.Text = "Print Packing List at End Of Order";
+            this.CheckBoxPrintPackingListEnd.UseVisualStyleBackColor = true;
             // 
-            // CheckBoxUpdateItemDefinitionDescription
+            // CheckBoxPrintPackingListManual
             // 
-            this.CheckBoxUpdateItemDefinitionDescription.AutoSize = true;
-            this.CheckBoxUpdateItemDefinitionDescription.Checked = true;
-            this.CheckBoxUpdateItemDefinitionDescription.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckBoxUpdateItemDefinitionDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUpdateItemDefinitionDescription.Location = new System.Drawing.Point(601, 559);
-            this.CheckBoxUpdateItemDefinitionDescription.Name = "CheckBoxUpdateItemDefinitionDescription";
-            this.CheckBoxUpdateItemDefinitionDescription.Size = new System.Drawing.Size(229, 20);
-            this.CheckBoxUpdateItemDefinitionDescription.TabIndex = 14;
-            this.CheckBoxUpdateItemDefinitionDescription.Text = "Update Item Definition Description";
-            this.CheckBoxUpdateItemDefinitionDescription.UseVisualStyleBackColor = true;
+            this.CheckBoxPrintPackingListManual.AutoSize = true;
+            this.CheckBoxPrintPackingListManual.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPackingListManual.Location = new System.Drawing.Point(841, 200);
+            this.CheckBoxPrintPackingListManual.Name = "CheckBoxPrintPackingListManual";
+            this.CheckBoxPrintPackingListManual.Size = new System.Drawing.Size(185, 20);
+            this.CheckBoxPrintPackingListManual.TabIndex = 8;
+            this.CheckBoxPrintPackingListManual.Text = "Print Packing List Manually";
+            this.CheckBoxPrintPackingListManual.UseVisualStyleBackColor = true;
             // 
             // FrmUtilities
             // 
@@ -2112,10 +2151,10 @@
             this.GroupBoxPickMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).EndInit();
             this.HardwareDevices.ResumeLayout(false);
-            this.ManageLookups.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.PanelHardwareDevices.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
+            this.ManageLookups.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2284,5 +2323,8 @@
         private System.Windows.Forms.Panel PanelHardwareDevices;
         private System.Windows.Forms.DataGridView DataGridView1;
         private System.Windows.Forms.CheckBox CheckBoxUpdateItemDefinitionDescription;
+        private System.Windows.Forms.CheckBox CheckBoxPrintPackingListManual;
+        private System.Windows.Forms.CheckBox CheckBoxPrintPackingListEnd;
+        private System.Windows.Forms.CheckBox CheckBoxPrintPackingListStart;
     }
 }

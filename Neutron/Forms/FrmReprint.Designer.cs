@@ -56,8 +56,6 @@
             // CheckBoxToteLabel
             // 
             this.CheckBoxToteLabel.AutoSize = true;
-            this.CheckBoxToteLabel.Checked = true;
-            this.CheckBoxToteLabel.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxToteLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxToteLabel.Location = new System.Drawing.Point(126, 212);
             this.CheckBoxToteLabel.Name = "CheckBoxToteLabel";
@@ -69,14 +67,12 @@
             // CheckBoxDocument
             // 
             this.CheckBoxDocument.AutoSize = true;
-            this.CheckBoxDocument.Checked = true;
-            this.CheckBoxDocument.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxDocument.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxDocument.Location = new System.Drawing.Point(126, 168);
             this.CheckBoxDocument.Name = "CheckBoxDocument";
-            this.CheckBoxDocument.Size = new System.Drawing.Size(110, 24);
+            this.CheckBoxDocument.Size = new System.Drawing.Size(125, 24);
             this.CheckBoxDocument.TabIndex = 34;
-            this.CheckBoxDocument.Text = "Document";
+            this.CheckBoxDocument.Text = "Packing List";
             this.CheckBoxDocument.UseVisualStyleBackColor = true;
             // 
             // LabelChangeQuantityPosition

@@ -42,5 +42,8 @@ namespace NeutronCore.Global
         public bool SerialPicking { get; set; }
         public bool PrintPreview { get; set; }
         public bool UpdateItemDefinitionDescription { get; set; }
+        public bool PrintPackingListStart { get; set; }
+        public bool PrintPackingListEnd { get; set; }
+        public bool PrintPackingListManual { get; set; }
     }
 }

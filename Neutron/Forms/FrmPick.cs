@@ -160,7 +160,7 @@ namespace Neutron.Forms
             }
 
             //FillComboBoxStationNumber();
-
+            MBPrint.Visible = _neutronVariables.PrintPackingListManual;
             InitOrdersToPick(_neutronVariables.PickBatchSize);
             InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
@@ -201,20 +201,22 @@ namespace Neutron.Forms
         private void ShowOrderComplete(Order order)
         {
             Task.Run(() => _logger.Log($"Show Order Complete Event: Order Number _ {order.Ord1} -- {order.Ord2}"));
-            foreach (var bp in _ordersToPick)
+            var bp = _ordersToPick.Where(o => o.OrderId == order.Id).FirstOrDefault();
+            if (bp == null) return;
+            // foreach (var bp in _ordersToPick)
+            // {
+            //if (bp.OrderId == null) return;
+            string pos = bp.PositionNumber.ToString();
+            Control c = Controls.Find("Pos" + pos + "Display", true).First();
+            if (c != null)
             {
-                if (bp.OrderId != order.Id) continue;
-                string pos = bp.PositionNumber.ToString();
-                Control c = Controls.Find("Pos" + pos + "Display", true).First();
-                if (c != null)
-                {
-                    var panel = ((Panel)c);
-                    panel.BackColor = Color.Green;
-                    panel.Visible = true;
-                    panel.Refresh();
-                }
-                bp.OrderComplete = true;
+                var panel = ((Panel)c);
+                panel.BackColor = Color.Green;
+                panel.Visible = true;
+                panel.Refresh();
             }
+            bp.OrderComplete = true;
+            //}
         }
 
         private void SetupPickPositions(int pickBatchSize)
@@ -2901,8 +2903,14 @@ namespace Neutron.Forms
                 Task.Run(() => _logger.Log($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
 
                 //  PrintAllToteLabels();
+                if (_neutronVariables.EnableDocumentPrinter)
+                {
+                    if (_neutronVariables.PrintPackingListStart)
+                    {
+                        PrintAllDocuments();
+                    }
+                }
 
-                //   PrintAllDocuments();
 
                 Task.Run(() => _logger.Log($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -3168,12 +3176,16 @@ namespace Neutron.Forms
         private int GetBatchPosition(int orderId)
         {
             var result = -1;
-            foreach (var bp in _ordersToPick)
+            //foreach (var bp in _ordersToPick)
+            //{
+            var bp = _ordersToPick.Where(o => o.OrderId == orderId).FirstOrDefault();
+            //if (bp.OrderId != orderId) continue;
+            if (bp != null)
             {
-                if (bp.OrderId != orderId) continue;
                 result = bp.PositionNumber;
-                break;
             }
+            //break;
+            // }
             return result;
         }
 
@@ -3344,14 +3356,20 @@ namespace Neutron.Forms
 
         private void RemoveItemFromBatch(int orderId)
         {
-            foreach (var bp in _ordersToPick)
+            // foreach (var bp in _ordersToPick)
+            // {
+            var bp = _ordersToPick.Where(o => o.OrderId == orderId).FirstOrDefault();
+
+            // if (bp.OrderId != orderId) continue;
+            if (bp != null)
             {
-                if (bp.OrderId != orderId) continue;
                 bp.OrderId = null;
                 bp.Ord1 = string.Empty;
                 bp.Ord2 = string.Empty;
                 UpdateTextBoxPosition(bp);
             }
+
+            // }
         }
 
         private int AddItemToBatch(int orderId, string ord1, string ord2)
@@ -3698,6 +3716,7 @@ namespace Neutron.Forms
             _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
             UpdatePickScreen();
             Task.Run(() => _logger.Log($"Start_Click 4  Run GetFirstStop?: [{DateTime.Now.ToLongTimeString()}]"));
+            //MessageBox.Show("Do you want to print here?");
             // PrintAllDocuments();
             // PrintAllToteLabels();
 
@@ -4888,10 +4907,13 @@ namespace Neutron.Forms
             {
                 if (bp.OrderId == null) continue;
                 var id = bp.OrderId.Value;
-                var order = _repoOrders.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true).FirstOrDefault();
+                
+                //Check to see if it has already been printed, if it has continue without printing.
+                var printJob = _repoPrintJob.FindBy(r => r.OrderId == id && r.PickDocument == true).FirstOrDefault();
                 if (printJob != null) continue;
-                PrintDoc(bp.PositionNumber, order);
+                PrintPackingList(id);
+                //PrintDoc(bp.PositionNumber, order);
+                var order = _repoOrders.FindByKey(id);
                 printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
                 _repoPrintJob.Insert(printJob);
             }
@@ -4899,18 +4921,25 @@ namespace Neutron.Forms
 
         private void PrintDocument(int batchPosition)
         {
-            foreach (var bp in _ordersToPick)
+            //foreach (var bp in _ordersToPick)
+            //{
+            //    if (bp.PositionNumber != batchPosition) continue;
+            //    if (bp.OrderId == null) continue;
+
+            var bp = _ordersToPick.Where(o => o.PositionNumber == batchPosition).FirstOrDefault();
+            if (bp == null) return;
+            if (bp.OrderId == null) return;
+            var id = bp.OrderId.Value;
+            var order = _repoOrders.FindByKey(id);
+            var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true).FirstOrDefault();
+            if (printJob == null)
             {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == null) continue;
-                var id = bp.OrderId.Value;
-                var order = _repoOrders.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true).FirstOrDefault();
-                if (printJob != null) continue;
                 PrintDoc(bp.PositionNumber, order);
                 printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
                 _repoPrintJob.Insert(printJob);
             }
+
+            //}
         }
 
         private void PrintAnticipatedOuts()
@@ -4971,6 +5000,7 @@ namespace Neutron.Forms
             return outs;
         }
 
+        // Rack print - Pick List
         private void MBPrintDocument_Click(object sender, EventArgs e)
         {
             PrintPickList(8);
@@ -5053,7 +5083,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Printing Document. {order.Ord1}"));
             if (_neutronVariables.EnableDocumentPrinter)
             {
-                // Task.Run(() => DocumentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
+                Task.Run(() => DocumentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
             }
         }
 
@@ -5074,18 +5104,26 @@ namespace Neutron.Forms
 
         private void PrintToteLabel(int batchPosition)
         {
-            foreach (var bp in _ordersToPick)
+            //foreach (var bp in _ordersToPick)
+            //{
+            //    if (bp.PositionNumber != batchPosition) continue;
+            //    if (bp.OrderId == null) continue;
+
+            var bp = _ordersToPick.Where(o => o.PositionNumber == batchPosition).FirstOrDefault();
+            if (bp == null) return;
+            if (bp.OrderId == null) return;
+
+            var id = bp.OrderId.Value;
+            var order = _repoOrders.FindByKey(id);
+            var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.ToteLabel == true).FirstOrDefault();
+            if (printJob == null)
             {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == null) continue;
-                var id = bp.OrderId.Value;
-                var order = _repoOrders.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.ToteLabel == true).FirstOrDefault();
-                if (printJob != null) continue;
                 PrintTote(bp.PositionNumber, order);
                 printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
                 _repoPrintJob.Insert(printJob);
             }
+
+            // }
         }
 
         private void PrintTote(int positionNumber, Order order)
@@ -7067,6 +7105,11 @@ namespace Neutron.Forms
                 .ToList();
             if (linesNotComplete.Count != 0) return;
             order.OrderStatusId = 6;
+            if (_neutronVariables.PrintPackingListEnd)
+            {
+                PrintPackingList(order.Id);
+            }
+
             GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order: order);
             _repoOrders.Update(order);
             Mediator.GetInstance().OnOrderComplete(this, order);
@@ -7136,50 +7179,57 @@ namespace Neutron.Forms
 
         private void ReprintToteLabel(int batchPosition)
         {
-            foreach (var bp in _ordersToPick)
+            //foreach (var bp in _ordersToPick)
+            //{
+            //    if (bp.PositionNumber != batchPosition) continue;
+            //    if (bp.OrderId == null) continue;
+
+            var bp = _ordersToPick.Where(o => o.PositionNumber == batchPosition).FirstOrDefault();
+            if (bp == null) return;
+            if (bp.OrderId == null) return;
+
+            var id = bp.OrderId.Value;
+            var order = _repoOrders.FindByKey(id);
+            var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
+            if (printJob == null)
             {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == null) continue;
-                var id = bp.OrderId.Value;
-                var order = _repoOrders.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
-                if (printJob == null)
-                {
-                    PrintTote(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
-                    _repoPrintJob.Insert(printJob);
-                }
-                else
-                {
-                    PrintTote(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
-                    _repoPrintJob.Update(printJob);
-                }
+                PrintTote(bp.PositionNumber, order);
+                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
+                _repoPrintJob.Insert(printJob);
             }
+            else
+            {
+                PrintTote(bp.PositionNumber, order);
+                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
+                _repoPrintJob.Update(printJob);
+            }
+            // }
         }
 
         private void ReprintDocument(int batchPosition)
         {
-            foreach (var bp in _ordersToPick)
+            var bp = _ordersToPick.Where(o => o.PositionNumber == batchPosition).FirstOrDefault();
+            if (bp == null) return;
+            if (bp.OrderId == null) return;
+            var id = bp.OrderId.Value;
+            var order = _repoOrders.FindByKey(id);
+            if (order == null) return;
+            var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
+            if (printJob == null)
             {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == null) continue;
-                var id = bp.OrderId.Value;
-                var order = _repoOrders.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
-                if (printJob == null)
-                {
-                    PrintDoc(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
-                    _repoPrintJob.Insert(printJob);
-                }
-                else
-                {
-                    PrintDoc(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
-                    _repoPrintJob.Update(printJob);
-                }
+                //PrintDoc(bp.PositionNumber, order);
+                PrintPackingList(id);
+                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
+                _repoPrintJob.Insert(printJob);
             }
+            else
+            {
+                //PrintDoc(bp.PositionNumber, order);
+                PrintPackingList(id);
+                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
+                _repoPrintJob.Update(printJob);
+            }
+            //}
         }
 
         private void PictureBoxItemImage_MouseEnter(object sender, EventArgs e)

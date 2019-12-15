@@ -563,6 +563,9 @@ namespace Neutron.Forms
             _neutronVariables.SerialPicking = CheckBoxSerialPicking.Checked;
             _neutronVariables.PrintPreview = CheckBoxPrintPreview.Checked;
             _neutronVariables.UpdateItemDefinitionDescription = CheckBoxUpdateItemDefinitionDescription.Checked;
+            _neutronVariables.PrintPackingListStart = CheckBoxPrintPackingListStart.Checked;
+            _neutronVariables.PrintPackingListEnd = CheckBoxPrintPackingListEnd.Checked;
+            _neutronVariables.PrintPackingListManual = CheckBoxPrintPackingListManual.Checked;
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
@@ -636,6 +639,9 @@ namespace Neutron.Forms
             CheckBoxSerialPicking.Checked = neutronVariables.SerialPicking;
             CheckBoxPrintPreview.Checked = neutronVariables.PrintPreview;
             CheckBoxUpdateItemDefinitionDescription.Checked = neutronVariables.UpdateItemDefinitionDescription;
+            CheckBoxPrintPackingListStart.Checked = neutronVariables.PrintPackingListStart;
+            CheckBoxPrintPackingListEnd.Checked = neutronVariables.PrintPackingListEnd;
+            CheckBoxPrintPackingListManual.Checked = neutronVariables.PrintPackingListManual;
 
             SetPickMethod(neutronVariables.PickMethod);
         }
