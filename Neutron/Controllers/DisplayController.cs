@@ -62,15 +62,15 @@ namespace Neutron.Controllers
 
             //else
             //{
-                if (bliEnabled)
-                {
-                    FillBliList();
-                }
-                if (shiEnabled)
-                {
-                    FileShiList();
-                }
-           // }
+            if (bliEnabled)
+            {
+                FillBliList();
+            }
+            if (shiEnabled)
+            {
+                FileShiList();
+            }
+            // }
 
             string hartLog = ($"{logFileDir}Hart");
             HartDisplayController = new Hart_DisplayController(Hart_DisplayController.Controller_Type_Remstar_BPI_SHI(), hartLog);
@@ -615,7 +615,7 @@ namespace Neutron.Controllers
                         break;
                     }
             }
-            
+
             Task.Run(() => _logger.Log($"Get Address Returned: {address}"));
 
             return address.ParseInt();

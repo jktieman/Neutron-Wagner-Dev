@@ -7,67 +7,69 @@ namespace AlliedLogger
 {
     public static class Logger
     {
-        private static string logFilePath;
-        private static readonly Object mylock = new Object();
-        private static bool init;
-        private static bool logActivity;
+        private static string _logFilePath;
+        private static readonly object Mylock = new object();
+        private static bool _validPath;
 
-        public static bool LogActivity
-        {
-            get { return logActivity; }
-            set { logActivity = value; }
-        }
+        public static bool LogActivity { get; set; }
 
         public static string FilePath
         {
             get
             {
-                return Logger.logFilePath;
+                return _logFilePath;
             }
             set
             {
-                if (value.Length > 0)
+                lock (Mylock)
                 {
-                    Logger.logFilePath = value;
-                    var path = new FileInfo(Logger.logFilePath);
-                    try
+                    _validPath = false;
+
+                    if (!string.IsNullOrEmpty(value))
                     {
-                        // ... If the directory doesn't exist, create it.
-                        if (!Directory.Exists(path.DirectoryName))
+                        _logFilePath = value;
+                        var path = new FileInfo(_logFilePath);
+                        var directory = path.DirectoryName;
+                        try
                         {
-                            Directory.CreateDirectory(path.DirectoryName);
+                            // ... If the directory doesn't exist, create it.
+                            if (directory != null)
+                            {
+                                if (!Directory.Exists(directory))
+                                {
+                                    Directory.CreateDirectory(directory);
+                                    _validPath = true;
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Silent Fail
                         }
                     }
-                    catch (Exception)
-                    {
-                        init = false;
-                    }
                 }
-                init = true;
             }
         }
 
         public static void Flush()
         {
-            File.WriteAllText(Logger.FilePath, string.Empty);
+            File.WriteAllText(_logFilePath, string.Empty);
         }
 
         public static void Log(string msg)
         {
-            if (logActivity)
+            if (LogActivity)
             {
-
                 CultureInfo ci = CultureInfo.InvariantCulture;
-
-                lock (mylock)
+                lock (Mylock)
                 {
                     if (msg.Length > 0)
                     {
-                        if (init)
+                        if (_validPath)
                         {
                             try
                             {
-                                using (StreamWriter sw = File.AppendText(Logger.FilePath))
+                                using (var sw = File.AppendText(_logFilePath))
                                 {
                                     sw.WriteLine("{0} {1}: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToString("hh:mm:ss.FFF", ci), msg);
                                     sw.Flush();

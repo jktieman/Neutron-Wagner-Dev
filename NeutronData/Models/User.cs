@@ -29,7 +29,7 @@ namespace NeutronData.Models
         public int? HomeLocationId { get; set; }
         [ForeignKey("HomeLocationId")]
         public virtual Location HomeLocation { get; set; }
-        public string UserInfo { get { return string.Format(format: "{0} {1}", arg0: Firstname, arg1: Lastname); } }
-        public string Fullname { get { return ($"{Lastname},{Firstname}"); } }
+        public string UserInfo => $"{Firstname} {Lastname}";
+        public string Fullname => ($"{Lastname},{Firstname}");
     }
 }

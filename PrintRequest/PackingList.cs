@@ -9,6 +9,7 @@ namespace PrintRequest
     public class PackingList
     {
         public string Station { get; set; }
+        public string BatchPosition { get; set; }
         public string Order { get; set; }
         public string Invoice { get; set; }
         public string CostCenter { get; set; }

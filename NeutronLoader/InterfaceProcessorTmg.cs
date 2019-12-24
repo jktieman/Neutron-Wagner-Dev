@@ -30,7 +30,6 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
-        private string _neutronDownFileName;
         private Timer _downTimer;
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";

@@ -54,7 +54,6 @@ namespace Neutron.Forms
             new GenericRepository<VelocityCode>(new NeutronDb());
 
         private ISlot _slotName;
-        private ISlotNameFactory _slotNameFactory;
 
         public FrmLocations(IJsonData jsonData, StationView station, INomenclature nomenclature,
             NeutronVariables neutronVariables)
@@ -117,28 +116,6 @@ namespace Neutron.Forms
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
             _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
         }
-
-        //private void CreateSlotNameFactory(string slotType)
-        //{
-        //    switch (slotType)
-        //    {
-        //        case "Default":
-        //            _slotNameFactory = new DefaultSlotNameFactory();
-        //            break;
-        //        case "T101-01-01":
-        //            _slotNameFactory = new Type1SlotNameFactory();
-        //            break;
-        //        case "V101":
-        //            _slotNameFactory = new Type2SlotNameFactory();
-        //            break;
-        //        case "01--01--01--01":
-        //            _slotNameFactory = new Type3SlotNameFactory();
-        //            break;
-        //        default:
-        //            _slotNameFactory = new DefaultSlotNameFactory();
-        //            break;
-        //    }
-        //}
 
         private void FrmLocations_Load(object sender, EventArgs e)
         {
@@ -695,6 +672,7 @@ namespace Neutron.Forms
         {
             var stationId = ((Station) ComboBoxNewStation.SelectedItem)?.Id ?? 1;
             TextBoxNewSlot.ReadOnly = stationId != 8;
+            LabelSlotInformation.Visible = stationId == 8;
 
             var sv = _repoStation.GetStationView(stationId);
 
@@ -709,6 +687,7 @@ namespace Neutron.Forms
         {
             var stationId = ((Station) ComboBoxViewEditStation.SelectedItem)?.Id ?? 1;
             TextBoxViewEditSlot.ReadOnly = stationId != 8;
+            LabelSlotInformation.Visible = stationId == 8;
 
             var sv = _repoStation.GetStationView(stationId);
 
@@ -845,8 +824,6 @@ namespace Neutron.Forms
         {
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
-            var w = (DataGridView1.Width - 60) / 12;
 
             var bCol = new DataGridViewButtonColumn
             {

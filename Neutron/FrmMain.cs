@@ -39,7 +39,6 @@ namespace Neutron
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private IInterfaceProcessor _interfaceProcessor;
         private StationView _station;
         private int _stationNumber;
         private DynamicLogger _logger;
@@ -88,19 +87,19 @@ namespace Neutron
             Mediator.GetInstance().InventoryFileCreatedError += (s, e) => MessageBox.Show(e.Text, "Inventory File Error"
                 , MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-         
+
             LogOnOff();
 
             if (!InitForm())
             {
-               MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
+                MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
                 // Close();
             }
 
 
-           // LogOnOff();
-           
+            // LogOnOff();
+
         }
 
         private bool InitForm()
@@ -587,7 +586,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities])
             {
                 Hide();
-                using (MetroForm frm = new FrmUtilities(_jsonData))
+                using (MetroForm frm = new FrmUtilities(_jsonData, _neutronVariables))
                 {
                     frm.ShowDialog();
                     Show();
@@ -680,10 +679,6 @@ namespace Neutron
                     GlobalVar.Displays = null;
                 }
             }
-
-            if (!GlobalVar.LoaderRunning) return;
-            _interfaceProcessor?.StopProcessingInterfaceFiles();
-            GlobalVar.LoaderRunning = false;
         }
 
         private void ButtonPark_Click(object sender, EventArgs e)

@@ -34,7 +34,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"AKA Error: {ex.Message} \r\n {ex.InnerException}");
+                MessageBox.Show($"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             return item;

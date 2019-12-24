@@ -223,7 +223,7 @@ namespace Neutron.Controllers
             Task.Run(() => logger.Log($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
             bool continueLoop = true;
             int loopCounter = 0;
-            HardwareDevice device = station.HardwareDevices.Where(r => r.DeviceNumber == deviceNumber).FirstOrDefault();
+            HardwareDevice device = station.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
             if (device != null)
             {
                 if (device.Enabled)
@@ -240,7 +240,7 @@ namespace Neutron.Controllers
                                 loopCounter = 0;
                                 if (!status.In_Motion)
                                 {
-                                    if (!(status.Current_Tray == trayNumber))
+                                    if (status.Current_Tray != trayNumber)
                                     {
                                         if (previousTray[deviceNumber] != 0)
                                         {
@@ -288,8 +288,9 @@ namespace Neutron.Controllers
                                     {
                                         loopCounter += 1;
                                         Thread.Sleep(millisecondsTimeout: 100);
+                                        var counter = loopCounter;
                                         Task.Run(() => logger.Log($"Postition Device: Waiting for tray to be in position to send new command.  Current Tray: "
-                                            + status.Current_Tray.ToString() + "  In Motion is " + status.In_Motion.ToString() + "Loop Count: " + loopCounter.ToString()));
+                                                                  + status.Current_Tray.ToString() + "  In Motion is " + status.In_Motion.ToString() + "Loop Count: " + counter.ToString()));
                                     }
                                 }
                             }
@@ -304,7 +305,8 @@ namespace Neutron.Controllers
                                 {
                                     loopCounter += 1;
                                     Thread.Sleep(millisecondsTimeout: 100);
-                                    Task.Run(() => logger.Log(msg: "Device Response was Bad Status  LoopCounter: " + loopCounter.ToString()));
+                                    var counter = loopCounter;
+                                    Task.Run(() => logger.Log(msg: "Device Response was Bad Status  LoopCounter: " + counter.ToString()));
                                 }
                             }
                         }
@@ -317,13 +319,13 @@ namespace Neutron.Controllers
                 }
                 else
                 {
-                    Task.Run(() => logger.Log($"Postition Device: Device not Enabled."));
+                    Task.Run(() => logger.Log($"Position Device: Device not Enabled."));
                     deviceResponse = DeviceResponse.DeviceNotEnabled;
                 }
             }
             else
             {
-                Task.Run(() => logger.Log($"Postition Device: Device not Found."));
+                Task.Run(() => logger.Log($"Position Device: Device not Found."));
                 deviceResponse = DeviceResponse.DeviceNotFound;
             }
 
@@ -337,11 +339,11 @@ namespace Neutron.Controllers
                 Task.Run(() => logger.Log($"Not Initialized.  Code is: {Shuttle_1.LastStatus_Code.ToString()}  Message is: {Shuttle_1.LastStatus_Message}"));
                 return;
             }
-            string cError = "";
+            cError = "";
             if (Shuttle_1.Notification_DeRegister(MyNotificationHandle, ref cError))
                 Task.Run(() => logger.Log($"Notification aborted successfully..."));
             else
-                Task.Run(() => logger.Log($"Deregistration Error...  {cError}"));
+                Task.Run(() => logger.Log($"De-registration Error...  {cError}"));
         }
 
         public DeviceResponse Park()

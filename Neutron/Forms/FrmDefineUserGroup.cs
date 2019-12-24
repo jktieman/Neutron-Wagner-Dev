@@ -22,7 +22,6 @@ namespace Neutron.Forms
         public List<UserIdString> UserIds;
         private ProductivityGroup _currentGroup = null;
         private List<ProductivityGroup> _currentGroups = new List<ProductivityGroup>();
-        private BindingSource _bindingSourceGroups;
         private bool _formInitialized = false;
         private bool _itemCheckEnabled = true;
         private string fileName = "ProductivityGroups";
@@ -49,9 +48,8 @@ namespace Neutron.Forms
                 {
                     CheckedListBoxGroups.Items.Add(productivityGroup);
                 }
-               
 
-               // CheckedListBoxGroups.DataSource = _currentGroups;
+                // CheckedListBoxGroups.DataSource = _currentGroups;
                 CheckedListBoxGroups.DisplayMember = "Name";
                 CheckedListBoxGroups.ValueMember = "Name";
 

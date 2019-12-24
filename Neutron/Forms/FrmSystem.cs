@@ -4,21 +4,17 @@ using Neutron.Global;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronData.DataContexts;
 using NeutronLoader;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 using AlliedLogger;
 using Neutron.Models;
 using NeutronEvents;
-using Timer = System.Threading.Timer;
 
 namespace Neutron.Forms
 {
@@ -28,7 +24,6 @@ namespace Neutron.Forms
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private string _configFilePath;
         private string _rootDirectory;
         private readonly DynamicLogger _logger;
 
@@ -377,11 +372,6 @@ namespace Neutron.Forms
             _jsonData.SaveFile(root);
 
             LoaderSettings.SetRootDirectory(RootDirectory.Text);
-            //Properties.Settings.Default.RootDirectory = LoaderSettings.GetRootDirectory();
-            //Properties.Settings.Default.Save();
-            // _configFilePath = $"{LoaderSettings.GetRootDirectory()}Configuration\\ConfigFile.Csv";
-            // string configFilePath = Properties.Settings.Default.ConfigFilePath;
-
             LoaderSettings.SetImagesDirectory(ImagesDirectory.Text);
             LoaderSettings.SetHostOrderDirectory(HostOrderDirectory.Text);
             LoaderSettings.SetHostOrderFile(HostOrderFile.Text);

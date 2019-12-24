@@ -16,53 +16,29 @@ namespace Neutron.Forms
     {
         public int NewQty { get; set; }
         public int Position { get; set; }
-        private int InitialQuantityToBePicked { get; set; }
-        private PickStop pickStop;
-        private ReplenPickStop replenPickStop;
+        private readonly PickStop _pickStop;
+        private ReplenPickStop _replenPickStop;
+
         public FrmChangeQuantity( PickStop pickStop)
         {
             InitializeComponent();
-            this.pickStop = pickStop;
+            this._pickStop = pickStop;
             var pos = pickStop.PickViews.First().PickPosition;
             TextBoxChangeQuantityPosition.Text = pos.ToString();
             TextBoxNewQuantity.Text = "0";
             TextBoxChangeQuantityPosition.SelectAll();
             TextBoxChangeQuantityPosition.Focus();
-
-            //foreach (var pickView in pickStop.PickViews)
-            //{
-            //    if (pickView.GetQuantityToBePicked() > 0)
-            //    {
-            //        Position = pickView.PickPosition;
-            //        TextBoxNewQuantity.Text = pickView.GetQuantityToBePicked().ToString();
-            //        TextBoxNewQuantity.SelectAll();
-            //        TextBoxNewQuantity.Focus();
-            //    }
-            //}
-            //TextBoxChangeQuantityPosition.Text = Position.ToString();
         }
 
         public FrmChangeQuantity(ReplenPickStop pickStop)
         {
             InitializeComponent();
-            this.replenPickStop = pickStop;
+            this._replenPickStop = pickStop;
             var pos = pickStop.PickViews.First().PickPosition;
             TextBoxChangeQuantityPosition.Text = pos.ToString();
             TextBoxNewQuantity.Text = "0";
             TextBoxChangeQuantityPosition.SelectAll();
             TextBoxChangeQuantityPosition.Focus();
-
-            //foreach (var pickView in pickStop.PickViews)
-            //{
-            //    if (pickView.GetQuantityToBePicked() > 0)
-            //    {
-            //        Position = pickView.PickPosition;
-            //        TextBoxNewQuantity.Text = pickView.GetQuantityToBePicked().ToString();
-            //        TextBoxNewQuantity.SelectAll();
-            //        TextBoxNewQuantity.Focus();
-            //    }
-            //}
-            //TextBoxChangeQuantityPosition.Text = Position.ToString();
         }
 
         public FrmChangeQuantity()
@@ -102,7 +78,7 @@ namespace Neutron.Forms
         {
 
             int pos = position.ParseInt();
-            foreach (var pickView in pickStop.PickViews)
+            foreach (var pickView in _pickStop.PickViews)
             {
                 if (pickView.PickPosition == pos)
                 {

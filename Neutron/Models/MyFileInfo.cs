@@ -8,48 +8,32 @@ namespace Neutron.Models
 
     public class MyFileInfo
     {
+        private string _directory;
 
-        private string fileName;
-        private string directory;
-
-        public string FileName { get { return fileName; } set { fileName = value; } }
+        public string FileName { get; set; }
 
         public string Directory
         {
-            get
-            {
-                if (directory.EndsWith(@"\"))
-                {
-                    return string.Format("{0}", directory);
-                }
-                else
-                {
-                    return string.Format("{0}{1}", directory, @"\");
-                }
-
-            }
-
-            set
-            {
-                directory = value;
-            }
-
+            get { return _directory.EndsWith(@"\") ? $"{_directory}" : $"{_directory}{@"\"}"; }
+            set { _directory = value; }
         }
 
         public string FullPath
         {
-
-            get { return string.Format("{0}{1}", this.Directory, this.FileName); }
+            get { return $"{this.Directory}{this.FileName}"; }
         }
 
         public bool Exists()
         {
-            bool result = false;
+            var result = false;
 
             try
             {
-                FileInfo fileInfo = new FileInfo(FullPath);
-                var d = fileInfo.Directory.Name;
+                var fileInfo = new FileInfo(FullPath);
+                if (fileInfo.Directory != null)
+                {
+                    var d = fileInfo.Directory.Name;
+                }
 
                 result = fileInfo.Exists;
             }
@@ -67,7 +51,7 @@ namespace Neutron.Models
             {
                 if (File.Exists(FullPath))
                 {
-                    string toPath = string.Format("{0}{1}.bak", this.Directory, this.FileName);
+                    var toPath = $"{this.Directory}{this.FileName}.bak";
                     File.Delete(toPath);
                     File.Move(this.FullPath, toPath );
                 }

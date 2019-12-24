@@ -57,7 +57,7 @@ namespace Neutron.Forms
         public RackOrderView CurrentItem;
         private SqlInventoryView _currentInventoryView = new SqlInventoryView();
         readonly NeutronVariables _neutronVariables;
-        DynamicLogger _logger;
+        private DynamicLogger _logger;
         readonly StationView _station;
         string _imagesDirectory;
         readonly IAkaRepository _akaRepository;
@@ -65,7 +65,6 @@ namespace Neutron.Forms
         private readonly IJsonData _jsonData;
         private CostCenterManager _costCenterManager;
         private ItemDefinitionView _currentItemDefinition;
-        private Location _currentLocation;
         private GridDataType _currentGridDataType = GridDataType.None;
         private bool _formLoading = true;
         private bool _hotPickButtonPressed = false;
@@ -73,8 +72,6 @@ namespace Neutron.Forms
         private InventoryManager _inventoryManager;
         private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
-
-        private string _currentGrid;
 
         public enum GridDataType
         {
@@ -273,7 +270,7 @@ namespace Neutron.Forms
             }
 
 
-           if (CheckBoxAll.Checked)
+            if (CheckBoxAll.Checked)
             {
                 var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(stationNumber));
                 var blvAll = new BindingListView<LocationView>(views.ToList());
@@ -372,7 +369,7 @@ namespace Neutron.Forms
                 DataGridViewHot.Rows[idx].Selected = true;
                 _currentItemDefinition =
                      ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
-                if(recordCount == 1) await LoadCurrentAndNew();
+                if (recordCount == 1) await LoadCurrentAndNew();
             }
             else
             {
@@ -397,8 +394,8 @@ namespace Neutron.Forms
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
             MBCurrentLocations.Enabled = false;
-            
-           // _bindingSourceNewLocations.Clear();
+
+            // _bindingSourceNewLocations.Clear();
             MBNewLocations.Text = $"{_newLocationButtonText} (0)";
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
@@ -793,7 +790,7 @@ namespace Neutron.Forms
             };
             DataGridViewHot.Columns.Add(col);
 
-           
+
 
             foreach (DataGridViewColumn column in DataGridViewHot.Columns)
             {
@@ -1003,7 +1000,7 @@ namespace Neutron.Forms
 
         private void FindItem()
         {
- Cursor.Current = Cursors.WaitCursor;
+            Cursor.Current = Cursors.WaitCursor;
             FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
             Cursor.Current = Cursors.Default;
         }
@@ -1711,7 +1708,7 @@ namespace Neutron.Forms
             _formLoading = false;
         }
 
-        private async void CheckBoxAll_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxAll_CheckedChanged(object sender, EventArgs e)
         {
             FindItem();
             //await LoadNewLocations(_currentItemDefinition);

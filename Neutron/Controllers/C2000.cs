@@ -258,7 +258,7 @@ namespace Neutron.Controllers
             Task.Run(() => _logger.Log($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
             bool continueLoop = true;
             int loopCounter = 0;
-            HardwareDevice device = _station.HardwareDevices.Where(r => r.DeviceNumber == deviceNumber).FirstOrDefault();
+            HardwareDevice device = _station.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
             if (device != null && device.Enabled)
             {
                 if (device.Enabled)
@@ -274,7 +274,7 @@ namespace Neutron.Controllers
                                 loopCounter = 0;
                                 if (!status.In_Motion)
                                 {
-                                    if (!(status.Current_Tray == trayNumber))
+                                    if (status.Current_Tray != trayNumber)
                                     {
                                         if (_previousTray[deviceNumber] != 0)
                                         {
@@ -322,8 +322,11 @@ namespace Neutron.Controllers
                                     {
                                         loopCounter += 1;
                                         Thread.Sleep(millisecondsTimeout: 100);
-                                        Task.Run(() => _logger.Log($"Postition Device: Waiting for tray to be in position to send new command.  Current Tray: "
-                                            + status.Current_Tray.ToString() + "  In Motion is " + status.In_Motion.ToString() + "Loop Count: " + loopCounter.ToString()));
+                                        var counter = loopCounter;
+                                        Task.Run(() =>
+                                            _logger.Log(
+                                                $"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.Current_Tray.ToString()}  In Motion is {status.In_Motion.ToString()}  Loop Count: {counter.ToString()}"));
+                                  
                                     }
                                 }
                             }
@@ -338,7 +341,8 @@ namespace Neutron.Controllers
                                 {
                                     loopCounter += 1;
                                     Thread.Sleep(millisecondsTimeout: 100);
-                                    Task.Run(() => _logger.Log(msg: "Device Response was Bad Status  LoopCounter: " + loopCounter.ToString()));
+                                    var counter = loopCounter;
+                                    Task.Run(() => _logger.Log(msg: "Device Response was Bad Status  LoopCounter: " + counter.ToString()));
                                 }
                             }
                         }

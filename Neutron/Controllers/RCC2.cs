@@ -71,7 +71,7 @@ namespace Neutron.Controllers
 
         public Form CurrentForm
         {
-            get { return _currentForm; }
+            private get { return _currentForm; }
             set
             {
                 _currentForm = value;

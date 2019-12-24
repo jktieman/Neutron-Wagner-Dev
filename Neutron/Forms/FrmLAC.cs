@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 
-namespace Neutron
+namespace Neutron.Forms
 {
+    //Location Access Control
     public partial class FrmLAC : Form
     {
         private readonly SecureDb context = new SecureDb();
-
         private bool checkAllUsers;
         private bool checkAllDevice1;
         private bool checkAllDevice2;
         private bool checkAllDevice3;
         private bool checkAllDevice4;
         private int currentStationNumber;
+
         public FrmLAC()
         {
             InitializeComponent();
@@ -102,10 +102,7 @@ namespace Neutron
 
         public bool CheckAllUsers
         {
-            get
-            {
-                return checkAllUsers;
-            }
+            get { return checkAllUsers; }
             set
             {
                 checkAllUsers = value;
@@ -162,10 +159,7 @@ namespace Neutron
 
         public bool CheckAllDevice1
         {
-            get
-            {
-                return checkAllDevice1;
-            }
+            get { return checkAllDevice1; }
             set
             {
                 checkAllDevice1 = value;
@@ -223,10 +217,7 @@ namespace Neutron
         //------
         public bool CheckAllDevice2
         {
-            get
-            {
-                return checkAllDevice2;
-            }
+            get { return checkAllDevice2; }
             set
             {
                 checkAllDevice2 = value;
@@ -284,10 +275,7 @@ namespace Neutron
         //------
         public bool CheckAllDevice3
         {
-            get
-            {
-                return checkAllDevice3;
-            }
+            get { return checkAllDevice3; }
             set
             {
                 checkAllDevice3 = value;
@@ -344,10 +332,7 @@ namespace Neutron
         //------
         public bool CheckAllDevice4
         {
-            get
-            {
-                return checkAllDevice4;
-            }
+            get { return checkAllDevice4; }
             set
             {
                 checkAllDevice4 = value;

@@ -78,7 +78,6 @@ namespace Neutron.Forms
         public bool CloseButtonPressed { get; set; }
         public OrderView CurrentItem;
         public RackOrderView CurrentRackItem;
-        private AvailableOrdersView _currentAvailableOrdersViewRack;
         private AvailableOrdersView _currentAvailableOrdersView;
         public TextBox CurrentTextBoxPos;
         public bool ManualOverrideCurrentTextBoxPos;
@@ -86,12 +85,9 @@ namespace Neutron.Forms
         private PickStop _currentPickStop = new PickStop();
         private SqlInventoryView _currentInventoryView = new SqlInventoryView();
         private bool _openHotPickFromPickScreen;
-        private bool _openHotStoreFromPickScreen;
         private bool _showSkipped;
         private bool _shortPick;
-        static Timer _timer;
 
-        private InterfaceProcessorTmg _interfaceProcessorTmg;
         readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
 
@@ -4671,7 +4667,13 @@ namespace Neutron.Forms
 
                     foreach (var pickView in _currentPickStop.PickViews)
                     {
-                        CheckForOrderComplete(pickView.OrderDetail.Order);
+                        if (CheckForOrderComplete(pickView.OrderDetail.Order))
+                        {
+                            if (_neutronVariables.PrintPackingListEnd)
+                            {
+                                PrintPackingList(pickView.OrderDetail.Order.Id, pickView.PickPosition.ToString());
+                            }
+                        }
                     }
 
                     Task.Run(() => _logger.Log($"PickAccept_Click Stop Complete End : [{DateTime.Now.ToLongTimeString()}]"));
@@ -4911,7 +4913,7 @@ namespace Neutron.Forms
                 //Check to see if it has already been printed, if it has continue without printing.
                 var printJob = _repoPrintJob.FindBy(r => r.OrderId == id && r.PickDocument == true).FirstOrDefault();
                 if (printJob != null) continue;
-                PrintPackingList(id);
+                PrintPackingList(id, bp.PositionNumber.ToString());
                 //PrintDoc(bp.PositionNumber, order);
                 var order = _repoOrders.FindByKey(id);
                 printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
@@ -4982,10 +4984,14 @@ namespace Neutron.Forms
             }
         }
 
-        private void PrintPackingList(int orderId)
+        private void PrintPackingList(int orderId, string batchPosition = "")
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var packingList = GetPackingList(orderId);
+            foreach (var pack in packingList)
+            {
+                pack.BatchPosition = batchPosition;
+            }
             DocumentToPrint.PrintPackingList(packingList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
@@ -6969,38 +6975,6 @@ namespace Neutron.Forms
             CsvUtility.SaveToCsv(DataGridViewOrderDetails);
         }
 
-        //private void MBPickStore_Click(object sender, EventArgs e)
-        //{
-        //    OpenHotStoreFromPickScreen = true;
-        //    LabelFormTitle.Text = "Hot Store";
-        //    LabelFormTitle.BackColor = Color.Green;
-        //    tabControl1.SelectedTab = HotStore;
-        //}
-
-        //private void MBBackHotStore_Click(object sender, EventArgs e)
-        //{
-        //    if (_openHotStoreFromPickScreen)
-        //    {
-        //        LabelFormTitle.Text = _resourceManager.GetString($"Selection");
-        //        LabelFormTitle.BackColor = Color.RoyalBlue;
-        //        tabControl1.SelectedTab = PickScreen;
-        //        _openHotStoreFromPickScreen = false;
-        //    }
-        //    else
-        //    {
-        //        LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
-        //        LabelFormTitle.BackColor = Color.RoyalBlue;
-        //        tabControl1.SelectedTab = Main;
-        //    }
-        //}
-
-        //private void MBHotStoreStoreBack_Click(object sender, EventArgs e)
-        //{
-        //    LabelFormTitle.Text = _resourceManager.GetString($"HotStore");
-        //    LabelFormTitle.BackColor = Color.Green;
-        //    tabControl1.SelectedTab = HotStoreToDelete;
-        //}
-
         private void TextBoxPos_Click(object sender, EventArgs e)
         {
             //if you click directly in a textboxpos, you override the
@@ -7099,20 +7073,17 @@ namespace Neutron.Forms
             }
         }
 
-        private void CheckForOrderComplete(Order order)
+        private bool CheckForOrderComplete(Order order)
         {
             var linesNotComplete = _repoOrderDetails.FindBy(r => r.OrderId == order.Id).Where(r => r.LineStatusId != 6)
                 .ToList();
-            if (linesNotComplete.Count != 0) return;
-            order.OrderStatusId = 6;
-            if (_neutronVariables.PrintPackingListEnd)
-            {
-                PrintPackingList(order.Id);
-            }
+            if (linesNotComplete.Count != 0) return false;
 
+            order.OrderStatusId = 6;
             GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order: order);
             _repoOrders.Update(order);
             Mediator.GetInstance().OnOrderComplete(this, order);
+            return true;
         }
 
         private void MBRefreshRack_Click(object sender, EventArgs e)
@@ -7442,8 +7413,13 @@ namespace Neutron.Forms
                         }
                         // Mediator.GetInstance().OnBatchComplete(this);
                     }
-
-                    CheckForOrderComplete(order);
+                    if (CheckForOrderComplete(order))
+                    {
+                        if (_neutronVariables.PrintPackingListEnd)
+                        {
+                            PrintPackingList(order.Id);
+                        }
+                    }
                 }
 
                 //var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
@@ -7691,7 +7667,14 @@ namespace Neutron.Forms
             detail.EmpId = GlobalVar.User.EmpId;
             _repoOrderDetails.Update(detail);
 
-            CheckForOrderComplete(detail.Order);
+            if (CheckForOrderComplete(detail.Order))
+            {
+                if (_neutronVariables.PrintPackingListEnd)
+                {
+                    PrintPackingList(detail.Order.Id);
+                }
+            }
+
 
             ShowSkipped();
         }
@@ -7713,8 +7696,13 @@ namespace Neutron.Forms
             detail.EmpId = GlobalVar.User.EmpId;
             _repoOrderDetails.Update(detail);
 
-            CheckForOrderComplete(detail.Order);
-
+            if (CheckForOrderComplete(detail.Order))
+            {
+                if (_neutronVariables.PrintPackingListEnd)
+                {
+                    PrintPackingList(detail.Order.Id);
+                }
+            }
             ShowSkipped();
         }
 
@@ -7744,8 +7732,13 @@ namespace Neutron.Forms
                     detail.EmpId = GlobalVar.User.EmpId;
                     _repoOrderDetails.Update(detail);
 
-                    CheckForOrderComplete(detail.Order);
-
+                    if (CheckForOrderComplete(detail.Order))
+                    {
+                        if (_neutronVariables.PrintPackingListEnd)
+                        {
+                            PrintPackingList(detail.Order.Id);
+                        }
+                    }
                     ShowSkipped();
                 }
             }

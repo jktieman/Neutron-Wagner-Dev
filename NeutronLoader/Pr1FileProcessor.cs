@@ -143,7 +143,7 @@ namespace NeutronLoader
                                 itemDef = UpdateItemDefinitionDescription(itemDef, description);
                             }
 
-                             var primeBin = "OC";
+                            var primeBin = "OC";
                             detail = new OrderDetail
                             {
                                 OrderId = orderId,
@@ -242,7 +242,7 @@ namespace NeutronLoader
             for (int i = 0; i < allLines.Length; i++)
             {
                 line = allLines[i];
-               
+
                 string lineType = line.Substring(0, 1);
                 if (lineType == "2")
                 {
@@ -445,7 +445,7 @@ namespace NeutronLoader
             try
             {
                 Station station = _repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
-               
+
                 if (station != null)
                 {
                     _logger.Log($"Get Station Number: {station.StationNumber}  StationId: {stationId} ");

@@ -4,17 +4,9 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
-using NeutronCore.Extensions;
-using NeutronData.SqlModelViews;
 
 namespace NeutronData.Repositories
 {
@@ -125,31 +117,31 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public IEnumerable<OrderView> GetOrderView(string search)
-        {
-            IEnumerable<OrderView> recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new OrderView
-            {
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
-                Priority = s.Priority,
-                Order = s,
-                Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
-                Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
-                Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
-                Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
-                Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
-                Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate,
-                OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
-            })
-            .OrderBy(o => o.Ord1).ToList();
-            IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
-            return result;
-        }
+        //public IEnumerable<OrderView> GetOrderView(string search)
+        //{
+        //    IEnumerable<OrderView> recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new OrderView
+        //    {
+        //        Id = s.Id,
+        //        Ord1 = s.Ord1,
+        //        Ord2 = s.Ord2,
+        //        OrderStatusName = s.OrderStatus.Name,
+        //        ShipMethodName = s.ShipMethod.Name,
+        //        Priority = s.Priority,
+        //        Order = s,
+        //        Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
+        //        Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
+        //        Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
+        //        Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
+        //        Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
+        //        Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
+        //        LoadDate = s.LoadDate,
+        //        OrderStatusId = s.OrderStatusId,
+        //        ShipMethodId = s.ShipMethodId
+        //    })
+        //    .OrderBy(o => o.Ord1).ToList();
+        //    IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
+        //    return result;
+        //}
 
         public List<AvailableOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
         {
@@ -255,242 +247,242 @@ namespace NeutronData.Repositories
         }
 
 
-        public IEnumerable<OrderView> GetAvailableOrders__OLD
-            (StationView station, string search, bool serialPicking)
-        {
-            var station1Orders = new List<OrderView>();
-            var station2Orders = new List<OrderView>();
-            var station3Orders = new List<OrderView>();
-            var station4Orders = new List<OrderView>();
-            var station5Orders = new List<OrderView>();
-            var station8Orders = new List<OrderView>();
-            var result = new List<OrderView>();
-            var availableRecs = new List<OrderView>();
-            var recs = new List<OrderView>();  // null;
-            try
-            {
-                recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new OrderView
-                {
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    Starter = "1", // StartOnThisStation(station.StationNumber, s.OrderDetails),
-                    OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
-                    Priority = s.Priority,
-                    Order = s,
-                    Station_1_HasPicks = CheckForPicks3(1, s.OrderDetails),
-                    Station_2_HasPicks = CheckForPicks3(2, s.OrderDetails),
-                    Station_3_HasPicks = CheckForPicks3(3, s.OrderDetails),
-                    Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
-                    Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
-                    Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-                    FirstPickStation = GetFirstPickStation(s.OrderDetails),
-                    LoadDate = s.LoadDate,
-                    OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
-                })
-                   .OrderByDescending(o => o.Priority).ToList();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"GetAvailableOrders Error Phase 1 Recs Count: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
-            }
+        //public IEnumerable<OrderView> GetAvailableOrders__OLD
+        //    (StationView station, string search, bool serialPicking)
+        //{
+        //    var station1Orders = new List<OrderView>();
+        //    var station2Orders = new List<OrderView>();
+        //    var station3Orders = new List<OrderView>();
+        //    var station4Orders = new List<OrderView>();
+        //    var station5Orders = new List<OrderView>();
+        //    var station8Orders = new List<OrderView>();
+        //    var result = new List<OrderView>();
+        //    var availableRecs = new List<OrderView>();
+        //    var recs = new List<OrderView>();  // null;
+        //    try
+        //    {
+        //        recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new OrderView
+        //        {
+        //            Id = s.Id,
+        //            Ord1 = s.Ord1,
+        //            Ord2 = s.Ord2,
+        //            Starter = "1", // StartOnThisStation(station.StationNumber, s.OrderDetails),
+        //            OrderStatusName = s.OrderStatus.Name,
+        //            ShipMethodName = s.ShipMethod.Name,
+        //            Priority = s.Priority,
+        //            Order = s,
+        //            Station_1_HasPicks = CheckForPicks3(1, s.OrderDetails),
+        //            Station_2_HasPicks = CheckForPicks3(2, s.OrderDetails),
+        //            Station_3_HasPicks = CheckForPicks3(3, s.OrderDetails),
+        //            Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
+        //            Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
+        //            Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
+        //            FirstPickStation = GetFirstPickStation(s.OrderDetails),
+        //            LoadDate = s.LoadDate,
+        //            OrderStatusId = s.OrderStatusId,
+        //            ShipMethodId = s.ShipMethodId
+        //        })
+        //           .OrderByDescending(o => o.Priority).ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"GetAvailableOrders Error Phase 1 Recs Count: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+        //    }
 
-            try
-            {
-                foreach (var item in recs)
-                {
-                    if (!string.IsNullOrEmpty(item.Station_1_HasPicks))
-                    {
-                        if (!string.Equals(item.Station_1_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            station1Orders.Add(item);
-                            item.CurrentPickStation = 1;
-                            continue;
-                        }
-                    }
+        //    try
+        //    {
+        //        foreach (var item in recs)
+        //        {
+        //            if (!string.IsNullOrEmpty(item.Station_1_HasPicks))
+        //            {
+        //                if (!string.Equals(item.Station_1_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                {
+        //                    station1Orders.Add(item);
+        //                    item.CurrentPickStation = 1;
+        //                    continue;
+        //                }
+        //            }
 
-                    if (!string.IsNullOrEmpty(item.Station_2_HasPicks))
-                    {
-                        if (!string.Equals(item.Station_2_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            station2Orders.Add(item);
-                            item.CurrentPickStation = 2;
-                            continue;
-                        }
-                    }
+        //            if (!string.IsNullOrEmpty(item.Station_2_HasPicks))
+        //            {
+        //                if (!string.Equals(item.Station_2_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                {
+        //                    station2Orders.Add(item);
+        //                    item.CurrentPickStation = 2;
+        //                    continue;
+        //                }
+        //            }
 
-                    if (!string.IsNullOrEmpty(item.Station_3_HasPicks))
-                    {
-                        if (!string.Equals(item.Station_3_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            station3Orders.Add(item);
-                            item.CurrentPickStation = 3;
-                            continue;
-                        }
-                    }
+        //            if (!string.IsNullOrEmpty(item.Station_3_HasPicks))
+        //            {
+        //                if (!string.Equals(item.Station_3_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                {
+        //                    station3Orders.Add(item);
+        //                    item.CurrentPickStation = 3;
+        //                    continue;
+        //                }
+        //            }
 
-                    if (!string.IsNullOrEmpty(item.Station_4_HasPicks))
-                    {
-                        if (!string.Equals(item.Station_4_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            station4Orders.Add(item);
-                            item.CurrentPickStation = 4;
-                            continue;
-                        }
-                    }
+        //            if (!string.IsNullOrEmpty(item.Station_4_HasPicks))
+        //            {
+        //                if (!string.Equals(item.Station_4_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                {
+        //                    station4Orders.Add(item);
+        //                    item.CurrentPickStation = 4;
+        //                    continue;
+        //                }
+        //            }
 
-                    if (!string.IsNullOrEmpty(item.Station_5_HasPicks))
-                    {
-                        if (!string.Equals(item.Station_5_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            station5Orders.Add(item);
-                            item.CurrentPickStation = 5;
-                            continue;
-                        }
-                    }
+        //            if (!string.IsNullOrEmpty(item.Station_5_HasPicks))
+        //            {
+        //                if (!string.Equals(item.Station_5_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                {
+        //                    station5Orders.Add(item);
+        //                    item.CurrentPickStation = 5;
+        //                    continue;
+        //                }
+        //            }
 
-                    if (!string.IsNullOrEmpty(item.Station_8_HasPicks))
-                    {
-                        if (!string.Equals(item.Station_8_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            station8Orders.Add(item);
-                            item.CurrentPickStation = 8;
-                            continue;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
-            }
+        //            if (!string.IsNullOrEmpty(item.Station_8_HasPicks))
+        //            {
+        //                if (!string.Equals(item.Station_8_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                {
+        //                    station8Orders.Add(item);
+        //                    item.CurrentPickStation = 8;
+        //                    continue;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+        //    }
 
-            // Serial Picking
-            if (serialPicking)
-            {
-                try
-                {
-                    foreach (var item in recs.Where(r => r.CurrentPickStation == station.StationNumber))
-                    {
-                        var details = item.Order.OrderDetails.Where(r => r.StationNumber == station.StationNumber).ToList();
-                        item.Order.OrderDetails = details;
-                        availableRecs.Add(item);
-                    }
-                    result = availableRecs.Where(s => s.SearchField.Contains(search)).ToList();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Assign Detail Lines this Station - {station.StationNumber}: Rec Count: {recs.Count()}\r\n  {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
-                }
-                //End Serial Picking
-            }
-            //Parallel Picking
-            else
-            {
-                station1Orders.Clear();
-                station2Orders.Clear();
-                station3Orders.Clear();
-                station4Orders.Clear();
-                station5Orders.Clear();
-                station8Orders.Clear();
-                try
-                {
-                    foreach (var item in recs)
-                    {
-                        if (!string.IsNullOrEmpty(item.Station_1_HasPicks))
-                        {
-                            if (!string.Equals(item.Station_1_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                station1Orders.Add(item);
-                            }
-                        }
+        //    // Serial Picking
+        //    if (serialPicking)
+        //    {
+        //        try
+        //        {
+        //            foreach (var item in recs.Where(r => r.CurrentPickStation == station.StationNumber))
+        //            {
+        //                var details = item.Order.OrderDetails.Where(r => r.StationNumber == station.StationNumber).ToList();
+        //                item.Order.OrderDetails = details;
+        //                availableRecs.Add(item);
+        //            }
+        //            result = availableRecs.Where(s => s.SearchField.Contains(search)).ToList();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show($"Assign Detail Lines this Station - {station.StationNumber}: Rec Count: {recs.Count()}\r\n  {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+        //        }
+        //        //End Serial Picking
+        //    }
+        //    //Parallel Picking
+        //    else
+        //    {
+        //        station1Orders.Clear();
+        //        station2Orders.Clear();
+        //        station3Orders.Clear();
+        //        station4Orders.Clear();
+        //        station5Orders.Clear();
+        //        station8Orders.Clear();
+        //        try
+        //        {
+        //            foreach (var item in recs)
+        //            {
+        //                if (!string.IsNullOrEmpty(item.Station_1_HasPicks))
+        //                {
+        //                    if (!string.Equals(item.Station_1_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                    {
+        //                        station1Orders.Add(item);
+        //                    }
+        //                }
 
-                        if (!string.IsNullOrEmpty(item.Station_2_HasPicks))
-                        {
-                            if (!string.Equals(item.Station_2_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                station2Orders.Add(item);
-                            }
-                        }
+        //                if (!string.IsNullOrEmpty(item.Station_2_HasPicks))
+        //                {
+        //                    if (!string.Equals(item.Station_2_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                    {
+        //                        station2Orders.Add(item);
+        //                    }
+        //                }
 
-                        if (!string.IsNullOrEmpty(item.Station_3_HasPicks))
-                        {
-                            if (!string.Equals(item.Station_3_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                station3Orders.Add(item);
-                            }
-                        }
+        //                if (!string.IsNullOrEmpty(item.Station_3_HasPicks))
+        //                {
+        //                    if (!string.Equals(item.Station_3_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                    {
+        //                        station3Orders.Add(item);
+        //                    }
+        //                }
 
-                        if (!string.IsNullOrEmpty(item.Station_4_HasPicks))
-                        {
-                            if (!string.Equals(item.Station_4_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                station4Orders.Add(item);
-                            }
-                        }
+        //                if (!string.IsNullOrEmpty(item.Station_4_HasPicks))
+        //                {
+        //                    if (!string.Equals(item.Station_4_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                    {
+        //                        station4Orders.Add(item);
+        //                    }
+        //                }
 
-                        if (!string.IsNullOrEmpty(item.Station_5_HasPicks))
-                        {
-                            if (!string.Equals(item.Station_5_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                station5Orders.Add(item);
-                            }
-                        }
+        //                if (!string.IsNullOrEmpty(item.Station_5_HasPicks))
+        //                {
+        //                    if (!string.Equals(item.Station_5_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                    {
+        //                        station5Orders.Add(item);
+        //                    }
+        //                }
 
-                        if (!string.IsNullOrEmpty(item.Station_8_HasPicks))
-                        {
-                            if (!string.Equals(item.Station_8_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                station8Orders.Add(item);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
-                }
+        //                if (!string.IsNullOrEmpty(item.Station_8_HasPicks))
+        //                {
+        //                    if (!string.Equals(item.Station_8_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+        //                    {
+        //                        station8Orders.Add(item);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+        //        }
 
-                switch (station.StationNumber)
-                {
-                    case 1:
-                        {
-                            result = station1Orders;
-                            break;
-                        }
-                    case 2:
-                        {
-                            result = station2Orders;
-                            break;
-                        }
-                    case 3:
-                        {
-                            result = station3Orders;
-                            break;
-                        }
-                    case 4:
-                        {
-                            result = station4Orders;
-                            break;
-                        }
-                    case 5:
-                        {
-                            result = station5Orders;
-                            break;
-                        }
-                    case 8:
-                        {
-                            result = station8Orders;
-                            break;
-                        }
-                }
-                result = result.Where(s => s.SearchField.Contains(search)).ToList();
-            }
+        //        switch (station.StationNumber)
+        //        {
+        //            case 1:
+        //                {
+        //                    result = station1Orders;
+        //                    break;
+        //                }
+        //            case 2:
+        //                {
+        //                    result = station2Orders;
+        //                    break;
+        //                }
+        //            case 3:
+        //                {
+        //                    result = station3Orders;
+        //                    break;
+        //                }
+        //            case 4:
+        //                {
+        //                    result = station4Orders;
+        //                    break;
+        //                }
+        //            case 5:
+        //                {
+        //                    result = station5Orders;
+        //                    break;
+        //                }
+        //            case 8:
+        //                {
+        //                    result = station8Orders;
+        //                    break;
+        //                }
+        //        }
+        //        result = result.Where(s => s.SearchField.Contains(search)).ToList();
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         private string StartOnThisStation(int stationNumber, ICollection<OrderDetail> orderDetails)
         {

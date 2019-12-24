@@ -110,6 +110,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
+            this.LabelSlotInformation = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -799,6 +800,7 @@
             // PanelNew
             // 
             this.PanelNew.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.PanelNew.Controls.Add(this.LabelSlotInformation);
             this.PanelNew.Controls.Add(this.ComboBoxNewDevice);
             this.PanelNew.Controls.Add(this.CheckBoxInUseNew);
             this.PanelNew.Controls.Add(this.ComboBoxNewLocationCode);
@@ -836,7 +838,7 @@
             this.ComboBoxNewDevice.Location = new System.Drawing.Point(347, 144);
             this.ComboBoxNewDevice.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewDevice.Name = "ComboBoxNewDevice";
-            this.ComboBoxNewDevice.Size = new System.Drawing.Size(193, 30);
+            this.ComboBoxNewDevice.Size = new System.Drawing.Size(177, 30);
             this.ComboBoxNewDevice.TabIndex = 30;
             this.ComboBoxNewDevice.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxNewDevice_KeyDown);
             // 
@@ -878,13 +880,12 @@
             this.TextBoxNewSlot.ReadOnly = true;
             this.TextBoxNewSlot.Size = new System.Drawing.Size(190, 28);
             this.TextBoxNewSlot.TabIndex = 28;
-            this.TextBoxNewSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label19
             // 
-            this.label19.Location = new System.Drawing.Point(498, 148);
+            this.label19.Location = new System.Drawing.Point(546, 148);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(135, 36);
+            this.label19.Size = new System.Drawing.Size(87, 36);
             this.label19.TabIndex = 27;
             this.label19.Text = "Slot";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1064,6 +1065,18 @@
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
+            // LabelSlotInformation
+            // 
+            this.LabelSlotInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSlotInformation.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelSlotInformation.Location = new System.Drawing.Point(836, 140);
+            this.LabelSlotInformation.Name = "LabelSlotInformation";
+            this.LabelSlotInformation.Size = new System.Drawing.Size(241, 36);
+            this.LabelSlotInformation.TabIndex = 31;
+            this.LabelSlotInformation.Text = "< Enter Slot Description";
+            this.LabelSlotInformation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelSlotInformation.Visible = false;
+            // 
             // FrmLocations
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1178,5 +1191,6 @@
         private System.Windows.Forms.CheckBox CheckBoxAllStations;
         private MetroFramework.Controls.MetroButton ButtonAvailableLocations;
         private System.Windows.Forms.ComboBox ComboBoxStationNumber;
+        private System.Windows.Forms.Label LabelSlotInformation;
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace AlliedLogger
 {
@@ -23,7 +20,7 @@ namespace AlliedLogger
             _baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
             _baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
             _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
-            LogActivity = logActivity == "true" ? true : false;
+            LogActivity = logActivity == "true";
             IsValidLocation();
         }
 
@@ -40,7 +37,7 @@ namespace AlliedLogger
                 {
                     if (path.DirectoryName != null) Directory.CreateDirectory(path.DirectoryName);
                 }
-                    _validLocation = true;
+                _validLocation = true;
             }
             catch (Exception)
             {
@@ -86,7 +83,7 @@ namespace AlliedLogger
             var now = DateTime.Now;
             var date = now.ToString("yyyyMMdd");
 
-            return string.Concat(new string[] { date, ".Log" });
+            return string.Concat(new[] { date, ".Log" });
         }
     }
 }

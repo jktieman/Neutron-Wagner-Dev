@@ -19,6 +19,7 @@ namespace PrintRequest
         private const int HeaderPadding = 5;
         private int _printedRows = 0;
         private int lineLength = 795;
+        private string _batchPosition = "";
 
         private readonly int[] _columnWidths = new int[]
         {
@@ -53,6 +54,10 @@ namespace PrintRequest
             if (recs.Count > 0)
             {
                 _packingListHeader = recs.First();
+                if (!string.IsNullOrEmpty(_packingListHeader.BatchPosition))
+                {
+                    _batchPosition = $" - {_packingListHeader.BatchPosition}";
+                }
             }
             try
             {
@@ -113,7 +118,7 @@ namespace PrintRequest
         {
             var xValue = 0F;
             var format = new StringFormat() { Alignment = StringAlignment.Center };
-            var measureString = "Packing List";
+            var measureString = $"Packing List{_batchPosition}";
             var stringSize = g.MeasureString(measureString, _titleFont);
             var rect = new RectangleF(xValue, yValue, 820, stringSize.Height);
             g.DrawString(measureString, _titleFont, Brushes.Black, rect, format);

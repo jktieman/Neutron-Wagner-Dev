@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronCore;
-using NeutronData.Models;
 
 namespace PrintRequest
 {
@@ -18,12 +14,11 @@ namespace PrintRequest
         private const int NumRowsPerPage = 25;
         private const int RowHeight = 22;
         private const int HeaderPadding = 5;
-        private int _printedRows = 0;
-        private int lineLength = 1050;
+        private int _printedRows;
+        private readonly int _lineLength = 1050;
         private int _pageCount = 1;
 
-        private readonly int[] _columnWidths = new int[]
-        {
+        private readonly int[] _columnWidths = {
             50,
             100,
             325,
@@ -33,8 +28,7 @@ namespace PrintRequest
             100,
             100
         };
-        private readonly string[] _headerNames = new string[]
-        {
+        private readonly string[] _headerNames = {
             "Sys",
             "Sku",
             "Description",
@@ -109,7 +103,7 @@ namespace PrintRequest
         private void DrawTitle(Graphics g, ref int yValue)
         {
             var xValue = 0F;
-            var format = new StringFormat() { Alignment = StringAlignment.Center };
+            var format = new StringFormat { Alignment = StringAlignment.Center };
             var measureString = "Anticipated Outs";
             var stringSize = g.MeasureString(measureString, _titleFont);
             var rect = new RectangleF(xValue, yValue, 1050, stringSize.Height);
@@ -124,10 +118,10 @@ namespace PrintRequest
 
         private void DrawHeader(Graphics g, ref int yValue)
         {
-            var format = new StringFormat() { Alignment = StringAlignment.Far };
+            var format = new StringFormat { Alignment = StringAlignment.Far };
 
             var xValue = 25;
-            g.DrawLine(Pens.Black, new Point(xValue, yValue), new Point(lineLength, yValue));
+            g.DrawLine(Pens.Black, new Point(xValue, yValue), new Point(_lineLength, yValue));
 
             yValue += 5;
             for (var i = 0; i < _headerNames.Length; i++)
@@ -141,12 +135,12 @@ namespace PrintRequest
             yValue += RowHeight;
 
             xValue = 25;
-            g.DrawLine(Pens.Black, new Point(xValue, yValue), new Point(lineLength, yValue));
+            g.DrawLine(Pens.Black, new Point(xValue, yValue), new Point(_lineLength, yValue));
         }
 
         private void DrawBody(Graphics g, int yValue)
         {
-            var format = new StringFormat() { Alignment = StringAlignment.Far };
+            var format = new StringFormat { Alignment = StringAlignment.Far };
 
             for (var i = 0; (i < NumRowsPerPage) && ((i + _printedRows) < _transferRecs.Count); i++)
             {
@@ -195,13 +189,13 @@ namespace PrintRequest
 
                 xValue = 25;
                 yValue += RowHeight;
-                g.DrawLine(Pens.Black, new Point(xValue, yValue), new Point(lineLength, yValue));
+                g.DrawLine(Pens.Black, new Point(xValue, yValue), new Point(_lineLength, yValue));
                 yValue += 3;
             }
 
             _printedRows += NumRowsPerPage;
 
-            var pageNumberFormat = new StringFormat() { Alignment = StringAlignment.Center };
+            var pageNumberFormat = new StringFormat { Alignment = StringAlignment.Center };
             var pageNumberString = $"Page {_pageCount}";
             var stringSize = g.MeasureString(pageNumberString, _bodyFont);
 

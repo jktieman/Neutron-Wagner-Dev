@@ -16,11 +16,17 @@ namespace NeutronData.ModelViews
         public int NumberOfCarriers { get; set; }
         public int CarrierWidth { get; set; }
         public int CarrierDepth { get; set; }
+        public int DeviceTypeId { get; set; }
         public string DeviceTypeName { get; set; }
         public bool Enabled { get; set; }
         public bool SimulationMode { get; set; }
         public int LogLevel { get; set; }
-
+        public int? CommunicationTypeId { get; set; }
+        public string CommunicationTypeName { get; set; }
+        public int? TcpConfigurationId { get; set; }
+        public string TcpConfigurationName { get; set; }
+        public int? SerialConfigurationId { get; set; }
+        public string SerialConfigurationName { get; set; }
 
     }
 }

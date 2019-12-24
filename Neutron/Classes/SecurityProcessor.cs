@@ -14,27 +14,22 @@ namespace Neutron.Classes
 {
     public class SecurityProcessor : ISecurityProcessor
     {
-        private bool[] securityProfile;
-        readonly int neutronSecurityLength = 0;
+        readonly int _neutronSecurityLength = 0;
 
         public SecurityProcessor()
         {
-            neutronSecurityLength = Enum.GetNames(typeof(NeutronSecurity)).Length + 1;
-            securityProfile = new bool[neutronSecurityLength];
+            _neutronSecurityLength = Enum.GetNames(typeof(NeutronSecurity)).Length + 1;
+            SecurityProfile = new bool[_neutronSecurityLength];
             ReprocessSecuritySet();
         }
 
-        public bool[] SecurityProfile
-        {
-            get { return securityProfile; }
-            set { securityProfile = value; }
-        }
+        public bool[] SecurityProfile { get; set; }
 
         public void ReprocessSecuritySet(string id = "")
         {
             if (string.IsNullOrEmpty(id))
             {
-                for (int i = 0; i < neutronSecurityLength; i++)
+                for (var i = 0; i < _neutronSecurityLength; i++)
                 {
                     SecurityProfile[i] = false;
                 }
@@ -43,7 +38,7 @@ namespace Neutron.Classes
 
             if (id == "1111")
             {
-                for (int i = 0; i < neutronSecurityLength; i++)
+                for (var i = 0; i < _neutronSecurityLength; i++)
                 {
                     SecurityProfile[i] = true;
                 }
@@ -52,7 +47,7 @@ namespace Neutron.Classes
 
             if (id == "2277") //Neutron Admin
             {
-                for (int i = 0; i < neutronSecurityLength; i++)
+                for (var i = 0; i < _neutronSecurityLength; i++)
                 {
                     SecurityProfile[i] = true;
                 }
@@ -60,7 +55,7 @@ namespace Neutron.Classes
             }
             else
             {
-                for (int i = 0; i < neutronSecurityLength; i++)
+                for (var i = 0; i < _neutronSecurityLength; i++)
                 {
                     SecurityProfile[i] = false;
                 }
@@ -73,11 +68,11 @@ namespace Neutron.Classes
                             try
                             {
                                 var secureItems = new List<SecureItem>();
-                                User user = db.Users.Where(r => r.Pin == id).FirstOrDefault();
-                                List<Group> groups = db.GroupUser.Where(g => g.UserId == user.Id).Select(s => s.Group).ToList();
+                                var user = db.Users.FirstOrDefault(r => r.Pin == id);
+                                var groups = db.GroupUser.Where(g => g.UserId == user.Id).Select(s => s.Group).ToList();
                                 foreach (var group in groups)
                                 {
-                                    List<SecureItem> secItems = db.GroupSecureItem.Where(g => g.GroupId == group.GroupId)
+                                    var secItems = db.GroupSecureItem.Where(g => g.GroupId == group.GroupId)
                                         .Select(s => s.SecureItem).ToList();
                                     foreach (var sec in secItems)
                                     {

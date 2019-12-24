@@ -5,16 +5,14 @@ using NeutronData.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeutronData.ModelViews
 {
     public class ReplenPickStop : PickStopBase
     {
-        private readonly GenericRepository<ReplenOrder> repoOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> repoOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
 
         public ReplenPickStop()
         {
@@ -110,7 +108,7 @@ namespace NeutronData.ModelViews
                     item.OrderDetail.PickedQuantity = total;
                     item.OrderDetail.LineStatusId = 6;
                     item.OrderDetail.EmpId = user.EmpId;
-                    repoOrderDetails.Update(item.OrderDetail);
+                    _repoOrderDetails.Update(item.OrderDetail);
                     SetOrderComplete(item.ReplenOrderId);
                 }
             }
@@ -122,12 +120,12 @@ namespace NeutronData.ModelViews
 
         private void SetOrderComplete(int orderId)
         {
-            ReplenOrder order = repoOrders.FindByKey(orderId);
-            List <ReplenOrderDetail> recs = repoOrderDetails.All().Where(d => d.ReplenOrderId == orderId && d.LineStatusId != 6).ToList();
+            ReplenOrder order = _repoOrders.FindByKey(orderId);
+            List <ReplenOrderDetail> recs = _repoOrderDetails.All().Where(d => d.ReplenOrderId == orderId && d.LineStatusId != 6).ToList();
             if (recs.Count == 0)
             {
                 order.OrderStatusId = 6;
-                repoOrders.Update(order);
+                _repoOrders.Update(order);
             }
         }
     }

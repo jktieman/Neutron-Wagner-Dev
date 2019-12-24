@@ -11,7 +11,7 @@ namespace Neutron.Extensions
             var s = BitConverter.ToString(bytes);
             if (!dashes)
             {
-                s = s.Replace("-", ""); 
+                s = s.Replace("-", "");
             }
             return s;
         }
@@ -39,7 +39,6 @@ namespace Neutron.Extensions
         public static string ByteArrayToHumanString(this byte[] bytes)
         {
             var txt = string.Empty;
-            var result = string.Empty;
             var arr = System.Text.Encoding.UTF8.GetString(bytes);
             var len = arr.Length;
             var txtLen = len - 10;
@@ -47,7 +46,7 @@ namespace Neutron.Extensions
             {
                 if (len == 21)
                 {
-txt = arr.Substring(8, txtLen -1);
+                    txt = arr.Substring(8, txtLen - 1);
                 }
                 txt = arr.Substring(7, txtLen);
             }
@@ -55,11 +54,10 @@ txt = arr.Substring(8, txtLen -1);
             if (txtLen > 0)
             {
                 txt = arr.Substring(7);
-            }  
+            }
 
-            result =
-                $"Bay: {arr.Substring(1, 2)} Cmd: {arr.Substring(3, 2)}" +
-                $" Dis: {arr.Substring(5, 2)} Text: {txt}";
+            var result = $"Bay: {arr.Substring(1, 2)} Cmd: {arr.Substring(3, 2)}" +
+                         $" Dis: {arr.Substring(5, 2)} Text: {txt}";
 
             return result;
         }

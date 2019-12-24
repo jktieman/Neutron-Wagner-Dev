@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLookups));
             this.MetroPanelLookup = new MetroFramework.Controls.MetroPanel();
             this.LabelLookupName = new System.Windows.Forms.Label();
+            this.MBAddNew = new MetroFramework.Controls.MetroButton();
             this.MButtonSave = new MetroFramework.Controls.MetroButton();
             this.MBPrintLookup = new MetroFramework.Controls.MetroButton();
             this.DataGridViewLookups = new System.Windows.Forms.DataGridView();
@@ -40,7 +41,6 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.MBAddNew = new MetroFramework.Controls.MetroButton();
             this.MetroPanelLookup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewLookups)).BeginInit();
             this.SuspendLayout();
@@ -57,6 +57,7 @@
             this.MetroPanelLookup.Controls.Add(this.DataGridViewLookups);
             this.MetroPanelLookup.Controls.Add(this.ListBoxCodeNames);
             this.MetroPanelLookup.Controls.Add(this.MButtonClose);
+            this.MetroPanelLookup.ForeColor = System.Drawing.SystemColors.ControlText;
             this.MetroPanelLookup.HorizontalScrollbarBarColor = true;
             this.MetroPanelLookup.HorizontalScrollbarHighlightOnWheel = false;
             this.MetroPanelLookup.HorizontalScrollbarSize = 10;
@@ -81,6 +82,19 @@
             this.LabelLookupName.TabIndex = 33;
             this.LabelLookupName.Text = "Size Codes";
             this.LabelLookupName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MBAddNew
+            // 
+            this.MBAddNew.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MBAddNew.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBAddNew.Location = new System.Drawing.Point(526, 553);
+            this.MBAddNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBAddNew.Name = "MBAddNew";
+            this.MBAddNew.Size = new System.Drawing.Size(146, 76);
+            this.MBAddNew.TabIndex = 17;
+            this.MBAddNew.Text = "Add New";
+            this.MBAddNew.UseSelectable = true;
+            this.MBAddNew.Click += new System.EventHandler(this.MBAddNew_Click);
             // 
             // MButtonSave
             // 
@@ -192,19 +206,6 @@
             this.LabelFormHeaderText.TabIndex = 30;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // MBAddNew
-            // 
-            this.MBAddNew.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBAddNew.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAddNew.Location = new System.Drawing.Point(526, 553);
-            this.MBAddNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBAddNew.Name = "MBAddNew";
-            this.MBAddNew.Size = new System.Drawing.Size(146, 76);
-            this.MBAddNew.TabIndex = 17;
-            this.MBAddNew.Text = "Add New";
-            this.MBAddNew.UseSelectable = true;
-            this.MBAddNew.Click += new System.EventHandler(this.MBAddNew_Click);
             // 
             // FrmLookups
             // 

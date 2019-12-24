@@ -1,15 +1,11 @@
-﻿using NeutronData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using NeutronData.Models;
 
 namespace NeutronData.ModelViews
 {
     public class ReplenOrderView
     {
-        readonly int[] statusToGet = new int[] { 1, 2, 3, 4 };
+        private readonly int[] _statusToGet = { 1, 2, 3, 4 };
 
         public int Id { get; set; }
         public string Ord1 { get; set; }
@@ -25,57 +21,57 @@ namespace NeutronData.ModelViews
         public string Station_4_HasPicks { get; set; }
         public string Station_5_HasPicks { get; set; }
         public string Station_8_HasPicks { get; set; }
-        private int lines;
-        private int pieces;
-        private string searchField;
+        private int _lines;
+        private int _pieces;
+        private string _searchField;
         public string LoadDate { get; set; }
         public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
         public ReplenOrder ReplenOrder { get; set; }
         public int CurrentPickStation { get; set; }
         public int FirstPickStation { get; set; }
+
         public string SearchField
         {
             get
             {
-                return string.Format("{0}{1}", Ord1.ToLower()
-               , Ord2.ToLower());
+                return $"{Ord1.ToLower()}{Ord2.ToLower()}";
             }
-            set { searchField = value; }
+            set { _searchField = value; }
         }
 
         public int Lines
         {
             get
             {
-                lines = 0;
+                _lines = 0;
                 foreach (var item in ReplenOrder.ReplenOrderDetails)
                 {
-                    if (statusToGet.Contains(item.LineStatusId))
+                    if (_statusToGet.Contains(item.LineStatusId))
                     {
-                        lines += 1;
+                        _lines += 1;
                     }
                 }
-                return lines;
+                return _lines;
             }
-            set { lines = value; }
+            set { _lines = value; }
         }
 
         public int Pieces
         {
             get
             {
-                pieces = 0;
+                _pieces = 0;
                 foreach (var item in ReplenOrder.ReplenOrderDetails)
                 {
-                    if (statusToGet.Contains(item.LineStatusId))
+                    if (_statusToGet.Contains(item.LineStatusId))
                     {
-                        pieces += item.Quantity;
+                        _pieces += item.Quantity;
                     }
                 }
-                return pieces;
+                return _pieces;
             }
-            set { pieces = value; }
+            set { _pieces = value; }
         }
     }
 }

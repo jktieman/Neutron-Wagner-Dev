@@ -36,5 +36,7 @@ namespace NeutronData.Models
         public virtual TcpConfiguration TcpConfiguration { get; set; }
         [ForeignKey("SerialConfigurationId")]
         public virtual SerialConfiguration SerialConfiguration { get; set; }
+
+        
     }
 }

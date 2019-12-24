@@ -1,14 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
 namespace AlliedFileSystemWatcher
 {
     public class AlliedFileWatcher : IDisposable
     {
         private readonly FileSystemWatcher watcher;
-        private string path = @"C:\";
-        private string filter = @"*.*";
+        private string path;
+        private string filter;
         private bool watch = false;
         private bool includeSubdirectories = false;
         private bool enableRaisingEvents = false;
@@ -25,7 +24,7 @@ namespace AlliedFileSystemWatcher
             watcher.Path = path;
             watcher.Filter = filter;
             watcher.IncludeSubdirectories = includeSubdirectories;
-            watcher.Created += new FileSystemEventHandler(OnCreated);
+            watcher.Created += OnCreated;
         }
 
         public void Start()
