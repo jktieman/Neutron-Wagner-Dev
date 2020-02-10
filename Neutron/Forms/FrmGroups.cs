@@ -10,9 +10,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronData.ModelViews;
@@ -24,6 +27,8 @@ namespace Neutron.Forms
 {
     public partial class FrmGroups : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private BindingSource bindingSource = new BindingSource();
         private GenericRepository<Location> repoLocation = new GenericRepository<Location>(new NeutronDb());
         private GenericRepository<SizeCode> repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
@@ -35,6 +40,8 @@ namespace Neutron.Forms
         public FrmGroups(INomenclature nomenclature)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             this.nomenclature = nomenclature;
             SetupGrid();
             SetupTabControl();

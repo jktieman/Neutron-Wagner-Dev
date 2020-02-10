@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace NeutronCore.Enums
 {
-    public enum CommunicationType
+    public enum CommunicationTypezzz
+
     {
         [Description("None")]
         None = 0,

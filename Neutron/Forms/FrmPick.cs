@@ -45,6 +45,8 @@ namespace Neutron.Forms
 {
     public partial class FrmPick : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
@@ -72,8 +74,7 @@ namespace Neutron.Forms
         private readonly BindingSource _bindingSourceItems = new BindingSource();
         private BindingSource _bindingSourceNewItems = new BindingSource();
         //----
-        private CultureInfo _cultureInfo;
-        private ResourceManager _resourceManager;
+
 
         public bool CloseButtonPressed { get; set; }
         public OrderView CurrentItem;
@@ -1036,9 +1037,10 @@ namespace Neutron.Forms
 
         private void FrmPick_Load(object sender, EventArgs e)
         {
-            ////Communication Monitoring Form use for TEsting
-            //var frmCommunication = new FrmCommunication();
-            //frmCommunication.Show();
+            //Communication Monitoring Form use for TEsting
+
+           // var frmCommunication = new FrmCommunication();
+           // frmCommunication.Show();
 
 
             if (GlobalVar.LoaderRunning)
@@ -7528,7 +7530,7 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = SkipInventory;
         }
 
-        private void MBBackSkipInventory_Click(object sender, EventArgs e)
+        private void MBSkipInventoryBack_Click(object sender, EventArgs e)
         {
             ShowSkipped();
         }
@@ -8126,6 +8128,11 @@ namespace Neutron.Forms
             {
                 var result = form.ShowDialog();
             }
+        }
+
+        private void MBSkipInventoryAdjustQuantity_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

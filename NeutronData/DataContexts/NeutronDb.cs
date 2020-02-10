@@ -38,6 +38,7 @@ namespace NeutronData.DataContexts
         public DbSet<LocationCode> LocationCodes { get; set; }
         public DbSet<LookupTable> LookupTables { get; set; }
         public DbSet<DeviceType> DeviceTypes { get; set; }
+        public DbSet<CommunicationType> CommunicationTypes { get; set; }
         public DbSet<TcpConfiguration> TcpConfigurations { get; set; }
         public DbSet<SerialConfiguration> SerialConfigurations { get; set; }
         public DbSet<PickLocationSkip> PickLocationSkips { get; set; }

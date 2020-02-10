@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
+using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
@@ -11,6 +15,8 @@ namespace Neutron.Forms
 {
     public partial class FrmEditLocationDefinition : Form
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
 
         private readonly GenericRepository<VelocityCode> _repoVelocityCode =
@@ -33,6 +39,8 @@ namespace Neutron.Forms
         public FrmEditLocationDefinition(int id)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             _location = _repoLocation.FindByKey(id);
             SetupViewEditForm();
             FillForm();
@@ -44,7 +52,7 @@ namespace Neutron.Forms
             if (_location != null)
             {
                 TextBoxViewEditStation.Text = _location.Station.Name;
-                //ComboBoxViewEditDevice.SelectedIndex = 
+
                 ComboBoxViewEditDevice.SelectedValue  = _location.Loc1;
                 TextBoxViewEditLoc2.Text = _location.Loc2.ToString();
                 TextBoxViewEditLoc3.Text = _location.Loc3.ToString();
@@ -57,11 +65,6 @@ namespace Neutron.Forms
                 ComboBoxViewEditLocationCode.SelectedIndex = ComboBoxViewEditLocationCode.FindStringExact(_location.LocationCode.Name);
                 CheckBoxViewEditInUse.Checked = _location.InUse;
             }
-        }
-
-        private void ButtonCancel_Click_1(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
@@ -138,5 +141,37 @@ namespace Neutron.Forms
             }
             return recs;
         }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmEditLocationDefinition",
+               resourceDir: languageDirectory, usingResourceSet: null);
+
+                CheckBoxViewEditInUse.Text = _resourceManager.GetString("InUse");
+                LabelViewEditSlot.Text = _resourceManager.GetString("Slot");
+                LabelViewEditTag.Text = _resourceManager.GetString("Tag");
+                LabelViewEditBack.Text = _resourceManager.GetString("Back");
+                LabelViewEditOver.Text = _resourceManager.GetString("Over");
+                LabelViewEditTray.Text = _resourceManager.GetString("Tray");
+                LabelViewEditDevice.Text = _resourceManager.GetString("Device");
+                LabelViewEditStation.Text = _resourceManager.GetString("Station");
+                LabelViewEditLocation.Text = _resourceManager.GetString("Location");
+                LabelViewEditHeight.Text = _resourceManager.GetString("Height");
+                LabelViewEditVelocity.Text = _resourceManager.GetString("Velocity");
+                LabelViewEditSize.Text = _resourceManager.GetString("Size");
+                ButtonCancel.Text = _resourceManager.GetString("Cancel");
+                ButtonSave.Text = _resourceManager.GetString("Save");
+                this.Text = _resourceManager.GetString("FrmEditLocationDefinition");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
     }
 }

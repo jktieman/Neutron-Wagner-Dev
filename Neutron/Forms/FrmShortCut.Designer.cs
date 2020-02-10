@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.ButtonClose = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.LabelEnterKey = new System.Windows.Forms.Label();
+            this.LabelSpaceKey = new System.Windows.Forms.Label();
+            this.Label_L_Key = new System.Windows.Forms.Label();
+            this.Label_A_Key = new System.Windows.Forms.Label();
+            this.Label_S_Key = new System.Windows.Forms.Label();
+            this.Label_Q_Key = new System.Windows.Forms.Label();
+            this.Label_K_Key = new System.Windows.Forms.Label();
+            this.Label_H_Key = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ButtonClose
@@ -51,93 +51,93 @@
             this.ButtonClose.Text = "Close";
             this.ButtonClose.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // LabelEnterKey
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(40, 11);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(306, 35);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Enter Key - Accept";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelEnterKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEnterKey.Location = new System.Drawing.Point(40, 11);
+            this.LabelEnterKey.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelEnterKey.Name = "LabelEnterKey";
+            this.LabelEnterKey.Size = new System.Drawing.Size(306, 35);
+            this.LabelEnterKey.TabIndex = 7;
+            this.LabelEnterKey.Text = "Enter Key - Accept";
+            this.LabelEnterKey.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // LabelSpaceKey
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(40, 46);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(306, 35);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Space Key - Accept";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelSpaceKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSpaceKey.Location = new System.Drawing.Point(40, 46);
+            this.LabelSpaceKey.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelSpaceKey.Name = "LabelSpaceKey";
+            this.LabelSpaceKey.Size = new System.Drawing.Size(306, 35);
+            this.LabelSpaceKey.TabIndex = 9;
+            this.LabelSpaceKey.Text = "Space Key - Accept";
+            this.LabelSpaceKey.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label3
+            // Label_L_Key
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(40, 81);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(306, 35);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "L Key - Open Location Count Form";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_L_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label_L_Key.Location = new System.Drawing.Point(40, 81);
+            this.Label_L_Key.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label_L_Key.Name = "Label_L_Key";
+            this.Label_L_Key.Size = new System.Drawing.Size(306, 35);
+            this.Label_L_Key.TabIndex = 10;
+            this.Label_L_Key.Text = "L Key - Open Location Count Form";
+            this.Label_L_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label4
+            // Label_A_Key
             // 
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(40, 116);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(306, 35);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "A Key - Open Hot Action Form";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_A_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label_A_Key.Location = new System.Drawing.Point(40, 116);
+            this.Label_A_Key.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label_A_Key.Name = "Label_A_Key";
+            this.Label_A_Key.Size = new System.Drawing.Size(306, 35);
+            this.Label_A_Key.TabIndex = 11;
+            this.Label_A_Key.Text = "A Key - Open Hot Action Form";
+            this.Label_A_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label5
+            // Label_S_Key
             // 
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(40, 151);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(306, 35);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "S Key - Toggle Quantity/Order ";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_S_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label_S_Key.Location = new System.Drawing.Point(40, 151);
+            this.Label_S_Key.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label_S_Key.Name = "Label_S_Key";
+            this.Label_S_Key.Size = new System.Drawing.Size(306, 35);
+            this.Label_S_Key.TabIndex = 12;
+            this.Label_S_Key.Text = "S Key - Toggle Quantity/Order ";
+            this.Label_S_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label6
+            // Label_Q_Key
             // 
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(40, 186);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(306, 35);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Q Key - Change Quantity Form";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_Q_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label_Q_Key.Location = new System.Drawing.Point(40, 186);
+            this.Label_Q_Key.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label_Q_Key.Name = "Label_Q_Key";
+            this.Label_Q_Key.Size = new System.Drawing.Size(306, 35);
+            this.Label_Q_Key.TabIndex = 13;
+            this.Label_Q_Key.Text = "Q Key - Change Quantity Form";
+            this.Label_Q_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label7
+            // Label_K_Key
             // 
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(40, 221);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(306, 35);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "K Key - Skip Pick";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_K_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label_K_Key.Location = new System.Drawing.Point(40, 221);
+            this.Label_K_Key.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label_K_Key.Name = "Label_K_Key";
+            this.Label_K_Key.Size = new System.Drawing.Size(306, 35);
+            this.Label_K_Key.TabIndex = 14;
+            this.Label_K_Key.Text = "K Key - Skip Pick";
+            this.Label_K_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label8
+            // Label_H_Key
             // 
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(40, 256);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(306, 35);
-            this.label8.TabIndex = 15;
-            this.label8.Text = "H Key - Short Pick";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Label_H_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label_H_Key.Location = new System.Drawing.Point(40, 256);
+            this.Label_H_Key.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Label_H_Key.Name = "Label_H_Key";
+            this.Label_H_Key.Size = new System.Drawing.Size(306, 35);
+            this.Label_H_Key.TabIndex = 15;
+            this.Label_H_Key.Text = "H Key - Short Pick";
+            this.Label_H_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmShortCut
             // 
@@ -146,15 +146,15 @@
             this.BackColor = System.Drawing.Color.SlateGray;
             this.CancelButton = this.ButtonClose;
             this.ClientSize = new System.Drawing.Size(386, 370);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.Label_H_Key);
+            this.Controls.Add(this.Label_K_Key);
+            this.Controls.Add(this.Label_Q_Key);
+            this.Controls.Add(this.Label_S_Key);
+            this.Controls.Add(this.Label_A_Key);
+            this.Controls.Add(this.Label_L_Key);
+            this.Controls.Add(this.LabelSpaceKey);
             this.Controls.Add(this.ButtonClose);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LabelEnterKey);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -168,13 +168,13 @@
         #endregion
 
         private System.Windows.Forms.Button ButtonClose;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label LabelEnterKey;
+        private System.Windows.Forms.Label LabelSpaceKey;
+        private System.Windows.Forms.Label Label_L_Key;
+        private System.Windows.Forms.Label Label_A_Key;
+        private System.Windows.Forms.Label Label_S_Key;
+        private System.Windows.Forms.Label Label_Q_Key;
+        private System.Windows.Forms.Label Label_K_Key;
+        private System.Windows.Forms.Label Label_H_Key;
     }
 }

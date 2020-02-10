@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.TextBoxViewEditWeight = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
+            this.LabelViewEditWeight = new System.Windows.Forms.Label();
             this.CheckBoxViewEditScale = new System.Windows.Forms.CheckBox();
             this.ComboBoxViewEditUnitOfIssue = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
+            this.LabelViewEditUnitOfIssue = new System.Windows.Forms.Label();
             this.ComboBoxViewEditStorageType = new System.Windows.Forms.ComboBox();
-            this.label21 = new System.Windows.Forms.Label();
+            this.LabelViewEditStorageType = new System.Windows.Forms.Label();
             this.ComboBoxViewEditLocationCode = new System.Windows.Forms.ComboBox();
-            this.label26 = new System.Windows.Forms.Label();
+            this.LabelViewEditLocation = new System.Windows.Forms.Label();
             this.ComboBoxViewEditHeightCode = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.LabelViewEditHeight = new System.Windows.Forms.Label();
             this.ComboBoxViewEditVelocityCode = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.LabelViewEditVelocity = new System.Windows.Forms.Label();
+            this.LabelViewEditSystemMin = new System.Windows.Forms.Label();
             this.ComboBoxViewEditSizeCode = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.LabelViewEditSize = new System.Windows.Forms.Label();
             this.ComboBoxViewEditStation = new System.Windows.Forms.ComboBox();
             this.TextBoxViewEditId = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditSystemMax = new System.Windows.Forms.TextBox();
@@ -53,11 +53,11 @@
             this.TextBoxViewEditSystemMin = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditStation = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditItem = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.LabelViewEditSystemMax = new System.Windows.Forms.Label();
+            this.LabelViewEditLocationMin = new System.Windows.Forms.Label();
+            this.LabelViewEditLocationMax = new System.Windows.Forms.Label();
+            this.LabelViewEditDescription = new System.Windows.Forms.Label();
+            this.LabelViewEditItem = new System.Windows.Forms.Label();
             this.LabelViewEditStation = new System.Windows.Forms.Label();
             this.ButtonSave = new System.Windows.Forms.Button();
             this.ButtonCancel = new System.Windows.Forms.Button();
@@ -72,17 +72,17 @@
             this.TextBoxViewEditWeight.TabIndex = 11;
             this.TextBoxViewEditWeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label22
+            // LabelViewEditWeight
             // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(780, 313);
-            this.label22.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(56, 16);
-            this.label22.TabIndex = 45;
-            this.label22.Text = "Weight";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditWeight.AutoSize = true;
+            this.LabelViewEditWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditWeight.Location = new System.Drawing.Point(780, 313);
+            this.LabelViewEditWeight.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditWeight.Name = "LabelViewEditWeight";
+            this.LabelViewEditWeight.Size = new System.Drawing.Size(56, 16);
+            this.LabelViewEditWeight.TabIndex = 45;
+            this.LabelViewEditWeight.Text = "Weight";
+            this.LabelViewEditWeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CheckBoxViewEditScale
             // 
@@ -106,17 +106,17 @@
             this.ComboBoxViewEditUnitOfIssue.Size = new System.Drawing.Size(345, 32);
             this.ComboBoxViewEditUnitOfIssue.TabIndex = 10;
             // 
-            // label20
+            // LabelViewEditUnitOfIssue
             // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(741, 264);
-            this.label20.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(95, 16);
-            this.label20.TabIndex = 39;
-            this.label20.Text = "Unit Of Issue";
-            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditUnitOfIssue.AutoSize = true;
+            this.LabelViewEditUnitOfIssue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditUnitOfIssue.Location = new System.Drawing.Point(741, 264);
+            this.LabelViewEditUnitOfIssue.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditUnitOfIssue.Name = "LabelViewEditUnitOfIssue";
+            this.LabelViewEditUnitOfIssue.Size = new System.Drawing.Size(95, 16);
+            this.LabelViewEditUnitOfIssue.TabIndex = 39;
+            this.LabelViewEditUnitOfIssue.Text = "Unit Of Issue";
+            this.LabelViewEditUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxViewEditStorageType
             // 
@@ -128,17 +128,17 @@
             this.ComboBoxViewEditStorageType.Size = new System.Drawing.Size(345, 32);
             this.ComboBoxViewEditStorageType.TabIndex = 9;
             // 
-            // label21
+            // LabelViewEditStorageType
             // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(733, 216);
-            this.label21.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(103, 16);
-            this.label21.TabIndex = 38;
-            this.label21.Text = "Storage Type";
-            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditStorageType.AutoSize = true;
+            this.LabelViewEditStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditStorageType.Location = new System.Drawing.Point(733, 216);
+            this.LabelViewEditStorageType.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditStorageType.Name = "LabelViewEditStorageType";
+            this.LabelViewEditStorageType.Size = new System.Drawing.Size(103, 16);
+            this.LabelViewEditStorageType.TabIndex = 38;
+            this.LabelViewEditStorageType.Text = "Storage Type";
+            this.LabelViewEditStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxViewEditLocationCode
             // 
@@ -150,17 +150,17 @@
             this.ComboBoxViewEditLocationCode.Size = new System.Drawing.Size(345, 32);
             this.ComboBoxViewEditLocationCode.TabIndex = 8;
             // 
-            // label26
+            // LabelViewEditLocation
             // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(229, 361);
-            this.label26.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(67, 16);
-            this.label26.TabIndex = 33;
-            this.label26.Text = "Location";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditLocation.AutoSize = true;
+            this.LabelViewEditLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditLocation.Location = new System.Drawing.Point(229, 361);
+            this.LabelViewEditLocation.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditLocation.Name = "LabelViewEditLocation";
+            this.LabelViewEditLocation.Size = new System.Drawing.Size(67, 16);
+            this.LabelViewEditLocation.TabIndex = 33;
+            this.LabelViewEditLocation.Text = "Location";
+            this.LabelViewEditLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxViewEditHeightCode
             // 
@@ -172,17 +172,17 @@
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(345, 32);
             this.ComboBoxViewEditHeightCode.TabIndex = 7;
             // 
-            // label4
+            // LabelViewEditHeight
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(243, 313);
-            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 16);
-            this.label4.TabIndex = 35;
-            this.label4.Text = "Height";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditHeight.AutoSize = true;
+            this.LabelViewEditHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditHeight.Location = new System.Drawing.Point(243, 313);
+            this.LabelViewEditHeight.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditHeight.Name = "LabelViewEditHeight";
+            this.LabelViewEditHeight.Size = new System.Drawing.Size(53, 16);
+            this.LabelViewEditHeight.TabIndex = 35;
+            this.LabelViewEditHeight.Text = "Height";
+            this.LabelViewEditHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxViewEditVelocityCode
             // 
@@ -194,29 +194,29 @@
             this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(345, 32);
             this.ComboBoxViewEditVelocityCode.TabIndex = 6;
             // 
-            // label3
+            // LabelViewEditVelocity
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(232, 264);
-            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 16);
-            this.label3.TabIndex = 30;
-            this.label3.Text = "Velocity";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditVelocity.AutoSize = true;
+            this.LabelViewEditVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditVelocity.Location = new System.Drawing.Point(232, 264);
+            this.LabelViewEditVelocity.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditVelocity.Name = "LabelViewEditVelocity";
+            this.LabelViewEditVelocity.Size = new System.Drawing.Size(64, 16);
+            this.LabelViewEditVelocity.TabIndex = 30;
+            this.LabelViewEditVelocity.Text = "Velocity";
+            this.LabelViewEditVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label1
+            // LabelViewEditSystemMin
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(749, 176);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 16);
-            this.label1.TabIndex = 27;
-            this.label1.Text = "System Min";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditSystemMin.AutoSize = true;
+            this.LabelViewEditSystemMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditSystemMin.Location = new System.Drawing.Point(749, 176);
+            this.LabelViewEditSystemMin.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditSystemMin.Name = "LabelViewEditSystemMin";
+            this.LabelViewEditSystemMin.Size = new System.Drawing.Size(87, 16);
+            this.LabelViewEditSystemMin.TabIndex = 27;
+            this.LabelViewEditSystemMin.Text = "System Min";
+            this.LabelViewEditSystemMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxViewEditSizeCode
             // 
@@ -228,17 +228,17 @@
             this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(345, 32);
             this.ComboBoxViewEditSizeCode.TabIndex = 5;
             // 
-            // label2
+            // LabelViewEditSize
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(258, 216);
-            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 16);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "Size";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditSize.AutoSize = true;
+            this.LabelViewEditSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditSize.Location = new System.Drawing.Point(258, 216);
+            this.LabelViewEditSize.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditSize.Name = "LabelViewEditSize";
+            this.LabelViewEditSize.Size = new System.Drawing.Size(38, 16);
+            this.LabelViewEditSize.TabIndex = 28;
+            this.LabelViewEditSize.Text = "Size";
+            this.LabelViewEditSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxViewEditStation
             // 
@@ -254,7 +254,7 @@
             // 
             this.TextBoxViewEditId.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.TextBoxViewEditId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditId.Location = new System.Drawing.Point(44, 34);
+            this.TextBoxViewEditId.Location = new System.Drawing.Point(4, 6);
             this.TextBoxViewEditId.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.TextBoxViewEditId.Name = "TextBoxViewEditId";
             this.TextBoxViewEditId.Size = new System.Drawing.Size(152, 20);
@@ -330,65 +330,65 @@
             this.TextBoxViewEditItem.TabStop = false;
             this.TextBoxViewEditItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label9
+            // LabelViewEditSystemMax
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(205, 176);
-            this.label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(91, 16);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "System Max";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditSystemMax.AutoSize = true;
+            this.LabelViewEditSystemMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditSystemMax.Location = new System.Drawing.Point(205, 176);
+            this.LabelViewEditSystemMax.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditSystemMax.Name = "LabelViewEditSystemMax";
+            this.LabelViewEditSystemMax.Size = new System.Drawing.Size(91, 16);
+            this.LabelViewEditSystemMax.TabIndex = 19;
+            this.LabelViewEditSystemMax.Text = "System Max";
+            this.LabelViewEditSystemMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label8
+            // LabelViewEditLocationMin
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(741, 132);
-            this.label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(95, 16);
-            this.label8.TabIndex = 18;
-            this.label8.Text = "Location Min";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditLocationMin.AutoSize = true;
+            this.LabelViewEditLocationMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditLocationMin.Location = new System.Drawing.Point(741, 132);
+            this.LabelViewEditLocationMin.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditLocationMin.Name = "LabelViewEditLocationMin";
+            this.LabelViewEditLocationMin.Size = new System.Drawing.Size(95, 16);
+            this.LabelViewEditLocationMin.TabIndex = 18;
+            this.LabelViewEditLocationMin.Text = "Location Min";
+            this.LabelViewEditLocationMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label7
+            // LabelViewEditLocationMax
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(197, 127);
-            this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(99, 16);
-            this.label7.TabIndex = 17;
-            this.label7.Text = "Location Max";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditLocationMax.AutoSize = true;
+            this.LabelViewEditLocationMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditLocationMax.Location = new System.Drawing.Point(197, 127);
+            this.LabelViewEditLocationMax.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditLocationMax.Name = "LabelViewEditLocationMax";
+            this.LabelViewEditLocationMax.Size = new System.Drawing.Size(99, 16);
+            this.LabelViewEditLocationMax.TabIndex = 17;
+            this.LabelViewEditLocationMax.Text = "Location Max";
+            this.LabelViewEditLocationMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label6
+            // LabelViewEditDescription
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(209, 82);
-            this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 16);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Description";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditDescription.AutoSize = true;
+            this.LabelViewEditDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditDescription.Location = new System.Drawing.Point(209, 82);
+            this.LabelViewEditDescription.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditDescription.Name = "LabelViewEditDescription";
+            this.LabelViewEditDescription.Size = new System.Drawing.Size(87, 16);
+            this.LabelViewEditDescription.TabIndex = 16;
+            this.LabelViewEditDescription.Text = "Description";
+            this.LabelViewEditDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label5
+            // LabelViewEditItem
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(799, 36);
-            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(37, 16);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "Item";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditItem.AutoSize = true;
+            this.LabelViewEditItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditItem.Location = new System.Drawing.Point(799, 36);
+            this.LabelViewEditItem.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.LabelViewEditItem.Name = "LabelViewEditItem";
+            this.LabelViewEditItem.Size = new System.Drawing.Size(37, 16);
+            this.LabelViewEditItem.TabIndex = 21;
+            this.LabelViewEditItem.Text = "Item";
+            this.LabelViewEditItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelViewEditStation
             // 
@@ -440,21 +440,21 @@
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.TextBoxViewEditWeight);
-            this.Controls.Add(this.label22);
+            this.Controls.Add(this.LabelViewEditWeight);
             this.Controls.Add(this.CheckBoxViewEditScale);
             this.Controls.Add(this.ComboBoxViewEditUnitOfIssue);
-            this.Controls.Add(this.label20);
+            this.Controls.Add(this.LabelViewEditUnitOfIssue);
             this.Controls.Add(this.ComboBoxViewEditStorageType);
-            this.Controls.Add(this.label21);
+            this.Controls.Add(this.LabelViewEditStorageType);
             this.Controls.Add(this.ComboBoxViewEditLocationCode);
-            this.Controls.Add(this.label26);
+            this.Controls.Add(this.LabelViewEditLocation);
             this.Controls.Add(this.ComboBoxViewEditHeightCode);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.LabelViewEditHeight);
             this.Controls.Add(this.ComboBoxViewEditVelocityCode);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LabelViewEditVelocity);
+            this.Controls.Add(this.LabelViewEditSystemMin);
             this.Controls.Add(this.ComboBoxViewEditSizeCode);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.LabelViewEditSize);
             this.Controls.Add(this.ComboBoxViewEditStation);
             this.Controls.Add(this.TextBoxViewEditId);
             this.Controls.Add(this.TextBoxViewEditSystemMax);
@@ -464,11 +464,11 @@
             this.Controls.Add(this.TextBoxViewEditSystemMin);
             this.Controls.Add(this.TextBoxViewEditStation);
             this.Controls.Add(this.TextBoxViewEditItem);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.LabelViewEditSystemMax);
+            this.Controls.Add(this.LabelViewEditLocationMin);
+            this.Controls.Add(this.LabelViewEditLocationMax);
+            this.Controls.Add(this.LabelViewEditDescription);
+            this.Controls.Add(this.LabelViewEditItem);
             this.Controls.Add(this.LabelViewEditStation);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(6);
@@ -483,21 +483,21 @@
         #endregion
 
         private System.Windows.Forms.TextBox TextBoxViewEditWeight;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label LabelViewEditWeight;
         private System.Windows.Forms.CheckBox CheckBoxViewEditScale;
         private System.Windows.Forms.ComboBox ComboBoxViewEditUnitOfIssue;
-        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label LabelViewEditUnitOfIssue;
         private System.Windows.Forms.ComboBox ComboBoxViewEditStorageType;
-        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label LabelViewEditStorageType;
         private System.Windows.Forms.ComboBox ComboBoxViewEditLocationCode;
-        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label LabelViewEditLocation;
         private System.Windows.Forms.ComboBox ComboBoxViewEditHeightCode;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label LabelViewEditHeight;
         private System.Windows.Forms.ComboBox ComboBoxViewEditVelocityCode;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label LabelViewEditVelocity;
+        private System.Windows.Forms.Label LabelViewEditSystemMin;
         private System.Windows.Forms.ComboBox ComboBoxViewEditSizeCode;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label LabelViewEditSize;
         private System.Windows.Forms.ComboBox ComboBoxViewEditStation;
         private System.Windows.Forms.TextBox TextBoxViewEditId;
         private System.Windows.Forms.TextBox TextBoxViewEditSystemMax;
@@ -507,11 +507,11 @@
         private System.Windows.Forms.TextBox TextBoxViewEditSystemMin;
         private System.Windows.Forms.TextBox TextBoxViewEditStation;
         private System.Windows.Forms.TextBox TextBoxViewEditItem;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label LabelViewEditSystemMax;
+        private System.Windows.Forms.Label LabelViewEditLocationMin;
+        private System.Windows.Forms.Label LabelViewEditLocationMax;
+        private System.Windows.Forms.Label LabelViewEditDescription;
+        private System.Windows.Forms.Label LabelViewEditItem;
         private System.Windows.Forms.Label LabelViewEditStation;
         private System.Windows.Forms.Button ButtonSave;
         private System.Windows.Forms.Button ButtonCancel;

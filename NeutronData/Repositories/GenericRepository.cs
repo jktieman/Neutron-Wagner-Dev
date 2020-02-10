@@ -44,7 +44,7 @@ namespace NeutronData.Repositories
         public IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            IQueryable<TEntity> query = GetAllIncluding(includeProperties);
+            var query = GetAllIncluding(includeProperties);
             IEnumerable<TEntity> results = query.Where(predicate).ToList();
             return results;
         }
@@ -65,11 +65,11 @@ namespace NeutronData.Repositories
 
         public void Insert(TEntity entity)
         {
-            Type t = typeof(TEntity);
+            var t = typeof(TEntity);
 
             try
             {
-                TEntity local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
                 if (local != null)
                 {
                     _context.Entry(local).State = EntityState.Detached;
@@ -88,7 +88,7 @@ namespace NeutronData.Repositories
         {
             try
             {
-                TEntity local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
                 if (local != null)
                 {
                     _context.Entry(local).State = EntityState.Detached;
@@ -107,13 +107,13 @@ namespace NeutronData.Repositories
         {
             try
             {
-                TEntity local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == id);
+                var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == id);
                 if (local != null)
                 {
                     _context.Entry(local).State = EntityState.Detached;
                 }
 
-                TEntity entity = FindByKey(id);
+                var entity = FindByKey(id);
                 _dbSet.Attach(entity);
                 _dbSet.Remove(entity);
                 _context.SaveChanges();

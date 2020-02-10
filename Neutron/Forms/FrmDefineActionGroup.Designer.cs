@@ -37,9 +37,9 @@
             // 
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancel.Location = new System.Drawing.Point(266, 530);
+            this.ButtonCancel.Location = new System.Drawing.Point(195, 528);
             this.ButtonCancel.Name = "ButtonCancel";
-            this.ButtonCancel.Size = new System.Drawing.Size(89, 23);
+            this.ButtonCancel.Size = new System.Drawing.Size(120, 23);
             this.ButtonCancel.TabIndex = 4;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
@@ -49,9 +49,9 @@
             // 
             this.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ButtonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(166, 530);
+            this.ButtonSave.Location = new System.Drawing.Point(69, 528);
             this.ButtonSave.Name = "ButtonSave";
-            this.ButtonSave.Size = new System.Drawing.Size(89, 23);
+            this.ButtonSave.Size = new System.Drawing.Size(120, 23);
             this.ButtonSave.TabIndex = 3;
             this.ButtonSave.Text = "Save";
             this.ButtonSave.UseVisualStyleBackColor = true;

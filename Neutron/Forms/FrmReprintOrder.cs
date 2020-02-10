@@ -10,8 +10,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,6 +22,8 @@ namespace Neutron.Forms
 {
     public partial class FrmReprintOrder : Form
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly NeutronVariables _neutronVariables;
         private readonly DocumentPrinterPreferences _documentPrinter;
@@ -28,6 +33,8 @@ namespace Neutron.Forms
         public FrmReprintOrder(IJsonData jsonData)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            // SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
             _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();

@@ -105,7 +105,7 @@ namespace Neutron.Controllers
 
                         if (Shuttle_1.Init_Controller(serialConfiguration.PortNumber, serialConfiguration.BaudRate,
                             serialConfiguration.DataBits,
-                            serialConfiguration.Parity.ToString(), (int)serialConfiguration.StopBits, simulationMode,
+                            serialConfiguration.Parity.ToString(), serialConfiguration.StopBits, simulationMode,
                             logLevel,
                             enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
                         {

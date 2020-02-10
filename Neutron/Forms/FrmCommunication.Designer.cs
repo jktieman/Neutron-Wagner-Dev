@@ -35,10 +35,13 @@
             // 
             // ListBoxRequests
             // 
+            this.ListBoxRequests.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ListBoxRequests.FormattingEnabled = true;
-            this.ListBoxRequests.Location = new System.Drawing.Point(5, 37);
+            this.ListBoxRequests.Location = new System.Drawing.Point(12, 37);
             this.ListBoxRequests.Name = "ListBoxRequests";
-            this.ListBoxRequests.Size = new System.Drawing.Size(306, 719);
+            this.ListBoxRequests.Size = new System.Drawing.Size(258, 706);
             this.ListBoxRequests.TabIndex = 120;
             // 
             // ButtonClear
@@ -67,11 +70,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.ButtonClose;
-            this.ClientSize = new System.Drawing.Size(316, 769);
+            this.ClientSize = new System.Drawing.Size(282, 759);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.ButtonClear);
             this.Controls.Add(this.ListBoxRequests);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "FrmCommunication";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

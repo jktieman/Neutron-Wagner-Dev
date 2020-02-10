@@ -49,14 +49,14 @@ namespace Neutron.Controllers
         {
             previousTray = new int[10];
             this.station = station;
-            string logFileDir = LoaderSettings.GetLogFileDirectory();
-            string folderName = string.Format(format: @"C3000_Station_{0}", arg0: station.StationNumber.ToString());
-            string logActivity = LoaderSettings.EnableLogging;
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = string.Format(format: @"C3000_Station_{0}", arg0: station.StationNumber.ToString());
+            var logActivity = LoaderSettings.EnableLogging;
             logger = new DynamicLogger(logFileDir, folderName, logActivity);
             currentForm = frm;
             Task.Run(() => logger.Log($"C3000 Constructor - {frm.Name}"));
             CallBackHandler_Init = new SendOrPostCallback(MyInitProgressDelegate);
-            string hartLog = ($"{logFileDir}Hart");
+            var hartLog = ($"{logFileDir}Hart");
             Shuttle_1 = new Hart_DeviceController(Hart_DeviceController.Controller_Type_Kardex_C3000(), hartLog);
             if (Shuttle_1 != null)
             {
@@ -87,7 +87,14 @@ namespace Neutron.Controllers
                 return;
             }
 
-            TcpConfiguration tcpConfiguration = station.HardwareDevices.FirstOrDefault().TcpConfiguration;
+            var firstHardwareDevice = station.HardwareDevices.FirstOrDefault();
+            if (firstHardwareDevice == null)
+            {
+                Task.Run(() => logger.Log("Hardware not defined."));
+                return;
+            }
+
+            var tcpConfiguration = firstHardwareDevice.TcpConfiguration;
 
             if (tcpConfiguration == null)
             {
@@ -95,15 +102,14 @@ namespace Neutron.Controllers
                 return;
             }
 
-
-            int deviceCount = station.HardwareDevices.Count;
+            var deviceCount = station.HardwareDevices.Count;
             previousTray = new int[deviceCount + 1];
             NotificationTimeOutSeconds = tcpConfiguration.NotificationTimeout;
-            bool simulationMode = station.HardwareDevices.FirstOrDefault().SimulationMode;
-            int logLevel = station.HardwareDevices.FirstOrDefault().LogLevel;
-            List<int> enabledUnitNumbers = station.HardwareDevices.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
+            var simulationMode = firstHardwareDevice.SimulationMode;
+            var logLevel = firstHardwareDevice.LogLevel;
+            var enabledUnitNumbers = station.HardwareDevices.Where(r => r.Enabled).Select(s => s.DeviceNumber).ToList();
 
-            Task.Run(() => logger.Log($"IP Address: {tcpConfiguration.IPAddress} Port: {tcpConfiguration.Port} Enabled Unit Numbers: {enabledUnitNumbers.ToString()}"));
+            Task.Run(() => logger.Log($"IP Address: {tcpConfiguration.IPAddress} Port: {tcpConfiguration.Port} Enabled Unit Numbers: {enabledUnitNumbers}"));
 
             if (Shuttle_1.Init_Controller(tcpConfiguration.IPAddress, tcpConfiguration.Port
                 , simulationMode, logLevel, enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
@@ -118,10 +124,10 @@ namespace Neutron.Controllers
 
         public int InitStatus()
         {
-            // Note that the sequesnce of the following assignments is critical. Success must be first. Others follow in any sequence.
-            bool success = Shuttle_1.Init_Success;
-            int initCode = Shuttle_1.LastStatus_Code;
-            string initMsg = Shuttle_1.LastStatus_Message;
+            // Note that the sequence of the following assignments is critical. Success must be first. Others follow in any sequence.
+            var success = Shuttle_1.Init_Success;
+            var initCode = Shuttle_1.LastStatus_Code;
+            var initMsg = Shuttle_1.LastStatus_Message;
             Task.Run(() => logger.Log($"InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
             if (success)
             {
@@ -219,11 +225,11 @@ namespace Neutron.Controllers
 
         public DeviceResponse PositionDevice(int deviceNumber, int trayNumber, int facing = 0, int depth = 0, int quantity = 0, string display = "")
         {
-            DeviceResponse deviceResponse = DeviceResponse.UnknownFailure;
+            var deviceResponse = DeviceResponse.UnknownFailure;
             Task.Run(() => logger.Log($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
-            bool continueLoop = true;
-            int loopCounter = 0;
-            HardwareDevice device = station.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+            var continueLoop = true;
+            var loopCounter = 0;
+            var device = station.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
             if (device != null)
             {
                 if (device.Enabled)
@@ -233,7 +239,7 @@ namespace Neutron.Controllers
                         while (continueLoop)
                         {
                             Task.Run(() => logger.Log($"SimulationMode: {device.SimulationMode.ToString()}"));
-                            Hart_DeviceStatusType status = GetDeviceStatus(deviceNumber);
+                            var status = GetDeviceStatus(deviceNumber);
 
                             if (status.Good_Status)
                             {
@@ -255,7 +261,7 @@ namespace Neutron.Controllers
                                             }
                                         }
 
-                                        string cError = "";
+                                        var cError = "";
                                         if (Shuttle_1.Drive_Device(deviceNumber, trayNumber, ref cError))
                                         {
                                             Task.Run(() => logger.Log($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}"));
@@ -348,7 +354,7 @@ namespace Neutron.Controllers
 
         public DeviceResponse Park()
         {
-            DeviceResponse response = DeviceResponse.UnknownFailure;
+            var response = DeviceResponse.UnknownFailure;
             foreach (var item in station.HardwareDevices)
             {
 
@@ -375,7 +381,7 @@ namespace Neutron.Controllers
 
         public Hart_DeviceStatusType GetDeviceStatus(int deviceNumber)
         {
-            string msg = string.Empty;
+            var msg = string.Empty;
             var deviceStatus = new Hart_DeviceStatusType();
             logger.Log($"Device Number Status: {deviceNumber}");
             if (!Shuttle_1.Init_Success)
@@ -385,7 +391,7 @@ namespace Neutron.Controllers
             }
             else
             {
-                string cError = "";
+                var cError = "";
                 // When you request device status, you get status for all devices. That is the reason for the list.
                 // Even if there is only a single device, it comes back in a list.
                 var myDeviceStatusList = new List<Hart_DeviceStatusType>();

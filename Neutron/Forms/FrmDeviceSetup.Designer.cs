@@ -43,7 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.ComboBoxStation = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.LabelName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -65,7 +65,7 @@
             "Remstar RCC-2",
             "Rack Shelving"});
             this.ComboBoxDeviceType.Location = new System.Drawing.Point(150, 104);
-            this.ComboBoxDeviceType.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ComboBoxDeviceType.Margin = new System.Windows.Forms.Padding(2);
             this.ComboBoxDeviceType.Name = "ComboBoxDeviceType";
             this.ComboBoxDeviceType.Size = new System.Drawing.Size(115, 21);
             this.ComboBoxDeviceType.TabIndex = 2;
@@ -84,7 +84,7 @@
             // TextBoxNumberOfCarriers
             // 
             this.TextBoxNumberOfCarriers.Location = new System.Drawing.Point(150, 136);
-            this.TextBoxNumberOfCarriers.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TextBoxNumberOfCarriers.Margin = new System.Windows.Forms.Padding(2);
             this.TextBoxNumberOfCarriers.Name = "TextBoxNumberOfCarriers";
             this.TextBoxNumberOfCarriers.Size = new System.Drawing.Size(68, 20);
             this.TextBoxNumberOfCarriers.TabIndex = 3;
@@ -105,7 +105,7 @@
             // TextBoxCarrierWidth
             // 
             this.TextBoxCarrierWidth.Location = new System.Drawing.Point(151, 167);
-            this.TextBoxCarrierWidth.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TextBoxCarrierWidth.Margin = new System.Windows.Forms.Padding(2);
             this.TextBoxCarrierWidth.Name = "TextBoxCarrierWidth";
             this.TextBoxCarrierWidth.Size = new System.Drawing.Size(68, 20);
             this.TextBoxCarrierWidth.TabIndex = 4;
@@ -126,7 +126,7 @@
             // TextBoxCarrierDepth
             // 
             this.TextBoxCarrierDepth.Location = new System.Drawing.Point(150, 198);
-            this.TextBoxCarrierDepth.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TextBoxCarrierDepth.Margin = new System.Windows.Forms.Padding(2);
             this.TextBoxCarrierDepth.Name = "TextBoxCarrierDepth";
             this.TextBoxCarrierDepth.Size = new System.Drawing.Size(68, 20);
             this.TextBoxCarrierDepth.TabIndex = 5;
@@ -137,7 +137,7 @@
             // 
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.Location = new System.Drawing.Point(265, 246);
-            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(2);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(56, 20);
             this.ButtonCancel.TabIndex = 7;
@@ -148,7 +148,7 @@
             // ButtonSave
             // 
             this.ButtonSave.Location = new System.Drawing.Point(195, 246);
-            this.ButtonSave.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ButtonSave.Margin = new System.Windows.Forms.Padding(2);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(56, 20);
             this.ButtonSave.TabIndex = 6;
@@ -159,7 +159,7 @@
             // TextBoxId
             // 
             this.TextBoxId.Location = new System.Drawing.Point(8, 8);
-            this.TextBoxId.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TextBoxId.Margin = new System.Windows.Forms.Padding(2);
             this.TextBoxId.Name = "TextBoxId";
             this.TextBoxId.Size = new System.Drawing.Size(68, 20);
             this.TextBoxId.TabIndex = 2;
@@ -185,7 +185,7 @@
             "Remstar RCC-2",
             "Rack Shelving"});
             this.ComboBoxStation.Location = new System.Drawing.Point(151, 75);
-            this.ComboBoxStation.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ComboBoxStation.Margin = new System.Windows.Forms.Padding(2);
             this.ComboBoxStation.Name = "ComboBoxStation";
             this.ComboBoxStation.Size = new System.Drawing.Size(115, 21);
             this.ComboBoxStation.TabIndex = 1;
@@ -193,7 +193,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(150, 43);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(172, 20);
             this.textBox1.TabIndex = 0;
@@ -201,15 +201,15 @@
             this.textBox1.Text = "Shuttle - 1";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label3
+            // LabelName
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(102, 45);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Name";
+            this.LabelName.AutoSize = true;
+            this.LabelName.Location = new System.Drawing.Point(102, 45);
+            this.LabelName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.LabelName.Name = "LabelName";
+            this.LabelName.Size = new System.Drawing.Size(35, 13);
+            this.LabelName.TabIndex = 8;
+            this.LabelName.Text = "Name";
             // 
             // FrmDeviceSetup
             // 
@@ -217,7 +217,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 295);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.LabelName);
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.TextBoxId);
@@ -232,7 +232,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmDeviceSetup";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hardware Device Setup";
@@ -258,6 +258,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox ComboBoxStation;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label LabelName;
     }
 }

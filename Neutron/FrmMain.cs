@@ -108,6 +108,12 @@ namespace Neutron
             LineStatusManager.SaveLineStatusToDatabase();
             try
             {
+                //Communication Monitoring Form use for TEsting
+
+                //var frmCommunication = new FrmCommunication();
+                //frmCommunication.Show();
+
+
                 ButtonPark.Visible = _neutronLicense.CompanyCode == "TOP";
                 ButtonClearDisplays.Visible = _neutronLicense.CompanyCode == "TOP";
                 if (LoaderSettings.Init())

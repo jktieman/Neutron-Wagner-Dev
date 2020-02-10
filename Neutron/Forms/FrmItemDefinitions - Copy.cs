@@ -1,0 +1,1253 @@
+﻿using Equin.ApplicationFramework;
+using MetroFramework.Forms;
+using Neutron.Global;
+using NeutronData.DataContexts;
+using NeutronData.Models;
+using NeutronData.Repositories;
+using System;
+using System.Collections;
+using System.Data.Entity;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using NeutronData.ModelViews;
+using NeutronData.Models.Lookups;
+using Neutron.Classes;
+using JsonManager;
+using NeutronCore.Global;
+using System.Diagnostics;
+using System.Globalization;
+using System.Resources;
+using System.Threading;
+using AlliedLogger;
+using Microsoft.VisualBasic;
+using Neutron.Extensions;
+using NeutronCore;
+using NeutronData.Interfaces;
+using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
+
+
+namespace Neutron.Forms
+{
+    public partial class FrmItemDefinitions : MetroForm
+    {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
+        private ResourceManager _gridResourceManager;
+        private readonly BindingSource _bindingSource = new BindingSource();
+
+        private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
+        private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
+        private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
+        private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
+        private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<StorageType> _repoStorageType = new GenericRepository<StorageType>(new NeutronDb());
+        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
+
+        DynamicLogger _logger;
+        readonly IJsonData _jsonData;
+        private readonly StationView _station;
+
+        private readonly IAkaRepository _akaRepository;
+        public bool CloseButtonPressed { get; set; }
+
+        private BackgroundWorker _dgvColumnWidthSizer;
+
+        public FrmItemDefinitions(IJsonData jsonData, StationView station, IAkaRepository akaRepository)
+        {
+            InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
+            _dgvColumnWidthSizer = new BackgroundWorker();
+            _dgvColumnWidthSizer.DoWork += DgvColumnWidthSizerOnDoWork;
+            _dgvColumnWidthSizer.RunWorkerCompleted += DgvColumnWidthSizerOnRunWorkerCompleted;
+
+
+            KeyPreview = true;
+            this._station = station;
+            _logger = CreateLog();
+            _jsonData = jsonData;
+            CloseButtonPressed = false;
+            SetupGrid();
+            SetupTabControl();
+            SetupNewForm();
+            SetupViewEditForm();
+            _akaRepository = akaRepository;
+            mlUserInfo.Text = GlobalVar.User?.UserInfo;
+            if (_station.StationNumber >= 10)
+            {
+                CheckBoxAllStations.Checked = true;
+            }
+
+            SetupViewEditBindings();
+            RefreshData();
+
+            //this.AutoValidate = AutoValidate.Disable;
+        }
+
+        private void DgvColumnWidthSizerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SetAutoSizeColumnsWidth(DataGridView1,(int[])e.Result);
+        }
+
+        private void DgvColumnWidthSizerOnDoWork(object sender, DoWorkEventArgs e)
+        {
+            e.Result = GetAutoSizeColumnsWidth(DataGridView1);
+        }
+
+
+
+        private int[] GetAutoSizeColumnsWidth(DataGridView grid)
+        {
+            var src = ((IEnumerable)grid.DataSource)
+                .Cast<object>()
+                .Select(x => x.GetType()
+                    .GetProperties()
+                    .Select(p => p.GetValue(x, null)?.ToString() ?? string.Empty)
+                    .ToArray()
+                );
+
+            int[] widths = new int[grid.Columns.Count];
+            // Iterate through the columns.
+            for (int i = 0; i < grid.Columns.Count; i++)
+            {
+                // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
+                string[] colStringCollection = src.Where(r => r[i] != null).Select(r => r[i].ToString()).ToArray();
+
+                // Sort the string array by string lengths.
+                colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
+
+                // Get the last and longest string in the array.
+                string longestColString = colStringCollection.Last();
+
+                // Use the graphics object to measure the string size.
+                var colWidth = TextRenderer.MeasureText(longestColString, grid.Font);
+
+                // If the calculated width is larger than the column header width, set the new column width.
+                if (colWidth.Width > grid.Columns[i].HeaderCell.Size.Width)
+                {
+                    widths[i] = (int)colWidth.Width;
+                }
+                else // Otherwise, set the column width to the header width.
+                {
+                    widths[i] = grid.Columns[i].HeaderCell.Size.Width;
+                }
+            }
+
+            return widths;
+        }
+
+        public void SetAutoSizeColumnsWidth(DataGridView grid, int[] widths)
+        {
+            for (int i = 0; i < grid.Columns.Count; i++)
+            {
+                grid.Columns[i].Width = widths[i];
+            }
+        }
+
+        private DynamicLogger CreateLog()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = string.Format(format: @"Item_Definitions_{0}", arg0: _station.StationNumber.ToString());
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+            return _logger;
+        }
+
+        private void RefreshData(int recId = 0)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            var idx = 0;
+            var findWhat = TextBoxFind.Text.ToLower().Trim();
+            var find = _akaRepository.Get(findWhat);
+            TextBoxFind.Text = find;
+
+            var views = CheckBoxAllStations.Checked ? _itemDefinitionsRepository.FindItemDefinitionViews(find) : _itemDefinitionsRepository.FindItemDefinitionViewsByStation(find, _station.StationId);
+
+            var bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
+
+            _bindingSource.DataSource = bindingSourceItemDefinitionViewEquin;
+
+           //_bindingSource.DataSource = views.ToList();
+
+            DataGridView1.DataSource = _bindingSource.DataSource;
+            if (GetRecordCount(_bindingSource) > 0)
+            {
+                if (recId != 0)
+                {
+                    idx = IndexOf(_bindingSource, recId);
+                }
+                DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+                DataGridView1.Refresh();
+                DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
+                DataGridView1.Rows[idx].Selected = true;
+            }
+
+            DataGridView1.Columns[2].Width = 300;
+
+            //MessageBox.Show($"Elasped Time: {time}");
+            //_dgvColumnWidthSizer.RunWorkerAsync();
+            DataGridView1.FastAutoSizeColumns();
+        }
+
+        public int IndexOf(BindingSource bindingSource, int value)
+        {
+            var count = bindingSource.Count;
+            var itemIndex = 4;
+            for (var i = 0; i < count; i++)
+            {
+                ItemDefinitionView rec = ((ObjectView<ItemDefinitionView>)bindingSource[i]).Object;
+                if (rec.Id == value)
+                {
+                    itemIndex = i;
+                    break;
+                }
+            }
+            return itemIndex;
+        }
+
+        private void SetupViewEditBindings()
+        {
+            TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
+            TextBoxViewEditStation.DataBindings.Add("Text", _bindingSource, "StationName");
+            ComboBoxViewEditStation.DataBindings.Add("SelectedValue", _bindingSource, "StationId");
+            TextBoxViewEditItem.DataBindings.Add("Text", _bindingSource, "Item");
+            TextBoxViewEditDescription.DataBindings.Add("Text", _bindingSource, "Description");
+            TextBoxViewEditLocationMax.DataBindings.Add("Text", _bindingSource, "LocationMax");
+            TextBoxViewEditLocationMin.DataBindings.Add("Text", _bindingSource, "LocationMin");
+            TextBoxViewEditSystemMax.DataBindings.Add("Text", _bindingSource, "SystemMax");
+            TextBoxViewEditSystemMin.DataBindings.Add("Text", _bindingSource, "SystemMin");
+            ComboBoxViewEditSizeCode.DataBindings.Add("SelectedValue", _bindingSource, "SizeCodeId");
+            ComboBoxViewEditVelocityCode.DataBindings.Add("SelectedValue", _bindingSource, "VelocityCodeId");
+            ComboBoxViewEditHeightCode.DataBindings.Add("SelectedValue", _bindingSource, "HeightCodeId");
+            ComboBoxViewEditLocationCode.DataBindings.Add("SelectedValue", _bindingSource, "LocationCodeId");
+            ComboBoxViewEditStorageType.DataBindings.Add("SelectedValue", _bindingSource, "StorageTypeId");
+            ComboBoxViewEditUnitOfIssue.DataBindings.Add("SelectedValue", _bindingSource, "UnitOfIssueId");
+            TextBoxViewEditWeight.DataBindings.Add("Text", _bindingSource, "Weight");
+            CheckBoxViewEditScale.DataBindings.Add("Checked", _bindingSource, "Scale", false, DataSourceUpdateMode.OnPropertyChanged);
+
+        }
+
+        private int GetRecordCount(BindingSource bindingSource)
+        {
+            var count = bindingSource.Count;
+            LabelRecordCount.Text = $"Records: {count.ToString()}";
+            return count;
+        }
+
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+            //tabControl1.SelectedTab = tabPage2;
+        }
+
+        #region Find Functions
+        private void MButtonFind_Click(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void FindRecord(string s)
+        {
+            RefreshData();
+        }
+
+        private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                RefreshData();
+            }
+        }
+        #endregion
+
+        #region Button Clicks
+        private void ButtonClear_Click(object sender, EventArgs e)
+        {
+            TextBoxFind.Text = string.Empty;
+            RefreshData();
+            TextBoxFind.Focus();
+        }
+
+        private void MButtonClose_Click(object sender, EventArgs e)
+        {
+            CloseButtonPressed = true;
+            // this.Close();
+        }
+
+        private void MButtonViewEdit_Click(object sender, EventArgs e)
+        {
+            // Check Inventory and OrderDetails for this item
+            var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
+            //var id = TextBoxViewEditId.Text.ParseInt();
+            var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == id).ToList();
+            var msg = $"There are {recs.Count} inventory locations. {Environment.NewLine}";
+            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == id && r.LineStatusId != 6).ToList();
+            msg += $"There are {recs2.Count} lines to be picked from this station. {Environment.NewLine}";
+            if (recs.Count == 0)
+            {
+                ComboBoxViewEditStation.Enabled = true;
+                LabelViewEditChangeStationWarning.ForeColor = Color.Green;
+                msg += "Moving the Item Definition is Allowed.";
+            }
+            else
+            {
+                ComboBoxViewEditStation.Enabled = false;
+                LabelViewEditChangeStationWarning.ForeColor = Color.Red;
+                msg += "Moving the Item Definition is Not Allowed.";
+            }
+
+            LabelViewEditChangeStationWarning.Text = msg;
+
+            tabControl1.SelectedTab = ViewEdit;
+        }
+
+        private void MButtonNew_Click(object sender, EventArgs e)
+        {
+            NewItem();
+            //TextBoxNewItem.Text = string.Empty;
+            //TextBoxNewDescription.Text = string.Empty;
+            //TextBoxNewLocationMax.Text = string.Empty;
+            //TextBoxNewLocationMin.Text = string.Empty;
+            //TextBoxNewSystemMax.Text = string.Empty;
+            //TextBoxNewSystemMin.Text = string.Empty;
+            //TextBoxNewWeight.Text = string.Empty;
+            //ComboBoxNewStation.SelectedIndex = 0;
+            //ComboBoxNewHeightCode.SelectedIndex = 0;
+            //ComboBoxNewSizeCode.SelectedIndex = 0;
+            //ComboBoxNewVelocityCode.SelectedIndex = 0;
+            //ComboBoxNewLocationCode.SelectedIndex = 0;
+            //ComboBoxNewStorageType.SelectedIndex = 1;
+            //ComboBoxNewUnitOfIssue.SelectedIndex = 0;
+            //CheckBoxNewScale.Checked = false;
+            //tabControl1.SelectedTab = New;
+        }
+
+        private void NewItem()
+        {
+            MbNewSave.Enabled = true;
+            MbSaveAsDefault.Enabled = false;
+            TextBoxNewItem.Visible = true;
+            TextBoxNewDescription.Visible = true;
+            LabelNewDescription.Visible = true;
+            LabelNewItem.Visible = true;
+
+            var item = _jsonData.LoadFile<ItemDefinition>();
+            ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
+            TextBoxNewItem.Text = string.Empty;
+            TextBoxNewDescription.Text = string.Empty;
+            TextBoxNewLocationMax.Text = string.IsNullOrEmpty(item.LocationMax.ToString()) ? "0" : item.LocationMax.ToString();                // item.LocationMax.ToString();
+            TextBoxNewLocationMin.Text = string.IsNullOrEmpty(item.LocationMin.ToString()) ? "0" : item.LocationMin.ToString();
+            TextBoxNewSystemMax.Text = string.IsNullOrEmpty(item.SystemMax.ToString()) ? "0" : item.SystemMax.ToString();
+            TextBoxNewSystemMin.Text = string.IsNullOrEmpty(item.SystemMin.ToString()) ? "0" : item.SystemMin.ToString();
+            ComboBoxNewSizeCode.SelectedValue = string.IsNullOrEmpty(item.SizeCodeId.ToString())
+                ? ((SizeCode)ComboBoxNewSizeCode.Items[0]).Id
+                : item.SizeCodeId;
+            ComboBoxNewVelocityCode.SelectedValue = string.IsNullOrEmpty(item.VelocityCodeId.ToString())
+                ? ((VelocityCode)ComboBoxNewVelocityCode.Items[0]).Id
+                : item.VelocityCodeId;
+            ComboBoxNewHeightCode.SelectedValue = string.IsNullOrEmpty(item.HeightCodeId.ToString())
+                ? ((HeightCode)ComboBoxNewHeightCode.Items[0]).Id
+                : item.HeightCodeId;
+            ComboBoxNewLocationCode.SelectedValue = string.IsNullOrEmpty(item.LocationCodeId.ToString())
+                ? ((LocationCode)ComboBoxNewLocationCode.Items[0]).Id
+                : item.LocationCodeId;
+            ComboBoxNewStorageType.SelectedValue = string.IsNullOrEmpty(item.StorageTypeId.ToString())
+                ? ((StorageType)ComboBoxNewStorageType.Items[0]).Id
+                : item.StorageTypeId;
+            ComboBoxNewUnitOfIssue.SelectedValue = string.IsNullOrEmpty(item.UnitOfIssueId.ToString())
+                ? ((UnitOfIssue)ComboBoxNewUnitOfIssue.Items[0]).Id
+                : item.UnitOfIssueId;
+
+            TextBoxNewWeight.Text = string.IsNullOrEmpty(item.Weight.ToString(CultureInfo.InvariantCulture))
+                ? "0"
+                : item.Weight.ToString(CultureInfo.InvariantCulture);
+            CheckBoxNewScale.Checked = item.Scale;
+            tabControl1.SelectedTab = New;
+        }
+
+        private void MbViewEditListing_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = Listing;
+        }
+
+        private void MbViewEditNew_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = New;
+        }
+
+        private void MbViewEditClose_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = Listing;
+        }
+
+        private void MbViewEditSave_Click(object sender, EventArgs e)
+        {
+            MbViewEditSave.Enabled = false;
+            UpdateViewEdit();
+            MbViewEditSave.Enabled = true;
+        }
+
+        private void MbNewListing_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = Listing;
+        }
+
+        private void MbNewViewEdit_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = ViewEdit;
+        }
+
+        private void MbNewSave_Click(object sender, EventArgs e)
+        {
+            MbNewSave.Enabled = false;
+            SaveNew();
+            MbNewSave.Enabled = true;
+        }
+
+        private void MbNewClose_Click(object sender, EventArgs e)
+        {
+            tabControl1.SelectedTab = Listing;
+        }
+        #endregion
+
+        private void SaveNew()
+        {
+            var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
+            var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
+            var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
+            var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
+            var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
+            var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
+            if (!string.IsNullOrEmpty(TextBoxNewItem.Text.Trim()))
+            {
+                var item = TextBoxNewItem.Text.Trim();
+                if (!string.IsNullOrEmpty(TextBoxNewDescription.Text.Trim()))
+                {
+                    var description = TextBoxNewDescription.Text.Trim();
+                    var itemDef = _repoItemDefinition.FindBy(f => f.Item == item).FirstOrDefault();
+                    if (itemDef == null)
+                    {
+                        var rec = new ItemDefinition()
+                        {
+                            StationId = stationId,
+                            Item = item,
+                            Description = description,
+                            LocationMax = IntegerExtensions.ParseInt((locationMax)),
+                            LocationMin = IntegerExtensions.ParseInt((locationMin)),
+                            SystemMax = IntegerExtensions.ParseInt((systemMax)),
+                            SystemMin = IntegerExtensions.ParseInt((systemMin)),
+                            SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
+                            VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
+                            HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
+                            LocationCodeId = ((LocationCode)ComboBoxNewLocationCode.SelectedItem).Id,
+                            StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
+                            UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
+                            Weight = float.Parse(weight),
+                            Scale = CheckBoxNewScale.Checked
+                        };
+
+                        try
+                        {
+                            _repoItemDefinition.Insert(rec);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"{_resourceManager.GetString("Message0")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                        }
+                        RefreshData(rec.Id);
+                        tabControl1.SelectedTab = Listing;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"{_resourceManager.GetString("Message1")}: {itemDef.Station.Name}.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(_resourceManager.GetString("Message2"));
+                }
+            }
+            else
+            {
+                MessageBox.Show(_resourceManager.GetString("Message3"));
+            }
+        }
+
+        private void UpdateViewEdit()
+        {
+            int stationNumber = 1;
+            var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
+            var stationId = ((Station)ComboBoxViewEditStation.SelectedItem).Id;
+            var station = _repoStation.FindBy(s => s.Id == stationId).FirstOrDefault();
+            if (station != null)
+            {
+                stationNumber = station.StationNumber;
+            }
+            var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
+            var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text) ? "0" : TextBoxViewEditLocationMax.Text;
+            var locationMin = string.IsNullOrEmpty(TextBoxViewEditLocationMin.Text) ? "0" : TextBoxViewEditLocationMin.Text;
+            var systemMax = string.IsNullOrEmpty(TextBoxViewEditSystemMax.Text) ? "0" : TextBoxViewEditSystemMax.Text;
+            var systemMin = string.IsNullOrEmpty(TextBoxViewEditSystemMin.Text) ? "0" : TextBoxViewEditSystemMin.Text;
+            if (!string.IsNullOrEmpty(TextBoxViewEditItem.Text))
+            {
+                var item = TextBoxViewEditItem.Text;
+                if (!string.IsNullOrEmpty(TextBoxViewEditDescription.Text))
+                {
+                    var description = TextBoxViewEditDescription.Text;
+                    var itemDef = _repoItemDefinition.FindByKey(id);
+                    if (itemDef != null)
+                    {
+
+                        itemDef.StationId = stationId;
+                        itemDef.Item = item;
+                        itemDef.Description = description;
+                        itemDef.LocationMax = IntegerExtensions.ParseInt((locationMax));
+                        itemDef.LocationMin = IntegerExtensions.ParseInt((locationMin));
+                        itemDef.SystemMax = IntegerExtensions.ParseInt((systemMax));
+                        itemDef.SystemMin = IntegerExtensions.ParseInt((systemMin));
+                        itemDef.SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
+                        itemDef.VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
+                        itemDef.HeightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
+                        itemDef.LocationCodeId = ((LocationCode)ComboBoxViewEditLocationCode.SelectedItem).Id;
+                        itemDef.StorageTypeId = ((StorageType)ComboBoxViewEditStorageType.SelectedItem).Id;
+                        itemDef.UnitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
+                        itemDef.Weight = float.Parse(weight);
+                        itemDef.Scale = CheckBoxViewEditScale.Checked;
+
+                        try
+                        {
+                            _repoItemDefinition.Update(itemDef);
+
+                            var recs = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != 6).ToList();
+                            foreach (var rec in recs)
+                            {
+                                rec.StationNumber = stationNumber;
+                                _repoOrderDetails.Update(rec);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"{_resourceManager.GetString("Message4")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                        }
+                        RefreshData(itemDef.Id);
+                        tabControl1.SelectedTab = Listing;
+                    }
+                    else
+                    {
+                        MessageBox.Show(_resourceManager.GetString("Message5"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(_resourceManager.GetString("Message6"));
+                }
+            }
+            else
+            {
+                MessageBox.Show(_resourceManager.GetString("Message7"));
+            }
+        }
+
+
+        //private bool ValidateFields(ItemDefinition rec)
+        //{
+        //    if (!StringValidator(rec.Item))
+        //    {
+        //        return false;
+        //    }
+        //    if (!StringValidator(rec.Description))
+        //    {
+        //        return false;
+        //    }
+        //    if (!IntegerValidator(rec.LocationMax))
+        //    {
+        //        return false;
+        //    }
+        //    if (!IntegerValidator(rec.LocationMin))
+        //    {
+        //        return false;
+        //    }
+        //    if (!IntegerValidator(rec.SystemMax))
+        //    {
+        //        return false;
+        //    }
+        //    if (!IntegerValidator(rec.SystemMin))
+        //    {
+        //        return false;
+        //    }
+        //    if (!floatValidator(rec.Weight))
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        //private bool floatValidator(float input)
+        //{
+        //    if (input >= 0)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
+        //private bool StringValidator(string input)
+        //{
+        //    string pattern = "[^a-zA-Z]";
+        //    if (Regex.IsMatch(input, pattern))
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
+        ////validate integer 
+        //private bool IntegerValidator(int input)
+        //{
+        //    string pattern = "^[0-9]+$";
+        //    if (Regex.IsMatch(input.ToString(), pattern))
+        //    {
+        //        if (input < 0)
+        //        {
+        //            MessageBox.Show("Entry must be greater than zero.");
+        //            return false;
+        //        }
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
+
+        private bool IsDuplicate(string item)
+        {
+            var rec = _repoItemDefinition.FindBy(f => f.Item == item).FirstOrDefault();
+            if (rec == null) return false;
+            MessageBox.Show($"{_resourceManager.GetString("Message8")}: {rec.Station.Name}", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return true;
+        }
+
+        #region Form Setup
+        private void SetupGrid()
+        {
+            DataGridView1.AutoGenerateColumns = false;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            var w = (DataGridView1.Width - 60) / 10;
+
+            var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationName",
+                HeaderText = "Station",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "StationName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = "Item",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = "Description",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Description"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "UnitOfIssueName",
+                HeaderText = "Unit Of Issue",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "UnitOfIssueName"
+            };
+            DataGridView1.Columns.Add(col);
+
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LocationMax",
+                HeaderText = "Location Max",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "LocationMax"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LocationMin",
+                HeaderText = "Location Min",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "LocationMin"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "SystemMax",
+                HeaderText = "System Max",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "SystemMax"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "SystemMin",
+                HeaderText = "System Min",
+                Visible = true,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "SystemMin"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "SizeCodeName",
+                HeaderText = "Size Code",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "SizeCodeName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "VelocityCodeName",
+                HeaderText = "Velocity Code",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "VelocityCodeName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "HeightCodeName",
+                HeaderText = "Height Code",
+                //AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "HeightCodeName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LocationCodeName",
+                HeaderText = "Location Code",
+                //AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "LocationCodeName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StorageTypeName",
+                HeaderText = "Storage Type",
+                //AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "StorageTypeName"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Weight",
+                HeaderText = "Weight",
+                //AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Weight"
+            };
+            DataGridView1.Columns.Add(col);
+
+            var ckcol = new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Scale",
+                HeaderText = "Scale",
+                //AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Scale"
+            };
+            DataGridView1.Columns.Add(ckcol);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id"
+                ,
+                HeaderText = "Id"
+                ,
+                Visible = false
+                ,
+                Name = "Id"
+            };
+            DataGridView1.Columns.Add(col);
+
+            foreach (DataGridViewColumn column in DataGridView1.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            }
+        }
+
+        private void SetupTabControl()
+        {
+            tabControl1.Appearance = TabAppearance.FlatButtons;
+            tabControl1.ItemSize = new Size(0, 1);
+            tabControl1.SizeMode = TabSizeMode.Fixed;
+            foreach (TabPage tab in tabControl1.TabPages)
+            {
+                tab.Text = string.Empty;
+            }
+        }
+
+        private void SetupNewForm()
+        {
+            LabelFindDescription.Text = "Search any part of Item or Description fields";
+
+            ComboBoxNewSizeCode.DataSource = _repoSizeCode.All();
+            ComboBoxNewSizeCode.DisplayMember = "Name";
+            ComboBoxNewSizeCode.ValueMember = "Id";
+
+            ComboBoxNewVelocityCode.DataSource = _repoVelocityCode.All();
+            ComboBoxNewVelocityCode.DisplayMember = "Name";
+            ComboBoxNewVelocityCode.ValueMember = "Id";
+
+            ComboBoxNewHeightCode.DataSource = _repoHeightCode.All();
+            ComboBoxNewHeightCode.DisplayMember = "Name";
+            ComboBoxNewHeightCode.ValueMember = "Id";
+
+            ComboBoxNewLocationCode.DataSource = _repoLocationCode.All();
+            ComboBoxNewLocationCode.DisplayMember = "Name";
+            ComboBoxNewLocationCode.ValueMember = "Id";
+
+            ComboBoxNewStation.DataSource = _repoStation.All();
+            ComboBoxNewStation.DisplayMember = "Name";
+            ComboBoxNewStation.ValueMember = "Id";
+
+            ComboBoxNewStorageType.DataSource = _repoStorageType.All();
+            ComboBoxNewStorageType.DisplayMember = "Name";
+            ComboBoxNewStorageType.ValueMember = "Id";
+
+            ComboBoxNewUnitOfIssue.DataSource = _repoUnitOfIssue.All();
+            ComboBoxNewUnitOfIssue.DisplayMember = "Name";
+            ComboBoxNewUnitOfIssue.ValueMember = "Id";
+        }
+
+        private void SetupViewEditForm()
+        {
+            LabelFindDescription.Text = "Search any part of Item or Description fields";
+
+            ComboBoxViewEditSizeCode.DataSource = _repoSizeCode.All();
+            ComboBoxViewEditSizeCode.DisplayMember = "Name";
+            ComboBoxViewEditSizeCode.ValueMember = "Id";
+
+            ComboBoxViewEditVelocityCode.DataSource = _repoVelocityCode.All();
+            ComboBoxViewEditVelocityCode.DisplayMember = "Name";
+            ComboBoxViewEditVelocityCode.ValueMember = "Id";
+
+            ComboBoxViewEditHeightCode.DataSource = _repoHeightCode.All();
+            ComboBoxViewEditHeightCode.DisplayMember = "Name";
+            ComboBoxViewEditHeightCode.ValueMember = "Id";
+
+            ComboBoxViewEditLocationCode.DataSource = _repoLocationCode.All();
+            ComboBoxViewEditLocationCode.DisplayMember = "Name";
+            ComboBoxViewEditLocationCode.ValueMember = "Id";
+
+            ComboBoxViewEditStation.DataSource = _repoStation.All();
+            ComboBoxViewEditStation.DisplayMember = "Name";
+            ComboBoxViewEditStation.ValueMember = "Id";
+
+            ComboBoxViewEditStorageType.DataSource = _repoStorageType.All();
+            ComboBoxViewEditStorageType.DisplayMember = "Name";
+            ComboBoxViewEditStorageType.ValueMember = "Id";
+
+            ComboBoxViewEditUnitOfIssue.DataSource = _repoUnitOfIssue.All();
+            ComboBoxViewEditUnitOfIssue.DisplayMember = "Name";
+            ComboBoxViewEditUnitOfIssue.ValueMember = "Id";
+        }
+        #endregion
+
+        #region Return Key Functions
+        private void TextBoxNewItem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxNewDescription.Focus();
+            }
+        }
+
+        private void TextBoxNewDescription_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxNewLocationMax.Focus();
+            }
+        }
+
+        private void TextBoxNewLocationMax_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxNewLocationMin.Focus();
+            }
+        }
+
+        private void TextBoxNewLocationMin_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxNewSystemMax.Focus();
+            }
+        }
+
+        private void TextBoxNewSystemMax_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxNewSizeCode.Focus();
+            }
+        }
+
+        private void ComboBoxNewSizeCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxNewVelocityCode.Focus();
+            }
+        }
+
+        private void ComboBoxNewVelocityCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxNewHeightCode.Focus();
+            }
+        }
+
+        private void ComboBoxNewHeightCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxNewDescription.Focus();
+            }
+        }
+
+        private void TextBoxViewEditItem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxViewEditDescription.Focus();
+            }
+        }
+
+        private void TextBoxViewEditDescription_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxViewEditLocationMax.Focus();
+            }
+        }
+
+        private void TextBoxViewEditLocationMax_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxViewEditLocationMin.Focus();
+            }
+        }
+
+        private void TextBoxViewEditLocationMin_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxViewEditSystemMax.Focus();
+            }
+        }
+
+        private void TextBoxViewEditSystemMax_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxViewEditSizeCode.Focus();
+            }
+        }
+
+        private void ComboBoxViewEditSizeCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxViewEditVelocityCode.Focus();
+            }
+        }
+
+        private void ComboBoxViewEditVelocityCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxViewEditHeightCode.Focus();
+            }
+        }
+
+        private void ComboBoxViewEditHeightCode_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Return)
+            {
+                ComboBoxViewEditLocationCode.Focus();
+            }
+        }
+
+        private void ComboBoxViewEditLocationCode_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Return)
+            {
+                TextBoxViewEditItem.Focus();
+            }
+        }
+
+        private void tabControl1_Enter(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex != 1)
+            {
+            }
+            else
+            {
+                TextBoxViewEditItem.Focus();
+            }
+
+            if (tabControl1.SelectedIndex == 2)
+            {
+                TextBoxNewItem.Focus();
+            }
+        }
+        #endregion
+
+        private void MbViewEditDelete_Click(object sender, EventArgs e)
+        {
+            var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
+            if (CheckForInventory(id)) return;
+            _repoItemDefinition.Delete(id);
+            TextBoxFind.Text = string.Empty;
+            RefreshData();
+            TextBoxFind.Focus();
+            tabControl1.SelectedTab = Listing;
+        }
+
+        private bool CheckForInventory(int id)
+        {
+            var recs = _repoInventory.FindBy(r => r.ItemDefinitionId == id).ToList();
+            if (recs.Count <= 0) return false;
+            MessageBox.Show($"{_resourceManager.GetString("Message9")} {recs.Count}");
+            return true;
+        }
+
+        private void TextBoxNewItem_Leave(object sender, EventArgs e)
+        {
+            if (!IsDuplicate(TextBoxNewItem.Text)) return;
+            TextBoxNewItem.Focus();
+            TextBoxNewItem.SelectAll();
+        }
+
+        private void MBPrintItemDefinitions_Click(object sender, EventArgs e)
+        {
+            CsvUtility.SaveToCsv(DataGridView1);
+        }
+
+        private void MbSaveAsDefault_Click(object sender, EventArgs e)
+        {
+            var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
+            var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
+            var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
+            var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
+            var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
+            var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
+          
+            var rec = new ItemDefinition()
+            {
+                StationId = stationId,
+                Item = string.Empty,
+                Description = string.Empty,
+                LocationMax = IntegerExtensions.ParseInt((locationMax)),
+                LocationMin = IntegerExtensions.ParseInt((locationMin)),
+                SystemMax = IntegerExtensions.ParseInt((systemMax)),
+                SystemMin = IntegerExtensions.ParseInt((systemMin)),
+                SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
+                VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
+                HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
+                LocationCodeId = ((LocationCode)ComboBoxNewLocationCode.SelectedItem).Id,
+                StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
+                UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
+                Weight = float.Parse(weight),
+                Scale = CheckBoxNewScale.Checked
+            };
+
+            try
+            {
+                _jsonData.SaveFile(rec);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{_resourceManager.GetString("Message10")}{Environment.NewLine}" +
+                                $"{ex.Message}{ex.InnerException}");
+            }
+            NewItem();
+        }
+
+        private void MbLoadDefault_Click(object sender, EventArgs e)
+        {
+            MbNewSave.Enabled = false;
+            MbSaveAsDefault.Enabled = true;
+            TextBoxNewItem.Visible = false;
+            TextBoxNewDescription.Visible = false;
+            LabelNewDescription.Visible = false;
+            LabelNewItem.Visible = false;
+
+            var item = _jsonData.LoadFile<ItemDefinition>();
+            ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
+            TextBoxNewItem.Text = string.Empty;
+            TextBoxNewDescription.Text = string.Empty;
+            TextBoxNewLocationMax.Text = string.IsNullOrEmpty(item.LocationMax.ToString()) ? "0" : item.LocationMax.ToString();                // item.LocationMax.ToString();
+            TextBoxNewLocationMin.Text = string.IsNullOrEmpty(item.LocationMin.ToString()) ? "0" : item.LocationMin.ToString();
+            TextBoxNewSystemMax.Text = string.IsNullOrEmpty(item.SystemMax.ToString()) ? "0" : item.SystemMax.ToString();
+            TextBoxNewSystemMin.Text = string.IsNullOrEmpty(item.SystemMin.ToString()) ? "0" : item.SystemMin.ToString();
+            ComboBoxNewSizeCode.SelectedValue = string.IsNullOrEmpty(item.SizeCodeId.ToString())
+                ? ((SizeCode)ComboBoxNewSizeCode.Items[0]).Id
+                : item.SizeCodeId;
+            ComboBoxNewVelocityCode.SelectedValue = string.IsNullOrEmpty(item.VelocityCodeId.ToString())
+                ? ((VelocityCode) ComboBoxNewVelocityCode.Items[0]).Id
+                : item.VelocityCodeId;
+            ComboBoxNewHeightCode.SelectedValue = string.IsNullOrEmpty(item.HeightCodeId.ToString())
+                ? ((HeightCode) ComboBoxNewHeightCode.Items[0]).Id
+                : item.HeightCodeId;
+            ComboBoxNewLocationCode.SelectedValue = string.IsNullOrEmpty(item.LocationCodeId.ToString())
+                ? ((LocationCode) ComboBoxNewLocationCode.Items[0]).Id
+                : item.LocationCodeId;
+            ComboBoxNewStorageType.SelectedValue = string.IsNullOrEmpty(item.StorageTypeId.ToString())
+                ? ((StorageType) ComboBoxNewStorageType.Items[0]).Id
+                : item.StorageTypeId;
+            ComboBoxNewUnitOfIssue.SelectedValue = string.IsNullOrEmpty(item.UnitOfIssueId.ToString())
+                ? ((UnitOfIssue) ComboBoxNewUnitOfIssue.Items[0]).Id
+                : item.UnitOfIssueId;
+
+            TextBoxNewWeight.Text = string.IsNullOrEmpty(item.Weight.ToString(CultureInfo.InvariantCulture))
+                ? "0"
+                : item.Weight.ToString(CultureInfo.InvariantCulture);
+            CheckBoxNewScale.Checked = item.Scale;
+        }
+
+        private void CheckBoxAllStations_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void FrmItemDefinitions_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !CloseButtonPressed;
+        }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmItemDefinitions",
+               resourceDir: languageDirectory, usingResourceSet: null);
+                _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+
+                LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
+                LabelFormTitle.Text = _resourceManager.GetString("ItemDefinitions");
+                CheckBoxAllStations.Text = _resourceManager.GetString("AllStations");
+                LabelFindDescription.Text = _resourceManager.GetString("SearchFor");
+                MButtonNew.Text = _resourceManager.GetString("New");
+                MBPrintItemDefinitions.Text = _resourceManager.GetString("SaveToFile");
+                MButtonViewEdit.Text = _resourceManager.GetString("View/Edit");
+                MButtonClose.Text = _resourceManager.GetString("Home");
+                MButtonSearch.Text = _resourceManager.GetString("Search");
+                LabelAction.Text = _resourceManager.GetString("View/Edit");
+                MbViewEditListing.Text = _resourceManager.GetString("Listing");
+                MbViewEditDelete.Text = _resourceManager.GetString("Delete");
+                MbViewEditClose.Text = _resourceManager.GetString("Back");
+                MbViewEditSave.Text = _resourceManager.GetString("Save");
+                LabelViewEditWeight.Text = _resourceManager.GetString("Weight");
+                CheckBoxViewEditScale.Text = _resourceManager.GetString("UseScale");
+                LabelViewEditUnitOfIssue.Text = _resourceManager.GetString("UnitOfIssue");
+                LabelViewEditStorageType.Text = _resourceManager.GetString("StorageType");
+                LabelViewEditLocation.Text = _resourceManager.GetString("Location");
+                LabelViewEditHeight.Text = _resourceManager.GetString("Height");
+                LabelViewEditVelocity.Text = _resourceManager.GetString("Velocity");
+                LabelViewEditSystemMin.Text = _resourceManager.GetString("SystemMin");
+                LabelViewEditSize.Text = _resourceManager.GetString("Size");
+                LabelViewEditSystemMax.Text = _resourceManager.GetString("SystemMax");
+                LabelViewEditLocationMin.Text = _resourceManager.GetString("LocationMin");
+                LabelViewEditLocationMax.Text = _resourceManager.GetString("LocationMax");
+                LabelViewEditDexcription.Text = _resourceManager.GetString("Description");
+                LabelViewEditItem.Text = _resourceManager.GetString("Item");
+                LabelViewEditStation.Text = _resourceManager.GetString("Station");
+                LabelActionNew.Text = _resourceManager.GetString("New");
+                MbNewListing.Text = _resourceManager.GetString("Listing");
+                MbLoadDefault.Text = _resourceManager.GetString("LoadDefault");
+                MbSaveAsDefault.Text = _resourceManager.GetString("SaveAsDefault");
+                MbNewViewEdit.Text = _resourceManager.GetString("View/Edit");
+                MbNewClose.Text = _resourceManager.GetString("Back");
+                MbNewSave.Text = _resourceManager.GetString("Save");
+                LabelNewLocation.Text = _resourceManager.GetString("Location");
+                LabelNewUnitOfIssue.Text = _resourceManager.GetString("UnitOfIssue");
+                LabelNewStorageType.Text = _resourceManager.GetString("StorageType");
+                LabelNewWeight.Text = _resourceManager.GetString("Weight");
+                CheckBoxNewScale.Text = _resourceManager.GetString("UseScale");
+                LabelNewSystemMin.Text = _resourceManager.GetString("SystemMin");
+                LabelNewHeight.Text = _resourceManager.GetString("Height");
+                LabelNewVelocity.Text = _resourceManager.GetString("Velocity");
+                LabelNewSize.Text = _resourceManager.GetString("Size");
+                LabelNewSystemMax.Text = _resourceManager.GetString("SystemMax");
+                LabelNewLocationMin.Text = _resourceManager.GetString("LocationMin");
+                LabelNewLocationMax.Text = _resourceManager.GetString("LocationMax");
+                LabelNewDescription.Text = _resourceManager.GetString("Description");
+                LabelNewItem.Text = _resourceManager.GetString("Item");
+                LabelNewStation.Text = _resourceManager.GetString("Station");
+                LabelNewDefaultImage.Text = _resourceManager.GetString("DefaultImage");
+                LabelViewEditDefaultImage.Text = _resourceManager.GetString("DefaultImage");
+                //_resourceManager.GetString("Message0");
+                //_resourceManager.GetString("Message1");
+                //_resourceManager.GetString("Message2");
+                //_resourceManager.GetString("Message3");
+                //_resourceManager.GetString("Message4");
+                //_resourceManager.GetString("Message5");
+                //_resourceManager.GetString("Message6");
+                //_resourceManager.GetString("Message7");
+                //_resourceManager.GetString("Message8");
+                //_resourceManager.GetString("Message9");
+                //_resourceManager.GetString("Message10");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
+    }
+}

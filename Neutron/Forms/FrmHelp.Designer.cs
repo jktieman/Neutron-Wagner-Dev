@@ -56,7 +56,7 @@
             this.mlUserInfo.Name = "mlUserInfo";
             this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
             this.mlUserInfo.TabIndex = 24;
-            this.mlUserInfo.Text = "Login ?";
+            this.mlUserInfo.Text = "Login";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelFormHeaderText
@@ -90,7 +90,7 @@
             this.MBMainClose.Name = "MBMainClose";
             this.MBMainClose.Size = new System.Drawing.Size(177, 68);
             this.MBMainClose.TabIndex = 29;
-            this.MBMainClose.Text = "< Home";
+            this.MBMainClose.Text = " Home";
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
             // 

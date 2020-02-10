@@ -17,7 +17,7 @@ namespace NeutronData.Models
         public int BaudRate { get; set; }
         public Parity Parity { get; set; }
         public int DataBits { get; set; }
-        public StopBits StopBits { get; set; }
+        public int StopBits { get; set; }
         public int DeviceCount { get; set; }
         public int LogLevel { get; set; }
         public int NotificationTimeout { get; set; }

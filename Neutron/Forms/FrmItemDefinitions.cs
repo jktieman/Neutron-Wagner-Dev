@@ -1,4 +1,4 @@
-﻿using Equin.ApplicationFramework;
+using Equin.ApplicationFramework;
 using MetroFramework.Forms;
 using Neutron.Global;
 using NeutronData.DataContexts;
@@ -17,25 +17,28 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronData.ModelViews;
-using NeutronCore.Extensions;
 using NeutronData.Models.Lookups;
 using Neutron.Classes;
 using JsonManager;
 using NeutronCore.Global;
 using System.Diagnostics;
 using System.Globalization;
+using System.Resources;
+using System.Threading;
 using AlliedLogger;
 using Microsoft.VisualBasic;
+using Neutron.Extensions;
 using NeutronCore;
 using NeutronData.Interfaces;
-
-
+using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
 namespace Neutron.Forms
 {
     public partial class FrmItemDefinitions : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
+        private ResourceManager _gridResourceManager;
         private readonly BindingSource _bindingSource = new BindingSource();
-
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
@@ -47,17 +50,20 @@ namespace Neutron.Forms
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
-
         DynamicLogger _logger;
         readonly IJsonData _jsonData;
         private readonly StationView _station;
-
         private readonly IAkaRepository _akaRepository;
         public bool CloseButtonPressed { get; set; }
-
+        private BackgroundWorker _dgvColumnWidthSizer;
         public FrmItemDefinitions(IJsonData jsonData, StationView station, IAkaRepository akaRepository)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
+            _dgvColumnWidthSizer = new BackgroundWorker();
+            _dgvColumnWidthSizer.DoWork += DgvColumnWidthSizerOnDoWork;
+            _dgvColumnWidthSizer.RunWorkerCompleted += DgvColumnWidthSizerOnRunWorkerCompleted;
             KeyPreview = true;
             this._station = station;
             _logger = CreateLog();
@@ -73,12 +79,58 @@ namespace Neutron.Forms
             {
                 CheckBoxAllStations.Checked = true;
             }
-
             SetupViewEditBindings();
             RefreshData();
             //this.AutoValidate = AutoValidate.Disable;
         }
-
+        private void DgvColumnWidthSizerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SetAutoSizeColumnsWidth(DataGridView1, (int[])e.Result);
+        }
+        private void DgvColumnWidthSizerOnDoWork(object sender, DoWorkEventArgs e)
+        {
+            e.Result = GetAutoSizeColumnsWidth(DataGridView1);
+        }
+        private int[] GetAutoSizeColumnsWidth(DataGridView grid)
+        {
+            var src = ((IEnumerable)grid.DataSource)
+                .Cast<object>()
+                .Select(x => x.GetType()
+                    .GetProperties()
+                    .Select(p => p.GetValue(x, null)?.ToString() ?? string.Empty)
+                    .ToArray()
+                );
+            int[] widths = new int[grid.Columns.Count];
+            // Iterate through the columns.
+            for (int i = 0; i < grid.Columns.Count; i++)
+            {
+                // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
+                string[] colStringCollection = src.Where(r => r[i] != null).Select(r => r[i].ToString()).ToArray();
+                // Sort the string array by string lengths.
+                colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
+                // Get the last and longest string in the array.
+                string longestColString = colStringCollection.Last();
+                // Use the graphics object to measure the string size.
+                var colWidth = TextRenderer.MeasureText(longestColString, grid.Font);
+                // If the calculated width is larger than the column header width, set the new column width.
+                if (colWidth.Width > grid.Columns[i].HeaderCell.Size.Width)
+                {
+                    widths[i] = (int)colWidth.Width;
+                }
+                else // Otherwise, set the column width to the header width.
+                {
+                    widths[i] = grid.Columns[i].HeaderCell.Size.Width;
+                }
+            }
+            return widths;
+        }
+        public void SetAutoSizeColumnsWidth(DataGridView grid, int[] widths)
+        {
+            for (int i = 0; i < grid.Columns.Count; i++)
+            {
+                grid.Columns[i].Width = widths[i];
+            }
+        }
         private DynamicLogger CreateLog()
         {
             var logFileDir = LoaderSettings.GetLogFileDirectory();
@@ -87,12 +139,6 @@ namespace Neutron.Forms
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             return _logger;
         }
-
-        private void FrmItemDefinitions_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void RefreshData(int recId = 0)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -100,13 +146,11 @@ namespace Neutron.Forms
             var findWhat = TextBoxFind.Text.ToLower().Trim();
             var find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
-
             var views = CheckBoxAllStations.Checked ? _itemDefinitionsRepository.FindItemDefinitionViews(find) : _itemDefinitionsRepository.FindItemDefinitionViewsByStation(find, _station.StationId);
             var bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
-
             _bindingSource.DataSource = bindingSourceItemDefinitionViewEquin;
-
-            DataGridView1.DataSource = _bindingSource;
+            //_bindingSource.DataSource = views.ToList();
+            DataGridView1.DataSource = _bindingSource.DataSource;
             if (GetRecordCount(_bindingSource) > 0)
             {
                 if (recId != 0)
@@ -118,9 +162,11 @@ namespace Neutron.Forms
                 DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
                 DataGridView1.Rows[idx].Selected = true;
             }
-            Cursor.Current = Cursors.Default;
+            DataGridView1.Columns[2].Width = 300;
+            //MessageBox.Show($"Elasped Time: {time}");
+            //_dgvColumnWidthSizer.RunWorkerAsync();
+            DataGridView1.FastAutoSizeColumns();
         }
-
         public int IndexOf(BindingSource bindingSource, int value)
         {
             var count = bindingSource.Count;
@@ -136,7 +182,6 @@ namespace Neutron.Forms
             }
             return itemIndex;
         }
-
         private void SetupViewEditBindings()
         {
             TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
@@ -156,33 +201,26 @@ namespace Neutron.Forms
             ComboBoxViewEditUnitOfIssue.DataBindings.Add("SelectedValue", _bindingSource, "UnitOfIssueId");
             TextBoxViewEditWeight.DataBindings.Add("Text", _bindingSource, "Weight");
             CheckBoxViewEditScale.DataBindings.Add("Checked", _bindingSource, "Scale", false, DataSourceUpdateMode.OnPropertyChanged);
-
         }
-
         private int GetRecordCount(BindingSource bindingSource)
         {
             var count = bindingSource.Count;
-            LabelRecordCount.Text = $"Records: {count.ToString()}";
+            LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
             return count;
         }
-
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-
             //tabControl1.SelectedTab = tabPage2;
         }
-
         #region Find Functions
         private void MButtonFind_Click(object sender, EventArgs e)
         {
             RefreshData();
         }
-
         private void FindRecord(string s)
         {
             RefreshData();
         }
-
         private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -191,7 +229,6 @@ namespace Neutron.Forms
             }
         }
         #endregion
-
         #region Button Clicks
         private void ButtonClear_Click(object sender, EventArgs e)
         {
@@ -199,40 +236,35 @@ namespace Neutron.Forms
             RefreshData();
             TextBoxFind.Focus();
         }
-
         private void MButtonClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
             // this.Close();
         }
-
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
             // Check Inventory and OrderDetails for this item
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
             //var id = TextBoxViewEditId.Text.ParseInt();
             var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == id).ToList();
-            var msg = $"There are {recs.Count} inventory locations. {Environment.NewLine}";
+            var msg = $"{recs.Count} {_resourceManager.GetString("Message14")} {Environment.NewLine}";
             var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == id && r.LineStatusId != 6).ToList();
-            msg += $"There are {recs2.Count} lines to be picked from this station. {Environment.NewLine}";
+            msg += $"{recs2.Count} {_resourceManager.GetString("Message13")}{Environment.NewLine}";
             if (recs.Count == 0)
             {
                 ComboBoxViewEditStation.Enabled = true;
                 LabelViewEditChangeStationWarning.ForeColor = Color.Green;
-                msg += "Moving the Item Definition is Allowed.";
+                msg += _resourceManager.GetString("Message11");
             }
             else
             {
                 ComboBoxViewEditStation.Enabled = false;
                 LabelViewEditChangeStationWarning.ForeColor = Color.Red;
-                msg += "Moving the Item Definition is Not Allowed.";
+                msg += _resourceManager.GetString("Message12");
             }
-
             LabelViewEditChangeStationWarning.Text = msg;
-
             tabControl1.SelectedTab = ViewEdit;
         }
-
         private void MButtonNew_Click(object sender, EventArgs e)
         {
             NewItem();
@@ -253,16 +285,14 @@ namespace Neutron.Forms
             //CheckBoxNewScale.Checked = false;
             //tabControl1.SelectedTab = New;
         }
-
         private void NewItem()
         {
             MbNewSave.Enabled = true;
             MbSaveAsDefault.Enabled = false;
             TextBoxNewItem.Visible = true;
             TextBoxNewDescription.Visible = true;
-            label16.Visible = true;
-            label17.Visible = true;
-
+            LabelNewDescription.Visible = true;
+            LabelNewItem.Visible = true;
             var item = _jsonData.LoadFile<ItemDefinition>();
             ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
             TextBoxNewItem.Text = string.Empty;
@@ -289,59 +319,49 @@ namespace Neutron.Forms
             ComboBoxNewUnitOfIssue.SelectedValue = string.IsNullOrEmpty(item.UnitOfIssueId.ToString())
                 ? ((UnitOfIssue)ComboBoxNewUnitOfIssue.Items[0]).Id
                 : item.UnitOfIssueId;
-
             TextBoxNewWeight.Text = string.IsNullOrEmpty(item.Weight.ToString(CultureInfo.InvariantCulture))
                 ? "0"
                 : item.Weight.ToString(CultureInfo.InvariantCulture);
             CheckBoxNewScale.Checked = item.Scale;
             tabControl1.SelectedTab = New;
         }
-
         private void MbViewEditListing_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = Listing;
         }
-
         private void MbViewEditNew_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = New;
         }
-
         private void MbViewEditClose_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = Listing;
         }
-
         private void MbViewEditSave_Click(object sender, EventArgs e)
         {
             MbViewEditSave.Enabled = false;
             UpdateViewEdit();
             MbViewEditSave.Enabled = true;
         }
-
         private void MbNewListing_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = Listing;
         }
-
         private void MbNewViewEdit_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = ViewEdit;
         }
-
         private void MbNewSave_Click(object sender, EventArgs e)
         {
             MbNewSave.Enabled = false;
             SaveNew();
             MbNewSave.Enabled = true;
         }
-
         private void MbNewClose_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = Listing;
         }
         #endregion
-
         private void SaveNew()
         {
             var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
@@ -364,10 +384,10 @@ namespace Neutron.Forms
                             StationId = stationId,
                             Item = item,
                             Description = description,
-                            LocationMax = (locationMax).ParseInt(),
-                            LocationMin = (locationMin).ParseInt(),
-                            SystemMax = (systemMax).ParseInt(),
-                            SystemMin = (systemMin).ParseInt(),
+                            LocationMax = IntegerExtensions.ParseInt((locationMax)),
+                            LocationMin = IntegerExtensions.ParseInt((locationMin)),
+                            SystemMax = IntegerExtensions.ParseInt((systemMax)),
+                            SystemMin = IntegerExtensions.ParseInt((systemMin)),
                             SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
                             VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
                             HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
@@ -377,34 +397,32 @@ namespace Neutron.Forms
                             Weight = float.Parse(weight),
                             Scale = CheckBoxNewScale.Checked
                         };
-
                         try
                         {
                             _repoItemDefinition.Insert(rec);
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error Inserting Item Definition.  " + ex.Message + "\n\r" + ex.InnerException);
+                            MessageBox.Show($"{_resourceManager.GetString("Message0")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
                         }
                         RefreshData(rec.Id);
                         tabControl1.SelectedTab = Listing;
                     }
                     else
                     {
-                        MessageBox.Show($"Item Definition already exists on Station: {itemDef.Station.Name}.", "Duplicate Entry", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"{_resourceManager.GetString("Message1")}: {itemDef.Station.Name}.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Entry.  Field can not be blank.");
+                    MessageBox.Show(_resourceManager.GetString("Message2"));
                 }
             }
             else
             {
-                MessageBox.Show("Invalid Entry.  Field can not be blank.");
+                MessageBox.Show(_resourceManager.GetString("Message3"));
             }
         }
-
         private void UpdateViewEdit()
         {
             int stationNumber = 1;
@@ -429,14 +447,13 @@ namespace Neutron.Forms
                     var itemDef = _repoItemDefinition.FindByKey(id);
                     if (itemDef != null)
                     {
-
                         itemDef.StationId = stationId;
                         itemDef.Item = item;
                         itemDef.Description = description;
-                        itemDef.LocationMax = (locationMax).ParseInt();
-                        itemDef.LocationMin = (locationMin).ParseInt();
-                        itemDef.SystemMax = (systemMax).ParseInt();
-                        itemDef.SystemMin = (systemMin).ParseInt();
+                        itemDef.LocationMax = IntegerExtensions.ParseInt((locationMax));
+                        itemDef.LocationMin = IntegerExtensions.ParseInt((locationMin));
+                        itemDef.SystemMax = IntegerExtensions.ParseInt((systemMax));
+                        itemDef.SystemMin = IntegerExtensions.ParseInt((systemMin));
                         itemDef.SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
                         itemDef.VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
                         itemDef.HeightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
@@ -445,11 +462,9 @@ namespace Neutron.Forms
                         itemDef.UnitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
                         itemDef.Weight = float.Parse(weight);
                         itemDef.Scale = CheckBoxViewEditScale.Checked;
-
                         try
                         {
                             _repoItemDefinition.Update(itemDef);
-
                             var recs = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != 6).ToList();
                             foreach (var rec in recs)
                             {
@@ -459,28 +474,26 @@ namespace Neutron.Forms
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error Updating Item Definition.  " + ex.Message + "\n\r" + ex.InnerException);
+                            MessageBox.Show($"{_resourceManager.GetString("Message4")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
                         }
                         RefreshData(itemDef.Id);
                         tabControl1.SelectedTab = Listing;
                     }
                     else
                     {
-                        MessageBox.Show("Item Definition already exists.", "Duplicate Entry", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(_resourceManager.GetString("Message5"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Entry.  Field can not be blank.");
+                    MessageBox.Show(_resourceManager.GetString("Message6"));
                 }
             }
             else
             {
-                MessageBox.Show("Invalid Entry.  Field can not be blank.");
+                MessageBox.Show(_resourceManager.GetString("Message7"));
             }
         }
-
-
         //private bool ValidateFields(ItemDefinition rec)
         //{
         //    if (!StringValidator(rec.Item))
@@ -513,7 +526,6 @@ namespace Neutron.Forms
         //    }
         //    return true;
         //}
-
         //private bool floatValidator(float input)
         //{
         //    if (input >= 0)
@@ -522,7 +534,6 @@ namespace Neutron.Forms
         //    }
         //    return false;
         //}
-
         //private bool StringValidator(string input)
         //{
         //    string pattern = "[^a-zA-Z]";
@@ -553,196 +564,154 @@ namespace Neutron.Forms
         //        return false;
         //    }
         //}
-
         private bool IsDuplicate(string item)
         {
             var rec = _repoItemDefinition.FindBy(f => f.Item == item).FirstOrDefault();
             if (rec == null) return false;
-            MessageBox.Show($"Record already exists on Station: {rec.Station.Name}.", "Duplicate Entry", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"{_resourceManager.GetString("Message8")}: {rec.Station.Name}", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return true;
         }
-
         #region Form Setup
         private void SetupGrid()
         {
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-
             var w = (DataGridView1.Width - 60) / 10;
-
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationName",
-                HeaderText = "Station",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("StationName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "StationName"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = "Item",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("Item"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = "Description",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("Description"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Description"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UnitOfIssueName",
-                HeaderText = "Unit Of Issue",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("UnitOfIssueName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "UnitOfIssueName"
             };
             DataGridView1.Columns.Add(col);
-
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMax",
-                HeaderText = "Location Max",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("LocationMax"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationMax"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMin",
-                HeaderText = "Location Min",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("LocationMin"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationMin"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMax",
-                HeaderText = "System Max",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("SystemMax"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SystemMax"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMin",
-                HeaderText = "System Min",
+                HeaderText = _gridResourceManager.GetString("SystemMin"),
                 Visible = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SystemMin"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
-                HeaderText = "Size Code",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("SizeCodeName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SizeCodeName"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
-                HeaderText = "Velocity Code",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "VelocityCodeName"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
-                HeaderText = "Height Code",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("HeightCodeName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "HeightCodeName"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationCodeName",
-                HeaderText = "Location Code",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("LocationCodeName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationCodeName"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageTypeName",
-                HeaderText = "Storage Type",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("StorageTypeName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "StorageTypeName"
             };
             DataGridView1.Columns.Add(col);
-
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Weight",
-                HeaderText = "Weight",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("Weight"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Weight"
             };
             DataGridView1.Columns.Add(col);
-
             var ckcol = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "Scale",
-                HeaderText = "Scale",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                HeaderText = _gridResourceManager.GetString("Scale"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Scale"
             };
             DataGridView1.Columns.Add(ckcol);
-
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Id"
-                ,
-                HeaderText = "Id"
-                ,
-                Visible = false
-                ,
+                DataPropertyName = "Id",
+                HeaderText = _gridResourceManager.GetString("Id"),
+                Visible = false,
                 Name = "Id"
-                ,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
-
             foreach (DataGridViewColumn column in DataGridView1.Columns)
             {
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
         }
-
         private void SetupTabControl()
         {
             tabControl1.Appearance = TabAppearance.FlatButtons;
@@ -753,74 +722,57 @@ namespace Neutron.Forms
                 tab.Text = string.Empty;
             }
         }
-
         private void SetupNewForm()
         {
-            LabelFindDescription.Text = "Search any part of Item or Description fields";
-
+            //LabelFindDescription.Text = "Search any part of Item or Description fields";
             ComboBoxNewSizeCode.DataSource = _repoSizeCode.All();
             ComboBoxNewSizeCode.DisplayMember = "Name";
             ComboBoxNewSizeCode.ValueMember = "Id";
-
             ComboBoxNewVelocityCode.DataSource = _repoVelocityCode.All();
             ComboBoxNewVelocityCode.DisplayMember = "Name";
             ComboBoxNewVelocityCode.ValueMember = "Id";
-
             ComboBoxNewHeightCode.DataSource = _repoHeightCode.All();
             ComboBoxNewHeightCode.DisplayMember = "Name";
             ComboBoxNewHeightCode.ValueMember = "Id";
-
             ComboBoxNewLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxNewLocationCode.DisplayMember = "Name";
             ComboBoxNewLocationCode.ValueMember = "Id";
-
             ComboBoxNewStation.DataSource = _repoStation.All();
             ComboBoxNewStation.DisplayMember = "Name";
             ComboBoxNewStation.ValueMember = "Id";
-
             ComboBoxNewStorageType.DataSource = _repoStorageType.All();
             ComboBoxNewStorageType.DisplayMember = "Name";
             ComboBoxNewStorageType.ValueMember = "Id";
-
             ComboBoxNewUnitOfIssue.DataSource = _repoUnitOfIssue.All();
             ComboBoxNewUnitOfIssue.DisplayMember = "Name";
             ComboBoxNewUnitOfIssue.ValueMember = "Id";
         }
-
         private void SetupViewEditForm()
         {
-            LabelFindDescription.Text = "Search any part of Item or Description fields";
-
+            //LabelFindDescription.Text = "Search any part of Item or Description fields";
             ComboBoxViewEditSizeCode.DataSource = _repoSizeCode.All();
             ComboBoxViewEditSizeCode.DisplayMember = "Name";
             ComboBoxViewEditSizeCode.ValueMember = "Id";
-
             ComboBoxViewEditVelocityCode.DataSource = _repoVelocityCode.All();
             ComboBoxViewEditVelocityCode.DisplayMember = "Name";
             ComboBoxViewEditVelocityCode.ValueMember = "Id";
-
             ComboBoxViewEditHeightCode.DataSource = _repoHeightCode.All();
             ComboBoxViewEditHeightCode.DisplayMember = "Name";
             ComboBoxViewEditHeightCode.ValueMember = "Id";
-
             ComboBoxViewEditLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxViewEditLocationCode.DisplayMember = "Name";
             ComboBoxViewEditLocationCode.ValueMember = "Id";
-
             ComboBoxViewEditStation.DataSource = _repoStation.All();
             ComboBoxViewEditStation.DisplayMember = "Name";
             ComboBoxViewEditStation.ValueMember = "Id";
-
             ComboBoxViewEditStorageType.DataSource = _repoStorageType.All();
             ComboBoxViewEditStorageType.DisplayMember = "Name";
             ComboBoxViewEditStorageType.ValueMember = "Id";
-
             ComboBoxViewEditUnitOfIssue.DataSource = _repoUnitOfIssue.All();
             ComboBoxViewEditUnitOfIssue.DisplayMember = "Name";
             ComboBoxViewEditUnitOfIssue.ValueMember = "Id";
         }
         #endregion
-
         #region Return Key Functions
         private void TextBoxNewItem_KeyDown(object sender, KeyEventArgs e)
         {
@@ -829,7 +781,6 @@ namespace Neutron.Forms
                 TextBoxNewDescription.Focus();
             }
         }
-
         private void TextBoxNewDescription_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -837,7 +788,6 @@ namespace Neutron.Forms
                 TextBoxNewLocationMax.Focus();
             }
         }
-
         private void TextBoxNewLocationMax_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -845,7 +795,6 @@ namespace Neutron.Forms
                 TextBoxNewLocationMin.Focus();
             }
         }
-
         private void TextBoxNewLocationMin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -853,7 +802,6 @@ namespace Neutron.Forms
                 TextBoxNewSystemMax.Focus();
             }
         }
-
         private void TextBoxNewSystemMax_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -861,7 +809,6 @@ namespace Neutron.Forms
                 ComboBoxNewSizeCode.Focus();
             }
         }
-
         private void ComboBoxNewSizeCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -869,7 +816,6 @@ namespace Neutron.Forms
                 ComboBoxNewVelocityCode.Focus();
             }
         }
-
         private void ComboBoxNewVelocityCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -877,7 +823,6 @@ namespace Neutron.Forms
                 ComboBoxNewHeightCode.Focus();
             }
         }
-
         private void ComboBoxNewHeightCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -885,7 +830,6 @@ namespace Neutron.Forms
                 TextBoxNewDescription.Focus();
             }
         }
-
         private void TextBoxViewEditItem_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -893,7 +837,6 @@ namespace Neutron.Forms
                 TextBoxViewEditDescription.Focus();
             }
         }
-
         private void TextBoxViewEditDescription_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -901,7 +844,6 @@ namespace Neutron.Forms
                 TextBoxViewEditLocationMax.Focus();
             }
         }
-
         private void TextBoxViewEditLocationMax_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -909,7 +851,6 @@ namespace Neutron.Forms
                 TextBoxViewEditLocationMin.Focus();
             }
         }
-
         private void TextBoxViewEditLocationMin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -917,7 +858,6 @@ namespace Neutron.Forms
                 TextBoxViewEditSystemMax.Focus();
             }
         }
-
         private void TextBoxViewEditSystemMax_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -925,7 +865,6 @@ namespace Neutron.Forms
                 ComboBoxViewEditSizeCode.Focus();
             }
         }
-
         private void ComboBoxViewEditSizeCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -933,7 +872,6 @@ namespace Neutron.Forms
                 ComboBoxViewEditVelocityCode.Focus();
             }
         }
-
         private void ComboBoxViewEditVelocityCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -941,25 +879,20 @@ namespace Neutron.Forms
                 ComboBoxViewEditHeightCode.Focus();
             }
         }
-
         private void ComboBoxViewEditHeightCode_KeyDown(object sender, KeyEventArgs e)
         {
-
             if (e.KeyCode == Keys.Return)
             {
                 ComboBoxViewEditLocationCode.Focus();
             }
         }
-
         private void ComboBoxViewEditLocationCode_KeyDown(object sender, KeyEventArgs e)
         {
-
             if (e.KeyCode == Keys.Return)
             {
                 TextBoxViewEditItem.Focus();
             }
         }
-
         private void tabControl1_Enter(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex != 1)
@@ -969,14 +902,12 @@ namespace Neutron.Forms
             {
                 TextBoxViewEditItem.Focus();
             }
-
             if (tabControl1.SelectedIndex == 2)
             {
                 TextBoxNewItem.Focus();
             }
         }
         #endregion
-
         private void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
@@ -987,27 +918,23 @@ namespace Neutron.Forms
             TextBoxFind.Focus();
             tabControl1.SelectedTab = Listing;
         }
-
         private bool CheckForInventory(int id)
         {
             var recs = _repoInventory.FindBy(r => r.ItemDefinitionId == id).ToList();
             if (recs.Count <= 0) return false;
-            MessageBox.Show($"Unable to Delete, there is inventory in {recs.Count} locations.");
+            MessageBox.Show($"{_resourceManager.GetString("Message9")} {recs.Count}");
             return true;
         }
-
         private void TextBoxNewItem_Leave(object sender, EventArgs e)
         {
             if (!IsDuplicate(TextBoxNewItem.Text)) return;
             TextBoxNewItem.Focus();
             TextBoxNewItem.SelectAll();
         }
-
         private void MBPrintItemDefinitions_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView1);
         }
-
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
             var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
@@ -1016,16 +943,15 @@ namespace Neutron.Forms
             var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
             var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
             var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
-          
             var rec = new ItemDefinition()
             {
                 StationId = stationId,
                 Item = string.Empty,
                 Description = string.Empty,
-                LocationMax = (locationMax).ParseInt(),
-                LocationMin = (locationMin).ParseInt(),
-                SystemMax = (systemMax).ParseInt(),
-                SystemMin = (systemMin).ParseInt(),
+                LocationMax = IntegerExtensions.ParseInt((locationMax)),
+                LocationMin = IntegerExtensions.ParseInt((locationMin)),
+                SystemMax = IntegerExtensions.ParseInt((systemMax)),
+                SystemMin = IntegerExtensions.ParseInt((systemMin)),
                 SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
                 VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
                 HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
@@ -1035,27 +961,25 @@ namespace Neutron.Forms
                 Weight = float.Parse(weight),
                 Scale = CheckBoxNewScale.Checked
             };
-
             try
             {
                 _jsonData.SaveFile(rec);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Saving Default Item Definition.  " + ex.Message + "\n\r" + ex.InnerException);
+                MessageBox.Show($"{_resourceManager.GetString("Message10")}{Environment.NewLine}" +
+                                $"{ex.Message}{ex.InnerException}");
             }
             NewItem();
         }
-
         private void MbLoadDefault_Click(object sender, EventArgs e)
         {
             MbNewSave.Enabled = false;
             MbSaveAsDefault.Enabled = true;
             TextBoxNewItem.Visible = false;
             TextBoxNewDescription.Visible = false;
-            label16.Visible = false;
-            label17.Visible = false;
-
+            LabelNewDescription.Visible = false;
+            LabelNewItem.Visible = false;
             var item = _jsonData.LoadFile<ItemDefinition>();
             ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
             TextBoxNewItem.Text = string.Empty;
@@ -1068,35 +992,112 @@ namespace Neutron.Forms
                 ? ((SizeCode)ComboBoxNewSizeCode.Items[0]).Id
                 : item.SizeCodeId;
             ComboBoxNewVelocityCode.SelectedValue = string.IsNullOrEmpty(item.VelocityCodeId.ToString())
-                ? ((VelocityCode) ComboBoxNewVelocityCode.Items[0]).Id
+                ? ((VelocityCode)ComboBoxNewVelocityCode.Items[0]).Id
                 : item.VelocityCodeId;
             ComboBoxNewHeightCode.SelectedValue = string.IsNullOrEmpty(item.HeightCodeId.ToString())
-                ? ((HeightCode) ComboBoxNewHeightCode.Items[0]).Id
+                ? ((HeightCode)ComboBoxNewHeightCode.Items[0]).Id
                 : item.HeightCodeId;
             ComboBoxNewLocationCode.SelectedValue = string.IsNullOrEmpty(item.LocationCodeId.ToString())
-                ? ((LocationCode) ComboBoxNewLocationCode.Items[0]).Id
+                ? ((LocationCode)ComboBoxNewLocationCode.Items[0]).Id
                 : item.LocationCodeId;
             ComboBoxNewStorageType.SelectedValue = string.IsNullOrEmpty(item.StorageTypeId.ToString())
-                ? ((StorageType) ComboBoxNewStorageType.Items[0]).Id
+                ? ((StorageType)ComboBoxNewStorageType.Items[0]).Id
                 : item.StorageTypeId;
             ComboBoxNewUnitOfIssue.SelectedValue = string.IsNullOrEmpty(item.UnitOfIssueId.ToString())
-                ? ((UnitOfIssue) ComboBoxNewUnitOfIssue.Items[0]).Id
+                ? ((UnitOfIssue)ComboBoxNewUnitOfIssue.Items[0]).Id
                 : item.UnitOfIssueId;
-
             TextBoxNewWeight.Text = string.IsNullOrEmpty(item.Weight.ToString(CultureInfo.InvariantCulture))
                 ? "0"
                 : item.Weight.ToString(CultureInfo.InvariantCulture);
             CheckBoxNewScale.Checked = item.Scale;
         }
-
         private void CheckBoxAllStations_CheckedChanged(object sender, EventArgs e)
         {
             RefreshData();
         }
-
         private void FrmItemDefinitions_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !CloseButtonPressed;
+        }
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmItemDefinitions",
+               resourceDir: languageDirectory, usingResourceSet: null);
+                _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
+                LabelFormTitle.Text = _resourceManager.GetString("ItemDefinitions");
+                CheckBoxAllStations.Text = _resourceManager.GetString("AllStations");
+                LabelFindDescription.Text = _resourceManager.GetString("SearchFor");
+                MButtonNew.Text = _resourceManager.GetString("New");
+                MBPrintItemDefinitions.Text = _resourceManager.GetString("SaveToFile");
+                MButtonViewEdit.Text = _resourceManager.GetString("View/Edit");
+                MButtonClose.Text = _resourceManager.GetString("Home");
+                MButtonSearch.Text = _resourceManager.GetString("Search");
+                LabelAction.Text = _resourceManager.GetString("View/Edit");
+                MbViewEditListing.Text = _resourceManager.GetString("Listing");
+                MbViewEditDelete.Text = _resourceManager.GetString("Delete");
+                MbViewEditClose.Text = _resourceManager.GetString("Back");
+                MbViewEditSave.Text = _resourceManager.GetString("Save");
+                LabelViewEditWeight.Text = _resourceManager.GetString("Weight");
+                CheckBoxViewEditScale.Text = _resourceManager.GetString("UseScale");
+                LabelViewEditUnitOfIssue.Text = _resourceManager.GetString("UnitOfIssue");
+                LabelViewEditStorageType.Text = _resourceManager.GetString("StorageType");
+                LabelViewEditLocation.Text = _resourceManager.GetString("Location");
+                LabelViewEditHeight.Text = _resourceManager.GetString("Height");
+                LabelViewEditVelocity.Text = _resourceManager.GetString("Velocity");
+                LabelViewEditSystemMin.Text = _resourceManager.GetString("SystemMin");
+                LabelViewEditSize.Text = _resourceManager.GetString("Size");
+                LabelViewEditSystemMax.Text = _resourceManager.GetString("SystemMax");
+                LabelViewEditLocationMin.Text = _resourceManager.GetString("LocationMin");
+                LabelViewEditLocationMax.Text = _resourceManager.GetString("LocationMax");
+                LabelViewEditDexcription.Text = _resourceManager.GetString("Description");
+                LabelViewEditItem.Text = _resourceManager.GetString("Item");
+                LabelViewEditStation.Text = _resourceManager.GetString("Station");
+                LabelActionNew.Text = _resourceManager.GetString("New");
+                MbNewListing.Text = _resourceManager.GetString("Listing");
+                MbLoadDefault.Text = _resourceManager.GetString("LoadDefault");
+                MbSaveAsDefault.Text = _resourceManager.GetString("SaveAsDefault");
+                MbNewViewEdit.Text = _resourceManager.GetString("View/Edit");
+                MbNewClose.Text = _resourceManager.GetString("Back");
+                MbNewSave.Text = _resourceManager.GetString("Save");
+                LabelNewLocation.Text = _resourceManager.GetString("Location");
+                LabelNewUnitOfIssue.Text = _resourceManager.GetString("UnitOfIssue");
+                LabelNewStorageType.Text = _resourceManager.GetString("StorageType");
+                LabelNewWeight.Text = _resourceManager.GetString("Weight");
+                CheckBoxNewScale.Text = _resourceManager.GetString("UseScale");
+                LabelNewSystemMin.Text = _resourceManager.GetString("SystemMin");
+                LabelNewHeight.Text = _resourceManager.GetString("Height");
+                LabelNewVelocity.Text = _resourceManager.GetString("Velocity");
+                LabelNewSize.Text = _resourceManager.GetString("Size");
+                LabelNewSystemMax.Text = _resourceManager.GetString("SystemMax");
+                LabelNewLocationMin.Text = _resourceManager.GetString("LocationMin");
+                LabelNewLocationMax.Text = _resourceManager.GetString("LocationMax");
+                LabelNewDescription.Text = _resourceManager.GetString("Description");
+                LabelNewItem.Text = _resourceManager.GetString("Item");
+                LabelNewStation.Text = _resourceManager.GetString("Station");
+                LabelNewDefaultImage.Text = _resourceManager.GetString("DefaultImage");
+                LabelViewEditDefaultImage.Text = _resourceManager.GetString("DefaultImage");
+                //_resourceManager.GetString("Message0");
+                //_resourceManager.GetString("Message1");
+                //_resourceManager.GetString("Message2");
+                //_resourceManager.GetString("Message3");
+                //_resourceManager.GetString("Message4");
+                //_resourceManager.GetString("Message5");
+                //_resourceManager.GetString("Message6");
+                //_resourceManager.GetString("Message7");
+                //_resourceManager.GetString("Message8");
+                //_resourceManager.GetString("Message9");
+                //_resourceManager.GetString("Message10");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
         }
     }
 }

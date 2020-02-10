@@ -72,6 +72,7 @@
             this.TextBoxChangeQuantityPosition.TabIndex = 2;
             this.TextBoxChangeQuantityPosition.Text = "1";
             this.TextBoxChangeQuantityPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxChangeQuantityPosition.Leave += new System.EventHandler(this.TextBoxChangeQuantityPosition_TextChanged);
             // 
             // MBChangeQuantityCancel
             // 
@@ -118,6 +119,7 @@
             this.TextBoxNewQuantity.TabIndex = 0;
             this.TextBoxNewQuantity.Text = "1";
             this.TextBoxNewQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxNewQuantity.Leave += new System.EventHandler(this.TextBoxNewQuantity_TextChanged);
             // 
             // FrmChangeQuantity
             // 

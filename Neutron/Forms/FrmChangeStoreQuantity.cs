@@ -5,15 +5,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NeutronCore;
 
 namespace Neutron.Forms
 {
     public partial class FrmChangeStoreQuantity : Form
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         public int NewQty { get; set; }
         public int Position { get; set; }
         private int InitialQuantityToBePicked { get; set; }
@@ -21,6 +27,8 @@ namespace Neutron.Forms
         public FrmChangeStoreQuantity( ReplenPickStop pickStop)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             this.pickStop = pickStop;
             foreach (var pickView in pickStop.PickViews)
             {
@@ -101,6 +109,27 @@ namespace Neutron.Forms
             Position = TextBoxChangeQuantityPosition.Text.ParseInt();
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmChangeStoreQuantity",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                LabelChangeQuantityPosition.Text = _resourceManager.GetString("PickPosition");
+                MBChangeQuantityCancel.Text = _resourceManager.GetString("Cancel");
+                MBChangeQuantitySave.Text = _resourceManager.GetString("Save");
+                LabelNewQuantity.Text = _resourceManager.GetString("NewQuantity");
+                this.Text = _resourceManager.GetString("ChangeQuantity");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
+            }
         }
     }
 }

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Globalization;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
 using Neutron.Extensions;
+using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
@@ -10,7 +14,8 @@ namespace Neutron.Forms
 {
     public partial class FrmEditItemDefinition : Form
     {
-
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
 
         private readonly GenericRepository<VelocityCode> _repoVelocityCode =
@@ -38,6 +43,8 @@ namespace Neutron.Forms
         public FrmEditItemDefinition(int id)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             SetupViewEditForm();
             FillForm(id);
         }
@@ -134,5 +141,39 @@ namespace Neutron.Forms
             ComboBoxViewEditUnitOfIssue.DisplayMember = "Name";
             ComboBoxViewEditUnitOfIssue.ValueMember = "Id";
         }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmEditItemDefinition",
+               resourceDir: languageDirectory, usingResourceSet: null);
+                LabelViewEditWeight.Text = _resourceManager.GetString("Weight");
+                CheckBoxViewEditScale.Text = _resourceManager.GetString("UseScale");
+                LabelViewEditUnitOfIssue.Text = _resourceManager.GetString("UnitOfIssue");
+                LabelViewEditStorageType.Text = _resourceManager.GetString("StorageType");
+                LabelViewEditLocation.Text = _resourceManager.GetString("Location");
+                LabelViewEditHeight.Text = _resourceManager.GetString("Height");
+                LabelViewEditVelocity.Text = _resourceManager.GetString("Velocity");
+                LabelViewEditSystemMin.Text = _resourceManager.GetString("SystemMin");
+                LabelViewEditSize.Text = _resourceManager.GetString("Size");
+                LabelViewEditSystemMax.Text = _resourceManager.GetString("SystemMax");
+                LabelViewEditLocationMin.Text = _resourceManager.GetString("LocationMin");
+                LabelViewEditLocationMax.Text = _resourceManager.GetString("LocationMax");
+                LabelViewEditDescription.Text = _resourceManager.GetString("Description");
+                LabelViewEditItem.Text = _resourceManager.GetString("Item");
+                LabelViewEditStation.Text = _resourceManager.GetString("Station");
+                ButtonSave.Text = _resourceManager.GetString("Save");
+                ButtonCancel.Text = _resourceManager.GetString("Cancel");
+                this.Text = _resourceManager.GetString("EditItemDefinition");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
     }
 }

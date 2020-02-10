@@ -6,7 +6,9 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Equin.ApplicationFramework;
@@ -20,6 +22,7 @@ using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.ModelViews;
 using Neutron.Models;
+using NeutronCore;
 using NeutronCore.Global;
 using PrintRequest;
 
@@ -27,6 +30,10 @@ namespace Neutron.Forms
 {
     public partial class FrmProductivity : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
+        private ResourceManager _gridResourceManager;
+        private ResourceManager _enumResourceManager;
         private BindingSource _bindingSourceSummary;
         private BindingSource _bindingSourceDetail;
         private DateTime _fromDate;
@@ -43,6 +50,8 @@ namespace Neutron.Forms
         {
             _jsonData = jsonData;
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             HideTabControlTabs();
             DisableEvents();
 
@@ -144,28 +153,53 @@ namespace Neutron.Forms
 
         private void SetupCheckedListBoxActionCodes()
         {
-
-            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
-                .Select(r => new EnumModel() { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
-
+            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
             var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
-            if (!string.IsNullOrEmpty(currentIds))
+
+            var codes = new Dictionary<int, string>();
+            foreach (var code in actionCodes)
             {
-                var nums = currentIds.Split(',').Select(int.Parse).ToArray();
-                if (nums.Length > 0)
+                if (!string.IsNullOrEmpty(currentIds))
                 {
-                    CheckedListBoxActionCodes.DataSource = actionCodes.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Name).ToList();
-                    CheckedListBoxActionCodes.DisplayMember = "Name";
-                    CheckedListBoxActionCodes.ValueMember = "Id";
+                    var nums = currentIds.Split(',').Select(int.Parse).ToArray();
+                    if (nums.Length > 0)
+                    {
+                        if (nums.Contains((int)code))
+                        {
+                            codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+                        }
+                    }
                 }
             }
-            else
-            {
-                CheckedListBoxActionCodes.DataSource = new BindingSource(actionCodes, null);
-                CheckedListBoxActionCodes.DisplayMember = "Name";
-                CheckedListBoxActionCodes.ValueMember = "Id";
-            }
+            CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
+            CheckedListBoxActionCodes.DisplayMember = "Value";
+            CheckedListBoxActionCodes.ValueMember = "Key";
+
         }
+        //private void SetupCheckedListBoxActionCodes()
+        //{
+
+        //    var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
+        //        .Select(r => new EnumModel() { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
+
+        //    var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+        //    if (!string.IsNullOrEmpty(currentIds))
+        //    {
+        //        var nums = currentIds.Split(',').Select(int.Parse).ToArray();
+        //        if (nums.Length > 0)
+        //        {
+        //            CheckedListBoxActionCodes.DataSource = actionCodes.Where(r => nums.Contains(r.Id)).OrderBy(o => o.Name).ToList();
+        //            CheckedListBoxActionCodes.DisplayMember = "Name";
+        //            CheckedListBoxActionCodes.ValueMember = "Id";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        CheckedListBoxActionCodes.DataSource = new BindingSource(actionCodes, null);
+        //        CheckedListBoxActionCodes.DisplayMember = "Name";
+        //        CheckedListBoxActionCodes.ValueMember = "Id";
+        //    }
+        //}
         #endregion
 
         private void SetupGrids()
@@ -473,27 +507,6 @@ namespace Neutron.Forms
 
         }
 
-
-
-        //private void ButtonCheckAll_Click(object sender, EventArgs e)
-        //{
-        //    SelectAllCheckBoxes(checkThem: true);
-        //}
-
-        //private void ButtonClearAll_Click(object sender, EventArgs e)
-        //{
-        //    SelectAllCheckBoxes(checkThem: false);
-        //}
-
-        //private void SelectAllCheckBoxes(bool checkThem)
-        //{
-        //    for (var i = 0; i <= (CheckedListBoxActionCodes.Items.Count - 1); i++)
-        //    {
-        //        CheckedListBoxActionCodes.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
-        //    }
-        //}
-
-
         private void ButtonCheckAllUsers_Click(object sender, EventArgs e)
         {
             SelectAllUserCheckBoxes(checkThem: true);
@@ -515,7 +528,6 @@ namespace Neutron.Forms
                 CheckedListBoxUsers.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
             }
         }
-
 
         private void ButtonCheckAllActions_Click(object sender, EventArgs e)
         {
@@ -554,9 +566,9 @@ namespace Neutron.Forms
         {
             var codes = new List<string>();
 
-            foreach (EnumModel item in CheckedListBoxActionCodes.CheckedItems)
+            foreach (KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems)
             {
-                codes.Add(item.Id.ToString());
+                codes.Add(item.Key.ToString());
             }
             return codes;
         }
@@ -735,70 +747,6 @@ namespace Neutron.Forms
             return details;
         }
 
-        //public List<HistoryView> GetHistoryRecordsByUser(string empId)
-        //{
-        //    DateTime today = DateTime.Now;
-        //    var fromDate = new DateTime(2015, 1, 1, 23, 59, 59, 999);
-        //    var toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 999);
-        //    string codes = GetCodes();
-        //    string find = string.Empty;
-
-        //    var history = new List<HistoryView>();
-        //    using (var context = new NeutronDb())
-        //    {
-        //        var paramCodes = new SqlParameter("@Codes", codes);
-        //        var paramFromDate = new SqlParameter("@FromDate", fromDate);
-        //        var paramToDate = new SqlParameter("@ToDate", toDate);
-        //        var paramFind = new SqlParameter("@Find", find);
-        //        var parameters = new object[] { paramCodes, paramFromDate, paramToDate, paramFind };
-        //        try
-        //        {
-        //            var hist = context.Database.SqlQuery<HistoryView>("usp_GetHistoryFind @Codes, @FromDate, @ToDate, @Find", parameters);
-        //            if (hist != null)
-        //            {
-        //                history = hist.Where(h => h.EmpId == empId).OrderByDescending(o => o.ActionDateTime).ToList();
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show($"Error Connecting to SQL Server (USER).  {ex.Message} \r\n {ex.InnerException}");
-        //        }
-        //    }
-        //    return history;
-        //}
-
-        //public List<HistoryView> GetHistoryRecords()
-        //{
-        //    DateTime today = DateTime.Now;
-        //    var fromDate = new DateTime(2015, 1, 1, 23, 59, 59, 999);
-        //    var toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 999);
-        //    string codes = GetCodes();
-        //    string find = string.Empty;
-
-        //    var history = new List<HistoryView>();
-        //    using (var context = new NeutronDb())
-        //    {
-        //        var paramCodes = new SqlParameter("@Codes", codes);
-        //        var paramFromDate = new SqlParameter("@FromDate", fromDate);
-        //        var paramToDate = new SqlParameter("@ToDate", toDate);
-        //        var paramFind = new SqlParameter("@Find", find);
-        //        var parameters = new object[] { paramCodes, paramFromDate, paramToDate, paramFind };
-        //        try
-        //        {
-        //            var hist = context.Database.SqlQuery<HistoryView>("usp_GetHistoryFind @Codes, @FromDate, @ToDate, @Find", parameters);
-        //            if (hist != null)
-        //            {
-        //                history = hist.ToList();
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} \r\n {ex.InnerException}");
-        //        }
-        //    }
-        //    return history;
-        //}
-
         public List<ProductivitySummary> GetProductivitySummaryRecords(string codes, DateTime fromDate, DateTime toDate,
             string userIds)
         {
@@ -972,13 +920,13 @@ namespace Neutron.Forms
         private void CheckedListBoxActionCodes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var checkedItems = new List<string>();
-            foreach (EnumModel item in CheckedListBoxActionCodes.CheckedItems)
-                checkedItems.Add(item.Id.ToString());
+            foreach (KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems)
+                checkedItems.Add(item.Key.ToString());
 
             if (e.NewValue == CheckState.Checked)
-                checkedItems.Add(((EnumModel)CheckedListBoxActionCodes.Items[e.Index]).Id.ToString());
+                checkedItems.Add(((KeyValuePair<int, string>)CheckedListBoxActionCodes.Items[e.Index]).Key.ToString());
             else
-                checkedItems.Remove(((EnumModel)CheckedListBoxActionCodes.Items[e.Index]).Id.ToString());
+                checkedItems.Remove(((KeyValuePair<int, string>)CheckedListBoxActionCodes.Items[e.Index]).Key.ToString());
 
             var userIds = GetUserIds();
 
@@ -1063,10 +1011,8 @@ namespace Neutron.Forms
 
         private void CheckedListBoxGroups_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // _groupItemCheckEnabled = true;
-            if (!_formInitialized || !_groupItemCheckEnabled) return;
 
-            
+            if (!_formInitialized || !_groupItemCheckEnabled) return;
 
             if (e.NewValue != CheckState.Checked)
             {
@@ -1084,25 +1030,8 @@ namespace Neutron.Forms
             }
 
             _currentGroup = (ProductivityGroup)CheckedListBoxGroups.SelectedItem;
-           // SetupCheckedListBoxUsers();
             UpdateCheckedListBoxUsers();
             var checkedItems = _currentGroup.UserIdString.CsvIdString.Split(',').ToList();
-
-            //var checkedItems = new List<string>();
-            //foreach (ProductivityGroup item in CheckedListBoxGroups.CheckedItems)
-            //    checkedItems.Add(item.UserIdString.CsvIdString);
-
-
-            //if (e.NewValue == CheckState.Checked)
-            //    checkedItems.Add(((ProductivityGroup)CheckedListBoxGroups.Items[e.Index]).UserIdString.CsvIdString);
-            //else
-            //    checkedItems.Remove(((ProductivityGroup)CheckedListBoxGroups.Items[e.Index]).UserIdString.CsvIdString);
-
-
-
-
-
-
             var codes = GetCodes();
 
             GetData(checkedItems, codes);
@@ -1110,7 +1039,6 @@ namespace Neutron.Forms
 
         private void CheckedListBoxUsers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // _userItemCheckEnabled = true;
 
             if (!_formInitialized || !_userItemCheckEnabled) return;
             var checkedItems = new List<string>();
@@ -1149,5 +1077,55 @@ namespace Neutron.Forms
                 CheckedListBoxUsers.SetItemChecked(i, true);
             }
         }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmProductivity",
+               resourceDir: languageDirectory, usingResourceSet: null);
+                _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                _enumResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "EnumDescriptions",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+
+                ButtonConfigureUsers.Text = _resourceManager.GetString("ConfigureUsers");
+                ButtonClearAllUsers.Text = _resourceManager.GetString("ClearAll");
+                ButtonCheckAllUsers.Text = _resourceManager.GetString("CheckAll");
+                ButtonConfigureActions.Text = _resourceManager.GetString("ConfigureActions");
+                ButtonClearAllActions.Text = _resourceManager.GetString("ClearAll");
+                ButtonCheckAllActions.Text = _resourceManager.GetString("CheckAll");
+                ButtonPrintSummary.Text = _resourceManager.GetString("PrintSummary");
+                LabelTotalOrders.Text = _resourceManager.GetString("TotalOrders");
+                LabelTotalPieces.Text = _resourceManager.GetString("TotalPieces");
+                LabelTotalLines.Text = _resourceManager.GetString("TotalLines");
+                ButtonPrintDetail.Text = _resourceManager.GetString("PrintDetail");
+                LabelTotalOrdersDetail.Text = _resourceManager.GetString("TotalOrders");
+                LabelTotalPiecesDetail.Text = _resourceManager.GetString("TotalPieces");
+                LabelTotalLinesDetail.Text = _resourceManager.GetString("TotalLines");
+                LabelTo.Text = _resourceManager.GetString("To");
+                LabelFrom.Text = _resourceManager.GetString("From");
+                RadioButtonDateRange.Text = _resourceManager.GetString("DateRange");
+                RadioButtonMonth.Text = _resourceManager.GetString("Month");
+                RadioButtonWeek.Text = _resourceManager.GetString("Week");
+                RadioButtonToday.Text = _resourceManager.GetString("Today");
+                MButtonClose.Text = _resourceManager.GetString("Close");
+                MBSaveDetail.Text = _resourceManager.GetString("SaveDetailtoFile");
+                MBSaveSummary.Text = _resourceManager.GetString("SaveSummarytoFile");
+                MButtonRun.Text = _resourceManager.GetString("Refresh");
+                LabelFormTitle.Text = _resourceManager.GetString("Productivity");
+                LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
+                this.Text = _resourceManager.GetString("Productivity");
+                _resourceManager.GetString("Message0");
+                _resourceManager.GetString("Message1");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
     }
 }

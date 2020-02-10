@@ -11,9 +11,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,12 +24,16 @@ namespace Neutron.Forms
 {
     public partial class FrmSizeCodes : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private BindingSource bindingSource = new BindingSource();
         private GenericRepository<SizeCode> repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
 
         public FrmSizeCodes()
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            // SetCulture(_cultureInfo.Name);
             SetupGrid();
             SetupTabControl();
             SetupNewForm();

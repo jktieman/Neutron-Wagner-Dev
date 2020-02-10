@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
 using NeutronData.DataContexts;
 using NeutronData.Models;
@@ -10,6 +13,8 @@ namespace Neutron.Forms
     //Location Access Control
     public partial class FrmLAC : Form
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly SecureDb context = new SecureDb();
         private bool checkAllUsers;
         private bool checkAllDevice1;
@@ -21,6 +26,8 @@ namespace Neutron.Forms
         public FrmLAC()
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+           // SetCulture(_cultureInfo.Name);
         }
 
         private void Form1_Load(object sender, EventArgs e)

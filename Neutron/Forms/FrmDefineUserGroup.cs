@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
 using JsonManager;
-using Neutron.Extensions;
 using Neutron.Models;
+using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 
@@ -18,6 +15,8 @@ namespace Neutron.Forms
 {
     public partial class FrmDefineUserGroup : Form
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly IJsonData _jsonData;
         public List<UserIdString> UserIds;
         private ProductivityGroup _currentGroup = null;
@@ -29,6 +28,8 @@ namespace Neutron.Forms
         {
             _jsonData = jsonData;
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             InitForm();
         }
 
@@ -56,7 +57,7 @@ namespace Neutron.Forms
                 CheckedListBoxGroups.SetItemCheckState(0, CheckState.Checked);
                 _currentGroup = (ProductivityGroup)CheckedListBoxGroups.Items[0];
                 TextBoxGroupName.Text = _currentGroup.Name;
-                LabelGroupName.Text = $"Edit {_currentGroup.Name} Group";
+                LabelGroupName.Text = $"Edit  Group  {_currentGroup.Name}";
                 TextBoxGroupName.Enabled = false;
                 ButtonRemove.Enabled = true;
             }
@@ -64,7 +65,8 @@ namespace Neutron.Forms
             UpdateCheckedListBoxUsers();
 
             _formInitialized = true;
-
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             //------------------
             //using (var db = new NeutronDb())
             //{
@@ -120,7 +122,7 @@ namespace Neutron.Forms
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Group Name.");
+                    MessageBox.Show(_resourceManager.GetString("Message0"));
                 }
             }
             else  //Existing Group
@@ -166,7 +168,7 @@ namespace Neutron.Forms
             if (e.NewValue != CheckState.Checked)
             {
                 _currentGroup = null;
-                LabelGroupName.Text = "Add New Group";
+                LabelGroupName.Text = _resourceManager.GetString("AddNewGroup");
                 TextBoxGroupName.Text = string.Empty;
                 TextBoxGroupName.Enabled = true;
                 TextBoxGroupName.Focus();
@@ -186,7 +188,7 @@ namespace Neutron.Forms
             }
 
             _currentGroup = (ProductivityGroup)CheckedListBoxGroups.SelectedItem;
-            LabelGroupName.Text = $"Edit {_currentGroup.Name} Group";
+            LabelGroupName.Text = $"{_resourceManager.GetString("EditGroup")}  {_currentGroup.Name} ";
             TextBoxGroupName.Text = _currentGroup.Name;
             TextBoxGroupName.Enabled = true;
             ButtonRemove.Enabled = true;
@@ -226,7 +228,7 @@ namespace Neutron.Forms
             SelectAllGroupCheckBoxes(false);
             if (_currentGroup == null)
             {
-                LabelGroupName.Text = "Add New Group";
+                LabelGroupName.Text = _resourceManager.GetString("AddNewGroup");
                 TextBoxGroupName.Text = string.Empty;
                 TextBoxGroupName.Enabled = true;
                 TextBoxGroupName.Focus();
@@ -270,7 +272,7 @@ namespace Neutron.Forms
                     CheckedListBoxGroups.SelectedIndex = index;
 
                     TextBoxGroupName.Text = _currentGroup.Name;
-                    LabelGroupName.Text = $"Edit {_currentGroup.Name} Group";
+                    LabelGroupName.Text = $"{_resourceManager.GetString("EditGroup")}  {_currentGroup.Name} ";
                     ButtonRemove.Enabled = true;
 
                     UpdateCheckedListBoxUsers();
@@ -307,5 +309,35 @@ namespace Neutron.Forms
             CheckedListBoxGroups.ClearSelected();
             _itemCheckEnabled = true;
         }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmDefineUserGroup",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                ButtonCancel.Text = _resourceManager.GetString("Cancel");
+                ButtonSave.Text = _resourceManager.GetString("Save");
+                this.Text = _resourceManager.GetString("DefineActionGroup");
+                LabelGroupName.Text = _resourceManager.GetString("GroupName");
+                ButtonCancel.Text = _resourceManager.GetString("Close");
+                ButtonSave.Text = _resourceManager.GetString("Save");
+                ButtonRemove.Text = _resourceManager.GetString("Remove");
+                ButtonClearAllUsers.Text = _resourceManager.GetString("ClearAll");
+                ButtonCheckAllUsers.Text = _resourceManager.GetString("CheckAll");
+                LabelClearCheckBox.Text = _resourceManager.GetString("ClearCheckBoxtoAddNewGroup");
+                LabelUsers.Text = _resourceManager.GetString("Users");
+                LabelGroups.Text = _resourceManager.GetString("Groups");
+                this.Text = _resourceManager.GetString("DefineUserGroup");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
     }
 }

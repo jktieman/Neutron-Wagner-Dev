@@ -56,9 +56,9 @@ namespace Neutron.Global
                 foreach (var pickLocation in pickView.PickLocations)
                 {
                     var cCenter = "          ";
-                    if (pickView.OrderDetail.OrderDetailInfo.Length >= 10)
+                    if (pickView.OrderDetail.OrderDetailInfo?.Length >= 10)
                     {
-                        cCenter = pickView.OrderDetail.OrderDetailInfo.Substring(0, 10);
+                        cCenter = pickView.OrderDetail.OrderDetailInfo?.Substring(0, 10);
                     }
 
                     var history = new History
@@ -630,7 +630,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 StationId = skipView.StationNumber,
                 OrderDetailId = skipView.Id,
-                CostCenter = skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
+                CostCenter = skipView.OrderDetail.OrderDetailInfo?.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,
                 OrderDetailInfo = skipView.OrderDetail.OrderDetailInfo
             };

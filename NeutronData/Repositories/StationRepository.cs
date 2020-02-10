@@ -1,5 +1,4 @@
-﻿using NeutronCore.Enums;
-using NeutronData.DataContexts;
+﻿using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.ModelViews;
@@ -9,15 +8,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NeutronCore;
+using NeutronData.Models.Lookups;
+using DeviceType = NeutronCore.Enums.DeviceType;
 
 namespace NeutronData.Repositories
 {
     public class StationRepository : IStationRepository
     {
-        private readonly GenericRepository<HardwareDevice> repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-        private readonly GenericRepository<Station> repoStation = new GenericRepository<Station>(new NeutronDb());
-        private readonly GenericRepository<TcpConfiguration> repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
-        private readonly GenericRepository<SerialConfiguration> repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
+        private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
+        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
+        private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
+        private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
+        private Dictionary<int, string> _dicCommunicationTypes;
+
+        public StationRepository()
+        {
+            _dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
+        }
 
         public StationView GetStationView(int stationNumber)
         {
@@ -27,7 +35,7 @@ namespace NeutronData.Repositories
             Station station;
             try
             {
-                station = repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
+                station = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
 
                 if (station != null)
                 {
@@ -35,26 +43,30 @@ namespace NeutronData.Repositories
                     //get all the hardware devices on this station carousel, lights scale, etc
                     try
                     {
-                        var hardwareDevices = repoHardwareDevices.All().Where(r => r.StationId == station.Id).ToList();
+                        var hardwareDevices = _repoHardwareDevices.All().Where(r => r.StationId == station.Id).ToList();
                         logger.Log("Station Name: " + station.Name + " Number of Devices: " + station.HardwareDevices.Count.ToString());
                         foreach (var device in hardwareDevices)
                         {
                             logger.Log($"Hardware Device: {device.Name}");
+                            int key;
                             switch (device.DeviceTypeId)
                             {
                                 case (int) DeviceType.Shuttle:
-                                    {
+                                {
+                                    key = _dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
                                         logger.Log($"This is a Shuttle Device");
-                                        if (device.CommunicationTypeId == (int) CommunicationType.TCP)
+                                        //if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
+                                        key = _dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
+                                        if (device.CommunicationTypeId == key)
                                         {
                                             logger.Log($"This is a TCP Device");
-                                            int tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
+                                            var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
                                             logger.Log(@"TCP Configuration number: " + tcpConfiguration.ToString());
                                             if (tcpConfiguration != 0)
                                             {
                                                 try
                                                 {
-                                                    TcpConfiguration tcp = repoTcpConfiguration.FindByKey(tcpConfiguration);
+                                                    TcpConfiguration tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
                                                     logger.Log($"TCP Name: {tcp.Name}");
                                                     device.TcpConfiguration = tcp;
                                                 }
@@ -71,7 +83,9 @@ namespace NeutronData.Repositories
                                             }
                                             stationView.HardwareDevices.Add(device);
                                         }
-                                        if (device.CommunicationTypeId == (int) CommunicationType.Serial)
+                                        //if (device.CommunicationTypeId == (int) CommunicationType.Serial)
+                                        key = _dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
+                                        if (device.CommunicationTypeId == key)
                                         {
                                             logger.Log($"This is a Serial Device");
                                             int serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
@@ -80,7 +94,7 @@ namespace NeutronData.Repositories
                                             {
                                                 try
                                                 {
-                                                    SerialConfiguration serial = repoSerialConfiguration.FindByKey(serialConfiguration);
+                                                    SerialConfiguration serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
                                                     logger.Log($"Serial Name: {serial.Name}");
                                                     device.SerialConfiguration = serial;
                                                 }
@@ -102,7 +116,9 @@ namespace NeutronData.Repositories
                                 case (int) DeviceType.Carousel:
                                     {
                                         logger.Log(@"This is a Carousel Device");
-                                        if (device.CommunicationTypeId == (int) CommunicationType.TCP)
+                                        //if (device.CommunicationTypeId == (int) CommunicationType.TCP)
+                                        key = _dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
+                                        if (device.CommunicationTypeId == key)
                                         {
                                             logger.Log($"This is a TCP Device");
                                             int tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
@@ -111,7 +127,7 @@ namespace NeutronData.Repositories
                                             {
                                                 try
                                                 {
-                                                    TcpConfiguration tcp = repoTcpConfiguration.FindByKey(tcpConfiguration);
+                                                    TcpConfiguration tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
                                                     logger.Log($"TCP Name: {tcp.Name}");
                                                     device.TcpConfiguration = tcp;
                                                 }
@@ -129,7 +145,9 @@ namespace NeutronData.Repositories
                                             stationView.HardwareDevices.Add(device);
 
                                         }
-                                        if (device.CommunicationTypeId == (int)CommunicationType.Serial)
+                                        //if (device.CommunicationTypeId == (int)CommunicationType.Serial)
+                                        key = _dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
+                                        if (device.CommunicationTypeId == key)
                                         {
                                             logger.Log($"This is a Serial Device");
                                             int serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
@@ -138,7 +156,7 @@ namespace NeutronData.Repositories
                                             {
                                                 try
                                                 {
-                                                    SerialConfiguration serial = repoSerialConfiguration.FindByKey(serialConfiguration);
+                                                    SerialConfiguration serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
                                                     logger.Log($"Serial Name: {serial.Name}  Port: {serial.PortName}");
                                                     device.SerialConfiguration = serial;
                                                 }
@@ -206,7 +224,7 @@ namespace NeutronData.Repositories
         public int GetStationId(int stationNumber)
         {
             int stationId = 0;
-            Station result = repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
+            Station result = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
             if (result != null)
             {
                 stationId = result.Id;
@@ -216,14 +234,14 @@ namespace NeutronData.Repositories
 
         public List<Station> Lookup()
         {
-            List<Station> stations = repoStation.All().ToList();
+            List<Station> stations = _repoStation.All().ToList();
             return stations;
         }
 
         public List<string> GetPickStationIds()
         {
             var result = new List<string>();
-            var stations = repoStation.All().Where(r => r.Id <= 8).Select(s => s.Id.ToString()).OrderBy(s => s).ToList();
+            var stations = _repoStation.All().Where(r => r.Id <= 8).Select(s => s.Id.ToString()).OrderBy(s => s).ToList();
             if (stations.Count > 0)
             {
                 result = stations;

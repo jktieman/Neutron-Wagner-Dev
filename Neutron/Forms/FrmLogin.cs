@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
 using MetroFramework;
 using MetroFramework.Forms;
@@ -11,12 +14,16 @@ namespace Neutron.Forms
 {
     public partial class FrmLogin : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private static FrmLogin instance;
         public User CurrentUser;
 
         public FrmLogin()
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            // SetCulture(_cultureInfo.Name);
         }
 
         public static FrmLogin Instance

@@ -9,8 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using NeutronCore.Global;
 using NeutronData.ModelViews;
@@ -19,6 +22,8 @@ namespace Neutron.Forms
 {
     public partial class FrmSecurity : Form
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private readonly SecureDb _context = new SecureDb();
         private readonly NeutronDb _contextNeutron = new NeutronDb();
 
@@ -32,6 +37,8 @@ namespace Neutron.Forms
         public FrmSecurity(INomenclature nomenclature, NeutronVariables neutronVariables)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            // SetCulture(_cultureInfo.Name);
             _nomenclature = nomenclature;
             _neutronVariables = neutronVariables;
             ButtonDeleteEditUser.Enabled = false;

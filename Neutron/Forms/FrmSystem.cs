@@ -10,7 +10,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Reflection;
+using System.Resources;
+using System.Threading;
 using System.Windows.Forms;
 using AlliedLogger;
 using Neutron.Models;
@@ -20,6 +23,8 @@ namespace Neutron.Forms
 {
     public partial class FrmSystem : MetroForm
     {
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         private bool CloseButtonPressed { get; set; }
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
@@ -30,6 +35,8 @@ namespace Neutron.Forms
         public FrmSystem(IJsonData jsonData, DynamicLogger logger)
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            // SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();

@@ -201,28 +201,17 @@
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\StorageType.cs" />
     <Compile Include="Extensions\ByteExtensions.cs" />
+    <Compile Include="Extensions\DataGridViewExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\FileInfoExtensions.cs" />
     <Compile Include="Extensions\IntegerExtensions.cs" />
     <Compile Include="Extensions\MyExtensions.cs" />
     <Compile Include="Extensions\StringHelper.cs" />
-    <Compile Include="Forms\BaseForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BaseForm.Designer.cs">
-      <DependentUpon>BaseForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FrmChangePriority.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FrmChangePriority.Designer.cs">
       <DependentUpon>FrmChangePriority.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmChangeStoreQuantity.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmChangeStoreQuantity.Designer.cs">
-      <DependentUpon>FrmChangeStoreQuantity.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmChangeQuantity.cs">
       <SubType>Form</SubType>
@@ -247,18 +236,6 @@
     </Compile>
     <Compile Include="Forms\FrmDefineUserGroup.Designer.cs">
       <DependentUpon>FrmDefineUserGroup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmDevices.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmDevices.Designer.cs">
-      <DependentUpon>FrmDevices.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmDeviceSetup.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmDeviceSetup.Designer.cs">
-      <DependentUpon>FrmDeviceSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmEditItemDefinition.cs">
       <SubType>Form</SubType>
@@ -301,18 +278,6 @@
     </Compile>
     <Compile Include="Forms\FrmItemDefinitions.Designer.cs">
       <DependentUpon>FrmItemDefinitions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmHeightCodes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmHeightCodes.Designer.cs">
-      <DependentUpon>FrmHeightCodes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmGroups.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmGroups.Designer.cs">
-      <DependentUpon>FrmGroups.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmLAC.cs">
       <SubType>Form</SubType>
@@ -472,14 +437,8 @@
     <EmbeddedResource Include="Language\ResGen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BaseForm.resx">
-      <DependentUpon>BaseForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangePriority.resx">
       <DependentUpon>FrmChangePriority.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmChangeStoreQuantity.resx">
-      <DependentUpon>FrmChangeStoreQuantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeQuantity.resx">
       <DependentUpon>FrmChangeQuantity.cs</DependentUpon>
@@ -492,12 +451,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDefineUserGroup.resx">
       <DependentUpon>FrmDefineUserGroup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmDevices.resx">
-      <DependentUpon>FrmDevices.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmDeviceSetup.resx">
-      <DependentUpon>FrmDeviceSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmEditItemDefinition.resx">
       <DependentUpon>FrmEditItemDefinition.cs</DependentUpon>
@@ -521,12 +474,6 @@
     <EmbeddedResource Include="Forms\FrmItemDefinitions.resx">
       <DependentUpon>FrmItemDefinitions.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmHeightCodes.resx">
-      <DependentUpon>FrmHeightCodes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmGroups.resx">
-      <DependentUpon>FrmGroups.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmLAC.resx">
       <DependentUpon>FrmLAC.cs</DependentUpon>

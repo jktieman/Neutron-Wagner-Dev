@@ -37,9 +37,9 @@
             this.GroupBoxActionCodes = new System.Windows.Forms.GroupBox();
             this.CheckedListBoxActionCodes = new System.Windows.Forms.CheckedListBox();
             this.PanelDateRanges = new System.Windows.Forms.Panel();
-            this.label27 = new System.Windows.Forms.Label();
+            this.LabelTo = new System.Windows.Forms.Label();
             this.DateTimePickerTo = new System.Windows.Forms.DateTimePicker();
-            this.label26 = new System.Windows.Forms.Label();
+            this.LabelFrom = new System.Windows.Forms.Label();
             this.DateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.RadioButtonDateRange = new System.Windows.Forms.RadioButton();
             this.RadioButtonMonth = new System.Windows.Forms.RadioButton();
@@ -105,9 +105,9 @@
             // 
             // ButtonClearAll
             // 
-            this.ButtonClearAll.Location = new System.Drawing.Point(91, 99);
+            this.ButtonClearAll.Location = new System.Drawing.Point(112, 99);
             this.ButtonClearAll.Name = "ButtonClearAll";
-            this.ButtonClearAll.Size = new System.Drawing.Size(75, 23);
+            this.ButtonClearAll.Size = new System.Drawing.Size(96, 23);
             this.ButtonClearAll.TabIndex = 23;
             this.ButtonClearAll.Text = "Clear All";
             this.ButtonClearAll.UseVisualStyleBackColor = true;
@@ -117,7 +117,7 @@
             // 
             this.ButtonCheckAll.Location = new System.Drawing.Point(10, 99);
             this.ButtonCheckAll.Name = "ButtonCheckAll";
-            this.ButtonCheckAll.Size = new System.Drawing.Size(75, 23);
+            this.ButtonCheckAll.Size = new System.Drawing.Size(96, 23);
             this.ButtonCheckAll.TabIndex = 23;
             this.ButtonCheckAll.Text = "Check All";
             this.ButtonCheckAll.UseVisualStyleBackColor = true;
@@ -128,7 +128,7 @@
             this.GroupBoxActionCodes.Controls.Add(this.CheckedListBoxActionCodes);
             this.GroupBoxActionCodes.Location = new System.Drawing.Point(11, 126);
             this.GroupBoxActionCodes.Name = "GroupBoxActionCodes";
-            this.GroupBoxActionCodes.Size = new System.Drawing.Size(162, 507);
+            this.GroupBoxActionCodes.Size = new System.Drawing.Size(194, 507);
             this.GroupBoxActionCodes.TabIndex = 22;
             this.GroupBoxActionCodes.TabStop = false;
             this.GroupBoxActionCodes.Text = "Action Codes";
@@ -140,15 +140,15 @@
             this.CheckedListBoxActionCodes.FormattingEnabled = true;
             this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(3, 16);
             this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
-            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(156, 488);
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 488);
             this.CheckedListBoxActionCodes.TabIndex = 0;
             this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
             // 
             // PanelDateRanges
             // 
-            this.PanelDateRanges.Controls.Add(this.label27);
+            this.PanelDateRanges.Controls.Add(this.LabelTo);
             this.PanelDateRanges.Controls.Add(this.DateTimePickerTo);
-            this.PanelDateRanges.Controls.Add(this.label26);
+            this.PanelDateRanges.Controls.Add(this.LabelFrom);
             this.PanelDateRanges.Controls.Add(this.DateTimePickerFrom);
             this.PanelDateRanges.Controls.Add(this.RadioButtonDateRange);
             this.PanelDateRanges.Controls.Add(this.RadioButtonMonth);
@@ -159,15 +159,15 @@
             this.PanelDateRanges.Size = new System.Drawing.Size(418, 84);
             this.PanelDateRanges.TabIndex = 21;
             // 
-            // label27
+            // LabelTo
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(223, 47);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(23, 15);
-            this.label27.TabIndex = 24;
-            this.label27.Text = "To";
+            this.LabelTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTo.Location = new System.Drawing.Point(202, 47);
+            this.LabelTo.Name = "LabelTo";
+            this.LabelTo.Size = new System.Drawing.Size(55, 15);
+            this.LabelTo.TabIndex = 24;
+            this.LabelTo.Text = "To";
+            this.LabelTo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DateTimePickerTo
             // 
@@ -178,15 +178,15 @@
             this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerTo.TabIndex = 23;
             // 
-            // label26
+            // LabelFrom
             // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(202, 14);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(40, 15);
-            this.label26.TabIndex = 22;
-            this.label26.Text = "From";
+            this.LabelFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFrom.Location = new System.Drawing.Point(202, 14);
+            this.LabelFrom.Name = "LabelFrom";
+            this.LabelFrom.Size = new System.Drawing.Size(55, 15);
+            this.LabelFrom.TabIndex = 22;
+            this.LabelFrom.Text = "From";
+            this.LabelFrom.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DateTimePickerFrom
             // 
@@ -316,12 +316,12 @@
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.AllowUserToOrderColumns = true;
             this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridView1.Location = new System.Drawing.Point(179, 126);
+            this.DataGridView1.Location = new System.Drawing.Point(211, 126);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(962, 507);
+            this.DataGridView1.Size = new System.Drawing.Size(930, 507);
             this.DataGridView1.TabIndex = 0;
             // 
             // LabelFormTitle
@@ -344,7 +344,7 @@
             this.mlUserInfo.Name = "mlUserInfo";
             this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
             this.mlUserInfo.TabIndex = 21;
-            this.mlUserInfo.Text = "Login ?";
+            this.mlUserInfo.Text = "Login";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelFormHeaderText
@@ -401,9 +401,9 @@
         private System.Windows.Forms.RadioButton RadioButtonMonth;
         private System.Windows.Forms.RadioButton RadioButtonWeek;
         private System.Windows.Forms.RadioButton RadioButtonToday;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label LabelTo;
         private System.Windows.Forms.DateTimePicker DateTimePickerTo;
-        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label LabelFrom;
         private System.Windows.Forms.DateTimePicker DateTimePickerFrom;
         private MetroFramework.Controls.MetroButton MBSaveHistory;
         private System.Windows.Forms.GroupBox GroupBoxActionCodes;

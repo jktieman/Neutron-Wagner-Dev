@@ -14,8 +14,9 @@ namespace Neutron.Forms
 {
     public partial class FrmPin : MetroForm
     {
-        private static FrmPin _instance;
         private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
+        private static FrmPin _instance;
         public User CurrentUser;
 
         public FrmPin()

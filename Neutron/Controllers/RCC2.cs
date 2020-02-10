@@ -102,7 +102,7 @@ namespace Neutron.Controllers
                         Task.Run(() => _logger.Log($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}Device Count: {serialConfiguration.DeviceCount}"));
 
                         if (Shuttle_1.Init_Controller(serialConfiguration.ControllerId, serialConfiguration.PortNumber, serialConfiguration.BaudRate, serialConfiguration.DataBits,
-                            serialConfiguration.Parity.ToString(), (int)serialConfiguration.StopBits, simulationMode, logLevel, enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
+                            serialConfiguration.Parity.ToString(), serialConfiguration.StopBits, simulationMode, logLevel, enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
                         {
                             Task.Run(() => _logger.Log("Initialization Requested"));
                         }

@@ -35,6 +35,7 @@
             this.ButtonConfigureUsers = new System.Windows.Forms.Button();
             this.ButtonClearAllUsers = new System.Windows.Forms.Button();
             this.ButtonCheckAllUsers = new System.Windows.Forms.Button();
+            this.CheckedListBoxGroups = new System.Windows.Forms.CheckedListBox();
             this.CheckedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.ButtonConfigureActions = new System.Windows.Forms.Button();
             this.ButtonClearAllActions = new System.Windows.Forms.Button();
@@ -58,22 +59,21 @@
             this.LabelTotalLinesDetail = new System.Windows.Forms.Label();
             this.DataGridView2 = new System.Windows.Forms.DataGridView();
             this.PanelDateRanges = new System.Windows.Forms.Panel();
-            this.label27 = new System.Windows.Forms.Label();
+            this.LabelTo = new System.Windows.Forms.Label();
             this.DateTimePickerTo = new System.Windows.Forms.DateTimePicker();
-            this.label26 = new System.Windows.Forms.Label();
+            this.LabelFrom = new System.Windows.Forms.Label();
             this.DateTimePickerFrom = new System.Windows.Forms.DateTimePicker();
             this.RadioButtonDateRange = new System.Windows.Forms.RadioButton();
             this.RadioButtonMonth = new System.Windows.Forms.RadioButton();
             this.RadioButtonWeek = new System.Windows.Forms.RadioButton();
             this.RadioButtonToday = new System.Windows.Forms.RadioButton();
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
+            this.MBSaveDetail = new MetroFramework.Controls.MetroButton();
             this.MBSaveSummary = new MetroFramework.Controls.MetroButton();
             this.MButtonRun = new MetroFramework.Controls.MetroButton();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.MBSaveDetail = new MetroFramework.Controls.MetroButton();
-            this.CheckedListBoxGroups = new System.Windows.Forms.CheckedListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -166,9 +166,9 @@
             // 
             // ButtonClearAllUsers
             // 
-            this.ButtonClearAllUsers.Location = new System.Drawing.Point(97, 362);
+            this.ButtonClearAllUsers.Location = new System.Drawing.Point(90, 362);
             this.ButtonClearAllUsers.Name = "ButtonClearAllUsers";
-            this.ButtonClearAllUsers.Size = new System.Drawing.Size(70, 23);
+            this.ButtonClearAllUsers.Size = new System.Drawing.Size(80, 23);
             this.ButtonClearAllUsers.TabIndex = 30;
             this.ButtonClearAllUsers.Text = "Clear All";
             this.ButtonClearAllUsers.UseVisualStyleBackColor = true;
@@ -176,13 +176,25 @@
             // 
             // ButtonCheckAllUsers
             // 
-            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(6, 362);
+            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(3, 362);
             this.ButtonCheckAllUsers.Name = "ButtonCheckAllUsers";
-            this.ButtonCheckAllUsers.Size = new System.Drawing.Size(70, 23);
+            this.ButtonCheckAllUsers.Size = new System.Drawing.Size(80, 23);
             this.ButtonCheckAllUsers.TabIndex = 31;
             this.ButtonCheckAllUsers.Text = "Check All";
             this.ButtonCheckAllUsers.UseVisualStyleBackColor = true;
             this.ButtonCheckAllUsers.Click += new System.EventHandler(this.ButtonCheckAllUsers_Click);
+            // 
+            // CheckedListBoxGroups
+            // 
+            this.CheckedListBoxGroups.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CheckedListBoxGroups.CheckOnClick = true;
+            this.CheckedListBoxGroups.FormattingEnabled = true;
+            this.CheckedListBoxGroups.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxGroups.Name = "CheckedListBoxGroups";
+            this.CheckedListBoxGroups.Size = new System.Drawing.Size(173, 139);
+            this.CheckedListBoxGroups.TabIndex = 29;
+            this.CheckedListBoxGroups.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxGroups_ItemCheck);
             // 
             // CheckedListBoxUsers
             // 
@@ -209,9 +221,9 @@
             // 
             // ButtonClearAllActions
             // 
-            this.ButtonClearAllActions.Location = new System.Drawing.Point(97, 175);
+            this.ButtonClearAllActions.Location = new System.Drawing.Point(90, 175);
             this.ButtonClearAllActions.Name = "ButtonClearAllActions";
-            this.ButtonClearAllActions.Size = new System.Drawing.Size(70, 23);
+            this.ButtonClearAllActions.Size = new System.Drawing.Size(80, 23);
             this.ButtonClearAllActions.TabIndex = 32;
             this.ButtonClearAllActions.Text = "Clear All";
             this.ButtonClearAllActions.UseVisualStyleBackColor = true;
@@ -219,9 +231,9 @@
             // 
             // ButtonCheckAllActions
             // 
-            this.ButtonCheckAllActions.Location = new System.Drawing.Point(6, 175);
+            this.ButtonCheckAllActions.Location = new System.Drawing.Point(3, 175);
             this.ButtonCheckAllActions.Name = "ButtonCheckAllActions";
-            this.ButtonCheckAllActions.Size = new System.Drawing.Size(70, 23);
+            this.ButtonCheckAllActions.Size = new System.Drawing.Size(80, 23);
             this.ButtonCheckAllActions.TabIndex = 33;
             this.ButtonCheckAllActions.Text = "Check All";
             this.ButtonCheckAllActions.UseVisualStyleBackColor = true;
@@ -279,7 +291,7 @@
             // TextBoxTotalOrdersSummary
             // 
             this.TextBoxTotalOrdersSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalOrdersSummary.Location = new System.Drawing.Point(601, 294);
+            this.TextBoxTotalOrdersSummary.Location = new System.Drawing.Point(690, 294);
             this.TextBoxTotalOrdersSummary.Name = "TextBoxTotalOrdersSummary";
             this.TextBoxTotalOrdersSummary.ReadOnly = true;
             this.TextBoxTotalOrdersSummary.Size = new System.Drawing.Size(100, 22);
@@ -289,7 +301,7 @@
             // TextBoxTotalPiecesSummary
             // 
             this.TextBoxTotalPiecesSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalPiecesSummary.Location = new System.Drawing.Point(380, 294);
+            this.TextBoxTotalPiecesSummary.Location = new System.Drawing.Point(423, 294);
             this.TextBoxTotalPiecesSummary.Name = "TextBoxTotalPiecesSummary";
             this.TextBoxTotalPiecesSummary.ReadOnly = true;
             this.TextBoxTotalPiecesSummary.Size = new System.Drawing.Size(100, 22);
@@ -299,7 +311,7 @@
             // TextBoxTotalLinesSummary
             // 
             this.TextBoxTotalLinesSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalLinesSummary.Location = new System.Drawing.Point(157, 294);
+            this.TextBoxTotalLinesSummary.Location = new System.Drawing.Point(156, 295);
             this.TextBoxTotalLinesSummary.Name = "TextBoxTotalLinesSummary";
             this.TextBoxTotalLinesSummary.ReadOnly = true;
             this.TextBoxTotalLinesSummary.Size = new System.Drawing.Size(100, 22);
@@ -319,33 +331,33 @@
             // 
             // LabelTotalOrders
             // 
-            this.LabelTotalOrders.AutoSize = true;
             this.LabelTotalOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalOrders.Location = new System.Drawing.Point(500, 297);
+            this.LabelTotalOrders.Location = new System.Drawing.Point(539, 297);
             this.LabelTotalOrders.Name = "LabelTotalOrders";
-            this.LabelTotalOrders.Size = new System.Drawing.Size(95, 16);
+            this.LabelTotalOrders.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalOrders.TabIndex = 2;
             this.LabelTotalOrders.Text = "Total Orders";
+            this.LabelTotalOrders.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelTotalPieces
             // 
-            this.LabelTotalPieces.AutoSize = true;
             this.LabelTotalPieces.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalPieces.Location = new System.Drawing.Point(278, 297);
+            this.LabelTotalPieces.Location = new System.Drawing.Point(272, 297);
             this.LabelTotalPieces.Name = "LabelTotalPieces";
-            this.LabelTotalPieces.Size = new System.Drawing.Size(96, 16);
+            this.LabelTotalPieces.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalPieces.TabIndex = 2;
             this.LabelTotalPieces.Text = "Total Pieces";
+            this.LabelTotalPieces.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelTotalLines
             // 
-            this.LabelTotalLines.AutoSize = true;
             this.LabelTotalLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalLines.Location = new System.Drawing.Point(68, 297);
+            this.LabelTotalLines.Location = new System.Drawing.Point(5, 297);
             this.LabelTotalLines.Name = "LabelTotalLines";
-            this.LabelTotalLines.Size = new System.Drawing.Size(85, 16);
+            this.LabelTotalLines.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalLines.TabIndex = 2;
             this.LabelTotalLines.Text = "Total Lines";
+            this.LabelTotalLines.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DataGridView1
             // 
@@ -369,7 +381,7 @@
             // TextBoxTotalOrdersDetail
             // 
             this.TextBoxTotalOrdersDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalOrdersDetail.Location = new System.Drawing.Point(601, 294);
+            this.TextBoxTotalOrdersDetail.Location = new System.Drawing.Point(690, 293);
             this.TextBoxTotalOrdersDetail.Name = "TextBoxTotalOrdersDetail";
             this.TextBoxTotalOrdersDetail.ReadOnly = true;
             this.TextBoxTotalOrdersDetail.Size = new System.Drawing.Size(100, 22);
@@ -379,7 +391,7 @@
             // TextBoxTotalPiecesDetail
             // 
             this.TextBoxTotalPiecesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalPiecesDetail.Location = new System.Drawing.Point(380, 294);
+            this.TextBoxTotalPiecesDetail.Location = new System.Drawing.Point(423, 294);
             this.TextBoxTotalPiecesDetail.Name = "TextBoxTotalPiecesDetail";
             this.TextBoxTotalPiecesDetail.ReadOnly = true;
             this.TextBoxTotalPiecesDetail.Size = new System.Drawing.Size(100, 22);
@@ -389,7 +401,7 @@
             // TextBoxTotalLinesDetail
             // 
             this.TextBoxTotalLinesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalLinesDetail.Location = new System.Drawing.Point(157, 294);
+            this.TextBoxTotalLinesDetail.Location = new System.Drawing.Point(156, 294);
             this.TextBoxTotalLinesDetail.Name = "TextBoxTotalLinesDetail";
             this.TextBoxTotalLinesDetail.ReadOnly = true;
             this.TextBoxTotalLinesDetail.Size = new System.Drawing.Size(100, 22);
@@ -409,33 +421,33 @@
             // 
             // LabelTotalOrdersDetail
             // 
-            this.LabelTotalOrdersDetail.AutoSize = true;
             this.LabelTotalOrdersDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalOrdersDetail.Location = new System.Drawing.Point(500, 297);
+            this.LabelTotalOrdersDetail.Location = new System.Drawing.Point(539, 295);
             this.LabelTotalOrdersDetail.Name = "LabelTotalOrdersDetail";
-            this.LabelTotalOrdersDetail.Size = new System.Drawing.Size(95, 16);
+            this.LabelTotalOrdersDetail.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalOrdersDetail.TabIndex = 26;
             this.LabelTotalOrdersDetail.Text = "Total Orders";
+            this.LabelTotalOrdersDetail.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelTotalPiecesDetail
             // 
-            this.LabelTotalPiecesDetail.AutoSize = true;
             this.LabelTotalPiecesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalPiecesDetail.Location = new System.Drawing.Point(278, 297);
+            this.LabelTotalPiecesDetail.Location = new System.Drawing.Point(272, 295);
             this.LabelTotalPiecesDetail.Name = "LabelTotalPiecesDetail";
-            this.LabelTotalPiecesDetail.Size = new System.Drawing.Size(96, 16);
+            this.LabelTotalPiecesDetail.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalPiecesDetail.TabIndex = 27;
             this.LabelTotalPiecesDetail.Text = "Total Pieces";
+            this.LabelTotalPiecesDetail.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelTotalLinesDetail
             // 
-            this.LabelTotalLinesDetail.AutoSize = true;
             this.LabelTotalLinesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalLinesDetail.Location = new System.Drawing.Point(68, 297);
+            this.LabelTotalLinesDetail.Location = new System.Drawing.Point(5, 297);
             this.LabelTotalLinesDetail.Name = "LabelTotalLinesDetail";
-            this.LabelTotalLinesDetail.Size = new System.Drawing.Size(85, 16);
+            this.LabelTotalLinesDetail.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalLinesDetail.TabIndex = 28;
             this.LabelTotalLinesDetail.Text = "Total Lines";
+            this.LabelTotalLinesDetail.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DataGridView2
             // 
@@ -458,9 +470,9 @@
             // 
             // PanelDateRanges
             // 
-            this.PanelDateRanges.Controls.Add(this.label27);
+            this.PanelDateRanges.Controls.Add(this.LabelTo);
             this.PanelDateRanges.Controls.Add(this.DateTimePickerTo);
-            this.PanelDateRanges.Controls.Add(this.label26);
+            this.PanelDateRanges.Controls.Add(this.LabelFrom);
             this.PanelDateRanges.Controls.Add(this.DateTimePickerFrom);
             this.PanelDateRanges.Controls.Add(this.RadioButtonDateRange);
             this.PanelDateRanges.Controls.Add(this.RadioButtonMonth);
@@ -468,45 +480,45 @@
             this.PanelDateRanges.Controls.Add(this.RadioButtonToday);
             this.PanelDateRanges.Location = new System.Drawing.Point(6, 8);
             this.PanelDateRanges.Name = "PanelDateRanges";
-            this.PanelDateRanges.Size = new System.Drawing.Size(418, 80);
+            this.PanelDateRanges.Size = new System.Drawing.Size(477, 80);
             this.PanelDateRanges.TabIndex = 21;
             // 
-            // label27
+            // LabelTo
             // 
-            this.label27.AutoSize = true;
-            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(223, 47);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(23, 15);
-            this.label27.TabIndex = 24;
-            this.label27.Text = "To";
+            this.LabelTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTo.Location = new System.Drawing.Point(234, 46);
+            this.LabelTo.Name = "LabelTo";
+            this.LabelTo.Size = new System.Drawing.Size(70, 18);
+            this.LabelTo.TabIndex = 24;
+            this.LabelTo.Text = "To";
+            this.LabelTo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DateTimePickerTo
             // 
             this.DateTimePickerTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DateTimePickerTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.DateTimePickerTo.Location = new System.Drawing.Point(263, 43);
+            this.DateTimePickerTo.Location = new System.Drawing.Point(310, 46);
             this.DateTimePickerTo.Name = "DateTimePickerTo";
             this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerTo.TabIndex = 23;
             this.DateTimePickerTo.ValueChanged += new System.EventHandler(this.DateTimePickerTo_ValueChanged);
             this.DateTimePickerTo.Enter += new System.EventHandler(this.DateTimePicker_Enter);
             // 
-            // label26
+            // LabelFrom
             // 
-            this.label26.AutoSize = true;
-            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(202, 14);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(40, 15);
-            this.label26.TabIndex = 22;
-            this.label26.Text = "From";
+            this.LabelFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFrom.Location = new System.Drawing.Point(234, 14);
+            this.LabelFrom.Name = "LabelFrom";
+            this.LabelFrom.Size = new System.Drawing.Size(70, 18);
+            this.LabelFrom.TabIndex = 22;
+            this.LabelFrom.Text = "From";
+            this.LabelFrom.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // DateTimePickerFrom
             // 
             this.DateTimePickerFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DateTimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.DateTimePickerFrom.Location = new System.Drawing.Point(263, 9);
+            this.DateTimePickerFrom.Location = new System.Drawing.Point(310, 14);
             this.DateTimePickerFrom.Name = "DateTimePickerFrom";
             this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerFrom.TabIndex = 21;
@@ -516,11 +528,10 @@
             // 
             // RadioButtonDateRange
             // 
-            this.RadioButtonDateRange.AutoSize = true;
             this.RadioButtonDateRange.Checked = true;
-            this.RadioButtonDateRange.Location = new System.Drawing.Point(95, 47);
+            this.RadioButtonDateRange.Location = new System.Drawing.Point(122, 47);
             this.RadioButtonDateRange.Name = "RadioButtonDateRange";
-            this.RadioButtonDateRange.Size = new System.Drawing.Size(83, 17);
+            this.RadioButtonDateRange.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonDateRange.TabIndex = 0;
             this.RadioButtonDateRange.TabStop = true;
             this.RadioButtonDateRange.Text = "Date Range";
@@ -529,10 +540,9 @@
             // 
             // RadioButtonMonth
             // 
-            this.RadioButtonMonth.AutoSize = true;
-            this.RadioButtonMonth.Location = new System.Drawing.Point(95, 14);
+            this.RadioButtonMonth.Location = new System.Drawing.Point(122, 14);
             this.RadioButtonMonth.Name = "RadioButtonMonth";
-            this.RadioButtonMonth.Size = new System.Drawing.Size(55, 17);
+            this.RadioButtonMonth.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonMonth.TabIndex = 0;
             this.RadioButtonMonth.Text = "Month";
             this.RadioButtonMonth.UseVisualStyleBackColor = true;
@@ -540,10 +550,9 @@
             // 
             // RadioButtonWeek
             // 
-            this.RadioButtonWeek.AutoSize = true;
             this.RadioButtonWeek.Location = new System.Drawing.Point(8, 47);
             this.RadioButtonWeek.Name = "RadioButtonWeek";
-            this.RadioButtonWeek.Size = new System.Drawing.Size(54, 17);
+            this.RadioButtonWeek.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonWeek.TabIndex = 0;
             this.RadioButtonWeek.Text = "Week";
             this.RadioButtonWeek.UseVisualStyleBackColor = true;
@@ -551,10 +560,9 @@
             // 
             // RadioButtonToday
             // 
-            this.RadioButtonToday.AutoSize = true;
             this.RadioButtonToday.Location = new System.Drawing.Point(8, 14);
             this.RadioButtonToday.Name = "RadioButtonToday";
-            this.RadioButtonToday.Size = new System.Drawing.Size(55, 17);
+            this.RadioButtonToday.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonToday.TabIndex = 0;
             this.RadioButtonToday.Text = "Today";
             this.RadioButtonToday.UseVisualStyleBackColor = true;
@@ -571,6 +579,18 @@
             this.MButtonClose.TabIndex = 12;
             this.MButtonClose.Text = "Close";
             this.MButtonClose.UseSelectable = true;
+            // 
+            // MBSaveDetail
+            // 
+            this.MBSaveDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBSaveDetail.Location = new System.Drawing.Point(511, 54);
+            this.MBSaveDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBSaveDetail.Name = "MBSaveDetail";
+            this.MBSaveDetail.Size = new System.Drawing.Size(245, 37);
+            this.MBSaveDetail.TabIndex = 12;
+            this.MBSaveDetail.Text = "Save Detail to File";
+            this.MBSaveDetail.UseSelectable = true;
+            this.MBSaveDetail.Click += new System.EventHandler(this.MBSaveDetail_Click);
             // 
             // MBSaveSummary
             // 
@@ -632,30 +652,6 @@
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // MBSaveDetail
-            // 
-            this.MBSaveDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSaveDetail.Location = new System.Drawing.Point(511, 54);
-            this.MBSaveDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSaveDetail.Name = "MBSaveDetail";
-            this.MBSaveDetail.Size = new System.Drawing.Size(245, 37);
-            this.MBSaveDetail.TabIndex = 12;
-            this.MBSaveDetail.Text = "Save Detail to File";
-            this.MBSaveDetail.UseSelectable = true;
-            this.MBSaveDetail.Click += new System.EventHandler(this.MBSaveDetail_Click);
-            // 
-            // CheckedListBoxGroups
-            // 
-            this.CheckedListBoxGroups.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CheckedListBoxGroups.CheckOnClick = true;
-            this.CheckedListBoxGroups.FormattingEnabled = true;
-            this.CheckedListBoxGroups.Location = new System.Drawing.Point(0, 0);
-            this.CheckedListBoxGroups.Name = "CheckedListBoxGroups";
-            this.CheckedListBoxGroups.Size = new System.Drawing.Size(173, 139);
-            this.CheckedListBoxGroups.TabIndex = 29;
-            this.CheckedListBoxGroups.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxGroups_ItemCheck);
-            // 
             // FrmProductivity
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -683,7 +679,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView2)).EndInit();
             this.PanelDateRanges.ResumeLayout(false);
-            this.PanelDateRanges.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -694,9 +689,9 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Panel PanelDateRanges;
-        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label LabelTo;
         private System.Windows.Forms.DateTimePicker DateTimePickerTo;
-        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label LabelFrom;
         private System.Windows.Forms.DateTimePicker DateTimePickerFrom;
         private System.Windows.Forms.RadioButton RadioButtonDateRange;
         private System.Windows.Forms.RadioButton RadioButtonMonth;

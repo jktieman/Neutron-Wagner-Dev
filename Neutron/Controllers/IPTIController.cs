@@ -325,13 +325,13 @@ namespace Neutron.Controllers
                     Task.Run(() => _logger.Log($"Hardware Device: {displayDevice.Name}"));
                     Task.Run(() => _logger.Log($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));
                     Task.Run(() => _logger.Log($"Serial Port Number: {serialConfiguration.PortNumber.ToString()}"));
-                    _serialPort = new SerialPort
+                    _serialPort = new SerialPort()
                     {
                         PortName = serialConfiguration.PortName,
                         BaudRate = serialConfiguration.BaudRate,
                         Parity = serialConfiguration.Parity,
                         DataBits = serialConfiguration.DataBits,
-                        StopBits = serialConfiguration.StopBits
+                        StopBits = (StopBits)serialConfiguration.StopBits
                     };
 
                     // 1/29 _serialPort.DataReceived += SerialPortDataReceived;
