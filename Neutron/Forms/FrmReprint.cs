@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NeutronCore;
 
 namespace Neutron.Forms
 {
@@ -24,7 +25,7 @@ namespace Neutron.Forms
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            // SetCulture(_cultureInfo.Name);
+            SetCulture(_cultureInfo.Name);
         }
 
         private void MBReprintPrint_Click(object sender, EventArgs e)
@@ -48,5 +49,27 @@ namespace Neutron.Forms
             public bool PrintDocument { get; set; }
             public bool PrintToteLabel { get; set; }
         }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmReprint",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                CheckBoxToteLabel.Text = _resourceManager.GetString("ToteLabel");
+                CheckBoxDocument.Text = _resourceManager.GetString("PackingList");
+                LabelChangeQuantityPosition.Text = _resourceManager.GetString("PickPosition");
+                MBReprintCancel.Text = _resourceManager.GetString("Cancel");
+                MBReprintPrint.Text = _resourceManager.GetString("Print");
+                this.Text = _resourceManager.GetString("FrmReprint");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
     }
 }

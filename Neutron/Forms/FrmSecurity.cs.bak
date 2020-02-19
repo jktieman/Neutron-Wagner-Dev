@@ -1,4 +1,4 @@
-using Neutron.Enums;
+﻿using Neutron.Enums;
 using Neutron.Global;
 using Neutron.Interfaces;
 using NeutronCore.Extensions;
@@ -18,21 +18,23 @@ using System.Windows.Forms;
 using NeutronCore.Global;
 using NeutronData.ModelViews;
 using NeutronCore;
+
 namespace Neutron.Forms
 {
     public partial class FrmSecurity : Form
     {
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
-        private ResourceManager _gridResourceManager;
         private readonly SecureDb _context = new SecureDb();
         private readonly NeutronDb _contextNeutron = new NeutronDb();
+
         private bool _checkAllUsers;
         private bool _checkAllSecureItems;
         private SecureItem[] _secureItems;
         readonly INomenclature _nomenclature;
         private readonly NeutronVariables _neutronVariables;
         private User _currentUser;
+
         public FrmSecurity(INomenclature nomenclature, NeutronVariables neutronVariables)
         {
             InitializeComponent();
@@ -43,24 +45,31 @@ namespace Neutron.Forms
             ButtonDeleteEditUser.Enabled = false;
             SetupGrids();
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             _secureItems = ((NeutronSecurity[])Enum.GetValues(typeof(NeutronSecurity)))
                 .Select(c => new SecureItem() { SecureItemId = (int)c, Name = c.GetEnumDescription() }).ToArray();
+
             // SecureItem[] secureItems = context.SecureItems.ToArray();
             var groups = _context.Groups.ToArray();
             var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
             var allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
+
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
             ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
             ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+
             ComboBoxGroups.DataSource = groups.ToList();
             ComboBoxGroups.DisplayMember = "Name";
             ComboBoxGroups.ValueMember = "GroupId";
+
             ComboBoxUsers.DataSource = allUsers;
             ComboBoxUsers.DisplayMember = "FullName";
             ComboBoxUsers.ValueMember = "Id";
+
         }
+
         private void LoadGroups()
         {
             ListViewGroups.Clear();
@@ -68,18 +77,21 @@ namespace Neutron.Forms
             ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
             ComboBoxGroups.DataSource = groups.ToList();
         }
+
         private void LoadUsers()
         {
             ListViewUsers.Clear();
             var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
         }
+
         private void LoadSecureItems()
         {
             ListViewSecureItems.Clear();
             // SecureItem[] secureItems = context.SecureItems.ToArray();
             ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
         }
+
         public bool CheckAllUsers
         {
             get { return _checkAllUsers; }
@@ -89,6 +101,7 @@ namespace Neutron.Forms
                 ButtonSelectUsers.Text = _checkAllUsers ? "Clear All" : "Check All";
             }
         }
+
         private void ButtonSelectUsers_Click(object sender, EventArgs e)
         {
             CheckAllUsers = !CheckAllUsers;
@@ -101,6 +114,7 @@ namespace Neutron.Forms
                 ClearUsers();
             }
         }
+
         private void CheckUsers()
         {
             foreach (ListViewItem item in ListViewUsers.Items)
@@ -108,6 +122,7 @@ namespace Neutron.Forms
                 item.Checked = true;
             }
         }
+
         private void CheckUsers(List<User> users)
         {
             foreach (ListViewItem item in ListViewUsers.Items)
@@ -123,6 +138,7 @@ namespace Neutron.Forms
                 }
             }
         }
+
         private void ClearUsers()
         {
             foreach (ListViewItem item in ListViewUsers.Items)
@@ -130,6 +146,7 @@ namespace Neutron.Forms
                 item.Checked = false;
             }
         }
+
         private void ButtonSaveNewGroup_Click(object sender, EventArgs e)
         {
             if (TextBoxNewGroup.Text.Length > 3)
@@ -140,6 +157,7 @@ namespace Neutron.Forms
                 RefreshUsersAndSecureItems();
             }
         }
+
         private void ShowChecked_Click(object sender, EventArgs e)
         {
             //string msg = string.Empty;
@@ -149,13 +167,17 @@ namespace Neutron.Forms
             //    {
             //        msg += item.Tag + " " + item.Text + "\r\n";
             //    }
+
             //}
+
             //MessageBox.Show(msg);
         }
+
         private void ComboBoxGroups_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshUsersAndSecureItems();
         }
+
         private void RefreshUsersAndSecureItems()
         {
             var group = (Group)ComboBoxGroups.SelectedItem;
@@ -170,6 +192,7 @@ namespace Neutron.Forms
             CheckSecureItems(secureItems);
             UpdateInformation();
         }
+
         private void UpdateInformation()
         {
             var group = (Group)ComboBoxGroups.SelectedItem;
@@ -182,6 +205,7 @@ namespace Neutron.Forms
                 LabelSecureItemsInformation.Text = $"The {group?.Name} Group has Access to All Checked Items.";
             }
         }
+
         private void ButtonSaveUsers_Click(object sender, EventArgs e)
         {
             var group = (Group)ComboBoxGroups.SelectedItem;
@@ -196,7 +220,9 @@ namespace Neutron.Forms
             }
             _context.SaveChanges();
             SaveSelectedUsers(group);
+
         }
+
         private void SaveSelectedUsers(Group group)
         {
             try
@@ -221,6 +247,7 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error Saving User: {ex.Message}\r\n {ex.InnerException}");
             }
         }
+
         private void DisableSelectedUsers(Group group)
         {
             foreach (ListViewItem item in ListViewUsers.Items)
@@ -233,6 +260,7 @@ namespace Neutron.Forms
             }
             _context.SaveChanges();
         }
+
         private void ButtonSaveNewUser_Click(object sender, EventArgs e)
         {
             var group = (Group)ComboBoxGroups.SelectedItem;
@@ -254,12 +282,15 @@ namespace Neutron.Forms
                     _context.Users.Add(user);
                     _context.GroupUser.Add(new GroupUser { GroupId = group.GroupId, UserId = user.Id });
                     _context.SaveChanges();
+
                     ClearFields();
                     LoadUsers();
                     RefreshUsersAndSecureItems();
+
                 }
             }
         }
+
         private bool VerifyFields()
         {
             var result = true;
@@ -284,6 +315,7 @@ namespace Neutron.Forms
                 sb.AppendLine($"You must provide a PIN number.");
                 result = false;
             }
+
             if (!_neutronVariables.PinLoginOnly)
             {
                 if (string.IsNullOrEmpty(TextBoxUsername.Text.Trim()))
@@ -299,12 +331,15 @@ namespace Neutron.Forms
                     result = false;
                 }
             }
+
             if (!result)
             {
                 MessageBox.Show(sb.ToString());
             }
+
             return result;
         }
+
         private void ClearFields()
         {
             TextBoxEmpId.Text = string.Empty;
@@ -315,9 +350,12 @@ namespace Neutron.Forms
             TextBoxPassword.Text = string.Empty;
             CheckBoxDisabled.Checked = false;
         }
+
         private void ButtonSaveSecureItems_Click(object sender, EventArgs e)
         {
             var group = (Group)ComboBoxGroups.SelectedItem;
+
+
             foreach (var item in _secureItems)
             {
                 var gs = _context.GroupSecureItem.FirstOrDefault(g => g.GroupId == group.GroupId
@@ -330,7 +368,9 @@ namespace Neutron.Forms
             _context.SaveChanges();
             SaveSelectedSecureItems(group);
             RefreshUsersAndSecureItems();
+
         }
+
         private void SaveSelectedSecureItems(Group group)
         {
             foreach (ListViewItem item in ListViewSecureItems.Items)
@@ -351,6 +391,7 @@ namespace Neutron.Forms
             }
             _context.SaveChanges();
         }
+
         public bool CheckAllSecureItems
         {
             get { return _checkAllSecureItems; }
@@ -360,6 +401,7 @@ namespace Neutron.Forms
                 ButtonSelectSecureItems.Text = _checkAllSecureItems ? "Clear All" : "Check All";
             }
         }
+
         private void ButtonSelectSecureItems_Click(object sender, EventArgs e)
         {
             CheckAllSecureItems = !CheckAllSecureItems;
@@ -372,6 +414,7 @@ namespace Neutron.Forms
                 ClearSecureItems();
             }
         }
+
         private void CheckSecureItems()
         {
             foreach (ListViewItem item in ListViewSecureItems.Items)
@@ -379,6 +422,7 @@ namespace Neutron.Forms
                 item.Checked = true;
             }
         }
+
         private void CheckSecureItems(List<SecureItem> secureItems)
         {
             foreach (ListViewItem item in ListViewSecureItems.Items)
@@ -394,6 +438,7 @@ namespace Neutron.Forms
                 }
             }
         }
+
         private void ClearSecureItems()
         {
             foreach (ListViewItem item in ListViewSecureItems.Items)
@@ -401,19 +446,25 @@ namespace Neutron.Forms
                 item.Checked = false;
             }
         }
+
         private void ButtonDisableUsers_ClientSizeChanged(object sender, EventArgs e)
         {
+
         }
+
         private void TabControlSecurity_TabIndexChanged(object sender, EventArgs e)
         {
             UpdateInformation();
         }
+
         private void ButtonFindEditUser_Click(object sender, EventArgs e)
         {
             FindEditUser();
         }
+
         private void FindEditUser()
         {
+
             ButtonDeleteEditUser.Enabled = false;
             var empId = TextBoxEmpIdEditUser.Text.Trim();
             try
@@ -424,6 +475,7 @@ namespace Neutron.Forms
                 {
                     ButtonDeleteEditUser.Enabled = true;
                 }
+
                 DataGridView1.DataSource = recs;
             }
             catch (Exception e)
@@ -432,11 +484,13 @@ namespace Neutron.Forms
             }
             ComboBoxUsers.Focus();
         }
+
         private void ClearGrid()
         {
             DataGridView1.Rows.Clear();
             DataGridView1.Refresh();
         }
+
         private void ButtonDeleteEditUser_Click(object sender, EventArgs e)
         {
             var empId = TextBoxEmpIdEditUser.Text.Trim();
@@ -453,8 +507,10 @@ namespace Neutron.Forms
                     ButtonDeleteEditUser.Enabled = false;
                 }
             }
+
             ButtonDeleteEditUser.Enabled = false;
         }
+
         private void ButtonSaveEditUser_Click(object sender, EventArgs e)
         {
             try
@@ -482,10 +538,12 @@ namespace Neutron.Forms
             }
             ButtonDeleteEditUser.Enabled = false;
         }
+
         private void ButtonClearEditUserFields_Click(object sender, EventArgs e)
         {
             ClearEditUserFields();
         }
+
         private void ClearEditUserFields()
         {
             TextBoxEmpIdEditUser.Text = string.Empty;
@@ -498,10 +556,12 @@ namespace Neutron.Forms
             ButtonDeleteEditUser.Enabled = false;
             ClearGrid();
         }
+
         private void TextBoxEmpIdEditUser_Enter(object sender, EventArgs e)
         {
             HighLightText((TextBox)sender);
         }
+
         private void HighLightText(TextBox textBox)
         {
             if (!String.IsNullOrEmpty(textBox.Text))
@@ -510,73 +570,155 @@ namespace Neutron.Forms
                 textBox.SelectionLength = textBox.Text.Length;
             }
         }
+
         private void SetupGrids()
         {
+
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
+
             var col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "ActionCodeName";
-            col.HeaderText = _gridResourceManager.GetString("ActionCodeName");
+            col.HeaderText = "Action";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "ActionCodeName";
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "ActionDateTime";
-            col.HeaderText = _gridResourceManager.GetString("ActionDateTime");
+            col.HeaderText = "Date";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "ActionDateTime";
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Ord1";
-            col.HeaderText = _gridResourceManager.GetString("Ord1");
+            col.HeaderText = "Job";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Ord1";
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Ord2";
-            col.HeaderText = _gridResourceManager.GetString("Ord2");
+            col.HeaderText = "Invoice";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Ord2";
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Item";
-            col.HeaderText = _gridResourceManager.GetString("Item");
+            col.HeaderText = "Item";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Item";
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "Description";
-            col.HeaderText = _gridResourceManager.GetString("Description");
+            col.HeaderText = "Description";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             col.Name = "Description";
             DataGridView1.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn();
+            //col.DataPropertyName = "OrderStatusName";
+            //col.HeaderText = "Job Status";
+            //col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            //col.Name = "OrderStatusName";
+            //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "RequestedQuantity";
-            col.HeaderText = _gridResourceManager.GetString("RequestedQuantity");
+            col.HeaderText = "Requested";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             col.Name = "RequestedQuantity";
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn();
             col.DataPropertyName = "IssuedQuantity";
             col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.HeaderText = _gridResourceManager.GetString("IssuedQuantity");
+            col.HeaderText = "Issued";
             col.Name = "IssuedQuantity";
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             DataGridView1.Columns.Add(col);
-            }
+
+            //col = new DataGridViewTextBoxColumn();
+            //col.DataPropertyName = "StationName";
+            //col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //col.HeaderText = "Station";
+            //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //col.Name = "StationName";
+            //DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc1";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelDevice;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc1";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc2";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelTray;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc2";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc3";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelOver;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc3";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc4";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelBack;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc4";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc5";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = "Tag";
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc5";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Slot";
+            col.HeaderText = "Slot";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            col.Name = "Slot";
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Id";
+            col.HeaderText = "Id";
+            col.Visible = false;
+            col.Name = "Id";
+            DataGridView1.Columns.Add(col);
+        }
 
         private void ComboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             var user = ((ComboBox)sender).SelectedItem as User;
+
             if (user == null) return;
             _currentUser = user;
             TextBoxEmpIdEditUser.Text = user.EmpId;
@@ -586,9 +728,11 @@ namespace Neutron.Forms
             TextBoxPinEditUser.Text = user.Pin;
             TextBoxUsernameEditUser.Text = user.Username;
             CheckBoxDisabledEditUser.Checked = user.Disabled;
+
             //if (string.IsNullOrEmpty(user.EmpId)) return;
             FindEditUser();
         }
+
         private void SetCulture(string lang)
         {
             try
@@ -597,8 +741,6 @@ namespace Neutron.Forms
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmSecurity",
                resourceDir: languageDirectory, usingResourceSet: null);
-                _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders",
-                    resourceDir: languageDirectory, usingResourceSet: null);
                 TabPageUsers.Text = _resourceManager.GetString("Users");
                 ButtonSaveUsers.Text = _resourceManager.GetString("Save");
                 ButtonSelectUsers.Text = _resourceManager.GetString("CheckAll");
@@ -640,5 +782,7 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
         }
+
     }
 }
+

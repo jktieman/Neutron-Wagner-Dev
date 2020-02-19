@@ -24,10 +24,11 @@ namespace Neutron.Forms
 
         public FrmDefineActionGroup(IJsonData jsonData)
         {
-            _jsonData = jsonData;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
+            _jsonData = jsonData;
+
             InitForm();
         }
 

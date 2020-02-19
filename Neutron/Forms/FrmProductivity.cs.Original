@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,6 +25,7 @@ using Neutron.Models;
 using NeutronCore;
 using NeutronCore.Global;
 using PrintRequest;
+
 namespace Neutron.Forms
 {
     public partial class FrmProductivity : MetroForm
@@ -44,13 +45,6 @@ namespace Neutron.Forms
         private bool _groupItemCheckEnabled = true;
         private bool _userItemCheckEnabled = true;
         private readonly string _fileName = "ProductivityGroups";
-        private DateTime _currentFromDateTime;
-        private DateTime _currentToDateTime;
-
-        private bool _checkAllActions = false;
-        private bool _clearAllActions = false;
-        private bool _checkAllUsers = false;
-        private bool _clearAllUsers = false;
 
         public FrmProductivity(IJsonData jsonData)
         {
@@ -60,39 +54,36 @@ namespace Neutron.Forms
             SetCulture(_cultureInfo.Name);
             HideTabControlTabs();
             DisableEvents();
+
             SetupCheckedListBoxGroups();
             SetupCheckedListBoxActionCodes();
             SetupGrids();
             SetInitialDateTimePickers();
+
             SetupCheckedListBoxUsers();
+
             EnableEvents();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             _formInitialized = true;
-        }
-
-        private void FrmProductivity_Load(object sender, EventArgs e)
-        {
-            var date = DateTime.Now;
-            DateTimePickerFrom.Value = date.FirstDayOfMonth();
-            DateTimePickerTo.Value = date;
-            _currentFromDateTime = date.FirstDayOfMonth();
-            _currentToDateTime = date;
         }
 
         private void EnableEvents()
         {
             CheckedListBoxUsers.ItemCheck += new ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
         }
+
         private void DisableEvents()
         {
             CheckedListBoxUsers.ItemCheck -= new ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
         }
+
         private void SetInitialDateTimePickers()
         {
             var today = DateTime.Today;
             DateTimePickerFrom.Value = today.FirstDayOfMonth();
             DateTimePickerTo.Value = today;
         }
+
         private void HideTabControlTabs()
         {
             tabControl1.Appearance = TabAppearance.FlatButtons;
@@ -100,6 +91,7 @@ namespace Neutron.Forms
             tabControl1.SizeMode = TabSizeMode.Fixed;
         }
         #region SetupCheckedListBoxes
+
         private void SetupCheckedListBoxGroups()
         {
             CheckedListBoxGroups.Items.Clear();
@@ -109,14 +101,18 @@ namespace Neutron.Forms
             {
                 CheckedListBoxGroups.Items.Add(productivityGroup);
             }
+
             CheckedListBoxGroups.DisplayMember = "Name";
             CheckedListBoxGroups.ValueMember = "Name";
+
             CheckedListBoxGroups.SetItemCheckState(0, CheckState.Checked);
             _currentGroup = (ProductivityGroup)CheckedListBoxGroups.Items[0];
         }
+
         private void SetupCheckedListBoxUsers()
         {
             var users = new List<User>();
+
             if (_currentGroup != null)
             {
                 var currentUserIds = _currentGroup.UserIdString.CsvIdString;
@@ -139,6 +135,7 @@ namespace Neutron.Forms
                     users = db.Users.OrderBy(o => o.Lastname).ToList();
                 }
             }
+
             CheckedListBoxUsers.Items.Clear();
             foreach (var user in users)
             {
@@ -146,15 +143,19 @@ namespace Neutron.Forms
             }
             CheckedListBoxUsers.DisplayMember = "FullName";
             CheckedListBoxUsers.ValueMember = "Id";
+
             for (var i = 0; i < CheckedListBoxUsers.Items.Count; i++)
             {
                 CheckedListBoxUsers.SetItemChecked(i, true);
             }
+
         }
+
         private void SetupCheckedListBoxActionCodes()
         {
             var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
             var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+
             var codes = new Dictionary<int, string>();
             foreach (var code in actionCodes)
             {
@@ -173,11 +174,14 @@ namespace Neutron.Forms
             CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
             CheckedListBoxActionCodes.DisplayMember = "Value";
             CheckedListBoxActionCodes.ValueMember = "Key";
+
         }
         //private void SetupCheckedListBoxActionCodes()
         //{
+
         //    var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
         //        .Select(r => new EnumModel() { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
+
         //    var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
         //    if (!string.IsNullOrEmpty(currentIds))
         //    {
@@ -197,294 +201,326 @@ namespace Neutron.Forms
         //    }
         //}
         #endregion
+
         private void SetupGrids()
         {
+
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
+
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Date",
-                HeaderText = _gridResourceManager.GetString("Date"),
+                HeaderText = @"Date",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Date",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Employee",
-                HeaderText = _gridResourceManager.GetString("Employee"),
+                HeaderText = @"Employee",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Employee",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Action",
-                HeaderText = _gridResourceManager.GetString("Action"),
+                HeaderText = @"Action",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Action",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Lines",
-                HeaderText = _gridResourceManager.GetString("Lines"),
+                HeaderText = @"Lines",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Lines",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Pieces",
-                HeaderText = _gridResourceManager.GetString("Pieces"),
+                HeaderText = @"Pieces",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Pieces",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Orders",
-                HeaderText = _gridResourceManager.GetString("Orders"),
+                HeaderText = @"Orders",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Orders",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station",
-                HeaderText = _gridResourceManager.GetString("Station"),
+                HeaderText = @"Station",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 Name = "Station",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UserId",
-                HeaderText = _gridResourceManager.GetString("UserId"),
+                HeaderText = @"UserId",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "UserId",
                 Visible = false
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCodeId",
-                HeaderText = _gridResourceManager.GetString("ActionCodeId"),
+                HeaderText = @"ActionCodeId",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ActionCodeId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Visible = false
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationId",
-                HeaderText = _gridResourceManager.GetString("StationId"),
+                HeaderText = @"StationId",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "StationId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Visible = false
             };
             DataGridView1.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCode",
-                HeaderText = _gridResourceManager.GetString("ActionCode"),
+                HeaderText = @"ActionCode",
                 Visible = false,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "ActionCode",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
+
             foreach (DataGridViewColumn column in DataGridView1.Columns)
             {
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
+
             //DataGridView2
+
             DataGridView2.AutoGenerateColumns = false;
             DataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView2.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView2.DefaultCellStyle.BackColor = Color.White;
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Date",
-                HeaderText = _gridResourceManager.GetString("Date"),
+                HeaderText = @"Date",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Date",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Employee",
-                HeaderText = _gridResourceManager.GetString("Employee"),
+                HeaderText = @"Employee",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Employee",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Action",
-                HeaderText = _gridResourceManager.GetString("Action"),
+                HeaderText = @"Action",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Action",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Order",
-                HeaderText = _gridResourceManager.GetString("Order"),
+                HeaderText = @"Order",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Order",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Reservation",
-                HeaderText = _gridResourceManager.GetString("Reservation"),
+                HeaderText = @"Res",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Reservation",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _gridResourceManager.GetString("Item"),
+                HeaderText = @"Item",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Item",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderText = @"Description",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Description",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Requested",
-                HeaderText = _gridResourceManager.GetString("Requested"),
+                HeaderText = @"Req",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Requested",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Issued",
-                HeaderText = _gridResourceManager.GetString("Issued"),
+                HeaderText = @"Iss",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Issued",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station",
-                HeaderText = _gridResourceManager.GetString("Station"),
+                HeaderText = @"Station",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 Name = "Station",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UserId",
-                HeaderText = _gridResourceManager.GetString("UserId"),
+                HeaderText = @"UserId",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "UserId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Visible = false
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCodeId",
-                HeaderText = _gridResourceManager.GetString("ActionCodeId"),
+                HeaderText = @"ActionCodeId",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "ActionCodeId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Visible = false
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationId",
-                HeaderText = _gridResourceManager.GetString("StationId"),
+                HeaderText = @"Station",
                 Visible = false,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView2.Columns.Add(col);
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCode",
-                HeaderText = _gridResourceManager.GetString("ActionCode"),
+                HeaderText = @"ActionCode",
                 Visible = false,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "ActionCode",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView2.Columns.Add(col);
+
             foreach (DataGridViewColumn column in DataGridView2.Columns)
             {
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
+
         }
+
         private void ButtonCheckAllUsers_Click(object sender, EventArgs e)
         {
-            _checkAllUsers = true;
             SelectAllUserCheckBoxes(checkThem: true);
             var userIds = GetUserIds();
             var codes = GetCodes();
             GetData(userIds, codes);
-            _checkAllUsers = false;
         }
+
         private void ButtonClearAllUsers_Click(object sender, EventArgs e)
         {
-            _clearAllUsers = true;
             SelectAllUserCheckBoxes(checkThem: false);
             ClearAll();
-            _clearAllUsers = false;
         }
+
         private void SelectAllUserCheckBoxes(bool checkThem)
         {
             for (var i = 0; i < (CheckedListBoxUsers.Items.Count); i++)
@@ -492,22 +528,21 @@ namespace Neutron.Forms
                 CheckedListBoxUsers.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
             }
         }
+
         private void ButtonCheckAllActions_Click(object sender, EventArgs e)
         {
-            _checkAllActions = true;
             SelectAllActionCheckBoxes(checkThem: true);
             var userIds = GetUserIds();
             var codes = GetCodes();
             GetData(userIds, codes);
-            _checkAllActions = false;
         }
+
         private void ButtonClearAllActions_Click(object sender, EventArgs e)
         {
-            _clearAllActions = true;
             SelectAllActionCheckBoxes(checkThem: false);
             ClearAll();
-            _clearAllActions = false;
         }
+
         private void SelectAllActionCheckBoxes(bool checkThem)
         {
             for (var i = 0; i < (CheckedListBoxActionCodes.Items.Count); i++)
@@ -515,75 +550,86 @@ namespace Neutron.Forms
                 CheckedListBoxActionCodes.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
             }
         }
+
         private List<string> GetUserIds()
         {
-            //foreach (User item in CheckedListBoxUsers.CheckedItems)
-            //{
-            //    userList.Add(item.Id.ToString());
-            //}
-            return (from User item in CheckedListBoxUsers.CheckedItems select item.Id.ToString()).ToList();
+            var userList = new List<string>();
+
+            foreach (User item in CheckedListBoxUsers.CheckedItems)
+            {
+                userList.Add(item.Id.ToString());
+            }
+            return userList;
         }
+
         private List<string> GetCodes()
         {
-            return (from KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems select item.Key.ToString()).ToList();
-            //var codes = new List<string>();
-            //foreach (KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems)
-            //{
-            //    codes.Add(item.Key.ToString());
-            //}
-            //return codes;
+            var codes = new List<string>();
+
+            foreach (KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems)
+            {
+                codes.Add(item.Key.ToString());
+            }
+            return codes;
         }
-        //private DateTime GetToDate()
-        //{
-        //    var toDate = new DateTime();
-        //    var today = DateTime.Now;
-        //    if (RadioButtonToday.Checked)
-        //    {
-        //        toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 500);
-        //    }
-        //    else if (RadioButtonWeek.Checked)
-        //    {
-        //        var date = today.LastDayOfWeek();
-        //        toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 500);
-        //    }
-        //    else if (RadioButtonMonth.Checked)
-        //    {
-        //        // var date = DateTimePickerFrom.Value;
-        //        var lastDay = today.LastDayOfMonth();
-        //        toDate = new DateTime(lastDay.Year, lastDay.Month, lastDay.Day, 23, 59, 59, 500);
-        //    }
-        //    else if (RadioButtonDateRange.Checked)
-        //    {
-        //        var date = DateTimePickerTo.Value;
-        //        toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 500);
-        //    }
-        //    return toDate;
-        //}
-        //private DateTime GetFromDate()
-        //{
-        //    var fromDate = new DateTime();
-        //    var today = DateTime.Now;
-        //    if (RadioButtonToday.Checked)
-        //    {
-        //        fromDate = new DateTime(today.Year, today.Month, today.Day, 0, 0, 0, 0);
-        //    }
-        //    else if (RadioButtonWeek.Checked)
-        //    {
-        //        var date = today.FirstDayOfWeek();
-        //        fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
-        //    }
-        //    else if (RadioButtonMonth.Checked)
-        //    {
-        //        var date = today.FirstDayOfMonth();
-        //        fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
-        //    }
-        //    else if (RadioButtonDateRange.Checked)
-        //    {
-        //        var date = DateTimePickerFrom.Value;
-        //        fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
-        //    }
-        //    return fromDate;
-        //}
+
+        private DateTime GetToDate()
+        {
+            var toDate = new DateTime();
+            var today = DateTime.Now;
+
+            if (RadioButtonToday.Checked)
+            {
+                toDate = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59, 500);
+            }
+            else if (RadioButtonWeek.Checked)
+            {
+                var date = today.LastDayOfWeek();
+                toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 500);
+            }
+            else if (RadioButtonMonth.Checked)
+            {
+                // var date = DateTimePickerFrom.Value;
+                var lastDay = today.LastDayOfMonth();
+                toDate = new DateTime(lastDay.Year, lastDay.Month, lastDay.Day, 23, 59, 59, 500);
+            }
+            else if (RadioButtonDateRange.Checked)
+            {
+                var date = DateTimePickerTo.Value;
+                toDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 500);
+            }
+
+            return toDate;
+        }
+
+        private DateTime GetFromDate()
+        {
+            var fromDate = new DateTime();
+            var today = DateTime.Now;
+
+            if (RadioButtonToday.Checked)
+            {
+                fromDate = new DateTime(today.Year, today.Month, today.Day, 0, 0, 0, 0);
+            }
+            else if (RadioButtonWeek.Checked)
+            {
+                var date = today.FirstDayOfWeek();
+                fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
+            }
+            else if (RadioButtonMonth.Checked)
+            {
+                var date = today.FirstDayOfMonth();
+                fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
+            }
+            else if (RadioButtonDateRange.Checked)
+            {
+                var date = DateTimePickerFrom.Value;
+                fromDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
+            }
+
+            return fromDate;
+        }
+
         /// <summary>
         /// Returns the first day of the week that the specified
         /// date is in using the current culture. 
@@ -593,6 +639,7 @@ namespace Neutron.Forms
             var defaultCultureInfo = CultureInfo.CurrentCulture;
             return GetFirstDayOfWeek(dayInWeek, defaultCultureInfo);
         }
+
         /// <summary>
         /// Returns the first day of the week that the specified date 
         /// is in. 
@@ -603,43 +650,52 @@ namespace Neutron.Forms
             DateTime firstDayInWeek = dayInWeek.Date;
             while (firstDayInWeek.DayOfWeek != firstDay)
                 firstDayInWeek = firstDayInWeek.AddDays(-1);
+
             return firstDayInWeek;
         }
+
         private void MBSaveHistory_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView1);
         }
+
         private void MBSaveSummary_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView1);
         }
+
         private void MBSaveDetail_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView2);
         }
+
         private void MButtonRun_Click(object sender, EventArgs e)
         {
             var userIds = GetUserIds();
             var codes = GetCodes();
-            _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
+
             GetData(userIds, codes);
         }
+
         private void GetData()
         {
             var userIds = GetUserIds();
             var codes = GetCodes();
+
             GetData(userIds, codes);
         }
+
         private void UpdateSummaryTotals(List<ProductivitySummary> recs)
         {
             TextBoxTotalLinesSummary.Text = recs.Sum(r => r.Lines).ToString();
             TextBoxTotalPiecesSummary.Text = recs.Sum(r => r.Pieces).ToString();
             TextBoxTotalOrdersSummary.Text = recs.Sum(r => r.Orders).ToString();
         }
+
         private void UpdateDetailGrid()
         {
             var currentItem = ((ObjectView<ProductivitySummary>)_bindingSourceSummary.Current).Object;
+
             var recs = GetProductivityDetailRecords(currentItem.ActionCodeId, _fromDate, _toDate, currentItem.UserId,
                 currentItem.StationId);
             var blv = new BindingListView<ProductivityDetail>(recs);
@@ -652,12 +708,14 @@ namespace Neutron.Forms
             }
             DataGridView2.ClearSelection();
         }
+
         private void UpdateDetailTotals(List<ProductivityDetail> recs)
         {
             TextBoxTotalLinesDetail.Text = recs.Count.ToString();
             TextBoxTotalPiecesDetail.Text = recs.Sum(r => r.Issued).ToString();
             TextBoxTotalOrdersDetail.Text = recs.Select(r => r.OrderId).Distinct().Count().ToString();
         }
+
         private List<ProductivityDetail> GetProductivityDetailRecords(int currentItemActionCodeId, DateTime fromDate,
             DateTime toDate, int currentItemUserId, int currentItemStationId)
         {
@@ -677,6 +735,7 @@ namespace Neutron.Forms
                     if (det != null)
                     {
                         details = det.ToList();
+
                     }
                 }
                 catch (Exception ex)
@@ -684,8 +743,10 @@ namespace Neutron.Forms
                     MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} \r\n {ex.InnerException}");
                 }
             }
+
             return details;
         }
+
         public List<ProductivitySummary> GetProductivitySummaryRecords(string codes, DateTime fromDate, DateTime toDate,
             string userIds)
         {
@@ -704,6 +765,7 @@ namespace Neutron.Forms
                     if (summ != null)
                     {
                         summary = summ.ToList();
+
                     }
                 }
                 catch (Exception ex)
@@ -711,12 +773,15 @@ namespace Neutron.Forms
                     MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} \r\n {ex.InnerException}");
                 }
             }
+
             return summary;
         }
+
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // UpdateDetailGrid();
         }
+
         private void SplitContainer1_SplitterMoving(object sender, SplitterCancelEventArgs e)
         {
             //var gridBottom = DataGridView1.Height;
@@ -724,6 +789,7 @@ namespace Neutron.Forms
             //           var point = new Point(ButtonPrintSummary.Location.X, buttonYLocation);
             //           ButtonPrintSummary.Location = point;
         }
+
         private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
             var yValue = DataGridView1.Height + 10;
@@ -734,6 +800,7 @@ namespace Neutron.Forms
             TextBoxTotalPiecesSummary.Location = new Point { X = TextBoxTotalPiecesSummary.Location.X, Y = yValue };
             LabelTotalOrders.Location = new Point { X = LabelTotalOrders.Location.X, Y = yValue + 3 };
             TextBoxTotalOrdersSummary.Location = new Point { X = TextBoxTotalOrdersSummary.Location.X, Y = yValue };
+
             //Detail Panel
             yValue = DataGridView2.Height + 10;
             ButtonPrintDetail.Location = new Point { X = ButtonPrintDetail.Location.X, Y = yValue };
@@ -744,6 +811,7 @@ namespace Neutron.Forms
             LabelTotalOrdersDetail.Location = new Point { X = LabelTotalOrdersDetail.Location.X, Y = yValue + 3 };
             TextBoxTotalOrdersDetail.Location = new Point { X = TextBoxTotalOrdersDetail.Location.X, Y = yValue };
         }
+
         private void SplitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
             //Users
@@ -752,15 +820,18 @@ namespace Neutron.Forms
             ButtonCheckAllUsers.Location = new Point { X = ButtonCheckAllUsers.Location.X, Y = yValue };
             ButtonClearAllUsers.Location = new Point { X = ButtonClearAllUsers.Location.X, Y = yValue };
             ButtonConfigureUsers.Location = new Point { X = ButtonConfigureUsers.Location.X, Y = yValueConfigure };
+
             //Actions
             yValue = CheckedListBoxActionCodes.Height + CheckedListBoxActionCodes.Location.Y + 8;
             yValueConfigure = CheckedListBoxActionCodes.Height + CheckedListBoxActionCodes.Location.Y + 36;
             ButtonCheckAllActions.Location = new Point { X = ButtonCheckAllActions.Location.X, Y = yValue };
             ButtonClearAllActions.Location = new Point { X = ButtonClearAllActions.Location.X, Y = yValue };
             ButtonConfigureActions.Location = new Point { X = ButtonConfigureActions.Location.X, Y = yValueConfigure };
+
             yValue = CheckedListBoxUsers.Location.Y - 8;
             CheckedListBoxGroups.Height = yValue;
         }
+
         private void ButtonConfigureUsers_Click(object sender, EventArgs e)
         {
             using (var frm = new FrmDefineUserGroup(_jsonData))
@@ -774,10 +845,12 @@ namespace Neutron.Forms
                 UpdateCheckedListBoxUsers();
             }
         }
+
         private void CheckedListBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             //GetData();
         }
+
         private void ClearAll()
         {
             DataGridView1.DataSource = null;
@@ -789,20 +862,23 @@ namespace Neutron.Forms
             TextBoxTotalPiecesDetail.Text = string.Empty;
             TextBoxTotalPiecesSummary.Text = string.Empty;
         }
+
         private void DataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             _bindingSourceSummary.Position = e.RowIndex;
             UpdateDetailGrid();
         }
+
+
+
         private void GetData(List<string> checkedUserItems, List<string> checkedActionCodes)
         {
             if (checkedUserItems.Count > 0)
             {
                 if (checkedActionCodes.Count > 0)
                 {
-                    _fromDate = _currentFromDateTime;  // GetFromDate();
-                    _toDate = _currentToDateTime;  // GetToDate();
-
+                    _fromDate = GetFromDate();
+                    _toDate = GetToDate();
                     var codes = string.Join(",", checkedActionCodes);
                     var userIds = string.Join(",", checkedUserItems);
                     var recs = GetProductivitySummaryRecords(codes, _fromDate, _toDate, userIds);
@@ -830,6 +906,7 @@ namespace Neutron.Forms
                 ClearAll();
             }
         }
+
         private void ButtonConfigureActions_Click(object sender, EventArgs e)
         {
             using (var frm = new FrmDefineActionGroup(_jsonData))
@@ -839,25 +916,29 @@ namespace Neutron.Forms
                 SetupCheckedListBoxActionCodes();
             }
         }
+
         private void CheckedListBoxActionCodes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             var checkedItems = new List<string>();
             foreach (KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems)
                 checkedItems.Add(item.Key.ToString());
+
             if (e.NewValue == CheckState.Checked)
                 checkedItems.Add(((KeyValuePair<int, string>)CheckedListBoxActionCodes.Items[e.Index]).Key.ToString());
             else
                 checkedItems.Remove(((KeyValuePair<int, string>)CheckedListBoxActionCodes.Items[e.Index]).Key.ToString());
-            if (_checkAllActions || _clearAllActions) return;
-            var userIds = GetUserIds();
-            GetData(userIds, checkedItems);
 
+            var userIds = GetUserIds();
+
+            GetData(userIds, checkedItems);
         }
+
         private void ButtonPrintSummary_Click(object sender, EventArgs e)
         {
             var totalLines = TextBoxTotalLinesSummary.Text.ParseInt();
             var totalPieces = TextBoxTotalPiecesSummary.Text.ParseInt();
             var totalOrders = TextBoxTotalOrdersSummary.Text.ParseInt();
+
             var summaryList = new List<ProductivitySummary>();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
             var neutronVariables = _jsonData.LoadFile<NeutronVariables>();
@@ -871,6 +952,7 @@ namespace Neutron.Forms
             }
             DocumentToPrint.PrintSummary(summaryList, _documentPrinter, neutronVariables.PrintPreview);
         }
+
         private void ButtonPrintDetail_Click(object sender, EventArgs e)
         {
             foreach (var item in _bindingSourceSummary)
@@ -894,33 +976,39 @@ namespace Neutron.Forms
                     rec.TotalOrders = totalOrders;
                     detailList.Add(rec);
                 }
+
                 DocumentToPrint.PrintDetail(detailList, _documentPrinter, neutronVariables.PrintPreview);
             }
         }
+
         private void DateTimePicker_Enter(object sender, EventArgs e)
         {
             RadioButtonDateRange.Checked = true;
         }
+
         private void DateTimePickerFrom_ValueChanged(object sender, EventArgs e)
         {
-            //if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
-            //{
-            //    DateTimePickerTo.Value = DateTimePickerFrom.Value;
-            //}
-            //GetData();
+            if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
+            {
+                DateTimePickerTo.Value = DateTimePickerFrom.Value;
+            }
+            GetData();
         }
+
         private void RadioButtonDate(object sender, EventArgs e)
         {
             GetData();
         }
+
         private void DateTimePickerTo_ValueChanged(object sender, EventArgs e)
         {
-            //if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
-            //{
-            //    DateTimePickerTo.Value = DateTimePickerFrom.Value;
-            //}
-            //GetData();
+            if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
+            {
+                DateTimePickerTo.Value = DateTimePickerFrom.Value;
+            }
+            GetData();
         }
+
         private void CheckedListBoxGroups_ItemCheck(object sender, ItemCheckEventArgs e)
         {
 
@@ -929,12 +1017,10 @@ namespace Neutron.Forms
             if (e.NewValue != CheckState.Checked)
             {
                 _currentGroup = null;
-                UpdateCheckedListBoxUsers();
-                GetData(new List<string>(), GetCodes() );
                 _groupItemCheckEnabled = true;
                 return;
             }
-            _checkAllUsers = true;
+
             var selectedIndexes = CheckedListBoxGroups.CheckedIndices;
             if (selectedIndexes.Count > 0)
             {
@@ -942,27 +1028,33 @@ namespace Neutron.Forms
                 CheckedListBoxGroups.SetItemChecked(selectedIndexes[0], false);
                 _groupItemCheckEnabled = true;
             }
+
             _currentGroup = (ProductivityGroup)CheckedListBoxGroups.SelectedItem;
             UpdateCheckedListBoxUsers();
             var checkedItems = _currentGroup.UserIdString.CsvIdString.Split(',').ToList();
             var codes = GetCodes();
+
             GetData(checkedItems, codes);
-            _checkAllUsers = false;
         }
+
         private void CheckedListBoxUsers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+
             if (!_formInitialized || !_userItemCheckEnabled) return;
             var checkedItems = new List<string>();
             foreach (User item in CheckedListBoxUsers.CheckedItems)
                 checkedItems.Add(item.Id.ToString());
+
             if (e.NewValue == CheckState.Checked)
                 checkedItems.Add(((User)CheckedListBoxUsers.Items[e.Index]).Id.ToString());
             else
                 checkedItems.Remove(((User)CheckedListBoxUsers.Items[e.Index]).Id.ToString());
-            if (_checkAllUsers || _clearAllUsers) return;
+
             var codes = GetCodes();
+
             GetData(checkedItems, codes);
         }
+
         private void UpdateCheckedListBoxUsers()
         {
             CheckedListBoxUsers.Items.Clear();
@@ -986,63 +1078,6 @@ namespace Neutron.Forms
             }
         }
 
-        private void RadioButtonToday_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!((RadioButton)sender).Checked) return;
-            var date = DateTime.Now;
-            DateTimePickerFrom.Value = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
-            _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
-            GetData();
-        }
-
-        private void RadioButtonWeek_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!((RadioButton)sender).Checked) return;
-            var date = DateTime.Now;
-            var firstDay = date.FirstDayOfWeek();
-            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
-            _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
-            GetData();
-        }
-
-        private void RadioButtonMonth_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!((RadioButton)sender).Checked) return;
-            var date = DateTime.Now;
-            var firstDay = date.FirstDayOfMonth();
-            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
-            _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
-            GetData();
-        }
-
-        private void RadioButtonDateRange_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!((RadioButton)sender).Checked) return;
-            var date = DateTime.Now;
-            var firstDay = date.FirstDayOfMonth();
-            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
-            _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
-            GetData();
-        }
-
-        private void DateTimePickerFrom_Enter(object sender, EventArgs e)
-        {
-            RadioButtonDateRange.Checked = true;
-        }
-
-        private void DateTimePickerTo_Enter(object sender, EventArgs e)
-        {
-            RadioButtonDateRange.Checked = true;
-        }
-
         private void SetCulture(string lang)
         {
             try
@@ -1055,6 +1090,7 @@ namespace Neutron.Forms
                     resourceDir: languageDirectory, usingResourceSet: null);
                 _enumResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "EnumDescriptions",
                     resourceDir: languageDirectory, usingResourceSet: null);
+
                 ButtonConfigureUsers.Text = _resourceManager.GetString("ConfigureUsers");
                 ButtonClearAllUsers.Text = _resourceManager.GetString("ClearAll");
                 ButtonCheckAllUsers.Text = _resourceManager.GetString("CheckAll");
@@ -1082,11 +1118,14 @@ namespace Neutron.Forms
                 LabelFormTitle.Text = _resourceManager.GetString("Productivity");
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
                 this.Text = _resourceManager.GetString("Productivity");
+                _resourceManager.GetString("Message0");
+                _resourceManager.GetString("Message1");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
         }
+
     }
 }

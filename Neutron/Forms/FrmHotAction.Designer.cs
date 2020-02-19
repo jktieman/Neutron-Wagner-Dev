@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -48,31 +48,6 @@
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.HotAction = new System.Windows.Forms.TabPage();
-            this.ComboBoxLocationCodeItem = new System.Windows.Forms.ComboBox();
-            this.LabelMainLocation = new System.Windows.Forms.Label();
-            this.ComboBoxHeightCodeItem = new System.Windows.Forms.ComboBox();
-            this.ComboBoxVelocityCodeItem = new System.Windows.Forms.ComboBox();
-            this.ComboBoxSizeCodeItem = new System.Windows.Forms.ComboBox();
-            this.ButtonEditItemDefinition = new System.Windows.Forms.Button();
-            this.LabelMainHeight = new System.Windows.Forms.Label();
-            this.LabelMainVelocity = new System.Windows.Forms.Label();
-            this.LabelMainSize = new System.Windows.Forms.Label();
-            this.LabelHotPickUOI = new System.Windows.Forms.Label();
-            this.LabelMainUnitOfIssue = new System.Windows.Forms.Label();
-            this.GroupBoxHotActions = new System.Windows.Forms.GroupBox();
-            this.TextBoxFindCostCenter = new System.Windows.Forms.TextBox();
-            this.ComboBoxCostCenter = new System.Windows.Forms.ComboBox();
-            this.RadioButtonCostCenter = new System.Windows.Forms.RadioButton();
-            this.RadioButtonOther = new System.Windows.Forms.RadioButton();
-            this.RadioButtonScrap = new System.Windows.Forms.RadioButton();
-            this.RadioButtonWarranty = new System.Windows.Forms.RadioButton();
-            this.RadioButtonPick = new System.Windows.Forms.RadioButton();
-            this.TextBoxHotPickQuantity = new System.Windows.Forms.TextBox();
-            this.LabelHotPickDescription = new System.Windows.Forms.Label();
-            this.LabelMainQuantity = new System.Windows.Forms.Label();
-            this.LabelHotPickItem = new System.Windows.Forms.Label();
-            this.LabelMainItem = new System.Windows.Forms.Label();
-            this.LabelMainDescription = new System.Windows.Forms.Label();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.ComboBoxLocationCodeLocation = new System.Windows.Forms.ComboBox();
             this.LabelLocation = new System.Windows.Forms.Label();
@@ -99,6 +74,31 @@
             this.LabelOver = new System.Windows.Forms.Label();
             this.LabelTray = new System.Windows.Forms.Label();
             this.LabelDevice = new System.Windows.Forms.Label();
+            this.ComboBoxLocationCodeItem = new System.Windows.Forms.ComboBox();
+            this.LabelMainLocation = new System.Windows.Forms.Label();
+            this.ComboBoxHeightCodeItem = new System.Windows.Forms.ComboBox();
+            this.ComboBoxVelocityCodeItem = new System.Windows.Forms.ComboBox();
+            this.ComboBoxSizeCodeItem = new System.Windows.Forms.ComboBox();
+            this.ButtonEditItemDefinition = new System.Windows.Forms.Button();
+            this.LabelMainHeight = new System.Windows.Forms.Label();
+            this.LabelMainVelocity = new System.Windows.Forms.Label();
+            this.LabelMainSize = new System.Windows.Forms.Label();
+            this.LabelHotPickUOI = new System.Windows.Forms.Label();
+            this.LabelMainUnitOfIssue = new System.Windows.Forms.Label();
+            this.GroupBoxHotActions = new System.Windows.Forms.GroupBox();
+            this.TextBoxFindCostCenter = new System.Windows.Forms.TextBox();
+            this.ComboBoxCostCenter = new System.Windows.Forms.ComboBox();
+            this.RadioButtonCostCenter = new System.Windows.Forms.RadioButton();
+            this.RadioButtonOther = new System.Windows.Forms.RadioButton();
+            this.RadioButtonScrap = new System.Windows.Forms.RadioButton();
+            this.RadioButtonWarranty = new System.Windows.Forms.RadioButton();
+            this.RadioButtonPick = new System.Windows.Forms.RadioButton();
+            this.TextBoxHotPickQuantity = new System.Windows.Forms.TextBox();
+            this.LabelHotPickDescription = new System.Windows.Forms.Label();
+            this.LabelMainQuantity = new System.Windows.Forms.Label();
+            this.LabelHotPickItem = new System.Windows.Forms.Label();
+            this.LabelMainItem = new System.Windows.Forms.Label();
+            this.LabelMainDescription = new System.Windows.Forms.Label();
             this.MBHotActionCount = new MetroFramework.Controls.MetroButton();
             this.MBHotAccept = new MetroFramework.Controls.MetroButton();
             this.MBHotActionBack = new MetroFramework.Controls.MetroButton();
@@ -110,8 +110,8 @@
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
             this.HotAction.SuspendLayout();
-            this.GroupBoxHotActions.SuspendLayout();
             this.GroupBoxHotPickLocation.SuspendLayout();
+            this.GroupBoxHotActions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -158,7 +158,7 @@
             // CheckBoxAll
             // 
             this.CheckBoxAll.AutoSize = true;
-            this.CheckBoxAll.Location = new System.Drawing.Point(721, 81);
+            this.CheckBoxAll.Location = new System.Drawing.Point(755, 81);
             this.CheckBoxAll.Name = "CheckBoxAll";
             this.CheckBoxAll.Size = new System.Drawing.Size(37, 17);
             this.CheckBoxAll.TabIndex = 32;
@@ -172,10 +172,10 @@
             this.MBHotStore.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHotStore.Enabled = false;
             this.MBHotStore.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotStore.Location = new System.Drawing.Point(205, 9);
+            this.MBHotStore.Location = new System.Drawing.Point(177, 9);
             this.MBHotStore.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHotStore.Name = "MBHotStore";
-            this.MBHotStore.Size = new System.Drawing.Size(177, 96);
+            this.MBHotStore.Size = new System.Drawing.Size(150, 96);
             this.MBHotStore.TabIndex = 3;
             this.MBHotStore.Text = "Hot Store";
             this.MBHotStore.UseCustomBackColor = true;
@@ -190,7 +190,7 @@
             this.MBHotPick.Location = new System.Drawing.Point(12, 9);
             this.MBHotPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHotPick.Name = "MBHotPick";
-            this.MBHotPick.Size = new System.Drawing.Size(177, 96);
+            this.MBHotPick.Size = new System.Drawing.Size(150, 96);
             this.MBHotPick.Style = MetroFramework.MetroColorStyle.Red;
             this.MBHotPick.TabIndex = 2;
             this.MBHotPick.Text = "Hot Pick";
@@ -200,12 +200,12 @@
             // 
             // LabelSearch
             // 
-            this.LabelSearch.Location = new System.Drawing.Point(431, 44);
+            this.LabelSearch.Location = new System.Drawing.Point(398, 44);
             this.LabelSearch.Name = "LabelSearch";
-            this.LabelSearch.Size = new System.Drawing.Size(265, 20);
+            this.LabelSearch.Size = new System.Drawing.Size(350, 20);
             this.LabelSearch.TabIndex = 31;
             this.LabelSearch.Text = "Search for any part of Item or Description and hit Enter";
-            this.LabelSearch.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.LabelSearch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TextBoxFindItem
             // 
@@ -223,7 +223,7 @@
             this.ButtonClearFindItem.Location = new System.Drawing.Point(714, 9);
             this.ButtonClearFindItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClearFindItem.Name = "ButtonClearFindItem";
-            this.ButtonClearFindItem.Size = new System.Drawing.Size(34, 38);
+            this.ButtonClearFindItem.Size = new System.Drawing.Size(34, 29);
             this.ButtonClearFindItem.TabIndex = 6;
             this.ButtonClearFindItem.Text = "X";
             this.ButtonClearFindItem.UseVisualStyleBackColor = true;
@@ -234,10 +234,10 @@
             this.MBHotActionClose.BackColor = System.Drawing.Color.RoyalBlue;
             this.MBHotActionClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHotActionClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotActionClose.Location = new System.Drawing.Point(957, 9);
+            this.MBHotActionClose.Location = new System.Drawing.Point(979, 9);
             this.MBHotActionClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHotActionClose.Name = "MBHotActionClose";
-            this.MBHotActionClose.Size = new System.Drawing.Size(177, 96);
+            this.MBHotActionClose.Size = new System.Drawing.Size(150, 96);
             this.MBHotActionClose.TabIndex = 4;
             this.MBHotActionClose.Text = "Close";
             this.MBHotActionClose.UseSelectable = true;
@@ -248,10 +248,10 @@
             this.MBNewLocations.BackColor = System.Drawing.Color.SkyBlue;
             this.MBNewLocations.Enabled = false;
             this.MBNewLocations.FontSize = MetroFramework.MetroButtonSize.Medium;
-            this.MBNewLocations.Location = new System.Drawing.Point(561, 71);
+            this.MBNewLocations.Location = new System.Drawing.Point(576, 71);
             this.MBNewLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBNewLocations.Name = "MBNewLocations";
-            this.MBNewLocations.Size = new System.Drawing.Size(153, 34);
+            this.MBNewLocations.Size = new System.Drawing.Size(165, 34);
             this.MBNewLocations.TabIndex = 5;
             this.MBNewLocations.Text = "New Locations";
             this.MBNewLocations.UseSelectable = true;
@@ -263,10 +263,10 @@
             this.MBCurrentLocations.Enabled = false;
             this.MBCurrentLocations.FontSize = MetroFramework.MetroButtonSize.Medium;
             this.MBCurrentLocations.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.MBCurrentLocations.Location = new System.Drawing.Point(398, 71);
+            this.MBCurrentLocations.Location = new System.Drawing.Point(405, 71);
             this.MBCurrentLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCurrentLocations.Name = "MBCurrentLocations";
-            this.MBCurrentLocations.Size = new System.Drawing.Size(144, 34);
+            this.MBCurrentLocations.Size = new System.Drawing.Size(165, 34);
             this.MBCurrentLocations.TabIndex = 5;
             this.MBCurrentLocations.Text = "Current Locations";
             this.MBCurrentLocations.UseSelectable = true;
@@ -275,10 +275,10 @@
             // MBFindItem
             // 
             this.MBFindItem.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFindItem.Location = new System.Drawing.Point(764, 9);
+            this.MBFindItem.Location = new System.Drawing.Point(814, 9);
             this.MBFindItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBFindItem.Name = "MBFindItem";
-            this.MBFindItem.Size = new System.Drawing.Size(177, 96);
+            this.MBFindItem.Size = new System.Drawing.Size(150, 96);
             this.MBFindItem.TabIndex = 5;
             this.MBFindItem.Text = "Search";
             this.MBFindItem.UseSelectable = true;
@@ -288,38 +288,38 @@
             // 
             this.DataGridViewHot.AllowUserToAddRows = false;
             this.DataGridViewHot.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridViewHot.Location = new System.Drawing.Point(12, 122);
             this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewHot.MultiSelect = false;
             this.DataGridViewHot.Name = "DataGridViewHot";
             this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewHot.RowTemplate.Height = 28;
             this.DataGridViewHot.RowTemplate.ReadOnly = true;
@@ -360,292 +360,6 @@
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
             this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
-            // 
-            // ComboBoxLocationCodeItem
-            // 
-            this.ComboBoxLocationCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxLocationCodeItem.FormattingEnabled = true;
-            this.ComboBoxLocationCodeItem.Location = new System.Drawing.Point(903, 293);
-            this.ComboBoxLocationCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ComboBoxLocationCodeItem.Name = "ComboBoxLocationCodeItem";
-            this.ComboBoxLocationCodeItem.Size = new System.Drawing.Size(120, 21);
-            this.ComboBoxLocationCodeItem.TabIndex = 12;
-            this.ComboBoxLocationCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxLocationCodeItem_SelectionChangeCommitted);
-            // 
-            // LabelMainLocation
-            // 
-            this.LabelMainLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainLocation.Location = new System.Drawing.Point(780, 294);
-            this.LabelMainLocation.Name = "LabelMainLocation";
-            this.LabelMainLocation.Size = new System.Drawing.Size(110, 16);
-            this.LabelMainLocation.TabIndex = 11;
-            this.LabelMainLocation.Text = "Location";
-            this.LabelMainLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // ComboBoxHeightCodeItem
-            // 
-            this.ComboBoxHeightCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxHeightCodeItem.FormattingEnabled = true;
-            this.ComboBoxHeightCodeItem.Location = new System.Drawing.Point(647, 293);
-            this.ComboBoxHeightCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ComboBoxHeightCodeItem.Name = "ComboBoxHeightCodeItem";
-            this.ComboBoxHeightCodeItem.Size = new System.Drawing.Size(120, 21);
-            this.ComboBoxHeightCodeItem.TabIndex = 10;
-            this.ComboBoxHeightCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxHeightCodeItem_SelectionChangeCommitted);
-            // 
-            // ComboBoxVelocityCodeItem
-            // 
-            this.ComboBoxVelocityCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxVelocityCodeItem.FormattingEnabled = true;
-            this.ComboBoxVelocityCodeItem.Location = new System.Drawing.Point(391, 290);
-            this.ComboBoxVelocityCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ComboBoxVelocityCodeItem.Name = "ComboBoxVelocityCodeItem";
-            this.ComboBoxVelocityCodeItem.Size = new System.Drawing.Size(120, 21);
-            this.ComboBoxVelocityCodeItem.TabIndex = 8;
-            this.ComboBoxVelocityCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxVelocityCodeItem_SelectionChangeCommitted);
-            // 
-            // ComboBoxSizeCodeItem
-            // 
-            this.ComboBoxSizeCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxSizeCodeItem.FormattingEnabled = true;
-            this.ComboBoxSizeCodeItem.Location = new System.Drawing.Point(135, 290);
-            this.ComboBoxSizeCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ComboBoxSizeCodeItem.Name = "ComboBoxSizeCodeItem";
-            this.ComboBoxSizeCodeItem.Size = new System.Drawing.Size(120, 21);
-            this.ComboBoxSizeCodeItem.TabIndex = 6;
-            this.ComboBoxSizeCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxSizeCodeItem_SelectionChangeCommitted);
-            // 
-            // ButtonEditItemDefinition
-            // 
-            this.ButtonEditItemDefinition.Location = new System.Drawing.Point(1037, 291);
-            this.ButtonEditItemDefinition.Name = "ButtonEditItemDefinition";
-            this.ButtonEditItemDefinition.Size = new System.Drawing.Size(80, 23);
-            this.ButtonEditItemDefinition.TabIndex = 13;
-            this.ButtonEditItemDefinition.Text = "Edit";
-            this.ButtonEditItemDefinition.UseVisualStyleBackColor = true;
-            this.ButtonEditItemDefinition.Click += new System.EventHandler(this.ButtonEditItemDefinition_Click);
-            // 
-            // LabelMainHeight
-            // 
-            this.LabelMainHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainHeight.Location = new System.Drawing.Point(524, 294);
-            this.LabelMainHeight.Name = "LabelMainHeight";
-            this.LabelMainHeight.Size = new System.Drawing.Size(110, 16);
-            this.LabelMainHeight.TabIndex = 9;
-            this.LabelMainHeight.Text = "Height";
-            this.LabelMainHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelMainVelocity
-            // 
-            this.LabelMainVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainVelocity.Location = new System.Drawing.Point(268, 294);
-            this.LabelMainVelocity.Name = "LabelMainVelocity";
-            this.LabelMainVelocity.Size = new System.Drawing.Size(110, 16);
-            this.LabelMainVelocity.TabIndex = 7;
-            this.LabelMainVelocity.Text = "Velocity";
-            this.LabelMainVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelMainSize
-            // 
-            this.LabelMainSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainSize.Location = new System.Drawing.Point(12, 294);
-            this.LabelMainSize.Name = "LabelMainSize";
-            this.LabelMainSize.Size = new System.Drawing.Size(110, 16);
-            this.LabelMainSize.TabIndex = 5;
-            this.LabelMainSize.Text = "Size";
-            this.LabelMainSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelHotPickUOI
-            // 
-            this.LabelHotPickUOI.BackColor = System.Drawing.Color.White;
-            this.LabelHotPickUOI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelHotPickUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickUOI.Location = new System.Drawing.Point(845, 125);
-            this.LabelHotPickUOI.Name = "LabelHotPickUOI";
-            this.LabelHotPickUOI.Size = new System.Drawing.Size(289, 66);
-            this.LabelHotPickUOI.TabIndex = 18;
-            this.LabelHotPickUOI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelMainUnitOfIssue
-            // 
-            this.LabelMainUnitOfIssue.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainUnitOfIssue.Location = new System.Drawing.Point(587, 140);
-            this.LabelMainUnitOfIssue.Name = "LabelMainUnitOfIssue";
-            this.LabelMainUnitOfIssue.Size = new System.Drawing.Size(252, 42);
-            this.LabelMainUnitOfIssue.TabIndex = 17;
-            this.LabelMainUnitOfIssue.Text = "Unit of Issue";
-            this.LabelMainUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // GroupBoxHotActions
-            // 
-            this.GroupBoxHotActions.Controls.Add(this.TextBoxFindCostCenter);
-            this.GroupBoxHotActions.Controls.Add(this.ComboBoxCostCenter);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonCostCenter);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonOther);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonScrap);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonWarranty);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonPick);
-            this.GroupBoxHotActions.Location = new System.Drawing.Point(15, 6);
-            this.GroupBoxHotActions.Name = "GroupBoxHotActions";
-            this.GroupBoxHotActions.Size = new System.Drawing.Size(914, 99);
-            this.GroupBoxHotActions.TabIndex = 0;
-            this.GroupBoxHotActions.TabStop = false;
-            this.GroupBoxHotActions.Text = "Transaction Type";
-            // 
-            // TextBoxFindCostCenter
-            // 
-            this.TextBoxFindCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFindCostCenter.Location = new System.Drawing.Point(208, 53);
-            this.TextBoxFindCostCenter.Name = "TextBoxFindCostCenter";
-            this.TextBoxFindCostCenter.Size = new System.Drawing.Size(170, 29);
-            this.TextBoxFindCostCenter.TabIndex = 0;
-            this.TextBoxFindCostCenter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindCostCenter_KeyDown);
-            this.TextBoxFindCostCenter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxFindCostCenter_KeyPress);
-            this.TextBoxFindCostCenter.Leave += new System.EventHandler(this.TextBoxFindCostCenter_Leave);
-            // 
-            // ComboBoxCostCenter
-            // 
-            this.ComboBoxCostCenter.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.ComboBoxCostCenter.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxCostCenter.FormattingEnabled = true;
-            this.ComboBoxCostCenter.Location = new System.Drawing.Point(394, 50);
-            this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
-            this.ComboBoxCostCenter.Size = new System.Drawing.Size(513, 32);
-            this.ComboBoxCostCenter.TabIndex = 1;
-            this.ComboBoxCostCenter.TextChanged += new System.EventHandler(this.ComboBoxCostCenter_TextChanged);
-            // 
-            // RadioButtonCostCenter
-            // 
-            this.RadioButtonCostCenter.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonCostCenter.Checked = true;
-            this.RadioButtonCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonCostCenter.Location = new System.Drawing.Point(21, 53);
-            this.RadioButtonCostCenter.Name = "RadioButtonCostCenter";
-            this.RadioButtonCostCenter.Size = new System.Drawing.Size(181, 28);
-            this.RadioButtonCostCenter.TabIndex = 2;
-            this.RadioButtonCostCenter.TabStop = true;
-            this.RadioButtonCostCenter.Tag = "Cost Center";
-            this.RadioButtonCostCenter.Text = "Cost Center";
-            this.RadioButtonCostCenter.UseVisualStyleBackColor = false;
-            // 
-            // RadioButtonOther
-            // 
-            this.RadioButtonOther.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonOther.Location = new System.Drawing.Point(712, 17);
-            this.RadioButtonOther.Name = "RadioButtonOther";
-            this.RadioButtonOther.Size = new System.Drawing.Size(133, 28);
-            this.RadioButtonOther.TabIndex = 6;
-            this.RadioButtonOther.Tag = "Other";
-            this.RadioButtonOther.Text = "Other";
-            this.RadioButtonOther.UseVisualStyleBackColor = false;
-            this.RadioButtonOther.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
-            // 
-            // RadioButtonScrap
-            // 
-            this.RadioButtonScrap.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonScrap.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonScrap.Location = new System.Drawing.Point(493, 17);
-            this.RadioButtonScrap.Name = "RadioButtonScrap";
-            this.RadioButtonScrap.Size = new System.Drawing.Size(133, 28);
-            this.RadioButtonScrap.TabIndex = 5;
-            this.RadioButtonScrap.Tag = "Scrap";
-            this.RadioButtonScrap.Text = "Scrap";
-            this.RadioButtonScrap.UseVisualStyleBackColor = false;
-            this.RadioButtonScrap.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
-            // 
-            // RadioButtonWarranty
-            // 
-            this.RadioButtonWarranty.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonWarranty.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonWarranty.Location = new System.Drawing.Point(240, 17);
-            this.RadioButtonWarranty.Name = "RadioButtonWarranty";
-            this.RadioButtonWarranty.Size = new System.Drawing.Size(167, 28);
-            this.RadioButtonWarranty.TabIndex = 4;
-            this.RadioButtonWarranty.Tag = "Warranty";
-            this.RadioButtonWarranty.Text = "Warranty";
-            this.RadioButtonWarranty.UseVisualStyleBackColor = false;
-            this.RadioButtonWarranty.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
-            // 
-            // RadioButtonPick
-            // 
-            this.RadioButtonPick.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonPick.Location = new System.Drawing.Point(21, 17);
-            this.RadioButtonPick.Name = "RadioButtonPick";
-            this.RadioButtonPick.Size = new System.Drawing.Size(133, 28);
-            this.RadioButtonPick.TabIndex = 3;
-            this.RadioButtonPick.Tag = "Pick";
-            this.RadioButtonPick.Text = "Pick";
-            this.RadioButtonPick.UseVisualStyleBackColor = false;
-            this.RadioButtonPick.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
-            // 
-            // TextBoxHotPickQuantity
-            // 
-            this.TextBoxHotPickQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickQuantity.Location = new System.Drawing.Point(957, 391);
-            this.TextBoxHotPickQuantity.Name = "TextBoxHotPickQuantity";
-            this.TextBoxHotPickQuantity.Size = new System.Drawing.Size(177, 80);
-            this.TextBoxHotPickQuantity.TabIndex = 1;
-            this.TextBoxHotPickQuantity.Text = "1";
-            this.TextBoxHotPickQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxHotPickQuantity.TextChanged += new System.EventHandler(this.TextBoxHotPickQuantity_TextChanged);
-            this.TextBoxHotPickQuantity.Leave += new System.EventHandler(this.TextBoxHotPickQuantity_Leave);
-            // 
-            // LabelHotPickDescription
-            // 
-            this.LabelHotPickDescription.BackColor = System.Drawing.SystemColors.Control;
-            this.LabelHotPickDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelHotPickDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickDescription.Location = new System.Drawing.Point(191, 207);
-            this.LabelHotPickDescription.Name = "LabelHotPickDescription";
-            this.LabelHotPickDescription.Size = new System.Drawing.Size(943, 63);
-            this.LabelHotPickDescription.TabIndex = 20;
-            this.LabelHotPickDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelMainQuantity
-            // 
-            this.LabelMainQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainQuantity.Location = new System.Drawing.Point(698, 417);
-            this.LabelMainQuantity.Name = "LabelMainQuantity";
-            this.LabelMainQuantity.Size = new System.Drawing.Size(253, 44);
-            this.LabelMainQuantity.TabIndex = 14;
-            this.LabelMainQuantity.Text = "Qty";
-            this.LabelMainQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelHotPickItem
-            // 
-            this.LabelHotPickItem.BackColor = System.Drawing.SystemColors.Control;
-            this.LabelHotPickItem.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelHotPickItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickItem.Location = new System.Drawing.Point(191, 125);
-            this.LabelHotPickItem.Name = "LabelHotPickItem";
-            this.LabelHotPickItem.Size = new System.Drawing.Size(378, 66);
-            this.LabelHotPickItem.TabIndex = 16;
-            this.LabelHotPickItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelHotPickItem.DoubleClick += new System.EventHandler(this.LabelHotPickItem_Click);
-            // 
-            // LabelMainItem
-            // 
-            this.LabelMainItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainItem.Location = new System.Drawing.Point(27, 139);
-            this.LabelMainItem.Name = "LabelMainItem";
-            this.LabelMainItem.Size = new System.Drawing.Size(158, 44);
-            this.LabelMainItem.TabIndex = 15;
-            this.LabelMainItem.Text = "Item";
-            this.LabelMainItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelMainDescription
-            // 
-            this.LabelMainDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainDescription.Location = new System.Drawing.Point(10, 214);
-            this.LabelMainDescription.Name = "LabelMainDescription";
-            this.LabelMainDescription.Size = new System.Drawing.Size(175, 49);
-            this.LabelMainDescription.TabIndex = 19;
-            this.LabelMainDescription.Text = "Desc";
-            this.LabelMainDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // GroupBoxHotPickLocation
             // 
@@ -951,6 +665,292 @@
             this.LabelDevice.Text = "Device";
             this.LabelDevice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // ComboBoxLocationCodeItem
+            // 
+            this.ComboBoxLocationCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxLocationCodeItem.FormattingEnabled = true;
+            this.ComboBoxLocationCodeItem.Location = new System.Drawing.Point(903, 293);
+            this.ComboBoxLocationCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxLocationCodeItem.Name = "ComboBoxLocationCodeItem";
+            this.ComboBoxLocationCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxLocationCodeItem.TabIndex = 12;
+            this.ComboBoxLocationCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxLocationCodeItem_SelectionChangeCommitted);
+            // 
+            // LabelMainLocation
+            // 
+            this.LabelMainLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainLocation.Location = new System.Drawing.Point(780, 294);
+            this.LabelMainLocation.Name = "LabelMainLocation";
+            this.LabelMainLocation.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainLocation.TabIndex = 11;
+            this.LabelMainLocation.Text = "Location";
+            this.LabelMainLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // ComboBoxHeightCodeItem
+            // 
+            this.ComboBoxHeightCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxHeightCodeItem.FormattingEnabled = true;
+            this.ComboBoxHeightCodeItem.Location = new System.Drawing.Point(647, 293);
+            this.ComboBoxHeightCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxHeightCodeItem.Name = "ComboBoxHeightCodeItem";
+            this.ComboBoxHeightCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxHeightCodeItem.TabIndex = 10;
+            this.ComboBoxHeightCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxHeightCodeItem_SelectionChangeCommitted);
+            // 
+            // ComboBoxVelocityCodeItem
+            // 
+            this.ComboBoxVelocityCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxVelocityCodeItem.FormattingEnabled = true;
+            this.ComboBoxVelocityCodeItem.Location = new System.Drawing.Point(391, 290);
+            this.ComboBoxVelocityCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxVelocityCodeItem.Name = "ComboBoxVelocityCodeItem";
+            this.ComboBoxVelocityCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxVelocityCodeItem.TabIndex = 8;
+            this.ComboBoxVelocityCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxVelocityCodeItem_SelectionChangeCommitted);
+            // 
+            // ComboBoxSizeCodeItem
+            // 
+            this.ComboBoxSizeCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxSizeCodeItem.FormattingEnabled = true;
+            this.ComboBoxSizeCodeItem.Location = new System.Drawing.Point(135, 290);
+            this.ComboBoxSizeCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxSizeCodeItem.Name = "ComboBoxSizeCodeItem";
+            this.ComboBoxSizeCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxSizeCodeItem.TabIndex = 6;
+            this.ComboBoxSizeCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxSizeCodeItem_SelectionChangeCommitted);
+            // 
+            // ButtonEditItemDefinition
+            // 
+            this.ButtonEditItemDefinition.Location = new System.Drawing.Point(1037, 291);
+            this.ButtonEditItemDefinition.Name = "ButtonEditItemDefinition";
+            this.ButtonEditItemDefinition.Size = new System.Drawing.Size(80, 23);
+            this.ButtonEditItemDefinition.TabIndex = 13;
+            this.ButtonEditItemDefinition.Text = "Edit";
+            this.ButtonEditItemDefinition.UseVisualStyleBackColor = true;
+            this.ButtonEditItemDefinition.Click += new System.EventHandler(this.ButtonEditItemDefinition_Click);
+            // 
+            // LabelMainHeight
+            // 
+            this.LabelMainHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainHeight.Location = new System.Drawing.Point(524, 294);
+            this.LabelMainHeight.Name = "LabelMainHeight";
+            this.LabelMainHeight.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainHeight.TabIndex = 9;
+            this.LabelMainHeight.Text = "Height";
+            this.LabelMainHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelMainVelocity
+            // 
+            this.LabelMainVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainVelocity.Location = new System.Drawing.Point(268, 294);
+            this.LabelMainVelocity.Name = "LabelMainVelocity";
+            this.LabelMainVelocity.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainVelocity.TabIndex = 7;
+            this.LabelMainVelocity.Text = "Velocity";
+            this.LabelMainVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelMainSize
+            // 
+            this.LabelMainSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainSize.Location = new System.Drawing.Point(12, 294);
+            this.LabelMainSize.Name = "LabelMainSize";
+            this.LabelMainSize.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainSize.TabIndex = 5;
+            this.LabelMainSize.Text = "Size";
+            this.LabelMainSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelHotPickUOI
+            // 
+            this.LabelHotPickUOI.BackColor = System.Drawing.Color.White;
+            this.LabelHotPickUOI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickUOI.Location = new System.Drawing.Point(845, 125);
+            this.LabelHotPickUOI.Name = "LabelHotPickUOI";
+            this.LabelHotPickUOI.Size = new System.Drawing.Size(289, 66);
+            this.LabelHotPickUOI.TabIndex = 18;
+            this.LabelHotPickUOI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelMainUnitOfIssue
+            // 
+            this.LabelMainUnitOfIssue.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainUnitOfIssue.Location = new System.Drawing.Point(587, 140);
+            this.LabelMainUnitOfIssue.Name = "LabelMainUnitOfIssue";
+            this.LabelMainUnitOfIssue.Size = new System.Drawing.Size(252, 42);
+            this.LabelMainUnitOfIssue.TabIndex = 17;
+            this.LabelMainUnitOfIssue.Text = "Unit of Issue";
+            this.LabelMainUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GroupBoxHotActions
+            // 
+            this.GroupBoxHotActions.Controls.Add(this.TextBoxFindCostCenter);
+            this.GroupBoxHotActions.Controls.Add(this.ComboBoxCostCenter);
+            this.GroupBoxHotActions.Controls.Add(this.RadioButtonCostCenter);
+            this.GroupBoxHotActions.Controls.Add(this.RadioButtonOther);
+            this.GroupBoxHotActions.Controls.Add(this.RadioButtonScrap);
+            this.GroupBoxHotActions.Controls.Add(this.RadioButtonWarranty);
+            this.GroupBoxHotActions.Controls.Add(this.RadioButtonPick);
+            this.GroupBoxHotActions.Location = new System.Drawing.Point(15, 6);
+            this.GroupBoxHotActions.Name = "GroupBoxHotActions";
+            this.GroupBoxHotActions.Size = new System.Drawing.Size(914, 99);
+            this.GroupBoxHotActions.TabIndex = 0;
+            this.GroupBoxHotActions.TabStop = false;
+            this.GroupBoxHotActions.Text = "Transaction Type";
+            // 
+            // TextBoxFindCostCenter
+            // 
+            this.TextBoxFindCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxFindCostCenter.Location = new System.Drawing.Point(208, 53);
+            this.TextBoxFindCostCenter.Name = "TextBoxFindCostCenter";
+            this.TextBoxFindCostCenter.Size = new System.Drawing.Size(170, 29);
+            this.TextBoxFindCostCenter.TabIndex = 0;
+            this.TextBoxFindCostCenter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindCostCenter_KeyDown);
+            this.TextBoxFindCostCenter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxFindCostCenter_KeyPress);
+            this.TextBoxFindCostCenter.Leave += new System.EventHandler(this.TextBoxFindCostCenter_Leave);
+            // 
+            // ComboBoxCostCenter
+            // 
+            this.ComboBoxCostCenter.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ComboBoxCostCenter.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxCostCenter.FormattingEnabled = true;
+            this.ComboBoxCostCenter.Location = new System.Drawing.Point(394, 50);
+            this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
+            this.ComboBoxCostCenter.Size = new System.Drawing.Size(513, 32);
+            this.ComboBoxCostCenter.TabIndex = 1;
+            this.ComboBoxCostCenter.TextChanged += new System.EventHandler(this.ComboBoxCostCenter_TextChanged);
+            // 
+            // RadioButtonCostCenter
+            // 
+            this.RadioButtonCostCenter.BackColor = System.Drawing.Color.Transparent;
+            this.RadioButtonCostCenter.Checked = true;
+            this.RadioButtonCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RadioButtonCostCenter.Location = new System.Drawing.Point(21, 53);
+            this.RadioButtonCostCenter.Name = "RadioButtonCostCenter";
+            this.RadioButtonCostCenter.Size = new System.Drawing.Size(181, 28);
+            this.RadioButtonCostCenter.TabIndex = 2;
+            this.RadioButtonCostCenter.TabStop = true;
+            this.RadioButtonCostCenter.Tag = "Cost Center";
+            this.RadioButtonCostCenter.Text = "Cost Center";
+            this.RadioButtonCostCenter.UseVisualStyleBackColor = false;
+            // 
+            // RadioButtonOther
+            // 
+            this.RadioButtonOther.BackColor = System.Drawing.Color.Transparent;
+            this.RadioButtonOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RadioButtonOther.Location = new System.Drawing.Point(712, 17);
+            this.RadioButtonOther.Name = "RadioButtonOther";
+            this.RadioButtonOther.Size = new System.Drawing.Size(133, 28);
+            this.RadioButtonOther.TabIndex = 6;
+            this.RadioButtonOther.Tag = "Other";
+            this.RadioButtonOther.Text = "Other";
+            this.RadioButtonOther.UseVisualStyleBackColor = false;
+            this.RadioButtonOther.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
+            // 
+            // RadioButtonScrap
+            // 
+            this.RadioButtonScrap.BackColor = System.Drawing.Color.Transparent;
+            this.RadioButtonScrap.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RadioButtonScrap.Location = new System.Drawing.Point(493, 17);
+            this.RadioButtonScrap.Name = "RadioButtonScrap";
+            this.RadioButtonScrap.Size = new System.Drawing.Size(133, 28);
+            this.RadioButtonScrap.TabIndex = 5;
+            this.RadioButtonScrap.Tag = "Scrap";
+            this.RadioButtonScrap.Text = "Scrap";
+            this.RadioButtonScrap.UseVisualStyleBackColor = false;
+            this.RadioButtonScrap.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
+            // 
+            // RadioButtonWarranty
+            // 
+            this.RadioButtonWarranty.BackColor = System.Drawing.Color.Transparent;
+            this.RadioButtonWarranty.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RadioButtonWarranty.Location = new System.Drawing.Point(240, 17);
+            this.RadioButtonWarranty.Name = "RadioButtonWarranty";
+            this.RadioButtonWarranty.Size = new System.Drawing.Size(167, 28);
+            this.RadioButtonWarranty.TabIndex = 4;
+            this.RadioButtonWarranty.Tag = "Warranty";
+            this.RadioButtonWarranty.Text = "Warranty";
+            this.RadioButtonWarranty.UseVisualStyleBackColor = false;
+            this.RadioButtonWarranty.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
+            // 
+            // RadioButtonPick
+            // 
+            this.RadioButtonPick.BackColor = System.Drawing.Color.Transparent;
+            this.RadioButtonPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RadioButtonPick.Location = new System.Drawing.Point(21, 17);
+            this.RadioButtonPick.Name = "RadioButtonPick";
+            this.RadioButtonPick.Size = new System.Drawing.Size(133, 28);
+            this.RadioButtonPick.TabIndex = 3;
+            this.RadioButtonPick.Tag = "Pick";
+            this.RadioButtonPick.Text = "Pick";
+            this.RadioButtonPick.UseVisualStyleBackColor = false;
+            this.RadioButtonPick.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
+            // 
+            // TextBoxHotPickQuantity
+            // 
+            this.TextBoxHotPickQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickQuantity.Location = new System.Drawing.Point(957, 391);
+            this.TextBoxHotPickQuantity.Name = "TextBoxHotPickQuantity";
+            this.TextBoxHotPickQuantity.Size = new System.Drawing.Size(177, 80);
+            this.TextBoxHotPickQuantity.TabIndex = 1;
+            this.TextBoxHotPickQuantity.Text = "1";
+            this.TextBoxHotPickQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxHotPickQuantity.TextChanged += new System.EventHandler(this.TextBoxHotPickQuantity_TextChanged);
+            this.TextBoxHotPickQuantity.Leave += new System.EventHandler(this.TextBoxHotPickQuantity_Leave);
+            // 
+            // LabelHotPickDescription
+            // 
+            this.LabelHotPickDescription.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelHotPickDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickDescription.Location = new System.Drawing.Point(191, 207);
+            this.LabelHotPickDescription.Name = "LabelHotPickDescription";
+            this.LabelHotPickDescription.Size = new System.Drawing.Size(943, 63);
+            this.LabelHotPickDescription.TabIndex = 20;
+            this.LabelHotPickDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelMainQuantity
+            // 
+            this.LabelMainQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainQuantity.Location = new System.Drawing.Point(698, 417);
+            this.LabelMainQuantity.Name = "LabelMainQuantity";
+            this.LabelMainQuantity.Size = new System.Drawing.Size(253, 44);
+            this.LabelMainQuantity.TabIndex = 14;
+            this.LabelMainQuantity.Text = "Qty";
+            this.LabelMainQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelHotPickItem
+            // 
+            this.LabelHotPickItem.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelHotPickItem.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickItem.Location = new System.Drawing.Point(191, 125);
+            this.LabelHotPickItem.Name = "LabelHotPickItem";
+            this.LabelHotPickItem.Size = new System.Drawing.Size(378, 66);
+            this.LabelHotPickItem.TabIndex = 16;
+            this.LabelHotPickItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelHotPickItem.DoubleClick += new System.EventHandler(this.LabelHotPickItem_Click);
+            // 
+            // LabelMainItem
+            // 
+            this.LabelMainItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainItem.Location = new System.Drawing.Point(27, 139);
+            this.LabelMainItem.Name = "LabelMainItem";
+            this.LabelMainItem.Size = new System.Drawing.Size(158, 44);
+            this.LabelMainItem.TabIndex = 15;
+            this.LabelMainItem.Text = "Item";
+            this.LabelMainItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelMainDescription
+            // 
+            this.LabelMainDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainDescription.Location = new System.Drawing.Point(10, 214);
+            this.LabelMainDescription.Name = "LabelMainDescription";
+            this.LabelMainDescription.Size = new System.Drawing.Size(175, 49);
+            this.LabelMainDescription.TabIndex = 19;
+            this.LabelMainDescription.Text = "Desc";
+            this.LabelMainDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // MBHotActionCount
             // 
             this.MBHotActionCount.FontSize = MetroFramework.MetroButtonSize.Tall;
@@ -1060,10 +1060,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).EndInit();
             this.HotAction.ResumeLayout(false);
             this.HotAction.PerformLayout();
-            this.GroupBoxHotActions.ResumeLayout(false);
-            this.GroupBoxHotActions.PerformLayout();
             this.GroupBoxHotPickLocation.ResumeLayout(false);
             this.GroupBoxHotPickLocation.PerformLayout();
+            this.GroupBoxHotActions.ResumeLayout(false);
+            this.GroupBoxHotActions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).EndInit();
             this.ResumeLayout(false);
 

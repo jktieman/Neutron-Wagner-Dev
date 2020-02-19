@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NeutronCore;
 
 namespace Neutron.Forms
 {
@@ -22,7 +23,7 @@ namespace Neutron.Forms
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            // SetCulture(_cultureInfo.Name);
+            SetCulture(_cultureInfo.Name);
         }
 
         private void ButtonOk_Click(object sender, EventArgs e)
@@ -36,5 +37,25 @@ namespace Neutron.Forms
         {
             this.Close();
         }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmNewItemAuth",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                ButtonCancel.Text = _resourceManager.GetString("Cancel");
+                ButtonOk.Text = _resourceManager.GetString("Ok");
+                LabelEnterPassword.Text = _resourceManager.GetString("EnterPassword");
+                this.Text = _resourceManager.GetString("FrmNewItemAuth");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
     }
 }

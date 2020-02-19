@@ -28,6 +28,8 @@ namespace Neutron.Forms
         readonly IAkaRepository _akaRepository;
         private readonly INomenclature _nomenclature;
         private BindingListView<HistoryView> _bindingSourceEquin;
+        private DateTime _currentFromDateTime;
+        private DateTime _currentToDateTime;
         public FrmHistory(IAkaRepository akaRepository, INomenclature nomenclature)
         {
             InitializeComponent();
@@ -40,6 +42,17 @@ namespace Neutron.Forms
             SetupGrids();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
         }
+
+
+        private void FrmHistory_Load(object sender, EventArgs e)
+        {
+            var date = DateTime.Now;
+            DateTimePickerFrom.Value = date.FirstDayOfMonth();
+            DateTimePickerTo.Value = date;
+            _currentFromDateTime = date.FirstDayOfMonth();
+            _currentToDateTime = date;
+        }
+
         private void HideTabControlTabs()
         {
             tabControl1.Appearance = TabAppearance.FlatButtons;
@@ -333,14 +346,16 @@ namespace Neutron.Forms
                 CheckedListBoxActionCodes.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
             }
         }
-        private void ButtonRun_Click(object sender, EventArgs e)
-        {
-            GetHistoryRecords();
-        }
+        //private void ButtonRun_Click(object sender, EventArgs e)
+        //{
+        //    GetHistoryRecords();
+        //}
         private void GetHistoryRecords()
         {
-            var fromDate = GetFromDate();
-            var toDate = GetToDate();
+            // var fromDate = GetFromDate();
+            // var toDate = GetToDate();
+            var fromDate = _currentFromDateTime;
+            var toDate = _currentToDateTime;
             var codes = GetCodes();
             var findWhat = TextBoxFind.Text.Trim().ToLower();
             var find = _akaRepository.Get(findWhat);
@@ -439,6 +454,8 @@ namespace Neutron.Forms
         private void MButtonRun_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
@@ -479,6 +496,63 @@ namespace Neutron.Forms
             {
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
+        }
+
+        private void RadioButtonToday_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!((RadioButton)sender).Checked) return;
+            var date = DateTime.Now;
+            DateTimePickerFrom.Value = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            DateTimePickerTo.Value = date;
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
+            GetHistoryRecords();
+        }
+
+        private void RadioButtonWeek_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!((RadioButton)sender).Checked) return;
+            var date = DateTime.Now;
+            var firstDay = date.FirstDayOfWeek();
+            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
+            DateTimePickerTo.Value = date;
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
+            GetHistoryRecords();
+        }
+
+        private void RadioButtonMonth_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!((RadioButton)sender).Checked) return;
+            var date = DateTime.Now;
+            var firstDay = date.FirstDayOfMonth();
+            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
+            DateTimePickerTo.Value = date;
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
+            GetHistoryRecords();
+        }
+
+        private void RadioButtonDateRange_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!((RadioButton)sender).Checked) return;
+            var date = DateTime.Now;
+            var firstDay = date.FirstDayOfMonth();
+            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
+            DateTimePickerTo.Value = date;
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
+            GetHistoryRecords();
+        }
+
+        private void DateTimePickerFrom_Enter(object sender, EventArgs e)
+        {
+            RadioButtonDateRange.Checked = true;
+        }
+
+        private void DateTimePickerTo_Enter(object sender, EventArgs e)
+        {
+            RadioButtonDateRange.Checked = true;
         }
     }
 }

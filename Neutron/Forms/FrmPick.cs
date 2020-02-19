@@ -1039,8 +1039,8 @@ namespace Neutron.Forms
         {
             //Communication Monitoring Form use for TEsting
 
-           // var frmCommunication = new FrmCommunication();
-           // frmCommunication.Show();
+            // var frmCommunication = new FrmCommunication();
+            // frmCommunication.Show();
 
 
             if (GlobalVar.LoaderRunning)
@@ -4174,8 +4174,16 @@ namespace Neutron.Forms
 
             LabelLocationNumber.Text = string.Format(format: "{0} of {1}"
                 , arg0: _currentPickStop.InventoryIndex + 1, arg1: _currentPickStop.Inventory.Count);
-            TextBoxLocationQuantity.Text = _currentPickStop.CurrentInventoryLocation.Quantity.ToString();
-            TextBoxTotalQuantity.Text = _currentPickStop.TotalQuantityInInventory.ToString();
+            var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
+            var qty = GetCurrentInventoryLocationQuantity(inventoryId);
+            TextBoxLocationQuantity.Text = qty.ToString();
+            _currentPickStop.CurrentInventoryLocation.Quantity = qty;
+            var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
+            _currentPickStop.TotalQuantityInInventory = total;
+            TextBoxTotalQuantity.Text = total.ToString();
+
+            //TextBoxLocationQuantity.Text = _currentPickStop.CurrentInventoryLocation.Quantity.ToString();
+            //TextBoxTotalQuantity.Text = _currentPickStop.TotalQuantityInInventory.ToString();
             TextBoxReceivedDate.Text = _currentPickStop.CurrentInventoryLocation.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = _currentPickStop.CurrentInventoryLocation.PrimeBin;
             LabelStaticRelease.Text = _currentPickStop.CurrentInventoryLocation.StorageType.Name;
@@ -4621,8 +4629,7 @@ namespace Neutron.Forms
             // in case a hot action or Location Count changes the current inventory
             // let's refresh the currentInventory
             var key = _currentPickStop.CurrentInventoryLocation.Id;
-            _currentPickStop.CurrentInventoryLocation.Quantity = _repoInventory.FindByKey(key).Quantity;
-
+            _currentPickStop.CurrentInventoryLocation.Quantity = GetCurrentInventoryLocationQuantity(key);
             pick = _currentPickStop.CurrentInventoryLocation.Quantity >= _currentPickStop.QuantityToBePicked;
 
             if (pick)
@@ -4708,6 +4715,17 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             MBPickAccept.Enabled = true;
             MBPickAccept.Focus();
+        }
+
+        private int GetCurrentInventoryLocationQuantity(int inventoryLocationId)
+        {
+            int result = 0;
+            var inv = _repoInventory.FindByKey(inventoryLocationId);
+            if (inv != null)
+            {
+                result = inv.Quantity;
+            }
+            return result;
         }
 
         public int GetTotalQuantityToBePicked(IList<PickView> pickViews)
@@ -4911,7 +4929,7 @@ namespace Neutron.Forms
             {
                 if (bp.OrderId == null) continue;
                 var id = bp.OrderId.Value;
-                
+
                 //Check to see if it has already been printed, if it has continue without printing.
                 var printJob = _repoPrintJob.FindBy(r => r.OrderId == id && r.PickDocument == true).FirstOrDefault();
                 if (printJob != null) continue;
@@ -5628,14 +5646,14 @@ namespace Neutron.Forms
 
             if (qty >= 0)
             {
-                TextBoxLocationQuantity.Text = qty.ToString();
-                _currentPickStop.CurrentInventoryLocation.Quantity = qty;
+                var invQty  = GetCurrentInventoryLocationQuantity(inventoryId);
+                TextBoxLocationQuantity.Text = invQty.ToString();
+                _currentPickStop.CurrentInventoryLocation.Quantity = invQty;
                 var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
                 _currentPickStop.TotalQuantityInInventory = total;
                 TextBoxTotalQuantity.Text = total.ToString();
             }
         }
-
 
         private int OpenLocationCountForm(int inventoryId)
         {
@@ -5686,139 +5704,6 @@ namespace Neutron.Forms
             _bindingSourceHot.Position = pos;
             _currentInventoryView = (SqlInventoryView)_bindingSourceHot.Current;
         }
-
-        //private void MBHotPickAccept_Click(object sender, EventArgs e)
-        //{
-        //    Cursor.Current = Cursors.WaitCursor;
-        //    int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-        //    Inventory inv = _repoInventory.FindByKey(_currentInventoryView.Id);
-        //    inv.Quantity -= pickQty;
-        //    _repoInventory.Update(inv);
-        //    GlobalVar.HistoryManager.SaveHistory(ActionCode.PickHot, inv);
-        //    //FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-        //    LabelFormTitle.Text = _resourceManager.GetString($"HotSearch");
-        //    LabelFormTitle.BackColor = Color.RoyalBlue;
-        //    tabControl1.SelectedTab = HotPickToDelete;
-        //    Cursor.Current = Cursors.Default;
-        //}
-
-        //private void MBHotStoreAccept_Click(object sender, EventArgs e)
-        //{
-        //    Cursor.Current = Cursors.WaitCursor;
-        //    int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-        //    Inventory inv = _repoInventory.FindByKey(_currentInventoryView.Id);
-        //    inv.Quantity += pickQty;
-        //    _repoInventory.Update(inv);
-        //    GlobalVar.HistoryManager.SaveHistory(ActionCode.StoreHot, inv);
-        //    //FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-        //    LabelFormTitle.Text = _resourceManager.GetString($"HotSearch");
-        //    LabelFormTitle.BackColor = Color.RoyalBlue;
-        //    tabControl1.SelectedTab = HotPickToDelete;
-        //    Cursor.Current = Cursors.Default;
-        //}
-
-        //private void MBHotAccept_Click(object sender, EventArgs e)
-        //{
-        //    Inventory inv;
-        //    ClearAllShi();
-        //    int actionCode = GetHotActionCode();
-        //    Cursor.Current = Cursors.WaitCursor;
-        //    int pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
-        //    inv = _repoInventory.FindByKey(_currentInventoryView.Id);
-
-        //    if (RadioButtonPick.Text == _resourceManager.GetString($"Pick"))
-        //    {
-        //        inv.Quantity -= pickQty;
-        //        if (_currentInventoryView.Item == _currentPickStop.Item)
-        //        {
-        //            TextBoxLocationQuantity.Text = inv.Quantity.ToString(); // TextBoxHotPickLocationQuantity.Text;
-        //            TextBoxTotalQuantity.Text = (int.Parse(TextBoxTotalQuantity.Text) - pickQty).ToString();
-        //        }
-        //    }
-        //    else if (RadioButtonPick.Text == _resourceManager.GetString($"Store"))
-        //    {
-        //        inv.Quantity += pickQty;
-        //        if (_currentInventoryView.Item == _currentPickStop.Item)
-        //        {
-        //            TextBoxLocationQuantity.Text = inv.Quantity.ToString(); //  TextBoxHotPickLocationQuantity.Text;
-        //            TextBoxTotalQuantity.Text = (int.Parse(TextBoxTotalQuantity.Text) + pickQty).ToString();
-        //        }
-        //    }
-        //    TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
-        //    _repoInventory.Update(inv);
-        //    GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryModify, inv);
-        //    FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-        //    DataGridViewInventory.Refresh();
-        //    LabelFormTitle.Text = _resourceManager.GetString($"HotSearch");
-        //    LabelFormTitle.BackColor = Color.RoyalBlue;
-        //    Cursor.Current = Cursors.Default;
-        //    tabControl1.SelectedTab = HotPickToDelete;
-        //}
-
-        //private int GetHotActionCode()
-        //{
-        //    int result = 3;
-        //    var radioButtons = new List<RadioButton> { RadioButtonPick, RadioButtonWarranty, RadioButtonScrap, RadioButtonOther };
-
-        //    if (RadioButtonPick.Text == _resourceManager.GetString($"Pick"))
-        //    {
-        //        foreach (RadioButton item in radioButtons)
-        //        {
-        //            if (item.Checked)
-        //            {
-        //                if (item.Text == _resourceManager.GetString($"Pick"))
-        //                {
-        //                    result = 3;
-        //                }
-        //                else if (item.Text == _resourceManager.GetString($"Warranty"))
-        //                {
-        //                    result = 39;
-        //                }
-        //                else if (item.Text == _resourceManager.GetString($"Scrap"))
-        //                {
-        //                    result = 40;
-        //                }
-        //                else if (item.Text == _resourceManager.GetString($"Other"))
-        //                {
-        //                    result = 41;
-        //                }
-
-
-        //            }
-        //        }
-        //    }
-        //    else if (RadioButtonPick.Text == "Store")
-        //    {
-        //        foreach (RadioButton item in radioButtons)
-        //        {
-        //            if (item.Checked)
-        //            {
-        //                if (item.Text == _resourceManager.GetString($"Store"))
-        //                {
-        //                    result = 4;
-        //                }
-        //                else if (item.Text == _resourceManager.GetString($"Warranty"))
-        //                {
-        //                    result = 42;
-        //                }
-        //                else if (item.Text == _resourceManager.GetString($"Scrap"))
-        //                {
-        //                    result = 43;
-        //                }
-        //                else if (item.Text == _resourceManager.GetString($"Other"))
-        //                {
-        //                    result = 44;
-        //                }
-        //                else
-        //                {
-        //                    result = 4;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return result;
-        //}
 
         private void MBShowAvailable_Click(object sender, EventArgs e)
         {
@@ -6133,74 +6018,146 @@ namespace Neutron.Forms
                 {
                     if (form.AuthCode == "topura")
                     {
-                        var success = false;
-                        foreach (var pickView in _currentPickStop.PickViews)
-                        {
-                            var newItem = string.Format(format: "9{0}", arg0: pickView.OrderDetail.PartNum.Substring(startIndex: 1));
-                            var newItemDefinition = _repoItemDefinition.FindBy(f => f.Item == newItem).FirstOrDefault();
-                            if (newItemDefinition != null)
-                            {
-                                pickView.OrderDetail.PartDesc = newItemDefinition.Description;
-                                pickView.Description = pickView.OrderDetail.PartDesc;
-                                pickView.OrderDetail.PartNum = newItemDefinition.Item;
-                                pickView.Item = pickView.OrderDetail.PartNum;
-                                pickView.ItemId = newItemDefinition.Id;
+                        UpdatePickViews();
 
-                                var exactInventorySequence = new List<Inventory>();
-                                switch (_neutronVariables.PickMethod)
-                                {
-                                    case "RadioButtonPrimeBinFirst":
-                                        exactInventorySequence = PrimeBinFirst(pickView);
-                                        break;
-                                    case "RadioButtonPrimeBinLast":
-                                        exactInventorySequence = PrimeBinLast(pickView);
-                                        break;
-                                    case "RadioButtonFifo":
-                                        exactInventorySequence = Fifo(pickView);
-                                        break;
-                                    case "RadioButtonLifo":
-                                        exactInventorySequence = Lifo(pickView);
-                                        break;
-                                    default:
-                                        exactInventorySequence = Fifo(pickView);
-                                        break;
-                                }
+                        //var success = false;
+                        //foreach (var pickView in _currentPickStop.PickViews)
+                        //{
+                        //    var newItem = string.Format(format: "9{0}", arg0: pickView.OrderDetail.PartNum.Substring(startIndex: 1));
+                        //    var newItemDefinition = _repoItemDefinition.FindBy(f => f.Item == newItem).FirstOrDefault();
+                        //    if (newItemDefinition != null)
+                        //    {
+                        //        pickView.OrderDetail.PartDesc = newItemDefinition.Description;
+                        //        pickView.Description = pickView.OrderDetail.PartDesc;
+                        //        pickView.OrderDetail.PartNum = newItemDefinition.Item;
+                        //        pickView.Item = pickView.OrderDetail.PartNum;
+                        //        pickView.ItemId = newItemDefinition.Id;
 
-                                pickView.CurrentInventoryLocation = exactInventorySequence.First();
-                                pickView.Inventory = exactInventorySequence;
-                                pickView.TotalQuantityInInventory = exactInventorySequence.Sum(r => r.Quantity);
-                                pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
-                                pickView.SlotQty = pickView.TotalQuantityInInventory;
-                                pickView.InventoryIndex = 0;
-                                pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
-                                success = true;
-                            }
-                        }
-                        if (success)
-                        {
-                            _currentPickStop.CurrentInventoryLocation = _currentPickStop.PickViews.First().CurrentInventoryLocation;
-                            _currentPickStop.Description = _currentPickStop.PickViews.First().Description;
-                            _currentPickStop.Images = _currentPickStop.PickViews.First().Images;
-                            _currentPickStop.Inventory = _currentPickStop.PickViews.First().Inventory;
-                            _currentPickStop.InventoryIndex = _currentPickStop.PickViews.First().InventoryIndex;
-                            _currentPickStop.Item = _currentPickStop.PickViews.First().Item;
-                            _currentPickStop.ItemId = _currentPickStop.PickViews.First().ItemId;
-                            _currentPickStop.Ord1 = _currentPickStop.PickViews.First().Ord1;
-                            _currentPickStop.Ord2 = _currentPickStop.PickViews.First().Ord2;
-                            _currentPickStop.OrderId = _currentPickStop.PickViews.First().OrderId;
-                            _currentPickStop.PickedQty = _currentPickStop.PickViews.First().PickedQty;
-                            _currentPickStop.Quantity = _currentPickStop.PickViews.First().Quantity;
-                            _currentPickStop.QuantityToBePicked = _currentPickStop.PickViews.First().QuantityToBePicked;
-                            _currentPickStop.Slot = _currentPickStop.PickViews.First().Slot;
-                            _currentPickStop.SlotQty = _currentPickStop.PickViews.First().SlotQty;
-                            _currentPickStop.TotalQuantityInInventory = _currentPickStop.PickViews.First().TotalQuantityInInventory;
+                        //        var exactInventorySequence = new List<Inventory>();
+                        //        switch (_neutronVariables.PickMethod)
+                        //        {
+                        //            case "RadioButtonPrimeBinFirst":
+                        //                exactInventorySequence = PrimeBinFirst(pickView);
+                        //                break;
+                        //            case "RadioButtonPrimeBinLast":
+                        //                exactInventorySequence = PrimeBinLast(pickView);
+                        //                break;
+                        //            case "RadioButtonFifo":
+                        //                exactInventorySequence = Fifo(pickView);
+                        //                break;
+                        //            case "RadioButtonLifo":
+                        //                exactInventorySequence = Lifo(pickView);
+                        //                break;
+                        //            default:
+                        //                exactInventorySequence = Fifo(pickView);
+                        //                break;
+                        //        }
 
-                            UpdatePickScreen();
-                        }
+                        //        pickView.CurrentInventoryLocation = exactInventorySequence.First();
+                        //        pickView.Inventory = exactInventorySequence;
+                        //        pickView.TotalQuantityInInventory = exactInventorySequence.Sum(r => r.Quantity);
+                        //        pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
+                        //        pickView.SlotQty = pickView.TotalQuantityInInventory;
+                        //        pickView.InventoryIndex = 0;
+                        //        pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
+                        //        success = true;
+                        //    }
+                        //}
+                        //if (success)
+                        //{
+                        //    _currentPickStop.CurrentInventoryLocation = _currentPickStop.PickViews.First().CurrentInventoryLocation;
+                        //    _currentPickStop.Description = _currentPickStop.PickViews.First().Description;
+                        //    _currentPickStop.Images = _currentPickStop.PickViews.First().Images;
+                        //    _currentPickStop.Inventory = _currentPickStop.PickViews.First().Inventory;
+                        //    _currentPickStop.InventoryIndex = _currentPickStop.PickViews.First().InventoryIndex;
+                        //    _currentPickStop.Item = _currentPickStop.PickViews.First().Item;
+                        //    _currentPickStop.ItemId = _currentPickStop.PickViews.First().ItemId;
+                        //    _currentPickStop.Ord1 = _currentPickStop.PickViews.First().Ord1;
+                        //    _currentPickStop.Ord2 = _currentPickStop.PickViews.First().Ord2;
+                        //    _currentPickStop.OrderId = _currentPickStop.PickViews.First().OrderId;
+                        //    _currentPickStop.PickedQty = _currentPickStop.PickViews.First().PickedQty;
+                        //    _currentPickStop.Quantity = _currentPickStop.PickViews.First().Quantity;
+                        //    _currentPickStop.QuantityToBePicked = _currentPickStop.PickViews.First().QuantityToBePicked;
+                        //    _currentPickStop.Slot = _currentPickStop.PickViews.First().Slot;
+                        //    _currentPickStop.SlotQty = _currentPickStop.PickViews.First().SlotQty;
+                        //    _currentPickStop.TotalQuantityInInventory = _currentPickStop.PickViews.First().TotalQuantityInInventory;
+
+                        //    UpdatePickScreen();
+                        //}
                     }
                 }
             }
         }
+
+        private void UpdatePickViews()
+        {
+
+            var success = false;
+            foreach (var pickView in _currentPickStop.PickViews)
+            {
+                var newItem =  pickView.OrderDetail.PartNum;
+                var newItemDefinition = _repoItemDefinition.FindBy(f => f.Item == newItem).FirstOrDefault();
+                if (newItemDefinition != null)
+                {
+                    pickView.OrderDetail.PartDesc = newItemDefinition.Description;
+                    pickView.Description = pickView.OrderDetail.PartDesc;
+                    pickView.OrderDetail.PartNum = newItemDefinition.Item;
+                    pickView.Item = pickView.OrderDetail.PartNum;
+                    pickView.ItemId = newItemDefinition.Id;
+
+                    var exactInventorySequence = new List<Inventory>();
+                    switch (_neutronVariables.PickMethod)
+                    {
+                        case "RadioButtonPrimeBinFirst":
+                            exactInventorySequence = PrimeBinFirst(pickView);
+                            break;
+                        case "RadioButtonPrimeBinLast":
+                            exactInventorySequence = PrimeBinLast(pickView);
+                            break;
+                        case "RadioButtonFifo":
+                            exactInventorySequence = Fifo(pickView);
+                            break;
+                        case "RadioButtonLifo":
+                            exactInventorySequence = Lifo(pickView);
+                            break;
+                        default:
+                            exactInventorySequence = Fifo(pickView);
+                            break;
+                    }
+
+                    pickView.CurrentInventoryLocation = exactInventorySequence.First();
+                    pickView.Inventory = exactInventorySequence;
+                    pickView.TotalQuantityInInventory = exactInventorySequence.Sum(r => r.Quantity);
+                    pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
+                    pickView.SlotQty = pickView.TotalQuantityInInventory;
+                    pickView.InventoryIndex = 0;
+                    pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
+                    success = true;
+                }
+            }
+            if (success)
+            {
+                _currentPickStop.CurrentInventoryLocation = _currentPickStop.PickViews.First().CurrentInventoryLocation;
+                _currentPickStop.Description = _currentPickStop.PickViews.First().Description;
+                _currentPickStop.Images = _currentPickStop.PickViews.First().Images;
+                _currentPickStop.Inventory = _currentPickStop.PickViews.First().Inventory;
+                _currentPickStop.InventoryIndex = _currentPickStop.PickViews.First().InventoryIndex;
+                _currentPickStop.Item = _currentPickStop.PickViews.First().Item;
+                _currentPickStop.ItemId = _currentPickStop.PickViews.First().ItemId;
+                _currentPickStop.Ord1 = _currentPickStop.PickViews.First().Ord1;
+                _currentPickStop.Ord2 = _currentPickStop.PickViews.First().Ord2;
+                _currentPickStop.OrderId = _currentPickStop.PickViews.First().OrderId;
+                _currentPickStop.PickedQty = _currentPickStop.PickViews.First().PickedQty;
+                _currentPickStop.Quantity = _currentPickStop.PickViews.First().Quantity;
+                _currentPickStop.QuantityToBePicked = _currentPickStop.PickViews.First().QuantityToBePicked;
+                _currentPickStop.Slot = _currentPickStop.PickViews.First().Slot;
+                _currentPickStop.SlotQty = _currentPickStop.PickViews.First().SlotQty;
+                _currentPickStop.TotalQuantityInInventory = _currentPickStop.PickViews.First().TotalQuantityInInventory;
+
+                UpdatePickScreen();
+            }
+        }
+
 
         private void MBPickRefresh_Click(object sender, EventArgs e)
         {
@@ -6843,9 +6800,14 @@ namespace Neutron.Forms
                 {
                     var result = frm.ShowDialog();
                     Show();
-                    Task.Run(() => _deviceManager.Reset());
+                    _deviceManager.Reset();
                     Task.Run(() => _logger.Log($"Reset After Hot Action : [{DateTime.Now.ToLongTimeString()}]"));
                 }
+                UpdatePickViews();
+
+                UpdateInventoryLocation();
+
+
 
                 //var location = _currentPickStop.CurrentInventoryLocation.Location;
 
@@ -7124,12 +7086,6 @@ namespace Neutron.Forms
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
-
-        private void tabControl1_Enter(object sender, EventArgs e)
-        {
-            //TextBoxFindAvailableOrdersRack.Focus();
-        }
-
         private void MBPrint_Click(object sender, EventArgs e)
         {
             using (var form = new FrmReprint())
@@ -7246,15 +7202,6 @@ namespace Neutron.Forms
             TextBoxFindAvailableOrdersRack.Text = string.Empty;
             ShowAvailableOrders(0, TextBoxFindAvailableOrdersRack.Text.Trim().ToLower());
             TextBoxFindAvailableOrdersRack.Focus();
-        }
-
-        private void MBReprintOrder_Click(object sender, EventArgs e)
-        {
-            using (Form frm = new FrmReprintOrder(_jsonData))
-            {
-                var result = frm.ShowDialog();
-                Show();
-            }
         }
 
         private void Main_Enter(object sender, EventArgs e)
@@ -7491,43 +7438,47 @@ namespace Neutron.Forms
 
         private void MBInventorySkip_Click(object sender, EventArgs e)
         {
-            var cur = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
-            List<InventoryView> inventoryViews;
-            var skipInventoryViews = new List<SkipInventoryView>();
-            using (var repo = new InventoryRepository())
+            if (_bindingSourceSkipView.Current != null)
             {
-                inventoryViews = repo.GetInventoryViewByItem(cur.Item).ToList();
+                var cur = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
+                List<InventoryView> inventoryViews;
+                var skipInventoryViews = new List<SkipInventoryView>();
+                using (var repo = new InventoryRepository())
+                {
+                    inventoryViews = repo.GetInventoryViewByItem(cur.Item).ToList();
+                }
+
+                foreach (var invView in inventoryViews)
+                {
+                    var skipInventory = new SkipInventoryView();
+                    skipInventory.InventoryId = invView.Id;
+                    skipInventory.StorageType = invView.StorageTypeName;
+                    skipInventory.StationNumber = invView.StationNumber;
+                    skipInventory.Quantity = invView.Quantity;
+                    skipInventory.Slot = invView.Slot;
+                    skipInventory.Item = invView.Item;
+                    skipInventory.Description = invView.Description;
+
+                    skipInventoryViews.Add(skipInventory);
+                }
+
+                var blv = new BindingListView<SkipInventoryView>(skipInventoryViews);
+                _bindingSourceSkipView.DataSource = blv;
+                DataGridViewSkipInventory.DataSource = _bindingSourceSkipView;
+                GetRecordCount(_bindingSourceSkipView);
+                DataGridViewSkipInventory.ClearSelection();
+
+
+
+                LabelFormTitle.Text = $"Inventory for Skipped Item.";
+                LabelItemNumber.Text = cur.Item;
+                LabelRequiredQuantity.Text = cur.Quantity.ToString();
+                LabelPickedQuantity.Text = "0";
+                //LabelFormTitle.Text = _resourceManager.GetString($"Inventory for {cur.Item}.");
+                LabelFormTitle.BackColor = Color.RoyalBlue;
+                tabControl1.SelectedTab = SkipInventory;
+
             }
-
-            foreach (var invView in inventoryViews)
-            {
-                var skipInventory = new SkipInventoryView();
-                skipInventory.InventoryId = invView.Id;
-                skipInventory.StorageType = invView.StorageTypeName;
-                skipInventory.StationNumber = invView.StationNumber;
-                skipInventory.Quantity = invView.Quantity;
-                skipInventory.Slot = invView.Slot;
-                skipInventory.Item = invView.Item;
-                skipInventory.Description = invView.Description;
-
-                skipInventoryViews.Add(skipInventory);
-            }
-
-            var blv = new BindingListView<SkipInventoryView>(skipInventoryViews);
-            _bindingSourceSkipView.DataSource = blv;
-            DataGridViewSkipInventory.DataSource = _bindingSourceSkipView;
-            GetRecordCount(_bindingSourceSkipView);
-            DataGridViewSkipInventory.ClearSelection();
-
-
-
-            LabelFormTitle.Text = $"Inventory for Skipped Item.";
-            LabelItemNumber.Text = cur.Item;
-            LabelRequiredQuantity.Text = cur.Quantity.ToString();
-            LabelPickedQuantity.Text = "0";
-            //LabelFormTitle.Text = _resourceManager.GetString($"Inventory for {cur.Item}.");
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = SkipInventory;
         }
 
         private void MBSkipInventoryBack_Click(object sender, EventArgs e)
@@ -8131,6 +8082,11 @@ namespace Neutron.Forms
         }
 
         private void MBSkipInventoryAdjustQuantity_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MBPrintSkip_Click(object sender, EventArgs e)
         {
 
         }

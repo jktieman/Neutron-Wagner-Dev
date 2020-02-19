@@ -31,7 +31,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.ButtonClearAllUsers = new System.Windows.Forms.Button();
             this.ButtonCheckAllUsers = new System.Windows.Forms.Button();
-            this.ButtonCancel = new System.Windows.Forms.Button();
+            this.ButtonClose = new System.Windows.Forms.Button();
             this.ButtonRemove = new System.Windows.Forms.Button();
             this.ButtonSave = new System.Windows.Forms.Button();
             this.TextBoxGroupName = new System.Windows.Forms.TextBox();
@@ -48,7 +48,7 @@
             // 
             this.panel1.Controls.Add(this.ButtonClearAllUsers);
             this.panel1.Controls.Add(this.ButtonCheckAllUsers);
-            this.panel1.Controls.Add(this.ButtonCancel);
+            this.panel1.Controls.Add(this.ButtonClose);
             this.panel1.Controls.Add(this.ButtonRemove);
             this.panel1.Controls.Add(this.ButtonSave);
             this.panel1.Controls.Add(this.TextBoxGroupName);
@@ -85,17 +85,17 @@
             this.ButtonCheckAllUsers.UseVisualStyleBackColor = true;
             this.ButtonCheckAllUsers.Click += new System.EventHandler(this.ButtonCheckAllUsers_Click);
             // 
-            // ButtonCancel
+            // ButtonClose
             // 
-            this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancel.Location = new System.Drawing.Point(586, 587);
-            this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
-            this.ButtonCancel.Name = "ButtonCancel";
-            this.ButtonCancel.Size = new System.Drawing.Size(110, 28);
-            this.ButtonCancel.TabIndex = 7;
-            this.ButtonCancel.Text = "Close";
-            this.ButtonCancel.UseVisualStyleBackColor = true;
-            this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
+            this.ButtonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonClose.Location = new System.Drawing.Point(586, 587);
+            this.ButtonClose.Margin = new System.Windows.Forms.Padding(4);
+            this.ButtonClose.Name = "ButtonClose";
+            this.ButtonClose.Size = new System.Drawing.Size(110, 28);
+            this.ButtonClose.TabIndex = 7;
+            this.ButtonClose.Text = "Close";
+            this.ButtonClose.UseVisualStyleBackColor = true;
+            this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
             // 
             // ButtonRemove
             // 
@@ -217,7 +217,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button ButtonCancel;
+        private System.Windows.Forms.Button ButtonClose;
         private System.Windows.Forms.Button ButtonRemove;
         private System.Windows.Forms.Button ButtonSave;
         private System.Windows.Forms.TextBox TextBoxGroupName;

@@ -31,15 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLocationCount));
             this.ButtonCancel = new System.Windows.Forms.Button();
             this.ButtonOk = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.LabelNewQuantity = new System.Windows.Forms.Label();
             this.TextBoxNewQuantity = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // ButtonCancel
             // 
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancel.Location = new System.Drawing.Point(214, 233);
+            this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonCancel.Location = new System.Drawing.Point(209, 233);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(152, 76);
             this.ButtonCancel.TabIndex = 5;
@@ -50,8 +50,8 @@
             // ButtonOk
             // 
             this.ButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.ButtonOk.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonOk.Location = new System.Drawing.Point(47, 233);
+            this.ButtonOk.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonOk.Location = new System.Drawing.Point(42, 233);
             this.ButtonOk.Name = "ButtonOk";
             this.ButtonOk.Size = new System.Drawing.Size(152, 76);
             this.ButtonOk.TabIndex = 6;
@@ -59,20 +59,20 @@
             this.ButtonOk.UseVisualStyleBackColor = true;
             this.ButtonOk.Click += new System.EventHandler(this.ButtonOk_Click);
             // 
-            // label1
+            // LabelNewQuantity
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(87, 139);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(222, 43);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "New Quantity";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelNewQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewQuantity.Location = new System.Drawing.Point(83, 139);
+            this.LabelNewQuantity.Name = "LabelNewQuantity";
+            this.LabelNewQuantity.Size = new System.Drawing.Size(237, 43);
+            this.LabelNewQuantity.TabIndex = 4;
+            this.LabelNewQuantity.Text = "New Quantity";
+            this.LabelNewQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TextBoxNewQuantity
             // 
             this.TextBoxNewQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxNewQuantity.Location = new System.Drawing.Point(80, 46);
+            this.TextBoxNewQuantity.Location = new System.Drawing.Point(79, 46);
             this.TextBoxNewQuantity.Name = "TextBoxNewQuantity";
             this.TextBoxNewQuantity.Size = new System.Drawing.Size(244, 80);
             this.TextBoxNewQuantity.TabIndex = 3;
@@ -87,7 +87,7 @@
             this.ClientSize = new System.Drawing.Size(403, 370);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonOk);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.LabelNewQuantity);
             this.Controls.Add(this.TextBoxNewQuantity);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -103,7 +103,7 @@
 
         private System.Windows.Forms.Button ButtonCancel;
         private System.Windows.Forms.Button ButtonOk;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label LabelNewQuantity;
         private System.Windows.Forms.TextBox TextBoxNewQuantity;
     }
 }

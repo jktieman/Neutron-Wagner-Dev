@@ -1,194 +1,110 @@
-﻿using NeutronData.DataContexts;
+﻿using Neutron.Enums;
+using Neutron.Global;
+using Neutron.Interfaces;
+using NeutronCore.Extensions;
+using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Entity.Migrations;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+using NeutronCore.Global;
+using NeutronData.ModelViews;
 
-namespace Neutron
+namespace Neutron.Forms
 {
     public partial class FrmSecurity : Form
     {
-        private readonly NeutronDb context = new NeutronDb();
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
+        private readonly SecureDb _context = new SecureDb();
+        private readonly NeutronDb _contextNeutron = new NeutronDb();
 
-        private bool checkAllUsers;
-        private bool checkAllDevice1;
-        private bool checkAllDevice2;
-        private bool checkAllDevice3;
-        private bool checkAllDevice4;
-        private bool checkAllActivities;
+        private bool _checkAllUsers;
+        private bool _checkAllSecureItems;
+        private SecureItem[] _secureItems;
+        readonly INomenclature _nomenclature;
+        private readonly NeutronVariables _neutronVariables;
+        private User _currentUser;
 
-        public FrmSecurity()
+        public FrmSecurity(INomenclature nomenclature, NeutronVariables neutronVariables)
         {
             InitializeComponent();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //var users = new List<User>();
-            //var roles = new List<Role>();
-            //var carriers = new List<Carrier>();
-
-            //var user1 = new User { EmpId = "1001", Firstname = "Earl", Lastname = "Night", Username = "enight", Pin = 1234 };
-            //var user2 = new User { EmpId = "2002", Firstname = "Tom", Lastname = "Thumb", Username = "tthumb", Pin = 2345 };
-            //var user3 = new User { EmpId = "3003", Firstname = "Ralph", Lastname = "May", Username = "rmay", Pin = 3456 };
-            //var user4 = new User { EmpId = "4004", Firstname = "Steve", Lastname = "Bower", Username = "sbower", Pin = 4567 };
-
-            //users.Add(user1);
-            //users.Add(user2);
-            //users.Add(user3);
-            //users.Add(user4);
-
-            //var admin = new Role { RoleName = "Admin" };
-            //var picker = new Role { RoleName = "Picker" };
-            //var maint = new Role { RoleName = "Maint" };
-
-            //roles.Add(admin);
-            //roles.Add(picker);
-            //roles.Add(maint);
-
-            //for (int i = 1; i <= 4; i++)
-            //{
-            //    for (int j = 1; j <= 120; j++)
-            //    {
-            //        var carrier = new Carrier { DeviceNumber = i, CarrierNumber = j };
-            //        carriers.Add(carrier);
-            //    }
-
-            //}
-
-            //user1.Roles.Add(admin);
-            //user2.Roles.Add(picker);
-            //user3.Roles.Add(picker);
-            //user4.Roles.Add(maint);
-
-            //admin.Carriers.Add(carriers[1]);
-            //admin.Carriers.Add(carriers[2]);
-            //admin.Carriers.Add(carriers[3]);
-            //admin.Carriers.Add(carriers[4]);
-
-            //picker.Carriers.Add(carriers[3]);
-            //picker.Carriers.Add(carriers[4]);
-            //picker.Carriers.Add(carriers[5]);
-            //picker.Carriers.Add(carriers[6]);
-            //picker.Carriers.Add(carriers[7]);
-
-
-            //maint.Carriers.Add(carriers[6]);
-            //maint.Carriers.Add(carriers[7]);
-
-            //context.Roles.AddOrUpdate(roles.ToArray());
-            //context.Users.AddOrUpdate(users.ToArray());
-            //context.Carriers.AddOrUpdate(carriers.ToArray());
-
-
-            //context.SaveChanges();
-
-
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
+            _nomenclature = nomenclature;
+            _neutronVariables = neutronVariables;
+            ButtonDeleteEditUser.Enabled = false;
+            SetupGrids();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Activity[] activities = context.Activities.ToArray();
-            Carrier[] carriers = context.Carriers.ToArray();
-            Role[] roles = context.Roles.ToArray();
-            User[] users = context.Users.ToArray();
+            _secureItems = ((NeutronSecurity[])Enum.GetValues(typeof(NeutronSecurity)))
+                .Select(c => new SecureItem() { SecureItemId = (int)c, Name = c.GetEnumDescription() }).ToArray();
 
-            ListViewDevice1.Items.AddRange(carriers.Where(r => r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice2.Items.AddRange(carriers.Where(r => r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice3.Items.AddRange(carriers.Where(r => r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice4.Items.AddRange(carriers.Where(r => r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.UserInfo, Tag = r }).ToArray());
-            ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
-            ListViewActivities.Items.AddRange(activities.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+            // SecureItem[] secureItems = context.SecureItems.ToArray();
+            var groups = _context.Groups.ToArray();
+            var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
+            var allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
 
-            ComboBoxRoles.DataSource = roles.ToList();
-            ComboBoxRoles.DisplayMember = "RoleName";
-            ComboBoxRoles.ValueMember = "RoleId";
+            ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
+            ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+            ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+
+            ComboBoxGroups.DataSource = groups.ToList();
+            ComboBoxGroups.DisplayMember = "Name";
+            ComboBoxGroups.ValueMember = "GroupId";
+
+            ComboBoxUsers.DataSource = allUsers;
+            ComboBoxUsers.DisplayMember = "FullName";
+            ComboBoxUsers.ValueMember = "Id";
 
         }
 
-        private void LoadRoles()
+        private void LoadGroups()
         {
-            ListViewRoles.Clear();
-            Role[] roles = context.Roles.ToArray();
-            //ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem(r.RoleName)).ToArray());
-            ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
+            ListViewGroups.Clear();
+            var groups = _context.Groups.ToArray();
+            ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
+            ComboBoxGroups.DataSource = groups.ToList();
         }
 
         private void LoadUsers()
         {
             ListViewUsers.Clear();
-            User[] users = context.Users.ToArray();
-            //ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem(r.ToString())).ToArray());
-            ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.UserInfo, Tag = r }).ToArray());
+            var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
+            ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
         }
 
-        private void LoadActivities()
+        private void LoadSecureItems()
         {
-            ListViewActivities.Clear();
-            Activity[] activities = context.Activities.ToArray();
-            ListViewActivities.Items.AddRange(activities.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
-        }
-
-        private void LoadDevice1()
-        {
-            ListViewDevice1.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice1.Items.AddRange(carriers.Where(r => r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-        }
-
-        private void LoadDevice2()
-        {
-            ListViewDevice2.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice2.Items.AddRange(carriers.Where(r => r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-        }
-
-        private void LoadDevice3()
-        {
-            ListViewDevice3.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice3.Items.AddRange(carriers.Where(r => r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-        }
-
-        private void LoadDevice4()
-        {
-            ListViewDevice4.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice4.Items.AddRange(carriers.Where(r => r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-        }
-
-        private void ListViewDevice1_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            ListViewItem item = e.Item;
-            var carrier = (Carrier) item.Tag;
+            ListViewSecureItems.Clear();
+            // SecureItem[] secureItems = context.SecureItems.ToArray();
+            ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
         }
 
         public bool CheckAllUsers
         {
-            get
-            {
-                return checkAllUsers;
-            }
+            get { return _checkAllUsers; }
             set
             {
-                checkAllUsers = value;
-                ButtonSelectUsers.Text = checkAllUsers ? "Clear All" : "Check All";
+                _checkAllUsers = value;
+                ButtonSelectUsers.Text = _checkAllUsers ? "Clear All" : "Check All";
             }
         }
 
         private void ButtonSelectUsers_Click(object sender, EventArgs e)
         {
             CheckAllUsers = !CheckAllUsers;
-            if (CheckAllUsers == true)
+            if (CheckAllUsers)
             {
                 CheckUsers();
             }
@@ -213,14 +129,12 @@ namespace Neutron
                 item.Checked = false;  // turn it off first 
                 foreach (var usr in users)
                 {
-                    if (((User) item.Tag).Id == usr.Id)
+                    if (((User)item.Tag).Id == usr.Id)
                     {
                         item.Checked = true;
                         break;
                     }
-
                 }
-
             }
         }
 
@@ -232,306 +146,21 @@ namespace Neutron
             }
         }
 
-        //------
-        //public bool CheckAllRoles
-        //{
-        //    get
-        //    {
-        //        return checkAllRoles;
-        //    }
-        //    set
-        //    {
-        //        checkAllRoles = value;
-        //        ButtonSelectRoles.Text = checkAllRoles ? "Clear All" : "Check All";
-        //    }
-        //}
-
-        //private void ButtonSelectRoles_Click(object sender, EventArgs e)
-        //{
-        //    CheckAllRoles = !CheckAllRoles;
-        //    if (CheckAllRoles == true)
-        //    {
-        //        CheckRoles();
-        //    }
-        //    else
-        //    {
-        //        ClearRoles();
-        //    }
-        //}
-
-        //private void CheckRoles()
-        //{
-        //    foreach (ListViewItem item in ListViewRoles.Items)
-        //    {
-        //        item.Checked = true;
-        //    }
-        //}
-
-        //private void ClearRoles()
-        //{
-        //    foreach (ListViewItem item in ListViewRoles.Items)
-        //    {
-        //        item.Checked = false;
-        //    }
-        //}
-
-        //------
-        public bool CheckAllDevice1
+        private void ButtonSaveNewGroup_Click(object sender, EventArgs e)
         {
-            get
+            if (TextBoxNewGroup.Text.Length > 3)
             {
-                return checkAllDevice1;
-            }
-            set
-            {
-                checkAllDevice1 = value;
-                ButtonSelectDevice1.Text = checkAllDevice1 ? "Clear All" : "Check All";
-            }
-        }
-
-        private void ButtonSelectDevice1_Click(object sender, EventArgs e)
-        {
-            CheckAllDevice1 = !CheckAllDevice1;
-            if (CheckAllDevice1 == true)
-            {
-                CheckDevice1();
-            }
-            else
-            {
-                ClearDevice1();
-            }
-        }
-
-        private void CheckDevice1()
-        {
-            foreach (ListViewItem item in ListViewDevice1.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void CheckDevice1(List<Carrier> carriers)
-        {
-            foreach (ListViewItem item in ListViewDevice1.Items)
-            {
-                item.Checked = false;  // turn it off first 
-                foreach (var car in carriers)
-                {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
-                    {
-                        item.Checked = true;
-                        break;
-                    }
-
-                }
-
-            }
-        }
-
-        private void ClearDevice1()
-        {
-            foreach (ListViewItem item in ListViewDevice1.Items)
-            {
-                item.Checked = false;
-            }
-        }
-
-        //------
-        public bool CheckAllDevice2
-        {
-            get
-            {
-                return checkAllDevice2;
-            }
-            set
-            {
-                checkAllDevice2 = value;
-                ButtonSelectDevice2.Text = checkAllDevice2 ? "Clear All" : "Check All";
-            }
-        }
-
-        private void ButtonSelectDevice2_Click(object sender, EventArgs e)
-        {
-            CheckAllDevice2 = !CheckAllDevice2;
-            if (CheckAllDevice2 == true)
-            {
-                CheckDevice2();
-            }
-            else
-            {
-                ClearDevice2();
-            }
-        }
-
-        private void CheckDevice2()
-        {
-            foreach (ListViewItem item in ListViewDevice2.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void CheckDevice2(List<Carrier> carriers)
-        {
-            foreach (ListViewItem item in ListViewDevice2.Items)
-            {
-                item.Checked = false;  // turn it off first 
-                foreach (var car in carriers)
-                {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
-                    {
-                        item.Checked = true;
-                        break;
-                    }
-
-                }
-
-            }
-        }
-
-        private void ClearDevice2()
-        {
-            foreach (ListViewItem item in ListViewDevice2.Items)
-            {
-                item.Checked = false;
-            }
-        }
-
-        //------
-        public bool CheckAllDevice3
-        {
-            get
-            {
-                return checkAllDevice3;
-            }
-            set
-            {
-                checkAllDevice3 = value;
-                ButtonSelectDevice3.Text = checkAllDevice3 ? "Clear All" : "Check All";
-            }
-        }
-
-        private void ButtonSelectDevice3_Click(object sender, EventArgs e)
-        {
-            CheckAllDevice3 = !CheckAllDevice3;
-            if (CheckAllDevice3 == true)
-            {
-                CheckDevice3();
-            }
-            else
-            {
-                ClearDevice3();
-            }
-        }
-
-        private void CheckDevice3()
-        {
-            foreach (ListViewItem item in ListViewDevice3.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void CheckDevice3(List<Carrier> carriers)
-        {
-            foreach (ListViewItem item in ListViewDevice3.Items)
-            {
-                item.Checked = false;  // turn it off first 
-                foreach (var car in carriers)
-                {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
-                    {
-                        item.Checked = true;
-                        break;
-                    }
-
-                }
-            }
-        }
-
-        private void ClearDevice3()
-        {
-            foreach (ListViewItem item in ListViewDevice3.Items)
-            {
-                item.Checked = false;
-            }
-        }
-
-        //------
-        public bool CheckAllDevice4
-        {
-            get
-            {
-                return checkAllDevice4;
-            }
-            set
-            {
-                checkAllDevice4 = value;
-                ButtonSelectDevice4.Text = checkAllDevice4 ? "Clear All" : "Check All";
-            }
-        }
-
-        private void ButtonSelectDevice4_Click(object sender, EventArgs e)
-        {
-            CheckAllDevice4 = !CheckAllDevice4;
-            if (CheckAllDevice4 == true)
-            {
-                CheckDevice4();
-            }
-            else
-            {
-                ClearDevice4();
-            }
-        }
-
-        private void CheckDevice4()
-        {
-            foreach (ListViewItem item in ListViewDevice4.Items)
-            {
-                item.Checked = true;
-            }
-        }
-
-        private void CheckDevice4(List<Carrier> carriers)
-        {
-            foreach (ListViewItem item in ListViewDevice4.Items)
-            {
-                item.Checked = false;  // turn it off first 
-                foreach (var car in carriers)
-                {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
-                    {
-                        item.Checked = true;
-                        break;
-                    }
-
-                }
-
-            }
-        }
-
-        private void ClearDevice4()
-        {
-            foreach (ListViewItem item in ListViewDevice4.Items)
-            {
-                item.Checked = false;
-            }
-        }
-
-        private void ButtonSaveNewRole_Click(object sender, EventArgs e)
-        {
-            if (TextBoxNewRole.Text.Length > 3)
-            {
-                context.Roles.Add(new Role { RoleName = TextBoxNewRole.Text });
-                context.SaveChanges();
-                LoadRoles();
+                _context.Groups.Add(new Group { Name = TextBoxNewGroup.Text });
+                _context.SaveChanges();
+                LoadGroups();
+                RefreshUsersAndSecureItems();
             }
         }
 
         private void ShowChecked_Click(object sender, EventArgs e)
         {
             //string msg = string.Empty;
-            //foreach (ListViewItem item in ListViewRoles.Items)
+            //foreach (ListViewItem item in ListViewGroups.Items)
             //{
             //    if (item.Checked)
             //    {
@@ -543,170 +172,171 @@ namespace Neutron
             //MessageBox.Show(msg);
         }
 
-        private void ComboBoxRoles_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxGroups_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            Role usersWithThisRole = context.Roles.Include("Users").Include("Carriers").Where(r => r.RoleId == role.RoleId).FirstOrDefault();
-            CheckUsers(usersWithThisRole.Users);
-            //List<Carrier> carriers = role.Carriers.Where(r => r.DeviceNumber == 1).ToList();
-            CheckDevice1(usersWithThisRole.Carriers);
-            //carriers = role.Carriers.Where(r => r.DeviceNumber == 2).ToList();
-            CheckDevice2(usersWithThisRole.Carriers);
-            //carriers = role.Carriers.Where(r => r.DeviceNumber == 3).ToList();
-            CheckDevice3(usersWithThisRole.Carriers);
-            //carriers = role.Carriers.Where(r => r.DeviceNumber == 4).ToList();
-            CheckDevice4(usersWithThisRole.Carriers);
+            RefreshUsersAndSecureItems();
+        }
 
-            CheckActivities(usersWithThisRole.Activities);
+        private void RefreshUsersAndSecureItems()
+        {
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            var users = _context.GroupUser.Where(r => r.GroupId == group.GroupId).Select(u => u.User).ToList();
+            var secureItems = _context.GroupSecureItem.Where(r => r.GroupId == group.GroupId).Select(u => u.SecureItem).ToList();
+            //var grup = context.Users.Where(u => u.)
+            //group.Users = context.Users.Where(c => c.Groups == c.Id).ToList();
+            //group.SecureItems = context.SecureItems.Where(c => c.GroupId == group.Id).ToList();
+            // List<User> usersInGroup = context.GroupUser.Where(g => g.GroupId == group.GroupId).Select(s => s.Users.ToList()).; 
+            //usersWithThisGroup.SecureItems = context.SecureItems.Where(a => a.Groups. == group.);
+            CheckUsers(users);
+            CheckSecureItems(secureItems);
+            UpdateInformation();
+        }
+
+        private void UpdateInformation()
+        {
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            if (TabControlSecurity.SelectedTab == TabControlSecurity.TabPages["TabPageUsers"])
+            {
+                LabelUserGroupInformation.Text = $"Checked Users Are Members of the {group?.Name} Group.";
+            }
+            else if (TabControlSecurity.SelectedTab == TabControlSecurity.TabPages["TabPageSecureItems"])
+            {
+                LabelSecureItemsInformation.Text = $"The {group?.Name} Group has Access to All Checked Items.";
+            }
         }
 
         private void ButtonSaveUsers_Click(object sender, EventArgs e)
         {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<User> users = context.Users.ToList();
-            foreach (var item in users)
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
+            foreach (var user in users)
             {
-                role.Users.Remove(item);
+                var gu = _context.GroupUser.FirstOrDefault(g => g.GroupId == @group.GroupId && g.UserId == user.Id);
+                if (gu != null)
+                {
+                    _context.GroupUser.Remove(gu);
+                }
             }
-            context.SaveChanges();
-            SaveSelectedUsers(role);
+            _context.SaveChanges();
+            SaveSelectedUsers(group);
 
         }
 
-        private void SaveSelectedUsers(Role role)
+        private void SaveSelectedUsers(Group group)
+        {
+            try
+            {
+                foreach (ListViewItem item in ListViewUsers.Items)
+                {
+                    if (item.Checked)
+                    {
+                        var user = (User)item.Tag;
+                        var groupUser = new GroupUser { GroupId = group.GroupId, UserId = user.Id };
+                        var gu = _context.GroupUser.Find(group.GroupId, user.Id);
+                        if (gu == null)
+                        {
+                            _context.GroupUser.Add(groupUser);
+                        }
+                    }
+                }
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error Saving User: {ex.Message}\r\n {ex.InnerException}");
+            }
+        }
+
+        private void DisableSelectedUsers(Group group)
         {
             foreach (ListViewItem item in ListViewUsers.Items)
             {
                 if (item.Checked)
                 {
-                    var user = (User) item.Tag;
-                    role.Users.Add(user);
+                    var user = (User)item.Tag;
+                    user.Disabled = true;
                 }
             }
-            context.SaveChanges();
-        }
-
-        private void ButtonSaveDevice1_Click(object sender, EventArgs e)
-        {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 1).ToList();
-            foreach (var item in carriers)
-            {
-                role.Carriers.Remove(item);
-            }
-            context.SaveChanges();
-            SaveSelectedDevice1(role);
-
-        }
-
-        private void SaveSelectedDevice1(Role role)
-        {
-            foreach (ListViewItem item in ListViewDevice1.Items)
-            {
-                if (item.Checked)
-                {
-                    var carrier = (Carrier) item.Tag;
-                    role.Carriers.Add(carrier);
-                }
-            }
-            context.SaveChanges();
-        }
-
-        private void ButtonSaveDevice2_Click(object sender, EventArgs e)
-        {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 2).ToList();
-            foreach (var item in carriers)
-            {
-                role.Carriers.Remove(item);
-            }
-            context.SaveChanges();
-            SaveSelectedDevice2(role);
-
-        }
-
-        private void SaveSelectedDevice2(Role role)
-        {
-            foreach (ListViewItem item in ListViewDevice2.Items)
-            {
-                if (item.Checked)
-                {
-                    var carrier = (Carrier) item.Tag;
-                    role.Carriers.Add(carrier);
-                }
-            }
-            context.SaveChanges();
-        }
-
-        private void ButtonSaveDevice3_Click(object sender, EventArgs e)
-        {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 3).ToList();
-            foreach (var item in carriers)
-            {
-                role.Carriers.Remove(item);
-            }
-            context.SaveChanges();
-            SaveSelectedDevice3(role);
-
-        }
-
-        private void SaveSelectedDevice3(Role role)
-        {
-            foreach (ListViewItem item in ListViewDevice3.Items)
-            {
-                if (item.Checked)
-                {
-                    var carrier = (Carrier) item.Tag;
-                    role.Carriers.Add(carrier);
-                }
-            }
-            context.SaveChanges();
-        }
-
-        private void ButtonSaveDevice4_Click(object sender, EventArgs e)
-        {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 4).ToList();
-            foreach (var item in carriers)
-            {
-                role.Carriers.Remove(item);
-            }
-            context.SaveChanges();
-            SaveSelectedDevice4(role);
-
-        }
-
-        private void SaveSelectedDevice4(Role role)
-        {
-            foreach (ListViewItem item in ListViewDevice4.Items)
-            {
-                if (item.Checked)
-                {
-                    var carrier = (Carrier) item.Tag;
-                    role.Carriers.Add(carrier);
-                }
-            }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveNewUser_Click(object sender, EventArgs e)
         {
-            var user = new User
+            var group = (Group)ComboBoxGroups.SelectedItem;
+            if (group != null)
             {
-                EmpId = TextBoxEmpId.Text,
-                Pin = TextBoxPin.Text,
-                Firstname = TextBoxFirstname.Text,
-                Lastname = TextBoxLastname.Text,
-                Username = TextBoxUsername.Text,
-                Password = TextBoxPassword.Text,
-                Disabled = CheckBoxDisabled.Checked
-            };
-            context.Users.Add(user);
-            context.SaveChanges();
+                if (VerifyFields())
+                {
+                    var user = new User
+                    {
+                        EmpId = TextBoxEmpId.Text.Trim(),
+                        Pin = TextBoxPin.Text.Trim(),
+                        Firstname = TextBoxFirstname.Text.Trim(),
+                        Lastname = TextBoxLastname.Text.Trim(),
+                        Username = TextBoxUsername.Text.Trim(),
+                        Password = TextBoxPassword.Text.Trim(),
+                        Disabled = CheckBoxDisabled.Checked,
+                        HomeLocationId = _contextNeutron.Locations.FirstOrDefault()?.Id,
+                    };
+                    _context.Users.Add(user);
+                    _context.GroupUser.Add(new GroupUser { GroupId = group.GroupId, UserId = user.Id });
+                    _context.SaveChanges();
 
-            ClearFields();
-            LoadUsers();
+                    ClearFields();
+                    LoadUsers();
+                    RefreshUsersAndSecureItems();
+
+                }
+            }
+        }
+
+        private bool VerifyFields()
+        {
+            var result = true;
+            var sb = new StringBuilder();
+            if (string.IsNullOrEmpty(TextBoxFirstname.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a first name.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxLastname.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a last name.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxEmpId.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide an employee Id.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxPin.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a PIN number.");
+                result = false;
+            }
+
+            if (!_neutronVariables.PinLoginOnly)
+            {
+                if (string.IsNullOrEmpty(TextBoxUsername.Text.Trim()))
+                {
+                    sb.AppendLine("Login requires a user name and password.");
+                    sb.AppendLine($"You must provide a user name.");
+                    result = false;
+                }
+                if (string.IsNullOrEmpty(TextBoxPassword.Text.Trim()))
+                {
+                    sb.AppendLine("Login requires a user name and password.");
+                    sb.AppendLine($"You must provide a password.");
+                    result = false;
+                }
+            }
+
+            if (!result)
+            {
+                MessageBox.Show(sb.ToString());
+            }
+
+            return result;
         }
 
         private void ClearFields()
@@ -720,90 +350,389 @@ namespace Neutron
             CheckBoxDisabled.Checked = false;
         }
 
-        private void ButtonSaveActivities_Click(object sender, EventArgs e)
+        private void ButtonSaveSecureItems_Click(object sender, EventArgs e)
         {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Activity> activities = context.Activities.ToList();
-            foreach (var item in activities)
+            var group = (Group)ComboBoxGroups.SelectedItem;
+
+
+            foreach (var item in _secureItems)
             {
-                role.Activities.Remove(item);
+                var gs = _context.GroupSecureItem.FirstOrDefault(g => g.GroupId == group.GroupId
+                                                                      && g.SecureItemId == item.SecureItemId);
+                if (gs != null)
+                {
+                    _context.GroupSecureItem.Remove(gs);
+                }
             }
-            context.SaveChanges();
-            SaveSelectedActivities(role);
+            _context.SaveChanges();
+            SaveSelectedSecureItems(group);
+            RefreshUsersAndSecureItems();
 
         }
 
-        private void SaveSelectedActivities(Role role)
+        private void SaveSelectedSecureItems(Group group)
         {
-            foreach (ListViewItem item in ListViewActivities.Items)
+            foreach (ListViewItem item in ListViewSecureItems.Items)
             {
                 if (item.Checked)
                 {
-                    var activity = (Activity) item.Tag;
-                    role.Activities.Add(activity);
+                    var secureItem = (SecureItem)item.Tag;
+                    if (secureItem != null)
+                    {
+                        var groupSecureItem = new GroupSecureItem { GroupId = group.GroupId, SecureItemId = secureItem.SecureItemId };
+                        var gs = _context.GroupSecureItem.Find(group.GroupId, secureItem.SecureItemId);
+                        if (gs == null)
+                        {
+                            _context.GroupSecureItem.Add(groupSecureItem);
+                        }
+                    }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
-        public bool CheckAllActivities
+        public bool CheckAllSecureItems
         {
-            get
-            {
-                return checkAllActivities;
-            }
+            get { return _checkAllSecureItems; }
             set
             {
-                checkAllActivities = value;
-                ButtonSelectActivities.Text = checkAllActivities ? "Clear All" : "Check All";
+                _checkAllSecureItems = value;
+                ButtonSelectSecureItems.Text = _checkAllSecureItems ? "Clear All" : "Check All";
             }
         }
 
-        private void ButtonSelectActivities_Click(object sender, EventArgs e)
+        private void ButtonSelectSecureItems_Click(object sender, EventArgs e)
         {
-            CheckAllActivities = !CheckAllActivities;
-            if (CheckAllActivities == true)
+            CheckAllSecureItems = !CheckAllSecureItems;
+            if (CheckAllSecureItems == true)
             {
-                CheckActivities();
+                CheckSecureItems();
             }
             else
             {
-                ClearActivities();
+                ClearSecureItems();
             }
         }
 
-        private void CheckActivities()
+        private void CheckSecureItems()
         {
-            foreach (ListViewItem item in ListViewActivities.Items)
+            foreach (ListViewItem item in ListViewSecureItems.Items)
             {
                 item.Checked = true;
             }
         }
 
-        private void CheckActivities(List<Activity> activities)
+        private void CheckSecureItems(List<SecureItem> secureItems)
         {
-            foreach (ListViewItem item in ListViewActivities.Items)
+            foreach (ListViewItem item in ListViewSecureItems.Items)
             {
                 item.Checked = false;  // turn it off first 
-                foreach (var act in activities)
+                foreach (var act in secureItems)
                 {
-                    if (((Activity) item.Tag).Id == act.Id)
+                    if (((SecureItem)item.Tag).SecureItemId == act.SecureItemId)
                     {
                         item.Checked = true;
                         break;
                     }
-
                 }
             }
         }
 
-        private void ClearActivities()
+        private void ClearSecureItems()
         {
-            foreach (ListViewItem item in ListViewActivities.Items)
+            foreach (ListViewItem item in ListViewSecureItems.Items)
             {
                 item.Checked = false;
             }
         }
 
+        private void ButtonDisableUsers_ClientSizeChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TabControlSecurity_TabIndexChanged(object sender, EventArgs e)
+        {
+            UpdateInformation();
+        }
+
+        private void ButtonFindEditUser_Click(object sender, EventArgs e)
+        {
+            FindEditUser();
+        }
+
+        private void FindEditUser()
+        {
+
+            ButtonDeleteEditUser.Enabled = false;
+            var empId = TextBoxEmpIdEditUser.Text.Trim();
+            try
+            {
+                var recs = GlobalVar.HistoryManager.GetHistoryRecordsByUser(empId).Take(50)
+                                 .OrderByDescending(h => h.ActionDateTime).ToList();
+                if (!recs.Any())
+                {
+                    ButtonDeleteEditUser.Enabled = true;
+                }
+
+                DataGridView1.DataSource = recs;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"Unable To Find User.  {Environment.NewLine} {e.Message}");
+            }
+            ComboBoxUsers.Focus();
+        }
+
+        private void ClearGrid()
+        {
+            DataGridView1.Rows.Clear();
+            DataGridView1.Refresh();
+        }
+
+        private void ButtonDeleteEditUser_Click(object sender, EventArgs e)
+        {
+            var empId = TextBoxEmpIdEditUser.Text.Trim();
+            if (!string.IsNullOrEmpty(empId))
+            {
+                var user = _context.Users.FirstOrDefault(u =>
+                    string.Equals(u.EmpId, empId, StringComparison.CurrentCultureIgnoreCase));
+                if (user != null)
+                {
+                    _context.Users.Remove(user);
+                    _context.SaveChanges();
+                    ClearEditUserFields();
+                    TextBoxEmpIdEditUser.Focus();
+                    ButtonDeleteEditUser.Enabled = false;
+                }
+            }
+
+            ButtonDeleteEditUser.Enabled = false;
+        }
+
+        private void ButtonSaveEditUser_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (VerifyFields())
+                {
+                    var user = _context.Users.Find(_currentUser.Id);
+                    if (user != null)
+                    {
+                        user.EmpId = TextBoxEmpId.Text.Trim();
+                        user.Pin = TextBoxPinEditUser.Text.Trim();
+                        user.Firstname = TextBoxFirstnameEditUser.Text.Trim();
+                        user.Lastname = TextBoxLastnameEditUser.Text.Trim();
+                        user.Username = TextBoxUsernameEditUser.Text.Trim();
+                        user.Password = TextBoxPasswordEditUser.Text.Trim();
+                        user.Disabled = CheckBoxDisabledEditUser.Checked;
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable To Save Changes.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
+                TextBoxEmpIdEditUser.Focus();
+            }
+            ButtonDeleteEditUser.Enabled = false;
+        }
+
+        private void ButtonClearEditUserFields_Click(object sender, EventArgs e)
+        {
+            ClearEditUserFields();
+        }
+
+        private void ClearEditUserFields()
+        {
+            TextBoxEmpIdEditUser.Text = string.Empty;
+            TextBoxPinEditUser.Text = string.Empty;
+            TextBoxFirstnameEditUser.Text = string.Empty;
+            TextBoxLastnameEditUser.Text = string.Empty;
+            TextBoxUsernameEditUser.Text = string.Empty;
+            TextBoxPasswordEditUser.Text = string.Empty;
+            CheckBoxDisabledEditUser.Checked = false;
+            ButtonDeleteEditUser.Enabled = false;
+            ClearGrid();
+        }
+
+        private void TextBoxEmpIdEditUser_Enter(object sender, EventArgs e)
+        {
+            HighLightText((TextBox)sender);
+        }
+
+        private void HighLightText(TextBox textBox)
+        {
+            if (!String.IsNullOrEmpty(textBox.Text))
+            {
+                textBox.SelectionStart = 0;
+                textBox.SelectionLength = textBox.Text.Length;
+            }
+        }
+
+        private void SetupGrids()
+        {
+
+            DataGridView1.AutoGenerateColumns = false;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
+            DataGridView1.DefaultCellStyle.BackColor = Color.White;
+
+            var col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "ActionCodeName";
+            col.HeaderText = "Action";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "ActionCodeName";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "ActionDateTime";
+            col.HeaderText = "Date";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "ActionDateTime";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Ord1";
+            col.HeaderText = "Job";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Ord1";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Ord2";
+            col.HeaderText = "Invoice";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Ord2";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Item";
+            col.HeaderText = "Item";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Item";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Description";
+            col.HeaderText = "Description";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Description";
+            DataGridView1.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn();
+            //col.DataPropertyName = "OrderStatusName";
+            //col.HeaderText = "Job Status";
+            //col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            //col.Name = "OrderStatusName";
+            //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "RequestedQuantity";
+            col.HeaderText = "Requested";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.Name = "RequestedQuantity";
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "IssuedQuantity";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = "Issued";
+            col.Name = "IssuedQuantity";
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            DataGridView1.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn();
+            //col.DataPropertyName = "StationName";
+            //col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            //col.HeaderText = "Station";
+            //col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //col.Name = "StationName";
+            //DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc1";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelDevice;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc1";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc2";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelTray;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc2";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc3";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelOver;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc3";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc4";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = _nomenclature.LabelBack;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc4";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Loc5";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col.HeaderText = "Tag";
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            col.Name = "Loc5";
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Slot";
+            col.HeaderText = "Slot";
+            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            col.Name = "Slot";
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn();
+            col.DataPropertyName = "Id";
+            col.HeaderText = "Id";
+            col.Visible = false;
+            col.Name = "Id";
+            DataGridView1.Columns.Add(col);
+        }
+
+        private void ComboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var user = ((ComboBox)sender).SelectedItem as User;
+
+            if (user == null) return;
+            _currentUser = user;
+            TextBoxEmpIdEditUser.Text = user.EmpId;
+            TextBoxFirstnameEditUser.Text = user.Firstname;
+            TextBoxLastnameEditUser.Text = user.Lastname;
+            TextBoxPasswordEditUser.Text = user.Password;
+            TextBoxPinEditUser.Text = user.Pin;
+            TextBoxUsernameEditUser.Text = user.Username;
+            CheckBoxDisabledEditUser.Checked = user.Disabled;
+
+            //if (string.IsNullOrEmpty(user.EmpId)) return;
+            FindEditUser();
+        }
+
+        
     }
 }
+

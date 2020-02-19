@@ -522,7 +522,7 @@
             this.DateTimePickerFrom.Name = "DateTimePickerFrom";
             this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerFrom.TabIndex = 21;
-            this.DateTimePickerFrom.Value = new System.DateTime(2020, 1, 1, 0, 0, 0, 0);
+            this.DateTimePickerFrom.Value = new System.DateTime(2018, 1, 1, 5, 20, 0, 0);
             this.DateTimePickerFrom.ValueChanged += new System.EventHandler(this.DateTimePickerFrom_ValueChanged);
             this.DateTimePickerFrom.Enter += new System.EventHandler(this.DateTimePicker_Enter);
             // 
@@ -536,7 +536,7 @@
             this.RadioButtonDateRange.TabStop = true;
             this.RadioButtonDateRange.Text = "Date Range";
             this.RadioButtonDateRange.UseVisualStyleBackColor = true;
-            this.RadioButtonDateRange.CheckedChanged += new System.EventHandler(this.RadioButtonDateRange_CheckedChanged);
+            this.RadioButtonDateRange.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // RadioButtonMonth
             // 
@@ -546,7 +546,7 @@
             this.RadioButtonMonth.TabIndex = 0;
             this.RadioButtonMonth.Text = "Month";
             this.RadioButtonMonth.UseVisualStyleBackColor = true;
-            this.RadioButtonMonth.CheckedChanged += new System.EventHandler(this.RadioButtonMonth_CheckedChanged);
+            this.RadioButtonMonth.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // RadioButtonWeek
             // 
@@ -556,7 +556,7 @@
             this.RadioButtonWeek.TabIndex = 0;
             this.RadioButtonWeek.Text = "Week";
             this.RadioButtonWeek.UseVisualStyleBackColor = true;
-            this.RadioButtonWeek.CheckedChanged += new System.EventHandler(this.RadioButtonWeek_CheckedChanged);
+            this.RadioButtonWeek.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // RadioButtonToday
             // 
@@ -566,7 +566,7 @@
             this.RadioButtonToday.TabIndex = 0;
             this.RadioButtonToday.Text = "Today";
             this.RadioButtonToday.UseVisualStyleBackColor = true;
-            this.RadioButtonToday.CheckedChanged += new System.EventHandler(this.RadioButtonToday_CheckedChanged);
+            this.RadioButtonToday.Click += new System.EventHandler(this.RadioButtonDate);
             // 
             // MButtonClose
             // 
@@ -583,10 +583,10 @@
             // MBSaveDetail
             // 
             this.MBSaveDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSaveDetail.Location = new System.Drawing.Point(511, 56);
+            this.MBSaveDetail.Location = new System.Drawing.Point(511, 54);
             this.MBSaveDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveDetail.Name = "MBSaveDetail";
-            this.MBSaveDetail.Size = new System.Drawing.Size(245, 32);
+            this.MBSaveDetail.Size = new System.Drawing.Size(245, 37);
             this.MBSaveDetail.TabIndex = 12;
             this.MBSaveDetail.Text = "Save Detail to File";
             this.MBSaveDetail.UseSelectable = true;
@@ -595,10 +595,10 @@
             // MBSaveSummary
             // 
             this.MBSaveSummary.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSaveSummary.Location = new System.Drawing.Point(511, 8);
+            this.MBSaveSummary.Location = new System.Drawing.Point(511, 10);
             this.MBSaveSummary.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveSummary.Name = "MBSaveSummary";
-            this.MBSaveSummary.Size = new System.Drawing.Size(245, 32);
+            this.MBSaveSummary.Size = new System.Drawing.Size(245, 37);
             this.MBSaveSummary.TabIndex = 12;
             this.MBSaveSummary.Text = "Save Summary to File";
             this.MBSaveSummary.UseSelectable = true;
@@ -642,7 +642,7 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -664,7 +664,6 @@
             this.Controls.Add(this.LabelFormHeaderText);
             this.Name = "FrmProductivity";
             this.Text = "Productivity";
-            this.Load += new System.EventHandler(this.FrmProductivity_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);

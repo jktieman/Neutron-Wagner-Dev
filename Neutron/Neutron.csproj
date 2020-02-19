@@ -327,12 +327,6 @@
     <Compile Include="Forms\FrmReprint.Designer.cs">
       <DependentUpon>FrmReprint.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmReprintOrder.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmReprintOrder.Designer.cs">
-      <DependentUpon>FrmReprintOrder.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FrmSecurity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -357,12 +351,6 @@
     <Compile Include="Forms\FrmSystem.Designer.cs">
       <DependentUpon>FrmSystem.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmUsers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmUsers.Designer.cs">
-      <DependentUpon>FrmUsers.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FrmLocations.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -374,24 +362,6 @@
     </Compile>
     <Compile Include="Forms\FrmPick.Designer.cs">
       <DependentUpon>FrmPick.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmSizeCodes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmSizeCodes.Designer.cs">
-      <DependentUpon>FrmSizeCodes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmVelocityCodes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmVelocityCodes.Designer.cs">
-      <DependentUpon>FrmVelocityCodes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmTcpConfiguration.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmTcpConfiguration.Designer.cs">
-      <DependentUpon>FrmTcpConfiguration.cs</DependentUpon>
     </Compile>
     <Compile Include="Global\LineStatusManager.cs" />
     <Compile Include="Models\ActionIdString.cs" />
@@ -499,9 +469,6 @@
     <EmbeddedResource Include="Forms\FrmReprint.resx">
       <DependentUpon>FrmReprint.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmReprintOrder.resx">
-      <DependentUpon>FrmReprintOrder.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSecurity.resx">
       <DependentUpon>FrmSecurity.cs</DependentUpon>
     </EmbeddedResource>
@@ -511,24 +478,12 @@
     <EmbeddedResource Include="Forms\FrmSystem.resx">
       <DependentUpon>FrmSystem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmUsers.resx">
-      <DependentUpon>FrmUsers.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmLocations.resx">
       <DependentUpon>FrmLocations.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmPick.resx">
       <DependentUpon>FrmPick.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmSizeCodes.resx">
-      <DependentUpon>FrmSizeCodes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmVelocityCodes.resx">
-      <DependentUpon>FrmVelocityCodes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmTcpConfiguration.resx">
-      <DependentUpon>FrmTcpConfiguration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>

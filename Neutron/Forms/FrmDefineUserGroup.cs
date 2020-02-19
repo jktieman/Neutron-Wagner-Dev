@@ -26,10 +26,10 @@ namespace Neutron.Forms
         private string fileName = "ProductivityGroups";
         public FrmDefineUserGroup(IJsonData jsonData)
         {
-            _jsonData = jsonData;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
+            _jsonData = jsonData;
             InitForm();
         }
 
@@ -103,6 +103,11 @@ namespace Neutron.Forms
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void ButtonClose_Click(object sender, EventArgs e)
         {
             Close();
         }
@@ -318,11 +323,8 @@ namespace Neutron.Forms
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmDefineUserGroup",
                     resourceDir: languageDirectory, usingResourceSet: null);
-                ButtonCancel.Text = _resourceManager.GetString("Cancel");
-                ButtonSave.Text = _resourceManager.GetString("Save");
-                this.Text = _resourceManager.GetString("DefineActionGroup");
                 LabelGroupName.Text = _resourceManager.GetString("GroupName");
-                ButtonCancel.Text = _resourceManager.GetString("Close");
+                ButtonClose.Text = _resourceManager.GetString("Close");
                 ButtonSave.Text = _resourceManager.GetString("Save");
                 ButtonRemove.Text = _resourceManager.GetString("Remove");
                 ButtonClearAllUsers.Text = _resourceManager.GetString("ClearAll");

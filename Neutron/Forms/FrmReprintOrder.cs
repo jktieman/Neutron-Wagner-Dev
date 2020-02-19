@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NeutronCore;
 
 namespace Neutron.Forms
 {
@@ -34,7 +35,7 @@ namespace Neutron.Forms
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            // SetCulture(_cultureInfo.Name);
+            SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
             _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
@@ -83,6 +84,27 @@ namespace Neutron.Forms
             if (_neutronVariables.EnableDocumentPrinter)
             {
                 Task.Run(() => DocumentToPrint.Print(order.Ord1, _documentPrinter, order.Ord2));
+            }
+        }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmReprintOrder",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                CheckBoxToteLabel.Text = _resourceManager.GetString("ToteLabel");
+                CheckBoxDocument.Text = _resourceManager.GetString("Document");
+                LabelChangeQuantityPosition.Text = _resourceManager.GetString("OrderNumber");
+                MBReprintCancel.Text = _resourceManager.GetString("Cancel");
+                MBReprintPrint.Text = _resourceManager.GetString("Print");
+                this.Text = _resourceManager.GetString("FrmReprintOrder");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
         }
 

@@ -65,20 +65,20 @@
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 129);
+            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Location = new System.Drawing.Point(22, 173);
+            this.tabControl1.Location = new System.Drawing.Point(22, 77);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 670);
+            this.tabControl1.Size = new System.Drawing.Size(1155, 796);
             this.tabControl1.TabIndex = 23;
             // 
             // tabPage1
@@ -99,7 +99,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1147, 644);
+            this.tabPage1.Size = new System.Drawing.Size(1147, 770);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
             // 
@@ -128,7 +128,7 @@
             this.GroupBoxActionCodes.Controls.Add(this.CheckedListBoxActionCodes);
             this.GroupBoxActionCodes.Location = new System.Drawing.Point(11, 126);
             this.GroupBoxActionCodes.Name = "GroupBoxActionCodes";
-            this.GroupBoxActionCodes.Size = new System.Drawing.Size(194, 507);
+            this.GroupBoxActionCodes.Size = new System.Drawing.Size(194, 624);
             this.GroupBoxActionCodes.TabIndex = 22;
             this.GroupBoxActionCodes.TabStop = false;
             this.GroupBoxActionCodes.Text = "Action Codes";
@@ -140,7 +140,7 @@
             this.CheckedListBoxActionCodes.FormattingEnabled = true;
             this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(3, 16);
             this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
-            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 488);
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 605);
             this.CheckedListBoxActionCodes.TabIndex = 0;
             this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
             // 
@@ -156,15 +156,15 @@
             this.PanelDateRanges.Controls.Add(this.RadioButtonToday);
             this.PanelDateRanges.Location = new System.Drawing.Point(6, 8);
             this.PanelDateRanges.Name = "PanelDateRanges";
-            this.PanelDateRanges.Size = new System.Drawing.Size(418, 84);
+            this.PanelDateRanges.Size = new System.Drawing.Size(477, 80);
             this.PanelDateRanges.TabIndex = 21;
             // 
             // LabelTo
             // 
             this.LabelTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTo.Location = new System.Drawing.Point(202, 47);
+            this.LabelTo.Location = new System.Drawing.Point(234, 46);
             this.LabelTo.Name = "LabelTo";
-            this.LabelTo.Size = new System.Drawing.Size(55, 15);
+            this.LabelTo.Size = new System.Drawing.Size(70, 18);
             this.LabelTo.TabIndex = 24;
             this.LabelTo.Text = "To";
             this.LabelTo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -173,17 +173,18 @@
             // 
             this.DateTimePickerTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DateTimePickerTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.DateTimePickerTo.Location = new System.Drawing.Point(263, 43);
+            this.DateTimePickerTo.Location = new System.Drawing.Point(310, 46);
             this.DateTimePickerTo.Name = "DateTimePickerTo";
             this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerTo.TabIndex = 23;
+            this.DateTimePickerTo.Enter += new System.EventHandler(this.DateTimePickerTo_Enter);
             // 
             // LabelFrom
             // 
             this.LabelFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFrom.Location = new System.Drawing.Point(202, 14);
+            this.LabelFrom.Location = new System.Drawing.Point(234, 14);
             this.LabelFrom.Name = "LabelFrom";
-            this.LabelFrom.Size = new System.Drawing.Size(55, 15);
+            this.LabelFrom.Size = new System.Drawing.Size(70, 18);
             this.LabelFrom.TabIndex = 22;
             this.LabelFrom.Text = "From";
             this.LabelFrom.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -192,60 +193,61 @@
             // 
             this.DateTimePickerFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DateTimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.DateTimePickerFrom.Location = new System.Drawing.Point(263, 9);
+            this.DateTimePickerFrom.Location = new System.Drawing.Point(310, 14);
             this.DateTimePickerFrom.Name = "DateTimePickerFrom";
             this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
             this.DateTimePickerFrom.TabIndex = 21;
             this.DateTimePickerFrom.Value = new System.DateTime(2018, 1, 1, 5, 20, 0, 0);
+            this.DateTimePickerFrom.Enter += new System.EventHandler(this.DateTimePickerFrom_Enter);
             // 
             // RadioButtonDateRange
             // 
-            this.RadioButtonDateRange.AutoSize = true;
             this.RadioButtonDateRange.Checked = true;
-            this.RadioButtonDateRange.Location = new System.Drawing.Point(95, 47);
+            this.RadioButtonDateRange.Location = new System.Drawing.Point(122, 47);
             this.RadioButtonDateRange.Name = "RadioButtonDateRange";
-            this.RadioButtonDateRange.Size = new System.Drawing.Size(83, 17);
+            this.RadioButtonDateRange.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonDateRange.TabIndex = 0;
             this.RadioButtonDateRange.TabStop = true;
             this.RadioButtonDateRange.Text = "Date Range";
             this.RadioButtonDateRange.UseVisualStyleBackColor = true;
+            this.RadioButtonDateRange.CheckedChanged += new System.EventHandler(this.RadioButtonDateRange_CheckedChanged);
             // 
             // RadioButtonMonth
             // 
-            this.RadioButtonMonth.AutoSize = true;
-            this.RadioButtonMonth.Location = new System.Drawing.Point(95, 14);
+            this.RadioButtonMonth.Location = new System.Drawing.Point(122, 14);
             this.RadioButtonMonth.Name = "RadioButtonMonth";
-            this.RadioButtonMonth.Size = new System.Drawing.Size(55, 17);
+            this.RadioButtonMonth.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonMonth.TabIndex = 0;
             this.RadioButtonMonth.Text = "Month";
             this.RadioButtonMonth.UseVisualStyleBackColor = true;
+            this.RadioButtonMonth.CheckedChanged += new System.EventHandler(this.RadioButtonMonth_CheckedChanged);
             // 
             // RadioButtonWeek
             // 
-            this.RadioButtonWeek.AutoSize = true;
             this.RadioButtonWeek.Location = new System.Drawing.Point(8, 47);
             this.RadioButtonWeek.Name = "RadioButtonWeek";
-            this.RadioButtonWeek.Size = new System.Drawing.Size(54, 17);
+            this.RadioButtonWeek.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonWeek.TabIndex = 0;
             this.RadioButtonWeek.Text = "Week";
             this.RadioButtonWeek.UseVisualStyleBackColor = true;
+            this.RadioButtonWeek.CheckedChanged += new System.EventHandler(this.RadioButtonWeek_CheckedChanged);
             // 
             // RadioButtonToday
             // 
-            this.RadioButtonToday.AutoSize = true;
             this.RadioButtonToday.Location = new System.Drawing.Point(8, 14);
             this.RadioButtonToday.Name = "RadioButtonToday";
-            this.RadioButtonToday.Size = new System.Drawing.Size(55, 17);
+            this.RadioButtonToday.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonToday.TabIndex = 0;
             this.RadioButtonToday.Text = "Today";
             this.RadioButtonToday.UseVisualStyleBackColor = true;
+            this.RadioButtonToday.CheckedChanged += new System.EventHandler(this.RadioButtonToday_CheckedChanged);
             // 
             // LabelFindDescription
             // 
             this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFindDescription.Location = new System.Drawing.Point(615, 50);
+            this.LabelFindDescription.Location = new System.Drawing.Point(500, 14);
             this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(232, 27);
+            this.LabelFindDescription.Size = new System.Drawing.Size(198, 27);
             this.LabelFindDescription.TabIndex = 18;
             this.LabelFindDescription.Text = "Search For Part of Order or Item";
             this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -253,10 +255,10 @@
             // TextBoxFind
             // 
             this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(615, 10);
+            this.TextBoxFind.Location = new System.Drawing.Point(704, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(232, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(145, 29);
             this.TextBoxFind.TabIndex = 17;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -276,10 +278,10 @@
             // 
             this.MBHistoryTransmitSelected.Enabled = false;
             this.MBHistoryTransmitSelected.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHistoryTransmitSelected.Location = new System.Drawing.Point(430, 55);
+            this.MBHistoryTransmitSelected.Location = new System.Drawing.Point(489, 47);
             this.MBHistoryTransmitSelected.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHistoryTransmitSelected.Name = "MBHistoryTransmitSelected";
-            this.MBHistoryTransmitSelected.Size = new System.Drawing.Size(179, 37);
+            this.MBHistoryTransmitSelected.Size = new System.Drawing.Size(206, 37);
             this.MBHistoryTransmitSelected.TabIndex = 12;
             this.MBHistoryTransmitSelected.Text = "Transmit Selected";
             this.MBHistoryTransmitSelected.UseSelectable = true;
@@ -289,10 +291,10 @@
             // MBSaveHistory
             // 
             this.MBSaveHistory.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSaveHistory.Location = new System.Drawing.Point(430, 10);
+            this.MBSaveHistory.Location = new System.Drawing.Point(704, 47);
             this.MBSaveHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveHistory.Name = "MBSaveHistory";
-            this.MBSaveHistory.Size = new System.Drawing.Size(179, 37);
+            this.MBSaveHistory.Size = new System.Drawing.Size(145, 37);
             this.MBSaveHistory.TabIndex = 12;
             this.MBSaveHistory.Text = "Save to File";
             this.MBSaveHistory.UseSelectable = true;
@@ -301,7 +303,7 @@
             // MButtonRun
             // 
             this.MButtonRun.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonRun.Location = new System.Drawing.Point(853, 8);
+            this.MButtonRun.Location = new System.Drawing.Point(859, 8);
             this.MButtonRun.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonRun.Name = "MButtonRun";
             this.MButtonRun.Size = new System.Drawing.Size(136, 76);
@@ -321,7 +323,7 @@
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(930, 507);
+            this.DataGridView1.Size = new System.Drawing.Size(930, 624);
             this.DataGridView1.TabIndex = 0;
             // 
             // LabelFormTitle
@@ -330,19 +332,19 @@
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(367, 98);
+            this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(418, 66);
+            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "History";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(793, 35);
+            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
             this.mlUserInfo.TabIndex = 21;
             this.mlUserInfo.Text = "Login";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -350,12 +352,12 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 16);
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(713, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
             this.LabelFormHeaderText.TabIndex = 20;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -372,12 +374,12 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmHistory";
             this.Text = "History";
+            this.Load += new System.EventHandler(this.FrmHistory_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.GroupBoxActionCodes.ResumeLayout(false);
             this.PanelDateRanges.ResumeLayout(false);
-            this.PanelDateRanges.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.ResumeLayout(false);
 

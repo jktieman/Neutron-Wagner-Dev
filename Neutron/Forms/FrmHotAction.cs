@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -72,6 +70,7 @@ namespace Neutron.Forms
         private bool _formLoading = true;
         private bool _hotPickButtonPressed = false;
         private bool _hotStoreButtonPressed = false;
+        private bool _useCostCenter = false;
         private InventoryManager _inventoryManager;
         private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
@@ -102,6 +101,7 @@ namespace Neutron.Forms
             SetupLogger();
             SetupGridItemDefinition();
             UpdateNomenclature();
+            // _useCostCenter = _neutronVariables.UseCostCenter;
             LabelFormTitle.Text = _resourceManager.GetString("HotActions");
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
@@ -119,7 +119,7 @@ namespace Neutron.Forms
         {
             if (string.IsNullOrEmpty(item))
             {
-                FindHotRecord();
+                //FindHotRecord();
                 TextBoxFindItem.Focus();
             }
             else
@@ -131,6 +131,7 @@ namespace Neutron.Forms
         }
         private async Task FillCostCenterComboBox()
         {
+            if (!_useCostCenter) return;
             var costCenterPath = LoaderSettings.GetCostCenterPath();
             _costCenterManager = new CostCenterManager(costCenterPath);
             var costCenterList = await _costCenterManager.GetCostCenterListAsync();
@@ -167,19 +168,19 @@ namespace Neutron.Forms
         }
         private void SetupLogger()
         {
-            string logFileDir = LoaderSettings.GetLogFileDirectory();
-            string folderName = @"HotAction";
-            string logActivity = LoaderSettings.EnableLogging;
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            const string folderName = @"HotAction";
+            var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
         private void UpdateNomenclature()
         {
-            MBHotAccept.Text = _nomenclature.MBPickAccept;
-            MBHotAccept.Text = _nomenclature.MBStoreAccept;
-            LabelDevice.Text = _nomenclature.LabelDevice;
-            LabelTray.Text = _nomenclature.LabelTray;
-            LabelOver.Text = _nomenclature.LabelOver;
-            LabelBack.Text = _nomenclature.LabelBack;
+            //MBHotAccept.Text = _nomenclature.MBPickAccept;
+            //MBHotAccept.Text = _nomenclature.MBStoreAccept;
+            //LabelDevice.Text = _nomenclature.LabelDevice;
+            //LabelTray.Text = _nomenclature.LabelTray;
+            //LabelOver.Text = _nomenclature.LabelOver;
+            //LabelBack.Text = _nomenclature.LabelBack;
         }
         //public int IndexOf(BindingSource bs, int value)
         //{
@@ -214,9 +215,11 @@ namespace Neutron.Forms
                 }
             }
             _currentItemDefinition = item;
-            var recs = _repoInv.FindInventoryViewsByStation(item.Item, stationNumber).ToList();
+            //var recs = _repoInv.FindInventoryViewsByStation(item.Item, stationNumber).ToList();
+            var recs = _repoInv.GetAllInventoryViewsByItemDefinitionId(item.Id).ToList();
             var blv = new BindingListView<SqlInventoryView>(recs);
             _bindingSourceCurrent.DataSource = blv;
+            var recordCount = GetRecordCount(recs);
             MBCurrentLocations.Text = $"{_resourceManager.GetString("CurrentLocations")} ({_bindingSourceCurrent.Count})";
             if (_bindingSourceCurrent.Count > 0)
             {
@@ -251,15 +254,19 @@ namespace Neutron.Forms
             if (CheckBoxAll.Checked)
             {
                 var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(stationNumber));
-                var blvAll = new BindingListView<LocationView>(views.ToList());
+                var locationViews = views.ToList();
+                var blvAll = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blvAll;
+                var recordCount = GetRecordCount(locationViews.ToList());
             }
             else
             {
                 var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(stationNumber,
                      item.SizeCodeId, item.VelocityCodeId, item.HeightCodeId, item.LocationCodeId, inUse: false));
-                var blv = new BindingListView<LocationView>(views.ToList());
+                var locationViews = views.ToList();
+                var blv = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blv;
+                var recordCount = GetRecordCount(locationViews.ToList());
             }
             //var blv = new BindingListView<LocationView>(views.ToList());
             //_bindingSourceNewLocations.DataSource = blv;
@@ -287,6 +294,7 @@ namespace Neutron.Forms
             {
                 DataGridViewHot.DataSource = bindingSource.DataSource;
                 DataGridViewHot.ClearSelection();
+                var recordCount = GetRecordCount(bindingSource);
             }
         }
         private async Task LoadItemDefinitions(int recId = 0)
@@ -382,6 +390,14 @@ namespace Neutron.Forms
             LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
             return count;
         }
+
+        private int GetRecordCount(IReadOnlyCollection<object> bs)
+        {
+            var count = bs.Count;
+            LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
+            return count;
+        }
+
         private void SetupGridItemDefinition()
         {
             _stopwatch = new Stopwatch();
@@ -732,7 +748,7 @@ namespace Neutron.Forms
             {
                 try
                 {
-                    string path = string.Concat(_imagesDirectory, image, str2: @".jpg");
+                    var path = string.Concat(_imagesDirectory, image, str2: @".jpg");
                     if (File.Exists(path))
                     {
                         PictureBoxItemHotImage.Load(path);
@@ -845,18 +861,26 @@ namespace Neutron.Forms
         {
             _hotPickButtonPressed = true;
             _hotStoreButtonPressed = false;
-            await FillCostCenterComboBox();
+            //Cost Center
+            GroupBoxHotActions.Visible = _useCostCenter;
+            if (_useCostCenter)
+            {
+                await FillCostCenterComboBox();
+                RadioButtonCostCenter.Checked = true;
+                ComboBoxCostCenter.Visible = true;
+                TextBoxFindCostCenter.Visible = true;
+                RadioButtonCostCenter.Visible = true;
+
+            }
+            RadioButtonPick.Text = $"{_resourceManager.GetString("Pick")}";
+            RadioButtonPick.Tag = "Store";
+
             CloseButtonPressed = false;
-            RadioButtonCostCenter.Checked = true;
             HotAction.BackColor = Color.Red;
             LabelFormTitle.BackColor = Color.Red;
             LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-            ComboBoxCostCenter.Visible = true;
-            TextBoxFindCostCenter.Visible = true;
-            RadioButtonCostCenter.Visible = true;
-            MBHotAccept.Text = _nomenclature.MBPickAccept;
-            RadioButtonPick.Text = $"{_resourceManager.GetString("Pick")}";
-            RadioButtonPick.Tag = "Store";
+            MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+
             _currentInventoryView = ((ObjectView<SqlInventoryView>)_bindingSourceCurrent.Current).Object;
             var loc1 = _currentInventoryView.Loc1;
             var loc2 = _currentInventoryView.Loc2;
@@ -870,20 +894,29 @@ namespace Neutron.Forms
         }
         private async void MBHotStore_Click(object sender, EventArgs e)
         {
+
             _hotPickButtonPressed = false;
             _hotStoreButtonPressed = true;
             CloseButtonPressed = false;
-            RadioButtonPick.Checked = true;
+            //Cost Center
+            GroupBoxHotActions.Visible = _useCostCenter;
+            if (_useCostCenter)
+            {
+                RadioButtonPick.Checked = true;
+                ComboBoxCostCenter.Visible = false;
+                TextBoxFindCostCenter.Visible = false;
+                RadioButtonCostCenter.Visible = false;
+            }
+
+            RadioButtonPick.Text = $"{_resourceManager.GetString("Store")}";
+            RadioButtonPick.Tag = "Store";
+
             HotAction.BackColor = Color.Green;
             LabelFormTitle.BackColor = Color.Green;
             LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-            ComboBoxCostCenter.Visible = false;
-            TextBoxFindCostCenter.Visible = false;
-            RadioButtonCostCenter.Visible = false;
-            MBHotAccept.Text = _nomenclature.MBStoreAccept;
+            MBHotAccept.Text = _resourceManager.GetString("Accept");
             MBHotAccept.Enabled = true;
-            RadioButtonPick.Text = $"{_resourceManager.GetString("Store")}";
-            RadioButtonPick.Tag = "Store";
+
             if (_currentGridDataType == GridDataType.Current)
             {
                 _currentInventoryView = ((ObjectView<SqlInventoryView>)_bindingSourceCurrent.Current).Object;
@@ -1055,6 +1088,7 @@ namespace Neutron.Forms
                         Console.WriteLine($"Speed: BindingSource Current Setup Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
                         _stopwatch.Restart();
                         DataGridViewHot.DataSource = _bindingSourceCurrent;
+                        var recordCount = GetRecordCount(_bindingSourceCurrent);
                         _stopwatch.Stop();
                         Console.WriteLine($"Speed: BindingSource Current DataSource: {_stopwatch.ElapsedMilliseconds.ToString()}");
                         _stopwatch.Restart();
@@ -1066,6 +1100,7 @@ namespace Neutron.Forms
                     {
                         SetupGridNew();
                         DataGridViewHot.DataSource = _bindingSourceNewLocations;
+                        var recordCount = GetRecordCount(_bindingSourceNewLocations);
                         DataGridViewHot.ClearSelection();
                         _stopwatch.Stop();
                         Console.WriteLine($"Speed: BindingSource New Locations: {_stopwatch.ElapsedMilliseconds.ToString()}");
@@ -1134,7 +1169,7 @@ namespace Neutron.Forms
                         }
                         TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
                         _repoInventory.Update(inv);
-                        if (RadioButtonCostCenter.Checked)
+                        if (RadioButtonCostCenter.Checked && _useCostCenter)
                         {
                             GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty, (string)ComboBoxCostCenter.SelectedValue);
                             //Mediator.GetInstance().OnBatchComplete(this);
@@ -1163,11 +1198,11 @@ namespace Neutron.Forms
         }
         private ActionCode GetHotActionCode()
         {
-            ActionCode result = ActionCode.PickHot;
+            var result = ActionCode.PickHot;
             var radioButtons = new List<RadioButton> { RadioButtonPick, RadioButtonWarranty, RadioButtonScrap, RadioButtonOther, RadioButtonCostCenter };
             if (RadioButtonPick.Text == $"{_resourceManager.GetString("Pick")}")
             {
-                foreach (RadioButton item in radioButtons)
+                foreach (var item in radioButtons)
                 {
                     if (item.Checked)
                     {
@@ -1197,7 +1232,7 @@ namespace Neutron.Forms
             }
             else if (RadioButtonPick.Text == $"{_resourceManager.GetString("Store")}")
             {
-                foreach (RadioButton item in radioButtons)
+                foreach (var item in radioButtons)
                 {
                     if (item.Checked)
                     {
@@ -1275,7 +1310,7 @@ namespace Neutron.Forms
             {
                 using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
                 {
-                    DialogResult result = frm.ShowDialog();
+                    var result = frm.ShowDialog();
                     Show();
                 }
             }
@@ -1286,6 +1321,7 @@ namespace Neutron.Forms
             MBHotStore.Enabled = true;
             SetupGridCurrent();
             DataGridViewHot.DataSource = _bindingSourceCurrent;
+            var recordCount = GetRecordCount(_bindingSourceCurrent);
         }
         private void MBNewLocations_Click(object sender, EventArgs e)
         {
@@ -1293,6 +1329,7 @@ namespace Neutron.Forms
             MBHotStore.Enabled = true;
             SetupGridNew();
             DataGridViewHot.DataSource = _bindingSourceNewLocations;
+            var recordCount = GetRecordCount(_bindingSourceNewLocations);
         }
         private async void LabelHotPickItem_Click(object sender, EventArgs e)
         {
@@ -1499,12 +1536,13 @@ namespace Neutron.Forms
         }
         private void TextBoxHotPickQuantity_Leave(object sender, EventArgs e)
         {
+            if (!_useCostCenter) return;
             var tb = TextBoxHotPickQuantity.Text;
             ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3, _currentInventoryView.Loc4.ToString(), tb);
         }
         private void TextBoxFindCostCenter_Leave(object sender, EventArgs e)
         {
-            ////file CostCenter Combo Box
+            if (!_useCostCenter) return;
             var search = TextBoxFindCostCenter.Text;
             var costCenterList = _costCenterManager.GetCostCenterList(search.ToLower());
             ComboBoxCostCenter.DataSource = costCenterList;
@@ -1514,6 +1552,7 @@ namespace Neutron.Forms
         }
         private void ComboBoxCostCenter_TextChanged(object sender, EventArgs e)
         {
+            if (!_useCostCenter) return;
             MBHotAccept.Enabled = false;
             try
             {
@@ -1539,6 +1578,7 @@ namespace Neutron.Forms
         }
         private void TextBoxFindCostCenter_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!_useCostCenter) return;
             if (e.KeyData == Keys.Enter)
             {
                 //file CostCenter Combo Box
@@ -1552,8 +1592,10 @@ namespace Neutron.Forms
         }
         private void HotAction_Enter(object sender, EventArgs e)
         {
+            if (!_useCostCenter) return;
             TextBoxFindCostCenter.Focus();
         }
+
         private void SetCulture(string lang)
         {
             try
