@@ -62,8 +62,10 @@
     <Compile Include="LabelPrinterPreferences.cs" />
     <Compile Include="PackingList.cs" />
     <Compile Include="PackingListProcessor.cs" />
+    <Compile Include="PackingListProcessor_FR.cs" />
     <Compile Include="PickList.cs" />
     <Compile Include="PickListProcessor.cs" />
+    <Compile Include="PickListProcessor_FR.cs" />
     <Compile Include="ProductivityDetailProcessor.cs" />
     <Compile Include="ProductivitySummaryProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

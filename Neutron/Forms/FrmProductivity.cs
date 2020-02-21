@@ -46,6 +46,7 @@ namespace Neutron.Forms
         private readonly string _fileName = "ProductivityGroups";
         private DateTime _currentFromDateTime;
         private DateTime _currentToDateTime;
+        private DocumentToPrint _documentToPrint;
 
         private bool _checkAllActions = false;
         private bool _clearAllActions = false;
@@ -67,6 +68,7 @@ namespace Neutron.Forms
             SetupCheckedListBoxUsers();
             EnableEvents();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
+            _documentToPrint = new DocumentToPrint();
             _formInitialized = true;
         }
 
@@ -869,7 +871,7 @@ namespace Neutron.Forms
                 rec.TotalOrders = totalOrders;
                 summaryList.Add(rec);
             }
-            DocumentToPrint.PrintSummary(summaryList, _documentPrinter, neutronVariables.PrintPreview);
+            _documentToPrint.PrintSummary(summaryList, _documentPrinter, neutronVariables.PrintPreview);
         }
         private void ButtonPrintDetail_Click(object sender, EventArgs e)
         {
@@ -894,7 +896,7 @@ namespace Neutron.Forms
                     rec.TotalOrders = totalOrders;
                     detailList.Add(rec);
                 }
-                DocumentToPrint.PrintDetail(detailList, _documentPrinter, neutronVariables.PrintPreview);
+                _documentToPrint.PrintDetail(detailList, _documentPrinter, neutronVariables.PrintPreview);
             }
         }
         private void DateTimePicker_Enter(object sender, EventArgs e)

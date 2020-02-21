@@ -54,6 +54,8 @@ namespace Neutron.Forms
         private readonly GenericRepository<VelocityCode> _repoVelocityCode =
             new GenericRepository<VelocityCode>(new NeutronDb());
         private ISlot _slotName;
+        private DocumentToPrint _documentToPrint;
+
         public FrmLocations(IJsonData jsonData, StationView station, INomenclature nomenclature,
             NeutronVariables neutronVariables)
         {
@@ -84,6 +86,7 @@ namespace Neutron.Forms
                 CheckBoxAllStations.Checked = true;
             }
             SetupViewEditBindings();
+            _documentToPrint = new DocumentToPrint();
             RefreshData();
         }
         public bool CloseButtonPressed { get; set; }
@@ -580,7 +583,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var locations = GetAvailableLocations();
-            DocumentToPrint.PrintAvailableLocations(locations, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintAvailableLocations(locations, _documentPrinter, _neutronVariables.PrintPreview);
         }
         private List<Location> GetAvailableLocations()
         {

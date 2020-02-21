@@ -97,7 +97,7 @@ namespace Neutron.Forms
         ReplenDeviceManager _deviceManager;
         DocumentPrinterPreferences _documentPrinter;
         LabelPrinterPreferences _labelPrinter;
-
+        private readonly DocumentToPrint _documentToPrint;
         private readonly IJsonData _jsonData;
         private readonly StationView _station;
         private readonly IAkaRepository _akaRepository;
@@ -124,7 +124,7 @@ namespace Neutron.Forms
             _nomenclature = nomenclature;
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
-
+            _documentToPrint = new DocumentToPrint();
             UpdateNomenclature();
             SetupPrinters();
             SetupGrids();
@@ -2706,7 +2706,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Printing Document. {order.Ord1}"));
             if (_neutronVariables.EnableDocumentPrinter)
             {
-                Task.Run(() => DocumentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
+                Task.Run(() => _documentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
             }
         }
 

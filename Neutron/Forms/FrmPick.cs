@@ -94,6 +94,7 @@ namespace Neutron.Forms
 
         private string _imagesDirectory;
         private DeviceManager _deviceManager;
+        private DocumentToPrint _documentToPrint;
         private DocumentPrinterPreferences _documentPrinter;
         private LabelPrinterPreferences _labelPrinter;
 
@@ -155,7 +156,7 @@ namespace Neutron.Forms
                 GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
                 GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
             }
-
+            _documentToPrint = new DocumentToPrint();
             //FillComboBoxStationNumber();
             MBPrint.Visible = _neutronVariables.PrintPackingListManual;
             InitOrdersToPick(_neutronVariables.PickBatchSize);
@@ -4978,7 +4979,7 @@ namespace Neutron.Forms
                 var stationId = IntegerExtensions.ParseInt(comboBoxValue);
                 anticipatedOuts = anticipatedOuts.Where(r => r.Station == stationId).ToList();
             }
-            DocumentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private void MBPrintPick_Click(object sender, EventArgs e)
@@ -5012,7 +5013,7 @@ namespace Neutron.Forms
             {
                 pack.BatchPosition = batchPosition;
             }
-            DocumentToPrint.PrintPackingList(packingList, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintPackingList(packingList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<PackingList> GetPackingList(int orderId)
@@ -5061,7 +5062,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var pickList = GetPickList(orderId);
-            DocumentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<PickList> GetPickList(int orderId)
@@ -5079,7 +5080,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var pickList = GetPickListByStation(orderId, stationId);
-            DocumentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
         private List<PickList> GetPickListByStation(int orderId, int stationId)
@@ -5109,7 +5110,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Printing Document. {order.Ord1}"));
             if (_neutronVariables.EnableDocumentPrinter)
             {
-                Task.Run(() => DocumentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
+                Task.Run(() => _documentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
             }
         }
 
@@ -7795,7 +7796,7 @@ namespace Neutron.Forms
                 MBDeleteOrder.Text = _resourceManager.GetString($"MBDeleteOrder");
                 MBJobDetails.Text = _resourceManager.GetString($"MBJobDetails");
                 MBPrintOrderListing.Text = _resourceManager.GetString($"MBPrintOrderListing");
-
+                MBFillOptimized.Text = _resourceManager.GetString("MBFillOptimized");
                 //Available Orders
                 MbPrintAvailableOrders.Text = _resourceManager.GetString($"MbPrintAvailableOrders");
                 MBAvailableOrdersRefresh.Text = _resourceManager.GetString($"MBAvailableOrdersRefresh");
@@ -8089,6 +8090,11 @@ namespace Neutron.Forms
         private void MBPrintSkip_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void MBFillOptimized_Click(object sender, EventArgs e)
+        {
+            // optimized query for orders
         }
     }
 }

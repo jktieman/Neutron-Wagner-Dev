@@ -73,6 +73,7 @@ namespace Neutron.Forms
         public TcpConfiguration CurrentTcpConfiguration;
         public SerialConfiguration CurrentSerialConfiguration;
 
+        private DocumentToPrint _documentToPrint;
         public DocumentPrinterPreferences DocumentPrinter;
         public LabelPrinterPreferences LabelPrinter;
         private readonly NeutronVariables _neutronVariables;
@@ -95,6 +96,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
             SetupGrids();
+            _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
                 $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}.{ApplicationVersion.MajorRevision}.{ApplicationVersion.MinorRevision}";
 
@@ -826,7 +828,7 @@ namespace Neutron.Forms
                             pack.BatchPosition = "1";
                         }
 
-                        DocumentToPrint.PrintPackingList(packingList, printer, _neutronVariables.PrintPreview);
+                        _documentToPrint.PrintPackingList(packingList, printer, _neutronVariables.PrintPreview);
                     }
                     else
                     {
