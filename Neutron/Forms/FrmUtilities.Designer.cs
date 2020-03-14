@@ -112,6 +112,9 @@
             this.RadioButtonPrimeBinFirst = new System.Windows.Forms.RadioButton();
             this.CheckBoxShiEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxBliEnabled = new System.Windows.Forms.CheckBox();
+            this.LabelUploadDelay = new System.Windows.Forms.Label();
+            this.LabelLoaderDelay = new System.Windows.Forms.Label();
+            this.LabelActionCodes = new System.Windows.Forms.Label();
             this.LabelFieldDelimiter = new System.Windows.Forms.Label();
             this.LabelSettingsStoreBatchSize = new System.Windows.Forms.Label();
             this.LabelSettingsPickBatchSize = new System.Windows.Forms.Label();
@@ -130,11 +133,13 @@
             this.CheckBoxLoadRackOrders = new System.Windows.Forms.CheckBox();
             this.CheckBoxIptiDisplays = new System.Windows.Forms.CheckBox();
             this.CheckBoxAutoEnlargeImage = new System.Windows.Forms.CheckBox();
-            this.CheckBoxSimulationMode = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseMenuSecurity = new System.Windows.Forms.CheckBox();
             this.ComboBoxDeviceDriver = new System.Windows.Forms.ComboBox();
+            this.TextBoxUploadDelay = new System.Windows.Forms.TextBox();
             this.LabelSettingsSlotFormat = new System.Windows.Forms.Label();
+            this.TextBoxLoaderDelay = new System.Windows.Forms.TextBox();
             this.LabelSettingsLogLevel = new System.Windows.Forms.Label();
+            this.TextBoxActionCodes = new System.Windows.Forms.TextBox();
             this.LabelSettingsDeviceDriver = new System.Windows.Forms.Label();
             this.TextBoxFieldDelimiter = new System.Windows.Forms.TextBox();
             this.TextBoxStationNumber = new System.Windows.Forms.TextBox();
@@ -349,6 +354,9 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.CheckBoxRunUploadOnStartup = new System.Windows.Forms.CheckBox();
+            this.LabelLicenseCode = new System.Windows.Forms.Label();
+            this.TextBoxLicenseCode = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -1042,6 +1050,9 @@
             this.Settings.Controls.Add(this.GroupBoxPickMethod);
             this.Settings.Controls.Add(this.CheckBoxShiEnabled);
             this.Settings.Controls.Add(this.CheckBoxBliEnabled);
+            this.Settings.Controls.Add(this.LabelUploadDelay);
+            this.Settings.Controls.Add(this.LabelLoaderDelay);
+            this.Settings.Controls.Add(this.LabelActionCodes);
             this.Settings.Controls.Add(this.LabelFieldDelimiter);
             this.Settings.Controls.Add(this.LabelSettingsStoreBatchSize);
             this.Settings.Controls.Add(this.LabelSettingsPickBatchSize);
@@ -1060,13 +1071,16 @@
             this.Settings.Controls.Add(this.CheckBoxLoadRackOrders);
             this.Settings.Controls.Add(this.CheckBoxIptiDisplays);
             this.Settings.Controls.Add(this.CheckBoxAutoEnlargeImage);
-            this.Settings.Controls.Add(this.CheckBoxSimulationMode);
             this.Settings.Controls.Add(this.CheckBoxUseMenuSecurity);
             this.Settings.Controls.Add(this.ComboBoxDeviceDriver);
+            this.Settings.Controls.Add(this.TextBoxUploadDelay);
             this.Settings.Controls.Add(this.LabelSettingsSlotFormat);
+            this.Settings.Controls.Add(this.TextBoxLoaderDelay);
             this.Settings.Controls.Add(this.LabelSettingsLogLevel);
+            this.Settings.Controls.Add(this.TextBoxActionCodes);
             this.Settings.Controls.Add(this.LabelSettingsDeviceDriver);
             this.Settings.Controls.Add(this.TextBoxFieldDelimiter);
+            this.Settings.Controls.Add(this.TextBoxLicenseCode);
             this.Settings.Controls.Add(this.TextBoxStationNumber);
             this.Settings.Controls.Add(this.CheckBoxUseLAC);
             this.Settings.Controls.Add(this.CheckBoxUsePrimeBin);
@@ -1074,8 +1088,10 @@
             this.Settings.Controls.Add(this.CheckBoxDisplaysEnabled);
             this.Settings.Controls.Add(this.CheckBoxShuttleEnabled);
             this.Settings.Controls.Add(this.CheckBoxCreateStoreOrderWithRts);
+            this.Settings.Controls.Add(this.LabelLicenseCode);
             this.Settings.Controls.Add(this.LabelSettingsStationNumber);
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListManual);
+            this.Settings.Controls.Add(this.CheckBoxRunUploadOnStartup);
             this.Settings.Controls.Add(this.CheckBoxRunLoaderOnStartup);
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListEnd);
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListStart);
@@ -1180,7 +1196,7 @@
             // 
             this.CheckBoxShiEnabled.AutoSize = true;
             this.CheckBoxShiEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxShiEnabled.Location = new System.Drawing.Point(598, 343);
+            this.CheckBoxShiEnabled.Location = new System.Drawing.Point(598, 379);
             this.CheckBoxShiEnabled.Name = "CheckBoxShiEnabled";
             this.CheckBoxShiEnabled.Size = new System.Drawing.Size(214, 20);
             this.CheckBoxShiEnabled.TabIndex = 22;
@@ -1191,12 +1207,42 @@
             // 
             this.CheckBoxBliEnabled.AutoSize = true;
             this.CheckBoxBliEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxBliEnabled.Location = new System.Drawing.Point(598, 307);
+            this.CheckBoxBliEnabled.Location = new System.Drawing.Point(598, 343);
             this.CheckBoxBliEnabled.Name = "CheckBoxBliEnabled";
             this.CheckBoxBliEnabled.Size = new System.Drawing.Size(207, 20);
             this.CheckBoxBliEnabled.TabIndex = 21;
             this.CheckBoxBliEnabled.Text = "Batch Light Indicators Enabled";
             this.CheckBoxBliEnabled.UseVisualStyleBackColor = true;
+            // 
+            // LabelUploadDelay
+            // 
+            this.LabelUploadDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelUploadDelay.Location = new System.Drawing.Point(838, 272);
+            this.LabelUploadDelay.Name = "LabelUploadDelay";
+            this.LabelUploadDelay.Size = new System.Drawing.Size(166, 16);
+            this.LabelUploadDelay.TabIndex = 19;
+            this.LabelUploadDelay.Text = "Upload Delay (Seconds)";
+            this.LabelUploadDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelLoaderDelay
+            // 
+            this.LabelLoaderDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLoaderDelay.Location = new System.Drawing.Point(838, 237);
+            this.LabelLoaderDelay.Name = "LabelLoaderDelay";
+            this.LabelLoaderDelay.Size = new System.Drawing.Size(166, 16);
+            this.LabelLoaderDelay.TabIndex = 19;
+            this.LabelLoaderDelay.Text = "Loader Delay (Seconds)";
+            this.LabelLoaderDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelActionCodes
+            // 
+            this.LabelActionCodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelActionCodes.Location = new System.Drawing.Point(838, 308);
+            this.LabelActionCodes.Name = "LabelActionCodes";
+            this.LabelActionCodes.Size = new System.Drawing.Size(166, 16);
+            this.LabelActionCodes.TabIndex = 19;
+            this.LabelActionCodes.Text = "Upload Action Codes";
+            this.LabelActionCodes.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelFieldDelimiter
             // 
@@ -1347,7 +1393,7 @@
             // 
             this.CheckBoxPinLoginOnly.AutoSize = true;
             this.CheckBoxPinLoginOnly.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPinLoginOnly.Location = new System.Drawing.Point(598, 271);
+            this.CheckBoxPinLoginOnly.Location = new System.Drawing.Point(598, 307);
             this.CheckBoxPinLoginOnly.Name = "CheckBoxPinLoginOnly";
             this.CheckBoxPinLoginOnly.Size = new System.Drawing.Size(112, 20);
             this.CheckBoxPinLoginOnly.TabIndex = 14;
@@ -1411,22 +1457,11 @@
             this.CheckBoxAutoEnlargeImage.Text = "Auto Enlarge Image";
             this.CheckBoxAutoEnlargeImage.UseVisualStyleBackColor = true;
             // 
-            // CheckBoxSimulationMode
-            // 
-            this.CheckBoxSimulationMode.AutoSize = true;
-            this.CheckBoxSimulationMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxSimulationMode.Location = new System.Drawing.Point(598, 379);
-            this.CheckBoxSimulationMode.Name = "CheckBoxSimulationMode";
-            this.CheckBoxSimulationMode.Size = new System.Drawing.Size(127, 20);
-            this.CheckBoxSimulationMode.TabIndex = 14;
-            this.CheckBoxSimulationMode.Text = "Simulation Mode";
-            this.CheckBoxSimulationMode.UseVisualStyleBackColor = true;
-            // 
             // CheckBoxUseMenuSecurity
             // 
             this.CheckBoxUseMenuSecurity.AutoSize = true;
             this.CheckBoxUseMenuSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseMenuSecurity.Location = new System.Drawing.Point(598, 235);
+            this.CheckBoxUseMenuSecurity.Location = new System.Drawing.Point(598, 271);
             this.CheckBoxUseMenuSecurity.Name = "CheckBoxUseMenuSecurity";
             this.CheckBoxUseMenuSecurity.Size = new System.Drawing.Size(139, 20);
             this.CheckBoxUseMenuSecurity.TabIndex = 13;
@@ -1447,6 +1482,16 @@
             this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(121, 24);
             this.ComboBoxDeviceDriver.TabIndex = 12;
             // 
+            // TextBoxUploadDelay
+            // 
+            this.TextBoxUploadDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxUploadDelay.Location = new System.Drawing.Point(1022, 269);
+            this.TextBoxUploadDelay.Name = "TextBoxUploadDelay";
+            this.TextBoxUploadDelay.Size = new System.Drawing.Size(62, 22);
+            this.TextBoxUploadDelay.TabIndex = 9;
+            this.TextBoxUploadDelay.Text = "60";
+            this.TextBoxUploadDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // LabelSettingsSlotFormat
             // 
             this.LabelSettingsSlotFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1457,6 +1502,16 @@
             this.LabelSettingsSlotFormat.Text = "Slot Format";
             this.LabelSettingsSlotFormat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // TextBoxLoaderDelay
+            // 
+            this.TextBoxLoaderDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxLoaderDelay.Location = new System.Drawing.Point(1022, 234);
+            this.TextBoxLoaderDelay.Name = "TextBoxLoaderDelay";
+            this.TextBoxLoaderDelay.Size = new System.Drawing.Size(62, 22);
+            this.TextBoxLoaderDelay.TabIndex = 9;
+            this.TextBoxLoaderDelay.Text = "60";
+            this.TextBoxLoaderDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // LabelSettingsLogLevel
             // 
             this.LabelSettingsLogLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1466,6 +1521,16 @@
             this.LabelSettingsLogLevel.TabIndex = 10;
             this.LabelSettingsLogLevel.Text = "Log Level";
             this.LabelSettingsLogLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxActionCodes
+            // 
+            this.TextBoxActionCodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxActionCodes.Location = new System.Drawing.Point(1022, 305);
+            this.TextBoxActionCodes.Name = "TextBoxActionCodes";
+            this.TextBoxActionCodes.Size = new System.Drawing.Size(103, 22);
+            this.TextBoxActionCodes.TabIndex = 9;
+            this.TextBoxActionCodes.Text = "1, 5, 46, 51";
+            this.TextBoxActionCodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelSettingsDeviceDriver
             // 
@@ -4098,6 +4163,37 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // CheckBoxRunUploadOnStartup
+            // 
+            this.CheckBoxRunUploadOnStartup.AutoSize = true;
+            this.CheckBoxRunUploadOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 236);
+            this.CheckBoxRunUploadOnStartup.Name = "CheckBoxRunUploadOnStartup";
+            this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(164, 20);
+            this.CheckBoxRunUploadOnStartup.TabIndex = 8;
+            this.CheckBoxRunUploadOnStartup.Text = "Run Upload On Startup";
+            this.CheckBoxRunUploadOnStartup.UseVisualStyleBackColor = true;
+            // 
+            // LabelLicenseCode
+            // 
+            this.LabelLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLicenseCode.Location = new System.Drawing.Point(41, 89);
+            this.LabelLicenseCode.Name = "LabelLicenseCode";
+            this.LabelLicenseCode.Size = new System.Drawing.Size(140, 16);
+            this.LabelLicenseCode.TabIndex = 7;
+            this.LabelLicenseCode.Text = "License Code";
+            this.LabelLicenseCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxLicenseCode
+            // 
+            this.TextBoxLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxLicenseCode.Location = new System.Drawing.Point(197, 88);
+            this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
+            this.TextBoxLicenseCode.Size = new System.Drawing.Size(55, 22);
+            this.TextBoxLicenseCode.TabIndex = 9;
+            this.TextBoxLicenseCode.Text = "PR1";
+            this.TextBoxLicenseCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4220,7 +4316,6 @@
         private System.Windows.Forms.CheckBox CheckBoxUseLAC;
         private System.Windows.Forms.CheckBox CheckBoxUseMenuSecurity;
         private System.Windows.Forms.NumericUpDown NumericUpDownLogLevel;
-        private System.Windows.Forms.CheckBox CheckBoxSimulationMode;
         private System.Windows.Forms.Label LabelSettingsLogLevel;
         private System.Windows.Forms.ComboBox ComboBoxSlotFormat;
         private System.Windows.Forms.Label LabelSettingsSlotFormat;
@@ -4478,5 +4573,14 @@
         private System.Windows.Forms.ComboBox ComboBoxSerialViewEditDataBits;
         private System.Windows.Forms.ComboBox ComboBoxSerialNewStopBits;
         private System.Windows.Forms.ComboBox ComboBoxSerialNewDataBits;
+        private System.Windows.Forms.Label LabelActionCodes;
+        private System.Windows.Forms.TextBox TextBoxActionCodes;
+        private System.Windows.Forms.Label LabelUploadDelay;
+        private System.Windows.Forms.Label LabelLoaderDelay;
+        private System.Windows.Forms.TextBox TextBoxUploadDelay;
+        private System.Windows.Forms.TextBox TextBoxLoaderDelay;
+        private System.Windows.Forms.CheckBox CheckBoxRunUploadOnStartup;
+        private System.Windows.Forms.TextBox TextBoxLicenseCode;
+        private System.Windows.Forms.Label LabelLicenseCode;
     }
 }

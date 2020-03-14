@@ -83,11 +83,11 @@ namespace NeutronEvents
             BatchComplete?.Invoke(sender, EventArgs.Empty);
         }
 
-        public event EventHandler<StartStopLoaderEventArgs> StartStopLoader;
+        public event EventHandler<StartStopEventArgs> StartStopLoader;
 
         public void OnStartStopLoader(object sender, string startStop)
         {
-            StartStopLoader?.Invoke(this, new StartStopLoaderEventArgs {StartStop = startStop});
+            StartStopLoader?.Invoke(this, new StartStopEventArgs {StartStop = startStop});
         }
 
         public event EventHandler<EventArgs> InventoryFileCreated;
@@ -102,6 +102,13 @@ namespace NeutronEvents
         public void OnInventoryFileCreatedError(object sender, string msg)
         {
             InventoryFileCreatedError?.Invoke(this, new InventoryFileCreatedErrorEventArgs {Text = msg});
+        }
+
+        public event EventHandler<StartStopEventArgs> StartStopUpload;
+
+        public void OnStartStopUpload(object sender, string startStop)
+        {
+            StartStopUpload?.Invoke(this, new StartStopEventArgs { StartStop = startStop });
         }
     }
 }

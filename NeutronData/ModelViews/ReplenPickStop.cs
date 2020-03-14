@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace NeutronData.ModelViews
 {
-    public class ReplenPickStop : PickStopBase
+    public class ReplenPickStop
     {
         private readonly GenericRepository<ReplenOrder> _repoOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
@@ -21,23 +21,28 @@ namespace NeutronData.ModelViews
             PickViews = new List<ReplenPickView>();
         }
         public List<ReplenPickView> PickViews { get; set; }
-        //public int Sequence { get; set; }
-        //public int OrderId { get; set; }
-        //public string Ord1 { get; set; }
-        //public string Ord2 { get; set; }
-        //public int ItemId { get; set; }
-        //public string Item { get; set; }
-        //public string Description { get; set; }
-        //public int Quantity { get; set; }
-        //public int QuantityToBePicked { get; set; }
-        //public int PickedQty { get; set; }
-        //public string Slot { get; set; }
-        //public int SlotQty { get; set; }
-        //public List<Inventory> Inventory { get; set; }
-        //public int InventoryIndex { get; set; }
-        //public Inventory CurrentInventoryLocation { get; set; }
-        //public int TotalQuantityInInventory { get; set; }
-        //public List<ItemImage> Images { get; set; }
+        public int Sequence { get; set; }
+        public int OrderId { get; set; }
+        public string Ord1 { get; set; }
+        public string Ord2 { get; set; }
+        public int ItemId { get; set; }
+        public string Item { get; set; }
+        public string Description { get; set; }
+        public string UnitOfIssue { get; set; }
+        public int Quantity { get; set; }
+        public int QuantityToBePicked { get; set; }
+        public int PickedQty { get; set; }
+        public string Slot { get; set; }
+        public int SlotQty { get; set; }
+        public List<Inventory> Inventory { get; set; }
+        public int InventoryIndex { get; set; }
+        public int GroupBoxLocationInventoryIndex { get; set; }
+        public Inventory CurrentInventoryLocation { get; set; }
+        public int TotalQuantityInInventory { get; set; }
+        public List<ItemImage> Images { get; set; }
+
+        public bool Skipped { get; set; }
+        public string ItemKey { get; set; }
 
         public bool StopComplete()
         {

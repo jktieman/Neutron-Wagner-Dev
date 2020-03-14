@@ -49,6 +49,7 @@ namespace Neutron
         private string _error1 = @"Unknown Error";
         private string _errorCaption = "Error Message";
         private StartStopLoaderManager _startStopLoaderManager;
+        private StartStopUploadManager _startStopUploadManager;
 
         /// <summary>
         /// Passed from NInject Kernel
@@ -136,9 +137,17 @@ namespace Neutron
                                         if (SetupSlotFactory())
                                         {
                                             _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger);
+                                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger);
                                             if (StartLoader())
                                             {
-                                                result = true;
+                                                if (StartUpload())
+                                                {
+                                                    result = true;
+                                                }
+                                                else
+                                                {
+                                                    MessageBox.Show("Main Form: Auto Upload Initialization Error.");
+                                                }
                                             }
                                             else
                                             {
@@ -206,6 +215,33 @@ namespace Neutron
             {
                 MessageBox.Show(
                     $"The Loader has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                result = false;
+            }
+
+            return result;
+        }
+
+        private bool StartUpload()
+        {
+            var result = false;
+            try
+            {
+                if (_neutronVariables.RunUploadOnStartup)
+                {
+                    Mediator.GetInstance().OnStartStopUpload(this, "Start");
+                    GlobalVar.UploadRunning = true;
+                    result = true;
+                }
+                else
+                {
+                    //don't run on startup, return true
+                    result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"The Upload has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 result = false;
             }
 
@@ -568,22 +604,20 @@ namespace Neutron
 
         private void MtPick_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders])
+            if (!_securityProcessor.SecurityProfile[(int) NeutronSecurity.PickItemsandOrders]) return;
+            Hide();
+            using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository
+                                                , _nomenclature, _securityProcessor, _lacProcessor))
             {
-                Hide();
-                using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _nomenclature,
-                    _securityProcessor, _lacProcessor))
+                frm.ShowDialog();
+
+                if (_neutronVariables.AutoLogOff)
                 {
-                    frm.ShowDialog();
-
-                    if (_neutronVariables.AutoLogOff)
-                    {
-                        SetMtLogOffText();
-                        LogOnOff();
-                    }
-
-                    Show();
+                    SetMtLogOffText();
+                    LogOnOff();
                 }
+
+                Show();
             }
         }
 
@@ -592,7 +626,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities])
             {
                 Hide();
-                using (MetroForm frm = new FrmUtilities(_jsonData, _neutronVariables))
+                using (MetroForm frm = new FrmUtilities(_jsonData, _neutronVariables, _neutronLicense))
                 {
                     frm.ShowDialog();
                     Show();

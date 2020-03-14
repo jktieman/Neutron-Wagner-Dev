@@ -34,15 +34,27 @@
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="NeutronDllu">
+      <HintPath>..\..\NeutronDllu\NeutronDllu\bin\Debug\NeutronDllu.dll</HintPath>
     </Reference>
     <Reference Include="Remotion, Version=1.18.0.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -54,26 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnticipatedOut.cs" />
-    <Compile Include="AnticipatedOutsProcessor.cs" />
-    <Compile Include="AvailableLocationsProcessor.cs" />
-    <Compile Include="DocumentPrinterPreferences.cs" />
-    <Compile Include="DocumentToPrint.cs" />
-    <Compile Include="LabelPrinterPreferences.cs" />
-    <Compile Include="PackingList.cs" />
-    <Compile Include="PackingListProcessor.cs" />
-    <Compile Include="PackingListProcessor_FR.cs" />
-    <Compile Include="PickList.cs" />
-    <Compile Include="PickListProcessor.cs" />
-    <Compile Include="PickListProcessor_FR.cs" />
-    <Compile Include="ProductivityDetailProcessor.cs" />
-    <Compile Include="ProductivitySummaryProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RawPrinterHelper.cs" />
-    <Compile Include="ShortReport.cs" />
-    <Compile Include="ShortReportProcessor.cs" />
-    <Compile Include="ShortReportToPrint.cs" />
-    <Compile Include="ToteToPrint.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">

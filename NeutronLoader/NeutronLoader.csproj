@@ -73,6 +73,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HostFilePr1.cs" />
+    <Compile Include="InterfaceProcessorPr1.cs" />
+    <Compile Include="IUploadProcessor.cs" />
+    <Compile Include="StartStopUploadManager.cs" />
     <Compile Include="TmgFileProcessor.cs" />
     <Compile Include="HostFile.cs" />
     <Compile Include="HostFileTop.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="StartStopLoaderManager.cs" />
     <Compile Include="TopFileProcessor.cs" />
     <Compile Include="UploadProcessor.cs" />
+    <Compile Include="UploadProcessorPr1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

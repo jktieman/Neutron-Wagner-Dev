@@ -408,6 +408,7 @@
     <Compile Include="Models\UserIdString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="PrintProcessor.dll" />
     <None Include="Resources\Pick_1.png" />
     <EmbeddedResource Include="Forms\FrmShortCut.resx">
       <DependentUpon>FrmShortCut.cs</DependentUpon>

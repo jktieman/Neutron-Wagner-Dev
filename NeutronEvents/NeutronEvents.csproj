@@ -66,7 +66,7 @@
     <Compile Include="ResponseInfo.cs" />
     <Compile Include="SerialPortChangedEventArgs.cs" />
     <Compile Include="SerialPortWriteEventArgs.cs" />
-    <Compile Include="StartStopLoaderEventArgs.cs" />
+    <Compile Include="StartStopEventArgs.cs" />
     <Compile Include="StationOrderDetailsCompleteEventArgs.cs" />
     <Compile Include="TransmitStateChangedEventArgs.cs" />
   </ItemGroup>

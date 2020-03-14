@@ -185,7 +185,6 @@ namespace Neutron.Models
                                         var sb1 = sb;
                                         Task.Run(() => _logger.Log($"{sb1}"));
                                         await Task.Run(() => VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2));
-                                        // VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2);
                                     }
                                 }
                             }
@@ -227,7 +226,6 @@ namespace Neutron.Models
                                 var sb1 = sb;
                                 _logger.Log($"{sb1.ToString()}");
                                 await Task.Run(() => ProcessInMotion(deviceMover.MoverNumber, loc2));
-                                //ProcessInMotion(deviceMover.MoverNumber, loc2);
                             }
                             else
                             {
@@ -244,7 +242,6 @@ namespace Neutron.Models
                                 var sb1 = sb;
                                 _logger.Log($"{sb1}");
                                 await Task.Run(() => VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2));
-                                //VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2);
                             }
                             var sb2 = sb;
                             _logger.Log($"{sb2}");
@@ -404,23 +401,6 @@ namespace Neutron.Models
                                 sb.AppendLine($"{sb1}");
                                 VerifyMoveLocation(loc1, status.Current_Tray, loc2);
                             }
-
-
-
-
-
-
-                            //--------------------------
-                            //var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
-
-                            //Task.Run(() => _logger.Log($"RESET FUNCTION: Response = {response.Result.AsString(EnumFormat.Description)}"));
-
-                            //if (response.Result != DeviceResponse.Success)
-                            //{
-                            //    MessageBox.Show(response.Result.AsString(EnumFormat.Description),
-                            //        caption: @"Device Response Reset"
-                            //        , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                            //}
                         }
                     }
                 }

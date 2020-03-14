@@ -37,7 +37,7 @@
             this.TextBoxStationToPrint = new System.Windows.Forms.TextBox();
             this.TextBoxOrderToPrint = new System.Windows.Forms.TextBox();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
-            this.MBCreateHostUploadFile = new MetroFramework.Controls.MetroButton();
+            this.MBStartUpload = new MetroFramework.Controls.MetroButton();
             this.MBMainSqlServer = new MetroFramework.Controls.MetroButton();
             this.MBStartLoader = new MetroFramework.Controls.MetroButton();
             this.MBMainInterfaceFile = new MetroFramework.Controls.MetroButton();
@@ -116,6 +116,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunLoader = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -153,12 +155,14 @@
             // 
             // Main
             // 
-            this.Main.BackColor = System.Drawing.Color.Turquoise;
+            this.Main.BackColor = System.Drawing.Color.RoyalBlue;
             this.Main.Controls.Add(this.button1);
             this.Main.Controls.Add(this.TextBoxStationToPrint);
             this.Main.Controls.Add(this.TextBoxOrderToPrint);
             this.Main.Controls.Add(this.MBMainClose);
-            this.Main.Controls.Add(this.MBCreateHostUploadFile);
+            this.Main.Controls.Add(this.MBRunUpload);
+            this.Main.Controls.Add(this.MBStartUpload);
+            this.Main.Controls.Add(this.MBRunLoader);
             this.Main.Controls.Add(this.MBMainSqlServer);
             this.Main.Controls.Add(this.MBStartLoader);
             this.Main.Controls.Add(this.MBMainInterfaceFile);
@@ -208,25 +212,25 @@
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
             // 
-            // MBCreateHostUploadFile
+            // MBStartUpload
             // 
-            this.MBCreateHostUploadFile.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCreateHostUploadFile.Location = new System.Drawing.Point(398, 451);
-            this.MBCreateHostUploadFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBCreateHostUploadFile.Name = "MBCreateHostUploadFile";
-            this.MBCreateHostUploadFile.Size = new System.Drawing.Size(350, 100);
-            this.MBCreateHostUploadFile.TabIndex = 21;
-            this.MBCreateHostUploadFile.Text = "Create Host Upload File";
-            this.MBCreateHostUploadFile.UseSelectable = true;
-            this.MBCreateHostUploadFile.Click += new System.EventHandler(this.MBCreateHostUploadFile_Click);
+            this.MBStartUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBStartUpload.Location = new System.Drawing.Point(396, 430);
+            this.MBStartUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBStartUpload.Name = "MBStartUpload";
+            this.MBStartUpload.Size = new System.Drawing.Size(350, 70);
+            this.MBStartUpload.TabIndex = 21;
+            this.MBStartUpload.Text = "Run Upload Continuously";
+            this.MBStartUpload.UseSelectable = true;
+            this.MBStartUpload.Click += new System.EventHandler(this.MBStartUpload_Click);
             // 
             // MBMainSqlServer
             // 
             this.MBMainSqlServer.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainSqlServer.Location = new System.Drawing.Point(398, 95);
+            this.MBMainSqlServer.Location = new System.Drawing.Point(396, 50);
             this.MBMainSqlServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainSqlServer.Name = "MBMainSqlServer";
-            this.MBMainSqlServer.Size = new System.Drawing.Size(350, 100);
+            this.MBMainSqlServer.Size = new System.Drawing.Size(350, 70);
             this.MBMainSqlServer.TabIndex = 25;
             this.MBMainSqlServer.Text = "SQL Server";
             this.MBMainSqlServer.UseSelectable = true;
@@ -235,22 +239,22 @@
             // MBStartLoader
             // 
             this.MBStartLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartLoader.Location = new System.Drawing.Point(398, 331);
+            this.MBStartLoader.Location = new System.Drawing.Point(396, 240);
             this.MBStartLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartLoader.Name = "MBStartLoader";
-            this.MBStartLoader.Size = new System.Drawing.Size(350, 100);
+            this.MBStartLoader.Size = new System.Drawing.Size(350, 70);
             this.MBStartLoader.TabIndex = 26;
-            this.MBStartLoader.Text = "Start Loader";
+            this.MBStartLoader.Text = "Run Loader Continuously";
             this.MBStartLoader.UseSelectable = true;
             this.MBStartLoader.Click += new System.EventHandler(this.MBStartLoader_Click);
             // 
             // MBMainInterfaceFile
             // 
             this.MBMainInterfaceFile.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainInterfaceFile.Location = new System.Drawing.Point(398, 214);
+            this.MBMainInterfaceFile.Location = new System.Drawing.Point(396, 145);
             this.MBMainInterfaceFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainInterfaceFile.Name = "MBMainInterfaceFile";
-            this.MBMainInterfaceFile.Size = new System.Drawing.Size(350, 100);
+            this.MBMainInterfaceFile.Size = new System.Drawing.Size(350, 70);
             this.MBMainInterfaceFile.TabIndex = 27;
             this.MBMainInterfaceFile.Text = "Interface Information";
             this.MBMainInterfaceFile.UseSelectable = true;
@@ -1023,7 +1027,7 @@
             // 
             // LabelFormTitle
             // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.Turquoise;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
@@ -1064,6 +1068,30 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // MBRunUpload
+            // 
+            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunUpload.Location = new System.Drawing.Point(396, 525);
+            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunUpload.Name = "MBRunUpload";
+            this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
+            this.MBRunUpload.TabIndex = 21;
+            this.MBRunUpload.Text = "Run Upload Once";
+            this.MBRunUpload.UseSelectable = true;
+            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
+            // 
+            // MBRunLoader
+            // 
+            this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunLoader.Location = new System.Drawing.Point(396, 335);
+            this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunLoader.Name = "MBRunLoader";
+            this.MBRunLoader.Size = new System.Drawing.Size(350, 70);
+            this.MBRunLoader.TabIndex = 26;
+            this.MBRunLoader.Text = "Run Loader Once";
+            this.MBRunLoader.UseSelectable = true;
+            this.MBRunLoader.Click += new System.EventHandler(this.MBRunLoader_Click);
             // 
             // FrmSystem
             // 
@@ -1118,7 +1146,7 @@
         private MetroFramework.Controls.MetroButton MBSpare2Back;
         private System.Windows.Forms.TabPage Main;
         private MetroFramework.Controls.MetroButton MBMainClose;
-        private MetroFramework.Controls.MetroButton MBCreateHostUploadFile;
+        private MetroFramework.Controls.MetroButton MBStartUpload;
         private MetroFramework.Controls.MetroButton MBMainSqlServer;
         private MetroFramework.Controls.MetroButton MBStartLoader;
         private MetroFramework.Controls.MetroButton MBMainInterfaceFile;
@@ -1189,5 +1217,7 @@
         private System.Windows.Forms.Button ButtonLanguageDirectory;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox LanguageDirectory;
+        private MetroFramework.Controls.MetroButton MBRunUpload;
+        private MetroFramework.Controls.MetroButton MBRunLoader;
     }
 }

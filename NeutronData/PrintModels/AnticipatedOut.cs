@@ -1,4 +1,4 @@
-﻿namespace PrintRequest
+﻿namespace NeutronData.PrintModels
 {
     public class AnticipatedOut
     {

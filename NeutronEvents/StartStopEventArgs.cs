@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NeutronEvents
 {
-    public class StartStopLoaderEventArgs
+    public class StartStopEventArgs
     {
         //Options are Start or Stop
 

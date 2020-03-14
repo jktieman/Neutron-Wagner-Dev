@@ -1,4 +1,5 @@
-﻿namespace Neutron.Forms
+﻿
+namespace Neutron.Forms
 {
     partial class FrmPick
     {
@@ -99,6 +100,7 @@
             this.MBReturnToStock = new MetroFramework.Controls.MetroButton();
             this.AvailableOrders = new System.Windows.Forms.TabPage();
             this.MBGo2 = new MetroFramework.Controls.MetroButton();
+            this.MBFillOptimized = new MetroFramework.Controls.MetroButton();
             this.MBShowSkipped = new MetroFramework.Controls.MetroButton();
             this.MBFillStarters = new MetroFramework.Controls.MetroButton();
             this.MBFill = new MetroFramework.Controls.MetroButton();
@@ -166,20 +168,27 @@
             this.MBStart = new MetroFramework.Controls.MetroButton();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
-            this.MBShortCut = new MetroFramework.Controls.MetroButton();
+            this.button1 = new System.Windows.Forms.Button();
+            this.CurrentDeviceIndicator6 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator5 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator4 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator3 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator2 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator1 = new CurrentDeviceIndicator.DeviceIndicator();
             this.ButtonStopMoveNext = new System.Windows.Forms.Button();
             this.ButtonStopMoveLast = new System.Windows.Forms.Button();
             this.ButtonStopMoveFirst = new System.Windows.Forms.Button();
             this.ButtonStopMovePrevious = new System.Windows.Forms.Button();
             this.PanelOrderPositions = new System.Windows.Forms.Panel();
-            this.LabelNotify = new System.Windows.Forms.Label();
             this.LabelPickMessages = new System.Windows.Forms.Label();
             this.TextBoxPickPos9 = new System.Windows.Forms.TextBox();
             this.LabelPickPos9 = new System.Windows.Forms.Label();
             this.LabelPickPos10 = new System.Windows.Forms.Label();
             this.TextBoxPickPos10 = new System.Windows.Forms.TextBox();
             this.LabelPickPos11 = new System.Windows.Forms.Label();
+            this.LabelNotify = new System.Windows.Forms.Label();
             this.TextBoxPickPos11 = new System.Windows.Forms.TextBox();
+            this.MBShortCut = new MetroFramework.Controls.MetroButton();
             this.LabelPickPos12 = new System.Windows.Forms.Label();
             this.TextBoxPickPos12 = new System.Windows.Forms.TextBox();
             this.LabelPickPos13 = new System.Windows.Forms.Label();
@@ -378,7 +387,9 @@
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
-            this.MBFillOptimized = new MetroFramework.Controls.MetroButton();
+            this.MBMainUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunLoader = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -422,6 +433,7 @@
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.LabelRecordCount.Visible = false;
             // 
             // tabControl1
             // 
@@ -446,7 +458,10 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Main.Controls.Add(this.MBRunUpload);
+            this.Main.Controls.Add(this.MBRunLoader);
             this.Main.Controls.Add(this.MBMainClose);
+            this.Main.Controls.Add(this.MBMainUpload);
             this.Main.Controls.Add(this.MBMainLoadOrders);
             this.Main.Controls.Add(this.MBMainNewOrder);
             this.Main.Controls.Add(this.MBMainOrderManager);
@@ -477,9 +492,9 @@
             this.MBMainLoadOrders.Location = new System.Drawing.Point(398, 497);
             this.MBMainLoadOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainLoadOrders.Name = "MBMainLoadOrders";
-            this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 100);
+            this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 53);
             this.MBMainLoadOrders.TabIndex = 3;
-            this.MBMainLoadOrders.Text = "Start Loader";
+            this.MBMainLoadOrders.Text = "Run Loader Continuously";
             this.MBMainLoadOrders.UseSelectable = true;
             this.MBMainLoadOrders.Visible = false;
             this.MBMainLoadOrders.Click += new System.EventHandler(this.MBMainLoadOrders_Click);
@@ -941,6 +956,18 @@
             this.MBGo2.Text = "Next";
             this.MBGo2.UseSelectable = true;
             this.MBGo2.Click += new System.EventHandler(this.MBGo_Click);
+            // 
+            // MBFillOptimized
+            // 
+            this.MBFillOptimized.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBFillOptimized.Location = new System.Drawing.Point(530, 686);
+            this.MBFillOptimized.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBFillOptimized.Name = "MBFillOptimized";
+            this.MBFillOptimized.Size = new System.Drawing.Size(155, 76);
+            this.MBFillOptimized.TabIndex = 10;
+            this.MBFillOptimized.Text = "Fill Optimized";
+            this.MBFillOptimized.UseSelectable = true;
+            this.MBFillOptimized.Click += new System.EventHandler(this.MBFillOptimized_Click);
             // 
             // MBShowSkipped
             // 
@@ -1815,7 +1842,13 @@
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.RoyalBlue;
-            this.PickScreen.Controls.Add(this.MBShortCut);
+            this.PickScreen.Controls.Add(this.button1);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator6);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator5);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator4);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator3);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator2);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator1);
             this.PickScreen.Controls.Add(this.ButtonStopMoveNext);
             this.PickScreen.Controls.Add(this.ButtonStopMoveLast);
             this.PickScreen.Controls.Add(this.ButtonStopMoveFirst);
@@ -1854,26 +1887,84 @@
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
-            // MBShortCut
+            // button1
             // 
-            this.MBShortCut.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShortCut.Location = new System.Drawing.Point(1112, 87);
-            this.MBShortCut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBShortCut.Name = "MBShortCut";
-            this.MBShortCut.Size = new System.Drawing.Size(26, 26);
-            this.MBShortCut.TabIndex = 119;
-            this.MBShortCut.Text = "?";
-            this.MBShortCut.UseSelectable = true;
-            this.MBShortCut.Click += new System.EventHandler(this.MBShortCut_Click);
+            this.button1.Location = new System.Drawing.Point(665, 526);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(34, 26);
+            this.button1.TabIndex = 120;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // CurrentDeviceIndicator6
+            // 
+            this.CurrentDeviceIndicator6.Active = false;
+            this.CurrentDeviceIndicator6.AutoScroll = true;
+            this.CurrentDeviceIndicator6.DeviceNumber = 6;
+            this.CurrentDeviceIndicator6.Location = new System.Drawing.Point(849, 8);
+            this.CurrentDeviceIndicator6.Name = "CurrentDeviceIndicator6";
+            this.CurrentDeviceIndicator6.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator6.TabIndex = 119;
+            // 
+            // CurrentDeviceIndicator5
+            // 
+            this.CurrentDeviceIndicator5.Active = false;
+            this.CurrentDeviceIndicator5.AutoScroll = true;
+            this.CurrentDeviceIndicator5.DeviceNumber = 5;
+            this.CurrentDeviceIndicator5.Location = new System.Drawing.Point(715, 8);
+            this.CurrentDeviceIndicator5.Name = "CurrentDeviceIndicator5";
+            this.CurrentDeviceIndicator5.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator5.TabIndex = 119;
+            // 
+            // CurrentDeviceIndicator4
+            // 
+            this.CurrentDeviceIndicator4.Active = false;
+            this.CurrentDeviceIndicator4.AutoScroll = true;
+            this.CurrentDeviceIndicator4.DeviceNumber = 4;
+            this.CurrentDeviceIndicator4.Location = new System.Drawing.Point(581, 8);
+            this.CurrentDeviceIndicator4.Name = "CurrentDeviceIndicator4";
+            this.CurrentDeviceIndicator4.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator4.TabIndex = 119;
+            // 
+            // CurrentDeviceIndicator3
+            // 
+            this.CurrentDeviceIndicator3.Active = false;
+            this.CurrentDeviceIndicator3.AutoScroll = true;
+            this.CurrentDeviceIndicator3.DeviceNumber = 3;
+            this.CurrentDeviceIndicator3.Location = new System.Drawing.Point(447, 8);
+            this.CurrentDeviceIndicator3.Name = "CurrentDeviceIndicator3";
+            this.CurrentDeviceIndicator3.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator3.TabIndex = 119;
+            // 
+            // CurrentDeviceIndicator2
+            // 
+            this.CurrentDeviceIndicator2.Active = false;
+            this.CurrentDeviceIndicator2.AutoScroll = true;
+            this.CurrentDeviceIndicator2.DeviceNumber = 2;
+            this.CurrentDeviceIndicator2.Location = new System.Drawing.Point(313, 8);
+            this.CurrentDeviceIndicator2.Name = "CurrentDeviceIndicator2";
+            this.CurrentDeviceIndicator2.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator2.TabIndex = 119;
+            // 
+            // CurrentDeviceIndicator1
+            // 
+            this.CurrentDeviceIndicator1.Active = false;
+            this.CurrentDeviceIndicator1.AutoScroll = true;
+            this.CurrentDeviceIndicator1.DeviceNumber = 1;
+            this.CurrentDeviceIndicator1.Location = new System.Drawing.Point(179, 8);
+            this.CurrentDeviceIndicator1.Name = "CurrentDeviceIndicator1";
+            this.CurrentDeviceIndicator1.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator1.TabIndex = 119;
             // 
             // ButtonStopMoveNext
             // 
             this.ButtonStopMoveNext.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_177_forward;
             this.ButtonStopMoveNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMoveNext.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMoveNext.Location = new System.Drawing.Point(631, 11);
+            this.ButtonStopMoveNext.Location = new System.Drawing.Point(1107, 115);
             this.ButtonStopMoveNext.Name = "ButtonStopMoveNext";
-            this.ButtonStopMoveNext.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMoveNext.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveNext.TabIndex = 118;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveNext, "Next Stop");
             this.ButtonStopMoveNext.UseVisualStyleBackColor = true;
@@ -1884,9 +1975,9 @@
             this.ButtonStopMoveLast.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_178_fast_forward;
             this.ButtonStopMoveLast.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMoveLast.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMoveLast.Location = new System.Drawing.Point(673, 11);
+            this.ButtonStopMoveLast.Location = new System.Drawing.Point(1127, 115);
             this.ButtonStopMoveLast.Name = "ButtonStopMoveLast";
-            this.ButtonStopMoveLast.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMoveLast.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveLast.TabIndex = 117;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveLast, "Last Stop");
             this.ButtonStopMoveLast.UseVisualStyleBackColor = true;
@@ -1897,9 +1988,9 @@
             this.ButtonStopMoveFirst.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_172_fast_backward;
             this.ButtonStopMoveFirst.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMoveFirst.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMoveFirst.Location = new System.Drawing.Point(439, 11);
+            this.ButtonStopMoveFirst.Location = new System.Drawing.Point(1005, 115);
             this.ButtonStopMoveFirst.Name = "ButtonStopMoveFirst";
-            this.ButtonStopMoveFirst.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMoveFirst.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveFirst.TabIndex = 116;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveFirst, "First Stop");
             this.ButtonStopMoveFirst.UseVisualStyleBackColor = true;
@@ -1910,9 +2001,9 @@
             this.ButtonStopMovePrevious.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_173_rewind;
             this.ButtonStopMovePrevious.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMovePrevious.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMovePrevious.Location = new System.Drawing.Point(481, 11);
+            this.ButtonStopMovePrevious.Location = new System.Drawing.Point(1025, 115);
             this.ButtonStopMovePrevious.Name = "ButtonStopMovePrevious";
-            this.ButtonStopMovePrevious.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMovePrevious.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMovePrevious.TabIndex = 115;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMovePrevious, "Prev Stop");
             this.ButtonStopMovePrevious.UseVisualStyleBackColor = true;
@@ -1922,14 +2013,15 @@
             // 
             this.PanelOrderPositions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.PanelOrderPositions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.PanelOrderPositions.Controls.Add(this.LabelNotify);
             this.PanelOrderPositions.Controls.Add(this.LabelPickMessages);
             this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos9);
             this.PanelOrderPositions.Controls.Add(this.LabelPickPos9);
             this.PanelOrderPositions.Controls.Add(this.LabelPickPos10);
             this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos10);
             this.PanelOrderPositions.Controls.Add(this.LabelPickPos11);
+            this.PanelOrderPositions.Controls.Add(this.LabelNotify);
             this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos11);
+            this.PanelOrderPositions.Controls.Add(this.MBShortCut);
             this.PanelOrderPositions.Controls.Add(this.LabelPickPos12);
             this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos12);
             this.PanelOrderPositions.Controls.Add(this.LabelPickPos13);
@@ -1972,28 +2064,18 @@
             this.PanelOrderPositions.Controls.Add(this.Pos6Display);
             this.PanelOrderPositions.Controls.Add(this.Pos7Display);
             this.PanelOrderPositions.Controls.Add(this.Pos8Display);
-            this.PanelOrderPositions.Location = new System.Drawing.Point(4, 120);
+            this.PanelOrderPositions.Location = new System.Drawing.Point(4, 137);
             this.PanelOrderPositions.Name = "PanelOrderPositions";
-            this.PanelOrderPositions.Size = new System.Drawing.Size(1140, 251);
+            this.PanelOrderPositions.Size = new System.Drawing.Size(1140, 234);
             this.PanelOrderPositions.TabIndex = 112;
-            // 
-            // LabelNotify
-            // 
-            this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LabelNotify.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelNotify.Location = new System.Drawing.Point(398, 199);
-            this.LabelNotify.Name = "LabelNotify";
-            this.LabelNotify.Size = new System.Drawing.Size(339, 19);
-            this.LabelNotify.TabIndex = 191;
-            this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelPickMessages
             // 
-            this.LabelPickMessages.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelPickMessages.BackColor = System.Drawing.Color.AliceBlue;
             this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickMessages.Location = new System.Drawing.Point(10, 218);
+            this.LabelPickMessages.Location = new System.Drawing.Point(50, 201);
             this.LabelPickMessages.Name = "LabelPickMessages";
-            this.LabelPickMessages.Size = new System.Drawing.Size(1115, 22);
+            this.LabelPickMessages.Size = new System.Drawing.Size(1037, 22);
             this.LabelPickMessages.TabIndex = 190;
             this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -2058,6 +2140,16 @@
             this.LabelPickPos11.Text = "11";
             this.LabelPickPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // LabelNotify
+            // 
+            this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.LabelNotify.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelNotify.Location = new System.Drawing.Point(7, 203);
+            this.LabelNotify.Name = "LabelNotify";
+            this.LabelNotify.Size = new System.Drawing.Size(31, 19);
+            this.LabelNotify.TabIndex = 192;
+            this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // TextBoxPickPos11
             // 
             this.TextBoxPickPos11.BackColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -2070,6 +2162,18 @@
             this.TextBoxPickPos11.TabIndex = 171;
             this.TextBoxPickPos11.Tag = "10";
             this.TextBoxPickPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MBShortCut
+            // 
+            this.MBShortCut.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBShortCut.Location = new System.Drawing.Point(1099, 197);
+            this.MBShortCut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBShortCut.Name = "MBShortCut";
+            this.MBShortCut.Size = new System.Drawing.Size(26, 26);
+            this.MBShortCut.TabIndex = 119;
+            this.MBShortCut.Text = "?";
+            this.MBShortCut.UseSelectable = true;
+            this.MBShortCut.Click += new System.EventHandler(this.MBShortCut_Click);
             // 
             // LabelPickPos12
             // 
@@ -2565,10 +2669,10 @@
             this.LabelLineOfLines.BackColor = System.Drawing.SystemColors.Control;
             this.LabelLineOfLines.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelLineOfLines.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.LabelLineOfLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLineOfLines.Location = new System.Drawing.Point(523, 11);
+            this.LabelLineOfLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLineOfLines.Location = new System.Drawing.Point(1044, 115);
             this.LabelLineOfLines.Name = "LabelLineOfLines";
-            this.LabelLineOfLines.Size = new System.Drawing.Size(100, 24);
+            this.LabelLineOfLines.Size = new System.Drawing.Size(60, 16);
             this.LabelLineOfLines.TabIndex = 103;
             this.LabelLineOfLines.Text = "1 of 4";
             this.LabelLineOfLines.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2661,10 +2765,10 @@
             // MBLocationCount
             // 
             this.MBLocationCount.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBLocationCount.Location = new System.Drawing.Point(4, 6);
+            this.MBLocationCount.Location = new System.Drawing.Point(3, 2);
             this.MBLocationCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBLocationCount.Name = "MBLocationCount";
-            this.MBLocationCount.Size = new System.Drawing.Size(135, 76);
+            this.MBLocationCount.Size = new System.Drawing.Size(135, 30);
             this.MBLocationCount.TabIndex = 92;
             this.MBLocationCount.Text = "&Location Count";
             this.MBLocationCount.UseSelectable = true;
@@ -2673,10 +2777,10 @@
             // MBResetCarousels
             // 
             this.MBResetCarousels.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBResetCarousels.Location = new System.Drawing.Point(465, 47);
+            this.MBResetCarousels.Location = new System.Drawing.Point(3, 101);
             this.MBResetCarousels.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBResetCarousels.Name = "MBResetCarousels";
-            this.MBResetCarousels.Size = new System.Drawing.Size(213, 35);
+            this.MBResetCarousels.Size = new System.Drawing.Size(135, 30);
             this.MBResetCarousels.TabIndex = 92;
             this.MBResetCarousels.Text = "&Reset Carousels";
             this.MBResetCarousels.UseSelectable = true;
@@ -2685,10 +2789,10 @@
             // MBPickScreenHotPick
             // 
             this.MBPickScreenHotPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickScreenHotPick.Location = new System.Drawing.Point(273, 6);
+            this.MBPickScreenHotPick.Location = new System.Drawing.Point(3, 68);
             this.MBPickScreenHotPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickScreenHotPick.Name = "MBPickScreenHotPick";
-            this.MBPickScreenHotPick.Size = new System.Drawing.Size(122, 76);
+            this.MBPickScreenHotPick.Size = new System.Drawing.Size(135, 30);
             this.MBPickScreenHotPick.TabIndex = 92;
             this.MBPickScreenHotPick.Text = "Hot &Action";
             this.MBPickScreenHotPick.UseSelectable = true;
@@ -2697,10 +2801,10 @@
             // MBShowOrderOrQuantityToggle
             // 
             this.MBShowOrderOrQuantityToggle.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShowOrderOrQuantityToggle.Location = new System.Drawing.Point(145, 6);
+            this.MBShowOrderOrQuantityToggle.Location = new System.Drawing.Point(3, 35);
             this.MBShowOrderOrQuantityToggle.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShowOrderOrQuantityToggle.Name = "MBShowOrderOrQuantityToggle";
-            this.MBShowOrderOrQuantityToggle.Size = new System.Drawing.Size(122, 76);
+            this.MBShowOrderOrQuantityToggle.Size = new System.Drawing.Size(135, 30);
             this.MBShowOrderOrQuantityToggle.TabIndex = 92;
             this.MBShowOrderOrQuantityToggle.Text = "&Show Jobs";
             this.MBShowOrderOrQuantityToggle.UseSelectable = true;
@@ -3033,10 +3137,10 @@
             // MBPrint
             // 
             this.MBPrint.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrint.Location = new System.Drawing.Point(749, 6);
+            this.MBPrint.Location = new System.Drawing.Point(1008, 68);
             this.MBPrint.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrint.Name = "MBPrint";
-            this.MBPrint.Size = new System.Drawing.Size(122, 76);
+            this.MBPrint.Size = new System.Drawing.Size(135, 30);
             this.MBPrint.TabIndex = 0;
             this.MBPrint.Text = "Print";
             this.MBPrint.UseSelectable = true;
@@ -3046,10 +3150,10 @@
             // MBPickNewItem
             // 
             this.MBPickNewItem.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickNewItem.Location = new System.Drawing.Point(877, 6);
+            this.MBPickNewItem.Location = new System.Drawing.Point(1008, 35);
             this.MBPickNewItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickNewItem.Name = "MBPickNewItem";
-            this.MBPickNewItem.Size = new System.Drawing.Size(122, 76);
+            this.MBPickNewItem.Size = new System.Drawing.Size(135, 30);
             this.MBPickNewItem.TabIndex = 0;
             this.MBPickNewItem.Text = "New Item";
             this.MBPickNewItem.UseSelectable = true;
@@ -3076,10 +3180,10 @@
             this.MBPickBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MBPickBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickBack.Location = new System.Drawing.Point(1006, 6);
+            this.MBPickBack.Location = new System.Drawing.Point(1008, 2);
             this.MBPickBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickBack.Name = "MBPickBack";
-            this.MBPickBack.Size = new System.Drawing.Size(135, 76);
+            this.MBPickBack.Size = new System.Drawing.Size(135, 30);
             this.MBPickBack.TabIndex = 3;
             this.MBPickBack.Text = "&Back";
             this.MBPickBack.UseSelectable = true;
@@ -4521,17 +4625,44 @@
             // 
             this.ToolTipPickScreen.IsBalloon = true;
             // 
-            // MBFillOptimized
+            // MBMainUpload
             // 
-            this.MBFillOptimized.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFillOptimized.Location = new System.Drawing.Point(530, 686);
-            this.MBFillOptimized.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBFillOptimized.Name = "MBFillOptimized";
-            this.MBFillOptimized.Size = new System.Drawing.Size(155, 76);
-            this.MBFillOptimized.TabIndex = 10;
-            this.MBFillOptimized.Text = "Fill Optimized";
-            this.MBFillOptimized.UseSelectable = true;
-            this.MBFillOptimized.Click += new System.EventHandler(this.MBFillOptimized_Click);
+            this.MBMainUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBMainUpload.Location = new System.Drawing.Point(398, 619);
+            this.MBMainUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBMainUpload.Name = "MBMainUpload";
+            this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
+            this.MBMainUpload.TabIndex = 3;
+            this.MBMainUpload.Text = "Run Upload Continuously";
+            this.MBMainUpload.UseSelectable = true;
+            this.MBMainUpload.Visible = false;
+            this.MBMainUpload.Click += new System.EventHandler(this.MBMainUpload_Click);
+            // 
+            // MBRunUpload
+            // 
+            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunUpload.Location = new System.Drawing.Point(398, 680);
+            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunUpload.Name = "MBRunUpload";
+            this.MBRunUpload.Size = new System.Drawing.Size(350, 53);
+            this.MBRunUpload.TabIndex = 27;
+            this.MBRunUpload.Text = "Run Upload Once";
+            this.MBRunUpload.UseSelectable = true;
+            this.MBRunUpload.Visible = false;
+            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
+            // 
+            // MBRunLoader
+            // 
+            this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunLoader.Location = new System.Drawing.Point(398, 558);
+            this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunLoader.Name = "MBRunLoader";
+            this.MBRunLoader.Size = new System.Drawing.Size(350, 53);
+            this.MBRunLoader.TabIndex = 28;
+            this.MBRunLoader.Text = "Run Loader Once";
+            this.MBRunLoader.UseSelectable = true;
+            this.MBRunLoader.Visible = false;
+            this.MBRunLoader.Click += new System.EventHandler(this.MBRunLoader_Click);
             // 
             // FrmPick
             // 
@@ -4855,7 +4986,6 @@
         private System.Windows.Forms.Panel AvailablePos7Display;
         private System.Windows.Forms.Panel AvailablePos8Display;
         private System.Windows.Forms.TextBox TextBoxPos1;
-        private System.Windows.Forms.Label LabelNotify;
         private System.Windows.Forms.Label LabelPickMessages;
         private System.Windows.Forms.TextBox TextBoxPickPos9;
         private System.Windows.Forms.Label LabelPickPos9;
@@ -4923,5 +5053,16 @@
         private System.Windows.Forms.DataGridView DataGridViewNewOrder;
         private MetroFramework.Controls.MetroButton MBShortCut;
         private MetroFramework.Controls.MetroButton MBFillOptimized;
+        private System.Windows.Forms.Label LabelNotify;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator6;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator5;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator4;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator3;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator2;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator1;
+        private System.Windows.Forms.Button button1;
+        private MetroFramework.Controls.MetroButton MBMainUpload;
+        private MetroFramework.Controls.MetroButton MBRunUpload;
+        private MetroFramework.Controls.MetroButton MBRunLoader;
     }
 }

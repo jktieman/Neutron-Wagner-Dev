@@ -46,7 +46,9 @@ namespace Neutron.Forms
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
             SetLoaderButtonText();
+            SetUploadButtonText();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+            Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
         }
 
         private void SetLoaderButtonText()
@@ -57,7 +59,19 @@ namespace Neutron.Forms
             }
             else
             {
-                MBStartLoader.Text = "Start Loader";
+                MBStartLoader.Text = "Run Loader Continuously";
+            }
+        }
+
+        private void SetUploadButtonText()
+        {
+            if (GlobalVar.UploadRunning)
+            {
+                MBStartUpload.Text = "Stop Upload";
+            }
+            else
+            {
+                MBStartUpload.Text = "Run Upload Continuously";
             }
         }
 
@@ -70,7 +84,21 @@ namespace Neutron.Forms
             }
             else
             {
-                MBStartLoader.Text = "Start Loader";
+                MBStartLoader.Text = "Run Loader Continuously";
+                GlobalVar.LoaderRunning = false;
+            }
+        }
+
+        private void StartStopUploadAction(string startStop)
+        {
+            if (startStop == "Start")
+            {
+                MBStartUpload.Text = "Stop Upload";
+                GlobalVar.LoaderRunning = true;
+            }
+            else
+            {
+                MBStartUpload.Text = "Run Upload Continuously";
                 GlobalVar.LoaderRunning = false;
             }
         }
@@ -78,18 +106,33 @@ namespace Neutron.Forms
         private void MBStartLoader_Click(object sender, EventArgs e)
         {
             Mediator.GetInstance().OnStartStopLoader(this, !GlobalVar.LoaderRunning ? "Start" : "Stop");
-
         }
 
-        private void MBCreateHostUploadFile_Click(object sender, EventArgs e)
+        private void MBRunLoader_Click(object sender, EventArgs e)
         {
-            CreateHostUploadFile();
+            RunLoader();
         }
 
-        public void CreateHostUploadFile()
+        private void MBStartUpload_Click(object sender, EventArgs e)
         {
-            var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
+            Mediator.GetInstance().OnStartStopUpload(this, !GlobalVar.UploadRunning ? "Start" : "Stop");
+        }
+
+        private void MBRunUpload_Click(object sender, EventArgs e)
+        {
+           RunUpload();
+        }
+
+        private void RunUpload()
+        {
+            var uploadProcessor = new UploadProcessorPr1(_neutronLicense, _neutronVariables, _logger);
             uploadProcessor.CreateHostFile();
+        }
+
+        private void RunLoader()
+        {
+            var interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+            interfaceProcessor.RunLoaderOnce();
         }
 
         private void MBMainClose_Click(object sender, EventArgs e)
@@ -120,14 +163,14 @@ namespace Neutron.Forms
         private void MBMainSqlServer_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Sql Server Setup";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = SqlServer;
         }
 
         private void MBMainInterfaceFiles_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Interface Settings";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = InterfaceFiles;
         }
 
@@ -135,7 +178,7 @@ namespace Neutron.Forms
         private void MBMainSpare1_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Spare 1";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Spare1;
         }
 
@@ -143,28 +186,28 @@ namespace Neutron.Forms
         private void MBSqlServerBack_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
 
         private void MBInterfaceFilesBack_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
 
         private void MBSpare1Back_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
 
         private void MBSpare2Back_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.Turquoise;
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
 
@@ -562,5 +605,6 @@ namespace Neutron.Forms
                 LanguageDirectory.Text = $"{path}";
             }
         }
+
     }
 }

@@ -118,14 +118,23 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NeutronLogo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\NeutronLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Neutron_Logo32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Neutron_Logo32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="glyphicons-174-play" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\glyphicons-174-play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="glyphicons-178-fast-forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\glyphicons-178-fast-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Neutron_Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Neutron_Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NeutronLogo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\NeutronLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="glyphicons-224-chevron-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\glyphicons-224-chevron-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="glyphicons-172-fast-backward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\glyphicons-172-fast-backward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="glyphicons-177-forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\glyphicons-177-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -133,34 +142,28 @@
   <data name="glyphicons-182-download-alt" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\glyphicons-182-download-alt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="1489123904_circle-arrow_back-previous-glyph" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\1489123904_circle-arrow_back-previous-glyph.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="glyphicons-172-fast-backward" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\glyphicons-172-fast-backward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="glyphicons-171-step-backward" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\glyphicons-171-step-backward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="glyphicons-179-step-forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\glyphicons-179-step-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NeutronLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\NeutronLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="glyphicons-173-rewind" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\glyphicons-173-rewind.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="glyphicons-224-chevron-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\glyphicons-224-chevron-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="glyphicons-178-fast-forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\glyphicons-178-fast-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="glyphicons-225-chevron-left" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\glyphicons-225-chevron-left.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Neutron_Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\Neutron_Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="NeutronLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\NeutronLogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Neutron_Logo32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Neutron_Logo32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="glyphicons-179-step-forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\glyphicons-179-step-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="glyphicons-171-step-backward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\glyphicons-171-step-backward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="1489123904_circle-arrow_back-previous-glyph" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\1489123904_circle-arrow_back-previous-glyph.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="glyphicons-173-rewind" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Icons\glyphicons-173-rewind.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Pick_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Pick_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

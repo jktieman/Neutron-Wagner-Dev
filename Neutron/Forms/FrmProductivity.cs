@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Equin.ApplicationFramework;
 using JsonManager;
@@ -24,7 +21,9 @@ using NeutronData.ModelViews;
 using Neutron.Models;
 using NeutronCore;
 using NeutronCore.Global;
-using PrintRequest;
+using NeutronData.PrintModels;
+using NeutronDllu;
+
 namespace Neutron.Forms
 {
     public partial class FrmProductivity : MetroForm

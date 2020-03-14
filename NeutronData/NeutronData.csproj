@@ -71,7 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseClasses\LookupData.cs" />
-    <Compile Include="BaseClasses\PickStopBase.cs" />
     <Compile Include="DataContexts\SecureDb.cs" />
     <Compile Include="Interfaces\IAkaRepository.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
@@ -177,6 +176,12 @@
     <Compile Include="ModelViews\SkipView.cs" />
     <Compile Include="ModelViews\StationView.cs" />
     <Compile Include="ModelViews\UserView.cs" />
+    <Compile Include="PrintModels\AnticipatedOut.cs" />
+    <Compile Include="PrintModels\DocumentPrinterPreferences.cs" />
+    <Compile Include="PrintModels\LabelPrinterPreferences.cs" />
+    <Compile Include="PrintModels\PackingList.cs" />
+    <Compile Include="PrintModels\PickList.cs" />
+    <Compile Include="PrintModels\ShortReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AkaRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -225,6 +230,7 @@
       <DependentUpon>201911122220341_ActionCodeItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

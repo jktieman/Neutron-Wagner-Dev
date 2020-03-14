@@ -72,6 +72,12 @@ namespace NeutronLoader
                         _interfaceProcessor.StartProcessingInterfaceFiles();
                         break;
                     }
+                case "PR1":
+                {
+                    _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+                    _interfaceProcessor.StartProcessingInterfaceFiles();
+                    break;
+                }
             }
 
         }
@@ -104,13 +110,7 @@ namespace NeutronLoader
                 using (var db = new NeutronDb())
                 {
                     var recs = db.Database.ExecuteSqlCommand("usp_RemoveDuplicateRecordsFromHistory");
-                    //if (! string.IsNullOrEmpty(recs))
-                    //{
-                    //     _logger.Log($"Remove Duplicate History Files Count: {recs} ");
-                    //}
-
                 }
-
             }
             catch (Exception ex)
             {

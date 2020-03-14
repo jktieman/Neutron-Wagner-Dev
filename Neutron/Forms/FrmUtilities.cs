@@ -15,7 +15,6 @@ using NeutronData.Repositories;
 using System.Reflection;
 using JsonManager;
 using NeutronCore.Global;
-using PrintRequest;
 using System.Deployment.Application;
 using System.Drawing.Printing;
 using System.Globalization;
@@ -23,13 +22,14 @@ using System.IO.Ports;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
-using EnumsNET;
 using Equin.ApplicationFramework;
 using Neutron.Classes;
 using Neutron.Extensions;
-using NeutronCore.Enums;
+using NeutronCore.Models;
 using NeutronData.BaseClasses;
 using NeutronData.Models.Lookups;
+using NeutronData.PrintModels;
+using NeutronDllu;
 //using CommunicationType = NeutronCore.Enums.CommunicationType;
 using DeviceType = NeutronData.Models.Lookups.DeviceType;
 
@@ -77,6 +77,7 @@ namespace Neutron.Forms
         public DocumentPrinterPreferences DocumentPrinter;
         public LabelPrinterPreferences LabelPrinter;
         private readonly NeutronVariables _neutronVariables;
+        private readonly NeutronLicense _neutronLicense;
 
         //Lookup variables
         private List<LookupTable> _lookupTables = new List<LookupTable>();
@@ -84,7 +85,7 @@ namespace Neutron.Forms
         private List<LookupData> _currentRecs;
         private BindingSource _bindingSource;
 
-        public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables)
+        public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -92,6 +93,7 @@ namespace Neutron.Forms
             KeyPreview = true;
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
+            _neutronLicense = neutronLicense;
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
@@ -623,12 +625,13 @@ namespace Neutron.Forms
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
             _neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
             _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
-            _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
+           // _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
             _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
             _neutronVariables.CheckForUsedItem = CheckBoxCheckForUsedItem.Checked;
             _neutronVariables.RunLoaderOnStartup = CheckBoxRunLoaderOnStartup.Checked;
+            _neutronVariables.RunUploadOnStartup = CheckBoxRunUploadOnStartup.Checked;
             _neutronVariables.DisplaysEnabled = CheckBoxDisplaysEnabled.Checked;
             _neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
             _neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
@@ -651,35 +654,40 @@ namespace Neutron.Forms
             _neutronVariables.PrintPackingListStart = CheckBoxPrintPackingListStart.Checked;
             _neutronVariables.PrintPackingListEnd = CheckBoxPrintPackingListEnd.Checked;
             _neutronVariables.PrintPackingListManual = CheckBoxPrintPackingListManual.Checked;
+            _neutronVariables.LoaderDelay = TextBoxLoaderDelay.Text.ParseInt();
+            _neutronVariables.UploadDelay = TextBoxUploadDelay.Text.ParseInt();
+            _neutronVariables.ActionCodes = TextBoxActionCodes.Text;
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
-            UpdateSimulationMode();
+            _jsonData.SaveFile<NeutronLicense>(new NeutronLicense {CompanyCode = TextBoxLicenseCode.Text});
+
+           // UpdateSimulationMode();
 
         }
 
-        private void UpdateSimulationMode()
-        {
-            var recs = _repoHardwareDevices.All().ToList();
-            if (_neutronVariables.SimulationMode)
-            {
-                foreach (var rec in recs)
-                {
-                    rec.SimulationMode = true;
-                    rec.LogLevel = 8;
-                    _repoHardwareDevices.Update(rec);
-                }
-            }
-            else
-            {
-                foreach (var rec in recs)
-                {
-                    rec.SimulationMode = false;
-                    rec.LogLevel = 2;
-                    _repoHardwareDevices.Update(rec);
-                }
-            }
-        }
+        //private void UpdateSimulationMode()
+        //{
+        //    var recs = _repoHardwareDevices.All().ToList();
+        //    if (_neutronVariables.SimulationMode)
+        //    {
+        //        foreach (var rec in recs)
+        //        {
+        //            rec.SimulationMode = true;
+        //            rec.LogLevel = 8;
+        //            _repoHardwareDevices.Update(rec);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (var rec in recs)
+        //        {
+        //            rec.SimulationMode = false;
+        //            rec.LogLevel = 2;
+        //            _repoHardwareDevices.Update(rec);
+        //        }
+        //    }
+        //}
 
         private void MBOptions_Click(object sender, EventArgs e)
         {
@@ -697,7 +705,7 @@ namespace Neutron.Forms
             CheckBoxUseReturnToStock.Checked = _neutronVariables.UseReturnToStock;
             TextBoxStationNumber.Text = _neutronVariables.StationNumber.ToString();
             ComboBoxDeviceDriver.SelectedIndex = ComboBoxDeviceDriver.FindStringExact(_neutronVariables.DeviceDriver);
-            CheckBoxSimulationMode.Checked = _neutronVariables.SimulationMode;
+           // CheckBoxSimulationMode.Checked = _neutronVariables.SimulationMode;
             NumericUpDownLogLevel.Value = _neutronVariables.LogLevel == 0
                 ? NumericUpDownLogLevel.Minimum
                 : _neutronVariables.LogLevel;
@@ -705,6 +713,7 @@ namespace Neutron.Forms
             CheckBoxAutoLogOff.Checked = _neutronVariables.AutoLogOff;
             CheckBoxCheckForUsedItem.Checked = _neutronVariables.CheckForUsedItem;
             CheckBoxRunLoaderOnStartup.Checked = _neutronVariables.RunLoaderOnStartup;
+            CheckBoxRunUploadOnStartup.Checked = _neutronVariables.RunUploadOnStartup;
             CheckBoxDisplaysEnabled.Checked = _neutronVariables.DisplaysEnabled;
             CheckBoxEnableDocumentPrinter.Checked = _neutronVariables.EnableDocumentPrinter;
             CheckBoxEnableLabelPrinter.Checked = _neutronVariables.EnableLabelPrinter;
@@ -729,8 +738,12 @@ namespace Neutron.Forms
             CheckBoxPrintPackingListStart.Checked = _neutronVariables.PrintPackingListStart;
             CheckBoxPrintPackingListEnd.Checked = _neutronVariables.PrintPackingListEnd;
             CheckBoxPrintPackingListManual.Checked = _neutronVariables.PrintPackingListManual;
-
+            TextBoxLoaderDelay.Text = _neutronVariables.LoaderDelay.ToString();
+            TextBoxUploadDelay.Text = _neutronVariables.UploadDelay.ToString();
+            TextBoxActionCodes.Text = _neutronVariables.ActionCodes;
             SetPickMethod(_neutronVariables.PickMethod);
+
+            TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -1225,7 +1238,7 @@ namespace Neutron.Forms
             TextBoxViewEditCarrierWidth.Text = hardwareDevice.CarrierWidth.ToString();
             TextBoxViewEditCarrierDepth.Text = hardwareDevice.CarrierDepth.ToString();
             CheckBoxViewEditDeviceEnabled.Checked = hardwareDevice.Enabled;
-            CheckBoxViewEditSimulationMode.Checked = hardwareDevice.SimulationMode;
+           // CheckBoxViewEditSimulationMode.Checked = hardwareDevice.SimulationMode;
             NumericUpDownViewEditDeviceLogLevel.Text = hardwareDevice.LogLevel.ToString();
             if (hardwareDevice.CommunicationTypeId != null)
             {

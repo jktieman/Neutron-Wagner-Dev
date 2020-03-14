@@ -23,6 +23,7 @@ namespace NeutronCore.Global
         public bool AutoLogOff = false;
         public bool CheckForUsedItem = false;
         public bool RunLoaderOnStartup = false;
+        public bool RunUploadOnStartup = false;
         public bool DisplaysEnabled = true;
         public bool EnableDocumentPrinter = false;
         public bool EnableLabelPrinter = false;
@@ -45,5 +46,8 @@ namespace NeutronCore.Global
         public bool PrintPackingListStart { get; set; }
         public bool PrintPackingListEnd { get; set; }
         public bool PrintPackingListManual { get; set; }
+        public int LoaderDelay { get; set; }
+        public int UploadDelay { get; set; }
+        public string ActionCodes { get; set; }
     }
 }
