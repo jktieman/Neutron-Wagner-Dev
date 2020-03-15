@@ -142,6 +142,7 @@
             this.TextBoxActionCodes = new System.Windows.Forms.TextBox();
             this.LabelSettingsDeviceDriver = new System.Windows.Forms.Label();
             this.TextBoxFieldDelimiter = new System.Windows.Forms.TextBox();
+            this.TextBoxLicenseCode = new System.Windows.Forms.TextBox();
             this.TextBoxStationNumber = new System.Windows.Forms.TextBox();
             this.CheckBoxUseLAC = new System.Windows.Forms.CheckBox();
             this.CheckBoxUsePrimeBin = new System.Windows.Forms.CheckBox();
@@ -149,8 +150,10 @@
             this.CheckBoxDisplaysEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxShuttleEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxCreateStoreOrderWithRts = new System.Windows.Forms.CheckBox();
+            this.LabelLicenseCode = new System.Windows.Forms.Label();
             this.LabelSettingsStationNumber = new System.Windows.Forms.Label();
             this.CheckBoxPrintPackingListManual = new System.Windows.Forms.CheckBox();
+            this.CheckBoxRunUploadOnStartup = new System.Windows.Forms.CheckBox();
             this.CheckBoxRunLoaderOnStartup = new System.Windows.Forms.CheckBox();
             this.CheckBoxPrintPackingListEnd = new System.Windows.Forms.CheckBox();
             this.CheckBoxPrintPackingListStart = new System.Windows.Forms.CheckBox();
@@ -354,9 +357,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxRunUploadOnStartup = new System.Windows.Forms.CheckBox();
-            this.LabelLicenseCode = new System.Windows.Forms.Label();
-            this.TextBoxLicenseCode = new System.Windows.Forms.TextBox();
+            this.CheckBoxUseCostCenter = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -1090,6 +1091,7 @@
             this.Settings.Controls.Add(this.CheckBoxCreateStoreOrderWithRts);
             this.Settings.Controls.Add(this.LabelLicenseCode);
             this.Settings.Controls.Add(this.LabelSettingsStationNumber);
+            this.Settings.Controls.Add(this.CheckBoxUseCostCenter);
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListManual);
             this.Settings.Controls.Add(this.CheckBoxRunUploadOnStartup);
             this.Settings.Controls.Add(this.CheckBoxRunLoaderOnStartup);
@@ -1552,6 +1554,16 @@
             this.TextBoxFieldDelimiter.Text = "|";
             this.TextBoxFieldDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // TextBoxLicenseCode
+            // 
+            this.TextBoxLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxLicenseCode.Location = new System.Drawing.Point(197, 88);
+            this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
+            this.TextBoxLicenseCode.Size = new System.Drawing.Size(55, 22);
+            this.TextBoxLicenseCode.TabIndex = 9;
+            this.TextBoxLicenseCode.Text = "PR1";
+            this.TextBoxLicenseCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // TextBoxStationNumber
             // 
             this.TextBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1632,6 +1644,16 @@
             this.CheckBoxCreateStoreOrderWithRts.Text = "Create Store Order With RTS";
             this.CheckBoxCreateStoreOrderWithRts.UseVisualStyleBackColor = true;
             // 
+            // LabelLicenseCode
+            // 
+            this.LabelLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLicenseCode.Location = new System.Drawing.Point(41, 89);
+            this.LabelLicenseCode.Name = "LabelLicenseCode";
+            this.LabelLicenseCode.Size = new System.Drawing.Size(140, 16);
+            this.LabelLicenseCode.TabIndex = 7;
+            this.LabelLicenseCode.Text = "License Code";
+            this.LabelLicenseCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // LabelSettingsStationNumber
             // 
             this.LabelSettingsStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1652,6 +1674,17 @@
             this.CheckBoxPrintPackingListManual.TabIndex = 8;
             this.CheckBoxPrintPackingListManual.Text = "Print Packing List Manually";
             this.CheckBoxPrintPackingListManual.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxRunUploadOnStartup
+            // 
+            this.CheckBoxRunUploadOnStartup.AutoSize = true;
+            this.CheckBoxRunUploadOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 236);
+            this.CheckBoxRunUploadOnStartup.Name = "CheckBoxRunUploadOnStartup";
+            this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(164, 20);
+            this.CheckBoxRunUploadOnStartup.TabIndex = 8;
+            this.CheckBoxRunUploadOnStartup.Text = "Run Upload On Startup";
+            this.CheckBoxRunUploadOnStartup.UseVisualStyleBackColor = true;
             // 
             // CheckBoxRunLoaderOnStartup
             // 
@@ -4163,36 +4196,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxRunUploadOnStartup
+            // CheckBoxUseCostCenter
             // 
-            this.CheckBoxRunUploadOnStartup.AutoSize = true;
-            this.CheckBoxRunUploadOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 236);
-            this.CheckBoxRunUploadOnStartup.Name = "CheckBoxRunUploadOnStartup";
-            this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(164, 20);
-            this.CheckBoxRunUploadOnStartup.TabIndex = 8;
-            this.CheckBoxRunUploadOnStartup.Text = "Run Upload On Startup";
-            this.CheckBoxRunUploadOnStartup.UseVisualStyleBackColor = true;
-            // 
-            // LabelLicenseCode
-            // 
-            this.LabelLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLicenseCode.Location = new System.Drawing.Point(41, 89);
-            this.LabelLicenseCode.Name = "LabelLicenseCode";
-            this.LabelLicenseCode.Size = new System.Drawing.Size(140, 16);
-            this.LabelLicenseCode.TabIndex = 7;
-            this.LabelLicenseCode.Text = "License Code";
-            this.LabelLicenseCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TextBoxLicenseCode
-            // 
-            this.TextBoxLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLicenseCode.Location = new System.Drawing.Point(197, 88);
-            this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
-            this.TextBoxLicenseCode.Size = new System.Drawing.Size(55, 22);
-            this.TextBoxLicenseCode.TabIndex = 9;
-            this.TextBoxLicenseCode.Text = "PR1";
-            this.TextBoxLicenseCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CheckBoxUseCostCenter.AutoSize = true;
+            this.CheckBoxUseCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseCostCenter.Location = new System.Drawing.Point(841, 343);
+            this.CheckBoxUseCostCenter.Name = "CheckBoxUseCostCenter";
+            this.CheckBoxUseCostCenter.Size = new System.Drawing.Size(177, 20);
+            this.CheckBoxUseCostCenter.TabIndex = 8;
+            this.CheckBoxUseCostCenter.Text = "Use Cost Center Hot Pick";
+            this.CheckBoxUseCostCenter.UseVisualStyleBackColor = true;
             // 
             // FrmUtilities
             // 
@@ -4582,5 +4595,6 @@
         private System.Windows.Forms.CheckBox CheckBoxRunUploadOnStartup;
         private System.Windows.Forms.TextBox TextBoxLicenseCode;
         private System.Windows.Forms.Label LabelLicenseCode;
+        private System.Windows.Forms.CheckBox CheckBoxUseCostCenter;
     }
 }

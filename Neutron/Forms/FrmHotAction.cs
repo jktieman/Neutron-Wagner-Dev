@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
+using CurrentDeviceIndicator;
 using EnumsNET;
 using Equin.ApplicationFramework;
 using JsonManager;
@@ -82,6 +83,9 @@ namespace Neutron.Forms
             New
         }
         public delegate void UpdateDataGridDelegate(BindingSource bindingSource);
+
+        private List<DeviceIndicator> _deviceIndicators;
+
         public FrmHotAction(StationView station, IJsonData jsonData
             , IAkaRepository akaRepository, NeutronVariables neutronVariables, INomenclature nomenclature, string item = @"")
         {
@@ -100,8 +104,9 @@ namespace Neutron.Forms
             KeyPreview = true;
             SetupLogger();
             SetupGridItemDefinition();
+            SetupCurrentDeviceIndicators();
             UpdateNomenclature();
-            // _useCostCenter = _neutronVariables.UseCostCenter;
+            _useCostCenter = _neutronVariables.UseCostCenter;
             LabelFormTitle.Text = _resourceManager.GetString("HotActions");
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
@@ -115,6 +120,20 @@ namespace Neutron.Forms
             _newLocationButtonText = _resourceManager.GetString("AllLocations");
             MBNewLocations.Text = _newLocationButtonText;
         }
+
+        private void SetupCurrentDeviceIndicators()
+        {
+            _deviceIndicators = new List<DeviceIndicator>();
+
+            _deviceIndicators.Add(CurrentDeviceIndicator1);
+            _deviceIndicators.Add(CurrentDeviceIndicator2);
+            _deviceIndicators.Add(CurrentDeviceIndicator3);
+            _deviceIndicators.Add(CurrentDeviceIndicator4);
+            _deviceIndicators.Add(CurrentDeviceIndicator5);
+            _deviceIndicators.Add(CurrentDeviceIndicator6);
+        }
+
+
         private void InitialSearch(string item)
         {
             if (string.IsNullOrEmpty(item))
@@ -873,7 +892,7 @@ namespace Neutron.Forms
 
             }
             RadioButtonPick.Text = $"{_resourceManager.GetString("Pick")}";
-            RadioButtonPick.Tag = "Store";
+            RadioButtonPick.Tag = "Pick";
 
             CloseButtonPressed = false;
             HotAction.BackColor = Color.Red;
@@ -886,6 +905,7 @@ namespace Neutron.Forms
             var loc2 = _currentInventoryView.Loc2;
             var loc3 = _currentInventoryView.Loc3;
             var loc4 = _currentInventoryView.Loc4;
+            UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
             ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                 , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -899,14 +919,14 @@ namespace Neutron.Forms
             _hotStoreButtonPressed = true;
             CloseButtonPressed = false;
             //Cost Center
-            GroupBoxHotActions.Visible = _useCostCenter;
-            if (_useCostCenter)
-            {
-                RadioButtonPick.Checked = true;
-                ComboBoxCostCenter.Visible = false;
-                TextBoxFindCostCenter.Visible = false;
-                RadioButtonCostCenter.Visible = false;
-            }
+            GroupBoxHotActions.Visible = false;
+            //if (_useCostCenter)
+            //{
+            //    RadioButtonPick.Checked = true;
+            //    ComboBoxCostCenter.Visible = false;
+            //    TextBoxFindCostCenter.Visible = false;
+            //    RadioButtonCostCenter.Visible = false;
+            //}
 
             RadioButtonPick.Text = $"{_resourceManager.GetString("Store")}";
             RadioButtonPick.Tag = "Store";
@@ -924,6 +944,7 @@ namespace Neutron.Forms
                 var loc2 = _currentInventoryView.Loc2;
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
+                UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                     , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -1108,24 +1129,44 @@ namespace Neutron.Forms
                 }
             }
         }
-        private void MBHotActionBack_Click(object sender, EventArgs e)
+        private async void MBHotActionBack_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = false;
             ClearAllShi();
+            await ClearAllActiveDeviceIndicators();
             FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
+            LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+            LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = HotPick;
         }
         private async void MBHotAccept_Click(object sender, EventArgs e)
         {
             await Accept();
         }
+
         private async Task Accept()
         {
+            var pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
+            if (CheckForOverPick(pickQty)) return;
+          
             Cursor.Current = Cursors.WaitCursor;
             Inventory inv = null;
+            var actionCode = ActionCode.PickHot;
+
             ClearAllShi();
-            var actionCode = GetHotActionCode();
-            var pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
+            await ClearAllActiveDeviceIndicators();
+
+            if (_useCostCenter)
+            {
+                actionCode = GetHotActionCode();
+            }
+            else
+            {
+                if (_hotPickButtonPressed) actionCode = ActionCode.PickHot;
+                if (_hotStoreButtonPressed) actionCode = ActionCode.StoreHot;
+            }
+
+
             if (_currentInventoryView.Id == 0)  //New Inventory Record can't be for a HOT PICK
             {
                 try
@@ -1141,9 +1182,11 @@ namespace Neutron.Forms
                         StationId = _currentInventoryView.StationId,
                     };
                     _repoInventory.Insert(inventory);
+
                     _locationsRepository.SetLocationInUse(inventory.LocationId, true);
-                    GlobalVar.HistoryManager.SaveHistory(actionCode, inventory, pickQty);
                     inv = _repoInventory.FindByKey(inventory.Id);
+
+                    GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
                 }
                 catch (Exception ex)
                 {
@@ -1169,10 +1212,10 @@ namespace Neutron.Forms
                         }
                         TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
                         _repoInventory.Update(inv);
-                        if (RadioButtonCostCenter.Checked && _useCostCenter)
+
+                        if (RadioButtonCostCenter.Checked && _useCostCenter && _hotPickButtonPressed)
                         {
                             GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty, (string)ComboBoxCostCenter.SelectedValue);
-                            //Mediator.GetInstance().OnBatchComplete(this);
                         }
                         else
                         {
@@ -1196,11 +1239,22 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = HotPick;
         }
+
+        private bool CheckForOverPick(int pickQty)
+        {
+            if (!_hotPickButtonPressed) return false;
+            if (pickQty <= _currentInventoryView.Quantity) return false;
+            MessageBox.Show($"The quantity to pick exceeds the quantity at this location.");
+            TextBoxHotPickQuantity.FocusAndHighlightText();
+            return true;
+        }
+
         private ActionCode GetHotActionCode()
         {
             var result = ActionCode.PickHot;
             var radioButtons = new List<RadioButton> { RadioButtonPick, RadioButtonWarranty, RadioButtonScrap, RadioButtonOther, RadioButtonCostCenter };
-            if (RadioButtonPick.Text == $"{_resourceManager.GetString("Pick")}")
+            //if (RadioButtonPick.Text == $"{_resourceManager.GetString("Pick")}")
+            if (_hotPickButtonPressed)
             {
                 foreach (var item in radioButtons)
                 {
@@ -1230,35 +1284,37 @@ namespace Neutron.Forms
                     }
                 }
             }
-            else if (RadioButtonPick.Text == $"{_resourceManager.GetString("Store")}")
+            //else if (RadioButtonPick.Text == $"{_resourceManager.GetString("Store")}")
+            else if (_hotStoreButtonPressed)
             {
-                foreach (var item in radioButtons)
-                {
-                    if (item.Checked)
-                    {
-                        switch (item.Tag.ToString())
-                        {
-                            case "Store":
-                                result = ActionCode.StoreHot;
-                                break;
-                            case "Warranty":
-                                result = ActionCode.WarrantyHotStore;
-                                break;
-                            case "Scrap":
-                                result = ActionCode.ScrapHotStore;
-                                break;
-                            case "Other":
-                                result = ActionCode.OtherHotStore;
-                                break;
-                            case "Cost Center":
-                                result = ActionCode.CostCenterHotStore;
-                                break;
-                            default:
-                                result = ActionCode.StoreHot;
-                                break;
-                        }
-                    }
-                }
+                result = ActionCode.StoreHot;
+                //foreach (var item in radioButtons)
+                //{
+                //    if (item.Checked)
+                //    {
+                //        switch (item.Tag.ToString())
+                //        {
+                //            case "Store":
+                //                result = ActionCode.StoreHot;
+                //                break;
+                //            case "Warranty":
+                //                result = ActionCode.WarrantyHotStore;
+                //                break;
+                //            case "Scrap":
+                //                result = ActionCode.ScrapHotStore;
+                //                break;
+                //            case "Other":
+                //                result = ActionCode.OtherHotStore;
+                //                break;
+                //            case "Cost Center":
+                //                result = ActionCode.CostCenterHotStore;
+                //                break;
+                //            default:
+                //                result = ActionCode.StoreHot;
+                //                break;
+                //        }
+                //    }
+                //}
             }
             return result;
         }
@@ -1507,6 +1563,7 @@ namespace Neutron.Forms
         {
             var inv = _repoInventory.FindByKey(inventoryId);
             if (inv == null) return;
+            _currentInventoryView.Quantity = qty;
             var prevQty = inv.Quantity;
             inv.Quantity = qty;
             _repoInventory.Update(inv);
@@ -1594,6 +1651,58 @@ namespace Neutron.Forms
         {
             if (!_useCostCenter) return;
             TextBoxFindCostCenter.Focus();
+        }
+
+
+        private void UpdateCurrentDeviceIndicator(int loc1, int loc2, int loc3, int loc4)
+        {
+            Console.WriteLine($"UpdateCurrentDeviceIndicator - Start");
+            var deviceIndicator = _deviceIndicators.FirstOrDefault(d => d.DeviceNumber == loc1);
+            if (deviceIndicator != null && deviceIndicator.Active == false)
+            {
+                Console.WriteLine($"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
+                deviceIndicator.SetDeviceIndicatorValues(loc3, loc4);
+                deviceIndicator.Active = true;
+            }
+
+            Console.WriteLine($"UpdateCurrentDeviceIndicator - End");
+        }
+
+        private async Task ClearAllActiveDeviceIndicators()
+        {
+            var sw = Stopwatch.StartNew();
+            Console.WriteLine($"ClearAllActiveDeviceIndicators - Start");
+            var tasks = new List<Task>();
+            foreach (var deviceIndicator in _deviceIndicators)
+            {
+                if (deviceIndicator.Active)
+                {
+                    Console.WriteLine($"ClearAllActiveDeviceIndicators - {deviceIndicator.DeviceNumber}");
+                    deviceIndicator.Active = false;
+                    tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+                }
+            }
+            await Task.WhenAll(tasks);
+            Console.WriteLine($"ClearAllActiveDeviceIndicators - End");
+            sw.Stop();
+            Console.WriteLine($"ClearAllActiveDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+        }
+
+        private async Task ClearAllDeviceIndicators()
+        {
+            var sw = Stopwatch.StartNew();
+            Console.WriteLine($"ClearAllDeviceIndicators - Start");
+            var tasks = new List<Task>();
+            foreach (var deviceIndicator in _deviceIndicators)
+            {
+                Console.WriteLine($"ClearAllDeviceIndicators - {deviceIndicator.DeviceNumber}");
+                deviceIndicator.Active = false;
+                tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+            }
+            await Task.WhenAll(tasks);
+            Console.WriteLine($"ClearAllDeviceIndicators - End");
+            sw.Stop();
+            Console.WriteLine($"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private void SetCulture(string lang)

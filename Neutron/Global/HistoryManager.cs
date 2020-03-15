@@ -265,61 +265,80 @@ namespace Neutron.Global
             Save(history);
         }
 
-        //Hot Action
+        //Hot Pick Hot Store Action Without Cost Center
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty)
         {
-            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            string orderText;
+            switch (actionCode)
+            {
+                case ActionCode.PickHot:
+                    {
+                        orderText = "  HOT PICK";
+                        break;
+                    }
+                case ActionCode.StoreHot:
+                    {
+                        orderText = " HOT STORE";
+                        break;
+                    }
+                default:
+                    {
+                        orderText = string.Empty;
+                        break;
+                    }
+            }
+
             var history = new History
             {
                 ActionCode = (int)actionCode,
                 ActionCodeName = actionCode.GetEnumDescription(),
                 ActionDateTime = DateTime.Now,
-                // Ord1 = pickView.Ord1,
-                // Ord2 = pickView.Ord2,
-                // OrderId = pickView.OrderId,
-                Item = inv.ItemDefinition.Item,
-                Description = inv.ItemDefinition.Description,
+                Ord1 = orderText,
+                Ord2 = orderText,
+                OrderId = 0,
+                Item = inventory.ItemDefinition.Item,
+                Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
-                // RequestedQuantity = pickView.Quantity,
-                StationId = inv.Location.StationId,
-                Loc1 = inv.Location.Loc1,
-                Loc2 = inv.Location.Loc2,
-                Loc3 = inv.Location.Loc3,
-                Loc4 = inv.Location.Loc4,
-                Loc5 = inv.Location.Loc5,
-                Slot = inv.Location.Slot,
+                RequestedQuantity = pickedQty,
+                StationId = inventory.Location.StationId,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = string.Empty,
-                // OrderInfo = string.Empty,
-                // OrderDetailInfo = string.Empty
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty
             };
             Save(history);
         }
 
 
-        //Hot Action with Cost Center
+        //Hot Pick Action With Cost Center
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, string costCenter)
         {
-            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            var orderText = "  HOT PICK";
             var history = new History
             {
                 ActionCode = (int)actionCode,
                 ActionCodeName = actionCode.GetEnumDescription(),
                 ActionDateTime = DateTime.Now,
-                Ord1 = "HOTPICK",
-                Ord2 = "HOTPICK",
-                //OrderId = pickStop.OrderId,
-                Item = inv.ItemDefinition.Item,
-                Description = inv.ItemDefinition.Description,
+                Ord1 = orderText,
+                Ord2 = orderText,
+                OrderId = 0,
+                Item = inventory.ItemDefinition.Item,
+                Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickedQty,
-                StationId = inv.Location.StationId,
-                Loc1 = inv.Location.Loc1,
-                Loc2 = inv.Location.Loc2,
-                Loc3 = inv.Location.Loc3,
-                Loc4 = inv.Location.Loc4,
-                Loc5 = inv.Location.Loc5,
-                Slot = inv.Location.Slot,
+                StationId = inventory.Location.StationId,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = costCenter,
                 OrderInfo = string.Empty,

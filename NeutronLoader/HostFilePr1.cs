@@ -176,46 +176,56 @@ namespace NeutronLoader
 
         private string GetUploadDatRecord(History history)
         {
-            var station = history.StationId;
-            var order = history.Ord1.PadRight(10);
-            var orderDetailInfo = string.Empty;
-            // Rightmost 24 characters of the OrderDetailInfo field
-            var info = history.OrderDetailInfo;
-            if (!string.IsNullOrEmpty(info))
+            _logger.Log($"179 History Record- Item: {history.Item}");
+            var result = string.Empty;
+            try
             {
-                if (info.Length >= 24)
+                var station = history.StationId;
+                var order = history.Ord1.PadRight(10);
+                var orderDetailInfo = string.Empty;
+                // Rightmost 24 characters of the OrderDetailInfo field
+                var info = history.OrderDetailInfo;
+                if (!string.IsNullOrEmpty(info))
                 {
-                    orderDetailInfo = info.Substring(info.Length - 24);
+                    if (info.Length >= 24)
+                    {
+                        orderDetailInfo = info.Substring(info.Length - 24);
+                    }
                 }
-            }
 
-            var empName = string.Empty;
-            var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
-            if (emp != null)
+                var empName = string.Empty;
+                var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
+                if (emp != null)
+                {
+                    empName = emp.Firstname.PadRight(10);
+                }
+                var upCode = ($"02");
+                var time = DateTime.Now.ToString(format: "HH:mm");
+                var invoice = history.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
+
+                var sb = new StringBuilder(new string(' ', 170));
+                sb.Insert(0, $"{station}O");
+                sb.Insert(2, order);
+                sb.Insert(13, invoice);
+                sb.Insert(24, history.ActionDateTime.ToString("yyyyMMdd"));
+                sb.Insert(33, history.ActionDateTime.ToString("yyyyMMdd"));
+                sb.Insert(42, history.Item.PadRight(35));
+                sb.Insert(78, history.RequestedQuantity.ToString().PadLeft(9, '0'));
+                sb.Insert(88, history.IssuedQuantity.ToString().PadLeft(9, '0'));
+                sb.Insert(98, time);
+                sb.Insert(104, upCode);
+                sb.Insert(107, empName);
+                sb.Insert(130, orderDetailInfo);
+                sb.Length = 154;
+
+                result = sb.ToString();
+                _logger.Log($"{result}");
+            }
+            catch (Exception ex)
             {
-                empName = emp.Firstname.PadRight(10);
+                _logger.Log($"227 Get Upload Dat Record - Item: {history.Item}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
-            var upCode = ($"02");
-            var time = DateTime.Now.ToString(format: "HH:mm");
-            var invoice = history.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
 
-            var sb = new StringBuilder(new string(' ', 170));
-            sb.Insert(0, $"{station}O");
-            sb.Insert(2, order);
-            sb.Insert(13, invoice);
-            sb.Insert(24, history.ActionDateTime.ToString("yyyyMMdd"));
-            sb.Insert(33, history.ActionDateTime.ToString("yyyyMMdd"));
-            sb.Insert(42, history.Item.PadRight(35));
-            sb.Insert(78, history.RequestedQuantity.ToString().PadLeft(9, '0'));
-            sb.Insert(88, history.IssuedQuantity.ToString().PadLeft(9, '0'));
-            sb.Insert(98, time);
-            sb.Insert(104, upCode);
-            sb.Insert(107, empName);
-            sb.Insert(130, orderDetailInfo);
-            sb.Length = 154;
-
-            var result = sb.ToString();
-            _logger.Log($"{result}");
             return result;
         }
 
