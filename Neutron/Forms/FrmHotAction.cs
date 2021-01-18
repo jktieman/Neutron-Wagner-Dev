@@ -184,6 +184,19 @@ namespace Neutron.Forms
             ComboBoxLocationCodeLocation.DataSource = _repoLocationCode.All();
             ComboBoxLocationCodeLocation.DisplayMember = "Name";
             ComboBoxLocationCodeLocation.ValueMember = "Id";
+            //Tray
+            ComboBoxSizeCodeLocationTray.DataSource = _repoSizeCode.All();
+            ComboBoxSizeCodeLocationTray.DisplayMember = "Name";
+            ComboBoxSizeCodeLocationTray.ValueMember = "Id";
+            ComboBoxVelocityCodeLocationTray.DataSource = _repoVelocityCode.All();
+            ComboBoxVelocityCodeLocationTray.DisplayMember = "Name";
+            ComboBoxVelocityCodeLocationTray.ValueMember = "Id";
+            ComboBoxHeightCodeLocationTray.DataSource = _repoHeightCode.All();
+            ComboBoxHeightCodeLocationTray.DisplayMember = "Name";
+            ComboBoxHeightCodeLocationTray.ValueMember = "Id";
+            ComboBoxLocationCodeLocationTray.DataSource = _repoLocationCode.All();
+            ComboBoxLocationCodeLocationTray.DisplayMember = "Name";
+            ComboBoxLocationCodeLocationTray.ValueMember = "Id";
         }
         private void SetupLogger()
         {
@@ -373,7 +386,7 @@ namespace Neutron.Forms
                 ClearCurrentAndNew();
             }
             _stopwatch.Stop();
-            Console.WriteLine($"Item Definition Views Time: {_stopwatch.ElapsedMilliseconds.ToString()}");
+            Console.WriteLine($@"Item Definition Views Time: {_stopwatch.ElapsedMilliseconds.ToString()}");
             DataGridViewHot.ClearSelection();
             Cursor.Current = Cursors.Default;
         }
@@ -541,7 +554,7 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
             _stopwatch.Stop();
-            Console.WriteLine($"Time to build Item Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
+            Console.WriteLine($@"Time to build Item Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
         }
         private void SetupGridNew()
         {
@@ -889,28 +902,51 @@ namespace Neutron.Forms
                 ComboBoxCostCenter.Visible = true;
                 TextBoxFindCostCenter.Visible = true;
                 RadioButtonCostCenter.Visible = true;
-
+                RadioButtonPick.Text = $"{_resourceManager.GetString("Pick")}";
+                RadioButtonPick.Tag = "Pick";
             }
-            RadioButtonPick.Text = $"{_resourceManager.GetString("Pick")}";
-            RadioButtonPick.Tag = "Pick";
-
-            CloseButtonPressed = false;
-            HotAction.BackColor = Color.Red;
-            LabelFormTitle.BackColor = Color.Red;
-            LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-            MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
-
             _currentInventoryView = ((ObjectView<SqlInventoryView>)_bindingSourceCurrent.Current).Object;
             var loc1 = _currentInventoryView.Loc1;
             var loc2 = _currentInventoryView.Loc2;
             var loc3 = _currentInventoryView.Loc3;
             var loc4 = _currentInventoryView.Loc4;
-            UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
-            PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-            ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                , _currentInventoryView.Loc4.ToString(), 1.ToString());
-            await UpdateHotPickScreen(_currentInventoryView);
-            tabControl1.SelectedTab = HotAction;
+
+
+
+
+            var deviceType = _station.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1)?.DeviceTypeId;
+            if (deviceType == null) return;
+            if (deviceType == 1)
+            {
+                CloseButtonPressed = false;
+                HotActionTray.BackColor = Color.LightGray;
+                LabelFormTitle.BackColor = Color.LightGray;
+                LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+               // UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
+
+                PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                await UpdateHotPickScreenTray(_currentInventoryView);
+                tabControl1.SelectedTab = HotActionTray;
+            }
+            else if (deviceType == 2)
+            {
+                CloseButtonPressed = false;
+                HotAction.BackColor = Color.Red;
+                LabelFormTitle.BackColor = Color.Red;
+                LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
+                PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                await UpdateHotPickScreen(_currentInventoryView);
+                tabControl1.SelectedTab = HotAction;
+            }
+
+
         }
         private async void MBHotStore_Click(object sender, EventArgs e)
         {
@@ -1036,6 +1072,72 @@ namespace Neutron.Forms
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        private async Task UpdateHotPickScreenTray(SqlInventoryView invItem)
+        {
+            try
+            {
+                using (var db = new NeutronDb())
+                {
+                    var itemDefinition = await db.ItemDefinitions.FindAsync(invItem.ItemDefinitionId);
+                    if (itemDefinition == null) throw new ArgumentNullException(nameof(itemDefinition));
+                    var location = await db.Locations.FindAsync(invItem.LocationId);
+                    if (location == null) throw new ArgumentNullException(nameof(location));
+                    LabelHotPickDescriptionTray.Text = itemDefinition.Description;
+                    LabelHotPickItemTray.Text = itemDefinition.Item;
+                    LabelHotPickUOITray.Text = itemDefinition.UnitOfIssue.Name;
+                    TextBoxHotPickLoc1Tray.Text = location.Loc1.ToString();
+                    TextBoxHotPickLoc2Tray.Text = location.Loc2.ToString();
+                    TextBoxHotPickLoc3Tray.Text = location.Loc3.ToString();
+                    TextBoxHotPickLoc4Tray.Text = location.Loc4.ToString();
+                    TextBoxHotPickLoc5Tray.Text = location.Loc5.ToString();
+
+                    Control c = Controls.Find($"LabelWidth{location.Loc3.ToString()}" , true).First();
+                    if (c != null)
+                    {
+                        var label = ((Label)c);
+                        label.BackColor = Color.Red;
+                        //label.Visible = true;
+                        label.Refresh();
+                    }
+
+                    c = Controls.Find($"LabelDepth{location.Loc4.ToString()}", true).First();
+                    if (c != null)
+                    {
+                        var label = ((Label)c);
+                        label.BackColor = Color.Red;
+                        //label.Visible = true;
+                        label.Refresh();
+                    }
+
+
+
+                    LabelSlotTray.Text = location.Slot;
+                   // ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
+                   // ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
+                   // ComboBoxHeightCodeItem.SelectedIndex = ComboBoxHeightCodeItem.FindStringExact(itemDefinition.HeightCode.Name);
+                  //  ComboBoxLocationCodeItem.SelectedIndex = ComboBoxLocationCodeItem.FindStringExact(itemDefinition.LocationCode.Name);
+                    ComboBoxSizeCodeLocationTray.SelectedIndex = ComboBoxSizeCodeLocationTray.FindStringExact(location.SizeCode.Name);
+                    ComboBoxVelocityCodeLocationTray.SelectedIndex = ComboBoxVelocityCodeLocationTray.FindStringExact(location.VelocityCode.Name);
+                    ComboBoxHeightCodeLocationTray.SelectedIndex = ComboBoxHeightCodeLocationTray.FindStringExact(location.HeightCode.Name);
+                    ComboBoxLocationCodeLocationTray.SelectedIndex = ComboBoxLocationCodeLocationTray.FindStringExact(location.LocationCode.Name);
+                    TextBoxHotPickQuantityTray.Text = string.Empty;
+                    TextBoxHotPickQuantityTray.Focus();
+                    TextBoxHotPickLocationQuantityTray.Text = invItem.Quantity.ToString();
+                    TextBoxHotPickReceivedDateTray.Text = string.IsNullOrEmpty(invItem.ReceivedDate.ToString("d"))
+                        ? ""
+                        : invItem.ReceivedDate.ToShortDateString();
+                    LabelPrimeBinTray.Visible = invItem.PrimeBin;
+                    LabelStaticReleaseTray.Text = invItem.StorageTypeName;
+                   // UpdateHotImage(invItem.Item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
         private void RadioButtonHotAction(object sender, EventArgs e)
         {
             if (RadioButtonPick.Checked)
@@ -1086,36 +1188,36 @@ namespace Neutron.Forms
                     var s = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
                     TextBoxFindItem.Text = s.Item;
                     _stopwatch.Stop();
-                    Console.WriteLine($"Speed: LoadCurrentAndNew: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    Console.WriteLine($@"Speed: LoadCurrentAndNew: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     _stopwatch.Restart();
                     // LoadItemDefinitions();
                     _stopwatch.Stop();
-                    Console.WriteLine($"Speed: LoadItemDefinitions: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    Console.WriteLine($@"Speed: LoadItemDefinitions: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     _stopwatch.Restart();
                     LoadCurrent(s);
                     //LoadCurrent(_currentItemDefinition);
                     _stopwatch.Stop();
-                    Console.WriteLine($"Speed: LoadCurrent: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    Console.WriteLine($@"Speed: LoadCurrent: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     _stopwatch.Restart();
                     // await LoadNewLocations(_currentItemDefinition);
                     await LoadNewLocations(s);
                     _stopwatch.Stop();
-                    Console.WriteLine($"Speed: await LoadNewLocations: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                    Console.WriteLine($@"Speed: await LoadNewLocations: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     _stopwatch.Restart();
                     if (_bindingSourceCurrent.Count > 0)
                     {
                         SetupGridCurrent();
                         _stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource Current Setup Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        Console.WriteLine($@"Speed: BindingSource Current Setup Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
                         _stopwatch.Restart();
                         DataGridViewHot.DataSource = _bindingSourceCurrent;
                         var recordCount = GetRecordCount(_bindingSourceCurrent);
                         _stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource Current DataSource: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        Console.WriteLine($@"Speed: BindingSource Current DataSource: {_stopwatch.ElapsedMilliseconds.ToString()}");
                         _stopwatch.Restart();
                         DataGridViewHot.ClearSelection();
                         _stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource Current Clear Selection: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        Console.WriteLine($@"Speed: BindingSource Current Clear Selection: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     }
                     else if (_bindingSourceNewLocations.Count > 0)
                     {
@@ -1124,7 +1226,7 @@ namespace Neutron.Forms
                         var recordCount = GetRecordCount(_bindingSourceNewLocations);
                         DataGridViewHot.ClearSelection();
                         _stopwatch.Stop();
-                        Console.WriteLine($"Speed: BindingSource New Locations: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        Console.WriteLine($@"Speed: BindingSource New Locations: {_stopwatch.ElapsedMilliseconds.ToString()}");
                     }
                 }
             }
@@ -1148,7 +1250,7 @@ namespace Neutron.Forms
         {
             var pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
             if (CheckForOverPick(pickQty)) return;
-          
+
             Cursor.Current = Cursors.WaitCursor;
             Inventory inv = null;
             var actionCode = ActionCode.PickHot;
@@ -1656,53 +1758,53 @@ namespace Neutron.Forms
 
         private void UpdateCurrentDeviceIndicator(int loc1, int loc2, int loc3, int loc4)
         {
-            Console.WriteLine($"UpdateCurrentDeviceIndicator - Start");
+            Console.WriteLine($@"UpdateCurrentDeviceIndicator - Start");
             var deviceIndicator = _deviceIndicators.FirstOrDefault(d => d.DeviceNumber == loc1);
             if (deviceIndicator != null && deviceIndicator.Active == false)
             {
-                Console.WriteLine($"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
-                deviceIndicator.SetDeviceIndicatorValues(loc3, loc4);
+                Console.WriteLine($@"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
+                deviceIndicator.SetDeviceIndicatorValues(loc2, loc3, loc4);
                 deviceIndicator.Active = true;
             }
 
-            Console.WriteLine($"UpdateCurrentDeviceIndicator - End");
+            Console.WriteLine($@"UpdateCurrentDeviceIndicator - End");
         }
 
         private async Task ClearAllActiveDeviceIndicators()
         {
             var sw = Stopwatch.StartNew();
-            Console.WriteLine($"ClearAllActiveDeviceIndicators - Start");
+            Console.WriteLine($@"ClearAllActiveDeviceIndicators - Start");
             var tasks = new List<Task>();
             foreach (var deviceIndicator in _deviceIndicators)
             {
                 if (deviceIndicator.Active)
                 {
-                    Console.WriteLine($"ClearAllActiveDeviceIndicators - {deviceIndicator.DeviceNumber}");
+                    Console.WriteLine($@"ClearAllActiveDeviceIndicators - {deviceIndicator.DeviceNumber}");
                     deviceIndicator.Active = false;
                     tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
                 }
             }
             await Task.WhenAll(tasks);
-            Console.WriteLine($"ClearAllActiveDeviceIndicators - End");
+            Console.WriteLine($@"ClearAllActiveDeviceIndicators - End");
             sw.Stop();
-            Console.WriteLine($"ClearAllActiveDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+            Console.WriteLine($@"ClearAllActiveDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private async Task ClearAllDeviceIndicators()
         {
             var sw = Stopwatch.StartNew();
-            Console.WriteLine($"ClearAllDeviceIndicators - Start");
+            Console.WriteLine($@"ClearAllDeviceIndicators - Start");
             var tasks = new List<Task>();
             foreach (var deviceIndicator in _deviceIndicators)
             {
-                Console.WriteLine($"ClearAllDeviceIndicators - {deviceIndicator.DeviceNumber}");
+                Console.WriteLine($@"ClearAllDeviceIndicators - {deviceIndicator.DeviceNumber}");
                 deviceIndicator.Active = false;
                 tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
             }
             await Task.WhenAll(tasks);
-            Console.WriteLine($"ClearAllDeviceIndicators - End");
+            Console.WriteLine($@"ClearAllDeviceIndicators - End");
             sw.Stop();
-            Console.WriteLine($"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+            Console.WriteLine($@"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private void SetCulture(string lang)
@@ -1768,6 +1870,15 @@ namespace Neutron.Forms
             {
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics, panel1.ClientRectangle,
+                Color.Black, 10, ButtonBorderStyle.Dashed, // left
+                Color.Black, 10, ButtonBorderStyle.Dashed, // top
+                Color.Black, 10, ButtonBorderStyle.Dashed, // right
+                Color.Black, 10, ButtonBorderStyle.Dashed);// bottom
         }
     }
 }

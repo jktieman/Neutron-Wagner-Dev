@@ -7,16 +7,16 @@ namespace NeutronData.Migrations
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.ActionCodeItems",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
+            //CreateTable(
+            //    "dbo.ActionCodeItems",
+            //    c => new
+            //        {
+            //            Id = c.Int(nullable: false, identity: true),
+            //            Name = c.String(),
+            //        })
+            //    .PrimaryKey(t => t.Id);
             
-            AlterColumn("dbo.Inventory", "ReceivedDate", c => c.DateTime(nullable: false));
+            //AlterColumn("dbo.Inventory", "ReceivedDate", c => c.DateTime(nullable: false));
         }
         
         public override void Down()

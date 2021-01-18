@@ -42,20 +42,16 @@ namespace NeutronData.DataContexts
         public DbSet<TcpConfiguration> TcpConfigurations { get; set; }
         public DbSet<SerialConfiguration> SerialConfigurations { get; set; }
         public DbSet<PickLocationSkip> PickLocationSkips { get; set; }
-        //public DbSet<GroupActivity> GroupActivities { get; set; }
+
         public DbSet<History> History { get; set; }
         public DbSet<ActionCodeItem> ActionCodeItems { get; set; }
         public DbSet<LineStatus> LineStatus { get; set; }
-        //public DbSet<LocationGroup> LocationGroups { get; set; }
-       // public DbSet<LocationGroupLocation> LocationGroupLocations { get; set; }
         
         public DbSet<LocationView> LocationViews { get; set; }
-        //public DbSet<Activity> Activities { get; set; }
         
         public DbSet<AkaType> AkaTypes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Group> Groups { get; set; }
-        //public DbSet<SecureItem> SecureItems { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Carrier> Carriers { get; set; }
 

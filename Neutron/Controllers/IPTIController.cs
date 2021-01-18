@@ -567,7 +567,7 @@ namespace Neutron.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Send Data Error. {ex.Message} ");
+                Console.WriteLine($@"Send Data Error. {ex.Message} ");
             }
         }
 

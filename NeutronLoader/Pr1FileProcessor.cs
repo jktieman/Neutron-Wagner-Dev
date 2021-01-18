@@ -376,12 +376,8 @@ namespace NeutronLoader
                 {
                     int stationId = GetStationId(stationNumber: 8);
                     //try to find it anywhere first
-                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault();
-                    if (item == null)
-                    {
-                        //didn't find it anywhere so create it in Station 8, OC
-                        item = new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description, stationId);
-                    }
+                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault() ??
+                           new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description, stationId);
                 }
                 catch (Exception ex)
                 {
@@ -392,11 +388,8 @@ namespace NeutronLoader
             {
                 try
                 {
-                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault();
-                    if (item == null)
-                    {
-                        item = new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description);
-                    }
+                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault() ??
+                           new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description);
                 }
                 catch (Exception ex)
                 {

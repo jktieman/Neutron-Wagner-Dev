@@ -25,8 +25,8 @@ namespace NeutronData.ModelViews
         public int Loc4 { get; set; }
         public int Loc5 { get; set; }
         public string Slot { get; set; }
-        public int OrderId { get; set; }
-        public int OrderDetailId { get; set; }
+        public int? OrderId { get; set; }
+        public int? OrderDetailId { get; set; }
         public string EmpId { get; set; }
         public string EmployeeName { get; set; }
         public string CostCenter { get; set; }

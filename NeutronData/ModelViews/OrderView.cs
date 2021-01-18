@@ -11,7 +11,7 @@ namespace NeutronData.ModelViews
         public int Id { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
-        public string Starter { get; set; }
+        public int Starter { get; set; }
         public int Priority { get; set; }
         public string ShipMethodName { get; set; }
         public string OrderStatusName { get; set; }

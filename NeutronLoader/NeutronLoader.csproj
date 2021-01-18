@@ -74,7 +74,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HostFilePr1.cs" />
-    <Compile Include="InterfaceProcessorPr1.cs" />
+    <Compile Include="InterfaceProcessor.cs" />
+    <Compile Include="InterfaceProcessorVidir.cs" />
     <Compile Include="IUploadProcessor.cs" />
     <Compile Include="StartStopUploadManager.cs" />
     <Compile Include="TmgFileProcessor.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="IInterfaceProcessor.cs" />
     <Compile Include="InterfaceProcessorTmg.cs" />
     <Compile Include="InterfaceProcessorSfh.cs" />
-    <Compile Include="InterfaceProcessorTop.cs" />
     <Compile Include="InventoryProcessor.cs" />
     <Compile Include="ItemDefinitionProcessor.cs" />
     <Compile Include="IFileProcessor.cs" />
@@ -97,9 +97,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="StartStopLoaderManager.cs" />
-    <Compile Include="TopFileProcessor.cs" />
     <Compile Include="UploadProcessor.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
+    <Compile Include="VidirFileProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

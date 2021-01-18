@@ -8,5 +8,7 @@ namespace NeutronLoader
     {
         void StartProcessingInterfaceFiles();
         void StopProcessingInterfaceFiles();
+        void RunLoaderOnce();
+        void RunLoaderContinuously();
     }
 }

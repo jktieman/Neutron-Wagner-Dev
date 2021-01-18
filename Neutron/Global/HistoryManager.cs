@@ -185,7 +185,7 @@ namespace Neutron.Global
             };
             Save(history);
         }
-
+        //Inventory Modify
         public void SaveHistory(ActionCode actionCode, Inventory inventory)
         {
             var inv = _repoInventory.GetInventoryViewById(inventory.Id);
@@ -194,13 +194,14 @@ namespace Neutron.Global
                 ActionCode = (int)actionCode,
                 ActionCodeName = actionCode.GetEnumDescription(),
                 ActionDateTime = DateTime.Now,
-                // Ord1 = pickStop.Ord1,
-                // Ord2 = pickStop.Ord2,
-                //OrderId = pickStop.OrderId,
+                Ord1 = string.Empty,
+                Ord2 = string.Empty,
+                OrderId = null,
+                OrderDetailId = null,
                 Item = inv.ItemDefinition.Item,
                 Description = inv.ItemDefinition.Description,
                 IssuedQuantity = inv.Quantity,
-                //RequestedQuantity = inv.Quantity,
+                RequestedQuantity = 0,
                 StationId = inv.Location.StationId,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
@@ -347,7 +348,7 @@ namespace Neutron.Global
             Save(history);
         }
 
-
+        // LocationCount
         public void SaveHistory(ActionCode actionCode, LocationCount cnt)
         {
             var inv = _repoInventory.GetInventoryViewById(cnt.InventoryId);
@@ -356,6 +357,8 @@ namespace Neutron.Global
                 ActionCode = (int)actionCode,
                 ActionCodeName = actionCode.GetEnumDescription(),
                 ActionDateTime = cnt.CountDate,
+                Ord1 = string.Empty,
+                Ord2 = string.Empty,
                 Item = inv.Item,
                 Description = inv.Description,
                 RequestedQuantity = cnt.PreviousQty,
@@ -367,7 +370,8 @@ namespace Neutron.Global
                 Loc4 = inv.Location.Loc4,
                 Loc5 = inv.Location.Loc5,
                 Slot = inv.Location.Slot,
-
+                OrderId = null,
+                OrderDetailId = null,
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,

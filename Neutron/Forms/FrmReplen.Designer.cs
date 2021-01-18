@@ -55,12 +55,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
-            this.LabelPickPos8 = new System.Windows.Forms.Label();
-            this.LabelPickPos7 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos7 = new System.Windows.Forms.TextBox();
-            this.Pos7Display = new System.Windows.Forms.Panel();
-            this.Pos8Display = new System.Windows.Forms.Panel();
-            this.TextBoxPickPos8 = new System.Windows.Forms.TextBox();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
@@ -111,11 +105,13 @@
             this.MbPrintAvailableOrdersRack = new MetroFramework.Controls.MetroButton();
             this.MBRackBack = new MetroFramework.Controls.MetroButton();
             this.NewOrder = new System.Windows.Forms.TabPage();
+            this.DataGridViewNewItems = new System.Windows.Forms.DataGridView();
+            this.LabelNewOrderStationNumber = new System.Windows.Forms.Label();
             this.LabelNewOrderOrderId = new System.Windows.Forms.Label();
             this.LabelNewOrderItemId = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.LabelNewOrderItem = new System.Windows.Forms.Label();
-            this.LabelNewOrderDescription = new System.Windows.Forms.Label();
+            this.TextBoxNewOrderDescription = new System.Windows.Forms.TextBox();
+            this.TextBoxNewOrderItem = new System.Windows.Forms.TextBox();
             this.ButtonAddDetail = new System.Windows.Forms.Button();
             this.TextBoxNewOrderQuantity = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
@@ -145,11 +141,18 @@
             this.DataGridViewOrderDetails = new System.Windows.Forms.DataGridView();
             this.MBOrderDetailsBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
+            this.CurrentDeviceIndicator6 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator5 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator4 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator3 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator2 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator1 = new CurrentDeviceIndicator.DeviceIndicator();
             this.LabelPickUOI = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.LabelNotify = new System.Windows.Forms.Label();
             this.PanelOrderPositions = new System.Windows.Forms.Panel();
+            this.LabelNotify = new System.Windows.Forms.Label();
+            this.MBShortCut = new MetroFramework.Controls.MetroButton();
             this.TextBoxPickPos1 = new System.Windows.Forms.TextBox();
             this.LabelPickMessages = new System.Windows.Forms.Label();
             this.LabelPickPos1 = new System.Windows.Forms.Label();
@@ -212,7 +215,6 @@
             this.MBStart = new MetroFramework.Controls.MetroButton();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.AvailableOrders = new System.Windows.Forms.TabPage();
-            this.MBFillStarters = new MetroFramework.Controls.MetroButton();
             this.MBFill = new MetroFramework.Controls.MetroButton();
             this.panel2 = new System.Windows.Forms.Panel();
             this.LabelPos8 = new System.Windows.Forms.Label();
@@ -249,14 +251,12 @@
             this.MbPrintAvailableOrders = new MetroFramework.Controls.MetroButton();
             this.MBAvailableOrdersBack = new MetroFramework.Controls.MetroButton();
             this.OrderListing = new System.Windows.Forms.TabPage();
-            this.MBShowAll = new MetroFramework.Controls.MetroButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ListBoxSelectedOrders = new System.Windows.Forms.ListBox();
+            this.MBShowRackOrders = new MetroFramework.Controls.MetroButton();
+            this.MBCompress = new MetroFramework.Controls.MetroButton();
             this.MBPrintOrderListing = new MetroFramework.Controls.MetroButton();
             this.MBPriority = new MetroFramework.Controls.MetroButton();
             this.MBHold = new MetroFramework.Controls.MetroButton();
             this.MBRelease = new MetroFramework.Controls.MetroButton();
-            this.MBRefresh = new MetroFramework.Controls.MetroButton();
             this.MBCompleted = new MetroFramework.Controls.MetroButton();
             this.LabelFindDescription = new System.Windows.Forms.Label();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
@@ -268,20 +268,23 @@
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
             this.MButtonSearch = new MetroFramework.Controls.MetroButton();
             this.MBDeleteOrder = new MetroFramework.Controls.MetroButton();
-            this.MBReturnToStock = new MetroFramework.Controls.MetroButton();
             this.Main = new System.Windows.Forms.TabPage();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
-            this.MBMainLoadOrders = new MetroFramework.Controls.MetroButton();
             this.MBMainNewOrder = new MetroFramework.Controls.MetroButton();
             this.MBMainOrderManager = new MetroFramework.Controls.MetroButton();
-            this.MBMainHotPick = new MetroFramework.Controls.MetroButton();
             this.MBMainAvailableOrders = new MetroFramework.Controls.MetroButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.Pos8Display.SuspendLayout();
+            this.LabelPickPos8 = new System.Windows.Forms.Label();
+            this.LabelPickPos7 = new System.Windows.Forms.Label();
+            this.TextBoxPickPos7 = new System.Windows.Forms.TextBox();
+            this.Pos8Display = new System.Windows.Forms.Panel();
+            this.TextBoxPickPos8 = new System.Windows.Forms.TextBox();
+            this.Pos7Display = new System.Windows.Forms.Panel();
             this.AvailableRack.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrdersRack)).BeginInit();
             this.panel1.SuspendLayout();
             this.NewOrder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewItems)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewOrder)).BeginInit();
@@ -300,87 +303,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
             this.Main.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.Pos8Display.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 129);
+            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // LabelPickPos8
-            // 
-            this.LabelPickPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos8.Location = new System.Drawing.Point(83, 108);
-            this.LabelPickPos8.Name = "LabelPickPos8";
-            this.LabelPickPos8.Size = new System.Drawing.Size(10, 10);
-            this.LabelPickPos8.TabIndex = 149;
-            this.LabelPickPos8.Text = "8";
-            this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPickPos8.Visible = false;
-            // 
-            // LabelPickPos7
-            // 
-            this.LabelPickPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos7.Location = new System.Drawing.Point(40, 108);
-            this.LabelPickPos7.Name = "LabelPickPos7";
-            this.LabelPickPos7.Size = new System.Drawing.Size(10, 10);
-            this.LabelPickPos7.TabIndex = 148;
-            this.LabelPickPos7.Text = "7";
-            this.LabelPickPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPickPos7.Visible = false;
-            // 
-            // TextBoxPickPos7
-            // 
-            this.TextBoxPickPos7.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos7.Location = new System.Drawing.Point(40, 121);
-            this.TextBoxPickPos7.Multiline = true;
-            this.TextBoxPickPos7.Name = "TextBoxPickPos7";
-            this.TextBoxPickPos7.ReadOnly = true;
-            this.TextBoxPickPos7.Size = new System.Drawing.Size(23, 16);
-            this.TextBoxPickPos7.TabIndex = 144;
-            this.TextBoxPickPos7.Tag = "6";
-            this.TextBoxPickPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPickPos7.Visible = false;
-            // 
-            // Pos7Display
-            // 
-            this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos7Display.Location = new System.Drawing.Point(32, 121);
-            this.Pos7Display.Name = "Pos7Display";
-            this.Pos7Display.Size = new System.Drawing.Size(39, 26);
-            this.Pos7Display.TabIndex = 159;
-            this.Pos7Display.Visible = false;
-            // 
-            // Pos8Display
-            // 
-            this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos8Display.Controls.Add(this.TextBoxPickPos8);
-            this.Pos8Display.Location = new System.Drawing.Point(77, 121);
-            this.Pos8Display.Name = "Pos8Display";
-            this.Pos8Display.Size = new System.Drawing.Size(39, 26);
-            this.Pos8Display.TabIndex = 160;
-            this.Pos8Display.Visible = false;
-            // 
-            // TextBoxPickPos8
-            // 
-            this.TextBoxPickPos8.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos8.Location = new System.Drawing.Point(8, 5);
-            this.TextBoxPickPos8.Multiline = true;
-            this.TextBoxPickPos8.Name = "TextBoxPickPos8";
-            this.TextBoxPickPos8.ReadOnly = true;
-            this.TextBoxPickPos8.Size = new System.Drawing.Size(23, 16);
-            this.TextBoxPickPos8.TabIndex = 146;
-            this.TextBoxPickPos8.Tag = "7";
-            this.TextBoxPickPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPickPos8.Visible = false;
+            this.LabelRecordCount.Visible = false;
             // 
             // LabelFormTitle
             // 
@@ -388,19 +322,19 @@
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(367, 98);
+            this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(418, 66);
+            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "Jobs";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(793, 35);
+            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
             this.mlUserInfo.TabIndex = 21;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -410,10 +344,10 @@
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.Green;
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 16);
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(713, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
             this.LabelFormHeaderText.TabIndex = 20;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -468,9 +402,9 @@
             this.ButtonStopMovePrevious.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_173_rewind;
             this.ButtonStopMovePrevious.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMovePrevious.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMovePrevious.Location = new System.Drawing.Point(481, 11);
+            this.ButtonStopMovePrevious.Location = new System.Drawing.Point(1025, 115);
             this.ButtonStopMovePrevious.Name = "ButtonStopMovePrevious";
-            this.ButtonStopMovePrevious.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMovePrevious.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMovePrevious.TabIndex = 115;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMovePrevious, "Previous Stop");
             this.ButtonStopMovePrevious.UseVisualStyleBackColor = true;
@@ -481,9 +415,9 @@
             this.ButtonStopMoveFirst.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_172_fast_backward;
             this.ButtonStopMoveFirst.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMoveFirst.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMoveFirst.Location = new System.Drawing.Point(439, 11);
+            this.ButtonStopMoveFirst.Location = new System.Drawing.Point(1005, 115);
             this.ButtonStopMoveFirst.Name = "ButtonStopMoveFirst";
-            this.ButtonStopMoveFirst.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMoveFirst.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveFirst.TabIndex = 116;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveFirst, "First Stop");
             this.ButtonStopMoveFirst.UseVisualStyleBackColor = true;
@@ -494,9 +428,9 @@
             this.ButtonStopMoveLast.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_178_fast_forward;
             this.ButtonStopMoveLast.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMoveLast.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMoveLast.Location = new System.Drawing.Point(673, 11);
+            this.ButtonStopMoveLast.Location = new System.Drawing.Point(1127, 115);
             this.ButtonStopMoveLast.Name = "ButtonStopMoveLast";
-            this.ButtonStopMoveLast.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMoveLast.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveLast.TabIndex = 117;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveLast, "Last Stop");
             this.ButtonStopMoveLast.UseVisualStyleBackColor = true;
@@ -507,9 +441,9 @@
             this.ButtonStopMoveNext.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_177_forward;
             this.ButtonStopMoveNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonStopMoveNext.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonStopMoveNext.Location = new System.Drawing.Point(631, 11);
+            this.ButtonStopMoveNext.Location = new System.Drawing.Point(1107, 115);
             this.ButtonStopMoveNext.Name = "ButtonStopMoveNext";
-            this.ButtonStopMoveNext.Size = new System.Drawing.Size(34, 24);
+            this.ButtonStopMoveNext.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveNext.TabIndex = 118;
             this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveNext, "Next Stop");
             this.ButtonStopMoveNext.UseVisualStyleBackColor = true;
@@ -518,7 +452,7 @@
             // MBJobDetails
             // 
             this.MBJobDetails.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBJobDetails.Location = new System.Drawing.Point(870, 549);
+            this.MBJobDetails.Location = new System.Drawing.Point(882, 678);
             this.MBJobDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBJobDetails.Name = "MBJobDetails";
             this.MBJobDetails.Size = new System.Drawing.Size(125, 79);
@@ -545,7 +479,7 @@
             this.AvailableRack.Controls.Add(this.MBRackBack);
             this.AvailableRack.Location = new System.Drawing.Point(4, 22);
             this.AvailableRack.Name = "AvailableRack";
-            this.AvailableRack.Size = new System.Drawing.Size(1147, 644);
+            this.AvailableRack.Size = new System.Drawing.Size(1147, 770);
             this.AvailableRack.TabIndex = 11;
             this.AvailableRack.Text = "Available Rack";
             // 
@@ -981,6 +915,8 @@
             // NewOrder
             // 
             this.NewOrder.BackColor = System.Drawing.Color.Green;
+            this.NewOrder.Controls.Add(this.DataGridViewNewItems);
+            this.NewOrder.Controls.Add(this.LabelNewOrderStationNumber);
             this.NewOrder.Controls.Add(this.LabelNewOrderOrderId);
             this.NewOrder.Controls.Add(this.LabelNewOrderItemId);
             this.NewOrder.Controls.Add(this.groupBox2);
@@ -995,9 +931,33 @@
             this.NewOrder.Controls.Add(this.MBNewOrderClose);
             this.NewOrder.Location = new System.Drawing.Point(4, 22);
             this.NewOrder.Name = "NewOrder";
-            this.NewOrder.Size = new System.Drawing.Size(1147, 644);
+            this.NewOrder.Size = new System.Drawing.Size(1147, 770);
             this.NewOrder.TabIndex = 6;
             this.NewOrder.Text = "New Order";
+            // 
+            // DataGridViewNewItems
+            // 
+            this.DataGridViewNewItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DataGridViewNewItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridViewNewItems.Location = new System.Drawing.Point(19, 427);
+            this.DataGridViewNewItems.MultiSelect = false;
+            this.DataGridViewNewItems.Name = "DataGridViewNewItems";
+            this.DataGridViewNewItems.ReadOnly = true;
+            this.DataGridViewNewItems.Size = new System.Drawing.Size(462, 318);
+            this.DataGridViewNewItems.TabIndex = 71;
+            // 
+            // LabelNewOrderStationNumber
+            // 
+            this.LabelNewOrderStationNumber.AutoSize = true;
+            this.LabelNewOrderStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewOrderStationNumber.Location = new System.Drawing.Point(531, 65);
+            this.LabelNewOrderStationNumber.Name = "LabelNewOrderStationNumber";
+            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(102, 17);
+            this.LabelNewOrderStationNumber.TabIndex = 70;
+            this.LabelNewOrderStationNumber.Text = "StationNumber";
+            this.LabelNewOrderStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewOrderStationNumber.Visible = false;
             // 
             // LabelNewOrderOrderId
             // 
@@ -1015,7 +975,7 @@
             // 
             this.LabelNewOrderItemId.AutoSize = true;
             this.LabelNewOrderItemId.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewOrderItemId.Location = new System.Drawing.Point(531, 59);
+            this.LabelNewOrderItemId.Location = new System.Drawing.Point(531, 42);
             this.LabelNewOrderItemId.Name = "LabelNewOrderItemId";
             this.LabelNewOrderItemId.Size = new System.Drawing.Size(45, 17);
             this.LabelNewOrderItemId.TabIndex = 68;
@@ -1025,8 +985,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.LabelNewOrderItem);
-            this.groupBox2.Controls.Add(this.LabelNewOrderDescription);
+            this.groupBox2.Controls.Add(this.TextBoxNewOrderDescription);
+            this.groupBox2.Controls.Add(this.TextBoxNewOrderItem);
             this.groupBox2.Controls.Add(this.ButtonAddDetail);
             this.groupBox2.Controls.Add(this.TextBoxNewOrderQuantity);
             this.groupBox2.Controls.Add(this.label29);
@@ -1039,23 +999,22 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Detail Information";
             // 
-            // LabelNewOrderItem
+            // TextBoxNewOrderDescription
             // 
-            this.LabelNewOrderItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelNewOrderItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewOrderItem.Location = new System.Drawing.Point(150, 32);
-            this.LabelNewOrderItem.Name = "LabelNewOrderItem";
-            this.LabelNewOrderItem.Size = new System.Drawing.Size(200, 30);
-            this.LabelNewOrderItem.TabIndex = 65;
+            this.TextBoxNewOrderDescription.Enabled = false;
+            this.TextBoxNewOrderDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewOrderDescription.Location = new System.Drawing.Point(150, 84);
+            this.TextBoxNewOrderDescription.Name = "TextBoxNewOrderDescription";
+            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(306, 22);
+            this.TextBoxNewOrderDescription.TabIndex = 67;
             // 
-            // LabelNewOrderDescription
+            // TextBoxNewOrderItem
             // 
-            this.LabelNewOrderDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelNewOrderDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewOrderDescription.Location = new System.Drawing.Point(150, 86);
-            this.LabelNewOrderDescription.Name = "LabelNewOrderDescription";
-            this.LabelNewOrderDescription.Size = new System.Drawing.Size(292, 30);
-            this.LabelNewOrderDescription.TabIndex = 62;
+            this.TextBoxNewOrderItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewOrderItem.Location = new System.Drawing.Point(150, 30);
+            this.TextBoxNewOrderItem.Name = "TextBoxNewOrderItem";
+            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 22);
+            this.TextBoxNewOrderItem.TabIndex = 68;
             // 
             // ButtonAddDetail
             // 
@@ -1187,9 +1146,9 @@
             // ListViewNewItems
             // 
             this.ListViewNewItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ListViewNewItems.Location = new System.Drawing.Point(13, 446);
+            this.ListViewNewItems.Location = new System.Drawing.Point(534, 666);
             this.ListViewNewItems.Name = "ListViewNewItems";
-            this.ListViewNewItems.Size = new System.Drawing.Size(465, 185);
+            this.ListViewNewItems.Size = new System.Drawing.Size(465, 79);
             this.ListViewNewItems.TabIndex = 65;
             this.ListViewNewItems.UseCompatibleStateImageBehavior = false;
             this.ListViewNewItems.View = System.Windows.Forms.View.Details;
@@ -1320,7 +1279,7 @@
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
             this.OrderDetails.Location = new System.Drawing.Point(4, 22);
             this.OrderDetails.Name = "OrderDetails";
-            this.OrderDetails.Size = new System.Drawing.Size(1147, 644);
+            this.OrderDetails.Size = new System.Drawing.Size(1147, 770);
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
@@ -1442,6 +1401,12 @@
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.Green;
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator6);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator5);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator4);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator3);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator2);
+            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator1);
             this.PickScreen.Controls.Add(this.LabelPickUOI);
             this.PickScreen.Controls.Add(this.label40);
             this.PickScreen.Controls.Add(this.label2);
@@ -1449,7 +1414,6 @@
             this.PickScreen.Controls.Add(this.ButtonStopMoveLast);
             this.PickScreen.Controls.Add(this.ButtonStopMoveFirst);
             this.PickScreen.Controls.Add(this.ButtonStopMovePrevious);
-            this.PickScreen.Controls.Add(this.LabelNotify);
             this.PickScreen.Controls.Add(this.PanelOrderPositions);
             this.PickScreen.Controls.Add(this.TextBoxPickedSoFar);
             this.PickScreen.Controls.Add(this.TextBoxRequestedQty);
@@ -1475,16 +1439,76 @@
             this.PickScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickScreen.Name = "PickScreen";
             this.PickScreen.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickScreen.Size = new System.Drawing.Size(1147, 644);
+            this.PickScreen.Size = new System.Drawing.Size(1147, 770);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
+            // 
+            // CurrentDeviceIndicator6
+            // 
+            this.CurrentDeviceIndicator6.Active = false;
+            this.CurrentDeviceIndicator6.AutoScroll = true;
+            this.CurrentDeviceIndicator6.DeviceNumber = 6;
+            this.CurrentDeviceIndicator6.Location = new System.Drawing.Point(849, 8);
+            this.CurrentDeviceIndicator6.Name = "CurrentDeviceIndicator6";
+            this.CurrentDeviceIndicator6.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator6.TabIndex = 166;
+            // 
+            // CurrentDeviceIndicator5
+            // 
+            this.CurrentDeviceIndicator5.Active = false;
+            this.CurrentDeviceIndicator5.AutoScroll = true;
+            this.CurrentDeviceIndicator5.DeviceNumber = 5;
+            this.CurrentDeviceIndicator5.Location = new System.Drawing.Point(715, 8);
+            this.CurrentDeviceIndicator5.Name = "CurrentDeviceIndicator5";
+            this.CurrentDeviceIndicator5.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator5.TabIndex = 167;
+            // 
+            // CurrentDeviceIndicator4
+            // 
+            this.CurrentDeviceIndicator4.Active = false;
+            this.CurrentDeviceIndicator4.AutoScroll = true;
+            this.CurrentDeviceIndicator4.DeviceNumber = 4;
+            this.CurrentDeviceIndicator4.Location = new System.Drawing.Point(581, 8);
+            this.CurrentDeviceIndicator4.Name = "CurrentDeviceIndicator4";
+            this.CurrentDeviceIndicator4.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator4.TabIndex = 168;
+            // 
+            // CurrentDeviceIndicator3
+            // 
+            this.CurrentDeviceIndicator3.Active = false;
+            this.CurrentDeviceIndicator3.AutoScroll = true;
+            this.CurrentDeviceIndicator3.DeviceNumber = 3;
+            this.CurrentDeviceIndicator3.Location = new System.Drawing.Point(447, 8);
+            this.CurrentDeviceIndicator3.Name = "CurrentDeviceIndicator3";
+            this.CurrentDeviceIndicator3.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator3.TabIndex = 169;
+            // 
+            // CurrentDeviceIndicator2
+            // 
+            this.CurrentDeviceIndicator2.Active = false;
+            this.CurrentDeviceIndicator2.AutoScroll = true;
+            this.CurrentDeviceIndicator2.DeviceNumber = 2;
+            this.CurrentDeviceIndicator2.Location = new System.Drawing.Point(313, 8);
+            this.CurrentDeviceIndicator2.Name = "CurrentDeviceIndicator2";
+            this.CurrentDeviceIndicator2.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator2.TabIndex = 170;
+            // 
+            // CurrentDeviceIndicator1
+            // 
+            this.CurrentDeviceIndicator1.Active = false;
+            this.CurrentDeviceIndicator1.AutoScroll = true;
+            this.CurrentDeviceIndicator1.DeviceNumber = 1;
+            this.CurrentDeviceIndicator1.Location = new System.Drawing.Point(179, 8);
+            this.CurrentDeviceIndicator1.Name = "CurrentDeviceIndicator1";
+            this.CurrentDeviceIndicator1.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator1.TabIndex = 171;
             // 
             // LabelPickUOI
             // 
             this.LabelPickUOI.BackColor = System.Drawing.Color.White;
             this.LabelPickUOI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickUOI.Location = new System.Drawing.Point(738, 262);
+            this.LabelPickUOI.Location = new System.Drawing.Point(738, 388);
             this.LabelPickUOI.Name = "LabelPickUOI";
             this.LabelPickUOI.Size = new System.Drawing.Size(389, 42);
             this.LabelPickUOI.TabIndex = 121;
@@ -1494,7 +1518,7 @@
             // 
             this.label40.AutoSize = true;
             this.label40.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.Location = new System.Drawing.Point(525, 262);
+            this.label40.Location = new System.Drawing.Point(525, 388);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(207, 37);
             this.label40.TabIndex = 120;
@@ -1505,25 +1529,23 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(9, 319);
+            this.label2.Location = new System.Drawing.Point(9, 445);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 37);
             this.label2.TabIndex = 119;
             this.label2.Text = "Desc";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelNotify
-            // 
-            this.LabelNotify.BackColor = System.Drawing.Color.Green;
-            this.LabelNotify.Location = new System.Drawing.Point(402, 45);
-            this.LabelNotify.Name = "LabelNotify";
-            this.LabelNotify.Size = new System.Drawing.Size(339, 32);
-            this.LabelNotify.TabIndex = 114;
-            this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // PanelOrderPositions
             // 
             this.PanelOrderPositions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.PanelOrderPositions.Controls.Add(this.LabelPickPos8);
+            this.PanelOrderPositions.Controls.Add(this.LabelPickPos7);
+            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos7);
+            this.PanelOrderPositions.Controls.Add(this.Pos8Display);
+            this.PanelOrderPositions.Controls.Add(this.Pos7Display);
+            this.PanelOrderPositions.Controls.Add(this.LabelNotify);
+            this.PanelOrderPositions.Controls.Add(this.MBShortCut);
             this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos1);
             this.PanelOrderPositions.Controls.Add(this.LabelPickMessages);
             this.PanelOrderPositions.Controls.Add(this.LabelPickPos1);
@@ -1543,10 +1565,30 @@
             this.PanelOrderPositions.Controls.Add(this.Pos4Display);
             this.PanelOrderPositions.Controls.Add(this.Pos5Display);
             this.PanelOrderPositions.Controls.Add(this.Pos6Display);
-            this.PanelOrderPositions.Location = new System.Drawing.Point(4, 91);
+            this.PanelOrderPositions.Location = new System.Drawing.Point(4, 137);
             this.PanelOrderPositions.Name = "PanelOrderPositions";
-            this.PanelOrderPositions.Size = new System.Drawing.Size(1137, 134);
+            this.PanelOrderPositions.Size = new System.Drawing.Size(1140, 234);
             this.PanelOrderPositions.TabIndex = 112;
+            // 
+            // LabelNotify
+            // 
+            this.LabelNotify.BackColor = System.Drawing.Color.Green;
+            this.LabelNotify.Location = new System.Drawing.Point(7, 203);
+            this.LabelNotify.Name = "LabelNotify";
+            this.LabelNotify.Size = new System.Drawing.Size(31, 19);
+            this.LabelNotify.TabIndex = 160;
+            this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MBShortCut
+            // 
+            this.MBShortCut.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBShortCut.Location = new System.Drawing.Point(1099, 197);
+            this.MBShortCut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBShortCut.Name = "MBShortCut";
+            this.MBShortCut.Size = new System.Drawing.Size(26, 26);
+            this.MBShortCut.TabIndex = 159;
+            this.MBShortCut.Text = "?";
+            this.MBShortCut.UseSelectable = true;
             // 
             // TextBoxPickPos1
             // 
@@ -1563,11 +1605,11 @@
             // 
             // LabelPickMessages
             // 
-            this.LabelPickMessages.BackColor = System.Drawing.Color.Green;
+            this.LabelPickMessages.BackColor = System.Drawing.Color.LightGreen;
             this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickMessages.Location = new System.Drawing.Point(31, 103);
+            this.LabelPickMessages.Location = new System.Drawing.Point(50, 201);
             this.LabelPickMessages.Name = "LabelPickMessages";
-            this.LabelPickMessages.Size = new System.Drawing.Size(1078, 22);
+            this.LabelPickMessages.Size = new System.Drawing.Size(1037, 22);
             this.LabelPickMessages.TabIndex = 150;
             this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1771,7 +1813,7 @@
             // TextBoxPickedSoFar
             // 
             this.TextBoxPickedSoFar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickedSoFar.Location = new System.Drawing.Point(1054, 510);
+            this.TextBoxPickedSoFar.Location = new System.Drawing.Point(1054, 636);
             this.TextBoxPickedSoFar.Name = "TextBoxPickedSoFar";
             this.TextBoxPickedSoFar.ReadOnly = true;
             this.TextBoxPickedSoFar.Size = new System.Drawing.Size(78, 22);
@@ -1781,7 +1823,7 @@
             // TextBoxRequestedQty
             // 
             this.TextBoxRequestedQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxRequestedQty.Location = new System.Drawing.Point(836, 510);
+            this.TextBoxRequestedQty.Location = new System.Drawing.Point(836, 636);
             this.TextBoxRequestedQty.Name = "TextBoxRequestedQty";
             this.TextBoxRequestedQty.ReadOnly = true;
             this.TextBoxRequestedQty.Size = new System.Drawing.Size(78, 22);
@@ -1791,7 +1833,7 @@
             // label23
             // 
             this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(920, 511);
+            this.label23.Location = new System.Drawing.Point(920, 637);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(128, 20);
             this.label23.TabIndex = 106;
@@ -1802,7 +1844,7 @@
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(760, 513);
+            this.label24.Location = new System.Drawing.Point(760, 639);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(64, 16);
             this.label24.TabIndex = 104;
@@ -1814,10 +1856,10 @@
             this.LabelLineOfLines.BackColor = System.Drawing.SystemColors.Control;
             this.LabelLineOfLines.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelLineOfLines.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.LabelLineOfLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLineOfLines.Location = new System.Drawing.Point(523, 11);
+            this.LabelLineOfLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLineOfLines.Location = new System.Drawing.Point(1044, 115);
             this.LabelLineOfLines.Name = "LabelLineOfLines";
-            this.LabelLineOfLines.Size = new System.Drawing.Size(100, 24);
+            this.LabelLineOfLines.Size = new System.Drawing.Size(60, 16);
             this.LabelLineOfLines.TabIndex = 103;
             this.LabelLineOfLines.Text = "1 of 4";
             this.LabelLineOfLines.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1827,7 +1869,7 @@
             this.LabelPickDescription.BackColor = System.Drawing.Color.White;
             this.LabelPickDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickDescription.Location = new System.Drawing.Point(108, 317);
+            this.LabelPickDescription.Location = new System.Drawing.Point(108, 443);
             this.LabelPickDescription.Name = "LabelPickDescription";
             this.LabelPickDescription.Size = new System.Drawing.Size(1019, 42);
             this.LabelPickDescription.TabIndex = 98;
@@ -1839,7 +1881,7 @@
             this.LabelPickQty.BackColor = System.Drawing.Color.White;
             this.LabelPickQty.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickQty.Location = new System.Drawing.Point(877, 373);
+            this.LabelPickQty.Location = new System.Drawing.Point(877, 499);
             this.LabelPickQty.Name = "LabelPickQty";
             this.LabelPickQty.Size = new System.Drawing.Size(250, 119);
             this.LabelPickQty.TabIndex = 96;
@@ -1849,7 +1891,7 @@
             // 
             this.label52.AutoSize = true;
             this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label52.Location = new System.Drawing.Point(795, 414);
+            this.label52.Location = new System.Drawing.Point(795, 540);
             this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(69, 37);
             this.label52.TabIndex = 95;
@@ -1861,7 +1903,7 @@
             this.LabelPickItemNumber.BackColor = System.Drawing.Color.White;
             this.LabelPickItemNumber.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickItemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickItemNumber.Location = new System.Drawing.Point(108, 262);
+            this.LabelPickItemNumber.Location = new System.Drawing.Point(108, 388);
             this.LabelPickItemNumber.Name = "LabelPickItemNumber";
             this.LabelPickItemNumber.Size = new System.Drawing.Size(389, 42);
             this.LabelPickItemNumber.TabIndex = 94;
@@ -1871,7 +1913,7 @@
             // 
             this.label50.AutoSize = true;
             this.label50.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label50.Location = new System.Drawing.Point(15, 262);
+            this.label50.Location = new System.Drawing.Point(15, 388);
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(82, 37);
             this.label50.TabIndex = 93;
@@ -1881,10 +1923,10 @@
             // MBLocationCount
             // 
             this.MBLocationCount.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBLocationCount.Location = new System.Drawing.Point(4, 6);
+            this.MBLocationCount.Location = new System.Drawing.Point(3, 2);
             this.MBLocationCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBLocationCount.Name = "MBLocationCount";
-            this.MBLocationCount.Size = new System.Drawing.Size(135, 76);
+            this.MBLocationCount.Size = new System.Drawing.Size(135, 30);
             this.MBLocationCount.TabIndex = 92;
             this.MBLocationCount.Text = "Location Count";
             this.MBLocationCount.UseSelectable = true;
@@ -1893,10 +1935,10 @@
             // MBPickScreenHotPick
             // 
             this.MBPickScreenHotPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickScreenHotPick.Location = new System.Drawing.Point(273, 6);
+            this.MBPickScreenHotPick.Location = new System.Drawing.Point(3, 68);
             this.MBPickScreenHotPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickScreenHotPick.Name = "MBPickScreenHotPick";
-            this.MBPickScreenHotPick.Size = new System.Drawing.Size(122, 76);
+            this.MBPickScreenHotPick.Size = new System.Drawing.Size(135, 30);
             this.MBPickScreenHotPick.TabIndex = 92;
             this.MBPickScreenHotPick.Text = "Hot Action";
             this.MBPickScreenHotPick.UseSelectable = true;
@@ -1905,10 +1947,10 @@
             // MBShowOrderOrQuantityToggle
             // 
             this.MBShowOrderOrQuantityToggle.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShowOrderOrQuantityToggle.Location = new System.Drawing.Point(145, 6);
+            this.MBShowOrderOrQuantityToggle.Location = new System.Drawing.Point(3, 35);
             this.MBShowOrderOrQuantityToggle.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShowOrderOrQuantityToggle.Name = "MBShowOrderOrQuantityToggle";
-            this.MBShowOrderOrQuantityToggle.Size = new System.Drawing.Size(122, 76);
+            this.MBShowOrderOrQuantityToggle.Size = new System.Drawing.Size(135, 30);
             this.MBShowOrderOrQuantityToggle.TabIndex = 92;
             this.MBShowOrderOrQuantityToggle.Text = "Show Jobs";
             this.MBShowOrderOrQuantityToggle.UseSelectable = true;
@@ -1937,7 +1979,7 @@
             this.GroupBoxLocation.Controls.Add(this.LabelBack);
             this.GroupBoxLocation.Controls.Add(this.LabelOver);
             this.GroupBoxLocation.Controls.Add(this.LabelTray);
-            this.GroupBoxLocation.Location = new System.Drawing.Point(9, 373);
+            this.GroupBoxLocation.Location = new System.Drawing.Point(9, 499);
             this.GroupBoxLocation.Name = "GroupBoxLocation";
             this.GroupBoxLocation.Size = new System.Drawing.Size(379, 256);
             this.GroupBoxLocation.TabIndex = 63;
@@ -2135,7 +2177,7 @@
             // 
             this.MBPickChangeQuantity.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickChangeQuantity.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickChangeQuantity.Location = new System.Drawing.Point(755, 553);
+            this.MBPickChangeQuantity.Location = new System.Drawing.Point(755, 679);
             this.MBPickChangeQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickChangeQuantity.Name = "MBPickChangeQuantity";
             this.MBPickChangeQuantity.Size = new System.Drawing.Size(175, 76);
@@ -2147,7 +2189,7 @@
             // MBStoreAccept
             // 
             this.MBStoreAccept.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStoreAccept.Location = new System.Drawing.Point(957, 553);
+            this.MBStoreAccept.Location = new System.Drawing.Point(957, 679);
             this.MBStoreAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStoreAccept.Name = "MBStoreAccept";
             this.MBStoreAccept.Size = new System.Drawing.Size(175, 76);
@@ -2159,22 +2201,23 @@
             // MBPrint
             // 
             this.MBPrint.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrint.Location = new System.Drawing.Point(749, 6);
+            this.MBPrint.Location = new System.Drawing.Point(1008, 68);
             this.MBPrint.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrint.Name = "MBPrint";
-            this.MBPrint.Size = new System.Drawing.Size(122, 76);
+            this.MBPrint.Size = new System.Drawing.Size(135, 30);
             this.MBPrint.TabIndex = 0;
             this.MBPrint.Text = "Print";
             this.MBPrint.UseSelectable = true;
+            this.MBPrint.Visible = false;
             this.MBPrint.Click += new System.EventHandler(this.MBPrint_Click);
             // 
             // MBPickNewItem
             // 
             this.MBPickNewItem.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickNewItem.Location = new System.Drawing.Point(877, 6);
+            this.MBPickNewItem.Location = new System.Drawing.Point(1008, 35);
             this.MBPickNewItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickNewItem.Name = "MBPickNewItem";
-            this.MBPickNewItem.Size = new System.Drawing.Size(122, 76);
+            this.MBPickNewItem.Size = new System.Drawing.Size(135, 30);
             this.MBPickNewItem.TabIndex = 0;
             this.MBPickNewItem.Text = "New Item";
             this.MBPickNewItem.UseSelectable = true;
@@ -2186,7 +2229,7 @@
             this.PictureBoxItemImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxItemImage.Image = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.Image")));
             this.PictureBoxItemImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.InitialImage")));
-            this.PictureBoxItemImage.Location = new System.Drawing.Point(446, 373);
+            this.PictureBoxItemImage.Location = new System.Drawing.Point(398, 499);
             this.PictureBoxItemImage.Name = "PictureBoxItemImage";
             this.PictureBoxItemImage.Size = new System.Drawing.Size(256, 256);
             this.PictureBoxItemImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -2200,10 +2243,10 @@
             this.MBPickBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MBPickBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickBack.Location = new System.Drawing.Point(1006, 6);
+            this.MBPickBack.Location = new System.Drawing.Point(1008, 2);
             this.MBPickBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickBack.Name = "MBPickBack";
-            this.MBPickBack.Size = new System.Drawing.Size(135, 76);
+            this.MBPickBack.Size = new System.Drawing.Size(135, 30);
             this.MBPickBack.TabIndex = 3;
             this.MBPickBack.Text = "Back";
             this.MBPickBack.UseSelectable = true;
@@ -2220,7 +2263,7 @@
             this.PickList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickList.Name = "PickList";
             this.PickList.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickList.Size = new System.Drawing.Size(1147, 644);
+            this.PickList.Size = new System.Drawing.Size(1147, 770);
             this.PickList.TabIndex = 3;
             this.PickList.Text = "Pick List";
             // 
@@ -2306,7 +2349,6 @@
             // AvailableOrders
             // 
             this.AvailableOrders.BackColor = System.Drawing.Color.Green;
-            this.AvailableOrders.Controls.Add(this.MBFillStarters);
             this.AvailableOrders.Controls.Add(this.MBFill);
             this.AvailableOrders.Controls.Add(this.panel2);
             this.AvailableOrders.Controls.Add(this.LabelAvailableOrdersSearchFor);
@@ -2322,21 +2364,9 @@
             this.AvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.AvailableOrders.Name = "AvailableOrders";
             this.AvailableOrders.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.AvailableOrders.Size = new System.Drawing.Size(1147, 644);
+            this.AvailableOrders.Size = new System.Drawing.Size(1147, 770);
             this.AvailableOrders.TabIndex = 1;
             this.AvailableOrders.Text = "Available Orders";
-            // 
-            // MBFillStarters
-            // 
-            this.MBFillStarters.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFillStarters.Location = new System.Drawing.Point(149, 557);
-            this.MBFillStarters.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBFillStarters.Name = "MBFillStarters";
-            this.MBFillStarters.Size = new System.Drawing.Size(135, 76);
-            this.MBFillStarters.TabIndex = 114;
-            this.MBFillStarters.Text = "Fill Starters";
-            this.MBFillStarters.UseSelectable = true;
-            this.MBFillStarters.Click += new System.EventHandler(this.MBFillStarters_Click);
             // 
             // MBFill
             // 
@@ -2812,15 +2842,13 @@
             // OrderListing
             // 
             this.OrderListing.BackColor = System.Drawing.Color.Green;
-            this.OrderListing.Controls.Add(this.MBShowAll);
-            this.OrderListing.Controls.Add(this.label1);
-            this.OrderListing.Controls.Add(this.ListBoxSelectedOrders);
+            this.OrderListing.Controls.Add(this.MBShowRackOrders);
+            this.OrderListing.Controls.Add(this.MBCompress);
             this.OrderListing.Controls.Add(this.MBPrintOrderListing);
             this.OrderListing.Controls.Add(this.MBJobDetails);
             this.OrderListing.Controls.Add(this.MBPriority);
             this.OrderListing.Controls.Add(this.MBHold);
             this.OrderListing.Controls.Add(this.MBRelease);
-            this.OrderListing.Controls.Add(this.MBRefresh);
             this.OrderListing.Controls.Add(this.MBCompleted);
             this.OrderListing.Controls.Add(this.LabelFindDescription);
             this.OrderListing.Controls.Add(this.TextBoxFind);
@@ -2832,56 +2860,43 @@
             this.OrderListing.Controls.Add(this.MButtonClose);
             this.OrderListing.Controls.Add(this.MButtonSearch);
             this.OrderListing.Controls.Add(this.MBDeleteOrder);
-            this.OrderListing.Controls.Add(this.MBReturnToStock);
             this.OrderListing.Location = new System.Drawing.Point(4, 22);
             this.OrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.OrderListing.Name = "OrderListing";
             this.OrderListing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.OrderListing.Size = new System.Drawing.Size(1147, 644);
+            this.OrderListing.Size = new System.Drawing.Size(1147, 770);
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
-            // MBShowAll
+            // MBShowRackOrders
             // 
-            this.MBShowAll.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShowAll.Location = new System.Drawing.Point(6, 593);
-            this.MBShowAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBShowAll.Name = "MBShowAll";
-            this.MBShowAll.Size = new System.Drawing.Size(126, 36);
-            this.MBShowAll.TabIndex = 23;
-            this.MBShowAll.Text = "Show All";
-            this.MBShowAll.UseSelectable = true;
-            this.MBShowAll.Click += new System.EventHandler(this.MBShowAll_Click);
+            this.MBShowRackOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBShowRackOrders.Location = new System.Drawing.Point(409, 10);
+            this.MBShowRackOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBShowRackOrders.Name = "MBShowRackOrders";
+            this.MBShowRackOrders.Size = new System.Drawing.Size(120, 79);
+            this.MBShowRackOrders.TabIndex = 25;
+            this.MBShowRackOrders.Text = "Off";
+            this.MBShowRackOrders.UseSelectable = true;
+            this.MBShowRackOrders.Click += new System.EventHandler(this.MBShowRackOrders_Click);
             // 
-            // label1
+            // MBCompress
             // 
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(735, 63);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 30);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "Currently Selected";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label1.Visible = false;
-            // 
-            // ListBoxSelectedOrders
-            // 
-            this.ListBoxSelectedOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ListBoxSelectedOrders.FormattingEnabled = true;
-            this.ListBoxSelectedOrders.ItemHeight = 20;
-            this.ListBoxSelectedOrders.Location = new System.Drawing.Point(441, 66);
-            this.ListBoxSelectedOrders.Margin = new System.Windows.Forms.Padding(15, 3, 3, 3);
-            this.ListBoxSelectedOrders.Name = "ListBoxSelectedOrders";
-            this.ListBoxSelectedOrders.Size = new System.Drawing.Size(28, 24);
-            this.ListBoxSelectedOrders.TabIndex = 20;
-            this.ListBoxSelectedOrders.Visible = false;
+            this.MBCompress.Enabled = false;
+            this.MBCompress.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBCompress.Location = new System.Drawing.Point(746, 678);
+            this.MBCompress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBCompress.Name = "MBCompress";
+            this.MBCompress.Size = new System.Drawing.Size(125, 36);
+            this.MBCompress.TabIndex = 24;
+            this.MBCompress.Text = "Compress";
+            this.MBCompress.UseSelectable = true;
+            this.MBCompress.Click += new System.EventHandler(this.MBCompress_Click);
             // 
             // MBPrintOrderListing
             // 
             this.MBPrintOrderListing.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 549);
+            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 678);
             this.MBPrintOrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderListing.Name = "MBPrintOrderListing";
             this.MBPrintOrderListing.Size = new System.Drawing.Size(125, 79);
@@ -2893,7 +2908,7 @@
             // MBPriority
             // 
             this.MBPriority.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPriority.Location = new System.Drawing.Point(579, 549);
+            this.MBPriority.Location = new System.Drawing.Point(615, 678);
             this.MBPriority.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPriority.Name = "MBPriority";
             this.MBPriority.Size = new System.Drawing.Size(125, 79);
@@ -2905,7 +2920,7 @@
             // MBHold
             // 
             this.MBHold.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHold.Location = new System.Drawing.Point(293, 549);
+            this.MBHold.Location = new System.Drawing.Point(353, 678);
             this.MBHold.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHold.Name = "MBHold";
             this.MBHold.Size = new System.Drawing.Size(125, 79);
@@ -2917,7 +2932,7 @@
             // MBRelease
             // 
             this.MBRelease.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRelease.Location = new System.Drawing.Point(436, 549);
+            this.MBRelease.Location = new System.Drawing.Point(484, 678);
             this.MBRelease.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRelease.Name = "MBRelease";
             this.MBRelease.Size = new System.Drawing.Size(125, 79);
@@ -2926,34 +2941,22 @@
             this.MBRelease.UseSelectable = true;
             this.MBRelease.Click += new System.EventHandler(this.MBRelease_Click);
             // 
-            // MBRefresh
-            // 
-            this.MBRefresh.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRefresh.Location = new System.Drawing.Point(150, 550);
-            this.MBRefresh.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRefresh.Name = "MBRefresh";
-            this.MBRefresh.Size = new System.Drawing.Size(125, 79);
-            this.MBRefresh.TabIndex = 19;
-            this.MBRefresh.Text = "Refresh";
-            this.MBRefresh.UseSelectable = true;
-            this.MBRefresh.Click += new System.EventHandler(this.MBRefresh_Click);
-            // 
             // MBCompleted
             // 
             this.MBCompleted.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCompleted.Location = new System.Drawing.Point(7, 549);
+            this.MBCompleted.Location = new System.Drawing.Point(275, 10);
             this.MBCompleted.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCompleted.Name = "MBCompleted";
-            this.MBCompleted.Size = new System.Drawing.Size(125, 36);
+            this.MBCompleted.Size = new System.Drawing.Size(120, 79);
             this.MBCompleted.TabIndex = 19;
-            this.MBCompleted.Text = "Completed";
+            this.MBCompleted.Text = "Complete";
             this.MBCompleted.UseSelectable = true;
             this.MBCompleted.Click += new System.EventHandler(this.MBCompleted_Click);
             // 
             // LabelFindDescription
             // 
             this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFindDescription.Location = new System.Drawing.Point(450, 52);
+            this.LabelFindDescription.Location = new System.Drawing.Point(545, 52);
             this.LabelFindDescription.Name = "LabelFindDescription";
             this.LabelFindDescription.Size = new System.Drawing.Size(260, 25);
             this.LabelFindDescription.TabIndex = 18;
@@ -2963,7 +2966,7 @@
             // TextBoxFind
             // 
             this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(441, 10);
+            this.TextBoxFind.Location = new System.Drawing.Point(536, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
             this.TextBoxFind.Size = new System.Drawing.Size(278, 29);
@@ -3012,17 +3015,17 @@
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridView1.Size = new System.Drawing.Size(1134, 434);
+            this.DataGridView1.Size = new System.Drawing.Size(1134, 570);
             this.DataGridView1.TabIndex = 0;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             // 
             // MBSelectAll
             // 
             this.MBSelectAll.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSelectAll.Location = new System.Drawing.Point(7, 10);
+            this.MBSelectAll.Location = new System.Drawing.Point(7, 678);
             this.MBSelectAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSelectAll.Name = "MBSelectAll";
-            this.MBSelectAll.Size = new System.Drawing.Size(135, 79);
+            this.MBSelectAll.Size = new System.Drawing.Size(125, 36);
             this.MBSelectAll.TabIndex = 16;
             this.MBSelectAll.Text = "Select All";
             this.MBSelectAll.UseSelectable = true;
@@ -3031,10 +3034,10 @@
             // MBOrderListingAvailable
             // 
             this.MBOrderListingAvailable.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOrderListingAvailable.Location = new System.Drawing.Point(297, 10);
+            this.MBOrderListingAvailable.Location = new System.Drawing.Point(141, 10);
             this.MBOrderListingAvailable.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOrderListingAvailable.Name = "MBOrderListingAvailable";
-            this.MBOrderListingAvailable.Size = new System.Drawing.Size(135, 79);
+            this.MBOrderListingAvailable.Size = new System.Drawing.Size(120, 79);
             this.MBOrderListingAvailable.TabIndex = 15;
             this.MBOrderListingAvailable.Text = "Available ";
             this.MBOrderListingAvailable.UseSelectable = true;
@@ -3043,10 +3046,10 @@
             // MButtonClearSelection
             // 
             this.MButtonClearSelection.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClearSelection.Location = new System.Drawing.Point(152, 9);
+            this.MButtonClearSelection.Location = new System.Drawing.Point(7, 721);
             this.MButtonClearSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClearSelection.Name = "MButtonClearSelection";
-            this.MButtonClearSelection.Size = new System.Drawing.Size(135, 79);
+            this.MButtonClearSelection.Size = new System.Drawing.Size(125, 36);
             this.MButtonClearSelection.TabIndex = 15;
             this.MButtonClearSelection.Text = "Clear Selection";
             this.MButtonClearSelection.UseSelectable = true;
@@ -3055,7 +3058,7 @@
             // ButtonClear
             // 
             this.ButtonClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClear.Location = new System.Drawing.Point(725, 10);
+            this.ButtonClear.Location = new System.Drawing.Point(820, 10);
             this.ButtonClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(34, 38);
@@ -3080,10 +3083,10 @@
             // MButtonSearch
             // 
             this.MButtonSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonSearch.Location = new System.Drawing.Point(767, 10);
+            this.MButtonSearch.Location = new System.Drawing.Point(862, 10);
             this.MButtonSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSearch.Name = "MButtonSearch";
-            this.MButtonSearch.Size = new System.Drawing.Size(135, 76);
+            this.MButtonSearch.Size = new System.Drawing.Size(135, 79);
             this.MButtonSearch.TabIndex = 12;
             this.MButtonSearch.Text = "Search";
             this.MButtonSearch.UseSelectable = true;
@@ -3092,40 +3095,25 @@
             // MBDeleteOrder
             // 
             this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDeleteOrder.Location = new System.Drawing.Point(722, 597);
+            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 721);
             this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDeleteOrder.Name = "MBDeleteOrder";
-            this.MBDeleteOrder.Size = new System.Drawing.Size(130, 31);
+            this.MBDeleteOrder.Size = new System.Drawing.Size(125, 36);
             this.MBDeleteOrder.TabIndex = 22;
             this.MBDeleteOrder.Text = "Delete";
             this.MBDeleteOrder.UseSelectable = true;
             this.MBDeleteOrder.Click += new System.EventHandler(this.MBDeleteOrder_Click);
             // 
-            // MBReturnToStock
-            // 
-            this.MBReturnToStock.Enabled = false;
-            this.MBReturnToStock.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStock.Location = new System.Drawing.Point(722, 549);
-            this.MBReturnToStock.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBReturnToStock.Name = "MBReturnToStock";
-            this.MBReturnToStock.Size = new System.Drawing.Size(130, 36);
-            this.MBReturnToStock.TabIndex = 19;
-            this.MBReturnToStock.Text = "Return to Stock";
-            this.MBReturnToStock.UseSelectable = true;
-            this.MBReturnToStock.Click += new System.EventHandler(this.MBReturnToStock_Click);
-            // 
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.Green;
             this.Main.Controls.Add(this.MBMainClose);
-            this.Main.Controls.Add(this.MBMainLoadOrders);
             this.Main.Controls.Add(this.MBMainNewOrder);
             this.Main.Controls.Add(this.MBMainOrderManager);
-            this.Main.Controls.Add(this.MBMainHotPick);
             this.Main.Controls.Add(this.MBMainAvailableOrders);
             this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1147, 644);
+            this.Main.Size = new System.Drawing.Size(1147, 770);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             // 
@@ -3133,32 +3121,19 @@
             // 
             this.MBMainClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBMainClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainClose.Location = new System.Drawing.Point(967, 4);
+            this.MBMainClose.Location = new System.Drawing.Point(1006, 10);
             this.MBMainClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainClose.Name = "MBMainClose";
-            this.MBMainClose.Size = new System.Drawing.Size(177, 76);
+            this.MBMainClose.Size = new System.Drawing.Size(135, 79);
             this.MBMainClose.TabIndex = 28;
             this.MBMainClose.Text = "Home";
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
             // 
-            // MBMainLoadOrders
-            // 
-            this.MBMainLoadOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainLoadOrders.Location = new System.Drawing.Point(14, 379);
-            this.MBMainLoadOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBMainLoadOrders.Name = "MBMainLoadOrders";
-            this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 100);
-            this.MBMainLoadOrders.TabIndex = 20;
-            this.MBMainLoadOrders.Text = "Load Jobs";
-            this.MBMainLoadOrders.UseSelectable = true;
-            this.MBMainLoadOrders.Visible = false;
-            this.MBMainLoadOrders.Click += new System.EventHandler(this.MBMainLoadOrders_Click);
-            // 
             // MBMainNewOrder
             // 
             this.MBMainNewOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainNewOrder.Location = new System.Drawing.Point(398, 271);
+            this.MBMainNewOrder.Location = new System.Drawing.Point(398, 378);
             this.MBMainNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainNewOrder.Name = "MBMainNewOrder";
             this.MBMainNewOrder.Size = new System.Drawing.Size(350, 100);
@@ -3170,7 +3145,7 @@
             // MBMainOrderManager
             // 
             this.MBMainOrderManager.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainOrderManager.Location = new System.Drawing.Point(398, 35);
+            this.MBMainOrderManager.Location = new System.Drawing.Point(398, 260);
             this.MBMainOrderManager.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainOrderManager.Name = "MBMainOrderManager";
             this.MBMainOrderManager.Size = new System.Drawing.Size(350, 100);
@@ -3179,22 +3154,10 @@
             this.MBMainOrderManager.UseSelectable = true;
             this.MBMainOrderManager.Click += new System.EventHandler(this.MBMainOrderManager_Click);
             // 
-            // MBMainHotPick
-            // 
-            this.MBMainHotPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainHotPick.Location = new System.Drawing.Point(14, 271);
-            this.MBMainHotPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBMainHotPick.Name = "MBMainHotPick";
-            this.MBMainHotPick.Size = new System.Drawing.Size(350, 100);
-            this.MBMainHotPick.TabIndex = 26;
-            this.MBMainHotPick.Text = "Hot Pick";
-            this.MBMainHotPick.UseSelectable = true;
-            this.MBMainHotPick.Visible = false;
-            // 
             // MBMainAvailableOrders
             // 
             this.MBMainAvailableOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainAvailableOrders.Location = new System.Drawing.Point(398, 153);
+            this.MBMainAvailableOrders.Location = new System.Drawing.Point(398, 142);
             this.MBMainAvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainAvailableOrders.Name = "MBMainAvailableOrders";
             this.MBMainAvailableOrders.Size = new System.Drawing.Size(350, 100);
@@ -3213,30 +3176,96 @@
             this.tabControl1.Controls.Add(this.OrderDetails);
             this.tabControl1.Controls.Add(this.NewOrder);
             this.tabControl1.Controls.Add(this.AvailableRack);
-            this.tabControl1.Location = new System.Drawing.Point(22, 173);
+            this.tabControl1.Location = new System.Drawing.Point(22, 77);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 670);
+            this.tabControl1.Size = new System.Drawing.Size(1155, 796);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.Enter += new System.EventHandler(this.tabControl1_Enter);
+            // 
+            // LabelPickPos8
+            // 
+            this.LabelPickPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos8.Location = new System.Drawing.Point(562, 133);
+            this.LabelPickPos8.Name = "LabelPickPos8";
+            this.LabelPickPos8.Size = new System.Drawing.Size(10, 10);
+            this.LabelPickPos8.TabIndex = 168;
+            this.LabelPickPos8.Text = "8";
+            this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPickPos8.Visible = false;
+            // 
+            // LabelPickPos7
+            // 
+            this.LabelPickPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickPos7.Location = new System.Drawing.Point(519, 133);
+            this.LabelPickPos7.Name = "LabelPickPos7";
+            this.LabelPickPos7.Size = new System.Drawing.Size(10, 10);
+            this.LabelPickPos7.TabIndex = 167;
+            this.LabelPickPos7.Text = "7";
+            this.LabelPickPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelPickPos7.Visible = false;
+            // 
+            // TextBoxPickPos7
+            // 
+            this.TextBoxPickPos7.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos7.Location = new System.Drawing.Point(519, 146);
+            this.TextBoxPickPos7.Multiline = true;
+            this.TextBoxPickPos7.Name = "TextBoxPickPos7";
+            this.TextBoxPickPos7.ReadOnly = true;
+            this.TextBoxPickPos7.Size = new System.Drawing.Size(23, 16);
+            this.TextBoxPickPos7.TabIndex = 166;
+            this.TextBoxPickPos7.Tag = "6";
+            this.TextBoxPickPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPickPos7.Visible = false;
+            // 
+            // Pos8Display
+            // 
+            this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos8Display.Controls.Add(this.TextBoxPickPos8);
+            this.Pos8Display.Location = new System.Drawing.Point(556, 146);
+            this.Pos8Display.Name = "Pos8Display";
+            this.Pos8Display.Size = new System.Drawing.Size(39, 26);
+            this.Pos8Display.TabIndex = 170;
+            this.Pos8Display.Visible = false;
+            // 
+            // TextBoxPickPos8
+            // 
+            this.TextBoxPickPos8.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.TextBoxPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickPos8.Location = new System.Drawing.Point(8, 5);
+            this.TextBoxPickPos8.Multiline = true;
+            this.TextBoxPickPos8.Name = "TextBoxPickPos8";
+            this.TextBoxPickPos8.ReadOnly = true;
+            this.TextBoxPickPos8.Size = new System.Drawing.Size(23, 16);
+            this.TextBoxPickPos8.TabIndex = 146;
+            this.TextBoxPickPos8.Tag = "7";
+            this.TextBoxPickPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxPickPos8.Visible = false;
+            // 
+            // Pos7Display
+            // 
+            this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
+            this.Pos7Display.Location = new System.Drawing.Point(511, 146);
+            this.Pos7Display.Name = "Pos7Display";
+            this.Pos7Display.Size = new System.Drawing.Size(39, 26);
+            this.Pos7Display.TabIndex = 169;
+            this.Pos7Display.Visible = false;
             // 
             // FrmReplen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1203, 890);
             this.ControlBox = false;
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.LabelPickPos8);
             this.Controls.Add(this.LabelFormTitle);
-            this.Controls.Add(this.LabelPickPos7);
             this.Controls.Add(this.mlUserInfo);
             this.Controls.Add(this.LabelFormHeaderText);
-            this.Controls.Add(this.TextBoxPickPos7);
-            this.Controls.Add(this.Pos8Display);
-            this.Controls.Add(this.Pos7Display);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "FrmReplen";
@@ -3245,8 +3274,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmReplen_FormClosing);
             this.Load += new System.EventHandler(this.FrmReplen_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmReplen_KeyDown);
-            this.Pos8Display.ResumeLayout(false);
-            this.Pos8Display.PerformLayout();
             this.AvailableRack.ResumeLayout(false);
             this.AvailableRack.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrdersRack)).EndInit();
@@ -3254,6 +3281,7 @@
             this.panel1.PerformLayout();
             this.NewOrder.ResumeLayout(false);
             this.NewOrder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewNewItems)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -3280,8 +3308,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.Main.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.Pos8Display.ResumeLayout(false);
+            this.Pos8Display.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -3292,12 +3321,6 @@
         private MetroFramework.Controls.MetroLabel mlUserInfo;
         private System.Windows.Forms.Label LabelFormHeaderText;
         private System.Windows.Forms.ToolTip ToolTipPickScreen;
-        private System.Windows.Forms.Label LabelPickPos8;
-        private System.Windows.Forms.Label LabelPickPos7;
-        private System.Windows.Forms.TextBox TextBoxPickPos7;
-        private System.Windows.Forms.Panel Pos7Display;
-        private System.Windows.Forms.Panel Pos8Display;
-        private System.Windows.Forms.TextBox TextBoxPickPos8;
         private System.Windows.Forms.TabPage AvailableRack;
         private System.Windows.Forms.DataGridView DataGridViewAvailableOrdersRack;
         private System.Windows.Forms.TextBox TextBoxFindAvailableOrdersRack;
@@ -3339,8 +3362,6 @@
         private System.Windows.Forms.Label LabelNewOrderOrderId;
         private System.Windows.Forms.Label LabelNewOrderItemId;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label LabelNewOrderItem;
-        private System.Windows.Forms.Label LabelNewOrderDescription;
         private System.Windows.Forms.Button ButtonAddDetail;
         private System.Windows.Forms.TextBox TextBoxNewOrderQuantity;
         private System.Windows.Forms.Label label29;
@@ -3377,7 +3398,6 @@
         private System.Windows.Forms.Button ButtonStopMoveLast;
         private System.Windows.Forms.Button ButtonStopMoveFirst;
         private System.Windows.Forms.Button ButtonStopMovePrevious;
-        private System.Windows.Forms.Label LabelNotify;
         private System.Windows.Forms.Panel PanelOrderPositions;
         private System.Windows.Forms.TextBox TextBoxPickPos1;
         private System.Windows.Forms.Label LabelPickMessages;
@@ -3444,7 +3464,6 @@
         private MetroFramework.Controls.MetroButton MBStart;
         private MetroFramework.Controls.MetroButton MBPickListBack;
         private System.Windows.Forms.TabPage AvailableOrders;
-        private MetroFramework.Controls.MetroButton MBFillStarters;
         private MetroFramework.Controls.MetroButton MBFill;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label LabelPos8;
@@ -3481,15 +3500,11 @@
         private MetroFramework.Controls.MetroButton MbPrintAvailableOrders;
         private MetroFramework.Controls.MetroButton MBAvailableOrdersBack;
         private System.Windows.Forms.TabPage OrderListing;
-        private MetroFramework.Controls.MetroButton MBShowAll;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox ListBoxSelectedOrders;
         private MetroFramework.Controls.MetroButton MBPrintOrderListing;
         private MetroFramework.Controls.MetroButton MBJobDetails;
         private MetroFramework.Controls.MetroButton MBPriority;
         private MetroFramework.Controls.MetroButton MBHold;
         private MetroFramework.Controls.MetroButton MBRelease;
-        private MetroFramework.Controls.MetroButton MBRefresh;
         private MetroFramework.Controls.MetroButton MBCompleted;
         private System.Windows.Forms.Label LabelFindDescription;
         private System.Windows.Forms.TextBox TextBoxFind;
@@ -3501,14 +3516,31 @@
         private MetroFramework.Controls.MetroButton MButtonClose;
         private MetroFramework.Controls.MetroButton MButtonSearch;
         private MetroFramework.Controls.MetroButton MBDeleteOrder;
-        private MetroFramework.Controls.MetroButton MBReturnToStock;
         private System.Windows.Forms.TabPage Main;
         private MetroFramework.Controls.MetroButton MBMainClose;
-        private MetroFramework.Controls.MetroButton MBMainLoadOrders;
         private MetroFramework.Controls.MetroButton MBMainNewOrder;
         private MetroFramework.Controls.MetroButton MBMainOrderManager;
-        private MetroFramework.Controls.MetroButton MBMainHotPick;
         private MetroFramework.Controls.MetroButton MBMainAvailableOrders;
         private System.Windows.Forms.TabControl tabControl1;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator6;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator5;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator4;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator3;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator2;
+        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator1;
+        private MetroFramework.Controls.MetroButton MBShortCut;
+        private System.Windows.Forms.Label LabelNotify;
+        private MetroFramework.Controls.MetroButton MBCompress;
+        private MetroFramework.Controls.MetroButton MBShowRackOrders;
+        private System.Windows.Forms.TextBox TextBoxNewOrderDescription;
+        private System.Windows.Forms.TextBox TextBoxNewOrderItem;
+        private System.Windows.Forms.Label LabelNewOrderStationNumber;
+        private System.Windows.Forms.DataGridView DataGridViewNewItems;
+        private System.Windows.Forms.Label LabelPickPos8;
+        private System.Windows.Forms.Label LabelPickPos7;
+        private System.Windows.Forms.TextBox TextBoxPickPos7;
+        private System.Windows.Forms.Panel Pos8Display;
+        private System.Windows.Forms.TextBox TextBoxPickPos8;
+        private System.Windows.Forms.Panel Pos7Display;
     }
 }

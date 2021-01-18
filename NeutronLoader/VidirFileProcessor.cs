@@ -368,8 +368,8 @@ namespace NeutronLoader
             {
                 order = new ReplenOrder()
                 {
-                    Ord1 = firstRec.PartNum, //.JobNum,
-                    Ord2 = firstRec.PartDesc, // .EmpId,
+                    Ord1 = firstRec.PartNum, 
+                    Ord2 = firstRec.PartDesc, 
                     Priority = GetTrayNumber(firstRec.PrimeBin),
                     LoadDate = System.DateTime.Now,
                     ShipperId = 1,
@@ -434,14 +434,14 @@ namespace NeutronLoader
 
                         hostOrder = linesInOrder[i];
                         empId = hostOrder.EmpId;
-                        var pickUsedItem = false;
-                        if (_neutronVariables.CheckForUsedItem)
-                        {
-                            pickUsedItem = PickUsedItem(orderId, hostOrder); //true if used inventory found
-                        }
-                        if (!pickUsedItem)
-                        {
-                            _logger.Log($"384 Used Item Failed.  Start New Item Load. ");
+                        //var pickUsedItem = false;
+                        //if (_neutronVariables.CheckForUsedItem)
+                        //{
+                         //  pickUsedItem = PickUsedItem(orderId, hostOrder); //true if used inventory found
+                        //}
+                       // if (!pickUsedItem)
+                       //{
+                            _logger.Log($"444  Start New Item Load. ");
                             var newItemExists = NewItemExists(hostOrder.PartNum);
                             if (newItemExists != null)
                             {
@@ -491,7 +491,7 @@ namespace NeutronLoader
                                 sb.AppendLine($"A Return To Stock request for this item has been sent to Epicor.");
                                 MessageBox.Show(sb.ToString(), "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
-                        }
+                       // }
                     }
                 }
                 try

@@ -85,19 +85,21 @@
     <Compile Include="Migrations\201911122220341_ActionCodeItem.Designer.cs">
       <DependentUpon>201911122220341_ActionCodeItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003301606550_carrierlevel.cs" />
+    <Compile Include="Migrations\202003301606550_carrierlevel.Designer.cs">
+      <DependentUpon>202003301606550_carrierlevel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ActionCodeItem.cs" />
     <Compile Include="Models\AkaType.cs" />
     <Compile Include="Models\Carrier.cs" />
     <Compile Include="Models\GroupUser.cs" />
     <Compile Include="Models\LocationDetail.cs" />
-    <Compile Include="Models\LocationGroupLocation.cs" />
     <Compile Include="Models\GroupSecureItem.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Lookups\aaaActionCode.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Lookups\CommunicationType.cs" />
     <Compile Include="Models\Lookups\HardwareDeviceLookup.cs" />
-    <Compile Include="Models\Lookups\LocationGroup.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\ItemImage.cs" />
     <Compile Include="DataContexts\NeutronDb.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Models\RoleUser.cs" />
     <Compile Include="Models\UserRoles.cs" />
     <Compile Include="ModelViews\AvailableOrdersView.cs" />
+    <Compile Include="ModelViews\AvailableReplenOrdersView.cs" />
     <Compile Include="ModelViews\HardwareDeviceView.cs" />
     <Compile Include="ModelViews\HistoryView.cs" />
     <Compile Include="ModelViews\HotPickView.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="ModelViews\PickLocation.cs" />
     <Compile Include="ModelViews\PickLocationSkip.cs" />
     <Compile Include="ModelViews\PickStop.cs" />
+    <Compile Include="ModelViews\RackReplenOrderView.cs" />
     <Compile Include="ModelViews\ReplenOrderDetailsView.cs" />
     <Compile Include="ModelViews\ReplenPickStop.cs" />
     <Compile Include="ModelViews\ReplenPickView.cs" />
@@ -228,6 +232,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911122220341_ActionCodeItem.resx">
       <DependentUpon>201911122220341_ActionCodeItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003301606550_carrierlevel.resx">
+      <DependentUpon>202003301606550_carrierlevel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

@@ -62,8 +62,8 @@ namespace NeutronLoader
                     }
                 case "TOP":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
-                        _interfaceProcessor.StartProcessingInterfaceFiles();
+                        //_interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
+                        //_interfaceProcessor.StartProcessingInterfaceFiles();
                         break;
                     }
                 case "TMG":
@@ -74,8 +74,8 @@ namespace NeutronLoader
                     }
                 case "PR1":
                 {
-                    _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
-                    _interfaceProcessor.StartProcessingInterfaceFiles();
+                    //_interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+                    //_interfaceProcessor.StartProcessingInterfaceFiles();
                     break;
                 }
             }

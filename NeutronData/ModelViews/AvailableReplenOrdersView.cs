@@ -3,7 +3,7 @@ using NeutronData.Models;
 
 namespace NeutronData.ModelViews
 {
-    public class AvailableOrdersView
+    public class AvailableReplenOrdersView
     {
         public int Id { get; set; }
         public string Ord1 { get; set; }
@@ -11,13 +11,10 @@ namespace NeutronData.ModelViews
         public int Starter { get; set; }
         public int Priority { get; set; }
         public int Lines { get; set; }
-        public int Available { get; set; }
-        public int Picked { get; set; }
-        public int Skipped { get; set; }
         public int Pieces { get; set; }
         public DateTime LoadDate { get; set; }
-        public Order Order { get; set; }
+        public ReplenOrder Order { get; set; }
         public int FirstStation { get; set; }
-        public int NextStation { get; set; }
+        public int NextStation { get; set; } 
     }
 }

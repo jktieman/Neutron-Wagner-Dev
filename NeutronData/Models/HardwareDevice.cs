@@ -20,6 +20,7 @@ namespace NeutronData.Models
         public int? TcpConfigurationId { get; set; }
         public int? SerialConfigurationId { get; set; }
         public int NumberOfCarriers { get; set; }
+        public int CarrierLevel { get; set; }
         public int CarrierWidth { get; set; }
         public int CarrierDepth { get; set; }
         public bool Enabled { get; set; }

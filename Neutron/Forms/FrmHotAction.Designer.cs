@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -48,6 +48,12 @@
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.HotAction = new System.Windows.Forms.TabPage();
+            this.CurrentDeviceIndicator6 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator5 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator4 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator3 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator2 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.CurrentDeviceIndicator1 = new CurrentDeviceIndicator.DeviceIndicator();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.ComboBoxLocationCodeLocation = new System.Windows.Forms.ComboBox();
             this.LabelLocation = new System.Windows.Forms.Label();
@@ -106,12 +112,89 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.CurrentDeviceIndicator6 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator5 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator4 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator3 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator2 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator1 = new CurrentDeviceIndicator.DeviceIndicator();
+            this.HotActionTray = new System.Windows.Forms.TabPage();
+            this.LabelHotPickUOITray = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.LabelHotPickDescriptionTray = new System.Windows.Forms.Label();
+            this.LabelHotPickItemTray = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.TextBoxHotPickQuantityTray = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.MBHotAcceptTray = new MetroFramework.Controls.MetroButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ComboBoxLocationCodeLocationTray = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.ComboBoxHeightCodeLocationTray = new System.Windows.Forms.ComboBox();
+            this.ComboBoxVelocityCodeLocationTray = new System.Windows.Forms.ComboBox();
+            this.ComboBoxSizeCodeLocationTray = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.TextBoxHotPickReceivedDateTray = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.LabelStaticReleaseTray = new System.Windows.Forms.Label();
+            this.LabelSlotTray = new System.Windows.Forms.Label();
+            this.LabelPrimeBinTray = new System.Windows.Forms.Label();
+            this.TextBoxHotPickLoc5Tray = new System.Windows.Forms.TextBox();
+            this.TextBoxHotPickLocationQuantityTray = new System.Windows.Forms.TextBox();
+            this.TextBoxHotPickLoc4Tray = new System.Windows.Forms.TextBox();
+            this.TextBoxHotPickLoc3Tray = new System.Windows.Forms.TextBox();
+            this.TextBoxHotPickLoc2Tray = new System.Windows.Forms.TextBox();
+            this.TextBoxHotPickLoc1Tray = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.MBHotActionBackTray = new MetroFramework.Controls.MetroButton();
+            this.PanelTray = new System.Windows.Forms.Panel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.PanelWidth = new System.Windows.Forms.Panel();
+            this.PanelDepth = new System.Windows.Forms.Panel();
+            this.LabelWidth1 = new System.Windows.Forms.Label();
+            this.LabelWidth2 = new System.Windows.Forms.Label();
+            this.LabelWidth3 = new System.Windows.Forms.Label();
+            this.LabelWidth4 = new System.Windows.Forms.Label();
+            this.LabelWidth5 = new System.Windows.Forms.Label();
+            this.LabelWidth6 = new System.Windows.Forms.Label();
+            this.LabelWidth7 = new System.Windows.Forms.Label();
+            this.LabelWidth8 = new System.Windows.Forms.Label();
+            this.LabelWidth9 = new System.Windows.Forms.Label();
+            this.LabelWidth10 = new System.Windows.Forms.Label();
+            this.LabelWidth11 = new System.Windows.Forms.Label();
+            this.LabelWidth12 = new System.Windows.Forms.Label();
+            this.LabelWidth13 = new System.Windows.Forms.Label();
+            this.LabelWidth14 = new System.Windows.Forms.Label();
+            this.LabelWidth15 = new System.Windows.Forms.Label();
+            this.LabelWidth16 = new System.Windows.Forms.Label();
+            this.LabelWidth17 = new System.Windows.Forms.Label();
+            this.LabelWidth18 = new System.Windows.Forms.Label();
+            this.LabelWidth19 = new System.Windows.Forms.Label();
+            this.LabelWidth20 = new System.Windows.Forms.Label();
+            this.LabelDepth1 = new System.Windows.Forms.Label();
+            this.LabelDepth2 = new System.Windows.Forms.Label();
+            this.LabelDepth3 = new System.Windows.Forms.Label();
+            this.LabelDepth4 = new System.Windows.Forms.Label();
+            this.LabelDepth5 = new System.Windows.Forms.Label();
+            this.LabelDepth6 = new System.Windows.Forms.Label();
+            this.LabelDepth7 = new System.Windows.Forms.Label();
+            this.LabelDepth8 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.LabelItemNumber = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
@@ -119,14 +202,24 @@
             this.GroupBoxHotPickLocation.SuspendLayout();
             this.GroupBoxHotActions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).BeginInit();
+            this.HotActionTray.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.PanelTray.SuspendLayout();
+            this.PanelWidth.SuspendLayout();
+            this.PanelDepth.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelRecordCount
             // 
-            this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 20);
             this.LabelRecordCount.TabIndex = 29;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.LabelRecordCount.Visible = false;
@@ -135,11 +228,12 @@
             // 
             this.tabControl1.Controls.Add(this.HotPick);
             this.tabControl1.Controls.Add(this.HotAction);
-            this.tabControl1.Location = new System.Drawing.Point(22, 77);
+            this.tabControl1.Controls.Add(this.HotActionTray);
+            this.tabControl1.Location = new System.Drawing.Point(22, 44);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 796);
+            this.tabControl1.Size = new System.Drawing.Size(1155, 810);
             this.tabControl1.TabIndex = 0;
             // 
             // HotPick
@@ -158,7 +252,7 @@
             this.HotPick.Controls.Add(this.DataGridViewHot);
             this.HotPick.Location = new System.Drawing.Point(4, 22);
             this.HotPick.Name = "HotPick";
-            this.HotPick.Size = new System.Drawing.Size(1147, 644);
+            this.HotPick.Size = new System.Drawing.Size(1147, 784);
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
             // 
@@ -295,38 +389,38 @@
             // 
             this.DataGridViewHot.AllowUserToAddRows = false;
             this.DataGridViewHot.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle6;
             this.DataGridViewHot.Location = new System.Drawing.Point(12, 122);
             this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewHot.MultiSelect = false;
             this.DataGridViewHot.Name = "DataGridViewHot";
             this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewHot.RowTemplate.Height = 28;
             this.DataGridViewHot.RowTemplate.ReadOnly = true;
@@ -369,10 +463,94 @@
             this.HotAction.Controls.Add(this.PictureBoxItemHotImage);
             this.HotAction.Location = new System.Drawing.Point(4, 22);
             this.HotAction.Name = "HotAction";
-            this.HotAction.Size = new System.Drawing.Size(1147, 770);
+            this.HotAction.Size = new System.Drawing.Size(1147, 784);
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
             this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
+            // 
+            // CurrentDeviceIndicator6
+            // 
+            this.CurrentDeviceIndicator6.Active = false;
+            this.CurrentDeviceIndicator6.AutoScroll = true;
+            this.CurrentDeviceIndicator6.BackColor = System.Drawing.Color.Transparent;
+            this.CurrentDeviceIndicator6.DeviceNumber = 6;
+            this.CurrentDeviceIndicator6.Location = new System.Drawing.Point(848, 8);
+            this.CurrentDeviceIndicator6.MaxBack = 9;
+            this.CurrentDeviceIndicator6.MaxLevels = 8;
+            this.CurrentDeviceIndicator6.MaxOver = 9;
+            this.CurrentDeviceIndicator6.Name = "CurrentDeviceIndicator6";
+            this.CurrentDeviceIndicator6.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator6.TabIndex = 167;
+            // 
+            // CurrentDeviceIndicator5
+            // 
+            this.CurrentDeviceIndicator5.Active = false;
+            this.CurrentDeviceIndicator5.AutoScroll = true;
+            this.CurrentDeviceIndicator5.BackColor = System.Drawing.Color.Transparent;
+            this.CurrentDeviceIndicator5.DeviceNumber = 5;
+            this.CurrentDeviceIndicator5.Location = new System.Drawing.Point(714, 8);
+            this.CurrentDeviceIndicator5.MaxBack = 9;
+            this.CurrentDeviceIndicator5.MaxLevels = 8;
+            this.CurrentDeviceIndicator5.MaxOver = 9;
+            this.CurrentDeviceIndicator5.Name = "CurrentDeviceIndicator5";
+            this.CurrentDeviceIndicator5.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator5.TabIndex = 168;
+            // 
+            // CurrentDeviceIndicator4
+            // 
+            this.CurrentDeviceIndicator4.Active = false;
+            this.CurrentDeviceIndicator4.AutoScroll = true;
+            this.CurrentDeviceIndicator4.BackColor = System.Drawing.Color.Transparent;
+            this.CurrentDeviceIndicator4.DeviceNumber = 4;
+            this.CurrentDeviceIndicator4.Location = new System.Drawing.Point(580, 8);
+            this.CurrentDeviceIndicator4.MaxBack = 9;
+            this.CurrentDeviceIndicator4.MaxLevels = 8;
+            this.CurrentDeviceIndicator4.MaxOver = 9;
+            this.CurrentDeviceIndicator4.Name = "CurrentDeviceIndicator4";
+            this.CurrentDeviceIndicator4.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator4.TabIndex = 169;
+            // 
+            // CurrentDeviceIndicator3
+            // 
+            this.CurrentDeviceIndicator3.Active = false;
+            this.CurrentDeviceIndicator3.AutoScroll = true;
+            this.CurrentDeviceIndicator3.BackColor = System.Drawing.Color.Transparent;
+            this.CurrentDeviceIndicator3.DeviceNumber = 3;
+            this.CurrentDeviceIndicator3.Location = new System.Drawing.Point(446, 8);
+            this.CurrentDeviceIndicator3.MaxBack = 9;
+            this.CurrentDeviceIndicator3.MaxLevels = 8;
+            this.CurrentDeviceIndicator3.MaxOver = 9;
+            this.CurrentDeviceIndicator3.Name = "CurrentDeviceIndicator3";
+            this.CurrentDeviceIndicator3.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator3.TabIndex = 170;
+            // 
+            // CurrentDeviceIndicator2
+            // 
+            this.CurrentDeviceIndicator2.Active = false;
+            this.CurrentDeviceIndicator2.AutoScroll = true;
+            this.CurrentDeviceIndicator2.BackColor = System.Drawing.Color.Transparent;
+            this.CurrentDeviceIndicator2.DeviceNumber = 2;
+            this.CurrentDeviceIndicator2.Location = new System.Drawing.Point(312, 8);
+            this.CurrentDeviceIndicator2.MaxBack = 9;
+            this.CurrentDeviceIndicator2.MaxLevels = 8;
+            this.CurrentDeviceIndicator2.MaxOver = 9;
+            this.CurrentDeviceIndicator2.Name = "CurrentDeviceIndicator2";
+            this.CurrentDeviceIndicator2.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator2.TabIndex = 171;
+            // 
+            // CurrentDeviceIndicator1
+            // 
+            this.CurrentDeviceIndicator1.Active = false;
+            this.CurrentDeviceIndicator1.AutoScroll = true;
+            this.CurrentDeviceIndicator1.BackColor = System.Drawing.Color.Transparent;
+            this.CurrentDeviceIndicator1.DeviceNumber = 1;
+            this.CurrentDeviceIndicator1.Location = new System.Drawing.Point(178, 8);
+            this.CurrentDeviceIndicator1.MaxBack = 9;
+            this.CurrentDeviceIndicator1.MaxLevels = 8;
+            this.CurrentDeviceIndicator1.MaxOver = 9;
+            this.CurrentDeviceIndicator1.Name = "CurrentDeviceIndicator1";
+            this.CurrentDeviceIndicator1.Size = new System.Drawing.Size(120, 120);
+            this.CurrentDeviceIndicator1.TabIndex = 172;
             // 
             // GroupBoxHotPickLocation
             // 
@@ -1020,11 +1198,11 @@
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
             this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
+            this.LabelFormTitle.Size = new System.Drawing.Size(338, 30);
             this.LabelFormTitle.TabIndex = 28;
             this.LabelFormTitle.Text = "Jobs";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1042,75 +1220,988 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 30);
             this.LabelFormHeaderText.TabIndex = 26;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // CurrentDeviceIndicator6
+            // HotActionTray
             // 
-            this.CurrentDeviceIndicator6.Active = false;
-            this.CurrentDeviceIndicator6.AutoScroll = true;
-            this.CurrentDeviceIndicator6.DeviceNumber = 6;
-            this.CurrentDeviceIndicator6.Location = new System.Drawing.Point(848, 8);
-            this.CurrentDeviceIndicator6.Name = "CurrentDeviceIndicator6";
-            this.CurrentDeviceIndicator6.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator6.TabIndex = 167;
+            this.HotActionTray.BackColor = System.Drawing.Color.Gainsboro;
+            this.HotActionTray.Controls.Add(this.PanelDepth);
+            this.HotActionTray.Controls.Add(this.PanelWidth);
+            this.HotActionTray.Controls.Add(this.PanelTray);
+            this.HotActionTray.Controls.Add(this.MBHotActionBackTray);
+            this.HotActionTray.Controls.Add(this.groupBox1);
+            this.HotActionTray.Controls.Add(this.TextBoxHotPickQuantityTray);
+            this.HotActionTray.Controls.Add(this.label7);
+            this.HotActionTray.Controls.Add(this.MBHotAcceptTray);
+            this.HotActionTray.Controls.Add(this.LabelHotPickUOITray);
+            this.HotActionTray.Controls.Add(this.label2);
+            this.HotActionTray.Controls.Add(this.LabelHotPickDescriptionTray);
+            this.HotActionTray.Controls.Add(this.LabelHotPickItemTray);
+            this.HotActionTray.Controls.Add(this.label5);
+            this.HotActionTray.Controls.Add(this.label6);
+            this.HotActionTray.Location = new System.Drawing.Point(4, 22);
+            this.HotActionTray.Name = "HotActionTray";
+            this.HotActionTray.Padding = new System.Windows.Forms.Padding(3);
+            this.HotActionTray.Size = new System.Drawing.Size(1147, 784);
+            this.HotActionTray.TabIndex = 8;
+            this.HotActionTray.Text = "Hot Action Tray";
             // 
-            // CurrentDeviceIndicator5
+            // LabelHotPickUOITray
             // 
-            this.CurrentDeviceIndicator5.Active = false;
-            this.CurrentDeviceIndicator5.AutoScroll = true;
-            this.CurrentDeviceIndicator5.DeviceNumber = 5;
-            this.CurrentDeviceIndicator5.Location = new System.Drawing.Point(714, 8);
-            this.CurrentDeviceIndicator5.Name = "CurrentDeviceIndicator5";
-            this.CurrentDeviceIndicator5.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator5.TabIndex = 168;
+            this.LabelHotPickUOITray.BackColor = System.Drawing.Color.White;
+            this.LabelHotPickUOITray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickUOITray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickUOITray.Location = new System.Drawing.Point(825, 381);
+            this.LabelHotPickUOITray.Name = "LabelHotPickUOITray";
+            this.LabelHotPickUOITray.Size = new System.Drawing.Size(310, 43);
+            this.LabelHotPickUOITray.TabIndex = 24;
+            this.LabelHotPickUOITray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CurrentDeviceIndicator4
+            // label2
             // 
-            this.CurrentDeviceIndicator4.Active = false;
-            this.CurrentDeviceIndicator4.AutoScroll = true;
-            this.CurrentDeviceIndicator4.DeviceNumber = 4;
-            this.CurrentDeviceIndicator4.Location = new System.Drawing.Point(580, 8);
-            this.CurrentDeviceIndicator4.Name = "CurrentDeviceIndicator4";
-            this.CurrentDeviceIndicator4.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator4.TabIndex = 169;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(576, 381);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(243, 43);
+            this.label2.TabIndex = 23;
+            this.label2.Text = "Unit of Issue";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // CurrentDeviceIndicator3
+            // LabelHotPickDescriptionTray
             // 
-            this.CurrentDeviceIndicator3.Active = false;
-            this.CurrentDeviceIndicator3.AutoScroll = true;
-            this.CurrentDeviceIndicator3.DeviceNumber = 3;
-            this.CurrentDeviceIndicator3.Location = new System.Drawing.Point(446, 8);
-            this.CurrentDeviceIndicator3.Name = "CurrentDeviceIndicator3";
-            this.CurrentDeviceIndicator3.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator3.TabIndex = 170;
+            this.LabelHotPickDescriptionTray.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelHotPickDescriptionTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickDescriptionTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickDescriptionTray.Location = new System.Drawing.Point(192, 436);
+            this.LabelHotPickDescriptionTray.Name = "LabelHotPickDescriptionTray";
+            this.LabelHotPickDescriptionTray.Size = new System.Drawing.Size(943, 43);
+            this.LabelHotPickDescriptionTray.TabIndex = 26;
+            this.LabelHotPickDescriptionTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CurrentDeviceIndicator2
+            // LabelHotPickItemTray
             // 
-            this.CurrentDeviceIndicator2.Active = false;
-            this.CurrentDeviceIndicator2.AutoScroll = true;
-            this.CurrentDeviceIndicator2.DeviceNumber = 2;
-            this.CurrentDeviceIndicator2.Location = new System.Drawing.Point(312, 8);
-            this.CurrentDeviceIndicator2.Name = "CurrentDeviceIndicator2";
-            this.CurrentDeviceIndicator2.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator2.TabIndex = 171;
+            this.LabelHotPickItemTray.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelHotPickItemTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickItemTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickItemTray.Location = new System.Drawing.Point(192, 381);
+            this.LabelHotPickItemTray.Name = "LabelHotPickItemTray";
+            this.LabelHotPickItemTray.Size = new System.Drawing.Size(378, 43);
+            this.LabelHotPickItemTray.TabIndex = 22;
+            this.LabelHotPickItemTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CurrentDeviceIndicator1
+            // label5
             // 
-            this.CurrentDeviceIndicator1.Active = false;
-            this.CurrentDeviceIndicator1.AutoScroll = true;
-            this.CurrentDeviceIndicator1.DeviceNumber = 1;
-            this.CurrentDeviceIndicator1.Location = new System.Drawing.Point(178, 8);
-            this.CurrentDeviceIndicator1.Name = "CurrentDeviceIndicator1";
-            this.CurrentDeviceIndicator1.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator1.TabIndex = 172;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(44, 381);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(142, 43);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Item";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label6
+            // 
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(50, 436);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(136, 43);
+            this.label6.TabIndex = 25;
+            this.label6.Text = "Desc";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxHotPickQuantityTray
+            // 
+            this.TextBoxHotPickQuantityTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickQuantityTray.Location = new System.Drawing.Point(894, 518);
+            this.TextBoxHotPickQuantityTray.Name = "TextBoxHotPickQuantityTray";
+            this.TextBoxHotPickQuantityTray.Size = new System.Drawing.Size(241, 116);
+            this.TextBoxHotPickQuantityTray.TabIndex = 27;
+            this.TextBoxHotPickQuantityTray.Text = "1";
+            this.TextBoxHotPickQuantityTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label7
+            // 
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(775, 554);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(113, 50);
+            this.label7.TabIndex = 29;
+            this.label7.Text = "Qty";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // MBHotAcceptTray
+            // 
+            this.MBHotAcceptTray.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBHotAcceptTray.Location = new System.Drawing.Point(958, 660);
+            this.MBHotAcceptTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotAcceptTray.Name = "MBHotAcceptTray";
+            this.MBHotAcceptTray.Size = new System.Drawing.Size(177, 96);
+            this.MBHotAcceptTray.TabIndex = 28;
+            this.MBHotAcceptTray.Text = "Accept";
+            this.MBHotAcceptTray.UseSelectable = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label20);
+            this.groupBox1.Controls.Add(this.ComboBoxLocationCodeLocationTray);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.ComboBoxHeightCodeLocationTray);
+            this.groupBox1.Controls.Add(this.ComboBoxVelocityCodeLocationTray);
+            this.groupBox1.Controls.Add(this.ComboBoxSizeCodeLocationTray);
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickReceivedDateTray);
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.LabelStaticReleaseTray);
+            this.groupBox1.Controls.Add(this.LabelSlotTray);
+            this.groupBox1.Controls.Add(this.LabelPrimeBinTray);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickLoc5Tray);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickLocationQuantityTray);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickLoc4Tray);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickLoc3Tray);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickLoc2Tray);
+            this.groupBox1.Controls.Add(this.TextBoxHotPickLoc1Tray);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.label17);
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.label19);
+            this.groupBox1.Location = new System.Drawing.Point(6, 490);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(745, 266);
+            this.groupBox1.TabIndex = 30;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Location";
+            // 
+            // ComboBoxLocationCodeLocationTray
+            // 
+            this.ComboBoxLocationCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
+            this.ComboBoxLocationCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxLocationCodeLocationTray.FormattingEnabled = true;
+            this.ComboBoxLocationCodeLocationTray.Location = new System.Drawing.Point(632, 235);
+            this.ComboBoxLocationCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxLocationCodeLocationTray.Name = "ComboBoxLocationCodeLocationTray";
+            this.ComboBoxLocationCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxLocationCodeLocationTray.TabIndex = 7;
+            // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(536, 236);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(88, 16);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Location";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // ComboBoxHeightCodeLocationTray
+            // 
+            this.ComboBoxHeightCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
+            this.ComboBoxHeightCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxHeightCodeLocationTray.FormattingEnabled = true;
+            this.ComboBoxHeightCodeLocationTray.Location = new System.Drawing.Point(428, 235);
+            this.ComboBoxHeightCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxHeightCodeLocationTray.Name = "ComboBoxHeightCodeLocationTray";
+            this.ComboBoxHeightCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxHeightCodeLocationTray.TabIndex = 5;
+            // 
+            // ComboBoxVelocityCodeLocationTray
+            // 
+            this.ComboBoxVelocityCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
+            this.ComboBoxVelocityCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxVelocityCodeLocationTray.FormattingEnabled = true;
+            this.ComboBoxVelocityCodeLocationTray.Location = new System.Drawing.Point(251, 234);
+            this.ComboBoxVelocityCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxVelocityCodeLocationTray.Name = "ComboBoxVelocityCodeLocationTray";
+            this.ComboBoxVelocityCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxVelocityCodeLocationTray.TabIndex = 3;
+            // 
+            // ComboBoxSizeCodeLocationTray
+            // 
+            this.ComboBoxSizeCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
+            this.ComboBoxSizeCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxSizeCodeLocationTray.FormattingEnabled = true;
+            this.ComboBoxSizeCodeLocationTray.Location = new System.Drawing.Point(63, 234);
+            this.ComboBoxSizeCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxSizeCodeLocationTray.Name = "ComboBoxSizeCodeLocationTray";
+            this.ComboBoxSizeCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxSizeCodeLocationTray.TabIndex = 1;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(691, 204);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(49, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Edit";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(359, 236);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(61, 16);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "Height";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label10
+            // 
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(171, 235);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(72, 16);
+            this.label10.TabIndex = 2;
+            this.label10.Text = "Velocity";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label11
+            // 
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(7, 236);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(48, 16);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Size";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxHotPickReceivedDateTray
+            // 
+            this.TextBoxHotPickReceivedDateTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickReceivedDateTray.Location = new System.Drawing.Point(136, 167);
+            this.TextBoxHotPickReceivedDateTray.Name = "TextBoxHotPickReceivedDateTray";
+            this.TextBoxHotPickReceivedDateTray.ReadOnly = true;
+            this.TextBoxHotPickReceivedDateTray.Size = new System.Drawing.Size(183, 22);
+            this.TextBoxHotPickReceivedDateTray.TabIndex = 22;
+            this.TextBoxHotPickReceivedDateTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label12
+            // 
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(9, 170);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(118, 17);
+            this.label12.TabIndex = 11;
+            this.label12.Text = "Received Date";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelStaticReleaseTray
+            // 
+            this.LabelStaticReleaseTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStaticReleaseTray.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.LabelStaticReleaseTray.Location = new System.Drawing.Point(280, 202);
+            this.LabelStaticReleaseTray.Name = "LabelStaticReleaseTray";
+            this.LabelStaticReleaseTray.Size = new System.Drawing.Size(118, 18);
+            this.LabelStaticReleaseTray.TabIndex = 17;
+            this.LabelStaticReleaseTray.Text = "Static Location";
+            this.LabelStaticReleaseTray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.LabelStaticReleaseTray.Visible = false;
+            // 
+            // LabelSlotTray
+            // 
+            this.LabelSlotTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSlotTray.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.LabelSlotTray.Location = new System.Drawing.Point(47, 201);
+            this.LabelSlotTray.Name = "LabelSlotTray";
+            this.LabelSlotTray.Size = new System.Drawing.Size(160, 18);
+            this.LabelSlotTray.TabIndex = 14;
+            this.LabelSlotTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelPrimeBinTray
+            // 
+            this.LabelPrimeBinTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPrimeBinTray.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.LabelPrimeBinTray.Location = new System.Drawing.Point(471, 204);
+            this.LabelPrimeBinTray.Name = "LabelPrimeBinTray";
+            this.LabelPrimeBinTray.Size = new System.Drawing.Size(92, 18);
+            this.LabelPrimeBinTray.TabIndex = 14;
+            this.LabelPrimeBinTray.Text = "Prime Bin";
+            this.LabelPrimeBinTray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.LabelPrimeBinTray.Visible = false;
+            // 
+            // TextBoxHotPickLoc5Tray
+            // 
+            this.TextBoxHotPickLoc5Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickLoc5Tray.Location = new System.Drawing.Point(339, 164);
+            this.TextBoxHotPickLoc5Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc5Tray.Name = "TextBoxHotPickLoc5Tray";
+            this.TextBoxHotPickLoc5Tray.ReadOnly = true;
+            this.TextBoxHotPickLoc5Tray.Size = new System.Drawing.Size(22, 26);
+            this.TextBoxHotPickLoc5Tray.TabIndex = 8;
+            this.TextBoxHotPickLoc5Tray.TabStop = false;
+            this.TextBoxHotPickLoc5Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxHotPickLoc5Tray.Visible = false;
+            // 
+            // TextBoxHotPickLocationQuantityTray
+            // 
+            this.TextBoxHotPickLocationQuantityTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickLocationQuantityTray.Location = new System.Drawing.Point(567, 166);
+            this.TextBoxHotPickLocationQuantityTray.Name = "TextBoxHotPickLocationQuantityTray";
+            this.TextBoxHotPickLocationQuantityTray.ReadOnly = true;
+            this.TextBoxHotPickLocationQuantityTray.Size = new System.Drawing.Size(126, 22);
+            this.TextBoxHotPickLocationQuantityTray.TabIndex = 23;
+            this.TextBoxHotPickLocationQuantityTray.TabStop = false;
+            this.TextBoxHotPickLocationQuantityTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxHotPickLoc4Tray
+            // 
+            this.TextBoxHotPickLoc4Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickLoc4Tray.Location = new System.Drawing.Point(600, 35);
+            this.TextBoxHotPickLoc4Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc4Tray.Name = "TextBoxHotPickLoc4Tray";
+            this.TextBoxHotPickLoc4Tray.ReadOnly = true;
+            this.TextBoxHotPickLoc4Tray.Size = new System.Drawing.Size(135, 116);
+            this.TextBoxHotPickLoc4Tray.TabIndex = 21;
+            this.TextBoxHotPickLoc4Tray.TabStop = false;
+            this.TextBoxHotPickLoc4Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxHotPickLoc3Tray
+            // 
+            this.TextBoxHotPickLoc3Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickLoc3Tray.Location = new System.Drawing.Point(427, 35);
+            this.TextBoxHotPickLoc3Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc3Tray.Name = "TextBoxHotPickLoc3Tray";
+            this.TextBoxHotPickLoc3Tray.ReadOnly = true;
+            this.TextBoxHotPickLoc3Tray.Size = new System.Drawing.Size(135, 116);
+            this.TextBoxHotPickLoc3Tray.TabIndex = 19;
+            this.TextBoxHotPickLoc3Tray.TabStop = false;
+            this.TextBoxHotPickLoc3Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxHotPickLoc2Tray
+            // 
+            this.TextBoxHotPickLoc2Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickLoc2Tray.Location = new System.Drawing.Point(185, 35);
+            this.TextBoxHotPickLoc2Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc2Tray.Name = "TextBoxHotPickLoc2Tray";
+            this.TextBoxHotPickLoc2Tray.ReadOnly = true;
+            this.TextBoxHotPickLoc2Tray.Size = new System.Drawing.Size(204, 116);
+            this.TextBoxHotPickLoc2Tray.TabIndex = 16;
+            this.TextBoxHotPickLoc2Tray.TabStop = false;
+            this.TextBoxHotPickLoc2Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxHotPickLoc1Tray
+            // 
+            this.TextBoxHotPickLoc1Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickLoc1Tray.Location = new System.Drawing.Point(12, 35);
+            this.TextBoxHotPickLoc1Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc1Tray.Name = "TextBoxHotPickLoc1Tray";
+            this.TextBoxHotPickLoc1Tray.ReadOnly = true;
+            this.TextBoxHotPickLoc1Tray.Size = new System.Drawing.Size(135, 116);
+            this.TextBoxHotPickLoc1Tray.TabIndex = 12;
+            this.TextBoxHotPickLoc1Tray.TabStop = false;
+            this.TextBoxHotPickLoc1Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label16
+            // 
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(425, 169);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(133, 16);
+            this.label16.TabIndex = 10;
+            this.label16.Text = "Location Quantity";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label17
+            // 
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(636, 12);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(75, 18);
+            this.label17.TabIndex = 20;
+            this.label17.Text = "Back";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label18
+            // 
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(458, 12);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(75, 18);
+            this.label18.TabIndex = 18;
+            this.label18.Text = "Over";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label19
+            // 
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(251, 12);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(75, 18);
+            this.label19.TabIndex = 15;
+            this.label19.Text = "Tray";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MBHotActionBackTray
+            // 
+            this.MBHotActionBackTray.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MBHotActionBackTray.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBHotActionBackTray.Location = new System.Drawing.Point(757, 660);
+            this.MBHotActionBackTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotActionBackTray.Name = "MBHotActionBackTray";
+            this.MBHotActionBackTray.Size = new System.Drawing.Size(177, 96);
+            this.MBHotActionBackTray.TabIndex = 31;
+            this.MBHotActionBackTray.Text = "Cancel";
+            this.MBHotActionBackTray.UseSelectable = true;
+            this.MBHotActionBackTray.Click += new System.EventHandler(this.MBHotActionBack_Click);
+            // 
+            // PanelTray
+            // 
+            this.PanelTray.BackColor = System.Drawing.Color.Blue;
+            this.PanelTray.Controls.Add(this.panel5);
+            this.PanelTray.Controls.Add(this.panel4);
+            this.PanelTray.Controls.Add(this.panel3);
+            this.PanelTray.Controls.Add(this.panel2);
+            this.PanelTray.Controls.Add(this.panel1);
+            this.PanelTray.Location = new System.Drawing.Point(36, 7);
+            this.PanelTray.Name = "PanelTray";
+            this.PanelTray.Size = new System.Drawing.Size(1100, 344);
+            this.PanelTray.TabIndex = 32;
+            // 
+            // label20
+            // 
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(42, 12);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(75, 18);
+            this.label20.TabIndex = 24;
+            this.label20.Text = "Device";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // PanelWidth
+            // 
+            this.PanelWidth.Controls.Add(this.LabelWidth20);
+            this.PanelWidth.Controls.Add(this.LabelWidth19);
+            this.PanelWidth.Controls.Add(this.LabelWidth18);
+            this.PanelWidth.Controls.Add(this.LabelWidth17);
+            this.PanelWidth.Controls.Add(this.LabelWidth16);
+            this.PanelWidth.Controls.Add(this.LabelWidth15);
+            this.PanelWidth.Controls.Add(this.LabelWidth14);
+            this.PanelWidth.Controls.Add(this.LabelWidth13);
+            this.PanelWidth.Controls.Add(this.LabelWidth12);
+            this.PanelWidth.Controls.Add(this.LabelWidth11);
+            this.PanelWidth.Controls.Add(this.LabelWidth10);
+            this.PanelWidth.Controls.Add(this.LabelWidth9);
+            this.PanelWidth.Controls.Add(this.LabelWidth8);
+            this.PanelWidth.Controls.Add(this.LabelWidth7);
+            this.PanelWidth.Controls.Add(this.LabelWidth6);
+            this.PanelWidth.Controls.Add(this.LabelWidth5);
+            this.PanelWidth.Controls.Add(this.LabelWidth4);
+            this.PanelWidth.Controls.Add(this.LabelWidth3);
+            this.PanelWidth.Controls.Add(this.LabelWidth2);
+            this.PanelWidth.Controls.Add(this.LabelWidth1);
+            this.PanelWidth.Location = new System.Drawing.Point(36, 352);
+            this.PanelWidth.Name = "PanelWidth";
+            this.PanelWidth.Size = new System.Drawing.Size(1100, 23);
+            this.PanelWidth.TabIndex = 33;
+            // 
+            // PanelDepth
+            // 
+            this.PanelDepth.Controls.Add(this.LabelDepth8);
+            this.PanelDepth.Controls.Add(this.LabelDepth7);
+            this.PanelDepth.Controls.Add(this.LabelDepth6);
+            this.PanelDepth.Controls.Add(this.LabelDepth5);
+            this.PanelDepth.Controls.Add(this.LabelDepth4);
+            this.PanelDepth.Controls.Add(this.LabelDepth3);
+            this.PanelDepth.Controls.Add(this.LabelDepth2);
+            this.PanelDepth.Controls.Add(this.LabelDepth1);
+            this.PanelDepth.Location = new System.Drawing.Point(10, 7);
+            this.PanelDepth.Name = "PanelDepth";
+            this.PanelDepth.Size = new System.Drawing.Size(25, 344);
+            this.PanelDepth.TabIndex = 34;
+            // 
+            // LabelWidth1
+            // 
+            this.LabelWidth1.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth1.Location = new System.Drawing.Point(0, 1);
+            this.LabelWidth1.Name = "LabelWidth1";
+            this.LabelWidth1.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth1.TabIndex = 0;
+            this.LabelWidth1.Text = "1";
+            this.LabelWidth1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth2
+            // 
+            this.LabelWidth2.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth2.Location = new System.Drawing.Point(55, 1);
+            this.LabelWidth2.Name = "LabelWidth2";
+            this.LabelWidth2.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth2.TabIndex = 0;
+            this.LabelWidth2.Text = "2";
+            this.LabelWidth2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth3
+            // 
+            this.LabelWidth3.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth3.Location = new System.Drawing.Point(110, 1);
+            this.LabelWidth3.Name = "LabelWidth3";
+            this.LabelWidth3.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth3.TabIndex = 0;
+            this.LabelWidth3.Text = "3";
+            this.LabelWidth3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth4
+            // 
+            this.LabelWidth4.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth4.Location = new System.Drawing.Point(165, 1);
+            this.LabelWidth4.Name = "LabelWidth4";
+            this.LabelWidth4.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth4.TabIndex = 0;
+            this.LabelWidth4.Text = "4";
+            this.LabelWidth4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth5
+            // 
+            this.LabelWidth5.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth5.Location = new System.Drawing.Point(220, 1);
+            this.LabelWidth5.Name = "LabelWidth5";
+            this.LabelWidth5.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth5.TabIndex = 0;
+            this.LabelWidth5.Text = "5";
+            this.LabelWidth5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth6
+            // 
+            this.LabelWidth6.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth6.Location = new System.Drawing.Point(275, 1);
+            this.LabelWidth6.Name = "LabelWidth6";
+            this.LabelWidth6.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth6.TabIndex = 0;
+            this.LabelWidth6.Text = "6";
+            this.LabelWidth6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth7
+            // 
+            this.LabelWidth7.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth7.Location = new System.Drawing.Point(330, 1);
+            this.LabelWidth7.Name = "LabelWidth7";
+            this.LabelWidth7.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth7.TabIndex = 0;
+            this.LabelWidth7.Text = "7";
+            this.LabelWidth7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth8
+            // 
+            this.LabelWidth8.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth8.Location = new System.Drawing.Point(385, 1);
+            this.LabelWidth8.Name = "LabelWidth8";
+            this.LabelWidth8.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth8.TabIndex = 0;
+            this.LabelWidth8.Text = "8";
+            this.LabelWidth8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth9
+            // 
+            this.LabelWidth9.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth9.Location = new System.Drawing.Point(440, 1);
+            this.LabelWidth9.Name = "LabelWidth9";
+            this.LabelWidth9.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth9.TabIndex = 0;
+            this.LabelWidth9.Text = "9";
+            this.LabelWidth9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth10
+            // 
+            this.LabelWidth10.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth10.Location = new System.Drawing.Point(495, 1);
+            this.LabelWidth10.Name = "LabelWidth10";
+            this.LabelWidth10.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth10.TabIndex = 0;
+            this.LabelWidth10.Text = "10";
+            this.LabelWidth10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth11
+            // 
+            this.LabelWidth11.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth11.Location = new System.Drawing.Point(550, 1);
+            this.LabelWidth11.Name = "LabelWidth11";
+            this.LabelWidth11.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth11.TabIndex = 0;
+            this.LabelWidth11.Text = "11";
+            this.LabelWidth11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth12
+            // 
+            this.LabelWidth12.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth12.Location = new System.Drawing.Point(605, 1);
+            this.LabelWidth12.Name = "LabelWidth12";
+            this.LabelWidth12.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth12.TabIndex = 0;
+            this.LabelWidth12.Text = "12";
+            this.LabelWidth12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth13
+            // 
+            this.LabelWidth13.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth13.Location = new System.Drawing.Point(660, 1);
+            this.LabelWidth13.Name = "LabelWidth13";
+            this.LabelWidth13.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth13.TabIndex = 0;
+            this.LabelWidth13.Text = "13";
+            this.LabelWidth13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth14
+            // 
+            this.LabelWidth14.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth14.Location = new System.Drawing.Point(715, 1);
+            this.LabelWidth14.Name = "LabelWidth14";
+            this.LabelWidth14.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth14.TabIndex = 0;
+            this.LabelWidth14.Text = "14";
+            this.LabelWidth14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth15
+            // 
+            this.LabelWidth15.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth15.Location = new System.Drawing.Point(770, 1);
+            this.LabelWidth15.Name = "LabelWidth15";
+            this.LabelWidth15.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth15.TabIndex = 0;
+            this.LabelWidth15.Text = "15";
+            this.LabelWidth15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth16
+            // 
+            this.LabelWidth16.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth16.Location = new System.Drawing.Point(825, 1);
+            this.LabelWidth16.Name = "LabelWidth16";
+            this.LabelWidth16.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth16.TabIndex = 0;
+            this.LabelWidth16.Text = "16";
+            this.LabelWidth16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth17
+            // 
+            this.LabelWidth17.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth17.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth17.Location = new System.Drawing.Point(880, 1);
+            this.LabelWidth17.Name = "LabelWidth17";
+            this.LabelWidth17.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth17.TabIndex = 0;
+            this.LabelWidth17.Text = "17";
+            this.LabelWidth17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth18
+            // 
+            this.LabelWidth18.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth18.Location = new System.Drawing.Point(935, 1);
+            this.LabelWidth18.Name = "LabelWidth18";
+            this.LabelWidth18.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth18.TabIndex = 0;
+            this.LabelWidth18.Text = "18";
+            this.LabelWidth18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth19
+            // 
+            this.LabelWidth19.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth19.Location = new System.Drawing.Point(990, 1);
+            this.LabelWidth19.Name = "LabelWidth19";
+            this.LabelWidth19.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth19.TabIndex = 0;
+            this.LabelWidth19.Text = "19";
+            this.LabelWidth19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth20
+            // 
+            this.LabelWidth20.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth20.Location = new System.Drawing.Point(1045, 1);
+            this.LabelWidth20.Name = "LabelWidth20";
+            this.LabelWidth20.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth20.TabIndex = 0;
+            this.LabelWidth20.Text = "20";
+            this.LabelWidth20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth1
+            // 
+            this.LabelDepth1.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth1.Location = new System.Drawing.Point(3, 324);
+            this.LabelDepth1.Name = "LabelDepth1";
+            this.LabelDepth1.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth1.TabIndex = 1;
+            this.LabelDepth1.Text = "1";
+            this.LabelDepth1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth2
+            // 
+            this.LabelDepth2.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth2.Location = new System.Drawing.Point(3, 281);
+            this.LabelDepth2.Name = "LabelDepth2";
+            this.LabelDepth2.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth2.TabIndex = 1;
+            this.LabelDepth2.Text = "2";
+            this.LabelDepth2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth3
+            // 
+            this.LabelDepth3.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth3.Location = new System.Drawing.Point(3, 238);
+            this.LabelDepth3.Name = "LabelDepth3";
+            this.LabelDepth3.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth3.TabIndex = 1;
+            this.LabelDepth3.Text = "3";
+            this.LabelDepth3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth4
+            // 
+            this.LabelDepth4.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth4.Location = new System.Drawing.Point(3, 195);
+            this.LabelDepth4.Name = "LabelDepth4";
+            this.LabelDepth4.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth4.TabIndex = 1;
+            this.LabelDepth4.Text = "4";
+            this.LabelDepth4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth5
+            // 
+            this.LabelDepth5.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth5.Location = new System.Drawing.Point(3, 152);
+            this.LabelDepth5.Name = "LabelDepth5";
+            this.LabelDepth5.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth5.TabIndex = 1;
+            this.LabelDepth5.Text = "5";
+            this.LabelDepth5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth6
+            // 
+            this.LabelDepth6.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth6.Location = new System.Drawing.Point(3, 109);
+            this.LabelDepth6.Name = "LabelDepth6";
+            this.LabelDepth6.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth6.TabIndex = 1;
+            this.LabelDepth6.Text = "6";
+            this.LabelDepth6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth7
+            // 
+            this.LabelDepth7.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth7.Location = new System.Drawing.Point(3, 66);
+            this.LabelDepth7.Name = "LabelDepth7";
+            this.LabelDepth7.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth7.TabIndex = 1;
+            this.LabelDepth7.Text = "7";
+            this.LabelDepth7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDepth8
+            // 
+            this.LabelDepth8.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth8.Location = new System.Drawing.Point(3, 23);
+            this.LabelDepth8.Name = "LabelDepth8";
+            this.LabelDepth8.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth8.TabIndex = 1;
+            this.LabelDepth8.Text = "8";
+            this.LabelDepth8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Green;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.LabelItemNumber);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(220, 344);
+            this.panel1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Yellow;
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.label4);
+            this.panel2.Location = new System.Drawing.Point(221, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(220, 344);
+            this.panel2.TabIndex = 1;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Green;
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3.Controls.Add(this.label13);
+            this.panel3.Controls.Add(this.label14);
+            this.panel3.Location = new System.Drawing.Point(441, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(220, 172);
+            this.panel3.TabIndex = 2;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.Red;
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel4.Controls.Add(this.label15);
+            this.panel4.Controls.Add(this.label21);
+            this.panel4.Location = new System.Drawing.Point(441, 173);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(220, 172);
+            this.panel4.TabIndex = 3;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Green;
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.label22);
+            this.panel5.Controls.Add(this.label23);
+            this.panel5.Location = new System.Drawing.Point(661, 173);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(436, 171);
+            this.panel5.TabIndex = 4;
+            // 
+            // LabelItemNumber
+            // 
+            this.LabelItemNumber.BackColor = System.Drawing.Color.Transparent;
+            this.LabelItemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelItemNumber.ForeColor = System.Drawing.Color.White;
+            this.LabelItemNumber.Location = new System.Drawing.Point(33, 20);
+            this.LabelItemNumber.Name = "LabelItemNumber";
+            this.LabelItemNumber.Size = new System.Drawing.Size(150, 20);
+            this.LabelItemNumber.TabIndex = 0;
+            this.LabelItemNumber.Text = "10049586";
+            this.LabelItemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(33, 50);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(150, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Qty:     24";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(33, 50);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(150, 20);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Qty:     4";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(33, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(150, 20);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "10029827";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label13
+            // 
+            this.label13.BackColor = System.Drawing.Color.Transparent;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(33, 51);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(150, 20);
+            this.label13.TabIndex = 1;
+            this.label13.Text = "Qty:     13";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label14
+            // 
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(33, 21);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(150, 20);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "10012546";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label15
+            // 
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(36, 50);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(150, 20);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Qty:    0";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label21
+            // 
+            this.label21.BackColor = System.Drawing.Color.Transparent;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.ForeColor = System.Drawing.Color.White;
+            this.label21.Location = new System.Drawing.Point(36, 20);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(150, 20);
+            this.label21.TabIndex = 2;
+            this.label21.Text = "20078564";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label22
+            // 
+            this.label22.BackColor = System.Drawing.Color.Transparent;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.ForeColor = System.Drawing.Color.White;
+            this.label22.Location = new System.Drawing.Point(146, 51);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(150, 20);
+            this.label22.TabIndex = 1;
+            this.label22.Text = "Qty:    356";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label23
+            // 
+            this.label23.BackColor = System.Drawing.Color.Transparent;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.ForeColor = System.Drawing.Color.White;
+            this.label23.Location = new System.Drawing.Point(146, 21);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(150, 20);
+            this.label23.TabIndex = 2;
+            this.label23.Text = "10034581";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FrmHotAction
             // 
@@ -1138,6 +2229,18 @@
             this.GroupBoxHotActions.ResumeLayout(false);
             this.GroupBoxHotActions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).EndInit();
+            this.HotActionTray.ResumeLayout(false);
+            this.HotActionTray.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.PanelTray.ResumeLayout(false);
+            this.PanelWidth.ResumeLayout(false);
+            this.PanelDepth.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1223,5 +2326,88 @@
         private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator3;
         private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator2;
         private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator1;
+        private System.Windows.Forms.TabPage HotActionTray;
+        private MetroFramework.Controls.MetroButton MBHotActionBackTray;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ComboBox ComboBoxLocationCodeLocationTray;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox ComboBoxHeightCodeLocationTray;
+        private System.Windows.Forms.ComboBox ComboBoxVelocityCodeLocationTray;
+        private System.Windows.Forms.ComboBox ComboBoxSizeCodeLocationTray;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox TextBoxHotPickReceivedDateTray;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label LabelStaticReleaseTray;
+        private System.Windows.Forms.Label LabelSlotTray;
+        private System.Windows.Forms.Label LabelPrimeBinTray;
+        private System.Windows.Forms.TextBox TextBoxHotPickLoc5Tray;
+        private System.Windows.Forms.TextBox TextBoxHotPickLocationQuantityTray;
+        private System.Windows.Forms.TextBox TextBoxHotPickLoc4Tray;
+        private System.Windows.Forms.TextBox TextBoxHotPickLoc3Tray;
+        private System.Windows.Forms.TextBox TextBoxHotPickLoc2Tray;
+        private System.Windows.Forms.TextBox TextBoxHotPickLoc1Tray;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox TextBoxHotPickQuantityTray;
+        private System.Windows.Forms.Label label7;
+        private MetroFramework.Controls.MetroButton MBHotAcceptTray;
+        private System.Windows.Forms.Label LabelHotPickUOITray;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label LabelHotPickDescriptionTray;
+        private System.Windows.Forms.Label LabelHotPickItemTray;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel PanelTray;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Panel PanelDepth;
+        private System.Windows.Forms.Label LabelDepth8;
+        private System.Windows.Forms.Label LabelDepth7;
+        private System.Windows.Forms.Label LabelDepth6;
+        private System.Windows.Forms.Label LabelDepth5;
+        private System.Windows.Forms.Label LabelDepth4;
+        private System.Windows.Forms.Label LabelDepth3;
+        private System.Windows.Forms.Label LabelDepth2;
+        private System.Windows.Forms.Label LabelDepth1;
+        private System.Windows.Forms.Panel PanelWidth;
+        private System.Windows.Forms.Label LabelWidth20;
+        private System.Windows.Forms.Label LabelWidth19;
+        private System.Windows.Forms.Label LabelWidth18;
+        private System.Windows.Forms.Label LabelWidth17;
+        private System.Windows.Forms.Label LabelWidth16;
+        private System.Windows.Forms.Label LabelWidth15;
+        private System.Windows.Forms.Label LabelWidth14;
+        private System.Windows.Forms.Label LabelWidth13;
+        private System.Windows.Forms.Label LabelWidth12;
+        private System.Windows.Forms.Label LabelWidth11;
+        private System.Windows.Forms.Label LabelWidth10;
+        private System.Windows.Forms.Label LabelWidth9;
+        private System.Windows.Forms.Label LabelWidth8;
+        private System.Windows.Forms.Label LabelWidth7;
+        private System.Windows.Forms.Label LabelWidth6;
+        private System.Windows.Forms.Label LabelWidth5;
+        private System.Windows.Forms.Label LabelWidth4;
+        private System.Windows.Forms.Label LabelWidth3;
+        private System.Windows.Forms.Label LabelWidth2;
+        private System.Windows.Forms.Label LabelWidth1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label LabelItemNumber;
     }
 }

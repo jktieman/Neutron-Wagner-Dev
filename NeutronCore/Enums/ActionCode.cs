@@ -46,7 +46,7 @@ namespace NeutronCore.Enums
         LocationCount = 21,
         [Description("Cycle Count")]
         CycleCount = 22,
-        [Description("Change Pick Location")]
+        [Description("Change Pick Quantity")]
         ChangePickLocation = 23,
         [Description("Hold Order")]
         HoldOrder = 24,

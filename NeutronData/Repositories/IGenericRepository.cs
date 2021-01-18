@@ -19,7 +19,7 @@ namespace NeutronData.Repositories
             params Expression<Func<TEntity, object>>[] includeProperties);
 
         IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
-        TEntity FindByKey(int id);
+        TEntity FindByKey(int? id);
         void Insert(TEntity entity);
         void Update(TEntity entity);
         void Delete(int id);

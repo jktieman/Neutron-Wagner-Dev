@@ -14,6 +14,7 @@ namespace NeutronData.ModelViews
         public int StationId { get; set; }
         public string StationName { get; set; }
         public int NumberOfCarriers { get; set; }
+        public int CarrierLevel { get; set; }
         public int CarrierWidth { get; set; }
         public int CarrierDepth { get; set; }
         public int DeviceTypeId { get; set; }

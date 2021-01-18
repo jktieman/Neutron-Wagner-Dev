@@ -66,7 +66,10 @@ namespace Neutron.Forms
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
+            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunLoader = new MetroFramework.Controls.MetroButton();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
+            this.MBMainUpload = new MetroFramework.Controls.MetroButton();
             this.MBMainLoadOrders = new MetroFramework.Controls.MetroButton();
             this.MBMainNewOrder = new MetroFramework.Controls.MetroButton();
             this.MBMainOrderManager = new MetroFramework.Controls.MetroButton();
@@ -168,13 +171,6 @@ namespace Neutron.Forms
             this.MBStart = new MetroFramework.Controls.MetroButton();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.CurrentDeviceIndicator6 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator5 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator4 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator3 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator2 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator1 = new CurrentDeviceIndicator.DeviceIndicator();
             this.ButtonStopMoveNext = new System.Windows.Forms.Button();
             this.ButtonStopMoveLast = new System.Windows.Forms.Button();
             this.ButtonStopMoveFirst = new System.Windows.Forms.Button();
@@ -387,9 +383,6 @@ namespace Neutron.Forms
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
-            this.MBMainUpload = new MetroFramework.Controls.MetroButton();
-            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
-            this.MBRunLoader = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -433,7 +426,6 @@ namespace Neutron.Forms
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.LabelRecordCount.Visible = false;
             // 
             // tabControl1
             // 
@@ -473,18 +465,57 @@ namespace Neutron.Forms
             this.Main.Text = "Main";
             this.Main.Enter += new System.EventHandler(this.Main_Enter);
             // 
+            // MBRunUpload
+            // 
+            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunUpload.Location = new System.Drawing.Point(398, 680);
+            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunUpload.Name = "MBRunUpload";
+            this.MBRunUpload.Size = new System.Drawing.Size(350, 53);
+            this.MBRunUpload.TabIndex = 27;
+            this.MBRunUpload.Text = "Run Upload Once";
+            this.MBRunUpload.UseSelectable = true;
+            this.MBRunUpload.Visible = false;
+            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
+            // 
+            // MBRunLoader
+            // 
+            this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunLoader.Location = new System.Drawing.Point(398, 558);
+            this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunLoader.Name = "MBRunLoader";
+            this.MBRunLoader.Size = new System.Drawing.Size(350, 53);
+            this.MBRunLoader.TabIndex = 28;
+            this.MBRunLoader.Text = "Run Loader Once";
+            this.MBRunLoader.UseSelectable = true;
+            this.MBRunLoader.Visible = false;
+            this.MBRunLoader.Click += new System.EventHandler(this.MBRunLoader_Click);
+            // 
             // MBMainClose
             // 
             this.MBMainClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBMainClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainClose.Location = new System.Drawing.Point(967, 4);
+            this.MBMainClose.Location = new System.Drawing.Point(1006, 10);
             this.MBMainClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainClose.Name = "MBMainClose";
-            this.MBMainClose.Size = new System.Drawing.Size(177, 76);
+            this.MBMainClose.Size = new System.Drawing.Size(135, 79);
             this.MBMainClose.TabIndex = 4;
             this.MBMainClose.Text = "Home";
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
+            // 
+            // MBMainUpload
+            // 
+            this.MBMainUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBMainUpload.Location = new System.Drawing.Point(398, 619);
+            this.MBMainUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBMainUpload.Name = "MBMainUpload";
+            this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
+            this.MBMainUpload.TabIndex = 3;
+            this.MBMainUpload.Text = "Run Upload Continuously";
+            this.MBMainUpload.UseSelectable = true;
+            this.MBMainUpload.Visible = false;
+            this.MBMainUpload.Click += new System.EventHandler(this.MBMainUpload_Click);
             // 
             // MBMainLoadOrders
             // 
@@ -575,7 +606,7 @@ namespace Neutron.Forms
             this.panel12.Controls.Add(this.ComboBoxStationNumber);
             this.panel12.Controls.Add(this.MBPrintPick);
             this.panel12.Controls.Add(this.ButtonPrintAO);
-            this.panel12.Location = new System.Drawing.Point(141, 645);
+            this.panel12.Location = new System.Drawing.Point(141, 674);
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(388, 45);
             this.panel12.TabIndex = 25;
@@ -626,7 +657,7 @@ namespace Neutron.Forms
             // 
             this.MBCompress.Enabled = false;
             this.MBCompress.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCompress.Location = new System.Drawing.Point(615, 693);
+            this.MBCompress.Location = new System.Drawing.Point(615, 722);
             this.MBCompress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCompress.Name = "MBCompress";
             this.MBCompress.Size = new System.Drawing.Size(125, 37);
@@ -638,7 +669,7 @@ namespace Neutron.Forms
             // MBPrintOrderListing
             // 
             this.MBPrintOrderListing.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 650);
+            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 679);
             this.MBPrintOrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderListing.Name = "MBPrintOrderListing";
             this.MBPrintOrderListing.Size = new System.Drawing.Size(125, 79);
@@ -650,7 +681,7 @@ namespace Neutron.Forms
             // MBJobDetails
             // 
             this.MBJobDetails.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBJobDetails.Location = new System.Drawing.Point(882, 650);
+            this.MBJobDetails.Location = new System.Drawing.Point(882, 679);
             this.MBJobDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBJobDetails.Name = "MBJobDetails";
             this.MBJobDetails.Size = new System.Drawing.Size(125, 79);
@@ -663,7 +694,7 @@ namespace Neutron.Forms
             // MBPriority
             // 
             this.MBPriority.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPriority.Location = new System.Drawing.Point(615, 649);
+            this.MBPriority.Location = new System.Drawing.Point(615, 678);
             this.MBPriority.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPriority.Name = "MBPriority";
             this.MBPriority.Size = new System.Drawing.Size(125, 37);
@@ -675,7 +706,7 @@ namespace Neutron.Forms
             // MBHold
             // 
             this.MBHold.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHold.Location = new System.Drawing.Point(536, 649);
+            this.MBHold.Location = new System.Drawing.Point(536, 678);
             this.MBHold.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHold.Name = "MBHold";
             this.MBHold.Size = new System.Drawing.Size(72, 36);
@@ -687,7 +718,7 @@ namespace Neutron.Forms
             // MBRelease
             // 
             this.MBRelease.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRelease.Location = new System.Drawing.Point(527, 693);
+            this.MBRelease.Location = new System.Drawing.Point(527, 722);
             this.MBRelease.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRelease.Name = "MBRelease";
             this.MBRelease.Size = new System.Drawing.Size(82, 36);
@@ -756,7 +787,7 @@ namespace Neutron.Forms
             // MBSelectAll
             // 
             this.MBSelectAll.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSelectAll.Location = new System.Drawing.Point(7, 649);
+            this.MBSelectAll.Location = new System.Drawing.Point(7, 678);
             this.MBSelectAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSelectAll.Name = "MBSelectAll";
             this.MBSelectAll.Size = new System.Drawing.Size(124, 36);
@@ -780,10 +811,10 @@ namespace Neutron.Forms
             // MButtonClearSelection
             // 
             this.MButtonClearSelection.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClearSelection.Location = new System.Drawing.Point(7, 692);
+            this.MButtonClearSelection.Location = new System.Drawing.Point(7, 721);
             this.MButtonClearSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClearSelection.Name = "MButtonClearSelection";
-            this.MButtonClearSelection.Size = new System.Drawing.Size(134, 36);
+            this.MButtonClearSelection.Size = new System.Drawing.Size(124, 36);
             this.MButtonClearSelection.TabIndex = 15;
             this.MButtonClearSelection.Text = "Clear Selection";
             this.MButtonClearSelection.UseSelectable = true;
@@ -817,7 +848,7 @@ namespace Neutron.Forms
             // MBOffCarousel
             // 
             this.MBOffCarousel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOffCarousel.Location = new System.Drawing.Point(334, 693);
+            this.MBOffCarousel.Location = new System.Drawing.Point(334, 722);
             this.MBOffCarousel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOffCarousel.Name = "MBOffCarousel";
             this.MBOffCarousel.Size = new System.Drawing.Size(187, 36);
@@ -829,10 +860,10 @@ namespace Neutron.Forms
             // ButtonPrintPacking
             // 
             this.ButtonPrintPacking.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonPrintPacking.Location = new System.Drawing.Point(147, 693);
+            this.ButtonPrintPacking.Location = new System.Drawing.Point(141, 722);
             this.ButtonPrintPacking.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonPrintPacking.Name = "ButtonPrintPacking";
-            this.ButtonPrintPacking.Size = new System.Drawing.Size(181, 36);
+            this.ButtonPrintPacking.Size = new System.Drawing.Size(187, 36);
             this.ButtonPrintPacking.TabIndex = 12;
             this.ButtonPrintPacking.Text = "Print Packing List";
             this.ButtonPrintPacking.UseSelectable = true;
@@ -889,7 +920,7 @@ namespace Neutron.Forms
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridView1.Size = new System.Drawing.Size(1131, 545);
+            this.DataGridView1.Size = new System.Drawing.Size(1131, 570);
             this.DataGridView1.TabIndex = 0;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             this.DataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DataGridView1_KeyUp);
@@ -897,7 +928,7 @@ namespace Neutron.Forms
             // MBDeleteOrder
             // 
             this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 693);
+            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 722);
             this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDeleteOrder.Name = "MBDeleteOrder";
             this.MBDeleteOrder.Size = new System.Drawing.Size(130, 36);
@@ -909,7 +940,7 @@ namespace Neutron.Forms
             // MBReturnToStock
             // 
             this.MBReturnToStock.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStock.Location = new System.Drawing.Point(746, 649);
+            this.MBReturnToStock.Location = new System.Drawing.Point(746, 678);
             this.MBReturnToStock.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReturnToStock.Name = "MBReturnToStock";
             this.MBReturnToStock.Size = new System.Drawing.Size(130, 36);
@@ -1800,7 +1831,7 @@ namespace Neutron.Forms
             this.DataGridPickView.RowTemplate.ReadOnly = true;
             this.DataGridPickView.Size = new System.Drawing.Size(1135, 666);
             this.DataGridPickView.TabIndex = 3;
-            this.DataGridPickView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DataGridPickView_CellFormatting);
+            this.DataGridPickView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridPickView_DataBindingComplete);
             // 
             // MBPrintPickList
             // 
@@ -1842,13 +1873,6 @@ namespace Neutron.Forms
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.RoyalBlue;
-            this.PickScreen.Controls.Add(this.button1);
-            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator6);
-            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator5);
-            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator4);
-            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator3);
-            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator2);
-            this.PickScreen.Controls.Add(this.CurrentDeviceIndicator1);
             this.PickScreen.Controls.Add(this.ButtonStopMoveNext);
             this.PickScreen.Controls.Add(this.ButtonStopMoveLast);
             this.PickScreen.Controls.Add(this.ButtonStopMoveFirst);
@@ -1886,76 +1910,6 @@ namespace Neutron.Forms
             this.PickScreen.Size = new System.Drawing.Size(1147, 770);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(665, 526);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(34, 26);
-            this.button1.TabIndex = 120;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // CurrentDeviceIndicator6
-            // 
-            this.CurrentDeviceIndicator6.Active = false;
-            this.CurrentDeviceIndicator6.AutoScroll = true;
-            this.CurrentDeviceIndicator6.DeviceNumber = 6;
-            this.CurrentDeviceIndicator6.Location = new System.Drawing.Point(849, 8);
-            this.CurrentDeviceIndicator6.Name = "CurrentDeviceIndicator6";
-            this.CurrentDeviceIndicator6.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator6.TabIndex = 119;
-            // 
-            // CurrentDeviceIndicator5
-            // 
-            this.CurrentDeviceIndicator5.Active = false;
-            this.CurrentDeviceIndicator5.AutoScroll = true;
-            this.CurrentDeviceIndicator5.DeviceNumber = 5;
-            this.CurrentDeviceIndicator5.Location = new System.Drawing.Point(715, 8);
-            this.CurrentDeviceIndicator5.Name = "CurrentDeviceIndicator5";
-            this.CurrentDeviceIndicator5.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator5.TabIndex = 119;
-            // 
-            // CurrentDeviceIndicator4
-            // 
-            this.CurrentDeviceIndicator4.Active = false;
-            this.CurrentDeviceIndicator4.AutoScroll = true;
-            this.CurrentDeviceIndicator4.DeviceNumber = 4;
-            this.CurrentDeviceIndicator4.Location = new System.Drawing.Point(581, 8);
-            this.CurrentDeviceIndicator4.Name = "CurrentDeviceIndicator4";
-            this.CurrentDeviceIndicator4.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator4.TabIndex = 119;
-            // 
-            // CurrentDeviceIndicator3
-            // 
-            this.CurrentDeviceIndicator3.Active = false;
-            this.CurrentDeviceIndicator3.AutoScroll = true;
-            this.CurrentDeviceIndicator3.DeviceNumber = 3;
-            this.CurrentDeviceIndicator3.Location = new System.Drawing.Point(447, 8);
-            this.CurrentDeviceIndicator3.Name = "CurrentDeviceIndicator3";
-            this.CurrentDeviceIndicator3.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator3.TabIndex = 119;
-            // 
-            // CurrentDeviceIndicator2
-            // 
-            this.CurrentDeviceIndicator2.Active = false;
-            this.CurrentDeviceIndicator2.AutoScroll = true;
-            this.CurrentDeviceIndicator2.DeviceNumber = 2;
-            this.CurrentDeviceIndicator2.Location = new System.Drawing.Point(313, 8);
-            this.CurrentDeviceIndicator2.Name = "CurrentDeviceIndicator2";
-            this.CurrentDeviceIndicator2.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator2.TabIndex = 119;
-            // 
-            // CurrentDeviceIndicator1
-            // 
-            this.CurrentDeviceIndicator1.Active = false;
-            this.CurrentDeviceIndicator1.AutoScroll = true;
-            this.CurrentDeviceIndicator1.DeviceNumber = 1;
-            this.CurrentDeviceIndicator1.Location = new System.Drawing.Point(179, 8);
-            this.CurrentDeviceIndicator1.Name = "CurrentDeviceIndicator1";
-            this.CurrentDeviceIndicator1.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator1.TabIndex = 119;
             // 
             // ButtonStopMoveNext
             // 
@@ -4625,45 +4579,6 @@ namespace Neutron.Forms
             // 
             this.ToolTipPickScreen.IsBalloon = true;
             // 
-            // MBMainUpload
-            // 
-            this.MBMainUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainUpload.Location = new System.Drawing.Point(398, 619);
-            this.MBMainUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBMainUpload.Name = "MBMainUpload";
-            this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
-            this.MBMainUpload.TabIndex = 3;
-            this.MBMainUpload.Text = "Run Upload Continuously";
-            this.MBMainUpload.UseSelectable = true;
-            this.MBMainUpload.Visible = false;
-            this.MBMainUpload.Click += new System.EventHandler(this.MBMainUpload_Click);
-            // 
-            // MBRunUpload
-            // 
-            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(398, 680);
-            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRunUpload.Name = "MBRunUpload";
-            this.MBRunUpload.Size = new System.Drawing.Size(350, 53);
-            this.MBRunUpload.TabIndex = 27;
-            this.MBRunUpload.Text = "Run Upload Once";
-            this.MBRunUpload.UseSelectable = true;
-            this.MBRunUpload.Visible = false;
-            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
-            // 
-            // MBRunLoader
-            // 
-            this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunLoader.Location = new System.Drawing.Point(398, 558);
-            this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRunLoader.Name = "MBRunLoader";
-            this.MBRunLoader.Size = new System.Drawing.Size(350, 53);
-            this.MBRunLoader.TabIndex = 28;
-            this.MBRunLoader.Text = "Run Loader Once";
-            this.MBRunLoader.UseSelectable = true;
-            this.MBRunLoader.Visible = false;
-            this.MBRunLoader.Click += new System.EventHandler(this.MBRunLoader_Click);
-            // 
             // FrmPick
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4682,7 +4597,6 @@ namespace Neutron.Forms
             this.Text = "Order Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPick_FormClosing);
             this.Load += new System.EventHandler(this.FrmPick_Load);
-            this.Shown += new System.EventHandler(this.FrmPick_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FrmPick_KeyPress);
             this.tabControl1.ResumeLayout(false);
@@ -5054,13 +4968,6 @@ namespace Neutron.Forms
         private MetroFramework.Controls.MetroButton MBShortCut;
         private MetroFramework.Controls.MetroButton MBFillOptimized;
         private System.Windows.Forms.Label LabelNotify;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator6;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator5;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator4;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator3;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator2;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator1;
-        private System.Windows.Forms.Button button1;
         private MetroFramework.Controls.MetroButton MBMainUpload;
         private MetroFramework.Controls.MetroButton MBRunUpload;
         private MetroFramework.Controls.MetroButton MBRunLoader;

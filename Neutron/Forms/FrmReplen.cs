@@ -67,16 +67,22 @@ namespace Neutron.Forms
         private BindingSource bindingSourceOrderView = new BindingSource();
         private BindingSource bindingSourceCompleted = new BindingSource();
         private BindingSource bindingSourceAvailableOrders = new BindingSource();
+        private BindingSource _bindingSourceAvailableOrdersRack = new BindingSource();
         private BindingSource bindingSourcePickViews = new BindingSource();
         private BindingSource bindingSourcePickStops = new BindingSource();
         private BindingSource bindingSourceHot = new BindingSource();
         private BindingSource bindingSourceOrderDetailsView = new BindingSource();
         //New ReplenOrder
-        private BindingSource bindingSourceItems = new BindingSource();
-        private BindingSource bindingSourceNewItems = new BindingSource();
+        private BindingSource _bindingSourceItems = new BindingSource();
+        private BindingSource _bindingSourceNewItems = new BindingSource();
+
+
         //----
         public bool CloseButtonPressed { get; set; }
         public ReplenOrderView CurrentItem;
+
+        public RackReplenOrderView CurrentRackItem;
+        private AvailableReplenOrdersView _currentAvailableOrdersView;
         public TextBox CurrentTextBoxPos;
         bool ManualOverrideCurrentTextBoxPos = false;
         public bool CloseForm = false;
@@ -106,6 +112,7 @@ namespace Neutron.Forms
         private readonly ISecurityProcessor _securityProcessor;
         private readonly ILacProcessor _lacProcessor;
 
+        private CurrentDataSet _currentDataSet;
 
         public FrmReplen(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables, INomenclature nomenclature
@@ -129,14 +136,14 @@ namespace Neutron.Forms
             UpdateNomenclature();
             SetupPrinters();
             SetupGrids();
-            SetupListBoxes();
             ShowButtons();
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
             CurrentTextBoxPos = TextBoxPos1;
             InitOrdersToPick(neutronVariables.StoreBatchSize);
-            InitListView();
+            //TODO don't think I need this it's not in Pick
+           // InitListView();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
         }
 
@@ -166,55 +173,48 @@ namespace Neutron.Forms
         private void FrmReplen_Load(object sender, EventArgs e)
         {
             Task.Run(() => _logger.Log($"Not Loading ShowAllOrders on INIT FrmReplen"));
-            if (GlobalVar.LoaderRunning)
-            {
-                MBMainLoadOrders.Text = "Stop Loader";
-            }
         }
 
         // Set the focus to the passed in recId if it's passed in
         private int ShowAllOrders(int recId = 0)
         {
-            Task.Run(() => _logger.Log($"ShowAllOrders Start: [{System.DateTime.Now.ToString()}]"));
-            int idx = 0;
-            string findWhat = TextBoxFind.Text.Trim().ToLower();
+            Task.Run(() => _logger.Log($"ShowAllOrders Replen Start: [{System.DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
+            var idx = 0;
+            var findWhat = TextBoxFind.Text.Trim().ToLower();
             // string find = _akaRepository.Get(findWhat);
             // TextBoxFind.Text = find;
 
             if (!string.IsNullOrEmpty(findWhat))
             {
-                IEnumerable<ReplenOrderView> views = ordersRepository.GetOrderView(findWhat);
-                bindingSourceOrderViewEquin = new BindingListView<ReplenOrderView>(views.ToList());
-                //bindingSourceOrderView.DataSource = bindingSourceOrderViewEquin;
+                var views = ordersRepository.GetOrderViewNotCompleted(findWhat);
+                var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
+                bindingSourceOrderView.DataSource = bindingListView;
             }
             else
             {
-                IEnumerable<ReplenOrderView> views = ordersRepository.GetOrderView();
-                bindingSourceOrderViewEquin = new BindingListView<ReplenOrderView>(views.ToList());
-                //bindingSourceOrderView.DataSource = bindingSourceOrderViewEquin;
-
+                var views = ordersRepository.GetOrderViewNotCompleted();
+                var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
+                bindingSourceOrderView.DataSource = bindingListView;
             }
-            //DataGridView1.DataSource = bindingSourceOrderView;
-            DataGridView1.DataSource = bindingSourceOrderViewEquin;
-            //if (GetRecordCount(bindingSourceOrderView) > 0)
-            if (GetRecordCount(bindingSourceOrderViewEquin) > 0)
+
+            DataGridView1.DataSource = bindingSourceOrderView;
+
+            if (GetRecordCount(bindingSourceOrderView) > 0)
             {
                 if (recId != 0)
                 {
-                    //idx = IndexOf(bindingSourceOrderView, recId);
-                    idx = IndexOf(bindingSourceOrderViewEquin, recId);
+                    idx = IndexOf(bindingSourceOrderView, recId);
                     DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
                 }
                 else
                 {
                     DataGridView1.ClearSelection();
+                    DataGridView1.Update();
                 }
-                SyncCurrentlySelectedWithDataGrid();
                 DataGridView1.Refresh();
 
-                //CurrentItem = ((ObjectView<ReplenOrderView>) bindingSourceOrderView.Current).Object;
-                CurrentItem = ((ObjectView<ReplenOrderView>)bindingSourceOrderViewEquin[recId]).Object;
-                //PictureBoxItemImage.Load(@"C:\Images\1121.jpg");
+                CurrentItem = ((ObjectView<ReplenOrderView>)bindingSourceOrderView[recId]).Object;
+
             }
             Task.Run(() => _logger.Log($"ShowAllOrders End: [{System.DateTime.Now.ToLongTimeString()}]"));
             return idx;
@@ -222,36 +222,22 @@ namespace Neutron.Forms
 
         private int ShowAvailableOrders(int recId = 0)
         {
-            Task.Run(() => _logger.Log($"ShowAvailableOrders: [{System.DateTime.Now.ToLongTimeString()}]"));
-            int idx = 0;
+            Task.Run(() => _logger.Log($"ShowAvailableOrders Replen: [{System.DateTime.Now.ToLongTimeString()}]"));
+            var idx = 0;
 
-            string findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
+            var findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
 
             try
             {
-                //if (!string.IsNullOrEmpty(search))
-                //{
-                //    //bindingSourceAvailableOrdersEquin.ApplyFilter(delegate (ReplenOrderView orderView) { return orderView.SearchField.Contains(search); });
-                //    bindingSourceAvailableOrdersEquin.ApplyFilter(r => r.SearchField.Contains(search));
-                //    //IEnumerable<ReplenOrderView> views = ordersRepository.GetAvailableOrders(search);
-                //    //bindingSourceAvailableOrdersEquin = new BindingListView<ReplenOrderView>(views.ToList());
-                //    //bindingSourceAvailableOrders.DataSource = bindingSourceAvailableOrdersEquin;
-                //    //bindingSourceAvailableOrders .Filter = $"SearchField = '{search}'";
-                //}
-                //else
-                //{
+                var views = ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking);
 
-                IEnumerable<ReplenOrderView> views = ordersRepository.GetAvailableOrders(_station, findWhat);
+                var bindingListView = new BindingListView<AvailableReplenOrdersView>(views.ToList());
 
-                bindingSourceAvailableOrdersEquin = new BindingListView<ReplenOrderView>(views.ToList());
-
-                bindingSourceAvailableOrders.DataSource = bindingSourceAvailableOrdersEquin;
-                //}
+                bindingSourceAvailableOrders.DataSource = bindingListView;
             }
             catch (Exception ex)
             {
-
-                Task.Run(() => _logger.Log($"ShowAvailableOrders Error: {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"ShowAvailableOrders Replen Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]"));
             }
 
             DataGridViewAvailableOrders.DataSource = bindingSourceAvailableOrders;
@@ -278,11 +264,10 @@ namespace Neutron.Forms
                 DataGridViewAvailableOrders.Refresh();
                 DataGridViewAvailableOrdersRack.Refresh();
 
-                CurrentItem = ((ObjectView<ReplenOrderView>)bindingSourceAvailableOrders.Current).Object;
-
+                _currentAvailableOrdersView = ((ObjectView<AvailableReplenOrdersView>)bindingSourceAvailableOrders.Current).Object;
             }
 
-            Task.Run(() => _logger.Log($"ShowAvailableOrders End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"ShowAvailableOrders Replen End: [{System.DateTime.Now.ToLongTimeString()}]"));
             return idx;
         }
 
@@ -363,27 +348,6 @@ namespace Neutron.Forms
             return count;
         }
 
-
-        private void SyncCurrentlySelectedWithDataGrid()
-        {
-            //if (ListBoxSelectedOrders.Items.Count > 0)
-            //{
-            //    foreach (ReplenOrder rec in ListBoxSelectedOrders.Items)
-            //    {
-            //        foreach (DataGridViewRow row in DataGridView1.Rows)
-            //        {
-            //            int id = Convert.ToInt32(row.Cells["Id"].Value);
-            //            if (rec.Id == id)
-            //            {
-            //                var chk = (DataGridViewCheckBoxCell) row.Cells[0];
-            //                chk.Value = chk.TrueValue;
-            //            }
-            //        }
-            //    }
-            //    DataGridView1.Refresh();
-            //}
-        }
-
         #region Button Clicks
 
 
@@ -417,152 +381,189 @@ namespace Neutron.Forms
 
         #endregion
 
-        private void SetupListBoxes()
-        {
-            //ListBoxSelectedOrders.DisplayMember = "Ord1";
-            //ListBoxSelectedOrders.ValueMember = "Id";
-        }
 
-        private void SetupGrids()
-        {
-            int w = 90;
+        #region DataGridSetup
 
+        private void SetupOrderGrid()
+        {
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
+            DataGridView1.ScrollBars = ScrollBars.Both;
 
-
-            var colx = new DataGridViewCheckBoxColumn();
-            colx.HeaderText = "   ";
-            colx.Width = w;
-            colx.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colx.Name = "IsChecked";
-            colx.TrueValue = true;
-            colx.FalseValue = false;
-            colx.Visible = true;
+            var colx = new DataGridViewCheckBoxColumn
+            {
+                HeaderText = @"   ",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "IsChecked",
+                TrueValue = true,
+                FalseValue = false,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Visible = true
+            };
             DataGridView1.Columns.Add(colx);
 
-            var col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord1";
-            col.HeaderText = "Job";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Width = w;
-            col.Name = "Ord1";
+            var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord1",
+                HeaderText = _resourceManager.GetString($"Ord1"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "Ord1"
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord2";
-            col.HeaderText = "Invoice";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Width = w * 3;
-            col.Name = "Ord2";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord2",
+                HeaderText = _resourceManager.GetString($"Ord2"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "Ord2"
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Priority";
-            col.HeaderText = "Tray";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Width = w;
-            col.Name = "Priority";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Priority",
+                HeaderText = _resourceManager.GetString($"Priority"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "Priority"
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "OrderStatusName";
-            col.HeaderText = "Job Status";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "OrderStatusName";
-            col.Visible = true;
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "OrderStatusName",
+                HeaderText = _resourceManager.GetString($"OrderStatusName"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "OrderStatusName",
+                Visible = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Station_1_HasPicks";
-            col.HeaderText = "1";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Station_1_HasPicks";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_1_HasPicks",
+                HeaderText = @"1",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_1_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Station_2_HasPicks";
-            col.HeaderText = "2";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Station_2_HasPicks";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_2_HasPicks",
+                HeaderText = @"2",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_2_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Station_3_HasPicks";
-            col.HeaderText = "3";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Station_3_HasPicks";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_3_HasPicks",
+                HeaderText = @"3",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_3_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Station_4_HasPicks";
-            col.HeaderText = "4";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Station_4_HasPicks";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_4_HasPicks",
+                HeaderText = @"4",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_4_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Station_5_HasPicks";
-            col.HeaderText = "5";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Station_5_HasPicks";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_5_HasPicks",
+                HeaderText = @"5",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_5_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Station_8_HasPicks";
-            col.HeaderText = "8";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Station_8_HasPicks";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_8_HasPicks",
+                HeaderText = _resourceManager.GetString($"Off"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_8_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Lines";
-            col.HeaderText = "Lines";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Lines";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Lines",
+                HeaderText = _resourceManager.GetString($"Lines"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Lines",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Pieces";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.HeaderText = "Pieces";
-            col.Name = "Pieces";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Pieces",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                HeaderText = _resourceManager.GetString($"Pieces"),
+                Name = "Pieces",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "LoadDate";
-            col.HeaderText = "LoadDate";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "LoadDate";
-            col.Width = w;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LoadDate",
+                HeaderText = _resourceManager.GetString($"LoadDate"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "LoadDate",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "ShipMethodName";
-            col.HeaderText = "Ship Method";
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Width = w;
-            col.Name = "ShipMethodName";
-            col.Visible = false;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "ShipMethodName",
+                HeaderText = _resourceManager.GetString($"ShipMethodName"),
+                Visible = false,
+                Name = "ShipMethodName"
+            };
             DataGridView1.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Id";
-            col.HeaderText = "Id";
-            col.Visible = false;
-            col.Name = "Id";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                HeaderText = _resourceManager.GetString($"Id"),
+                Visible = false,
+                Name = "Id"
+            };
             DataGridView1.Columns.Add(col);
+
+            foreach (DataGridViewColumn column in DataGridView1.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            }
+        }
+
+
+        private void SetupGrids()
+        {
+            SetupOrderGrid();
 
             //*****************************************************************************
             //DataGridPickView
@@ -571,302 +572,468 @@ namespace Neutron.Forms
             DataGridPickView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridPickView.DefaultCellStyle.ForeColor = Color.Black;
             DataGridPickView.DefaultCellStyle.BackColor = Color.White;
-            // DataGridPickView.Columns["ReceivedDate"].DefaultCellStyle.Format = "{0:dd.MM.yyyy}";
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Sequence";
-            col.HeaderText = "Seq";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Visible = false;
-            col.Name = "Sequence";
+            var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Sequence",
+                HeaderText = _resourceManager.GetString($"Sequence"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Visible = false,
+                Name = "Sequence"
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "PickPosition";
-            col.HeaderText = "Pos";
-            col.Width = w;
-            colx.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "PickPosition";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "PickPosition",
+                HeaderText = _resourceManager.GetString($"PickPosition"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "PickPosition",
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord1";
-            col.HeaderText = "Job";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord1";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord1",
+                HeaderText = _resourceManager.GetString($"Ord1"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord1"
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord2";
-            col.HeaderText = "Invoice";
-            col.Width = w * 3;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord2";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord2",
+                HeaderText = _resourceManager.GetString($"Ord2"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord2"
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Item";
-            col.HeaderText = "Item";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Item";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _resourceManager.GetString($"Item"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
             DataGridPickView.Columns.Add(col);
 
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Quantity";
-            col.HeaderText = "Qty";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Quantity";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString($"Quantity"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Quantity"
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Slot";
-            col.HeaderText = "Slot";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Slot";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Slot",
+                HeaderText = _resourceManager.GetString($"Slot"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Slot"
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "TotalQuantityInInventory";
-            col.HeaderText = "Inv Qty";
-            col.Name = "TotalQuantityInInventory";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "TotalQuantityInInventory",
+                HeaderText = _resourceManager.GetString($"TotalQuantityInInventory"),
+                Name = "TotalQuantityInInventory",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Description";
-            col.HeaderText = "Description";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "Description";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _resourceManager.GetString($"Description"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "Description"
+            };
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "ReceivedDate";
-            col.HeaderText = "Received Date";
-            col.Width = w; ;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "ReceivedDate";
-            col.DefaultCellStyle.Format = "{0:dd.MM.yyyy}";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "ReceivedDate",
+                HeaderText = _resourceManager.GetString($"ReceivedDate"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "ReceivedDate"
+            };
+            //col.DefaultCellStyle.Format = "{0:dd.MM.yyyy}";
             DataGridPickView.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "OrderId";
-            col.HeaderText = "Job Id";
-            col.Visible = false;
-            col.Name = "OrderId";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "OrderId",
+                HeaderText = _resourceManager.GetString($"OrderId"),
+                Visible = false,
+                Name = "OrderId"
+            };
             DataGridPickView.Columns.Add(col);
 
-
+            foreach (DataGridViewColumn column in DataGridPickView.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
 
             //*****************************************************************************
-            ///DataGridViewAvailableOrders
+            //DataGridViewAvailableOrders
 
             DataGridViewAvailableOrders.AutoGenerateColumns = false;
             DataGridViewAvailableOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridViewAvailableOrders.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewAvailableOrders.DefaultCellStyle.BackColor = Color.White;
 
-            colx = new DataGridViewCheckBoxColumn();
-            colx.HeaderText = "   ";
-            colx.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colx.Name = "IsChecked";
-            colx.TrueValue = true;
-            colx.FalseValue = false;
-            colx.Visible = true;
+            var colx = new DataGridViewCheckBoxColumn
+            {
+                HeaderText = @"   ",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "IsChecked",
+                TrueValue = true,
+                FalseValue = false,
+                Visible = true
+            };
             DataGridViewAvailableOrders.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord1";
-            col.HeaderText = "Job";
-            col.Width = w * 3;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord1";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord1",
+                HeaderText = _resourceManager.GetString($"Ord1"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord1"
+            };
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord2";
-            col.HeaderText = "Invoice";
-            col.Width = w * 2;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord2";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord2",
+                HeaderText = _resourceManager.GetString($"Ord2"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord2"
+            };
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Starter";
-            col.HeaderText = "Starter";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Starter";
-            col.Visible = true;
+
+            if (_neutronVariables.SerialPicking)  //Show the Starter column
+            {
+                col = new DataGridViewTextBoxColumn
+                {
+                    DataPropertyName = "Starter",
+                    HeaderText = _resourceManager.GetString($"Starter"),
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                    Name = "Starter",
+                    Visible = true
+                };
+                DataGridViewAvailableOrders.Columns.Add(col);
+
+            }
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Priority",
+                HeaderText = _resourceManager.GetString($"Priority"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Priority"
+            };
+
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Priority";
-            col.HeaderText = "Tray";
-            col.Width = w;
-            colx.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Priority";
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "OrderStatusName",
+            //    HeaderText = _resourceManager.GetString("OrderStatusName"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+            //    Name = "OrderStatusName",
+            //    Visible = false
+            //};
+            //DataGridViewAvailableOrders.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Lines",
+                HeaderText = _resourceManager.GetString($"Lines"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Lines"
+            };
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "OrderStatusName";
-            col.HeaderText = "Job Status";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "OrderStatusName";
-            col.Visible = false;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Pieces",
+                HeaderText = _resourceManager.GetString($"Pieces"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Pieces"
+            };
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Lines";
-            col.HeaderText = "Lines";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Lines";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LoadDate",
+                HeaderText = _resourceManager.GetString($"LoadDate"),
+                Name = "LoadDate",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            };
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Pieces";
-            col.HeaderText = "Pieces";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Pieces";
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "ShipMethodName",
+            //    HeaderText = _resourceManager.GetString("ShipMethod"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+            //    Visible = false,
+            //    Name = "ShipMethodName"
+            //};
+
+            // DataGridViewAvailableOrders.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                HeaderText = _resourceManager.GetString($"Id"),
+                Visible = false,
+                Name = "Id"
+            };
             DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "LoadDate";
-            col.HeaderText = "LoadDate";
-            col.Name = "LoadDate";
-            col.Width = w * 2;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            DataGridViewAvailableOrders.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "ShipMethodName";
-            col.HeaderText = "Ship Method";
-            col.Width = w; ;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Visible = false;
-            col.Name = "ShipMethodName";
-            DataGridViewAvailableOrders.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Id";
-            col.HeaderText = "Id";
-            col.Visible = false;
-            col.Name = "Id";
-            DataGridViewAvailableOrders.Columns.Add(col);
-
+            foreach (DataGridViewColumn column in DataGridViewAvailableOrders.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
 
             //*****************************************************************************
-            ///DataGridViewAvailableOrdersRack
+            //DataGridViewAvailableOrdersRack
 
             DataGridViewAvailableOrdersRack.AutoGenerateColumns = false;
             DataGridViewAvailableOrdersRack.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridViewAvailableOrdersRack.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewAvailableOrdersRack.DefaultCellStyle.BackColor = Color.White;
 
-            colx = new DataGridViewCheckBoxColumn();
-            colx.HeaderText = "   ";
-            colx.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colx.Name = "IsChecked";
-            colx.TrueValue = true;
-            colx.FalseValue = false;
-            colx.Visible = true;
+            colx = new DataGridViewCheckBoxColumn
+            {
+                HeaderText = @"   ",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "IsChecked",
+                TrueValue = true,
+                FalseValue = false,
+                Visible = true
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord1";
-            col.HeaderText = "Job";
-            col.Width = w * 3;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord1";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord1",
+                HeaderText = _resourceManager.GetString($"Ord1"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord1"
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord2";
-            col.HeaderText = "Invoice";
-            col.Width = w * 2;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord2";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord2",
+                HeaderText = _resourceManager.GetString($"Ord2"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord2"
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Starter";
-            col.HeaderText = "Starter";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Starter";
-            col.Visible = true;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StatusName",
+                HeaderText = _resourceManager.GetString($"StatusName"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "StatusName",
+                Visible = true
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Priority";
-            col.HeaderText = "Tray";
-            col.Width = w;
-            colx.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "Priority";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Priority",
+                HeaderText = _resourceManager.GetString($"Priority"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Priority"
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "OrderStatusName";
-            col.HeaderText = "Job Status";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "OrderStatusName";
-            col.Visible = false;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Lines",
+                HeaderText = _resourceManager.GetString($"Lines"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Lines"
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Lines";
-            col.HeaderText = "Lines";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Lines";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Pieces",
+                HeaderText = _resourceManager.GetString($"Pieces"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Pieces"
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Pieces";
-            col.HeaderText = "Pieces";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Pieces";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LoadDate",
+                HeaderText = _resourceManager.GetString($"LoadDate"),
+                Name = "LoadDate",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            };
+
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "LoadDate";
-            col.HeaderText = "LoadDate";
-            col.Name = "LoadDate";
-            col.Width = w * 2;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "ShipMethodName",
+            //    HeaderText = _resourceManager.GetString(@"ShipMethod"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+            //    Visible = false,
+            //    Name = "ShipMethodName"
+            //};
+
+            // DataGridViewAvailableOrdersRack.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                HeaderText = _resourceManager.GetString($"Id"),
+                Visible = false,
+                Name = "Id"
+            };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "ShipMethodName";
-            col.HeaderText = "Ship Method";
-            col.Width = w; ;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Visible = false;
-            col.Name = "ShipMethodName";
-            DataGridViewAvailableOrdersRack.Columns.Add(col);
+            foreach (DataGridViewColumn column in DataGridViewAvailableOrdersRack.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Id";
-            col.HeaderText = "Id";
-            col.Visible = false;
-            col.Name = "Id";
-            DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            
+            ////**********************************************************************************************           
+            ////DataGridViewInventory
+
+            //DataGridViewInventory.AutoGenerateColumns = false;
+            //DataGridViewInventory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            //DataGridViewInventory.DefaultCellStyle.ForeColor = Color.Black;
+            //DataGridViewInventory.DefaultCellStyle.BackColor = Color.White;
+
+            //var bCol = new DataGridViewButtonColumn
+            //{
+            //    HeaderText = @"   ",
+            //    Visible = false,
+            //    Name = "HotPick",
+            //    Text = _resourceManager.GetString(@"HotPick"),
+            //    FlatStyle = FlatStyle.Popup,
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    UseColumnTextForButtonValue = true
+            //};
+
+            //DataGridViewInventory.Columns.Add(bCol);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Item",
+            //    HeaderText = _resourceManager.GetString(@"Item"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+            //    Name = "Item"
+            //};
+            //DataGridViewInventory.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Description",
+            //    HeaderText = _resourceManager.GetString(@"Description"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+            //    Name = "Description"
+            //};
+            //DataGridViewInventory.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Quantity",
+            //    HeaderText = _resourceManager.GetString(@"Quantity"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+            //    Name = "Quantity"
+            //};
+            //DataGridViewInventory.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Slot",
+            //    HeaderText = _resourceManager.GetString(@"Slot"),
+            //    Name = "Slot",
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            //};
+            //DataGridViewInventory.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "ReceivedDate",
+            //    HeaderText = _resourceManager.GetString(@"ReceivedDate"),
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+            //    Name = "ReceivedDate"
+            //};
+            //col.DefaultCellStyle.Format = "MM-dd-yyyy";
+
+            //DataGridViewInventory.Columns.Add(col);
+
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "Id",
+            //    HeaderText = "Id",
+            //    Visible = false,
+            //    Name = "Id"
+            //};
+            //DataGridViewInventory.Columns.Add(col);
+
+            //foreach (DataGridViewColumn column in DataGridViewInventory.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
+
+
             //********************************************************************
             // DataGridViewNewOrder
 
@@ -875,47 +1042,60 @@ namespace Neutron.Forms
             DataGridViewNewOrder.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewNewOrder.DefaultCellStyle.BackColor = Color.White;
 
-            var bCol = new DataGridViewButtonColumn();
-            bCol.HeaderText = "   ";
-            bCol.Visible = true;
-            bCol.Name = "AddItem";
-            bCol.Text = "Add Item";
-            bCol.FlatStyle = FlatStyle.Popup;
-            bCol.UseColumnTextForButtonValue = true;
-            bCol.Width = w;
-            DataGridViewNewOrder.Columns.Add(bCol);
-
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Item";
-            col.HeaderText = "Item";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Item";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationNumber",
+                HeaderText = _resourceManager.GetString($"StationNumber"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "StationNumber"
+            };
             DataGridViewNewOrder.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Quantity";
-            col.HeaderText = "Quantity";
-            col.Name = "Quantity";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _resourceManager.GetString($"Item"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
             DataGridViewNewOrder.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Description";
-            col.HeaderText = "Description";
-            col.Name = "Description";
-            col.Width = w; ;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _resourceManager.GetString($"Description"),
+                Name = "Description",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
+            };
             DataGridViewNewOrder.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Id";
-            col.HeaderText = "Id";
-            col.Visible = false;
-            col.Name = "Id";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString($"Quantity"),
+                Name = "Quantity",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
             DataGridViewNewOrder.Columns.Add(col);
 
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "ItemDefinitionId",
+                HeaderText = _resourceManager.GetString($"ItemDefinitionId"),
+                Visible = false,
+                Name = "ItemDefinitionId"
+            };
+            DataGridViewNewOrder.Columns.Add(col);
+
+            foreach (DataGridViewColumn column in DataGridViewNewOrder.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
 
             //********************************************************************
             //DataGridViewOrderDetails
@@ -924,95 +1104,193 @@ namespace Neutron.Forms
             DataGridViewOrderDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridViewOrderDetails.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewOrderDetails.DefaultCellStyle.BackColor = Color.White;
+            DataGridViewOrderDetails.ScrollBars = ScrollBars.Both;
 
-            colx = new DataGridViewCheckBoxColumn();
-            colx.HeaderText = "   ";
-            colx.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            colx.Name = "IsChecked";
-            colx.TrueValue = true;
-            colx.FalseValue = false;
+            colx = new DataGridViewCheckBoxColumn
+            {
+                HeaderText = @"   ",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "IsChecked",
+                TrueValue = true,
+                FalseValue = false
+            };
             DataGridViewOrderDetails.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "StationNumber";
-            col.HeaderText = "Station";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            col.Name = "StationNumber";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationNumber",
+                HeaderText = _resourceManager.GetString($"StationNumber"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "StationNumber"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord1";
-            col.HeaderText = "Job";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord1";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord1",
+                HeaderText = _resourceManager.GetString($"Ord1"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord1"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Ord2";
-            col.HeaderText = "Task";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Ord2";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Ord2",
+                HeaderText = _resourceManager.GetString($"Ord2"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Ord2"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Item";
-            col.HeaderText = "Item";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            col.Name = "Item";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _resourceManager.GetString($"Item"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Quantity";
-            col.HeaderText = "Quantity";
-            col.Name = "Quantity";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString($"Quantity"),
+                Name = "Quantity",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "PickedQuantity";
-            col.HeaderText = "Picked Quantity";
-            col.Name = "PickedQuantity";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "PickedQuantity",
+                HeaderText = _resourceManager.GetString($"PickedQuantity"),
+                Name = "PickedQuantity",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "Description";
-            col.HeaderText = "Description";
-            col.Width = w;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "Description";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _resourceManager.GetString($"Description"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "Description"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "LineStatusName";
-            col.HeaderText = "Line Status";
-            col.Width = w; ;
-            col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            col.Name = "LineStatusName";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LineStatusName",
+                HeaderText = _resourceManager.GetString($"LineStatusName"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "LineStatusName"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "OrderId";
-            col.HeaderText = "OrderId";
-            col.Visible = false;
-            col.Name = "OrderId";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "OrderId",
+                HeaderText = _resourceManager.GetString($"OrderId"),
+                Visible = false,
+                Name = "OrderId"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
 
-            col = new DataGridViewTextBoxColumn();
-            col.DataPropertyName = "OrderDetailId";
-            col.HeaderText = "OrderDetailId";
-            col.Visible = false;
-            col.Name = "OrderDetailId";
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "OrderDetailId",
+                HeaderText = _resourceManager.GetString($"OrderDetailId"),
+                Visible = false,
+                Name = "OrderDetailId"
+            };
             DataGridViewOrderDetails.Columns.Add(col);
+
+
+            foreach (DataGridViewColumn column in DataGridViewOrderDetails.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
+
+
+            //********************************************************************
+            //DataGridViewNewItems
+
+            DataGridViewNewItems.AutoGenerateColumns = false;
+            DataGridViewNewItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewNewItems.DefaultCellStyle.ForeColor = Color.Black;
+            DataGridViewNewItems.DefaultCellStyle.BackColor = Color.White;
+            DataGridViewNewItems.ScrollBars = ScrollBars.Both;
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationNumber",
+                HeaderText = _resourceManager.GetString($"StationNumber"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "StationNumber"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _resourceManager.GetString($"Item"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _resourceManager.GetString($"Description"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "Description"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString($"Quantity"),
+                Name = "Quantity",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                HeaderText = _resourceManager.GetString($"Id"),
+                Visible = false,
+                Name = "Id"
+            };
+            DataGridViewNewItems.Columns.Add(col);
+
+            foreach (DataGridViewColumn column in DataGridViewNewItems.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            }
 
         }
+
+
+        #endregion
 
         private void FrmReplen_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1056,6 +1334,32 @@ namespace Neutron.Forms
             {
                 Task.Run(() => _logger.Log($"ClearSelection Error: {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]"));
             }
+        }
+
+        private void ClearSelection(DataGridView dataGridView)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            dataGridView.ClearSelection();
+            try
+            {
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    var cell = (DataGridViewCheckBoxCell)row.Cells["IsChecked"];
+
+                    if (cell.Value != null)
+                    {
+                        if (cell.Value.Equals(cell.TrueValue))
+                        {
+                            cell.Value = cell.FalseValue;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => _logger.Log($"ClearSelection Error: {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+            }
+            Cursor.Current = Cursors.Default;
         }
 
         private void MBSelectAll_Click(object sender, EventArgs e)
@@ -1175,7 +1479,6 @@ namespace Neutron.Forms
                 }
             }
             ShowAllOrders();
-            //ListBoxSelectedOrders.Items.Clear();
         }
 
         private List<int> GetCheckedOrderIds()
@@ -1379,8 +1682,8 @@ namespace Neutron.Forms
                 if (bp.OrderId == null) continue;
                 var itemFound = bindingSourceAvailableOrders.Find("Id", bp.OrderId);
                 bindingSourceAvailableOrders.Position = itemFound;
-                var currentItem = ((ObjectView<ReplenOrderView>)bindingSourceAvailableOrders.Current).Object;
-                foreach (var detail in currentItem.ReplenOrder.ReplenOrderDetails)
+                var currentItem = ((ObjectView<AvailableReplenOrdersView>)bindingSourceAvailableOrders.Current).Object;
+                foreach (var detail in currentItem.Order.ReplenOrderDetails)
                 {
                     var pickView = new ReplenPickView()
                     {
@@ -1389,8 +1692,8 @@ namespace Neutron.Forms
                         Ord1 = detail.ReplenOrder.Ord1,
                         Ord2 = detail.ReplenOrder.Ord2,
                         ItemId = detail.ItemDefinitionId,
-                        Item = string.Empty,
-                        Description = string.Empty,
+                        Item = !string.IsNullOrWhiteSpace(detail.ItemDefinition.Item) ? detail.ItemDefinition.Item : string.Empty,
+                        Description = !string.IsNullOrWhiteSpace(detail.ItemDefinition.Description) ? detail.ItemDefinition.Description : string.Empty,
                         UnitOfIssue = detail.ItemDefinition.UnitOfIssue.Name,
                         Quantity = detail.Quantity,
                         QuantityToBePicked = detail.Quantity,
@@ -1404,17 +1707,18 @@ namespace Neutron.Forms
                 }
             }
 
-            //Add Item definition
-            foreach (var item in pickViews)
-            {
-                var def = repoItemDefinition.FindBy(f => f.Id == item.ItemId).FirstOrDefault();
-                if (def == null) continue;
-                item.Item = def.Item;
-                item.Description = def.Description;
-            }
+            ////Add Item definition
+            //foreach (var item in pickViews)
+            //{
+            //    var def = repoItemDefinition.FindBy(f => f.Id == item.ItemId).FirstOrDefault();
+            //    if (def == null) continue;
+            //    item.Item = def.Item;
+            //    item.Description = def.Description;
+            //}
             Task.Run(() => _logger.Log($"GetPickViews End: [{System.DateTime.Now.ToLongTimeString()}]"));
             return pickViews;
         }
+
 
         private int GetBatchPosition(int orderId)
         {
@@ -1639,8 +1943,8 @@ namespace Neutron.Forms
                 bp.OrderId = null;
                 bp.Ord1 = string.Empty;
                 bp.Ord2 = string.Empty;
+                bp.OrderComplete = false;
                 UpdateTextBoxPosition(bp);
-
             }
         }
 
@@ -1726,12 +2030,12 @@ namespace Neutron.Forms
         }
 
 
-        private void InitOrdersToPick(int batchSize)
+        private void InitOrdersToPick(int pickBatchSize)
         {
             _ordersToPick = new List<BatchPosition>();
-            for (var i = 0; i < batchSize; i++)
+            for (var i = 0; i < pickBatchSize; i++)
             {
-                var bp = new BatchPosition() { PositionNumber = i + 1, OrderId = null, Ord1 = string.Empty, Ord2 = string.Empty };
+                var bp = new BatchPosition() { PositionNumber = i + 1, OrderId = null, Ord1 = string.Empty, Ord2 = string.Empty, OrderComplete = false };
                 _ordersToPick.Add(bp);
                 ShowPosition(i + 1);
             }
@@ -1739,7 +2043,7 @@ namespace Neutron.Forms
 
         private void ShowPosition(int position)
         {
-            var font = new Font("Microsoft Sans Serif", 24);
+            var font = new Font("Microsoft Sans Serif", 20);
             var pos = position.ToString();
 
             Control c = this.Controls.Find("LabelPickPos" + pos, true).Single() as Label;
@@ -2131,7 +2435,7 @@ namespace Neutron.Forms
 
         private void UpdatePickScreen()
         {
-           Task.Run(() => _logger.Log($"UpdatePickScreen Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"UpdatePickScreen Start: [{System.DateTime.Now.ToLongTimeString()}]"));
             UpdatePickPosition();
             UpdateInventoryLocation();
             UpdateImages();
@@ -2179,7 +2483,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"UpdateImages End : [{System.DateTime.Now.ToLongTimeString()}]"));
         }
 
-       private void UpdateInventoryLocation()
+        private void UpdateInventoryLocation()
         {
             Task.Run(() => _logger.Log($"UpdateInventoryLocation Start : [{System.DateTime.Now.ToLongTimeString()}]"));
 
@@ -2366,14 +2670,16 @@ namespace Neutron.Forms
 
         private void ClearOrderPositions()
         {
-            TextBoxPos1.Text = string.Empty;
-            TextBoxPos2.Text = string.Empty;
-            TextBoxPos3.Text = string.Empty;
-            TextBoxPos4.Text = string.Empty;
-            TextBoxPos5.Text = string.Empty;
-            TextBoxPos6.Text = string.Empty;
-            TextBoxPos7.Text = string.Empty;
-            TextBoxPos8.Text = string.Empty;
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"TextBoxPos{pos}", true).First();
+                if (c != null)
+                {
+                    var textBox = ((TextBox)c);
+                    textBox.Text = string.Empty;
+                }
+            }
         }
 
         private void ClearPickPositions()
@@ -2872,48 +3178,6 @@ namespace Neutron.Forms
             ShowAllOrders();
         }
 
-        private void MBReturnToStock_Click(object sender, EventArgs e)
-        {
-            var uploadProcessor = new UploadProcessor(neutronLicense, _neutronVariables, _logger);
-            List<ReplenOrderView> recs = GetCheckedOrders();
-            if (recs.Count() > 0)
-            {
-                foreach (var ov in recs)
-                {
-                    if (ov != null)
-                    {
-                        if (_neutronVariables.UseReturnToStock)
-                        {
-                            //int rtsCode = (int)OrderStatus.Returned;
-
-                            foreach (ReplenOrderDetail detail in ov.ReplenOrder.ReplenOrderDetails)
-                            {
-                                SetOrderDetailLineStatus(detail, (int)OrderStatus.Returned, ActionCode.OrderDetailRts);
-                            }
-
-                            uploadProcessor.ReturnOrderToStock(ov.ReplenOrder);  //sets the RTS code to each OrderDetail line
-                            ov.ReplenOrder.OrderStatusId = (int)OrderStatus.Returned;  //Returned
-                            repoReplenOrder.Update(ov.ReplenOrder);
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderRts, ov.ReplenOrder);
-                        }
-                        //else
-                        //{
-                        //    ov.ReplenOrder.OrderStatusId = (int) OrderStatus.Deleted;  //Deleted
-                        //    repoReplenOrder.Update(ov.ReplenOrder);
-                        //    GlobalVar.HistoryManager.SaveHistory(ActionCode.Order
-                        // Archived, ov.ReplenOrder);
-                        //}
-                        if (_neutronVariables.CreateStoreOrderWithRts)
-                        {
-                            CreateStoreOrderFromOrderDetailComplete(ov.ReplenOrder);
-                        }
-                    }
-                }
-            }
-            // ListBoxSelectedOrders.Items.Clear();
-            ShowAllOrders();
-        }
-
         private void SetOrderStatus(ReplenOrder order, int status, ActionCode actionCode)
         {
             try
@@ -2990,99 +3254,242 @@ namespace Neutron.Forms
 
         private void MBMainOrderManager_Click(object sender, EventArgs e)
         {
+            LoadOrderManagerScreen();
+        }
+
+        private void LoadOrderManagerScreen()
+        {
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"Job Manager Main Screen Start"));
             var watch = new Stopwatch();
             watch.Start();
-            LabelFormTitle.Text = "Job Listing";
+            LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.Green;
             ShowAllOrders();
-            var twatch = new Stopwatch();
-            twatch.Start();
             tabControl1.SelectedTab = OrderListing;
-            twatch.Stop();
-            Task.Run(() => _logger.Log($"Load Tab Control Elasped MSec:  {twatch.ElapsedMilliseconds}ms"));
-
-            watch.Stop();
             Task.Run(() => _logger.Log($"Job Manager Main screen Elasped MSec:  {watch.ElapsedMilliseconds}ms"));
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void MBShowAvailable_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            _currentDataSet = CurrentDataSet.Available;
+            ShowAllOrders();
             Cursor.Current = Cursors.Default;
         }
 
         private void MBMainAvailableOrders_Click(object sender, EventArgs e)
         {
+
             Cursor.Current = Cursors.WaitCursor;
-            LabelFormTitle.Text = "Available Jobs";
-            LabelFormTitle.BackColor = Color.Green;
-            ClearSelection();
-            ClearOrderPositions();
-            InitOrdersToPick(_neutronVariables.StoreBatchSize);
-            ShowAvailableOrders();
-            if (_station.StationNumber == 8)
+            //LabelFormTitle.Text = "Available Jobs";
+            //LabelFormTitle.BackColor = Color.Green;
+            //ClearSelection();
+            //ClearOrderPositions();
+            //InitOrdersToPick(_neutronVariables.StoreBatchSize);
+            //ShowAvailableOrders();
+            if (_station.StationNumber >= 8)
             {
+                ShowAvailableRackScreen();
                 tabControl1.SelectedTab = AvailableRack;
             }
             else
             {
+                AvailableOrdersScreen();
                 tabControl1.SelectedTab = AvailableOrders;
             }
             Cursor.Current = Cursors.Default;
         }
 
-    //New ReplenOrder
+        public void AvailableOrdersScreen()
+        {
+            //Cursor.Current = Cursors.WaitCursor;
+            MBCompress.Enabled = false;
+            LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            ClearSelection(DataGridViewAvailableOrders);
+            ClearOrderPositions();
+            //TODODon't need this
+            //InitOrdersToPick(_neutronVariables.StoreBatchSize);
+
+            ShowAvailableOrders();
+
+            //if (_station.StationNumber == 8)
+            //{
+            //    tabControl1.SelectedTab = AvailableRack;
+            //}
+            //else
+            //{
+            //    tabControl1.SelectedTab = AvailableOrders;
+            //}
+            //Cursor.Current = Cursors.Default;
+        }
+
+        private void ShowAvailableRackScreen()
+        {
+            ShowAvailableOrdersRack();
+            LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            tabControl1.SelectedTab = AvailableRack;
+        }
+
+        private int ShowAvailableOrdersRack(int recId = 0, string findWhat = "")
+        {
+            Task.Run(() => _logger.Log($"ShowAvailableOrdersRack Replen: [{DateTime.Now.ToLongTimeString()}]"));
+            var idx = 0;
+            // var station = _stationRepository.GetStationView(8);
+            if (string.IsNullOrEmpty(findWhat))
+            {
+                findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
+            }
+
+            try
+            {
+                var views = ordersRepository.GetRackOrdersView(findWhat);
+
+                var rackOrderViews = views.ToList();
+                foreach (var rackOrderView in rackOrderViews)
+                {
+                    if (rackOrderView.OrderDetails.First().LineStatusId == 3)
+                    {
+                        rackOrderView.StatusName = _resourceManager.GetString($"OnFloor");
+                    }
+                }
+
+
+                //var filteredViews = views.Where(v => v.Station_8_HasPicks != "C").ToList();
+
+                var bindingListView = new BindingListView<RackReplenOrderView>(rackOrderViews.ToList());
+
+                _bindingSourceAvailableOrdersRack.DataSource = bindingListView;
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => _logger.Log($"ShowAvailableOrdersRack Replen Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+            }
+
+
+            DataGridViewAvailableOrdersRack.DataSource = _bindingSourceAvailableOrdersRack;
+            if (GetRecordCount(_bindingSourceAvailableOrdersRack) > 0)
+            {
+                if (recId != 0)
+                {
+                    idx = IndexOf(_bindingSourceAvailableOrdersRack, recId);
+                    DataGridViewAvailableOrdersRack.FirstDisplayedScrollingRowIndex = DataGridViewAvailableOrdersRack.Rows[idx].Index;
+                    DataGridViewAvailableOrdersRack.CurrentCell = DataGridViewAvailableOrdersRack.Rows[idx].Cells[1];
+                    DataGridViewAvailableOrdersRack.Rows[idx].Selected = true;
+                }
+                else
+                {
+                    DataGridViewAvailableOrdersRack.ClearSelection();
+                    DataGridViewAvailableOrdersRack.Update();
+                }
+                DataGridViewAvailableOrdersRack.Refresh();
+
+                CurrentRackItem = ((ObjectView<RackReplenOrderView>)_bindingSourceAvailableOrdersRack.Current).Object;
+
+            }
+
+            Task.Run(() => _logger.Log($"ShowAvailableOrdersRack Replen End: [{DateTime.Now.ToLongTimeString()}]"));
+            return idx;
+        }
+
+        //New ReplenOrder
         private void MBMainNewOrder_Click(object sender, EventArgs e)
         {
-            LabelFormTitle.Text = "New Job";
+            LabelFormTitle.Text = _resourceManager.GetString($"NewJob");
             LabelFormTitle.BackColor = Color.Green;
-            bindingSourceItems.DataSource = GetItemsList();
-            DataGridViewNewOrder.DataSource = bindingSourceItems;
+            //bindingSourceItems.DataSource = GetItemsList();
+            //DataGridViewNewOrder.DataSource = bindingSourceItems;
+            ClearNewOrderForm();
             tabControl1.SelectedTab = NewOrder;
-            DataGridViewNewOrder.ClearSelection();
+            //DataGridViewNewOrder.ClearSelection();
         }
+
+        private void ClearNewOrderForm()
+        {
+            ClearNewOrderDetail();
+            _bindingSourceNewItems.Clear();
+            _bindingSourceItems.Clear();
+            TextBoxNewOrderOrd1.Text = "";
+            TextBoxNewOrderOrd2.Text = "";
+            TextBoxNewOrderPriority.Text = "99";
+            TextBoxNewOrderItem.Text = "";
+            TextBoxNewOrderDescription.Text = "";
+            TextBoxNewOrderQuantity.Text = "";
+            TextBoxNewOrderOrd1.Focus();
+        }
+
         //New ReplenOrder
-        private List<NewItemView> GetItemsList()
+        private List<NewItemView> GetItemsList(string s)
         {
-            var recs = new List<NewItemView>();
-            recs = repoInventory.AllInclude(r => r.ItemDefinition).Select(d => new NewItemView()
+            List<NewItemView> recs;
+            using (var db = new NeutronDb())
             {
-                //InventoryId = d.Id
-                //,
-                ItemDefinitionId = d.ItemDefinition.Id,
-                Description = d.ItemDefinition.Description
-                ,
-                Item = d.ItemDefinition.Item,
-                Quantity = d.Quantity
-            }).ToList();
-            return recs;
-        }
-
-        private void MBMainLoadOrders_Click(object sender, EventArgs e)
-        {
-            MBMainLoadOrders.Enabled = false;
-            if (GlobalVar.LoaderRunning)
-            {
-                DialogResult result = MessageBox.Show("Do you want to stop the loader?", "Loader", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    MBMainLoadOrders.Text = "Start Loader";
-                    if (_interfaceProcessorTmg != null)
+                recs = db.Inventory.Include("ItemDefinition")
+                    .Where(d => d.ItemDefinition.Item.ToLower().Contains(s) || d.ItemDefinition.Description.ToLower().Contains(s))
+                    .GroupBy(g => new
                     {
-                        _interfaceProcessorTmg.StopProcessingInterfaceFiles();
-
-                    }
-
-
-                    GlobalVar.LoaderRunning = false;
-                }
+                        g.ItemDefinitionId
+                        , g.ItemDefinition.Station.StationNumber
+                        , g.ItemDefinition.Item
+                        , g.ItemDefinition.Description
+                    })
+                    .Select(r => new NewItemView()
+                    {
+                        ItemDefinitionId = r.Key.ItemDefinitionId
+                        , StationNumber = r.Key.StationNumber
+                        , Item = r.Key.Item
+                        , Description = r.Key.Description
+                        , Quantity = r.Sum(t => t.Quantity)
+                    })
+                    .ToList();
             }
-            else
-            {
-                _interfaceProcessorTmg = new InterfaceProcessorTmg(_neutronVariables, neutronLicense, _jsonData);
-                _interfaceProcessorTmg.StartProcessingInterfaceFiles();
-                MBMainLoadOrders.Text = "Stop Loader";
-                GlobalVar.LoaderRunning = true;
-            }
-            MBMainLoadOrders.Enabled = true;
+            return recs;
+
+            //var recs = new List<NewItemView>();
+            //recs = repoInventory.AllInclude(r => r.ItemDefinition).Select(d => new NewItemView()
+            //{
+            //    //InventoryId = d.Id
+            //    //,
+            //    ItemDefinitionId = d.ItemDefinition.Id,
+            //    Description = d.ItemDefinition.Description
+            //    ,
+            //    Item = d.ItemDefinition.Item,
+            //    Quantity = d.Quantity
+            //}).ToList();
+            //return recs;
         }
+
+        //private void MBMainLoadOrders_Click(object sender, EventArgs e)
+        //{
+        //    MBMainLoadOrders.Enabled = false;
+        //    if (GlobalVar.LoaderRunning)
+        //    {
+        //        DialogResult result = MessageBox.Show("Do you want to stop the loader?", "Loader", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        //        if (result == DialogResult.Yes)
+        //        {
+        //            MBMainLoadOrders.Text = "Start Loader";
+        //            if (_interfaceProcessorTmg != null)
+        //            {
+        //                _interfaceProcessorTmg.StopProcessingInterfaceFiles();
+
+        //            }
+
+
+        //            GlobalVar.LoaderRunning = false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        _interfaceProcessorTmg = new InterfaceProcessorTmg(_neutronVariables, neutronLicense, _jsonData);
+        //        _interfaceProcessorTmg.StartProcessingInterfaceFiles();
+        //        MBMainLoadOrders.Text = "Stop Loader";
+        //        GlobalVar.LoaderRunning = true;
+        //    }
+        //    MBMainLoadOrders.Enabled = true;
+        //}
 
         private void MBMainClose_Click(object sender, EventArgs e)
         {
@@ -3185,39 +3592,13 @@ namespace Neutron.Forms
             currentInventoryView = (SqlInventoryView)bindingSourceHot.Current;
         }
 
-     
         private void MBCompleted_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (MBCompleted.Text == "Completed")
-            {
-                ShowCompleted();
-                SelectAll();
-                MBCompleted.Text = "Compress";
-            }
-            else
-            {
-                MBCompleted.Text = "Completed";
-                CompressOrders();
-            }
+            _currentDataSet = CurrentDataSet.Complete;
+            ShowCompleted();
+            MBCompress.Enabled = true;
             Cursor.Current = Cursors.Default;
-
-
-            //if (MBCompleted.Text == "Completed")
-            //{
-            //    bindingSourceCompleted.DataSource = ordersRepository.GetCompletedOrders();
-            //    DataGridView1.DataSource = bindingSourceCompleted;
-            //    DataGridView1.ClearSelection();
-            //    MBCompleted.Text = "Jobs";
-            //    HideButtons();
-            //}
-            //else if (MBCompleted.Text == "Jobs")
-            //{
-            //    ShowAllOrders();
-            //    MBCompleted.Text = "Completed";
-            //    ShowButtons();
-            //}
-            //SyncCurrentlySelectedWithDataGrid();
         }
 
         private void CompressOrders()
@@ -3275,21 +3656,17 @@ namespace Neutron.Forms
 
         private void ShowButtons()
         {
-            MBRefresh.Visible = true;
             MBPriority.Visible = true;
             MBHold.Visible = true;
             MBRelease.Visible = true;
-            MBReturnToStock.Visible = _neutronVariables.UseReturnToStock;
             MBDeleteOrder.Visible = true;
         }
 
         private void HideButtons()
         {
-            MBRefresh.Visible = false;
             MBPriority.Visible = false;
             MBHold.Visible = false;
             MBRelease.Visible = false;
-            MBReturnToStock.Visible = false;
             MBDeleteOrder.Visible = false;
         }
 
@@ -3303,19 +3680,10 @@ namespace Neutron.Forms
         {
             try
             {
-                if (string.IsNullOrEmpty(s))
-                {
-                    bindingSourceItems.DataSource = GetItemsList();
-                    DataGridViewNewOrder.DataSource = bindingSourceItems;
-                }
-                else
-                {
-                    IEnumerable<NewItemView> projection = GetItemsList();
-                    bindingSourceItems.DataSource = projection
-                        .Where(d => d.Item.ToLower().Contains(s) || d.Description.ToLower().Contains(s)).ToList();
-                    DataGridViewNewOrder.DataSource = bindingSourceItems;
-                }
+                _bindingSourceItems.DataSource = GetItemsList(s);
+                DataGridViewNewOrder.DataSource = _bindingSourceItems;
                 DataGridViewNewOrder.ClearSelection();
+                DataGridViewNewOrder.Update();
             }
             catch (Exception ex)
             {
@@ -3345,10 +3713,10 @@ namespace Neutron.Forms
         {
             if (e.ColumnIndex == 0)
             {
-                var currentItem = (NewItemView)bindingSourceItems.Current;
+                var currentItem = (NewItemView)_bindingSourceItems.Current;
                 LabelNewOrderItemId.Text = currentItem.ItemDefinitionId.ToString();
-                LabelNewOrderItem.Text = currentItem.Item;
-                LabelNewOrderDescription.Text = currentItem.Description;
+                TextBoxNewOrderItem.Text = currentItem.Item;
+                TextBoxNewOrderDescription.Text = currentItem.Description;
                 TextBoxNewOrderQuantity.Focus();
             }
         }
@@ -3359,8 +3727,8 @@ namespace Neutron.Forms
             {
                 ItemDefinitionId = (LabelNewOrderItemId.Text).ParseInt()
                 ,
-                Item = LabelNewOrderItem.Text,
-                Description = LabelNewOrderDescription.Text
+                Item = TextBoxNewOrderItem.Text,
+                Description = TextBoxNewOrderDescription.Text
                 ,
                 Quantity = (TextBoxNewOrderQuantity.Text).ParseInt()
             };
@@ -3372,8 +3740,8 @@ namespace Neutron.Forms
 
         private void ClearNewOrderDetail()
         {
-            LabelNewOrderItem.Text = "";
-            LabelNewOrderDescription.Text = "";
+            TextBoxNewOrderItem.Text = "";
+            TextBoxNewOrderDescription.Text = "";
             TextBoxNewOrderQuantity.Text = "";
         }
 
@@ -4088,7 +4456,7 @@ namespace Neutron.Forms
             }
         }
 
-      private void TextBoxPos_Click(object sender, EventArgs e)
+        private void TextBoxPos_Click(object sender, EventArgs e)
         {
             //if you click directly in a textboxpos, you override the
             //automatic get of the next empty textbox
@@ -4113,31 +4481,7 @@ namespace Neutron.Forms
             TextBoxPos8.BackColor = Color.White;
         }
 
-        private void MBFillStarters_Click(object sender, EventArgs e)
-        {
-            if (DataGridViewAvailableOrders.Rows.Count <= 0) return;
-            foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
-            {
-                var checkBoxCell = (DataGridViewCheckBoxCell)row.Cells[0];
-                var starterValue = row.Cells["Starter"].Value.ToString();
-                if (starterValue != @"S" || Convert.ToBoolean(checkBoxCell.Value) != false) continue;
-                var id = Convert.ToInt32(row.Cells["Id"].Value);
-                var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
-                var ord2 = Convert.ToString(row.Cells["Ord2"].Value);
-                var idx = AddItemToBatch(id, ord1, ord2);
-                if (idx == -1)
-                {
-                    //no more locations
-                    break;
-                }
-                else
-                {
-                    row.Cells[0].Value = checkBoxCell.TrueValue;
-                }
-            }
-        }
-
-        private void MBFill_Click(object sender, EventArgs e)
+   private void MBFill_Click(object sender, EventArgs e)
         {
             if (DataGridViewAvailableOrders.Rows.Count <= 0) return;
             foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
@@ -4167,7 +4511,7 @@ namespace Neutron.Forms
 
         }
 
-      
+
         private void FrmReplen_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F12)
@@ -4396,6 +4740,7 @@ namespace Neutron.Forms
 
         private void PictureBoxItemImage_MouseEnter(object sender, EventArgs e)
         {
+            if (!_neutronVariables.AutoEnlargeImage) return;
             PictureBoxItemImage.Location = new Point(318, 117);
             PictureBoxItemImage.Size = new Size(512, 512);
             PictureBoxItemImage.BringToFront();
@@ -4403,7 +4748,8 @@ namespace Neutron.Forms
 
         private void PictureBoxItemImage_MouseLeave(object sender, EventArgs e)
         {
-            PictureBoxItemImage.Location = new Point(446, 373);
+            if (!_neutronVariables.AutoEnlargeImage) return;
+            PictureBoxItemImage.Location = new Point(398, 499);
             PictureBoxItemImage.Size = new Size(256, 256);
             PictureBoxItemImage.BringToFront();
         }
@@ -4430,6 +4776,7 @@ namespace Neutron.Forms
             ShowAllOrders();
         }
 
+
         private void SetCulture(string lang)
         {
             try
@@ -4437,46 +4784,186 @@ namespace Neutron.Forms
                 var languageDirectory = LoaderSettings.GetLanguageDirectory();
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmReplen", resourceDir: languageDirectory, usingResourceSet: null);
-                MBMainOrderManager.Text = _resourceManager.GetString($"JobManager");
-                MBMainAvailableOrders.Text = _resourceManager.GetString($"AvailableJobs");
-                LabelFormHeaderText.Text = _resourceManager.GetString($"NeutronWarehouseManagement");
-                MBMainNewOrder.Text = _resourceManager.GetString($"NewJob");
-                MBMainLoadOrders.Text = _resourceManager.GetString($"LoadJobs");
-                MBMainClose.Text = _resourceManager.GetString($"Home");
-                LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
-                MBSelectAll.Text = _resourceManager.GetString($"SelectAll");
-                MButtonClearSelection.Text = _resourceManager.GetString($"ClearSelection");
-                MBOrderListingAvailable.Text = _resourceManager.GetString($"Available");
-                MButtonSearch.Text = _resourceManager.GetString($"Search");
-                MButtonClose.Text = _resourceManager.GetString($"Back");
-                MBShowAll.Text = _resourceManager.GetString($"ShowAll");
-                MBRefresh.Text = _resourceManager.GetString($"Refresh");
-                MBHold.Text = _resourceManager.GetString($"Hold");
-                MBRelease.Text = _resourceManager.GetString($"Release");
-                MBPriority.Text = _resourceManager.GetString($"Priority");
-                MBReturnToStock.Text = _resourceManager.GetString($"ReturnToStock");
-                MBDeleteOrder.Text = _resourceManager.GetString($"Delete");
-                MBPrintOrderListing.Text = _resourceManager.GetString($"SaveToFile");
-                MBJobDetails.Text = _resourceManager.GetString($"JobDetails");
-                LabelFindDescription.Text = _resourceManager.GetString($"SearchFor");
+                //Main Panel
+                LabelFormHeaderText.Text = _resourceManager.GetString($"LabelFormHeaderText");
+                LabelFormTitle.Text = _resourceManager.GetString($"LabelFormTitle");
+                MBMainClose.Text = _resourceManager.GetString($"MBMainClose");
+                MBMainAvailableOrders.Text = _resourceManager.GetString($"MBMainAvailableOrders");
+                MBMainOrderManager.Text = _resourceManager.GetString($"MBMainOrderManager");
+                MBMainNewOrder.Text = _resourceManager.GetString($"MBMainNewOrder");
+                //MBMainLoadOrders.Text = _resourceManager.GetString($"MBMainLoadOrders");
+                //MBMainUpload.Text = _resourceManager.GetString($"MBMainUpload");
+                //Order Listing Panel
+
+                //MBShowAvailable.Text = _resourceManager.GetString($"MBShowAvailable");
+                MBCompleted.Text = _resourceManager.GetString($"MBCompleted");
+                MBShowRackOrders.Text = _resourceManager.GetString($"MBShowRackOrders");
+                LabelFindDescription.Text = _resourceManager.GetString($"LabelFindDescription");
+                MButtonSearch.Text = _resourceManager.GetString($"MButtonSearch");
+                MButtonClose.Text = _resourceManager.GetString($"MButtonClose");
+                MBSelectAll.Text = _resourceManager.GetString($"MBSelectAll");
+                MButtonClearSelection.Text = _resourceManager.GetString($"MButtonClearSelection");
+                //ButtonPrintAO.Text = _resourceManager.GetString($"ButtonPrintAO");
+                //ButtonPrintPacking.Text = _resourceManager.GetString($"ButtonPrintPacking");
+                //MBPrintPick.Text = _resourceManager.GetString($"MBPrintPick");
+                //MBOffCarousel.Text = _resourceManager.GetString($"MBOffCarousel");
+                MBHold.Text = _resourceManager.GetString($"MBHold");
+                MBRelease.Text = _resourceManager.GetString($"MBRelease");
+                MBPriority.Text = _resourceManager.GetString($"MBPriority");
+                MBCompress.Text = _resourceManager.GetString($"MBCompress");
+                //MBReturnToStock.Text = _resourceManager.GetString($"MBReturnToStock");
+                MBDeleteOrder.Text = _resourceManager.GetString($"MBDeleteOrder");
+                MBJobDetails.Text = _resourceManager.GetString($"MBJobDetails");
+                MBPrintOrderListing.Text = _resourceManager.GetString($"MBPrintOrderListing");
+                //MBFillOptimized.Text = _resourceManager.GetString("MBFillOptimized");
                 //Available Orders
-                MbPrintAvailableOrders.Text = _resourceManager.GetString($"SaveToFile");
-                MBAvailableOrdersRefresh.Text = _resourceManager.GetString($"Refresh");
-                MBGo.Text = _resourceManager.GetString($"Next");
-                LabelAvailableOrdersSearchFor.Text = _resourceManager.GetString($"SearchFor");
-                MBSearchAvailableOrders.Text = _resourceManager.GetString($"Search");
-                MBFill.Text = _resourceManager.GetString($"Fill");
+                MbPrintAvailableOrders.Text = _resourceManager.GetString($"MbPrintAvailableOrders");
+                MBAvailableOrdersRefresh.Text = _resourceManager.GetString($"MBAvailableOrdersRefresh");
+                MBGo.Text = _resourceManager.GetString($"MBGo");
+                LabelAvailableOrdersSearchFor.Text = _resourceManager.GetString($"LabelAvailableOrdersSearchFor");
+                MBSearchAvailableOrders.Text = _resourceManager.GetString($"MBSearchAvailableOrders");
+                MBAvailableOrdersBack.Text = _resourceManager.GetString($"MBAvailableOrdersBack");
+                MBFill.Text = _resourceManager.GetString($"MBFill");
+
+                //MBGo2.Text = _resourceManager.GetString($"MBGo2");
+
+                //Pick List
+                MBPrintPickList.Text = _resourceManager.GetString($"MBPrintPickList");
+                MBStart.Text = _resourceManager.GetString($"MBStart");
+                MBPickListBack.Text = _resourceManager.GetString($"MBPickListBack");
+
+                //Pick Screen
+                MBLocationCount.Text = _resourceManager.GetString($"MBLocationCount");
+                MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"MBShowOrderOrQuantityToggle");
+                MBPickScreenHotPick.Text = _resourceManager.GetString($"MBPickScreenHotPick");
+                //MBResetCarousels.Text = _resourceManager.GetString($"MBResetCarousels");
+                MBPrint.Text = _resourceManager.GetString($"MBPrint");
+                MBPickNewItem.Text = _resourceManager.GetString($"MBPickNewItem");
+                MBPickBack.Text = _resourceManager.GetString($"MBPickBack");
+                //LabelItem.Text = _resourceManager.GetString($"LabelItem");
+                //LabelUOI.Text = _resourceManager.GetString($"LabelUOI");
+                //LabelQty.Text = _resourceManager.GetString($"LabelQty");
+                GroupBoxLocation.Text = _resourceManager.GetString($"GroupBoxLocation");
+                LabelDevice.Text = _resourceManager.GetString($"LabelDevice");
+                LabelTray.Text = _resourceManager.GetString($"LabelTray");
+                LabelOver.Text = _resourceManager.GetString($"LabelOver");
+                LabelBack.Text = _resourceManager.GetString($"LabelBack");
+                LabelReceivedDate.Text = _resourceManager.GetString($"LabelReceivedDate");
+                //LabelLocationQty.Text = _resourceManager.GetString($"LabelLocationQty");
+                //LabelTotalQty.Text = _resourceManager.GetString($"LabelTotalQty");
+                //LabelReqQty.Text = _resourceManager.GetString($"LabelReqQty");
+                //LabelPickedSoFar.Text = _resourceManager.GetString($"LabelPickedSoFar");
+                MBPickChangeQuantity.Text = _resourceManager.GetString($"MBPickChangeQuantity");
+                //MBShortPick.Text = _resourceManager.GetString($"MBShortPick");
+                //MBPickAccept.Text = _resourceManager.GetString($"MBPickAccept");
+
+                //Order Details
+                //MBSelectAllDetail.Text = _resourceManager.GetString($"MBSelectAllDetail");
+                //MBClearSelectionDetail.Text = _resourceManager.GetString($"MBClearSelectionDetail");
+                //MBReturnToStockOrderDetail.Text = _resourceManager.GetString($"MBReturnToStockOrderDetail");
+                MBHoldDetail.Text = _resourceManager.GetString($"MBHoldDetail");
+                MBReleaseDetail.Text = _resourceManager.GetString($"MBReleaseDetail");
+                MBPrintOrderDetails.Text = _resourceManager.GetString($"MBPrintOrderDetails");
+                MBOrderDetailsBack.Text = _resourceManager.GetString($"MBOrderDetailsBack");
+
+                //New Order
+                //GroupBoxOrderInformation.Text = _resourceManager.GetString($"GroupBoxOrderInformation");
+                //LabelJob.Text = _resourceManager.GetString($"LabelJob");
+                //LabelInvoice.Text = _resourceManager.GetString($"LabelInvoice");
+                //LabelPriority.Text = _resourceManager.GetString($"LabelPriority");
+                MBNewOrderSave.Text = _resourceManager.GetString($"MBNewOrderSave");
+                MBNewOrderClose.Text = _resourceManager.GetString($"MBNewOrderClose");
+                //GroupBoxDetailInformation.Text = _resourceManager.GetString($"GroupBoxDetailInformation");
+                TextBoxNewOrderItem.Text = _resourceManager.GetString($"TextBoxNewOrderItem");
+                TextBoxNewOrderDescription.Text = _resourceManager.GetString($"TextBoxNewOrderDescription");
+                //LabelNewOrderQuantity.Text = _resourceManager.GetString($"LabelNewOrderQuantity");
+                ButtonAddDetail.Text = _resourceManager.GetString($"ButtonAddDetail");
+                //LabelSearchForItem.Text = _resourceManager.GetString($"LabelSearchForItem");
+                MBNewOrderSearch.Text = _resourceManager.GetString($"MBNewOrderSearch");
+               //ButtonRemoveLine.Text = _resourceManager.GetString($"ButtonRemoveLine");
+
+                //Available Rack
+                MbPrintAvailableOrdersRack.Text = _resourceManager.GetString($"MbPrintAvailableOrdersRack");
+                MBRefreshRack.Text = _resourceManager.GetString($"MBRefreshRack");
+                //LabelSearchForRack.Text = _resourceManager.GetString($"LabelSearchForRack");
+                MBSearchAvailableOrdersRack.Text = _resourceManager.GetString($"MBSearchAvailableOrdersRack");
+                //MBRackHotAction.Text = _resourceManager.GetString($"MBRackHotAction");
+                MBRackBack.Text = _resourceManager.GetString($"MBRackBack");
+                //MBPrintDocument.Text = _resourceManager.GetString($"MBPrintDocument");
+                MBPrintToteLabel.Text = _resourceManager.GetString($"MBPrintToteLabel");
+                //MBRackOrderComplete.Text = _resourceManager.GetString($"MBRackOrderComplete");
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading languages.  FrmReplen  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                MessageBox.Show($"{_resourceManager.GetString($"ErrorLoadingLanguages")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
+
+        //private void SetCulture(string lang)
+        //{
+        //    try
+        //    {
+        //        var languageDirectory = LoaderSettings.GetLanguageDirectory();
+        //        _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+        //        _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmReplen", resourceDir: languageDirectory, usingResourceSet: null);
+        //        MBMainOrderManager.Text = _resourceManager.GetString($"JobManager");
+        //        MBMainAvailableOrders.Text = _resourceManager.GetString($"AvailableJobs");
+        //        LabelFormHeaderText.Text = _resourceManager.GetString($"NeutronWarehouseManagement");
+        //        MBMainNewOrder.Text = _resourceManager.GetString($"NewJob");
+        //        MBMainLoadOrders.Text = _resourceManager.GetString($"LoadJobs");
+        //        MBMainClose.Text = _resourceManager.GetString($"Home");
+        //        LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
+        //        MBSelectAll.Text = _resourceManager.GetString($"SelectAll");
+        //        MButtonClearSelection.Text = _resourceManager.GetString($"ClearSelection");
+        //        MBOrderListingAvailable.Text = _resourceManager.GetString($"Available");
+        //        MButtonSearch.Text = _resourceManager.GetString($"Search");
+        //        MButtonClose.Text = _resourceManager.GetString($"Back");
+        //        MBShowAll.Text = _resourceManager.GetString($"ShowAll");
+        //        MBRefresh.Text = _resourceManager.GetString($"Refresh");
+        //        MBHold.Text = _resourceManager.GetString($"Hold");
+        //        MBRelease.Text = _resourceManager.GetString($"Release");
+        //        MBPriority.Text = _resourceManager.GetString($"Priority");
+        //        MBReturnToStock.Text = _resourceManager.GetString($"ReturnToStock");
+        //        MBDeleteOrder.Text = _resourceManager.GetString($"Delete");
+        //        MBPrintOrderListing.Text = _resourceManager.GetString($"SaveToFile");
+        //        MBJobDetails.Text = _resourceManager.GetString($"JobDetails");
+        //        LabelFindDescription.Text = _resourceManager.GetString($"SearchFor");
+        //        //Available Orders
+        //        MbPrintAvailableOrders.Text = _resourceManager.GetString($"SaveToFile");
+        //        MBAvailableOrdersRefresh.Text = _resourceManager.GetString($"Refresh");
+        //        MBGo.Text = _resourceManager.GetString($"Next");
+        //        LabelAvailableOrdersSearchFor.Text = _resourceManager.GetString($"SearchFor");
+        //        MBSearchAvailableOrders.Text = _resourceManager.GetString($"Search");
+        //        MBFill.Text = _resourceManager.GetString($"Fill");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error loading languages.  FrmReplen  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+        //    }
+        //}
 
         private void MBShowAll_Click(object sender, EventArgs e)
         {
             ShowAllOrders();
             MBCompleted.Text = "Completed";
+        }
+
+        private void MBCompress_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            CompressOrders();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void MBShowRackOrders_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            DataGridView1.Columns.Clear();
+            _currentDataSet = CurrentDataSet.Rack;
+          //  SetupOrderGrid();
+          //  ShowRackOrders();
+            Cursor.Current = Cursors.Default;
         }
     }
 }

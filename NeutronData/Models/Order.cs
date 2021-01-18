@@ -13,8 +13,6 @@ namespace NeutronData.Models
     {
         public Order()
         {
-            OrderDetails = new List<OrderDetail>();
-            Containers = new List<Container>();
         }
         public int Id { get; set; }
         public string Ord1 { get; set; }
@@ -25,8 +23,9 @@ namespace NeutronData.Models
         public int ShipperId { get; set; }
         public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
-        public ICollection<OrderDetail> OrderDetails { get; set; }
-        public ICollection<Container> Containers { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        public virtual ICollection<Container> Containers { get; set; } = new List<Container>();
+
         [ForeignKey("ShipperId")]
         public virtual Shipper Shipper { get; set; }
         [ForeignKey("ShipMethodId")]

@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Resources;
 using System.Threading;
@@ -98,6 +99,9 @@ namespace Neutron
                 // Close();
             }
 
+
+            int id = Thread.CurrentThread.ManagedThreadId;
+            Trace.WriteLine("FrmMain thread: " + id);
 
             // LogOnOff();
 

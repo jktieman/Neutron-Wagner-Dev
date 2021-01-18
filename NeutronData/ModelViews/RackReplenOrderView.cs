@@ -5,7 +5,7 @@ using NeutronData.Models;
 
 namespace NeutronData.ModelViews
 {
-    public class RackOrderView
+    public class RackReplenOrderView
     {
         public int Id { get; set; }
         public string Ord1 { get; set; }
@@ -19,8 +19,8 @@ namespace NeutronData.ModelViews
         private string _statusName;
 
         public DateTime LoadDate { get; set; }
-        public Order Order { get; set; }
-        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ReplenOrder Order { get; set; }
+        public ICollection<ReplenOrderDetail> OrderDetails { get; set; }
         public string StatusName
         {
             get
@@ -45,7 +45,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _lines = Order.OrderDetails.Where(o => o.StationNumber == 8).ToList().Count;
+                _lines = Order.ReplenOrderDetails.Where(o => o.StationNumber == 8).ToList().Count;
                 return _lines;
             }
             set { _lines = value; }
@@ -55,7 +55,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _pieces = Order.OrderDetails.Where(o => o.StationNumber == 8).Sum(s => s.Quantity);
+                _pieces = Order.ReplenOrderDetails.Where(o => o.StationNumber == 8).Sum(s => s.Quantity);
                 return _pieces;
             }
             set { _pieces = value; }

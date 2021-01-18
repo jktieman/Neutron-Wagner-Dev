@@ -20,6 +20,14 @@ namespace NeutronCore.Models
         {
             return "C3000";
         }
+        public static string Mp12D()
+        {
+            return "MP12D";
+        }
+        public static string Mp12N()
+        {
+            return "MP12N";
+        }
 
     }
 }

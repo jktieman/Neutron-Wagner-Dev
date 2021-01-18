@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -35,6 +36,7 @@ using System.Text;
 using System.Threading;
 using System.Data.SqlClient;
 using CurrentDeviceIndicator;
+using JetBrains.Annotations;
 using Neutron.Controllers;
 using Neutron.Extensions;
 //using NeutronDllu;
@@ -43,6 +45,7 @@ using NeutronEvents;
 using static NeutronCore.Extensions.IntegerExtensions;
 using Timer = System.Threading.Timer;
 using NeutronDllu;
+using Remotion.Logging;
 
 namespace Neutron.Forms
 {
@@ -66,6 +69,7 @@ namespace Neutron.Forms
 
         private readonly BindingSource _bindingSourceCompleted = new BindingSource();
         private readonly BindingSource _bindingSourceOrderView = new BindingSource();
+        private BindingListView<AvailableOrdersView> _bindingListViewAvailableOrdersViews;
         private readonly BindingSource _bindingSourceAvailableOrders = new BindingSource();
         private readonly BindingSource _bindingSourceAvailableOrdersRack = new BindingSource();
         private readonly BindingSource _bindingSourcePickViews = new BindingSource();
@@ -112,8 +116,24 @@ namespace Neutron.Forms
 
         private CurrentDataSet _currentDataSet;
 
-        private List<DeviceIndicator> _deviceIndicators;
+        private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private DeviceIndicator _currentDeviceIndicator;
+
+        //GRIDS
+        private bool _allOrdersGridReady;
+        private bool _availableOrdersGridReady;
+        private bool _pickViewGridReady;
+        private bool _orderDetailsGridReady;
+        private bool _newOrderGridReady;
+        private bool _newItemsGridReady;
+        private bool _availableOrdersRackGridReady;
+        private bool _adjustGridReady;
+        private bool _skipGridReady;
+        private bool _skipInventoryGridReady;
+
+
+        private SynchronizationContext _synchronizationContext;
+
 
         // public delegate void UpdateTextBoxDelegate1(ResponseInfo responseInfo);
         // public delegate void UpdateTextBoxDelegate2(ResponseInfo responseInfo);
@@ -153,8 +173,13 @@ namespace Neutron.Forms
             }
             //UpdateNomenclature();
             SetupPrinters();
-            SetupGrids();
-            SetupCurrentDeviceIndicators();
+            _synchronizationContext = SynchronizationContext.Current;
+
+            InitGrids();
+
+
+
+
             SetupPickPositions(_neutronVariables.PickBatchSize);
             HideTabControlTabs();
             ShowButtons();
@@ -164,7 +189,7 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             CurrentTextBoxPos = TextBoxPos1;
             ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
-            if (_neutronVariables.IptiDisplays)
+            if (_neutronVariables.DisplaysEnabled && _neutronVariables.IptiDisplays)
             {
                 GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
                 GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
@@ -186,17 +211,145 @@ namespace Neutron.Forms
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
         }
 
-        private void SetupCurrentDeviceIndicators()
+        private void InitGrids()
         {
-            _deviceIndicators = new List<DeviceIndicator>();
 
-            _deviceIndicators.Add(CurrentDeviceIndicator1);
-            _deviceIndicators.Add(CurrentDeviceIndicator2);
-            _deviceIndicators.Add(CurrentDeviceIndicator3);
-            _deviceIndicators.Add(CurrentDeviceIndicator4);
-            _deviceIndicators.Add(CurrentDeviceIndicator5);
-            _deviceIndicators.Add(CurrentDeviceIndicator6);
+            int id = Thread.CurrentThread.ManagedThreadId;
+            Trace.WriteLine("FrmPick thread: " + id);
 
+            Console.WriteLine("Start Load Grids");
+            var sw = new Stopwatch();
+            sw.Start();
+
+            if (!_availableOrdersGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupAvailableOrdersGrid);
+                Thread thread =
+                    new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_pickViewGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupPickViewGrid);
+                Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_allOrdersGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupOrderGrid);
+                Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_newOrderGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupNewOrderGrid);
+                Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_newItemsGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupNewItemsGrid);
+                Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_availableOrdersRackGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupAvailableOrdersRackGrid);
+                Thread thread =
+                    new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_adjustGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupAdjustGrid);
+                Thread thread =
+                    new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_skipGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupSkipGrid);
+                Thread thread =
+                    new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+            if (!_skipInventoryGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupSkipInventoryGrid);
+                Thread thread =
+                    new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            sw.Stop();
+            Console.WriteLine($@"Grids initialized via Task...  Milliseconds: {sw.ElapsedMilliseconds}");
+        }
+
+        private void RunGrid(object state, SendOrPostCallback setupGrid)
+        {
+            int id = Thread.CurrentThread.ManagedThreadId;
+            Trace.WriteLine($"{setupGrid.ToString()}  Thread: " + id);
+            var uiContext = state as SynchronizationContext;
+            uiContext.Post(setupGrid, null);
+        }
+
+        private void InitDeviceIndicators()
+        {
+            if (PickScreen.Controls.ContainsKey("PanelDeviceIndicators")) return;
+
+            Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
+            _deviceIndicators = new Dictionary<int, DeviceIndicator>();
+
+            int[] validDeviceTypes = new[] { 1, 2 };  //1 - Shuttle, 2 - Carousel
+
+            var numDevices = _station.HardwareDevices.Where(x => validDeviceTypes.Contains(x.DeviceTypeId)).Count();
+            var hardwareDevices = _station.HardwareDevices.Where(x => validDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+
+            var panel = new Panel();
+            panel.Location = new Point(140, 0);
+            panel.Size = new Size(860, 150);
+            panel.BackColor = Color.Transparent;
+            panel.Name = "PanelDeviceIndicators";
+
+            foreach (var hardwareDevice in hardwareDevices)
+            {
+                var device = new DeviceIndicator(hardwareDevice.DeviceNumber, 200, Color.Aqua
+                    , Color.White, hardwareDevice.CarrierLevel, hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+                device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
+                device.DeviceNumber = hardwareDevice.DeviceNumber;
+                device.Location = GetLocation(panel.Size.Width, numDevices, hardwareDevice.DeviceNumber);
+                _deviceIndicators.Add(hardwareDevice.DeviceNumber, device);
+                panel.Controls.Add(device);
+            }
+
+            PickScreen.Controls.Add(panel);
+
+        }
+
+        private Point GetLocation(int sizeWidth, int numDevices, int deviceNumber)
+        {
+            Point point;
+            var eachBlock = sizeWidth / numDevices;
+            var centerBlock = eachBlock / 2;
+            var positionInBlock = centerBlock - 60;
+            if (deviceNumber == 1)
+            {
+                point = new Point(positionInBlock, 5);
+            }
+            else
+            {
+                var pos = positionInBlock + (deviceNumber - 1) * eachBlock;
+                point = new Point(pos, 5);
+            }
+
+            return point;
 
         }
 
@@ -213,15 +366,6 @@ namespace Neutron.Forms
             }
             ComboBoxStationNumber.DataSource = stationNumbers;
             ComboBoxStationNumber.SelectedIndex = 0;
-        }
-
-        private void ShowCommand(string request)
-        {
-            //if (IsHandleCreated)
-            //{
-            //    ListBoxRequests.Invoke(new Action(() => ListBoxRequests.Items.Add(request)));
-            //}
-
         }
 
         private void ShowOrderComplete(Order order)
@@ -1150,7 +1294,7 @@ namespace Neutron.Forms
                     DataGridView1.Update();
                 }
                 DataGridView1.Refresh();
-                CurrentItem = ((ObjectView<OrderView>)_bindingSourceOrderView.Current).Object;
+                CurrentItem = ((ObjectView<OrderView>)_bindingSourceOrderView[recId]).Object;
                 //PictureBoxItemImage.Load(@"C:\Images\1121.jpg");
             }
             Task.Run(() => _logger.Log($"ShowAllOrders End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -1198,7 +1342,6 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Show Rack Orders End: [{DateTime.Now.ToLongTimeString()}]"));
             return idx;
         }
-
 
         private int ShowAvailableOrdersRack(int recId = 0, string findWhat = "")
         {
@@ -1270,13 +1413,39 @@ namespace Neutron.Forms
                 findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
             }
 
+            //if (!string.IsNullOrEmpty(findWhat))
+            //{
+            //    //Check to see if _bindingSourceAvailableOrders has data.
+            //    //If it does, just filter the BindingSource and update the DataGridViewAvailableOrders
+            //    if (DataGridViewAvailableOrders.RowCount > 0)
+            //    {
+            //        var view = (BindingSource)DataGridViewAvailableOrders.DataSource;
+            //        view.Filter(r => r.Ord1.Contains(TextBoxFindAvailableOrders.Text));
+
+            //        var supportsFiltering = _bindingSourceAvailableOrders.SupportsFiltering;
+
+            //       // DataView dv = ((DataTable)DataGridViewAvailableOrders.DataSource).DefaultValue;
+            //       // dv.RowFilter = $"Ord1 LIKE '%{findWhat}%'";
+            //       _bindingSourceAvailableOrders.ApplyFilter = $"Ord1 LIKE '%{findWhat}%'";
+            //    }
+            //}
+
+
+
             try
             {
-                var views = _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking, _showSkipped);
+                var sw = new Stopwatch();
+                sw.Start();
+                //var views = _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking, _showSkipped);
+                var views = _ordersRepository.GetAvailableOrders(_station);
+                sw.Stop();
 
-                var bindingListView = new BindingListView<AvailableOrdersView>(views.ToList());
+                Console.WriteLine($@"GetAvailableOrders Milliseconds: {sw.ElapsedMilliseconds}");
 
-                _bindingSourceAvailableOrders.DataSource = bindingListView;
+                _bindingListViewAvailableOrdersViews = new BindingListView<AvailableOrdersView>(views.ToList());
+                _bindingSourceAvailableOrders.DataSource = _bindingListViewAvailableOrdersViews;
+
+
             }
             catch (Exception ex)
             {
@@ -1284,7 +1453,7 @@ namespace Neutron.Forms
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
-            // DataGridViewAvailableOrdersRack.DataSource = _bindingSourceAvailableOrders;
+
             if (GetRecordCount(_bindingSourceAvailableOrders) > 0)
             {
                 if (recId != 0)
@@ -1293,22 +1462,16 @@ namespace Neutron.Forms
                     DataGridViewAvailableOrders.FirstDisplayedScrollingRowIndex = DataGridViewAvailableOrders.Rows[idx].Index;
                     DataGridViewAvailableOrders.CurrentCell = DataGridViewAvailableOrders.Rows[idx].Cells[1];
                     DataGridViewAvailableOrders.Rows[idx].Selected = true;
-                    // DataGridViewAvailableOrdersRack.FirstDisplayedScrollingRowIndex = DataGridViewAvailableOrders.Rows[idx].Index;
-                    //  DataGridViewAvailableOrdersRack.CurrentCell = DataGridViewAvailableOrders.Rows[idx].Cells[1];
-                    // DataGridViewAvailableOrdersRack.Rows[idx].Selected = true;
                 }
                 else
                 {
                     DataGridViewAvailableOrders.ClearSelection();
                     DataGridViewAvailableOrders.Update();
-                    //   DataGridViewAvailableOrdersRack.ClearSelection();
-                    //   DataGridViewAvailableOrdersRack.Update();
                 }
                 CheckMarkSelectedAvailableOrders();
                 ClearTextBoxPosBackColor();
                 SetBatchPositionToFirstEmpty();
                 DataGridViewAvailableOrders.Refresh();
-                //  DataGridViewAvailableOrdersRack.Refresh();
 
                 _currentAvailableOrdersView = ((ObjectView<AvailableOrdersView>)_bindingSourceAvailableOrders.Current).Object;
 
@@ -1317,7 +1480,6 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"ShowAvailableOrders End: [{DateTime.Now.ToLongTimeString()}]"));
             return idx;
         }
-
 
         private int ShowAllAvailableOrders(int recId = 0, string findWhat = "")
         {
@@ -1367,7 +1529,6 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"ShowAvailableOrders End: [{DateTime.Now.ToLongTimeString()}]"));
             return idx;
         }
-
 
         private void CheckMarkSelectedAvailableOrders()
         {
@@ -1446,9 +1607,6 @@ namespace Neutron.Forms
             return count;
         }
 
-        #region Button Clicks
-
-
         private void MButtonClose_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
@@ -1477,12 +1635,8 @@ namespace Neutron.Forms
         //    tabControl1.SelectedTab = AvailableOrders;
         //}
 
-        #endregion
-
-        #region DataGridSetups
-
-
-        private void SetupOrderGrid()
+        #region All Grid Setups
+        private void SetupOrderGrid(object state)
         {
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -1656,10 +1810,10 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
+
+            _allOrdersGridReady = true;
         }
-
-
-        private void SetupSkipGrid()
+        private void SetupSkipGrid(object state)
         {
             DataGridViewSkip.AutoGenerateColumns = false;
             DataGridViewSkip.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -1806,16 +1960,12 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
+
+            _skipGridReady = true;
         }
-
-        #region DataGridSetup
-
-        private void SetupGrids()
+        private void SetupPickViewGrid(object state)
         {
-            SetupOrderGrid();
-            SetupSkipInventoryGrid();
-            //*****************************************************************************
-            //DataGridPickView
+            var result = false;
 
             DataGridPickView.AutoGenerateColumns = false;
             DataGridPickView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -1939,6 +2089,11 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
+            _pickViewGridReady = true;
+        }
+        private void SetupAvailableOrdersGrid(object state)
+        {
+
             //*****************************************************************************
             //DataGridViewAvailableOrders
 
@@ -1959,7 +2114,7 @@ namespace Neutron.Forms
             };
             DataGridViewAvailableOrders.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn
+            var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
                 HeaderText = _resourceManager.GetString($"Ord1"),
@@ -1980,20 +2135,23 @@ namespace Neutron.Forms
             DataGridViewAvailableOrders.Columns.Add(col);
 
 
-            if (_neutronVariables.SerialPicking)  //Show the Starter column
+            // if (_neutronVariables.SerialPicking) //Show the Starter column
+            // {
+            colx = new DataGridViewCheckBoxColumn
             {
-                col = new DataGridViewTextBoxColumn
-                {
-                    DataPropertyName = "Starter",
-                    HeaderText = _resourceManager.GetString($"Starter"),
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                    Name = "Starter",
-                    Visible = true
-                };
-                DataGridViewAvailableOrders.Columns.Add(col);
+                DataPropertyName = "Starter",
+                HeaderText = _resourceManager.GetString($"Starter"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Starter",
+                Visible = true,
+                TrueValue = 1,
+                FalseValue = 0,
+            };
+            DataGridViewAvailableOrders.Columns.Add(colx);
 
-            }
+            // }
+
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Priority",
@@ -2023,6 +2181,36 @@ namespace Neutron.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Lines"
+            };
+            DataGridViewAvailableOrders.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Available",
+                HeaderText = _resourceManager.GetString($"Available"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Available"
+            };
+            DataGridViewAvailableOrders.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Picked",
+                HeaderText = _resourceManager.GetString($"Picked"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Picked"
+            };
+            DataGridViewAvailableOrders.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Skipped",
+                HeaderText = _resourceManager.GetString($"Skipped"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Skipped"
             };
             DataGridViewAvailableOrders.Columns.Add(col);
 
@@ -2074,6 +2262,11 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
+            _availableOrdersGridReady = true;
+
+        }
+        private void SetupAvailableOrdersRackGrid(object state)
+        {
             //*****************************************************************************
             //DataGridViewAvailableOrdersRack
 
@@ -2082,7 +2275,7 @@ namespace Neutron.Forms
             DataGridViewAvailableOrdersRack.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewAvailableOrdersRack.DefaultCellStyle.BackColor = Color.White;
 
-            colx = new DataGridViewCheckBoxColumn
+            var colx = new DataGridViewCheckBoxColumn
             {
                 HeaderText = @"   ",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -2094,7 +2287,7 @@ namespace Neutron.Forms
             };
             DataGridViewAvailableOrdersRack.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn
+            var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
                 HeaderText = _resourceManager.GetString($"Ord1"),
@@ -2193,96 +2386,10 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
-
-            ////**********************************************************************************************           
-            ////DataGridViewInventory
-
-            //DataGridViewInventory.AutoGenerateColumns = false;
-            //DataGridViewInventory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            //DataGridViewInventory.DefaultCellStyle.ForeColor = Color.Black;
-            //DataGridViewInventory.DefaultCellStyle.BackColor = Color.White;
-
-            //var bCol = new DataGridViewButtonColumn
-            //{
-            //    HeaderText = @"   ",
-            //    Visible = false,
-            //    Name = "HotPick",
-            //    Text = _resourceManager.GetString(@"HotPick"),
-            //    FlatStyle = FlatStyle.Popup,
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-            //    UseColumnTextForButtonValue = true
-            //};
-
-            //DataGridViewInventory.Columns.Add(bCol);
-
-            //col = new DataGridViewTextBoxColumn
-            //{
-            //    DataPropertyName = "Item",
-            //    HeaderText = _resourceManager.GetString(@"Item"),
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-            //    Name = "Item"
-            //};
-            //DataGridViewInventory.Columns.Add(col);
-
-            //col = new DataGridViewTextBoxColumn
-            //{
-            //    DataPropertyName = "Description",
-            //    HeaderText = _resourceManager.GetString(@"Description"),
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
-            //    Name = "Description"
-            //};
-            //DataGridViewInventory.Columns.Add(col);
-
-            //col = new DataGridViewTextBoxColumn
-            //{
-            //    DataPropertyName = "Quantity",
-            //    HeaderText = _resourceManager.GetString(@"Quantity"),
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-            //    Name = "Quantity"
-            //};
-            //DataGridViewInventory.Columns.Add(col);
-
-            //col = new DataGridViewTextBoxColumn
-            //{
-            //    DataPropertyName = "Slot",
-            //    HeaderText = _resourceManager.GetString(@"Slot"),
-            //    Name = "Slot",
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
-            //};
-            //DataGridViewInventory.Columns.Add(col);
-
-            //col = new DataGridViewTextBoxColumn
-            //{
-            //    DataPropertyName = "ReceivedDate",
-            //    HeaderText = _resourceManager.GetString(@"ReceivedDate"),
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
-            //    Name = "ReceivedDate"
-            //};
-            //col.DefaultCellStyle.Format = "MM-dd-yyyy";
-
-            //DataGridViewInventory.Columns.Add(col);
-
-            //col = new DataGridViewTextBoxColumn
-            //{
-            //    DataPropertyName = "Id",
-            //    HeaderText = "Id",
-            //    Visible = false,
-            //    Name = "Id"
-            //};
-            //DataGridViewInventory.Columns.Add(col);
-
-            //foreach (DataGridViewColumn column in DataGridViewInventory.Columns)
-            //{
-            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            //}
-
-
+            _availableOrdersRackGridReady = true;
+        }
+        private void SetupNewOrderGrid(object state)
+        {
             //********************************************************************
             // DataGridViewNewOrder
 
@@ -2291,7 +2398,7 @@ namespace Neutron.Forms
             DataGridViewNewOrder.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewNewOrder.DefaultCellStyle.BackColor = Color.White;
 
-            col = new DataGridViewTextBoxColumn
+            var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
                 HeaderText = _resourceManager.GetString($"StationNumber"),
@@ -2346,6 +2453,10 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
+            _newOrderGridReady = true;
+        }
+        private void SetupOrderDetailsGrid(object state)
+        {
             //********************************************************************
             //DataGridViewOrderDetails
 
@@ -2355,7 +2466,7 @@ namespace Neutron.Forms
             DataGridViewOrderDetails.DefaultCellStyle.BackColor = Color.White;
             DataGridViewOrderDetails.ScrollBars = ScrollBars.Both;
 
-            colx = new DataGridViewCheckBoxColumn
+            var colx = new DataGridViewCheckBoxColumn
             {
                 HeaderText = @"   ",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -2366,7 +2477,7 @@ namespace Neutron.Forms
             };
             DataGridViewOrderDetails.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn
+            var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
                 HeaderText = _resourceManager.GetString($"StationNumber"),
@@ -2471,8 +2582,11 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
-
-            //        //********************************************************************
+            _orderDetailsGridReady = true;
+        }
+        private void SetupAdjustGrid(object state)
+        {
+            //********************************************************************
             //        //DataGridViewAdjust
             //
             DataGridViewAdjust.AutoGenerateColumns = false;
@@ -2482,7 +2596,7 @@ namespace Neutron.Forms
             DataGridViewAdjust.ScrollBars = ScrollBars.Both;
 
 
-            colx = new DataGridViewCheckBoxColumn
+            var colx = new DataGridViewCheckBoxColumn
             {
                 HeaderText = @"   ",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -2494,7 +2608,7 @@ namespace Neutron.Forms
             };
             DataGridViewAdjust.Columns.Add(colx);
 
-            col = new DataGridViewTextBoxColumn
+            var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
                 HeaderText = _resourceManager.GetString($"StationNumber"),
@@ -2581,12 +2695,17 @@ namespace Neutron.Forms
             DataGridViewAdjust.Columns.Add(col);
 
             DataGridViewAdjust.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 20, 0);
+
             foreach (DataGridViewColumn column in DataGridViewAdjust.Columns)
             {
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
+            _adjustGridReady = true;
+        }
+        private void SetupNewItemsGrid(object state)
+        {
             //********************************************************************
             //DataGridViewNewItems
 
@@ -2596,7 +2715,7 @@ namespace Neutron.Forms
             DataGridViewNewItems.DefaultCellStyle.BackColor = Color.White;
             DataGridViewNewItems.ScrollBars = ScrollBars.Both;
 
-            col = new DataGridViewTextBoxColumn
+            var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
                 HeaderText = _resourceManager.GetString($"StationNumber"),
@@ -2651,12 +2770,126 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             }
 
+            _newItemsGridReady = true;
+        }
+        private void SetupSkipInventoryGrid(object state)
+        {
+            DataGridViewSkipInventory.AutoGenerateColumns = false;
+            DataGridViewSkipInventory.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            DataGridViewSkipInventory.DefaultCellStyle.ForeColor = Color.Black;
+            DataGridViewSkipInventory.DefaultCellStyle.BackColor = Color.White;
+            DataGridViewSkipInventory.ScrollBars = ScrollBars.Both;
+
+            var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationNumber",
+                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = true,
+                Name = "StationNumber"
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StorageType",
+                HeaderText = _resourceManager.GetString($"StorageType"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = true,
+                Name = "StorageType"
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Slot",
+                HeaderText = _resourceManager.GetString($"Slot"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = true,
+                Name = "Slot"
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _resourceManager.GetString($"Item"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = true,
+                Name = "Item"
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _resourceManager.GetString($"Description"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "Description",
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Quantity",
+                HeaderText = _resourceManager.GetString($"Quantity"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Quantity",
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Picked",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                HeaderText = _resourceManager.GetString($"Picked"),
+                Name = "Picked",
+                ReadOnly = false,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Required",
+                HeaderText = _resourceManager.GetString($"Required"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Required",
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "InventoryId",
+                HeaderText = _resourceManager.GetString($"InventoryId"),
+                Visible = false,
+                Name = "InventoryId"
+            };
+            DataGridViewSkipInventory.Columns.Add(col);
+
+            foreach (DataGridViewColumn column in DataGridViewSkipInventory.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            }
+
+            _skipInventoryGridReady = true;
         }
 
 
         #endregion
 
-        #endregion
+
 
 
         private void FrmPick_FormClosing(object sender, FormClosingEventArgs e)
@@ -2926,6 +3159,7 @@ namespace Neutron.Forms
 
         private void PickListBack()
         {
+            ShowAvailableOrders();
             LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = AvailableOrders;
@@ -2949,7 +3183,7 @@ namespace Neutron.Forms
 
         private void AvailableOrdersBack()
         {
-            ClearBatchPositions();
+            // ClearBatchPositions();
             LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
@@ -2968,40 +3202,64 @@ namespace Neutron.Forms
                 LabelFormTitle.Text = _resourceManager.GetString($"PickList");
                 LabelFormTitle.BackColor = Color.RoyalBlue;
 
-                var itemShort = PickListLoad();
+                var pickableViews = PickListLoad();
 
-
-                Task.Run(() => _logger.Log($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
-
-                //  PrintAllToteLabels();
-                if (_neutronVariables.EnableDocumentPrinter)
+                if (pickableViews.Count > 0)
                 {
-                    if (_neutronVariables.PrintPackingListStart)
+                    _bindingSourcePickViews.DataSource = pickableViews;
+                    DataGridPickView.DataSource = _bindingSourcePickViews;
+                    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] \r\nCount:{_bindingSourcePickViews.Count.ToString()}"));
+                    GetRecordCount(_bindingSourcePickViews);
+
+                    // DataGridPickView_FormatRows();
+
+                    //DataGridPickView.ClearSelection();
+                    //DataGridPickView.Update();
+                    //DataGridPickView.ScrollBars = ScrollBars.Both;
+                    var shortItems = GetShortItems(pickableViews);
+
+                    if (shortItems.Count > 0)
                     {
-                        PrintAllDocuments();
+                        //SetupPickViewGrid();
+                        //DataGridPickView.ClearSelection();
+                        //DataGridPickView.Update();
+                        tabControl1.SelectedTab = PickList;
+                        Task.Run(() => _logger.Log($"Batch Start End: [{DateTime.Now.ToLongTimeString()}]"));
                     }
-                }
-
-
-                Task.Run(() => _logger.Log($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
-
-                if (itemShort)
-                {
-                    DataGridPickView.ClearSelection();
-                    DataGridPickView.Update();
-                    tabControl1.SelectedTab = PickList;
-                    Task.Run(() => _logger.Log($"Batch Start End: [{DateTime.Now.ToLongTimeString()}]"));
+                    else
+                    {
+                        Start();
+                    }
                 }
                 else
                 {
-                    Start();
+                    MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+                    ClearAllSelectOrdersToPick();
+                    LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+                    LabelFormTitle.BackColor = Color.RoyalBlue;
+                    ShowAvailableOrders();
+                    tabControl1.SelectedTab = AvailableOrders;
                 }
             }
         }
 
-        private bool PickListLoad()
+        private List<PickView> GetShortItems(List<PickView> pickableViews)
         {
-            var itemShort = false;
+            var shortItems = new List<PickView>();
+
+            foreach (var item in pickableViews)
+            {
+                if (item.QuantityToBePicked > item.TotalQuantityInInventory)
+                {
+                    shortItems.Add(item);
+                }
+            }
+            return shortItems;
+        }
+
+        private List<PickView> PickListLoad()
+        {
+
             Task.Run(() => _logger.Log($"PickListLoad Start: [{DateTime.Now.ToLongTimeString()}]"));
             TextBoxFindAvailableOrders.Text = string.Empty;
             //            ShowAvailableOrders();
@@ -3013,6 +3271,8 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Pickviews Count: {pickViews.Count}"));
 
             var pickableViews = new List<PickView>();
+            var skipPickableViews = new List<PickView>();
+            var zeroPickableViews = new List<PickView>();
 
             foreach (var item in pickViews)
             {
@@ -3049,42 +3309,85 @@ namespace Neutron.Forms
                 }
                 else
                 {
+                    using (var form = new FrmSkipOption(item))
+                    {
+                        var result = form.ShowDialog();
+
+                        if (result == DialogResult.OK)
+                        {
+                            var pushed = form.Pushed;
+                            if (pushed == "Skip")
+                            {
+                                item.OrderDetail.LineStatusId = 9;
+                                skipPickableViews.Add(item);
+                                _repoOrderDetails.Update(item.OrderDetail);
+                                GlobalVar.HistoryManager.SaveHistory(ActionCode.Skip, item.OrderDetail);
+                            }
+                            else if (pushed == "Pick Zero")
+                            {
+                                zeroPickableViews.Add(item);
+                                item.OrderDetail.LineStatusId = 6;
+                                item.OrderDetail.PickedQuantity = 0;
+                                _repoOrderDetails.Update(item.OrderDetail);
+
+                                GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail);
+                            }
+                        }
+                    }
+
+
+
                     //if (item.OrderDetail.LineStatusId == 9) continue;
-                    MessageBox.Show($"{_resourceManager.GetString($"NoInventoryForItem")}: {item.Item}. {Environment.NewLine} {_resourceManager.GetString($"ItemWillBeSkipped")}");
-                    item.OrderDetail.LineStatusId = 9;
-                    _repoOrderDetails.Update(item.OrderDetail);
-                }
-            }
+                    //MessageBox.Show($"{_resourceManager.GetString($"NoInventoryForItem")}: {item.Item}." +
+                    //                $" {Environment.NewLine} {_resourceManager.GetString($"ItemWillBeSkipped")}");
 
-            if (pickableViews.Count > 0)
-            {
-                _bindingSourcePickViews.DataSource = pickableViews;
-                DataGridPickView.DataSource = _bindingSourcePickViews;
-                Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] \r\nCount:{_bindingSourcePickViews.Count.ToString()}"));
-                GetRecordCount(_bindingSourcePickViews);
-                DataGridPickView.ClearSelection();
-                DataGridPickView.Update();
-                DataGridPickView.ScrollBars = ScrollBars.Both;
-            }
-            else
-            {
-                MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
-                ClearAllSelectOrdersToPick();
-                LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
-                LabelFormTitle.BackColor = Color.RoyalBlue;
-                tabControl1.SelectedTab = AvailableOrders;
-            }
-            foreach (var item in pickableViews)
-            {
-                if (item.QuantityToBePicked > item.TotalQuantityInInventory)
-                {
-                    itemShort = true;
-                    break;
                 }
 
             }
+
+            CreateSkipZeroSummary(skipPickableViews, zeroPickableViews);
+
+            //if (pickableViews.Count > 0)
+            //{
+            //    _bindingSourcePickViews.DataSource = pickableViews;
+            //    //SetupPickViewGrid();
+            //    DataGridPickView.DataSource = _bindingSourcePickViews;
+            //    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] \r\nCount:{_bindingSourcePickViews.Count.ToString()}"));
+            //    GetRecordCount(_bindingSourcePickViews);
+
+            //    // DataGridPickView_FormatRows();
+
+            //    //DataGridPickView.ClearSelection();
+            //    //DataGridPickView.Update();
+            //    //DataGridPickView.ScrollBars = ScrollBars.Both;
+            //}
+            //else
+            //{
+            //    MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+            //    ClearAllSelectOrdersToPick();
+            //    LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+            //    LabelFormTitle.BackColor = Color.RoyalBlue;
+            //    ShowAvailableOrders();
+            //    tabControl1.SelectedTab = AvailableOrders;
+            //}
+            //foreach (var item in pickableViews)
+            //{
+            //    if (item.QuantityToBePicked > item.TotalQuantityInInventory)
+            //    {
+            //        itemShort = true;
+            //        break;
+            //    }
+            //}
             Task.Run(() => _logger.Log($"PickListLoad End: [{DateTime.Now.ToLongTimeString()}]"));
-            return itemShort;
+
+            return pickableViews;
+        }
+
+        private void CreateSkipZeroSummary(List<PickView> skipPickableViews, List<PickView> zeroPickableViews)
+        {
+            if (skipPickableViews.Count <= 0 && zeroPickableViews.Count <= 0) return;
+            var frm = new FrmSkipZeroSummary(skipPickableViews, zeroPickableViews);
+            frm.ShowDialog();
         }
 
         private List<Inventory> PrimeBinFirst(PickView item)
@@ -3179,6 +3482,9 @@ namespace Neutron.Forms
                 var currentItem = ((ObjectView<AvailableOrdersView>)_bindingSourceAvailableOrders.Current).Object;
                 var firstTime = true;
                 var counter = 0;
+                var orderAndDetails = _ordersRepository.GetOrderAndOrderDetails(bp.OrderId, _station.StationNumber);
+                currentItem.Order = orderAndDetails;
+                // currentItem.Order = _repoOrders.FindByKey(bp.OrderId).FirstOrDefault().OrderDetails.Where(d => d.LineStatusId == 1);
                 var details = currentItem.Order.OrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
                 {
@@ -3207,6 +3513,8 @@ namespace Neutron.Forms
                         counter = 0;
                     }
 
+                    //detail.ItemDefinition = _repoItemDefinition.FindByKey(detail.ItemDefinitionId);
+
                     var pickView = new PickView()
                     {
                         PickPosition = bp.PositionNumber,
@@ -3231,15 +3539,15 @@ namespace Neutron.Forms
             }
 
             //Add Item definition
-            foreach (var item in pickViews)
-            {
-                var def = _repoItemDefinition.FindBy(f => f.Id == item.ItemId).FirstOrDefault();
-                if (def != null)
-                {
-                    item.Item = def.Item;
-                    item.Description = def.Description;
-                }
-            }
+            //foreach (var item in pickViews)
+            //{
+            //    var def = _repoItemDefinition.FindBy(f => f.Id == item.ItemId).FirstOrDefault();
+            //    if (def != null)
+            //    {
+            //        item.Item = def.Item;
+            //        item.Description = def.Description;
+            //    }
+            //}
             Task.Run(() => _logger.Log($"GetPickViews End: [{DateTime.Now.ToLongTimeString()}]"));
             return pickViews;
         }
@@ -3697,7 +4005,8 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = PickList;
             ClearAllShi();
             ClearAllBli();
-            ClearAllActiveDeviceIndicators();
+            Console.WriteLine("Clear Active Device Indicator  PickBack");
+            ClearActiveDeviceIndicator();
 
         }
 
@@ -3708,6 +4017,22 @@ namespace Neutron.Forms
 
         private void Start()
         {
+            Console.WriteLine("Init Device Indicators  Start");
+            InitDeviceIndicators();
+            //-------------------------------------
+            Task.Run(() => _logger.Log($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
+
+            //  PrintAllToteLabels();
+            if (_neutronVariables.EnableDocumentPrinter)
+            {
+                if (_neutronVariables.PrintPackingListStart)
+                {
+                    PrintAllDocuments();
+                }
+            }
+            Task.Run(() => _logger.Log($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
+
+
             Task.Run(() => _logger.Log($"Start_Click Start: [{DateTime.Now.ToLongTimeString()}]"));
             var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
             if (pickViews == null) return;
@@ -4002,7 +4327,8 @@ namespace Neutron.Forms
             var numberOfStops = _bindingSourcePickStops.Count;
             if (numberOfStops > 0)
             {
-                ClearAllActiveDeviceIndicators();
+                Console.WriteLine("Clear Device Indicator - Get First Stop");
+                ClearActiveDeviceIndicator();
                 //DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 _bindingSourcePickStops.MoveFirst();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
@@ -4026,7 +4352,8 @@ namespace Neutron.Forms
             var numberOfStops = _bindingSourcePickStops.Count;
             if (_currentPickStop.Sequence < numberOfStops)
             {
-                ClearAllActiveDeviceIndicators();
+                Console.WriteLine("Clear Device Indicator - Get Next Stop");
+                ClearActiveDeviceIndicator();
                 //DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 _bindingSourcePickStops.MoveNext();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
@@ -4049,7 +4376,8 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.Log($"GetPrevStop: [{DateTime.Now.ToLongTimeString()}]"));
             var numberOfStops = _bindingSourcePickStops.Count;
-            ClearAllActiveDeviceIndicators();
+            Console.WriteLine("Clear Device Indicator - Get Previous Stop");
+            ClearActiveDeviceIndicator();
             //DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
             if (_currentPickStop.Sequence > 0)
             {
@@ -4076,7 +4404,8 @@ namespace Neutron.Forms
             var numberOfStops = _bindingSourcePickStops.Count;
             if (numberOfStops > 0)
             {
-                ClearAllActiveDeviceIndicators();
+                Console.WriteLine("Clear Device Indicator - Get Last Stop");
+                ClearActiveDeviceIndicator();
                 //DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 _bindingSourcePickStops.MoveLast();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
@@ -4119,6 +4448,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"UpdatePickScreen Start: [{DateTime.Now.ToLongTimeString()}]"));
             MBPickNewItem.Visible = _neutronLicense.CompanyCode == "TOP" ? true : false;
             UpdateTowerDisplay();
+            Console.WriteLine("Update Device Indicator - Update Pick Screen");
             UpdateCurrentDeviceIndicator();
             UpdatePickPosition();
             // UpdateInventoryLocation();
@@ -4179,56 +4509,70 @@ namespace Neutron.Forms
 
         private void UpdateCurrentDeviceIndicator()
         {
-            Console.WriteLine($"UpdateCurrentDeviceIndicator - Start");
+            Console.WriteLine($@"UpdateCurrentDeviceIndicator - Start");
             var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+            var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
             var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-            var deviceIndicator = _deviceIndicators.Where(d => d.DeviceNumber == loc1).FirstOrDefault();
-            if (deviceIndicator != null && deviceIndicator.Active == false)
-            {
-                Console.WriteLine($"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
-                deviceIndicator.SetDeviceIndicatorValues(loc3, loc4);
-                deviceIndicator.Active = true;
-            }
+            //var deviceIndicator = _deviceIndicators.Where(d => d.DeviceNumber == loc1).FirstOrDefault();
+            _deviceIndicators[loc1].SetDeviceIndicatorValues(loc2, loc3, loc4);
+            _deviceIndicators[loc1].Active = true;
 
-            Console.WriteLine($"UpdateCurrentDeviceIndicator - End");
+            Console.WriteLine($@"UpdateCurrentDeviceIndicator ON - {_deviceIndicators[loc1].DeviceNumber}");
+
+            //var deviceIndicator = _deviceIndicators[loc1];
+
+            //if (deviceIndicator != null && deviceIndicator.Active == false)
+            //{
+            //    Console.WriteLine($"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
+            //    deviceIndicator.SetDeviceIndicatorValues(loc3, loc4);
+            //    deviceIndicator.Active = true;
+            //}
+
+            Console.WriteLine($@"UpdateCurrentDeviceIndicator - End");
         }
 
-        private async Task ClearAllActiveDeviceIndicators()
+        private async Task ClearActiveDeviceIndicator()
         {
             var sw = Stopwatch.StartNew();
-            Console.WriteLine($"ClearAllActiveDeviceIndicators - Start");
+            Console.WriteLine($@"Clear Active Device Indicator - Start");
             var tasks = new List<Task>();
-            foreach (var deviceIndicator in _deviceIndicators)
-            {
-                if (deviceIndicator.Active)
-                {
-                    Console.WriteLine($"ClearAllActiveDeviceIndicators - {deviceIndicator.DeviceNumber}");
-                    deviceIndicator.Active = false;
-                    tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
-                }
-            }
+            //var device = _deviceIndicators.Where(x => x.Value.Active == true).Value;
+            var device = _deviceIndicators.FirstOrDefault(x => x.Value.Active == true).Value;
+
+            tasks.Add(Task.Run(() => device.ClearAllAsync()));
+
+            //foreach (var deviceIndicator in _deviceIndicators)
+            //{
+            //    if (deviceIndicator.Active)+
+            //    {
+            //        Console.WriteLine($"ClearActiveDeviceIndicator - {deviceIndicator.DeviceNumber}");
+            //        deviceIndicator.Active = false;
+            //        tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+            //    }
+            //}
+
             await Task.WhenAll(tasks);
-            Console.WriteLine($"ClearAllActiveDeviceIndicators - End");
+            Console.WriteLine($@"Clear Active Device Indicator - End");
             sw.Stop();
-            Console.WriteLine($"ClearAllActiveDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+            Console.WriteLine($@"Clear Active Device Indicator  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private async Task ClearAllDeviceIndicators()
         {
             var sw = Stopwatch.StartNew();
-            Console.WriteLine($"ClearAllDeviceIndicators - Start");
+            Console.WriteLine($@"ClearAllDeviceIndicators - Start");
             var tasks = new List<Task>();
-            foreach (var deviceIndicator in _deviceIndicators)
+            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
             {
-                Console.WriteLine($"ClearAllDeviceIndicators - {deviceIndicator.DeviceNumber}");
-                deviceIndicator.Active = false;
-                tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+                Console.WriteLine($@"ClearAllDeviceIndicators - {deviceIndicator.Value.DeviceNumber}");
+                deviceIndicator.Value.Active = false;
+                tasks.Add(Task.Run(() => deviceIndicator.Value.ClearAllAsync()));
             }
             await Task.WhenAll(tasks);
-            Console.WriteLine($"ClearAllDeviceIndicators - End");
+            Console.WriteLine($@"ClearAllDeviceIndicators - End");
             sw.Stop();
-            Console.WriteLine($"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+            Console.WriteLine($@"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private void UpdateImages()
@@ -4660,7 +5004,8 @@ namespace Neutron.Forms
             var numberOfStops = _bindingSourcePickStops.Count;
             if (_currentPickStop.Sequence < numberOfStops)
             {
-                ClearAllActiveDeviceIndicators();
+                Console.WriteLine("Clear Active Device Indicator - SkipPick");
+                ClearActiveDeviceIndicator();
 
                 // DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 _bindingSourcePickStops.MoveNext();
@@ -4700,7 +5045,8 @@ namespace Neutron.Forms
 
             ClearOrderPositions();
             ClearBatchPositions();
-            ClearAllActiveDeviceIndicators();
+            Console.WriteLine("Clear Active Device Indicator - Close Batch With Skip");
+            ClearActiveDeviceIndicator();
             _logger.Log($"Start Upload Processor: {_neutronLicense.CompanyCode}");
             switch (_neutronLicense.CompanyCode)
             {
@@ -4781,7 +5127,8 @@ namespace Neutron.Forms
                 return;
             }
 
-            ClearAllActiveDeviceIndicators();
+            Console.WriteLine("Clear Active Device Indicator - Pick Accept");
+            ClearActiveDeviceIndicator();
             // DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
             MBPickAccept.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
@@ -5019,6 +5366,7 @@ namespace Neutron.Forms
             ClearAllBli();
             ClearOrderPositions();
             ClearBatchPositions();
+            Console.WriteLine("Clear All Device Indicators - Close Batch");
             ClearAllDeviceIndicators();
 
             _logger.Log($"Start Upload Processor: {_neutronLicense.CompanyCode}");
@@ -5473,7 +5821,8 @@ namespace Neutron.Forms
         private void ButtonMove_Click(object sender, EventArgs e)
         {
             // DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
-            ClearAllActiveDeviceIndicators();
+            Console.WriteLine("Clear Active Device Indicator - ButtonMove_Click");
+            ClearActiveDeviceIndicator();
             _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[_currentPickStop.GroupBoxLocationInventoryIndex];
 
             var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
@@ -5482,6 +5831,7 @@ namespace Neutron.Forms
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
 
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+            Console.WriteLine("Update Current Device Indicator - ButtonMove_Click");
             UpdateCurrentDeviceIndicator();
             //if (neutronVariables.ShuttleEnabled)
             //{
@@ -5601,6 +5951,7 @@ namespace Neutron.Forms
 
         private void MBJobDetails_Click(object sender, EventArgs e)
         {
+            SetupOrderDetailsGrid(new object());
             var row = DataGridView1.CurrentRow;
             if (row == null || row.Index < 0) return;
             var id = Convert.ToInt32(row.Cells["Id"].Value);
@@ -5663,37 +6014,52 @@ namespace Neutron.Forms
 
         private void MBMainAvailableOrders_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             if (_station.StationNumber >= 8)
             {
                 ShowAvailableRackScreen();
-
-            }
-            else
-            {
-                AvailableOrdersScreen();
-            }
-        }
-
-        public void AvailableOrdersScreen()
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            MBCompress.Enabled = false;
-            LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            ClearSelection(DataGridViewAvailableOrders);
-            ClearOrderPositions();
-            InitOrdersToPick(_neutronVariables.PickBatchSize);
-            _showSkipped = false;
-            ShowAvailableOrders();
-            if (_station.StationNumber == 8)
-            {
                 tabControl1.SelectedTab = AvailableRack;
             }
             else
             {
+                AvailableOrdersScreen();
                 tabControl1.SelectedTab = AvailableOrders;
             }
             Cursor.Current = Cursors.Default;
+        }
+
+        public void AvailableOrdersScreen()
+        {
+            Console.WriteLine("Start Available ORders Screen");
+            var sw = new Stopwatch();
+            sw.Start();
+            LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            //SetupAvailableOrdersGrid();
+            //SetupPickViewGrid();
+            ClearBatchPositions();
+            ClearOrderPositions();
+            MBCompress.Enabled = false;
+
+            ClearSelection(DataGridViewAvailableOrders);
+
+
+            InitOrdersToPick(_neutronVariables.PickBatchSize);
+            _showSkipped = false;
+            sw.Stop();
+            //Console.WriteLine($@"Load Grid Milliseconds: {sw.ElapsedMilliseconds}");
+            sw.Restart();
+            ShowAvailableOrders();
+            sw.Stop();
+            Console.WriteLine($@"Load Available Orders Milliseconds: {sw.ElapsedMilliseconds}");
+
+
+
+
+
+
+
+
         }
 
         private void MBAvailableOrdersRack_Click(object sender, EventArgs e)
@@ -5760,7 +6126,8 @@ namespace Neutron.Forms
 
         private void MBNewOrderClose_Click(object sender, EventArgs e)
         {
-            AvailableOrdersScreen();
+           // AvailableOrdersScreen();
+            tabControl1.SelectedTab = Main;
         }
 
         private void MBOrderDetailsBack_Click(object sender, EventArgs e)
@@ -5871,7 +6238,7 @@ namespace Neutron.Forms
             _repoInventory.Update(inv);
             GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryModify, inv);
 
-            var cnt = new LocationCount()
+            var locationCount = new LocationCount()
             {
                 InventoryId = inv.Id,
                 ItemDefinitionId = inv.ItemDefinitionId,
@@ -5881,8 +6248,8 @@ namespace Neutron.Forms
                 NewQty = qty,
                 CountDate = DateTime.Now,
             };
-            _repoLocationCount.Insert(cnt);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, cnt);
+            _repoLocationCount.Insert(locationCount);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, locationCount);
         }
 
         private void SetCurrentInventoryView(int inventoryId)
@@ -5896,22 +6263,15 @@ namespace Neutron.Forms
         private void MBShowAvailable_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            //ShowAvailable();
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
-            // MBCompress.Enabled = true;
             Cursor.Current = Cursors.Default;
-
-
-
-            //DataGridView1.Columns.Clear();
-            //SetupOrderGrid();
-            //ShowAvailableOrders();
         }
 
         private void CompressOrders()
         {
             var ids = GetCheckedOrderIds();
+            const string orderType = "PICK";
             var sb = new StringBuilder();
             foreach (var i in ids)
             {
@@ -5922,7 +6282,7 @@ namespace Neutron.Forms
             using (var context = new NeutronDb())
             {
                 var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
-                var paramOrderType = new SqlParameter("@ORDERTYPE", "PICK");
+                var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
                 var parameters = new object[] { paramOrderIds, paramOrderType };
 
                 context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds, paramOrderType);
@@ -5952,7 +6312,6 @@ namespace Neutron.Forms
             MBDeleteOrder.Visible = false;
         }
 
-        #region New Order
         //New Order
         private void MBNewOrderSearch_Click(object sender, EventArgs e)
         {
@@ -5965,19 +6324,6 @@ namespace Neutron.Forms
             {
                 _bindingSourceItems.DataSource = GetItemsList(s);
                 DataGridViewNewOrder.DataSource = _bindingSourceItems;
-
-                //if (string.IsNullOrEmpty(s))
-                //{
-                //    _bindingSourceItems.DataSource = GetItemsList();
-                //    DataGridViewNewOrder.DataSource = _bindingSourceItems;
-                //}
-                //else
-                //{
-                //    IEnumerable<NewItemView> projection = GetItemsList();
-                //    _bindingSourceItems.DataSource = projection
-                //        .Where(d => d.Item.ToLower().Contains(s) || d.Description.ToLower().Contains(s)).ToList();
-                //    DataGridViewNewOrder.DataSource = _bindingSourceItems;
-                //}
                 DataGridViewNewOrder.ClearSelection();
                 DataGridViewNewOrder.Update();
             }
@@ -6183,18 +6529,9 @@ namespace Neutron.Forms
                         })
                     .ToList();
             }
-
-            //recs = _repoInventory.AllInclude(r => r.ItemDefinition).Select(d => new NewItemView()
-            //{
-            //    InventoryId = d.Id
-            //    , ItemDefinitionId = d.ItemDefinition.Id
-            //    , Description = d.ItemDefinition.Description
-            //    , Item = d.ItemDefinition.Item
-            //    , Quantity = d.Quantity
-            //}).ToList();
             return recs;
         }
-        #endregion
+
         //New Order
 
         private void MBPickNewItem_Click(object sender, EventArgs e)
@@ -6595,11 +6932,6 @@ namespace Neutron.Forms
             }
         }
 
-
-
-        #region Find Functions Available Orders Screen
-
-
         private void TextBoxFindAvailableOrders_KeyDown(object sender, KeyEventArgs e)
         {
             // MessageBox.Show($" TextBoxFindAvailableOrders Key code: {e.KeyCode}");
@@ -6618,8 +6950,25 @@ namespace Neutron.Forms
         private void MBSearchAvailableOrders_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            ShowAvailableOrders();
+            //ShowAvailableOrders();
+
+            var find = TextBoxFindAvailableOrders.Text.Trim();
+            FilterAvailableOrders(find);
             Cursor.Current = Cursors.Default;
+        }
+
+        private void FilterAvailableOrders(string find)
+        {
+            if (string.IsNullOrWhiteSpace(find))
+            {
+                _bindingListViewAvailableOrdersViews.RemoveFilter();
+            }
+            else
+            {
+                _bindingListViewAvailableOrdersViews.ApplyFilter(r => r.Ord1.Contains(find));
+            }
+
+
         }
 
         private void ButtonClearFindAvailableOrders_Click(object sender, EventArgs e)
@@ -6630,10 +6979,6 @@ namespace Neutron.Forms
             TextBoxFindAvailableOrders.Focus();
             Cursor.Current = Cursors.Default;
         }
-
-        #endregion
-
-        #region Find Functions Main Orders
 
         private void MButtonSearch_Click(object sender, EventArgs e)
         {
@@ -6691,10 +7036,6 @@ namespace Neutron.Forms
         }
 
 
-        #endregion
-
-        #region Find Functions Hot 
-
         //private void MBFindItem_Click(object sender, EventArgs e)
         //{
         //    Cursor.Current = Cursors.WaitCursor;
@@ -6747,8 +7088,6 @@ namespace Neutron.Forms
         //    TextBoxFindItem.Text = string.Empty;
         //    TextBoxFindItem.Focus();
         //}
-
-        #endregion
 
         private void MBAvailableOrdersRefresh_Click(object sender, EventArgs e)
         {
@@ -7084,26 +7423,71 @@ namespace Neutron.Forms
             }
         }
 
+        private void DataGridPickView_FormatRows()
+        {
+            var grid = DataGridPickView;
+            if (grid.RowCount > 0)
+            {
+                grid.SuspendLayout();
+                foreach (DataGridViewRow row in grid.Rows)
+                {
+                    if (IntegerExtensions.ParseInt(row.Cells["Quantity"].Value.ToString()) > IntegerExtensions.ParseInt(row.Cells["TotalQuantityInInventory"].Value.ToString()))
+                    {
+                        row.DefaultCellStyle.BackColor = Color.Gold;
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = Color.White;
+                    }
+                }
+
+
+                grid.ResumeLayout();
+            }
+
+        }
+
+
         private void DataGridPickView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.RowIndex < 0)
-            {
-                return;
-            }
-            var totalQuantityCell = DataGridPickView.Rows[e.RowIndex].Cells["TotalQuantityInInventory"];
-            var quantityCell = DataGridPickView.Rows[e.RowIndex].Cells["Quantity"];
+            return;
+            //if (e.RowIndex < 0)
+            //{
+            //    return;
+            //}
 
-            var totalValue = totalQuantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(totalQuantityCell.Value.ToString());
-            var quantityValue = quantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(quantityCell.Value.ToString());
+            //for (int i = 0; i < DataGridPickView.RowCount ; i++)
+            //{
+            //    var totalQuantityCell = DataGridPickView.Rows[i].Cells["TotalQuantityInInventory"];
+            //    var quantityCell = DataGridPickView.Rows[i].Cells["Quantity"];
 
-            if (quantityValue > totalValue)
-            {
-                DataGridPickView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-            }
-            else
-            {
-                DataGridPickView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-            }
+            //    var totalValue = totalQuantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(totalQuantityCell.Value.ToString());
+            //    var quantityValue = quantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(quantityCell.Value.ToString());
+
+            //    if (quantityValue > totalValue)
+            //    {
+            //        DataGridPickView.Rows[i].DefaultCellStyle.BackColor = Color.Gold;
+            //    }
+            //    else
+            //    {
+            //        DataGridPickView.Rows[i].DefaultCellStyle.BackColor = Color.White;
+            //    }
+            //}
+
+            //var totalQuantityCell = DataGridPickView.Rows[e.RowIndex].Cells["TotalQuantityInInventory"];
+            //var quantityCell = DataGridPickView.Rows[e.RowIndex].Cells["Quantity"];
+
+            //var totalValue = totalQuantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(totalQuantityCell.Value.ToString());
+            //var quantityValue = quantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(quantityCell.Value.ToString());
+
+            //if (quantityValue > totalValue)
+            //{
+            //    DataGridPickView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Gold;
+            //}
+            //else
+            //{
+            //    DataGridPickView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+            //}
         }
 
         private void MBPickScreenHotPick_Click(object sender, EventArgs e)
@@ -7496,7 +7880,8 @@ namespace Neutron.Forms
         private void PictureBoxItemImage_MouseLeave(object sender, EventArgs e)
         {
             if (!_neutronVariables.AutoEnlargeImage) return;
-            PictureBoxItemImage.Location = new Point(398, 373);
+            var y = GroupBoxLocation.Location.Y;
+            PictureBoxItemImage.Location = new Point(398, y);
             PictureBoxItemImage.Size = new Size(256, 256);
             PictureBoxItemImage.BringToFront();
         }
@@ -7608,11 +7993,7 @@ namespace Neutron.Forms
 
         private void ButtonPrintAO_Click(object sender, EventArgs e)
         {
-            //PrintAnticipatedOuts();
-
-            var docToPrint = new DocumentToPrint();
-
-            docToPrint.PrintAnticipatedOuts(_station, _neutronVariables, _documentPrinter);
+            _documentToPrint.PrintAnticipatedOuts(_station, _neutronVariables, _documentPrinter);
         }
 
         private void ButtonPrintPacking_Click(object sender, EventArgs e)
@@ -7726,8 +8107,8 @@ namespace Neutron.Forms
         private void MBSkipped_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            DataGridViewSkip.Columns.Clear();
-            SetupSkipGrid();
+            // DataGridViewSkip.Columns.Clear();
+            //SetupSkipGrid();
             ShowSkipped();
             Cursor.Current = Cursors.Default;
         }
@@ -7814,123 +8195,7 @@ namespace Neutron.Forms
             ShowSkipped();
         }
 
-        private void SetupSkipInventoryGrid()
-        {
-            DataGridViewSkipInventory.AutoGenerateColumns = false;
-            DataGridViewSkipInventory.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            DataGridViewSkipInventory.DefaultCellStyle.ForeColor = Color.Black;
-            DataGridViewSkipInventory.DefaultCellStyle.BackColor = Color.White;
-            DataGridViewSkipInventory.ScrollBars = ScrollBars.Both;
 
-            var col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                ReadOnly = true,
-                Name = "StationNumber"
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "StorageType",
-                HeaderText = _resourceManager.GetString($"StorageType"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                ReadOnly = true,
-                Name = "StorageType"
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Slot",
-                HeaderText = _resourceManager.GetString($"Slot"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                ReadOnly = true,
-                Name = "Slot"
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                ReadOnly = true,
-                Name = "Item"
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
-                Name = "Description",
-                ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "Quantity",
-                ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Picked",
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = _resourceManager.GetString($"Picked"),
-                Name = "Picked",
-                ReadOnly = false,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Required",
-                HeaderText = _resourceManager.GetString($"Required"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "Required",
-                ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "InventoryId",
-                HeaderText = _resourceManager.GetString($"InventoryId"),
-                Visible = false,
-                Name = "InventoryId"
-            };
-            DataGridViewSkipInventory.Columns.Add(col);
-
-            foreach (DataGridViewColumn column in DataGridViewSkipInventory.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
-        }
-
-        private void FrmPick_Shown(object sender, EventArgs e)
-        {
-            DataGridPickView.ClearSelection();
-            DataGridPickView.Update();
-        }
 
         private void MBPickComplete_Click(object sender, EventArgs e)
         {
@@ -8036,9 +8301,9 @@ namespace Neutron.Forms
         private void MBShowRackOrders_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            DataGridView1.Columns.Clear();
+            //DataGridView1.Columns.Clear();
             _currentDataSet = CurrentDataSet.Rack;
-            SetupOrderGrid();
+            //SetupOrderGrid();
             ShowRackOrders();
             Cursor.Current = Cursors.Default;
         }
@@ -8061,6 +8326,7 @@ namespace Neutron.Forms
 
         private void ShowAvailableRackScreen()
         {
+            //SetupAvailableOrdersRackGrid();
             ShowAvailableOrdersRack();
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.RoyalBlue;
@@ -8424,11 +8690,6 @@ namespace Neutron.Forms
             // optimized query for orders
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ClearAllActiveDeviceIndicators();
-        }
-
         private void MBRunLoader_Click(object sender, EventArgs e)
         {
             RunLoader();
@@ -8447,8 +8708,14 @@ namespace Neutron.Forms
 
         private void RunLoader()
         {
-            var interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
-            interfaceProcessor.RunLoaderOnce();
+            //var interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+            //interfaceProcessor.RunLoaderOnce();
+        }
+
+        private void DataGridPickView_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            DataGridPickView.ClearSelection();
+            DataGridPickView_FormatRows();
         }
     }
 }

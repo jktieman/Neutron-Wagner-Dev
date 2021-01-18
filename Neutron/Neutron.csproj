@@ -30,7 +30,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>386</ApplicationRevision>
+    <ApplicationRevision>387</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -78,6 +78,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Neutron_1_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AlliedFileSystemWatcher, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -347,6 +350,18 @@
     <Compile Include="Forms\FrmShortCut.Designer.cs">
       <DependentUpon>FrmShortCut.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmSkipOption.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSkipOption.Designer.cs">
+      <DependentUpon>FrmSkipOption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmSkipZeroSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmSkipZeroSummary.Designer.cs">
+      <DependentUpon>FrmSkipZeroSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmUtilities.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -411,6 +426,12 @@
     <None Include="Resources\Pick_1.png" />
     <EmbeddedResource Include="Forms\FrmShortCut.resx">
       <DependentUpon>FrmShortCut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSkipOption.resx">
+      <DependentUpon>FrmSkipOption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmSkipZeroSummary.resx">
+      <DependentUpon>FrmSkipZeroSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Language\ResGen.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

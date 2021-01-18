@@ -167,7 +167,17 @@ namespace NeutronLoader
                 sb.Append(item.EmpId);
                 sb.AppendLine();
             }
-
+            else if (_neutronLicense.CompanyCode == "VID")
+            {
+                _logger.Log($"160 GetCsvString History VID - NOT use PR1 Processor");
+                sb.Append(item.Item + "|");
+                sb.Append(item.Description + "|");
+                sb.Append(item.Ord1 + "|");
+                sb.Append(item.IssuedQuantity + "|");
+                sb.Append(item.ActionDateTime + "|");
+                sb.Append(item.EmpId);
+                sb.AppendLine();
+            }
             _logger.Log($"173 GetCsvString History result: {sb.ToString()}");
             return sb.ToString();
         }
@@ -1004,6 +1014,20 @@ namespace NeutronLoader
                 sb.Append(hostOrder.Qty + "|");
             }
             else if (_neutronLicense.CompanyCode == "TOP")
+            {
+                sb.Append(hostOrder.TypeCode + "|");
+                sb.Append(hostOrder.PartNum + "|");
+                sb.Append(hostOrder.PartDesc + "|");
+                sb.Append(hostOrder.JobNum + "|");
+                sb.Append(hostOrder.PrimeBin + "|");
+                sb.Append(hostOrder.NewBin + "|");
+                sb.Append(hostOrder.Qty + "|");
+                sb.Append(hostOrder.TroubleBit + "|");
+                sb.Append(hostOrder.DateTime + "|");
+                sb.Append(hostOrder.EmpId);
+                sb.AppendLine();
+            }
+            else if (_neutronLicense.CompanyCode == "VID")
             {
                 sb.Append(hostOrder.TypeCode + "|");
                 sb.Append(hostOrder.PartNum + "|");

@@ -239,6 +239,16 @@ namespace Neutron.Forms
 
             col = new DataGridViewTextBoxColumn
             {
+                DataPropertyName = "CarrierLevel",
+                HeaderText = @"Carrier Levels",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "CarrierLevel"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
                 DataPropertyName = "CarrierWidth",
                 HeaderText = @"Carrier Width",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
@@ -1237,6 +1247,7 @@ namespace Neutron.Forms
             ComboBoxViewEditDeviceType.SelectedValue = hardwareDevice.DeviceTypeId;
             TextBoxViewEditDeviceNumber.Text = hardwareDevice.DeviceNumber.ToString();
             TextBoxViewEditNumberOfCarriers.Text = hardwareDevice.NumberOfCarriers.ToString();
+            TextBoxViewEditCarrierLevel.Text = hardwareDevice.CarrierLevel.ToString();
             TextBoxViewEditCarrierWidth.Text = hardwareDevice.CarrierWidth.ToString();
             TextBoxViewEditCarrierDepth.Text = hardwareDevice.CarrierDepth.ToString();
             CheckBoxViewEditDeviceEnabled.Checked = hardwareDevice.Enabled;
@@ -1337,6 +1348,7 @@ namespace Neutron.Forms
             ComboBoxViewEditDeviceType.SelectedIndex = -1;
             TextBoxViewEditDeviceNumber.Text = "";
             TextBoxViewEditNumberOfCarriers.Text = "0";
+            TextBoxViewEditCarrierLevel.Text = "0";
             TextBoxViewEditCarrierWidth.Text = "0";
             TextBoxViewEditCarrierDepth.Text = "0";
             CheckBoxViewEditDeviceEnabled.Checked = false;
@@ -1353,6 +1365,7 @@ namespace Neutron.Forms
             ComboBoxNewDeviceType.SelectedIndex = -1;
             TextBoxNewDeviceNumber.Text = "";
             TextBoxNewNumberOfCarriers.Text = "0";
+            TextBoxNewCarrierLevel.Text = "0";
             TextBoxNewCarrierWidth.Text = "0";
             TextBoxNewCarrierDepth.Text = "0";
             CheckBoxNewDeviceEnabled.Checked = false;
@@ -1418,6 +1431,7 @@ namespace Neutron.Forms
                 Name = TextBoxNewDeviceName.Text,
                 StationId = ((Station)ComboBoxNewDeviceStation.SelectedItem).Id,
                 NumberOfCarriers = TextBoxNewNumberOfCarriers.Text.ParseInt(),
+                CarrierLevel = TextBoxNewCarrierLevel.Text.ParseInt(),
                 CarrierWidth = TextBoxNewCarrierWidth.Text.ParseInt(),
                 CarrierDepth = TextBoxNewCarrierDepth.Text.ParseInt(),
                 Enabled = CheckBoxNewDeviceEnabled.Checked,
@@ -1452,6 +1466,7 @@ namespace Neutron.Forms
                 hardwareDevice.Name = TextBoxViewEditDeviceName.Text;
                 hardwareDevice.StationId = ((Station)ComboBoxViewEditDeviceStation.SelectedItem).Id;
                 hardwareDevice.NumberOfCarriers = TextBoxViewEditNumberOfCarriers.Text.ParseInt();
+                hardwareDevice.CarrierLevel = TextBoxViewEditCarrierLevel.Text.ParseInt();
                 hardwareDevice.CarrierWidth = TextBoxViewEditCarrierWidth.Text.ParseInt();
                 hardwareDevice.CarrierDepth = TextBoxViewEditCarrierDepth.Text.ParseInt();
                 hardwareDevice.Enabled = CheckBoxViewEditDeviceEnabled.Checked;
@@ -1513,6 +1528,7 @@ namespace Neutron.Forms
                     StationId = r.StationId,
                     StationName = r.Station.Name,
                     NumberOfCarriers = int.Parse(r.NumberOfCarriers.ToString()),
+                    CarrierLevel = r.CarrierLevel,
                     CarrierWidth = r.CarrierWidth,
                     CarrierDepth = r.CarrierDepth,
                     DeviceTypeId = r.DeviceTypeId,
@@ -1992,9 +2008,11 @@ namespace Neutron.Forms
                 TextBoxViewEditDeviceNumber.Visible = true;
                 LabelViewEditDeviceNumberOfCarriers.Visible = true;
                 TextBoxViewEditNumberOfCarriers.Visible = true;
+                LabelViewEditDeviceCarrierLevel.Visible = true;
                 LabelViewEditDeviceCarrierWidth.Visible = true;
-                TextBoxViewEditCarrierWidth.Visible = true;
                 LabelViewEditDeviceCarrierDepth.Visible = true;
+                TextBoxViewEditCarrierLevel.Visible = true;
+                TextBoxViewEditCarrierWidth.Visible = true;
                 TextBoxViewEditCarrierDepth.Visible = true;
             }
             else
@@ -2003,9 +2021,11 @@ namespace Neutron.Forms
                 TextBoxViewEditDeviceNumber.Visible = false;
                 LabelViewEditDeviceNumberOfCarriers.Visible = false;
                 TextBoxViewEditNumberOfCarriers.Visible = false;
+                LabelViewEditDeviceCarrierLevel.Visible = false;
                 LabelViewEditDeviceCarrierWidth.Visible = false;
-                TextBoxViewEditCarrierWidth.Visible = false;
                 LabelViewEditDeviceCarrierDepth.Visible = false;
+                TextBoxViewEditCarrierLevel.Visible = false;
+                TextBoxViewEditCarrierWidth.Visible = false;
                 TextBoxViewEditCarrierDepth.Visible = false;
             }
         }

@@ -37,7 +37,9 @@
             this.TextBoxStationToPrint = new System.Windows.Forms.TextBox();
             this.TextBoxOrderToPrint = new System.Windows.Forms.TextBox();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
+            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
             this.MBStartUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunLoaderOnce = new MetroFramework.Controls.MetroButton();
             this.MBMainSqlServer = new MetroFramework.Controls.MetroButton();
             this.MBStartLoader = new MetroFramework.Controls.MetroButton();
             this.MBMainInterfaceFile = new MetroFramework.Controls.MetroButton();
@@ -116,8 +118,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
-            this.MBRunLoader = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -162,7 +162,7 @@
             this.Main.Controls.Add(this.MBMainClose);
             this.Main.Controls.Add(this.MBRunUpload);
             this.Main.Controls.Add(this.MBStartUpload);
-            this.Main.Controls.Add(this.MBRunLoader);
+            this.Main.Controls.Add(this.MBRunLoaderOnce);
             this.Main.Controls.Add(this.MBMainSqlServer);
             this.Main.Controls.Add(this.MBStartLoader);
             this.Main.Controls.Add(this.MBMainInterfaceFile);
@@ -212,10 +212,22 @@
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
             // 
+            // MBRunUpload
+            // 
+            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunUpload.Location = new System.Drawing.Point(396, 430);
+            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunUpload.Name = "MBRunUpload";
+            this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
+            this.MBRunUpload.TabIndex = 21;
+            this.MBRunUpload.Text = "Run Upload Once";
+            this.MBRunUpload.UseSelectable = true;
+            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
+            // 
             // MBStartUpload
             // 
             this.MBStartUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartUpload.Location = new System.Drawing.Point(396, 430);
+            this.MBStartUpload.Location = new System.Drawing.Point(396, 525);
             this.MBStartUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartUpload.Name = "MBStartUpload";
             this.MBStartUpload.Size = new System.Drawing.Size(350, 70);
@@ -223,6 +235,18 @@
             this.MBStartUpload.Text = "Run Upload Continuously";
             this.MBStartUpload.UseSelectable = true;
             this.MBStartUpload.Click += new System.EventHandler(this.MBStartUpload_Click);
+            // 
+            // MBRunLoaderOnce
+            // 
+            this.MBRunLoaderOnce.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunLoaderOnce.Location = new System.Drawing.Point(396, 240);
+            this.MBRunLoaderOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunLoaderOnce.Name = "MBRunLoaderOnce";
+            this.MBRunLoaderOnce.Size = new System.Drawing.Size(350, 70);
+            this.MBRunLoaderOnce.TabIndex = 26;
+            this.MBRunLoaderOnce.Text = "Run Loader Once";
+            this.MBRunLoaderOnce.UseSelectable = true;
+            this.MBRunLoaderOnce.Click += new System.EventHandler(this.MBRunLoaderOnce_Click);
             // 
             // MBMainSqlServer
             // 
@@ -239,7 +263,7 @@
             // MBStartLoader
             // 
             this.MBStartLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartLoader.Location = new System.Drawing.Point(396, 240);
+            this.MBStartLoader.Location = new System.Drawing.Point(396, 335);
             this.MBStartLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartLoader.Name = "MBStartLoader";
             this.MBStartLoader.Size = new System.Drawing.Size(350, 70);
@@ -679,6 +703,7 @@
             this.RootDirectory.Size = new System.Drawing.Size(505, 26);
             this.RootDirectory.TabIndex = 95;
             this.RootDirectory.Visible = false;
+            this.RootDirectory.TextChanged += new System.EventHandler(this.RootDirectory_TextChanged);
             // 
             // TextBoxMaintenanceFileFilter
             // 
@@ -1069,30 +1094,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // MBRunUpload
-            // 
-            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(396, 525);
-            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRunUpload.Name = "MBRunUpload";
-            this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
-            this.MBRunUpload.TabIndex = 21;
-            this.MBRunUpload.Text = "Run Upload Once";
-            this.MBRunUpload.UseSelectable = true;
-            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
-            // 
-            // MBRunLoader
-            // 
-            this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunLoader.Location = new System.Drawing.Point(396, 335);
-            this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRunLoader.Name = "MBRunLoader";
-            this.MBRunLoader.Size = new System.Drawing.Size(350, 70);
-            this.MBRunLoader.TabIndex = 26;
-            this.MBRunLoader.Text = "Run Loader Once";
-            this.MBRunLoader.UseSelectable = true;
-            this.MBRunLoader.Click += new System.EventHandler(this.MBRunLoader_Click);
-            // 
             // FrmSystem
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1218,6 +1219,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox LanguageDirectory;
         private MetroFramework.Controls.MetroButton MBRunUpload;
-        private MetroFramework.Controls.MetroButton MBRunLoader;
+        private MetroFramework.Controls.MetroButton MBRunLoaderOnce;
     }
 }
