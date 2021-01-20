@@ -6341,7 +6341,6 @@ namespace Neutron.Forms
 
         private void TextBoxNewOrderFind_KeyDown(object sender, KeyEventArgs e)
         {
-            // MessageBox.Show($" TextBoxNewOrderFind Key code: {e.KeyCode}");
             if (e.KeyCode == Keys.Return)
             {
                 FindItemRecord(TextBoxNewOrderFind.Text.Trim().ToLower());
@@ -8256,7 +8255,7 @@ namespace Neutron.Forms
         private void MBAdjustQuantity_Click(object sender, EventArgs e)
         {
             var currentSkip = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
-            using (var form = new FrmChangeQuantity())
+            using (var form = new FrmChangeQuantityOnly())
             {
                 form.NewQty = currentSkip.Quantity;
                 var result = form.ShowDialog();

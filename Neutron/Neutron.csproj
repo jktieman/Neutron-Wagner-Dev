@@ -230,6 +230,12 @@
     <Compile Include="Forms\FrmChangeQuantity.Designer.cs">
       <DependentUpon>FrmChangeQuantity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmChangeQuantityOnly.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeQuantityOnly.Designer.cs">
+      <DependentUpon>FrmChangeQuantityOnly.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmCommunication.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -424,6 +430,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Resources\Pick_1.png" />
+    <EmbeddedResource Include="Forms\FrmChangeQuantityOnly.resx">
+      <DependentUpon>FrmChangeQuantityOnly.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmShortCut.resx">
       <DependentUpon>FrmShortCut.cs</DependentUpon>
     </EmbeddedResource>

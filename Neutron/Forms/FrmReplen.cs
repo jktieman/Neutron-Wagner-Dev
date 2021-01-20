@@ -142,8 +142,7 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             CurrentTextBoxPos = TextBoxPos1;
             InitOrdersToPick(neutronVariables.StoreBatchSize);
-            //TODO don't think I need this it's not in Pick
-           // InitListView();
+            InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
         }
 
@@ -3707,35 +3706,62 @@ namespace Neutron.Forms
         {
             TextBoxNewOrderFind.Text = string.Empty;
             TextBoxNewOrderFind.Focus();
+            FindItemRecord(string.Empty);
         }
 
         private void DataGridViewNewOrder_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
+            //if (e.ColumnIndex == 0)
+            //{
+            //    var currentItem = (NewItemView)_bindingSourceItems.Current;
+            //    LabelNewOrderItemId.Text = currentItem.ItemDefinitionId.ToString();
+            //    TextBoxNewOrderItem.Text = currentItem.Item;
+            //    TextBoxNewOrderDescription.Text = currentItem.Description;
+            //    TextBoxNewOrderQuantity.Focus();
+            //}
+            if (e.RowIndex >= 0)
             {
                 var currentItem = (NewItemView)_bindingSourceItems.Current;
                 LabelNewOrderItemId.Text = currentItem.ItemDefinitionId.ToString();
+                LabelNewOrderStationNumber.Text = currentItem.StationNumber.ToString();
                 TextBoxNewOrderItem.Text = currentItem.Item;
                 TextBoxNewOrderDescription.Text = currentItem.Description;
                 TextBoxNewOrderQuantity.Focus();
             }
         }
 
+        private void InitDataGridViewNewItems()
+        {
+            DataGridViewNewItems.DataSource = _bindingSourceNewItems;
+        }
+
         private void ButtonAddDetail_Click(object sender, EventArgs e)
+        {
+            AddDetail();
+        }
+
+        private void AddDetail()
         {
             var rec = new NewItemView()
             {
                 ItemDefinitionId = (LabelNewOrderItemId.Text).ParseInt()
                 ,
-                Item = TextBoxNewOrderItem.Text,
+                StationNumber = LabelNewOrderStationNumber.Text.ParseInt()
+                ,
+                Item = TextBoxNewOrderItem.Text
+                ,
                 Description = TextBoxNewOrderDescription.Text
                 ,
                 Quantity = (TextBoxNewOrderQuantity.Text).ParseInt()
             };
-            var item = new ListViewItem(new[] { rec.ItemDefinitionId.ToString(), rec.Item, rec.Description, rec.Quantity.ToString() });
 
-            ListViewNewItems.Items.Add(item);
+            _bindingSourceNewItems.Add(rec);
+
             ClearNewOrderDetail();
+            ButtonAddDetail.Enabled = false;
+            TextBoxNewOrderFind.Focus();
+
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
         }
 
         private void ClearNewOrderDetail()
@@ -3745,17 +3771,9 @@ namespace Neutron.Forms
             TextBoxNewOrderQuantity.Text = "";
         }
 
-        private void InitListView()
-        {
-            ListViewNewItems.Columns.Add("Id", 80, HorizontalAlignment.Left);
-            ListViewNewItems.Columns.Add("Item", 80, HorizontalAlignment.Left);
-            ListViewNewItems.Columns.Add("Description", 200, HorizontalAlignment.Left);
-            ListViewNewItems.Columns.Add("Quantity", 80, HorizontalAlignment.Left);
-        }
-
         private void MBNewOrderSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(TextBoxNewOrderOrd1.Text) && ListViewNewItems.Items.Count > 0)
+            if (!string.IsNullOrEmpty(TextBoxNewOrderOrd1.Text) && _bindingSourceNewItems.Count > 0)
             {
                 var orderDetails = new List<ReplenOrderDetail>();
 
@@ -3763,40 +3781,48 @@ namespace Neutron.Forms
                 {
                     Ord1 = TextBoxNewOrderOrd1.Text,
                     Ord2 = TextBoxNewOrderOrd2.Text,
-                    Priority = (TextBoxNewOrderPriority.Text).ParseInt(),
-                    LoadDate = System.DateTime.Now,
+                    Priority = TextBoxNewOrderPriority.Text.ParseInt(),
+                    LoadDate = DateTime.Now,
                     ShipperId = 1,
                     ShipMethodId = 1,
                     OrderStatusId = 1
                 };
                 repoReplenOrder.Insert(order);
 
-                for (var i = 0; i < ListViewNewItems.Items.Count; i++)
+                foreach (DataGridViewRow row in DataGridViewNewItems.Rows)
                 {
-                    var itemDefinitionId = (ListViewNewItems.Items[i].SubItems[0].Text).ParseInt();
-
+                    NewItemView view = row.DataBoundItem as NewItemView;
+                    if (view == null) continue;
+                    var itemDefinitionId = view.ItemDefinitionId;
+                    var itemDefinition = repoItemDefinition.FindByKey(itemDefinitionId);
+                    if (itemDefinition == null) continue;
                     var rec = new ReplenOrderDetail()
                     {
                         ItemDefinitionId = itemDefinitionId,
                         ReplenOrderId = order.Id,
-                        JobNum = order.Ord1,
-                        PartNum = ListViewNewItems.Items[i].SubItems[1].Text,
-                        PartDesc = ListViewNewItems.Items[i].SubItems[2].Text,
-                        Quantity = (ListViewNewItems.Items[i].SubItems[3].Text).ParseInt(),
+                        Quantity = view.Quantity,
+                        StationNumber = view.StationNumber,
                         LineStatusId = 1,
-                        StationNumber = repoInv.GetStationNumber(itemDefinitionId),
-                        ReplenOrder = order,
-                        DateTime = DateTime.Now.ToString("g"),
-                        EmpId = GlobalVar.User.EmpId
+                        DateTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(),
+                        EmpId = GlobalVar.User.EmpId,
+                        JobNum = TextBoxNewOrderOrd1.Text,
+                        PartNum = itemDefinition.Item,
+                        PartDesc = itemDefinition.Description,
+                        Qty = view.Quantity.ToString(),
+                        OrderDetailInfo = string.Empty,
+                        TroubleBit = "0"
                     };
 
                     repoReplenOrderDetail.Insert(rec);
                 }
                 TextBoxNewOrderOrd1.Text = string.Empty;
                 TextBoxNewOrderOrd2.Text = string.Empty;
-                ListViewNewItems.Clear();
+                _bindingSourceNewItems.Clear();
+                DataGridViewNewItems.Update();
+                ClearNewOrderForm();
             }
         }
+
 
         private void MBPickNewItem_Click(object sender, EventArgs e)
         {
@@ -4776,6 +4802,12 @@ namespace Neutron.Forms
             ShowAllOrders();
         }
 
+        private void ButtonRemoveLine_Click(object sender, EventArgs e)
+        {
+            _bindingSourceNewItems.RemoveCurrent();
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
+        }
+
 
         private void SetCulture(string lang)
         {
@@ -4964,6 +4996,19 @@ namespace Neutron.Forms
           //  SetupOrderGrid();
           //  ShowRackOrders();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void TextBoxNewOrderQuantity_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                AddDetail();
+            }
+        }
+
+        private void TextBoxNewOrderQuantity_TextChanged(object sender, EventArgs e)
+        {
+            ButtonAddDetail.Enabled = TextBoxNewOrderQuantity.Text.ParseInt() > 0;
         }
     }
 }

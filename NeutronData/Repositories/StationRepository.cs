@@ -30,7 +30,8 @@ namespace NeutronData.Repositories
         public StationView GetStationView(int stationNumber)
         {
             var logFileDirectory = LoaderSettings.GetLogFileDirectory();
-            var logger = new AlliedLogger.DynamicLogger(logFileDirectory, @"StationView", @"true");
+            var folderName = $"StationView_{stationNumber.ToString()}";
+            var logger = new AlliedLogger.DynamicLogger(logFileDirectory, folderName, @"true");
             var stationView = new StationView();
             Station station;
             try
