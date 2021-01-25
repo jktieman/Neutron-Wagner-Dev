@@ -27,7 +27,7 @@ using System.Resources;
 using System.Threading;
 using AlliedLogger;
 using Microsoft.VisualBasic;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using NeutronCore;
 using NeutronData.Interfaces;
 using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;

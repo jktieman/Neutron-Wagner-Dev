@@ -1,6 +1,7 @@
 ﻿using NeutronCore.Extensions;
 using NeutronData.ModelViews;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
@@ -18,6 +19,7 @@ namespace Neutron.Forms
         public int Position { get; set; }
         private readonly PickStop _pickStop;
         private ReplenPickStop _replenPickStop;
+        private List<int> _validPositions = new List<int>();
 
         public FrmChangeQuantity(PickStop pickStop)
         {
@@ -25,11 +27,29 @@ namespace Neutron.Forms
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _pickStop = pickStop;
+            GetValidPositions(_pickStop.PickViews);
             var pos = pickStop.PickViews.First().PickPosition;
             TextBoxChangeQuantityPosition.Text = pos.ToString();
             TextBoxNewQuantity.Text = "0";
             TextBoxChangeQuantityPosition.SelectAll();
             TextBoxChangeQuantityPosition.Focus();
+        }
+
+        private void GetValidPositions(List<PickView> pickviews)
+        {
+            _validPositions.Clear();
+            foreach (var view in pickviews)
+            {
+                _validPositions.Add(view.PickPosition);
+            }
+        }
+        private void GetValidPositions(List<ReplenPickView> pickviews)
+        {
+            _validPositions.Clear();
+            foreach (var view in pickviews)
+            {
+                _validPositions.Add(view.PickPosition);
+            }
         }
 
         public FrmChangeQuantity(ReplenPickStop pickStop)
@@ -38,6 +58,7 @@ namespace Neutron.Forms
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _replenPickStop = pickStop;
+            GetValidPositions(_replenPickStop.PickViews);
             var pos = pickStop.PickViews.First().PickPosition;
             TextBoxChangeQuantityPosition.Text = pos.ToString();
             TextBoxNewQuantity.Text = "0";
@@ -73,17 +94,7 @@ namespace Neutron.Forms
 
         private bool CheckForValidPosition(string position)
         {
-            int pos = position.ParseInt();
-            foreach (var pickView in _pickStop.PickViews)
-            {
-                if (pickView.PickPosition == pos)
-                {
-                    Position = pos;
-                    return true;
-                }
-            }
-            MessageBox.Show(_resourceManager.GetString("Message0"));
-            return false;
+            return _validPositions.Contains(position.ParseInt());
         }
 
         private void TextBoxNewQuantity_TextChanged(object sender, EventArgs e)

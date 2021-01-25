@@ -38,7 +38,7 @@ using System.Data.SqlClient;
 using CurrentDeviceIndicator;
 using JetBrains.Annotations;
 using Neutron.Controllers;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 //using NeutronDllu;
 using NeutronEvents;
 //using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
@@ -120,7 +120,7 @@ namespace Neutron.Forms
         private DeviceIndicator _currentDeviceIndicator;
 
         //GRIDS
-        private bool _allOrdersGridReady;
+        private bool _orderGridReady;
         private bool _availableOrdersGridReady;
         private bool _pickViewGridReady;
         private bool _orderDetailsGridReady;
@@ -134,10 +134,8 @@ namespace Neutron.Forms
 
         private SynchronizationContext _synchronizationContext;
 
-
         // public delegate void UpdateTextBoxDelegate1(ResponseInfo responseInfo);
         // public delegate void UpdateTextBoxDelegate2(ResponseInfo responseInfo);
-
         // public delegate void UpdateListBoxDelegate(byte[] request);
 
         public FrmPick(IJsonData jsonData, StationView station
@@ -171,14 +169,10 @@ namespace Neutron.Forms
                 MBRunLoader.Visible = true;
                 MBRunUpload.Visible = true;
             }
-            //UpdateNomenclature();
             SetupPrinters();
             _synchronizationContext = SynchronizationContext.Current;
 
             InitGrids();
-
-
-
 
             SetupPickPositions(_neutronVariables.PickBatchSize);
             HideTabControlTabs();
@@ -195,15 +189,14 @@ namespace Neutron.Forms
                 GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
             }
             _documentToPrint = new DocumentToPrint();
-            //FillComboBoxStationNumber();
+
             MBPrint.Visible = _neutronVariables.PrintPackingListManual;
             InitOrdersToPick(_neutronVariables.PickBatchSize);
             InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
             if (_station.StationNumber >= 8) MBMainAvailableOrders.Text = _resourceManager.GetString($"OffCarousel");
-            //var logFilePath = LoaderSettings.GetLogFileDirectory() + "FrmPick.log";
-            // _locationsRepository = new LocationsRepository();
+
             //Mediator.GetInstance().IptiButtonPressed += (s, e) => SetFocus(e.ResponseInfo);
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
@@ -236,7 +229,7 @@ namespace Neutron.Forms
                 thread.Start();
             }
 
-            if (!_allOrdersGridReady)
+            if (!_orderGridReady)
             {
                 var callback = new SendOrPostCallback(SetupOrderGrid);
                 Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
@@ -246,6 +239,13 @@ namespace Neutron.Forms
             if (!_newOrderGridReady)
             {
                 var callback = new SendOrPostCallback(SetupNewOrderGrid);
+                Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
+                thread.Start();
+            }
+
+            if (!_orderDetailsGridReady)
+            {
+                var callback = new SendOrPostCallback(SetupOrderDetailsGrid);
                 Thread thread = new Thread(new ThreadStart(() => RunGrid(_synchronizationContext, callback)));
                 thread.Start();
             }
@@ -1247,14 +1247,14 @@ namespace Neutron.Forms
             // frmCommunication.Show();
 
 
-            if (GlobalVar.LoaderRunning)
-            {
-                MBMainLoadOrders.Text = _resourceManager.GetString($"StopLoader");
-            }
-            if (GlobalVar.UploadRunning)
-            {
-                MBMainUpload.Text = _resourceManager.GetString($"StopUpload");
-            }
+            //if (GlobalVar.LoaderRunning)
+            //{
+            //    MBMainLoadOrders.Text = _resourceManager.GetString($"StopLoader");
+            //}
+            //if (GlobalVar.UploadRunning)
+            //{
+            //    MBMainUpload.Text = _resourceManager.GetString($"StopUpload");
+            //}
         }
 
         // Set the focus to the passed in recId if it's passed in
@@ -1350,7 +1350,7 @@ namespace Neutron.Forms
             // var station = _stationRepository.GetStationView(8);
             if (string.IsNullOrEmpty(findWhat))
             {
-                findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
+                findWhat = TextBoxFindAvailableOrdersRack.Text.Trim().ToLower();
             }
 
             try
@@ -1375,7 +1375,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"ShowAvailableOrdersRack Error: {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"ShowAvailableOrdersRack Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
 
@@ -1449,7 +1449,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"ShowAvailableOrders Error: {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
@@ -1500,7 +1500,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"ShowAvailableOrders Error: {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
@@ -1811,7 +1811,7 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
 
-            _allOrdersGridReady = true;
+            _orderGridReady = true;
         }
         private void SetupSkipGrid(object state)
         {
@@ -2931,7 +2931,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"ClearSelection Error: {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"ClearSelection Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
             Cursor.Current = Cursors.Default;
         }
@@ -2958,7 +2958,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Select All Error: {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"Select All Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
             Cursor.Current = Cursors.Default;
         }
@@ -3208,7 +3208,7 @@ namespace Neutron.Forms
                 {
                     _bindingSourcePickViews.DataSource = pickableViews;
                     DataGridPickView.DataSource = _bindingSourcePickViews;
-                    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] \r\nCount:{_bindingSourcePickViews.Count.ToString()}"));
+                    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] {Environment.NewLine}Count:{_bindingSourcePickViews.Count.ToString()}"));
                     GetRecordCount(_bindingSourcePickViews);
 
                     // DataGridPickView_FormatRows();
@@ -3220,7 +3220,6 @@ namespace Neutron.Forms
 
                     if (shortItems.Count > 0)
                     {
-                        //SetupPickViewGrid();
                         //DataGridPickView.ClearSelection();
                         //DataGridPickView.Update();
                         tabControl1.SelectedTab = PickList;
@@ -3350,9 +3349,8 @@ namespace Neutron.Forms
             //if (pickableViews.Count > 0)
             //{
             //    _bindingSourcePickViews.DataSource = pickableViews;
-            //    //SetupPickViewGrid();
             //    DataGridPickView.DataSource = _bindingSourcePickViews;
-            //    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] \r\nCount:{_bindingSourcePickViews.Count.ToString()}"));
+            //    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] {Environment.NewLine}Count:{_bindingSourcePickViews.Count.ToString()}"));
             //    GetRecordCount(_bindingSourcePickViews);
 
             //    // DataGridPickView_FormatRows();
@@ -4537,22 +4535,12 @@ namespace Neutron.Forms
             var sw = Stopwatch.StartNew();
             Console.WriteLine($@"Clear Active Device Indicator - Start");
             var tasks = new List<Task>();
-            //var device = _deviceIndicators.Where(x => x.Value.Active == true).Value;
             var device = _deviceIndicators.FirstOrDefault(x => x.Value.Active == true).Value;
-
-            tasks.Add(Task.Run(() => device.ClearAllAsync()));
-
-            //foreach (var deviceIndicator in _deviceIndicators)
-            //{
-            //    if (deviceIndicator.Active)+
-            //    {
-            //        Console.WriteLine($"ClearActiveDeviceIndicator - {deviceIndicator.DeviceNumber}");
-            //        deviceIndicator.Active = false;
-            //        tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
-            //    }
-            //}
-
-            await Task.WhenAll(tasks);
+            if (device != null)
+            {
+                tasks.Add(Task.Run(() => device.ClearAllAsync()));
+                await Task.WhenAll(tasks);
+            }
             Console.WriteLine($@"Clear Active Device Indicator - End");
             sw.Stop();
             Console.WriteLine($@"Clear Active Device Indicator  All Clear Elapsed: {sw.ElapsedMilliseconds}");
@@ -4629,41 +4617,41 @@ namespace Neutron.Forms
         //        }
         //        catch (Exception ex)
         //        {
-        //            MessageBox.Show($"Error getting Hot Image.  {ex.Message} \r\n {ex.InnerException}");
+        //            MessageBox.Show($"Error getting Hot Image.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
         //        }
         //    }
         //    Task.Run(() => _logger.Log($"Update Hot Images End : [{DateTime.Now.ToLongTimeString()}]"));
         //}
 
-        private void UpdateInventoryLocation()
-        {
-            Task.Run(() => _logger.Log($"UpdateInventoryLocation Start : [{DateTime.Now.ToLongTimeString()}]"));
+        //private void UpdateInventoryLocation()
+        //{
+        //    Task.Run(() => _logger.Log($"UpdateInventoryLocation Start : [{DateTime.Now.ToLongTimeString()}]"));
 
-            TextBoxPickLoc1.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc1.ToString();
-            TextBoxPickLoc2.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc2.ToString();
-            TextBoxPickLoc3.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc3.ToString();
-            TextBoxPickLoc4.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
-            TextBoxPickLoc5.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc5.ToString();
-            LabelLocationNumber.Text = $"{_currentPickStop.InventoryIndex + 1} of {_currentPickStop.Inventory.Count}";
-            //LabelLocationNumber.Text = string.Format(format: "{0} of {1}"
-            //    , arg0: _currentPickStop.InventoryIndex + 1, arg1: _currentPickStop.Inventory.Count);
-            var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
-            var qty = GetCurrentInventoryLocationQuantity(inventoryId);
-            TextBoxLocationQuantity.Text = qty.ToString();
-            _currentPickStop.CurrentInventoryLocation.Quantity = qty;
-            var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
-            _currentPickStop.TotalQuantityInInventory = total;
-            TextBoxTotalQuantity.Text = total.ToString();
+        //    TextBoxPickLoc1.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc1.ToString();
+        //    TextBoxPickLoc2.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc2.ToString();
+        //    TextBoxPickLoc3.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc3.ToString();
+        //    TextBoxPickLoc4.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
+        //    TextBoxPickLoc5.Text = _currentPickStop.CurrentInventoryLocation.Location.Loc5.ToString();
+        //    LabelLocationNumber.Text = $"{_currentPickStop.InventoryIndex + 1} of {_currentPickStop.Inventory.Count}";
+        //    //LabelLocationNumber.Text = string.Format(format: "{0} of {1}"
+        //    //    , arg0: _currentPickStop.InventoryIndex + 1, arg1: _currentPickStop.Inventory.Count);
+        //    var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
+        //    var qty = GetCurrentInventoryLocationQuantity(inventoryId);
+        //    TextBoxLocationQuantity.Text = qty.ToString();
+        //    _currentPickStop.CurrentInventoryLocation.Quantity = qty;
+        //    var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
+        //    _currentPickStop.TotalQuantityInInventory = total;
+        //    TextBoxTotalQuantity.Text = total.ToString();
 
-            //TextBoxLocationQuantity.Text = _currentPickStop.CurrentInventoryLocation.Quantity.ToString();
-            //TextBoxTotalQuantity.Text = _currentPickStop.TotalQuantityInInventory.ToString();
-            TextBoxReceivedDate.Text = _currentPickStop.CurrentInventoryLocation.ReceivedDate.ToString("G");
-            LabelPrimeBin.Visible = _currentPickStop.CurrentInventoryLocation.PrimeBin;
-            LabelStaticRelease.Text = _currentPickStop.CurrentInventoryLocation.StorageType.Name;
+        //    //TextBoxLocationQuantity.Text = _currentPickStop.CurrentInventoryLocation.Quantity.ToString();
+        //    //TextBoxTotalQuantity.Text = _currentPickStop.TotalQuantityInInventory.ToString();
+        //    TextBoxReceivedDate.Text = _currentPickStop.CurrentInventoryLocation.ReceivedDate.ToString("G");
+        //    LabelPrimeBin.Visible = _currentPickStop.CurrentInventoryLocation.PrimeBin;
+        //    LabelStaticRelease.Text = _currentPickStop.CurrentInventoryLocation.StorageType.Name;
 
-            Task.Run(() => _logger.Log($"UpdateInventoryLocation End : [{DateTime.Now.ToLongTimeString()}]"));
+        //    Task.Run(() => _logger.Log($"UpdateInventoryLocation End : [{DateTime.Now.ToLongTimeString()}]"));
 
-        }
+        //}
 
         private void UpdateGroupBoxLocation(Inventory inventory)
         {
@@ -4680,7 +4668,7 @@ namespace Neutron.Forms
             TextBoxReceivedDate.Text = inventory.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = inventory.PrimeBin;
             LabelStaticRelease.Text = inventory.StorageType.Name;
-
+            ShowShi(inventory.Location.Loc1, inventory.Location.Loc2, inventory.Location.Loc3, inventory.Location.Loc4.ToString(), _currentPickStop.QuantityToBePicked.ToString());
             Task.Run(() => _logger.Log($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]"));
         }
 
@@ -5463,7 +5451,6 @@ namespace Neutron.Forms
                 var printJob = _repoPrintJob.FindBy(r => r.OrderId == id && r.PickDocument == true).FirstOrDefault();
                 if (printJob != null) continue;
                 PrintPackingList(id, bp.PositionNumber.ToString());
-                //PrintDoc(bp.PositionNumber, order);
                 var order = _repoOrders.FindByKey(id);
                 printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
                 _repoPrintJob.Insert(printJob);
@@ -5472,11 +5459,6 @@ namespace Neutron.Forms
 
         private void PrintDocument(int batchPosition)
         {
-            //foreach (var bp in _ordersToPick)
-            //{
-            //    if (bp.PositionNumber != batchPosition) continue;
-            //    if (bp.OrderId == null) continue;
-
             var bp = _ordersToPick.Where(o => o.PositionNumber == batchPosition).FirstOrDefault();
             if (bp == null) return;
             if (bp.OrderId == null) return;
@@ -5489,8 +5471,6 @@ namespace Neutron.Forms
                 printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
                 _repoPrintJob.Insert(printJob);
             }
-
-            //}
         }
 
         private void PrintAnticipatedOuts()
@@ -5748,33 +5728,38 @@ namespace Neutron.Forms
             var idx = _currentPickStop.InventoryIndex + 1 < _currentPickStop.Inventory.Count
                 ? _currentPickStop.InventoryIndex + 1
                 : 0;
-            _currentPickStop.GroupBoxLocationInventoryIndex = idx;
-            var inventory = _currentPickStop.Inventory[idx];
-            if (inventory.Quantity > 0)
+            if (idx == 0)
             {
+                // back to first location so loop thru all locations to see
+                // if there is any inventory left
+                for (int i = 0; i < _currentPickStop.Inventory.Count; i++)
+                {
+                    if (_currentPickStop.Inventory[i].Quantity > 0)
+                    {
+                        _currentPickStop.GroupBoxLocationInventoryIndex = idx;
+                        var inventory = _currentPickStop.Inventory[idx];
+                        _currentPickStop.InventoryIndex = idx;
+                        _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[idx];
+                        var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+                        var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
+                        _logger.Log($"Get Next Picking Location: {loc1}-{loc2}");
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // Next Inventory location
+                _currentPickStop.GroupBoxLocationInventoryIndex = idx;
+                var inventory = _currentPickStop.Inventory[idx];
                 _currentPickStop.InventoryIndex = idx;
                 _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[idx];
+                var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+                var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
+                _logger.Log($"Get Next Picking Location: {loc1}-{loc2}");
                 result = true;
             }
-            var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-            var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-            _logger.Log($"Get Next Picking Location: {loc1}-{loc2}");
-
-
-
-            //var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-            //var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-            //var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
-            //var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-            //var text = _currentPickStop.QuantityToBePicked.ToString();
-
-
-            //PositionDevice(loc1, loc2, loc3, loc4, true);
-
-            //ShowShi(loc1, loc2, loc3, loc4.ToString(), text);
-
-            //UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-
             return result;
         }
 
@@ -5951,7 +5936,6 @@ namespace Neutron.Forms
 
         private void MBJobDetails_Click(object sender, EventArgs e)
         {
-            SetupOrderDetailsGrid(new object());
             var row = DataGridView1.CurrentRow;
             if (row == null || row.Index < 0) return;
             var id = Convert.ToInt32(row.Cells["Id"].Value);
@@ -6035,8 +6019,6 @@ namespace Neutron.Forms
             sw.Start();
             LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
-            //SetupAvailableOrdersGrid();
-            //SetupPickViewGrid();
             ClearBatchPositions();
             ClearOrderPositions();
             MBCompress.Enabled = false;
@@ -6081,17 +6063,13 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        //New Order
+        //Ready
         private void MBMainNewOrder_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = _resourceManager.GetString($"NewJob");
             LabelFormTitle.BackColor = Color.RoyalBlue;
-            // _bindingSourceItems.DataSource = GetItemsList(string.Empty);
-            //  DataGridViewNewOrder.DataSource = _bindingSourceItems;
             ClearNewOrderForm();
             tabControl1.SelectedTab = NewOrder;
-            //  DataGridViewNewOrder.ClearSelection();
-            //  DataGridViewNewOrder.Update();
         }
 
 
@@ -6126,7 +6104,7 @@ namespace Neutron.Forms
 
         private void MBNewOrderClose_Click(object sender, EventArgs e)
         {
-           // AvailableOrdersScreen();
+            // AvailableOrdersScreen();
             tabControl1.SelectedTab = Main;
         }
 
@@ -6312,12 +6290,12 @@ namespace Neutron.Forms
             MBDeleteOrder.Visible = false;
         }
 
-        //New Order
+        //Ready
         private void MBNewOrderSearch_Click(object sender, EventArgs e)
         {
             FindItemRecord(TextBoxNewOrderFind.Text.Trim().ToLower());
         }
-
+        //Ready
         private void FindItemRecord(string s)
         {
             try
@@ -6338,7 +6316,7 @@ namespace Neutron.Forms
             _bindingSourceNewItems.RemoveCurrent();
             ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
         }
-
+        //Ready
         private void TextBoxNewOrderFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -6350,12 +6328,12 @@ namespace Neutron.Forms
                 TextBoxNewOrderFind.Text = "";
             }
         }
-
+        //Ready
         private void TextBoxNewOrderQuantity_TextChanged(object sender, EventArgs e)
         {
-            ButtonAddDetail.Enabled = IntegerExtensions.ParseInt(TextBoxNewOrderQuantity.Text) > 0;
+            ButtonAddDetail.Enabled = TextBoxNewOrderQuantity.Text.ParseInt() > 0;
         }
-
+        //Ready
         private void TextBoxNewOrderQuantity_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -6363,14 +6341,14 @@ namespace Neutron.Forms
                 AddDetail();
             }
         }
-
+        //Ready
         private void ButtonNewOrderClear_Click(object sender, EventArgs e)
         {
             TextBoxNewOrderFind.Text = string.Empty;
             TextBoxNewOrderFind.Focus();
             FindItemRecord(string.Empty);
         }
-
+        //Ready
         private void DataGridViewNewOrder_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -6383,41 +6361,35 @@ namespace Neutron.Forms
                 TextBoxNewOrderQuantity.Focus();
             }
         }
-
+        //Ready
         private void ButtonAddDetail_Click(object sender, EventArgs e)
         {
             AddDetail();
         }
-
+        //Ready
         private void AddDetail()
         {
             var rec = new NewItemView()
             {
-                ItemDefinitionId = IntegerExtensions.ParseInt((LabelNewOrderItemId.Text))
+                ItemDefinitionId = LabelNewOrderItemId.Text.ParseInt()
                 ,
-                StationNumber = IntegerExtensions.ParseInt(LabelNewOrderStationNumber.Text)
+                StationNumber = LabelNewOrderStationNumber.Text.ParseInt()
                 ,
                 Item = TextBoxNewOrderItem.Text
                 ,
                 Description = TextBoxNewOrderDescription.Text
                 ,
-                Quantity = IntegerExtensions.ParseInt((TextBoxNewOrderQuantity.Text))
+                Quantity = TextBoxNewOrderQuantity.Text.ParseInt()
             };
-
             _bindingSourceNewItems.Add(rec);
-
             ClearNewOrderDetail();
             ButtonAddDetail.Enabled = false;
             TextBoxNewOrderFind.Focus();
-
             ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
-
-
         }
-
+        //Ready
         private void ClearNewOrderDetail()
         {
-
             TextBoxNewOrderItem.Text = "";
             TextBoxNewOrderDescription.Text = "";
             TextBoxNewOrderQuantity.Text = "";
@@ -6425,7 +6397,7 @@ namespace Neutron.Forms
             LabelNewOrderStationNumber.Text = "";
             LabelNewOrderItemId.Text = "";
         }
-
+        //Ready
         private void ClearNewOrderForm()
         {
             ClearNewOrderDetail();
@@ -6439,12 +6411,12 @@ namespace Neutron.Forms
             TextBoxNewOrderQuantity.Text = "";
             TextBoxNewOrderOrd1.Focus();
         }
-
+        //Ready
         private void InitDataGridViewNewItems()
         {
             DataGridViewNewItems.DataSource = _bindingSourceNewItems;
         }
-
+        //Ready
         private void MBNewOrderSave_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(TextBoxNewOrderOrd1.Text) && _bindingSourceNewItems.Count > 0)
@@ -6496,7 +6468,7 @@ namespace Neutron.Forms
                 ClearNewOrderForm();
             }
         }
-
+        //Ready
         private List<NewItemView> GetItemsList(string s)
         {
             var recs = new List<NewItemView>();
@@ -6531,8 +6503,6 @@ namespace Neutron.Forms
             return recs;
         }
 
-        //New Order
-
         private void MBPickNewItem_Click(object sender, EventArgs e)
         {
             using (var form = new FrmNewItemAuth())
@@ -6543,71 +6513,6 @@ namespace Neutron.Forms
                     if (form.AuthCode == "topura")
                     {
                         UpdatePickViews();
-
-                        //var success = false;
-                        //foreach (var pickView in _currentPickStop.PickViews)
-                        //{
-                        //    var newItem = string.Format(format: "9{0}", arg0: pickView.OrderDetail.PartNum.Substring(startIndex: 1));
-                        //    var newItemDefinition = _repoItemDefinition.FindBy(f => f.Item == newItem).FirstOrDefault();
-                        //    if (newItemDefinition != null)
-                        //    {
-                        //        pickView.OrderDetail.PartDesc = newItemDefinition.Description;
-                        //        pickView.Description = pickView.OrderDetail.PartDesc;
-                        //        pickView.OrderDetail.PartNum = newItemDefinition.Item;
-                        //        pickView.Item = pickView.OrderDetail.PartNum;
-                        //        pickView.ItemId = newItemDefinition.Id;
-
-                        //        var exactInventorySequence = new List<Inventory>();
-                        //        switch (_neutronVariables.PickMethod)
-                        //        {
-                        //            case "RadioButtonPrimeBinFirst":
-                        //                exactInventorySequence = PrimeBinFirst(pickView);
-                        //                break;
-                        //            case "RadioButtonPrimeBinLast":
-                        //                exactInventorySequence = PrimeBinLast(pickView);
-                        //                break;
-                        //            case "RadioButtonFifo":
-                        //                exactInventorySequence = Fifo(pickView);
-                        //                break;
-                        //            case "RadioButtonLifo":
-                        //                exactInventorySequence = Lifo(pickView);
-                        //                break;
-                        //            default:
-                        //                exactInventorySequence = Fifo(pickView);
-                        //                break;
-                        //        }
-
-                        //        pickView.CurrentInventoryLocation = exactInventorySequence.First();
-                        //        pickView.Inventory = exactInventorySequence;
-                        //        pickView.TotalQuantityInInventory = exactInventorySequence.Sum(r => r.Quantity);
-                        //        pickView.Slot = pickView.CurrentInventoryLocation.Location.Slot;
-                        //        pickView.SlotQty = pickView.TotalQuantityInInventory;
-                        //        pickView.InventoryIndex = 0;
-                        //        pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
-                        //        success = true;
-                        //    }
-                        //}
-                        //if (success)
-                        //{
-                        //    _currentPickStop.CurrentInventoryLocation = _currentPickStop.PickViews.First().CurrentInventoryLocation;
-                        //    _currentPickStop.Description = _currentPickStop.PickViews.First().Description;
-                        //    _currentPickStop.Images = _currentPickStop.PickViews.First().Images;
-                        //    _currentPickStop.Inventory = _currentPickStop.PickViews.First().Inventory;
-                        //    _currentPickStop.InventoryIndex = _currentPickStop.PickViews.First().InventoryIndex;
-                        //    _currentPickStop.Item = _currentPickStop.PickViews.First().Item;
-                        //    _currentPickStop.ItemId = _currentPickStop.PickViews.First().ItemId;
-                        //    _currentPickStop.Ord1 = _currentPickStop.PickViews.First().Ord1;
-                        //    _currentPickStop.Ord2 = _currentPickStop.PickViews.First().Ord2;
-                        //    _currentPickStop.OrderId = _currentPickStop.PickViews.First().OrderId;
-                        //    _currentPickStop.PickedQty = _currentPickStop.PickViews.First().PickedQty;
-                        //    _currentPickStop.Quantity = _currentPickStop.PickViews.First().Quantity;
-                        //    _currentPickStop.QuantityToBePicked = _currentPickStop.PickViews.First().QuantityToBePicked;
-                        //    _currentPickStop.Slot = _currentPickStop.PickViews.First().Slot;
-                        //    _currentPickStop.SlotQty = _currentPickStop.PickViews.First().SlotQty;
-                        //    _currentPickStop.TotalQuantityInInventory = _currentPickStop.PickViews.First().TotalQuantityInInventory;
-
-                        //    UpdatePickScreen();
-                        //}
                     }
                 }
             }
@@ -6615,7 +6520,6 @@ namespace Neutron.Forms
 
         private void UpdatePickViews()
         {
-
             var success = false;
             foreach (var pickView in _currentPickStop.PickViews)
             {
@@ -7244,7 +7148,6 @@ namespace Neutron.Forms
 
         private List<int> GetCheckedOrderDetailIds()
         {
-
             var orderDetailIds = new List<int>();
             foreach (DataGridViewRow row in DataGridViewOrderDetails.Rows)
             {
@@ -7267,7 +7170,7 @@ namespace Neutron.Forms
             {
                 if (row.Cells["IsChecked"].Value != null && (bool)row.Cells["IsChecked"].Value == true)
                 {
-                    var orderDetailId = IntegerExtensions.ParseInt(row.Cells["OrderDetailId"].Value.ToString());
+                    var orderDetailId = row.Cells["OrderDetailId"].Value.ToString().ParseInt();
                     var orderDetail = _repoOrderDetails.FindByKey(orderDetailId);
                     if (orderDetail != null)
                     {
@@ -8106,8 +8009,6 @@ namespace Neutron.Forms
         private void MBSkipped_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            // DataGridViewSkip.Columns.Clear();
-            //SetupSkipGrid();
             ShowSkipped();
             Cursor.Current = Cursors.Default;
         }
@@ -8302,7 +8203,6 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.WaitCursor;
             //DataGridView1.Columns.Clear();
             _currentDataSet = CurrentDataSet.Rack;
-            //SetupOrderGrid();
             ShowRackOrders();
             Cursor.Current = Cursors.Default;
         }
@@ -8325,7 +8225,6 @@ namespace Neutron.Forms
 
         private void ShowAvailableRackScreen()
         {
-            //SetupAvailableOrdersRackGrid();
             ShowAvailableOrdersRack();
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.RoyalBlue;

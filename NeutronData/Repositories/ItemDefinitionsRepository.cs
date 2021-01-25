@@ -85,5 +85,30 @@ namespace NeutronData.Repositories
             return recs;
         }
 
+        public IEnumerable<NewItemView> GetNewItemViews(string find = "")
+        {
+            var recs = new List<NewItemView>();
+
+
+            Logger.Log(msg: "Get All New Item Views Start");
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter("@FIND", find);
+
+                    recs = context.Database.SqlQuery<NewItemView>(sql: "usp_GetNewItemViews @Find "
+                        , parameters: new object[] { param }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get All New Item Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+            Logger.Log("Get All New Item Views End: " + recs.Count.ToString());
+
+            return recs;
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using Neutron.Builders.Interfaces;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using Neutron.Models;
 using NeutronEvents;
 

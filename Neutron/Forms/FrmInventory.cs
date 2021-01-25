@@ -23,7 +23,7 @@ using NeutronData.SqlModelViews;
 using Neutron.Classes;
 using Equin.ApplicationFramework;
 using EnumsNET;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using Neutron.Interfaces;
 using Neutron.Models;
 using NeutronCore.Global;

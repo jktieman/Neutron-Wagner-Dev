@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;

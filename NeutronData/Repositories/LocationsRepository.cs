@@ -47,6 +47,35 @@ namespace NeutronData.Repositories
             return list;
         }
 
+        public async Task<IEnumerable<Location>> GetAllLocationsExact(int stationId, int sizeCodeId,
+            int velocityCodeId, int heightCodeId, int locationCodeId, bool inUse)
+        {
+            var recs = new List<Location>();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param1 = new SqlParameter("@StationId", stationId);
+                    var param2 = new SqlParameter("@SizeCodeId", sizeCodeId);
+                    var param3 = new SqlParameter("@VelocityCodeId", velocityCodeId);
+                    var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
+                    var param5 = new SqlParameter("@LocationCodeId", locationCodeId);
+                    var param6 = new SqlParameter("@InUse", inUse);
+
+                    recs = await context.Database.SqlQuery<Location>(
+                        "usp_GetLocationViewsExact @StationId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @LocationCodeId, @InUse"
+                        , param1, param2, param3, param4, param5, param6).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await Task.Run(() =>
+                    _logger.Log($"Get All Location Views Exact Error.  {ex.Message} \r\n {ex.InnerException}"));
+            }
+
+            return recs;
+        }
+
         public async Task<IEnumerable<LocationView>> GetAllLocationViewsExact(int stationId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int locationCodeId, bool inUse)
         {

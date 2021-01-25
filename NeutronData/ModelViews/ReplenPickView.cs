@@ -22,6 +22,7 @@ namespace NeutronData.ModelViews
         public string Ord2 { get; set; }
         public int ItemId { get; set; }
         public string Item { get; set; }
+        public string ItemKey { get; set; }
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NeutronData.Models;
 
 namespace NeutronData.ModelViews
@@ -24,7 +25,7 @@ namespace NeutronData.ModelViews
         private int _lines;
         private int _pieces;
         private string _searchField;
-        public string LoadDate { get; set; }
+        public DateTime LoadDate { get; set; }
         public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
         public ReplenOrder ReplenOrder { get; set; }
@@ -44,14 +45,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _lines = 0;
-                foreach (var item in ReplenOrder.ReplenOrderDetails)
-                {
-                    if (_statusToGet.Contains(item.LineStatusId))
-                    {
-                        _lines += 1;
-                    }
-                }
+                _lines = ReplenOrder.ReplenOrderDetails.Count;
                 return _lines;
             }
             set { _lines = value; }
@@ -61,17 +55,44 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _pieces = 0;
-                foreach (var item in ReplenOrder.ReplenOrderDetails)
-                {
-                    if (_statusToGet.Contains(item.LineStatusId))
-                    {
-                        _pieces += item.Quantity;
-                    }
-                }
+                _pieces = ReplenOrder.ReplenOrderDetails.Sum(s => s.Quantity);
                 return _pieces;
             }
             set { _pieces = value; }
         }
+
+        //public int Lines
+        //{
+        //    get
+        //    {
+        //        _lines = 0;
+        //        foreach (var item in ReplenOrder.ReplenOrderDetails)
+        //        {
+        //            if (_statusToGet.Contains(item.LineStatusId))
+        //            {
+        //                _lines += 1;
+        //            }
+        //        }
+        //        return _lines;
+        //    }
+        //    set { _lines = value; }
+        //}
+
+        //public int Pieces
+        //{
+        //    get
+        //    {
+        //        _pieces = 0;
+        //        foreach (var item in ReplenOrder.ReplenOrderDetails)
+        //        {
+        //            if (_statusToGet.Contains(item.LineStatusId))
+        //            {
+        //                _pieces += item.Quantity;
+        //            }
+        //        }
+        //        return _pieces;
+        //    }
+        //    set { _pieces = value; }
+        //}
     }
 }

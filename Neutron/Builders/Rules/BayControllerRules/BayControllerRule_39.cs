@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Neutron.Builders.Interfaces;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using Neutron.Models;
 using NeutronEvents;
 

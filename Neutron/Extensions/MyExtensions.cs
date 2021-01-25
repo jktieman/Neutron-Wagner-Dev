@@ -43,5 +43,12 @@ namespace Neutron.Extensions
             }
             return list;
         }
+
+        public static void FocusAndHighlightText(this TextBox textBox)
+        {
+            textBox.Focus();
+            textBox.SelectionStart = 0;
+            textBox.SelectionLength = textBox.Text.Length;
+        }
     }
 }

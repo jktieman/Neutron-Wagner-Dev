@@ -14,7 +14,7 @@ using JsonManager;
 using MetroFramework.Forms;
 using Neutron.Classes;
 using Neutron.Enums;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using Neutron.Global;
 using Neutron.Interfaces;
 using NeutronCore;

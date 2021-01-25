@@ -14,10 +14,6 @@ namespace NeutronData.Models
         public int Id { get; set; }
         public int ReplenOrderId { get; set; }
         public int ItemDefinitionId { get; set; }
-        [ForeignKey("ReplenOrderId")]
-        public virtual ReplenOrder ReplenOrder { get; set; }
-        [ForeignKey("ItemDefinitionId")]
-        public virtual ItemDefinition ItemDefinition { get; set; }
         public int Quantity { get; set; }
         public int PickedQuantity { get; set; }
         public string DateTime { get; set; }
@@ -35,6 +31,10 @@ namespace NeutronData.Models
         [ForeignKey("LineStatusId")]
         public virtual LineStatus LineStatus { get; set; }
         public int StationNumber { get; set; }
+        [ForeignKey("ReplenOrderId")]
+        public virtual ReplenOrder ReplenOrder { get; set; }
+        [ForeignKey("ItemDefinitionId")]
+        public virtual ItemDefinition ItemDefinition { get; set; }
     }
 }
 

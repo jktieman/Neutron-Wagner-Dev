@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using AlliedLogger;
 using MetroFramework.Forms;
 using Neutron.Builders;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using NeutronEvents;
 
 

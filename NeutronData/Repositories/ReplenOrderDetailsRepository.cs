@@ -91,5 +91,11 @@ namespace NeutronData.Repositories
 
             return recs.ToList();
         }
+
+        public List<ReplenOrderDetail> GetOrderDetailsByOrderAndStation(int orderId, int stationNumber)
+        {
+            var recs = repo.All().Where(r => r.ReplenOrderId == orderId && r.StationNumber == stationNumber).ToList();
+            return recs.ToList();
+        }
     }
 }

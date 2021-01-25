@@ -24,7 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Equin.ApplicationFramework;
 using Neutron.Classes;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using NeutronCore.Models;
 using NeutronData.BaseClasses;
 using NeutronData.Models.Lookups;

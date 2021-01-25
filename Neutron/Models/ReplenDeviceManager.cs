@@ -21,7 +21,8 @@ namespace Neutron.Models
         public ReplenDeviceManager() { }
 
         public ReplenDeviceManager(List<ReplenPickStop> car1List, List<ReplenPickStop> car2List
-            , List<ReplenPickStop> car3List, List<ReplenPickStop> car4List, bool shuttleEnabled)
+            , List<ReplenPickStop> car3List, List<ReplenPickStop> car4List, List<ReplenPickStop> car5List
+            , List<ReplenPickStop> car6List, bool shuttleEnabled)
         {
             DeviceMover mover = CreateDeviceMover(deviceNumber: 1, carList: car1List);
             _deviceMovers.Add(mover);
@@ -35,12 +36,20 @@ namespace Neutron.Models
             mover = CreateDeviceMover(deviceNumber: 4, carList: car4List);
             _deviceMovers.Add(mover);
 
+            mover = CreateDeviceMover(deviceNumber: 5, carList: car5List);
+            _deviceMovers.Add(mover);
+
+            mover = CreateDeviceMover(deviceNumber: 6, carList: car6List);
+            _deviceMovers.Add(mover);
+
             _shuttleEnabled = shuttleEnabled;
 
             _currentLocations[1] = null;
             _currentLocations[2] = null;
             _currentLocations[3] = null;
             _currentLocations[4] = null;
+            _currentLocations[5] = null;
+            _currentLocations[6] = null;
         }
 
         private DeviceMover CreateDeviceMover(int deviceNumber, List<ReplenPickStop> carList)

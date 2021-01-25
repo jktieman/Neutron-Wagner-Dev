@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Neutron.Builders.Interfaces;
-using Neutron.Extensions;
+using NeutronCore.Extensions;
 using Neutron.Models;
 using NeutronEvents;
 
