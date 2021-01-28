@@ -101,7 +101,7 @@ namespace Neutron.Forms
         private readonly NeutronLicense _neutronLicense;
 
         private string _imagesDirectory;
-        private DeviceManager _deviceManager;
+        private PickDeviceManager _deviceManager;
         private DocumentToPrint _documentToPrint;
         private DocumentPrinterPreferences _documentPrinter;
         private LabelPrinterPreferences _labelPrinter;
@@ -309,8 +309,8 @@ namespace Neutron.Forms
 
             int[] validDeviceTypes = new[] { 1, 2 };  //1 - Shuttle, 2 - Carousel
 
-            var numDevices = _station.HardwareDevices.Where(x => validDeviceTypes.Contains(x.DeviceTypeId)).Count();
             var hardwareDevices = _station.HardwareDevices.Where(x => validDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            var numDevices = hardwareDevices.Count;
 
             var panel = new Panel();
             panel.Location = new Point(140, 0);
@@ -320,8 +320,8 @@ namespace Neutron.Forms
 
             foreach (var hardwareDevice in hardwareDevices)
             {
-                var device = new DeviceIndicator(hardwareDevice.DeviceNumber, 200, Color.Aqua
-                    , Color.White, hardwareDevice.CarrierLevel, hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+                var device = new DeviceIndicator(hardwareDevice.DeviceNumber, 200, Color.DarkGray
+                    , Color.Transparent, hardwareDevice.CarrierLevel, hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
                 device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
                 device.DeviceNumber = hardwareDevice.DeviceNumber;
                 device.Location = GetLocation(panel.Size.Width, numDevices, hardwareDevice.DeviceNumber);
@@ -3191,6 +3191,7 @@ namespace Neutron.Forms
 
         private void MBGo_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             TextBoxFindAvailableOrders.Text = string.Empty;
             // ShowAvailableOrders();
             var numOrders = _ordersToPick.Where(o => o.OrderId != null).Count();
@@ -3240,6 +3241,7 @@ namespace Neutron.Forms
                     tabControl1.SelectedTab = AvailableOrders;
                 }
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private List<PickView> GetShortItems(List<PickView> pickableViews)
@@ -4109,163 +4111,159 @@ namespace Neutron.Forms
 
         private List<PickStop> FinalPickSequence(List<PickStop> pickStops)
         {
-            Task.Run(() => _logger.Log($"FinalPickSequence Start: [{DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"FinalPickSequence Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            var newCarList = new List<List<PickStop>>();
             var newList = new List<PickStop>();
-            var car1List = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == 1)
-                .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
-                .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-                .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
-                .ToList();
-            var car2List = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == 2)
-               .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
-               .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-               .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
-               .ToList();
-            var car3List = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == 3)
-               .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
-               .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-               .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
-               .ToList();
-            var car4List = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == 4)
-               .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
-               .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-               .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
-               .ToList();
-
-            newList = BuildNewList(car1List, car2List, car3List, car4List);
-
-            Task.Run(() => _logger.Log($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-
-            _deviceManager = new DeviceManager(car1List, car2List, car3List
-                , car4List, _neutronVariables.ShuttleEnabled, _logger);
-
-            Task.Run(() => _deviceManager.FirstMoveAsync());
-
-            //Task.Run(() => _deviceManager.MoveNext(1));
-            //Task.Run(() => _deviceManager.MoveNext(2));
-            //Task.Run(() => _deviceManager.MoveNext(3));
-            //Task.Run(() => _deviceManager.MoveNext(4));
-
-            Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-            Task.Run(() => _logger.Log($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
-            return newList;
-        }
-
-        private List<PickStop> BuildNewList(List<PickStop> car1List, List<PickStop> car2List, List<PickStop> car3List, List<PickStop> car4List)
-        {
-            var car1Index = 0;
-            var car2Index = 0;
-            var car3Index = 0;
-            var car4Index = 0;
-
-            var newList = new List<PickStop>();
-            var totalStops = car1List.Count + car2List.Count + car3List.Count + car4List.Count;
-            var seq = 1;
-            var prevLoc1 = 0;
-            var prevLoc2 = 0;
-            var currLoc1 = 0;
-            var currLoc2 = 0;
-            PickStop currentCar;
-
-            while (seq <= totalStops)
+            for (var i = 0; i < _station.HardwareDevices.Count; i++)
             {
-                while (car1Index < car1List.Count)
-                {
-                    currentCar = car1List[car1Index];
-                    currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
-                    currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
-
-                    if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
-                    {
-                        currentCar.Sequence = seq;
-                        newList.Add(currentCar);
-                        car1Index += 1;
-                        seq += 1;
-                        prevLoc1 = currLoc1;
-                        prevLoc2 = currLoc2;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                prevLoc1 = 0;
-                prevLoc2 = 0;
-
-                while (car2Index < car2List.Count)
-                {
-                    currentCar = car2List[car2Index];
-                    currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
-                    currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
-
-                    if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
-                    {
-                        currentCar.Sequence = seq;
-                        newList.Add(currentCar);
-                        car2Index += 1;
-                        seq += 1;
-                        prevLoc1 = currLoc1;
-                        prevLoc2 = currLoc2;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                prevLoc1 = 0;
-                prevLoc2 = 0;
-
-                while (car3Index < car3List.Count)
-                {
-                    currentCar = car3List[car3Index];
-                    currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
-                    currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
-
-                    if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
-                    {
-                        currentCar.Sequence = seq;
-                        newList.Add(currentCar);
-                        car3Index += 1;
-                        seq += 1;
-                        prevLoc1 = currLoc1;
-                        prevLoc2 = currLoc2;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                prevLoc1 = 0;
-                prevLoc2 = 0;
-
-                while (car4Index < car4List.Count)
-                {
-                    currentCar = car4List[car4Index];
-                    currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
-                    currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
-
-                    if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
-                    {
-                        currentCar.Sequence = seq;
-                        newList.Add(currentCar);
-                        car4Index += 1;
-                        seq += 1;
-                        prevLoc1 = currLoc1;
-                        prevLoc2 = currLoc2;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                prevLoc1 = 0;
-                prevLoc2 = 0;
+                var carList = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == i + 1)
+                    .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
+                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
+                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
+                    .ToList();
+                newCarList.Add(carList);
             }
+            var seq = 1;
+            var totalPickStops = pickStops.Count;
 
+            for (var i = 0; i < totalPickStops; i++)
+            {
+                for (var j = 0; j < newCarList.Count; j++)
+                {
+                    if (newCarList[j].Count >= i + 1)
+                    {
+                        newCarList[j][i].Sequence = seq;
+                        seq += 1;
+                        newList.Add(newCarList[j][i]);
+                    }
+                }
+            }
+            Task.Run(() => _logger.Log($"FinalPickSequence Start Carousel Move: [{System.DateTime.Now.ToLongTimeString()}]"));
+            _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
+            for (var i = 0; i < _station.HardwareDevices.Count; i++)
+            {
+                Task.Run(() => _deviceManager.MoveNext(i));
+            }
+            Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"FinalPickSequence End: [{System.DateTime.Now.ToLongTimeString()}]"));
             return newList;
         }
+
+        //private List<PickStop> BuildNewList(List<PickStop> car1List, List<PickStop> car2List, List<PickStop> car3List, List<PickStop> car4List)
+        //{
+        //    var car1Index = 0;
+        //    var car2Index = 0;
+        //    var car3Index = 0;
+        //    var car4Index = 0;
+
+        //    var newList = new List<PickStop>();
+        //    var totalStops = car1List.Count + car2List.Count + car3List.Count + car4List.Count;
+        //    var seq = 1;
+        //    var prevLoc1 = 0;
+        //    var prevLoc2 = 0;
+        //    var currLoc1 = 0;
+        //    var currLoc2 = 0;
+        //    PickStop currentCar;
+
+        //    while (seq <= totalStops)
+        //    {
+        //        while (car1Index < car1List.Count)
+        //        {
+        //            currentCar = car1List[car1Index];
+        //            currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
+        //            currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
+
+        //            if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
+        //            {
+        //                currentCar.Sequence = seq;
+        //                newList.Add(currentCar);
+        //                car1Index += 1;
+        //                seq += 1;
+        //                prevLoc1 = currLoc1;
+        //                prevLoc2 = currLoc2;
+        //            }
+        //            else
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        prevLoc1 = 0;
+        //        prevLoc2 = 0;
+
+        //        while (car2Index < car2List.Count)
+        //        {
+        //            currentCar = car2List[car2Index];
+        //            currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
+        //            currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
+
+        //            if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
+        //            {
+        //                currentCar.Sequence = seq;
+        //                newList.Add(currentCar);
+        //                car2Index += 1;
+        //                seq += 1;
+        //                prevLoc1 = currLoc1;
+        //                prevLoc2 = currLoc2;
+        //            }
+        //            else
+        //            {
+        //                break;
+        //            }
+        //        }
+
+        //        prevLoc1 = 0;
+        //        prevLoc2 = 0;
+
+        //        while (car3Index < car3List.Count)
+        //        {
+        //            currentCar = car3List[car3Index];
+        //            currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
+        //            currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
+
+        //            if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
+        //            {
+        //                currentCar.Sequence = seq;
+        //                newList.Add(currentCar);
+        //                car3Index += 1;
+        //                seq += 1;
+        //                prevLoc1 = currLoc1;
+        //                prevLoc2 = currLoc2;
+        //            }
+        //            else
+        //            {
+        //                break;
+        //            }
+        //        }
+
+        //        prevLoc1 = 0;
+        //        prevLoc2 = 0;
+
+        //        while (car4Index < car4List.Count)
+        //        {
+        //            currentCar = car4List[car4Index];
+        //            currLoc1 = currentCar.CurrentInventoryLocation.Location.Loc1;
+        //            currLoc2 = currentCar.CurrentInventoryLocation.Location.Loc2;
+
+        //            if (prevLoc1 == 0 || (prevLoc1 == currLoc1 && prevLoc2 == currLoc2))
+        //            {
+        //                currentCar.Sequence = seq;
+        //                newList.Add(currentCar);
+        //                car4Index += 1;
+        //                seq += 1;
+        //                prevLoc1 = currLoc1;
+        //                prevLoc2 = currLoc2;
+        //            }
+        //            else
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        prevLoc1 = 0;
+        //        prevLoc2 = 0;
+        //    }
+
+        //    return newList;
+        //}
 
         //private void SetOrderStatusToPartial(IList<PickView> recs)
         //{
@@ -4487,53 +4485,19 @@ namespace Neutron.Forms
 
         }
 
-        //private void DeviceIndicatorToggle(int deviceNumber, bool turnOn = false, int level = 0, int partition = 0)
-        //{
-        //    var deviceIndicator = _deviceIndicators.Where(d => d.DeviceNumber == deviceNumber).FirstOrDefault();
-        //    if (deviceIndicator != null)
-        //    {
-        //        if (turnOn)
-        //        {
-        //            deviceIndicator.SetDeviceIndicatorValues(level, partition);
-        //            deviceIndicator.Active = true;
-        //        }
-        //        else
-        //        {
-        //            deviceIndicator.ClearAllAsync();
-        //            deviceIndicator.Active = false;
-        //        }
-        //    }
-        //}
-
         private void UpdateCurrentDeviceIndicator()
         {
-            Console.WriteLine($@"UpdateCurrentDeviceIndicator - Start");
+            var result = ClearActiveDeviceIndicator();
             var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
             var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
             var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-            //var deviceIndicator = _deviceIndicators.Where(d => d.DeviceNumber == loc1).FirstOrDefault();
             _deviceIndicators[loc1].SetDeviceIndicatorValues(loc2, loc3, loc4);
             _deviceIndicators[loc1].Active = true;
-
-            Console.WriteLine($@"UpdateCurrentDeviceIndicator ON - {_deviceIndicators[loc1].DeviceNumber}");
-
-            //var deviceIndicator = _deviceIndicators[loc1];
-
-            //if (deviceIndicator != null && deviceIndicator.Active == false)
-            //{
-            //    Console.WriteLine($"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
-            //    deviceIndicator.SetDeviceIndicatorValues(loc3, loc4);
-            //    deviceIndicator.Active = true;
-            //}
-
-            Console.WriteLine($@"UpdateCurrentDeviceIndicator - End");
         }
 
         private async Task ClearActiveDeviceIndicator()
         {
-            var sw = Stopwatch.StartNew();
-            Console.WriteLine($@"Clear Active Device Indicator - Start");
             var tasks = new List<Task>();
             var device = _deviceIndicators.FirstOrDefault(x => x.Value.Active == true).Value;
             if (device != null)
@@ -4541,26 +4505,17 @@ namespace Neutron.Forms
                 tasks.Add(Task.Run(() => device.ClearAllAsync()));
                 await Task.WhenAll(tasks);
             }
-            Console.WriteLine($@"Clear Active Device Indicator - End");
-            sw.Stop();
-            Console.WriteLine($@"Clear Active Device Indicator  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private async Task ClearAllDeviceIndicators()
         {
-            var sw = Stopwatch.StartNew();
-            Console.WriteLine($@"ClearAllDeviceIndicators - Start");
             var tasks = new List<Task>();
             foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
             {
-                Console.WriteLine($@"ClearAllDeviceIndicators - {deviceIndicator.Value.DeviceNumber}");
                 deviceIndicator.Value.Active = false;
                 tasks.Add(Task.Run(() => deviceIndicator.Value.ClearAllAsync()));
             }
             await Task.WhenAll(tasks);
-            Console.WriteLine($@"ClearAllDeviceIndicators - End");
-            sw.Stop();
-            Console.WriteLine($@"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private void UpdateImages()
@@ -5788,10 +5743,6 @@ namespace Neutron.Forms
         {
             var pickView = _currentPickStop.PickViews.Where(p => p.PickPosition == pos).FirstOrDefault();
             if (pickView == null) return;
-            //foreach (var pickView in _currentPickStop.PickViews)
-            //{
-            //    if (pickView.PickPosition == pos)
-            //    {
             if (newQty <= pickView.GetQuantityToBePicked())
             {
                 pickView.QuantityToBePicked = newQty;
@@ -5799,37 +5750,18 @@ namespace Neutron.Forms
                 LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
                 UpdatePickScreenAfterChangeQuantity();
             }
-            //    }
-            //}
         }
 
-        private void ButtonMove_Click(object sender, EventArgs e)
+        private async void ButtonMove_Click(object sender, EventArgs e)
         {
-            // DeviceIndicatorToggle(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
-            Console.WriteLine("Clear Active Device Indicator - ButtonMove_Click");
-            ClearActiveDeviceIndicator();
+            await ClearActiveDeviceIndicator();
             _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[_currentPickStop.GroupBoxLocationInventoryIndex];
-
             var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
             var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
             var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-            Console.WriteLine("Update Current Device Indicator - ButtonMove_Click");
             UpdateCurrentDeviceIndicator();
-            //if (neutronVariables.ShuttleEnabled)
-            //{
-            //    int loc1 = currentPickStop.CurrentInventoryLocation.Location.Loc1;
-            //    int loc2 = currentPickStop.CurrentInventoryLocation.Location.Loc2;
-
-            //    DeviceResponse response = GlobalVar.Shuttle.PositionDevice(loc1, loc2);
-            //    if (response != DeviceResponse.Success)
-            //    {
-            //        MessageBox.Show(response.AsString(EnumFormat.Description), caption: "Device Information"
-            //            , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-            //    }
-            //}
         }
 
         private void MBPriority_Click(object sender, EventArgs e)

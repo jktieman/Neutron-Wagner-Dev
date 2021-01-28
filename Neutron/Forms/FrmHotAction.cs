@@ -30,6 +30,8 @@ using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
+
+
 namespace Neutron.Forms
 {
     public partial class FrmHotAction : MetroForm
@@ -75,6 +77,8 @@ namespace Neutron.Forms
         private InventoryManager _inventoryManager;
         private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
+        private Dictionary<int, DeviceIndicator> _deviceIndicators;
+       // private DeviceIndicator _currentDeviceIndicator;
         public enum GridDataType
         {
             None,
@@ -83,8 +87,6 @@ namespace Neutron.Forms
             New
         }
         public delegate void UpdateDataGridDelegate(BindingSource bindingSource);
-
-        private List<DeviceIndicator> _deviceIndicators;
 
         public FrmHotAction(StationView station, IJsonData jsonData
             , IAkaRepository akaRepository, NeutronVariables neutronVariables, INomenclature nomenclature, string item = @"")
@@ -104,10 +106,11 @@ namespace Neutron.Forms
             KeyPreview = true;
             SetupLogger();
             SetupGridItemDefinition();
-            SetupCurrentDeviceIndicators();
+            InitDeviceIndicators();
             UpdateNomenclature();
             _useCostCenter = _neutronVariables.UseCostCenter;
             LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+            LabelFormTitle.BackColor = Color.Red;
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
@@ -121,18 +124,57 @@ namespace Neutron.Forms
             MBNewLocations.Text = _newLocationButtonText;
         }
 
-        private void SetupCurrentDeviceIndicators()
+        private void InitDeviceIndicators()
         {
-            _deviceIndicators = new List<DeviceIndicator>();
+            if (HotAction.Controls.ContainsKey("PanelDeviceIndicators")) return;
 
-            _deviceIndicators.Add(CurrentDeviceIndicator1);
-            _deviceIndicators.Add(CurrentDeviceIndicator2);
-            _deviceIndicators.Add(CurrentDeviceIndicator3);
-            _deviceIndicators.Add(CurrentDeviceIndicator4);
-            _deviceIndicators.Add(CurrentDeviceIndicator5);
-            _deviceIndicators.Add(CurrentDeviceIndicator6);
+            Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
+            _deviceIndicators = new Dictionary<int, DeviceIndicator>();
+
+            var validDeviceTypes = new[] { 1, 2 };  //1 - Shuttle, 2 - Carousel
+
+            var hardwareDevices = _station.HardwareDevices.Where(x => validDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            var numDevices = hardwareDevices.Count;
+            var panel = new Panel();
+            panel.Location = new Point(140, 0);
+            panel.Size = new Size(860, 150);
+            panel.BackColor = Color.Transparent;
+            panel.Name = "PanelDeviceIndicators";
+
+            foreach (var hardwareDevice in hardwareDevices)
+            {
+                var device = new DeviceIndicator(hardwareDevice.DeviceNumber, 200, Color.DarkGray
+                    , Color.Transparent, hardwareDevice.CarrierLevel, hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+                device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
+                device.DeviceNumber = hardwareDevice.DeviceNumber;
+                device.Location = GetLocation(panel.Size.Width, numDevices, hardwareDevice.DeviceNumber);
+                _deviceIndicators.Add(hardwareDevice.DeviceNumber, device);
+                panel.Controls.Add(device);
+            }
+
+            HotAction.Controls.Add(panel);
+
         }
 
+        private Point GetLocation(int sizeWidth, int numDevices, int deviceNumber)
+        {
+            Point point;
+            var eachBlock = sizeWidth / numDevices;
+            var centerBlock = eachBlock / 2;
+            var positionInBlock = centerBlock - 60;
+            if (deviceNumber == 1)
+            {
+                point = new Point(positionInBlock, 5);
+            }
+            else
+            {
+                var pos = positionInBlock + (deviceNumber - 1) * eachBlock;
+                point = new Point(pos, 5);
+            }
+
+            return point;
+
+        }
 
         private void InitialSearch(string item)
         {
@@ -775,6 +817,7 @@ namespace Neutron.Forms
         }
         private void UpdateHotImage(string image)
         {
+            PictureBoxItemHotImage.Visible = false;
             Task.Run(() => _logger.Log($"Update Hot Images Start : [{DateTime.Now.ToLongTimeString()}]"));
             if (!string.IsNullOrEmpty(_imagesDirectory))
             {
@@ -784,14 +827,7 @@ namespace Neutron.Forms
                     if (File.Exists(path))
                     {
                         PictureBoxItemHotImage.Load(path);
-                    }
-                    else
-                    {
-                        path = string.Concat(_imagesDirectory, str1: @"Unknown.jpg");
-                        if (File.Exists(path))
-                        {
-                            PictureBoxItemHotImage.Load(path);
-                        }
+                        PictureBoxItemHotImage.Visible = true;
                     }
                 }
                 catch (Exception ex)
@@ -863,8 +899,8 @@ namespace Neutron.Forms
             {
                 if (!string.IsNullOrEmpty(findWhat))
                 {
-                    var find = _akaRepository.Get(findWhat);
-                    TextBoxFindItem.Text = find;
+                    var akaFind = _akaRepository.Get(findWhat);
+                    TextBoxFindItem.Text = akaFind;
                 }
                 else
                 {
@@ -920,10 +956,10 @@ namespace Neutron.Forms
             {
                 CloseButtonPressed = false;
                 HotActionTray.BackColor = Color.LightGray;
-                LabelFormTitle.BackColor = Color.LightGray;
+                LabelFormTitle.BackColor = Color.Red;
                 LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
                 MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
-               // UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
+                // UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
 
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
@@ -938,7 +974,7 @@ namespace Neutron.Forms
                 LabelFormTitle.BackColor = Color.Red;
                 LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
                 MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
-                UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
+                UpdateCurrentDeviceIndicator();
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                     , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -980,7 +1016,7 @@ namespace Neutron.Forms
                 var loc2 = _currentInventoryView.Loc2;
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
-                UpdateCurrentDeviceIndicator(loc1, loc2, loc3, loc4);
+                UpdateCurrentDeviceIndicator();
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                     , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -1064,7 +1100,7 @@ namespace Neutron.Forms
                         : invItem.ReceivedDate.ToShortDateString();
                     LabelPrimeBin.Visible = invItem.PrimeBin;
                     LabelStaticRelease.Text = invItem.StorageTypeName;
-                    UpdateHotImage(invItem.Item);
+                    if (_neutronVariables.UseImages) UpdateHotImage(invItem.Item);
                 }
             }
             catch (Exception ex)
@@ -1092,7 +1128,7 @@ namespace Neutron.Forms
                     TextBoxHotPickLoc4Tray.Text = location.Loc4.ToString();
                     TextBoxHotPickLoc5Tray.Text = location.Loc5.ToString();
 
-                    Control c = Controls.Find($"LabelWidth{location.Loc3.ToString()}" , true).First();
+                    Control c = Controls.Find($"LabelWidth{location.Loc3.ToString()}", true).First();
                     if (c != null)
                     {
                         var label = ((Label)c);
@@ -1113,10 +1149,10 @@ namespace Neutron.Forms
 
 
                     LabelSlotTray.Text = location.Slot;
-                   // ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
-                   // ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
-                   // ComboBoxHeightCodeItem.SelectedIndex = ComboBoxHeightCodeItem.FindStringExact(itemDefinition.HeightCode.Name);
-                  //  ComboBoxLocationCodeItem.SelectedIndex = ComboBoxLocationCodeItem.FindStringExact(itemDefinition.LocationCode.Name);
+                    // ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
+                    // ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
+                    // ComboBoxHeightCodeItem.SelectedIndex = ComboBoxHeightCodeItem.FindStringExact(itemDefinition.HeightCode.Name);
+                    //  ComboBoxLocationCodeItem.SelectedIndex = ComboBoxLocationCodeItem.FindStringExact(itemDefinition.LocationCode.Name);
                     ComboBoxSizeCodeLocationTray.SelectedIndex = ComboBoxSizeCodeLocationTray.FindStringExact(location.SizeCode.Name);
                     ComboBoxVelocityCodeLocationTray.SelectedIndex = ComboBoxVelocityCodeLocationTray.FindStringExact(location.VelocityCode.Name);
                     ComboBoxHeightCodeLocationTray.SelectedIndex = ComboBoxHeightCodeLocationTray.FindStringExact(location.HeightCode.Name);
@@ -1129,7 +1165,7 @@ namespace Neutron.Forms
                         : invItem.ReceivedDate.ToShortDateString();
                     LabelPrimeBinTray.Visible = invItem.PrimeBin;
                     LabelStaticReleaseTray.Text = invItem.StorageTypeName;
-                   // UpdateHotImage(invItem.Item);
+                    if (_neutronVariables.UseImages) UpdateHotImage(invItem.Item);
                 }
             }
             catch (Exception ex)
@@ -1235,10 +1271,10 @@ namespace Neutron.Forms
         {
             CloseButtonPressed = false;
             ClearAllShi();
-            await ClearAllActiveDeviceIndicators();
+            await ClearAllDeviceIndicators();
             FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
             LabelFormTitle.Text = _resourceManager.GetString("HotActions");
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.Red;
             tabControl1.SelectedTab = HotPick;
         }
         private async void MBHotAccept_Click(object sender, EventArgs e)
@@ -1256,7 +1292,7 @@ namespace Neutron.Forms
             var actionCode = ActionCode.PickHot;
 
             ClearAllShi();
-            await ClearAllActiveDeviceIndicators();
+            await ClearAllDeviceIndicators();
 
             if (_useCostCenter)
             {
@@ -1337,7 +1373,7 @@ namespace Neutron.Forms
             await LoadItemDefinitions();
             await LoadCurrentAndNew();
             LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.Red;
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = HotPick;
         }
@@ -1755,57 +1791,89 @@ namespace Neutron.Forms
             TextBoxFindCostCenter.Focus();
         }
 
-
-        private void UpdateCurrentDeviceIndicator(int loc1, int loc2, int loc3, int loc4)
+        private void UpdateCurrentDeviceIndicator()
         {
-            Console.WriteLine($@"UpdateCurrentDeviceIndicator - Start");
-            var deviceIndicator = _deviceIndicators.FirstOrDefault(d => d.DeviceNumber == loc1);
-            if (deviceIndicator != null && deviceIndicator.Active == false)
-            {
-                Console.WriteLine($@"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
-                deviceIndicator.SetDeviceIndicatorValues(loc2, loc3, loc4);
-                deviceIndicator.Active = true;
-            }
-
-            Console.WriteLine($@"UpdateCurrentDeviceIndicator - End");
+            var result = ClearActiveDeviceIndicator();
+            var loc1 = _currentInventoryView.Loc1;
+            var loc2 = _currentInventoryView.Loc2;
+            var loc3 = _currentInventoryView.Loc3;
+            var loc4 = _currentInventoryView.Loc4;
+            _deviceIndicators[loc1].SetDeviceIndicatorValues(loc2, loc3, loc4);
+            _deviceIndicators[loc1].Active = true;
         }
 
-        private async Task ClearAllActiveDeviceIndicators()
+        private async Task ClearActiveDeviceIndicator()
         {
-            var sw = Stopwatch.StartNew();
-            Console.WriteLine($@"ClearAllActiveDeviceIndicators - Start");
             var tasks = new List<Task>();
-            foreach (var deviceIndicator in _deviceIndicators)
+            var device = _deviceIndicators.FirstOrDefault(x => x.Value.Active == true).Value;
+            if (device != null)
             {
-                if (deviceIndicator.Active)
-                {
-                    Console.WriteLine($@"ClearAllActiveDeviceIndicators - {deviceIndicator.DeviceNumber}");
-                    deviceIndicator.Active = false;
-                    tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
-                }
+                tasks.Add(Task.Run(() => device.ClearAllAsync()));
+                await Task.WhenAll(tasks);
             }
-            await Task.WhenAll(tasks);
-            Console.WriteLine($@"ClearAllActiveDeviceIndicators - End");
-            sw.Stop();
-            Console.WriteLine($@"ClearAllActiveDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
 
         private async Task ClearAllDeviceIndicators()
         {
-            var sw = Stopwatch.StartNew();
-            Console.WriteLine($@"ClearAllDeviceIndicators - Start");
             var tasks = new List<Task>();
-            foreach (var deviceIndicator in _deviceIndicators)
+            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
             {
-                Console.WriteLine($@"ClearAllDeviceIndicators - {deviceIndicator.DeviceNumber}");
-                deviceIndicator.Active = false;
-                tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+                deviceIndicator.Value.Active = false;
+                tasks.Add(Task.Run(() => deviceIndicator.Value.ClearAllAsync()));
             }
             await Task.WhenAll(tasks);
-            Console.WriteLine($@"ClearAllDeviceIndicators - End");
-            sw.Stop();
-            Console.WriteLine($@"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
         }
+
+        //private void UpdateCurrentDeviceIndicator(int loc1, int loc2, int loc3, int loc4)
+        //{
+        //    Console.WriteLine($@"UpdateCurrentDeviceIndicator - Start");
+        //    var deviceIndicator = _deviceIndicators.FirstOrDefault(d => d.DeviceNumber == loc1);
+        //    if (deviceIndicator != null && deviceIndicator.Active == false)
+        //    {
+        //        Console.WriteLine($@"UpdateCurrentDeviceIndicator ON - {deviceIndicator.DeviceNumber}");
+        //        deviceIndicator.SetDeviceIndicatorValues(loc2, loc3, loc4);
+        //        deviceIndicator.Active = true;
+        //    }
+
+        //    Console.WriteLine($@"UpdateCurrentDeviceIndicator - End");
+        //}
+
+        //private async Task ClearAllActiveDeviceIndicators()
+        //{
+        //    var sw = Stopwatch.StartNew();
+        //    Console.WriteLine($@"ClearAllActiveDeviceIndicators - Start");
+        //    var tasks = new List<Task>();
+        //    foreach (var deviceIndicator in _deviceIndicators)
+        //    {
+        //        if (deviceIndicator.Active)
+        //        {
+        //            Console.WriteLine($@"ClearAllActiveDeviceIndicators - {deviceIndicator.DeviceNumber}");
+        //            deviceIndicator.Active = false;
+        //            tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+        //        }
+        //    }
+        //    await Task.WhenAll(tasks);
+        //    Console.WriteLine($@"ClearAllActiveDeviceIndicators - End");
+        //    sw.Stop();
+        //    Console.WriteLine($@"ClearAllActiveDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+        //}
+
+        //private async Task ClearAllDeviceIndicators()
+        //{
+        //    var sw = Stopwatch.StartNew();
+        //    Console.WriteLine($@"ClearAllDeviceIndicators - Start");
+        //    var tasks = new List<Task>();
+        //    foreach (var deviceIndicator in _deviceIndicators)
+        //    {
+        //        Console.WriteLine($@"ClearAllDeviceIndicators - {deviceIndicator.DeviceNumber}");
+        //        deviceIndicator.Active = false;
+        //        tasks.Add(Task.Run(() => deviceIndicator.ClearAllAsync()));
+        //    }
+        //    await Task.WhenAll(tasks);
+        //    Console.WriteLine($@"ClearAllDeviceIndicators - End");
+        //    sw.Stop();
+        //    Console.WriteLine($@"ClearAllDeviceIndicators  All Clear Elapsed: {sw.ElapsedMilliseconds}");
+        //}
 
         private void SetCulture(string lang)
         {

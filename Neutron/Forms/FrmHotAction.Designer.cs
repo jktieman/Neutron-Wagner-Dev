@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -48,12 +48,6 @@
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.HotAction = new System.Windows.Forms.TabPage();
-            this.CurrentDeviceIndicator6 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator5 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator4 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator3 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator2 = new CurrentDeviceIndicator.DeviceIndicator();
-            this.CurrentDeviceIndicator1 = new CurrentDeviceIndicator.DeviceIndicator();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.ComboBoxLocationCodeLocation = new System.Windows.Forms.ComboBox();
             this.LabelLocation = new System.Windows.Forms.Label();
@@ -109,20 +103,56 @@
             this.MBHotAccept = new MetroFramework.Controls.MetroButton();
             this.MBHotActionBack = new MetroFramework.Controls.MetroButton();
             this.PictureBoxItemHotImage = new System.Windows.Forms.PictureBox();
-            this.LabelFormTitle = new System.Windows.Forms.Label();
-            this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
-            this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.HotActionTray = new System.Windows.Forms.TabPage();
-            this.LabelHotPickUOITray = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.LabelHotPickDescriptionTray = new System.Windows.Forms.Label();
-            this.LabelHotPickItemTray = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.TextBoxHotPickQuantityTray = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.MBHotAcceptTray = new MetroFramework.Controls.MetroButton();
+            this.PanelDepth = new System.Windows.Forms.Panel();
+            this.LabelDepth8 = new System.Windows.Forms.Label();
+            this.LabelDepth7 = new System.Windows.Forms.Label();
+            this.LabelDepth6 = new System.Windows.Forms.Label();
+            this.LabelDepth5 = new System.Windows.Forms.Label();
+            this.LabelDepth4 = new System.Windows.Forms.Label();
+            this.LabelDepth3 = new System.Windows.Forms.Label();
+            this.LabelDepth2 = new System.Windows.Forms.Label();
+            this.LabelDepth1 = new System.Windows.Forms.Label();
+            this.PanelWidth = new System.Windows.Forms.Panel();
+            this.LabelWidth20 = new System.Windows.Forms.Label();
+            this.LabelWidth19 = new System.Windows.Forms.Label();
+            this.LabelWidth18 = new System.Windows.Forms.Label();
+            this.LabelWidth17 = new System.Windows.Forms.Label();
+            this.LabelWidth16 = new System.Windows.Forms.Label();
+            this.LabelWidth15 = new System.Windows.Forms.Label();
+            this.LabelWidth14 = new System.Windows.Forms.Label();
+            this.LabelWidth13 = new System.Windows.Forms.Label();
+            this.LabelWidth12 = new System.Windows.Forms.Label();
+            this.LabelWidth11 = new System.Windows.Forms.Label();
+            this.LabelWidth10 = new System.Windows.Forms.Label();
+            this.LabelWidth9 = new System.Windows.Forms.Label();
+            this.LabelWidth8 = new System.Windows.Forms.Label();
+            this.LabelWidth7 = new System.Windows.Forms.Label();
+            this.LabelWidth6 = new System.Windows.Forms.Label();
+            this.LabelWidth5 = new System.Windows.Forms.Label();
+            this.LabelWidth4 = new System.Windows.Forms.Label();
+            this.LabelWidth3 = new System.Windows.Forms.Label();
+            this.LabelWidth2 = new System.Windows.Forms.Label();
+            this.LabelWidth1 = new System.Windows.Forms.Label();
+            this.PanelTray = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.LabelItemNumber = new System.Windows.Forms.Label();
+            this.MBHotActionBackTray = new MetroFramework.Controls.MetroButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.ComboBoxLocationCodeLocationTray = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.ComboBoxHeightCodeLocationTray = new System.Windows.Forms.ComboBox();
@@ -147,54 +177,18 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.MBHotActionBackTray = new MetroFramework.Controls.MetroButton();
-            this.PanelTray = new System.Windows.Forms.Panel();
-            this.label20 = new System.Windows.Forms.Label();
-            this.PanelWidth = new System.Windows.Forms.Panel();
-            this.PanelDepth = new System.Windows.Forms.Panel();
-            this.LabelWidth1 = new System.Windows.Forms.Label();
-            this.LabelWidth2 = new System.Windows.Forms.Label();
-            this.LabelWidth3 = new System.Windows.Forms.Label();
-            this.LabelWidth4 = new System.Windows.Forms.Label();
-            this.LabelWidth5 = new System.Windows.Forms.Label();
-            this.LabelWidth6 = new System.Windows.Forms.Label();
-            this.LabelWidth7 = new System.Windows.Forms.Label();
-            this.LabelWidth8 = new System.Windows.Forms.Label();
-            this.LabelWidth9 = new System.Windows.Forms.Label();
-            this.LabelWidth10 = new System.Windows.Forms.Label();
-            this.LabelWidth11 = new System.Windows.Forms.Label();
-            this.LabelWidth12 = new System.Windows.Forms.Label();
-            this.LabelWidth13 = new System.Windows.Forms.Label();
-            this.LabelWidth14 = new System.Windows.Forms.Label();
-            this.LabelWidth15 = new System.Windows.Forms.Label();
-            this.LabelWidth16 = new System.Windows.Forms.Label();
-            this.LabelWidth17 = new System.Windows.Forms.Label();
-            this.LabelWidth18 = new System.Windows.Forms.Label();
-            this.LabelWidth19 = new System.Windows.Forms.Label();
-            this.LabelWidth20 = new System.Windows.Forms.Label();
-            this.LabelDepth1 = new System.Windows.Forms.Label();
-            this.LabelDepth2 = new System.Windows.Forms.Label();
-            this.LabelDepth3 = new System.Windows.Forms.Label();
-            this.LabelDepth4 = new System.Windows.Forms.Label();
-            this.LabelDepth5 = new System.Windows.Forms.Label();
-            this.LabelDepth6 = new System.Windows.Forms.Label();
-            this.LabelDepth7 = new System.Windows.Forms.Label();
-            this.LabelDepth8 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.LabelItemNumber = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
+            this.TextBoxHotPickQuantityTray = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.MBHotAcceptTray = new MetroFramework.Controls.MetroButton();
+            this.LabelHotPickUOITray = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.LabelHotPickDescriptionTray = new System.Windows.Forms.Label();
+            this.LabelHotPickItemTray = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.LabelFormTitle = new System.Windows.Forms.Label();
+            this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
+            this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
@@ -203,15 +197,15 @@
             this.GroupBoxHotActions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).BeginInit();
             this.HotActionTray.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.PanelTray.SuspendLayout();
-            this.PanelWidth.SuspendLayout();
             this.PanelDepth.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.PanelWidth.SuspendLayout();
+            this.PanelTray.SuspendLayout();
             this.panel5.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -238,7 +232,7 @@
             // 
             // HotPick
             // 
-            this.HotPick.BackColor = System.Drawing.Color.RoyalBlue;
+            this.HotPick.BackColor = System.Drawing.SystemColors.ControlDark;
             this.HotPick.Controls.Add(this.CheckBoxAll);
             this.HotPick.Controls.Add(this.MBHotStore);
             this.HotPick.Controls.Add(this.MBHotPick);
@@ -389,38 +383,39 @@
             // 
             this.DataGridViewHot.AllowUserToAddRows = false;
             this.DataGridViewHot.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridViewHot.Location = new System.Drawing.Point(12, 122);
             this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewHot.MultiSelect = false;
             this.DataGridViewHot.Name = "DataGridViewHot";
             this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewHot.RowTemplate.Height = 28;
             this.DataGridViewHot.RowTemplate.ReadOnly = true;
@@ -431,13 +426,7 @@
             // 
             // HotAction
             // 
-            this.HotAction.BackColor = System.Drawing.Color.Red;
-            this.HotAction.Controls.Add(this.CurrentDeviceIndicator6);
-            this.HotAction.Controls.Add(this.CurrentDeviceIndicator5);
-            this.HotAction.Controls.Add(this.CurrentDeviceIndicator4);
-            this.HotAction.Controls.Add(this.CurrentDeviceIndicator3);
-            this.HotAction.Controls.Add(this.CurrentDeviceIndicator2);
-            this.HotAction.Controls.Add(this.CurrentDeviceIndicator1);
+            this.HotAction.BackColor = System.Drawing.SystemColors.ControlDark;
             this.HotAction.Controls.Add(this.GroupBoxHotPickLocation);
             this.HotAction.Controls.Add(this.ComboBoxLocationCodeItem);
             this.HotAction.Controls.Add(this.LabelMainLocation);
@@ -467,90 +456,6 @@
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
             this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
-            // 
-            // CurrentDeviceIndicator6
-            // 
-            this.CurrentDeviceIndicator6.Active = false;
-            this.CurrentDeviceIndicator6.AutoScroll = true;
-            this.CurrentDeviceIndicator6.BackColor = System.Drawing.Color.Transparent;
-            this.CurrentDeviceIndicator6.DeviceNumber = 6;
-            this.CurrentDeviceIndicator6.Location = new System.Drawing.Point(848, 8);
-            this.CurrentDeviceIndicator6.MaxBack = 9;
-            this.CurrentDeviceIndicator6.MaxLevels = 8;
-            this.CurrentDeviceIndicator6.MaxOver = 9;
-            this.CurrentDeviceIndicator6.Name = "CurrentDeviceIndicator6";
-            this.CurrentDeviceIndicator6.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator6.TabIndex = 167;
-            // 
-            // CurrentDeviceIndicator5
-            // 
-            this.CurrentDeviceIndicator5.Active = false;
-            this.CurrentDeviceIndicator5.AutoScroll = true;
-            this.CurrentDeviceIndicator5.BackColor = System.Drawing.Color.Transparent;
-            this.CurrentDeviceIndicator5.DeviceNumber = 5;
-            this.CurrentDeviceIndicator5.Location = new System.Drawing.Point(714, 8);
-            this.CurrentDeviceIndicator5.MaxBack = 9;
-            this.CurrentDeviceIndicator5.MaxLevels = 8;
-            this.CurrentDeviceIndicator5.MaxOver = 9;
-            this.CurrentDeviceIndicator5.Name = "CurrentDeviceIndicator5";
-            this.CurrentDeviceIndicator5.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator5.TabIndex = 168;
-            // 
-            // CurrentDeviceIndicator4
-            // 
-            this.CurrentDeviceIndicator4.Active = false;
-            this.CurrentDeviceIndicator4.AutoScroll = true;
-            this.CurrentDeviceIndicator4.BackColor = System.Drawing.Color.Transparent;
-            this.CurrentDeviceIndicator4.DeviceNumber = 4;
-            this.CurrentDeviceIndicator4.Location = new System.Drawing.Point(580, 8);
-            this.CurrentDeviceIndicator4.MaxBack = 9;
-            this.CurrentDeviceIndicator4.MaxLevels = 8;
-            this.CurrentDeviceIndicator4.MaxOver = 9;
-            this.CurrentDeviceIndicator4.Name = "CurrentDeviceIndicator4";
-            this.CurrentDeviceIndicator4.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator4.TabIndex = 169;
-            // 
-            // CurrentDeviceIndicator3
-            // 
-            this.CurrentDeviceIndicator3.Active = false;
-            this.CurrentDeviceIndicator3.AutoScroll = true;
-            this.CurrentDeviceIndicator3.BackColor = System.Drawing.Color.Transparent;
-            this.CurrentDeviceIndicator3.DeviceNumber = 3;
-            this.CurrentDeviceIndicator3.Location = new System.Drawing.Point(446, 8);
-            this.CurrentDeviceIndicator3.MaxBack = 9;
-            this.CurrentDeviceIndicator3.MaxLevels = 8;
-            this.CurrentDeviceIndicator3.MaxOver = 9;
-            this.CurrentDeviceIndicator3.Name = "CurrentDeviceIndicator3";
-            this.CurrentDeviceIndicator3.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator3.TabIndex = 170;
-            // 
-            // CurrentDeviceIndicator2
-            // 
-            this.CurrentDeviceIndicator2.Active = false;
-            this.CurrentDeviceIndicator2.AutoScroll = true;
-            this.CurrentDeviceIndicator2.BackColor = System.Drawing.Color.Transparent;
-            this.CurrentDeviceIndicator2.DeviceNumber = 2;
-            this.CurrentDeviceIndicator2.Location = new System.Drawing.Point(312, 8);
-            this.CurrentDeviceIndicator2.MaxBack = 9;
-            this.CurrentDeviceIndicator2.MaxLevels = 8;
-            this.CurrentDeviceIndicator2.MaxOver = 9;
-            this.CurrentDeviceIndicator2.Name = "CurrentDeviceIndicator2";
-            this.CurrentDeviceIndicator2.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator2.TabIndex = 171;
-            // 
-            // CurrentDeviceIndicator1
-            // 
-            this.CurrentDeviceIndicator1.Active = false;
-            this.CurrentDeviceIndicator1.AutoScroll = true;
-            this.CurrentDeviceIndicator1.BackColor = System.Drawing.Color.Transparent;
-            this.CurrentDeviceIndicator1.DeviceNumber = 1;
-            this.CurrentDeviceIndicator1.Location = new System.Drawing.Point(178, 8);
-            this.CurrentDeviceIndicator1.MaxBack = 9;
-            this.CurrentDeviceIndicator1.MaxLevels = 8;
-            this.CurrentDeviceIndicator1.MaxOver = 9;
-            this.CurrentDeviceIndicator1.Name = "CurrentDeviceIndicator1";
-            this.CurrentDeviceIndicator1.Size = new System.Drawing.Size(120, 120);
-            this.CurrentDeviceIndicator1.TabIndex = 172;
             // 
             // GroupBoxHotPickLocation
             // 
@@ -1191,44 +1096,9 @@
             this.PictureBoxItemHotImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBoxItemHotImage.TabIndex = 166;
             this.PictureBoxItemHotImage.TabStop = false;
+            this.PictureBoxItemHotImage.Visible = false;
             this.PictureBoxItemHotImage.MouseEnter += new System.EventHandler(this.PictureBoxItemHotImage_MouseEnter);
             this.PictureBoxItemHotImage.MouseLeave += new System.EventHandler(this.PictureBoxItemHotImage_MouseLeave);
-            // 
-            // LabelFormTitle
-            // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
-            this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(338, 30);
-            this.LabelFormTitle.TabIndex = 28;
-            this.LabelFormTitle.Text = "Jobs";
-            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // mlUserInfo
-            // 
-            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
-            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
-            this.mlUserInfo.TabIndex = 27;
-            this.mlUserInfo.Text = "Login ?";
-            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelFormHeaderText
-            // 
-            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
-            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 30);
-            this.LabelFormHeaderText.TabIndex = 26;
-            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
-            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // HotActionTray
             // 
@@ -1254,99 +1124,557 @@
             this.HotActionTray.TabIndex = 8;
             this.HotActionTray.Text = "Hot Action Tray";
             // 
-            // LabelHotPickUOITray
+            // PanelDepth
             // 
-            this.LabelHotPickUOITray.BackColor = System.Drawing.Color.White;
-            this.LabelHotPickUOITray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelHotPickUOITray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickUOITray.Location = new System.Drawing.Point(825, 381);
-            this.LabelHotPickUOITray.Name = "LabelHotPickUOITray";
-            this.LabelHotPickUOITray.Size = new System.Drawing.Size(310, 43);
-            this.LabelHotPickUOITray.TabIndex = 24;
-            this.LabelHotPickUOITray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.PanelDepth.Controls.Add(this.LabelDepth8);
+            this.PanelDepth.Controls.Add(this.LabelDepth7);
+            this.PanelDepth.Controls.Add(this.LabelDepth6);
+            this.PanelDepth.Controls.Add(this.LabelDepth5);
+            this.PanelDepth.Controls.Add(this.LabelDepth4);
+            this.PanelDepth.Controls.Add(this.LabelDepth3);
+            this.PanelDepth.Controls.Add(this.LabelDepth2);
+            this.PanelDepth.Controls.Add(this.LabelDepth1);
+            this.PanelDepth.Location = new System.Drawing.Point(10, 7);
+            this.PanelDepth.Name = "PanelDepth";
+            this.PanelDepth.Size = new System.Drawing.Size(25, 344);
+            this.PanelDepth.TabIndex = 34;
             // 
-            // label2
+            // LabelDepth8
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(576, 381);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(243, 43);
-            this.label2.TabIndex = 23;
-            this.label2.Text = "Unit of Issue";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelDepth8.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth8.Location = new System.Drawing.Point(3, 23);
+            this.LabelDepth8.Name = "LabelDepth8";
+            this.LabelDepth8.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth8.TabIndex = 1;
+            this.LabelDepth8.Text = "8";
+            this.LabelDepth8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // LabelHotPickDescriptionTray
+            // LabelDepth7
             // 
-            this.LabelHotPickDescriptionTray.BackColor = System.Drawing.SystemColors.Control;
-            this.LabelHotPickDescriptionTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelHotPickDescriptionTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickDescriptionTray.Location = new System.Drawing.Point(192, 436);
-            this.LabelHotPickDescriptionTray.Name = "LabelHotPickDescriptionTray";
-            this.LabelHotPickDescriptionTray.Size = new System.Drawing.Size(943, 43);
-            this.LabelHotPickDescriptionTray.TabIndex = 26;
-            this.LabelHotPickDescriptionTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelDepth7.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth7.Location = new System.Drawing.Point(3, 66);
+            this.LabelDepth7.Name = "LabelDepth7";
+            this.LabelDepth7.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth7.TabIndex = 1;
+            this.LabelDepth7.Text = "7";
+            this.LabelDepth7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // LabelHotPickItemTray
+            // LabelDepth6
             // 
-            this.LabelHotPickItemTray.BackColor = System.Drawing.SystemColors.Control;
-            this.LabelHotPickItemTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelHotPickItemTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickItemTray.Location = new System.Drawing.Point(192, 381);
-            this.LabelHotPickItemTray.Name = "LabelHotPickItemTray";
-            this.LabelHotPickItemTray.Size = new System.Drawing.Size(378, 43);
-            this.LabelHotPickItemTray.TabIndex = 22;
-            this.LabelHotPickItemTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelDepth6.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth6.Location = new System.Drawing.Point(3, 109);
+            this.LabelDepth6.Name = "LabelDepth6";
+            this.LabelDepth6.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth6.TabIndex = 1;
+            this.LabelDepth6.Text = "6";
+            this.LabelDepth6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label5
+            // LabelDepth5
             // 
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(44, 381);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(142, 43);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "Item";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelDepth5.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth5.Location = new System.Drawing.Point(3, 152);
+            this.LabelDepth5.Name = "LabelDepth5";
+            this.LabelDepth5.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth5.TabIndex = 1;
+            this.LabelDepth5.Text = "5";
+            this.LabelDepth5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label6
+            // LabelDepth4
             // 
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(50, 436);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(136, 43);
-            this.label6.TabIndex = 25;
-            this.label6.Text = "Desc";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelDepth4.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth4.Location = new System.Drawing.Point(3, 195);
+            this.LabelDepth4.Name = "LabelDepth4";
+            this.LabelDepth4.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth4.TabIndex = 1;
+            this.LabelDepth4.Text = "4";
+            this.LabelDepth4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // TextBoxHotPickQuantityTray
+            // LabelDepth3
             // 
-            this.TextBoxHotPickQuantityTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickQuantityTray.Location = new System.Drawing.Point(894, 518);
-            this.TextBoxHotPickQuantityTray.Name = "TextBoxHotPickQuantityTray";
-            this.TextBoxHotPickQuantityTray.Size = new System.Drawing.Size(241, 116);
-            this.TextBoxHotPickQuantityTray.TabIndex = 27;
-            this.TextBoxHotPickQuantityTray.Text = "1";
-            this.TextBoxHotPickQuantityTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelDepth3.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth3.Location = new System.Drawing.Point(3, 238);
+            this.LabelDepth3.Name = "LabelDepth3";
+            this.LabelDepth3.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth3.TabIndex = 1;
+            this.LabelDepth3.Text = "3";
+            this.LabelDepth3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label7
+            // LabelDepth2
             // 
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(775, 554);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 50);
-            this.label7.TabIndex = 29;
-            this.label7.Text = "Qty";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelDepth2.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth2.Location = new System.Drawing.Point(3, 281);
+            this.LabelDepth2.Name = "LabelDepth2";
+            this.LabelDepth2.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth2.TabIndex = 1;
+            this.LabelDepth2.Text = "2";
+            this.LabelDepth2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // MBHotAcceptTray
+            // LabelDepth1
             // 
-            this.MBHotAcceptTray.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotAcceptTray.Location = new System.Drawing.Point(958, 660);
-            this.MBHotAcceptTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBHotAcceptTray.Name = "MBHotAcceptTray";
-            this.MBHotAcceptTray.Size = new System.Drawing.Size(177, 96);
-            this.MBHotAcceptTray.TabIndex = 28;
-            this.MBHotAcceptTray.Text = "Accept";
-            this.MBHotAcceptTray.UseSelectable = true;
+            this.LabelDepth1.BackColor = System.Drawing.Color.Transparent;
+            this.LabelDepth1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDepth1.Location = new System.Drawing.Point(3, 324);
+            this.LabelDepth1.Name = "LabelDepth1";
+            this.LabelDepth1.Size = new System.Drawing.Size(20, 20);
+            this.LabelDepth1.TabIndex = 1;
+            this.LabelDepth1.Text = "1";
+            this.LabelDepth1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // PanelWidth
+            // 
+            this.PanelWidth.Controls.Add(this.LabelWidth20);
+            this.PanelWidth.Controls.Add(this.LabelWidth19);
+            this.PanelWidth.Controls.Add(this.LabelWidth18);
+            this.PanelWidth.Controls.Add(this.LabelWidth17);
+            this.PanelWidth.Controls.Add(this.LabelWidth16);
+            this.PanelWidth.Controls.Add(this.LabelWidth15);
+            this.PanelWidth.Controls.Add(this.LabelWidth14);
+            this.PanelWidth.Controls.Add(this.LabelWidth13);
+            this.PanelWidth.Controls.Add(this.LabelWidth12);
+            this.PanelWidth.Controls.Add(this.LabelWidth11);
+            this.PanelWidth.Controls.Add(this.LabelWidth10);
+            this.PanelWidth.Controls.Add(this.LabelWidth9);
+            this.PanelWidth.Controls.Add(this.LabelWidth8);
+            this.PanelWidth.Controls.Add(this.LabelWidth7);
+            this.PanelWidth.Controls.Add(this.LabelWidth6);
+            this.PanelWidth.Controls.Add(this.LabelWidth5);
+            this.PanelWidth.Controls.Add(this.LabelWidth4);
+            this.PanelWidth.Controls.Add(this.LabelWidth3);
+            this.PanelWidth.Controls.Add(this.LabelWidth2);
+            this.PanelWidth.Controls.Add(this.LabelWidth1);
+            this.PanelWidth.Location = new System.Drawing.Point(36, 352);
+            this.PanelWidth.Name = "PanelWidth";
+            this.PanelWidth.Size = new System.Drawing.Size(1100, 23);
+            this.PanelWidth.TabIndex = 33;
+            // 
+            // LabelWidth20
+            // 
+            this.LabelWidth20.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth20.Location = new System.Drawing.Point(1045, 1);
+            this.LabelWidth20.Name = "LabelWidth20";
+            this.LabelWidth20.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth20.TabIndex = 0;
+            this.LabelWidth20.Text = "20";
+            this.LabelWidth20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth19
+            // 
+            this.LabelWidth19.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth19.Location = new System.Drawing.Point(990, 1);
+            this.LabelWidth19.Name = "LabelWidth19";
+            this.LabelWidth19.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth19.TabIndex = 0;
+            this.LabelWidth19.Text = "19";
+            this.LabelWidth19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth18
+            // 
+            this.LabelWidth18.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth18.Location = new System.Drawing.Point(935, 1);
+            this.LabelWidth18.Name = "LabelWidth18";
+            this.LabelWidth18.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth18.TabIndex = 0;
+            this.LabelWidth18.Text = "18";
+            this.LabelWidth18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth17
+            // 
+            this.LabelWidth17.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth17.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth17.Location = new System.Drawing.Point(880, 1);
+            this.LabelWidth17.Name = "LabelWidth17";
+            this.LabelWidth17.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth17.TabIndex = 0;
+            this.LabelWidth17.Text = "17";
+            this.LabelWidth17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth16
+            // 
+            this.LabelWidth16.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth16.Location = new System.Drawing.Point(825, 1);
+            this.LabelWidth16.Name = "LabelWidth16";
+            this.LabelWidth16.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth16.TabIndex = 0;
+            this.LabelWidth16.Text = "16";
+            this.LabelWidth16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth15
+            // 
+            this.LabelWidth15.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth15.Location = new System.Drawing.Point(770, 1);
+            this.LabelWidth15.Name = "LabelWidth15";
+            this.LabelWidth15.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth15.TabIndex = 0;
+            this.LabelWidth15.Text = "15";
+            this.LabelWidth15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth14
+            // 
+            this.LabelWidth14.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth14.Location = new System.Drawing.Point(715, 1);
+            this.LabelWidth14.Name = "LabelWidth14";
+            this.LabelWidth14.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth14.TabIndex = 0;
+            this.LabelWidth14.Text = "14";
+            this.LabelWidth14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth13
+            // 
+            this.LabelWidth13.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth13.Location = new System.Drawing.Point(660, 1);
+            this.LabelWidth13.Name = "LabelWidth13";
+            this.LabelWidth13.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth13.TabIndex = 0;
+            this.LabelWidth13.Text = "13";
+            this.LabelWidth13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth12
+            // 
+            this.LabelWidth12.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth12.Location = new System.Drawing.Point(605, 1);
+            this.LabelWidth12.Name = "LabelWidth12";
+            this.LabelWidth12.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth12.TabIndex = 0;
+            this.LabelWidth12.Text = "12";
+            this.LabelWidth12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth11
+            // 
+            this.LabelWidth11.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth11.Location = new System.Drawing.Point(550, 1);
+            this.LabelWidth11.Name = "LabelWidth11";
+            this.LabelWidth11.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth11.TabIndex = 0;
+            this.LabelWidth11.Text = "11";
+            this.LabelWidth11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth10
+            // 
+            this.LabelWidth10.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth10.Location = new System.Drawing.Point(495, 1);
+            this.LabelWidth10.Name = "LabelWidth10";
+            this.LabelWidth10.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth10.TabIndex = 0;
+            this.LabelWidth10.Text = "10";
+            this.LabelWidth10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth9
+            // 
+            this.LabelWidth9.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth9.Location = new System.Drawing.Point(440, 1);
+            this.LabelWidth9.Name = "LabelWidth9";
+            this.LabelWidth9.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth9.TabIndex = 0;
+            this.LabelWidth9.Text = "9";
+            this.LabelWidth9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth8
+            // 
+            this.LabelWidth8.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth8.Location = new System.Drawing.Point(385, 1);
+            this.LabelWidth8.Name = "LabelWidth8";
+            this.LabelWidth8.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth8.TabIndex = 0;
+            this.LabelWidth8.Text = "8";
+            this.LabelWidth8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth7
+            // 
+            this.LabelWidth7.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth7.Location = new System.Drawing.Point(330, 1);
+            this.LabelWidth7.Name = "LabelWidth7";
+            this.LabelWidth7.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth7.TabIndex = 0;
+            this.LabelWidth7.Text = "7";
+            this.LabelWidth7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth6
+            // 
+            this.LabelWidth6.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth6.Location = new System.Drawing.Point(275, 1);
+            this.LabelWidth6.Name = "LabelWidth6";
+            this.LabelWidth6.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth6.TabIndex = 0;
+            this.LabelWidth6.Text = "6";
+            this.LabelWidth6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth5
+            // 
+            this.LabelWidth5.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth5.Location = new System.Drawing.Point(220, 1);
+            this.LabelWidth5.Name = "LabelWidth5";
+            this.LabelWidth5.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth5.TabIndex = 0;
+            this.LabelWidth5.Text = "5";
+            this.LabelWidth5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth4
+            // 
+            this.LabelWidth4.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth4.Location = new System.Drawing.Point(165, 1);
+            this.LabelWidth4.Name = "LabelWidth4";
+            this.LabelWidth4.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth4.TabIndex = 0;
+            this.LabelWidth4.Text = "4";
+            this.LabelWidth4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth3
+            // 
+            this.LabelWidth3.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth3.Location = new System.Drawing.Point(110, 1);
+            this.LabelWidth3.Name = "LabelWidth3";
+            this.LabelWidth3.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth3.TabIndex = 0;
+            this.LabelWidth3.Text = "3";
+            this.LabelWidth3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth2
+            // 
+            this.LabelWidth2.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth2.Location = new System.Drawing.Point(55, 1);
+            this.LabelWidth2.Name = "LabelWidth2";
+            this.LabelWidth2.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth2.TabIndex = 0;
+            this.LabelWidth2.Text = "2";
+            this.LabelWidth2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelWidth1
+            // 
+            this.LabelWidth1.BackColor = System.Drawing.Color.Transparent;
+            this.LabelWidth1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelWidth1.Location = new System.Drawing.Point(0, 1);
+            this.LabelWidth1.Name = "LabelWidth1";
+            this.LabelWidth1.Size = new System.Drawing.Size(24, 20);
+            this.LabelWidth1.TabIndex = 0;
+            this.LabelWidth1.Text = "1";
+            this.LabelWidth1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // PanelTray
+            // 
+            this.PanelTray.BackColor = System.Drawing.Color.Blue;
+            this.PanelTray.Controls.Add(this.panel5);
+            this.PanelTray.Controls.Add(this.panel4);
+            this.PanelTray.Controls.Add(this.panel3);
+            this.PanelTray.Controls.Add(this.panel2);
+            this.PanelTray.Controls.Add(this.panel1);
+            this.PanelTray.Location = new System.Drawing.Point(36, 7);
+            this.PanelTray.Name = "PanelTray";
+            this.PanelTray.Size = new System.Drawing.Size(1100, 344);
+            this.PanelTray.TabIndex = 32;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Green;
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.label22);
+            this.panel5.Controls.Add(this.label23);
+            this.panel5.Location = new System.Drawing.Point(661, 173);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(436, 171);
+            this.panel5.TabIndex = 4;
+            // 
+            // label22
+            // 
+            this.label22.BackColor = System.Drawing.Color.Transparent;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.ForeColor = System.Drawing.Color.White;
+            this.label22.Location = new System.Drawing.Point(146, 51);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(150, 20);
+            this.label22.TabIndex = 1;
+            this.label22.Text = "Qty:    356";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label23
+            // 
+            this.label23.BackColor = System.Drawing.Color.Transparent;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.ForeColor = System.Drawing.Color.White;
+            this.label23.Location = new System.Drawing.Point(146, 21);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(150, 20);
+            this.label23.TabIndex = 2;
+            this.label23.Text = "10034581";
+            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.Red;
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel4.Controls.Add(this.label15);
+            this.panel4.Controls.Add(this.label21);
+            this.panel4.Location = new System.Drawing.Point(441, 173);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(220, 172);
+            this.panel4.TabIndex = 3;
+            // 
+            // label15
+            // 
+            this.label15.BackColor = System.Drawing.Color.Transparent;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(36, 50);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(150, 20);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Qty:    0";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label21
+            // 
+            this.label21.BackColor = System.Drawing.Color.Transparent;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.ForeColor = System.Drawing.Color.White;
+            this.label21.Location = new System.Drawing.Point(36, 20);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(150, 20);
+            this.label21.TabIndex = 2;
+            this.label21.Text = "20078564";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Green;
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3.Controls.Add(this.label13);
+            this.panel3.Controls.Add(this.label14);
+            this.panel3.Location = new System.Drawing.Point(441, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(220, 172);
+            this.panel3.TabIndex = 2;
+            // 
+            // label13
+            // 
+            this.label13.BackColor = System.Drawing.Color.Transparent;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(33, 51);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(150, 20);
+            this.label13.TabIndex = 1;
+            this.label13.Text = "Qty:     13";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label14
+            // 
+            this.label14.BackColor = System.Drawing.Color.Transparent;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(33, 21);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(150, 20);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "10012546";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Yellow;
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Controls.Add(this.label4);
+            this.panel2.Location = new System.Drawing.Point(221, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(220, 344);
+            this.panel2.TabIndex = 1;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(33, 50);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(150, 20);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Qty:     4";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(33, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(150, 20);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "10029827";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Green;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.LabelItemNumber);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(220, 344);
+            this.panel1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(33, 50);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(150, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Qty:     24";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelItemNumber
+            // 
+            this.LabelItemNumber.BackColor = System.Drawing.Color.Transparent;
+            this.LabelItemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelItemNumber.ForeColor = System.Drawing.Color.White;
+            this.LabelItemNumber.Location = new System.Drawing.Point(33, 20);
+            this.LabelItemNumber.Name = "LabelItemNumber";
+            this.LabelItemNumber.Size = new System.Drawing.Size(150, 20);
+            this.LabelItemNumber.TabIndex = 0;
+            this.LabelItemNumber.Text = "10049586";
+            this.LabelItemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MBHotActionBackTray
+            // 
+            this.MBHotActionBackTray.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MBHotActionBackTray.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBHotActionBackTray.Location = new System.Drawing.Point(757, 660);
+            this.MBHotActionBackTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotActionBackTray.Name = "MBHotActionBackTray";
+            this.MBHotActionBackTray.Size = new System.Drawing.Size(177, 96);
+            this.MBHotActionBackTray.TabIndex = 31;
+            this.MBHotActionBackTray.Text = "Cancel";
+            this.MBHotActionBackTray.UseSelectable = true;
+            this.MBHotActionBackTray.Click += new System.EventHandler(this.MBHotActionBack_Click);
             // 
             // groupBox1
             // 
@@ -1381,6 +1709,16 @@
             this.groupBox1.TabIndex = 30;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Location";
+            // 
+            // label20
+            // 
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(42, 12);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(75, 18);
+            this.label20.TabIndex = 24;
+            this.label20.Text = "Device";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ComboBoxLocationCodeLocationTray
             // 
@@ -1641,567 +1979,135 @@
             this.label19.Text = "Tray";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // MBHotActionBackTray
-            // 
-            this.MBHotActionBackTray.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBHotActionBackTray.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotActionBackTray.Location = new System.Drawing.Point(757, 660);
-            this.MBHotActionBackTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBHotActionBackTray.Name = "MBHotActionBackTray";
-            this.MBHotActionBackTray.Size = new System.Drawing.Size(177, 96);
-            this.MBHotActionBackTray.TabIndex = 31;
-            this.MBHotActionBackTray.Text = "Cancel";
-            this.MBHotActionBackTray.UseSelectable = true;
-            this.MBHotActionBackTray.Click += new System.EventHandler(this.MBHotActionBack_Click);
-            // 
-            // PanelTray
-            // 
-            this.PanelTray.BackColor = System.Drawing.Color.Blue;
-            this.PanelTray.Controls.Add(this.panel5);
-            this.PanelTray.Controls.Add(this.panel4);
-            this.PanelTray.Controls.Add(this.panel3);
-            this.PanelTray.Controls.Add(this.panel2);
-            this.PanelTray.Controls.Add(this.panel1);
-            this.PanelTray.Location = new System.Drawing.Point(36, 7);
-            this.PanelTray.Name = "PanelTray";
-            this.PanelTray.Size = new System.Drawing.Size(1100, 344);
-            this.PanelTray.TabIndex = 32;
-            // 
-            // label20
-            // 
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(42, 12);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(75, 18);
-            this.label20.TabIndex = 24;
-            this.label20.Text = "Device";
-            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // PanelWidth
-            // 
-            this.PanelWidth.Controls.Add(this.LabelWidth20);
-            this.PanelWidth.Controls.Add(this.LabelWidth19);
-            this.PanelWidth.Controls.Add(this.LabelWidth18);
-            this.PanelWidth.Controls.Add(this.LabelWidth17);
-            this.PanelWidth.Controls.Add(this.LabelWidth16);
-            this.PanelWidth.Controls.Add(this.LabelWidth15);
-            this.PanelWidth.Controls.Add(this.LabelWidth14);
-            this.PanelWidth.Controls.Add(this.LabelWidth13);
-            this.PanelWidth.Controls.Add(this.LabelWidth12);
-            this.PanelWidth.Controls.Add(this.LabelWidth11);
-            this.PanelWidth.Controls.Add(this.LabelWidth10);
-            this.PanelWidth.Controls.Add(this.LabelWidth9);
-            this.PanelWidth.Controls.Add(this.LabelWidth8);
-            this.PanelWidth.Controls.Add(this.LabelWidth7);
-            this.PanelWidth.Controls.Add(this.LabelWidth6);
-            this.PanelWidth.Controls.Add(this.LabelWidth5);
-            this.PanelWidth.Controls.Add(this.LabelWidth4);
-            this.PanelWidth.Controls.Add(this.LabelWidth3);
-            this.PanelWidth.Controls.Add(this.LabelWidth2);
-            this.PanelWidth.Controls.Add(this.LabelWidth1);
-            this.PanelWidth.Location = new System.Drawing.Point(36, 352);
-            this.PanelWidth.Name = "PanelWidth";
-            this.PanelWidth.Size = new System.Drawing.Size(1100, 23);
-            this.PanelWidth.TabIndex = 33;
-            // 
-            // PanelDepth
-            // 
-            this.PanelDepth.Controls.Add(this.LabelDepth8);
-            this.PanelDepth.Controls.Add(this.LabelDepth7);
-            this.PanelDepth.Controls.Add(this.LabelDepth6);
-            this.PanelDepth.Controls.Add(this.LabelDepth5);
-            this.PanelDepth.Controls.Add(this.LabelDepth4);
-            this.PanelDepth.Controls.Add(this.LabelDepth3);
-            this.PanelDepth.Controls.Add(this.LabelDepth2);
-            this.PanelDepth.Controls.Add(this.LabelDepth1);
-            this.PanelDepth.Location = new System.Drawing.Point(10, 7);
-            this.PanelDepth.Name = "PanelDepth";
-            this.PanelDepth.Size = new System.Drawing.Size(25, 344);
-            this.PanelDepth.TabIndex = 34;
-            // 
-            // LabelWidth1
-            // 
-            this.LabelWidth1.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth1.Location = new System.Drawing.Point(0, 1);
-            this.LabelWidth1.Name = "LabelWidth1";
-            this.LabelWidth1.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth1.TabIndex = 0;
-            this.LabelWidth1.Text = "1";
-            this.LabelWidth1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth2
-            // 
-            this.LabelWidth2.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth2.Location = new System.Drawing.Point(55, 1);
-            this.LabelWidth2.Name = "LabelWidth2";
-            this.LabelWidth2.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth2.TabIndex = 0;
-            this.LabelWidth2.Text = "2";
-            this.LabelWidth2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth3
-            // 
-            this.LabelWidth3.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth3.Location = new System.Drawing.Point(110, 1);
-            this.LabelWidth3.Name = "LabelWidth3";
-            this.LabelWidth3.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth3.TabIndex = 0;
-            this.LabelWidth3.Text = "3";
-            this.LabelWidth3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth4
-            // 
-            this.LabelWidth4.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth4.Location = new System.Drawing.Point(165, 1);
-            this.LabelWidth4.Name = "LabelWidth4";
-            this.LabelWidth4.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth4.TabIndex = 0;
-            this.LabelWidth4.Text = "4";
-            this.LabelWidth4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth5
-            // 
-            this.LabelWidth5.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth5.Location = new System.Drawing.Point(220, 1);
-            this.LabelWidth5.Name = "LabelWidth5";
-            this.LabelWidth5.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth5.TabIndex = 0;
-            this.LabelWidth5.Text = "5";
-            this.LabelWidth5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth6
-            // 
-            this.LabelWidth6.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth6.Location = new System.Drawing.Point(275, 1);
-            this.LabelWidth6.Name = "LabelWidth6";
-            this.LabelWidth6.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth6.TabIndex = 0;
-            this.LabelWidth6.Text = "6";
-            this.LabelWidth6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth7
-            // 
-            this.LabelWidth7.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth7.Location = new System.Drawing.Point(330, 1);
-            this.LabelWidth7.Name = "LabelWidth7";
-            this.LabelWidth7.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth7.TabIndex = 0;
-            this.LabelWidth7.Text = "7";
-            this.LabelWidth7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth8
-            // 
-            this.LabelWidth8.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth8.Location = new System.Drawing.Point(385, 1);
-            this.LabelWidth8.Name = "LabelWidth8";
-            this.LabelWidth8.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth8.TabIndex = 0;
-            this.LabelWidth8.Text = "8";
-            this.LabelWidth8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth9
-            // 
-            this.LabelWidth9.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth9.Location = new System.Drawing.Point(440, 1);
-            this.LabelWidth9.Name = "LabelWidth9";
-            this.LabelWidth9.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth9.TabIndex = 0;
-            this.LabelWidth9.Text = "9";
-            this.LabelWidth9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth10
-            // 
-            this.LabelWidth10.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth10.Location = new System.Drawing.Point(495, 1);
-            this.LabelWidth10.Name = "LabelWidth10";
-            this.LabelWidth10.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth10.TabIndex = 0;
-            this.LabelWidth10.Text = "10";
-            this.LabelWidth10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth11
-            // 
-            this.LabelWidth11.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth11.Location = new System.Drawing.Point(550, 1);
-            this.LabelWidth11.Name = "LabelWidth11";
-            this.LabelWidth11.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth11.TabIndex = 0;
-            this.LabelWidth11.Text = "11";
-            this.LabelWidth11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth12
-            // 
-            this.LabelWidth12.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth12.Location = new System.Drawing.Point(605, 1);
-            this.LabelWidth12.Name = "LabelWidth12";
-            this.LabelWidth12.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth12.TabIndex = 0;
-            this.LabelWidth12.Text = "12";
-            this.LabelWidth12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth13
-            // 
-            this.LabelWidth13.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth13.Location = new System.Drawing.Point(660, 1);
-            this.LabelWidth13.Name = "LabelWidth13";
-            this.LabelWidth13.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth13.TabIndex = 0;
-            this.LabelWidth13.Text = "13";
-            this.LabelWidth13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth14
-            // 
-            this.LabelWidth14.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth14.Location = new System.Drawing.Point(715, 1);
-            this.LabelWidth14.Name = "LabelWidth14";
-            this.LabelWidth14.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth14.TabIndex = 0;
-            this.LabelWidth14.Text = "14";
-            this.LabelWidth14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth15
-            // 
-            this.LabelWidth15.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth15.Location = new System.Drawing.Point(770, 1);
-            this.LabelWidth15.Name = "LabelWidth15";
-            this.LabelWidth15.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth15.TabIndex = 0;
-            this.LabelWidth15.Text = "15";
-            this.LabelWidth15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth16
-            // 
-            this.LabelWidth16.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth16.Location = new System.Drawing.Point(825, 1);
-            this.LabelWidth16.Name = "LabelWidth16";
-            this.LabelWidth16.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth16.TabIndex = 0;
-            this.LabelWidth16.Text = "16";
-            this.LabelWidth16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth17
-            // 
-            this.LabelWidth17.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth17.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth17.Location = new System.Drawing.Point(880, 1);
-            this.LabelWidth17.Name = "LabelWidth17";
-            this.LabelWidth17.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth17.TabIndex = 0;
-            this.LabelWidth17.Text = "17";
-            this.LabelWidth17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth18
-            // 
-            this.LabelWidth18.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth18.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth18.Location = new System.Drawing.Point(935, 1);
-            this.LabelWidth18.Name = "LabelWidth18";
-            this.LabelWidth18.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth18.TabIndex = 0;
-            this.LabelWidth18.Text = "18";
-            this.LabelWidth18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth19
-            // 
-            this.LabelWidth19.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth19.Location = new System.Drawing.Point(990, 1);
-            this.LabelWidth19.Name = "LabelWidth19";
-            this.LabelWidth19.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth19.TabIndex = 0;
-            this.LabelWidth19.Text = "19";
-            this.LabelWidth19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelWidth20
-            // 
-            this.LabelWidth20.BackColor = System.Drawing.Color.Transparent;
-            this.LabelWidth20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelWidth20.Location = new System.Drawing.Point(1045, 1);
-            this.LabelWidth20.Name = "LabelWidth20";
-            this.LabelWidth20.Size = new System.Drawing.Size(24, 20);
-            this.LabelWidth20.TabIndex = 0;
-            this.LabelWidth20.Text = "20";
-            this.LabelWidth20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth1
-            // 
-            this.LabelDepth1.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth1.Location = new System.Drawing.Point(3, 324);
-            this.LabelDepth1.Name = "LabelDepth1";
-            this.LabelDepth1.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth1.TabIndex = 1;
-            this.LabelDepth1.Text = "1";
-            this.LabelDepth1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth2
-            // 
-            this.LabelDepth2.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth2.Location = new System.Drawing.Point(3, 281);
-            this.LabelDepth2.Name = "LabelDepth2";
-            this.LabelDepth2.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth2.TabIndex = 1;
-            this.LabelDepth2.Text = "2";
-            this.LabelDepth2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth3
-            // 
-            this.LabelDepth3.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth3.Location = new System.Drawing.Point(3, 238);
-            this.LabelDepth3.Name = "LabelDepth3";
-            this.LabelDepth3.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth3.TabIndex = 1;
-            this.LabelDepth3.Text = "3";
-            this.LabelDepth3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth4
-            // 
-            this.LabelDepth4.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth4.Location = new System.Drawing.Point(3, 195);
-            this.LabelDepth4.Name = "LabelDepth4";
-            this.LabelDepth4.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth4.TabIndex = 1;
-            this.LabelDepth4.Text = "4";
-            this.LabelDepth4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth5
-            // 
-            this.LabelDepth5.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth5.Location = new System.Drawing.Point(3, 152);
-            this.LabelDepth5.Name = "LabelDepth5";
-            this.LabelDepth5.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth5.TabIndex = 1;
-            this.LabelDepth5.Text = "5";
-            this.LabelDepth5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth6
-            // 
-            this.LabelDepth6.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth6.Location = new System.Drawing.Point(3, 109);
-            this.LabelDepth6.Name = "LabelDepth6";
-            this.LabelDepth6.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth6.TabIndex = 1;
-            this.LabelDepth6.Text = "6";
-            this.LabelDepth6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth7
-            // 
-            this.LabelDepth7.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth7.Location = new System.Drawing.Point(3, 66);
-            this.LabelDepth7.Name = "LabelDepth7";
-            this.LabelDepth7.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth7.TabIndex = 1;
-            this.LabelDepth7.Text = "7";
-            this.LabelDepth7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelDepth8
-            // 
-            this.LabelDepth8.BackColor = System.Drawing.Color.Transparent;
-            this.LabelDepth8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDepth8.Location = new System.Drawing.Point(3, 23);
-            this.LabelDepth8.Name = "LabelDepth8";
-            this.LabelDepth8.Size = new System.Drawing.Size(20, 20);
-            this.LabelDepth8.TabIndex = 1;
-            this.LabelDepth8.Text = "8";
-            this.LabelDepth8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Green;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.LabelItemNumber);
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(220, 344);
-            this.panel1.TabIndex = 0;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.Yellow;
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(221, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(220, 344);
-            this.panel2.TabIndex = 1;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.Green;
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel3.Controls.Add(this.label13);
-            this.panel3.Controls.Add(this.label14);
-            this.panel3.Location = new System.Drawing.Point(441, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(220, 172);
-            this.panel3.TabIndex = 2;
-            // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.Red;
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel4.Controls.Add(this.label15);
-            this.panel4.Controls.Add(this.label21);
-            this.panel4.Location = new System.Drawing.Point(441, 173);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(220, 172);
-            this.panel4.TabIndex = 3;
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.Green;
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel5.Controls.Add(this.label22);
-            this.panel5.Controls.Add(this.label23);
-            this.panel5.Location = new System.Drawing.Point(661, 173);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(436, 171);
-            this.panel5.TabIndex = 4;
-            // 
-            // LabelItemNumber
-            // 
-            this.LabelItemNumber.BackColor = System.Drawing.Color.Transparent;
-            this.LabelItemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelItemNumber.ForeColor = System.Drawing.Color.White;
-            this.LabelItemNumber.Location = new System.Drawing.Point(33, 20);
-            this.LabelItemNumber.Name = "LabelItemNumber";
-            this.LabelItemNumber.Size = new System.Drawing.Size(150, 20);
-            this.LabelItemNumber.TabIndex = 0;
-            this.LabelItemNumber.Text = "10049586";
-            this.LabelItemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label1
-            // 
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(33, 50);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Qty:     24";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label3
-            // 
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(33, 50);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(150, 20);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Qty:     4";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label4
-            // 
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(33, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(150, 20);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "10029827";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label13
-            // 
-            this.label13.BackColor = System.Drawing.Color.Transparent;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(33, 51);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(150, 20);
-            this.label13.TabIndex = 1;
-            this.label13.Text = "Qty:     13";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label14
-            // 
-            this.label14.BackColor = System.Drawing.Color.Transparent;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.ForeColor = System.Drawing.Color.White;
-            this.label14.Location = new System.Drawing.Point(33, 21);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(150, 20);
-            this.label14.TabIndex = 2;
-            this.label14.Text = "10012546";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label15
-            // 
-            this.label15.BackColor = System.Drawing.Color.Transparent;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.Color.White;
-            this.label15.Location = new System.Drawing.Point(36, 50);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(150, 20);
-            this.label15.TabIndex = 1;
-            this.label15.Text = "Qty:    0";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label21
-            // 
-            this.label21.BackColor = System.Drawing.Color.Transparent;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.ForeColor = System.Drawing.Color.White;
-            this.label21.Location = new System.Drawing.Point(36, 20);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(150, 20);
-            this.label21.TabIndex = 2;
-            this.label21.Text = "20078564";
-            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label22
-            // 
-            this.label22.BackColor = System.Drawing.Color.Transparent;
-            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.ForeColor = System.Drawing.Color.White;
-            this.label22.Location = new System.Drawing.Point(146, 51);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(150, 20);
-            this.label22.TabIndex = 1;
-            this.label22.Text = "Qty:    356";
-            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label23
-            // 
-            this.label23.BackColor = System.Drawing.Color.Transparent;
-            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.ForeColor = System.Drawing.Color.White;
-            this.label23.Location = new System.Drawing.Point(146, 21);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(150, 20);
-            this.label23.TabIndex = 2;
-            this.label23.Text = "10034581";
-            this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // TextBoxHotPickQuantityTray
+            // 
+            this.TextBoxHotPickQuantityTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxHotPickQuantityTray.Location = new System.Drawing.Point(894, 518);
+            this.TextBoxHotPickQuantityTray.Name = "TextBoxHotPickQuantityTray";
+            this.TextBoxHotPickQuantityTray.Size = new System.Drawing.Size(241, 116);
+            this.TextBoxHotPickQuantityTray.TabIndex = 27;
+            this.TextBoxHotPickQuantityTray.Text = "1";
+            this.TextBoxHotPickQuantityTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label7
+            // 
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(775, 554);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(113, 50);
+            this.label7.TabIndex = 29;
+            this.label7.Text = "Qty";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // MBHotAcceptTray
+            // 
+            this.MBHotAcceptTray.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBHotAcceptTray.Location = new System.Drawing.Point(958, 660);
+            this.MBHotAcceptTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotAcceptTray.Name = "MBHotAcceptTray";
+            this.MBHotAcceptTray.Size = new System.Drawing.Size(177, 96);
+            this.MBHotAcceptTray.TabIndex = 28;
+            this.MBHotAcceptTray.Text = "Accept";
+            this.MBHotAcceptTray.UseSelectable = true;
+            // 
+            // LabelHotPickUOITray
+            // 
+            this.LabelHotPickUOITray.BackColor = System.Drawing.Color.White;
+            this.LabelHotPickUOITray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickUOITray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickUOITray.Location = new System.Drawing.Point(825, 381);
+            this.LabelHotPickUOITray.Name = "LabelHotPickUOITray";
+            this.LabelHotPickUOITray.Size = new System.Drawing.Size(310, 43);
+            this.LabelHotPickUOITray.TabIndex = 24;
+            this.LabelHotPickUOITray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(576, 381);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(243, 43);
+            this.label2.TabIndex = 23;
+            this.label2.Text = "Unit of Issue";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelHotPickDescriptionTray
+            // 
+            this.LabelHotPickDescriptionTray.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelHotPickDescriptionTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickDescriptionTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickDescriptionTray.Location = new System.Drawing.Point(192, 436);
+            this.LabelHotPickDescriptionTray.Name = "LabelHotPickDescriptionTray";
+            this.LabelHotPickDescriptionTray.Size = new System.Drawing.Size(943, 43);
+            this.LabelHotPickDescriptionTray.TabIndex = 26;
+            this.LabelHotPickDescriptionTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelHotPickItemTray
+            // 
+            this.LabelHotPickItemTray.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelHotPickItemTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelHotPickItemTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelHotPickItemTray.Location = new System.Drawing.Point(192, 381);
+            this.LabelHotPickItemTray.Name = "LabelHotPickItemTray";
+            this.LabelHotPickItemTray.Size = new System.Drawing.Size(378, 43);
+            this.LabelHotPickItemTray.TabIndex = 22;
+            this.LabelHotPickItemTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label5
+            // 
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(44, 381);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(142, 43);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Item";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label6
+            // 
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(50, 436);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(136, 43);
+            this.label6.TabIndex = 25;
+            this.label6.Text = "Desc";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelFormTitle
+            // 
+            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
+            this.LabelFormTitle.Name = "LabelFormTitle";
+            this.LabelFormTitle.Size = new System.Drawing.Size(338, 30);
+            this.LabelFormTitle.TabIndex = 28;
+            this.LabelFormTitle.Text = "Jobs";
+            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // mlUserInfo
+            // 
+            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
+            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.mlUserInfo.Name = "mlUserInfo";
+            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
+            this.mlUserInfo.TabIndex = 27;
+            this.mlUserInfo.Text = "Login ?";
+            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelFormHeaderText
+            // 
+            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
+            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 30);
+            this.LabelFormHeaderText.TabIndex = 26;
+            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
+            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmHotAction
             // 
@@ -2231,16 +2137,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).EndInit();
             this.HotActionTray.ResumeLayout(false);
             this.HotActionTray.PerformLayout();
+            this.PanelDepth.ResumeLayout(false);
+            this.PanelWidth.ResumeLayout(false);
+            this.PanelTray.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.PanelTray.ResumeLayout(false);
-            this.PanelWidth.ResumeLayout(false);
-            this.PanelDepth.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2320,12 +2226,6 @@
         private MetroFramework.Controls.MetroButton MBHotActionCount;
         private System.Windows.Forms.TextBox TextBoxFindCostCenter;
         private System.Windows.Forms.Label LabelSlot;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator6;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator5;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator4;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator3;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator2;
-        private CurrentDeviceIndicator.DeviceIndicator CurrentDeviceIndicator1;
         private System.Windows.Forms.TabPage HotActionTray;
         private MetroFramework.Controls.MetroButton MBHotActionBackTray;
         private System.Windows.Forms.GroupBox groupBox1;

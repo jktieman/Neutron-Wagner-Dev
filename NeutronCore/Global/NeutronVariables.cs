@@ -50,5 +50,6 @@ namespace NeutronCore.Global
         public int UploadDelay { get; set; }
         public string ActionCodes { get; set; }
         public bool UseCostCenter { get; set; }
+        public bool UseImages { get; set; }
     }
 }

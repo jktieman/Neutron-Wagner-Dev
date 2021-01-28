@@ -21,6 +21,9 @@ namespace Neutron.Forms
         private bool checkAllDevice2;
         private bool checkAllDevice3;
         private bool checkAllDevice4;
+        private bool checkAllDevice5;
+        private bool checkAllDevice6;
+
         private int currentStationNumber;
 
         public FrmLAC()
@@ -43,6 +46,11 @@ namespace Neutron.Forms
             ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
             ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
             ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+
+
+
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
             ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
             
@@ -99,6 +107,20 @@ namespace Neutron.Forms
             ListViewDevice4.Clear();
             Carrier[] carriers = context.Carriers.ToArray();
             ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+        }
+
+        private void LoadDevice5()
+        {
+            ListViewDevice5.Clear();
+            Carrier[] carriers = context.Carriers.ToArray();
+            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+        }
+
+        private void LoadDevice6()
+        {
+            ListViewDevice6.Clear();
+            Carrier[] carriers = context.Carriers.ToArray();
+            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void ListViewDevice1_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -394,6 +416,124 @@ namespace Neutron.Forms
             }
         }
 
+        //-----------
+        public bool CheckAllDevice5
+        {
+            get { return checkAllDevice5; }
+            set
+            {
+                checkAllDevice5 = value;
+                ButtonSelectDevice5.Text = checkAllDevice5 ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectDevice5_Click(object sender, EventArgs e)
+        {
+            CheckAllDevice5 = !CheckAllDevice5;
+            if (CheckAllDevice5 == true)
+            {
+                CheckDevice5();
+            }
+            else
+            {
+                ClearDevice5();
+            }
+        }
+
+        private void CheckDevice5()
+        {
+            foreach (ListViewItem item in ListViewDevice5.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckDevice5(List<Carrier> carriers)
+        {
+            foreach (ListViewItem item in ListViewDevice5.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var car in carriers)
+                {
+                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    {
+                        item.Checked = true;
+                        //break;
+                    }
+
+                }
+
+            }
+        }
+
+        private void ClearDevice5()
+        {
+            foreach (ListViewItem item in ListViewDevice5.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        //------
+        public bool CheckAllDevice6
+        {
+            get { return checkAllDevice6; }
+            set
+            {
+                checkAllDevice6 = value;
+                ButtonSelectDevice6.Text = checkAllDevice6 ? "Clear All" : "Check All";
+            }
+        }
+
+        private void ButtonSelectDevice6_Click(object sender, EventArgs e)
+        {
+            CheckAllDevice6 = !CheckAllDevice6;
+            if (CheckAllDevice6 == true)
+            {
+                CheckDevice6();
+            }
+            else
+            {
+                ClearDevice6();
+            }
+        }
+
+        private void CheckDevice6()
+        {
+            foreach (ListViewItem item in ListViewDevice6.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void CheckDevice6(List<Carrier> carriers)
+        {
+            foreach (ListViewItem item in ListViewDevice6.Items)
+            {
+                item.Checked = false;  // turn it off first 
+                foreach (var car in carriers)
+                {
+                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    {
+                        item.Checked = true;
+                        //break;
+                    }
+
+                }
+
+            }
+        }
+
+        private void ClearDevice6()
+        {
+            foreach (ListViewItem item in ListViewDevice6.Items)
+            {
+                item.Checked = false;
+            }
+        }
+
+        //------
+
         private void ButtonSaveNewRole_Click(object sender, EventArgs e)
         {
             if (TextBoxNewRole.Text.Length > 3)
@@ -451,6 +591,10 @@ namespace Neutron.Forms
             CheckDevice3(carriers);
             LoadDevice4();
             CheckDevice4(carriers);
+            LoadDevice5();
+            CheckDevice5(carriers);
+            LoadDevice6();
+            CheckDevice6(carriers);
             UpdateInformation();
         }
 
@@ -647,6 +791,80 @@ namespace Neutron.Forms
             context.SaveChanges();
         }
 
+        private void ButtonSaveDevice5_Click(object sender, EventArgs e)
+        {
+            var role = (Role)ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 5).ToList();
+            foreach (var item in carriers)
+            {
+                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                                                                && g.CarrierId == item.CarrierId).FirstOrDefault();
+                if (rc != null)
+                {
+                    context.RoleCarrier.Remove(rc);
+                }
+            }
+            context.SaveChanges();
+            SaveSelectedDevice5(role);
+            RefreshUsersAndCarriers();
+        }
+
+        private void SaveSelectedDevice5(Role role)
+        {
+            foreach (ListViewItem item in ListViewDevice5.Items)
+            {
+                if (item.Checked)
+                {
+                    var carrier = item.Tag as Carrier;
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                                                                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                    if (rc == null)
+                    {
+                        context.RoleCarrier.Add(roleCarrier);
+                    }
+                }
+            }
+            context.SaveChanges();
+        }
+
+        private void ButtonSaveDevice6_Click(object sender, EventArgs e)
+        {
+            var role = (Role)ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 6).ToList();
+            foreach (var item in carriers)
+            {
+                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                                                                && g.CarrierId == item.CarrierId).FirstOrDefault();
+                if (rc != null)
+                {
+                    context.RoleCarrier.Remove(rc);
+                }
+            }
+            context.SaveChanges();
+            SaveSelectedDevice6(role);
+            RefreshUsersAndCarriers();
+        }
+
+        private void SaveSelectedDevice6(Role role)
+        {
+            foreach (ListViewItem item in ListViewDevice6.Items)
+            {
+                if (item.Checked)
+                {
+                    var carrier = item.Tag as Carrier;
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                                                                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                    if (rc == null)
+                    {
+                        context.RoleCarrier.Add(roleCarrier);
+                    }
+                }
+            }
+            context.SaveChanges();
+        }
+
         private void ButtonSaveNewUser_Click(object sender, EventArgs e)
         {
             var role = ComboBoxRoles.SelectedItem as Role;
@@ -702,6 +920,14 @@ namespace Neutron.Forms
             else if (TabControlLAC.SelectedTab == TabControlLAC.TabPages["TabPageDevice4"])
             {
                 LabelDevice4Information.Text = $"The {role.RoleName} Group has Access to All Checked Locations.";
+            }
+            else if (TabControlLAC.SelectedTab == TabControlLAC.TabPages["TabPageDevice5"])
+            {
+                LabelDevice5Information.Text = $"The {role.RoleName} Group has Access to All Checked Locations.";
+            }
+            else if (TabControlLAC.SelectedTab == TabControlLAC.TabPages["TabPageDevice6"])
+            {
+                LabelDevice6Information.Text = $"The {role.RoleName} Group has Access to All Checked Locations.";
             }
         }
 

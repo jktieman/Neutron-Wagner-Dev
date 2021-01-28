@@ -12,29 +12,22 @@ namespace NeutronData.Repositories
 {
     public class AkaRepository : IAkaRepository
     {
-        readonly NeutronDb context = new NeutronDb();
+        private readonly NeutronDb _context = new NeutronDb();
 
         public string Get(string aka)
         {
-            string item = string.Empty;
+            var item = string.Empty;
             try
             {
                 if (!string.IsNullOrEmpty(aka))
                 {
-                    AkaType rec = context.AkaTypes.Find(aka);
-                    if (rec != null)
-                    {
-                        item = rec.Item;
-                    }
-                    else
-                    {
-                        item = aka;
-                    }
+                    var rec = _context.AkaTypes.Find(aka);
+                    item = rec != null ? rec.Item : aka;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                MessageBox.Show($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             return item;

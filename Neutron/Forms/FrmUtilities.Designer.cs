@@ -193,11 +193,13 @@
             this.ComboBoxViewEditDeviceStation = new System.Windows.Forms.ComboBox();
             this.LabelViewEditDeviceStation = new System.Windows.Forms.Label();
             this.ComboBoxViewEditDeviceType = new System.Windows.Forms.ComboBox();
+            this.TextBoxViewEditCarrierLevel = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditCarrierWidth = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditNumberOfCarriers = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditDeviceName = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditDeviceNumber = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditCarrierDepth = new System.Windows.Forms.TextBox();
+            this.LabelViewEditDeviceCarrierLevel = new System.Windows.Forms.Label();
             this.LabelViewEditDeviceLogLevel = new System.Windows.Forms.Label();
             this.LabelViewEditDeviceCarrierWidth = new System.Windows.Forms.Label();
             this.LabelViewEditDeviceNumberOfCarriers = new System.Windows.Forms.Label();
@@ -210,6 +212,8 @@
             this.MBNewDeviceBack = new MetroFramework.Controls.MetroButton();
             this.MBNewDeviceSave = new MetroFramework.Controls.MetroButton();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.TextBoxNewCarrierLevel = new System.Windows.Forms.TextBox();
+            this.LabelNewDeviceCarrierLevel = new System.Windows.Forms.Label();
             this.NumericUpDownNewDeviceLogLevel = new System.Windows.Forms.NumericUpDown();
             this.CheckBoxNewDeviceEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxNewSimulationMode = new System.Windows.Forms.CheckBox();
@@ -358,10 +362,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.LabelViewEditDeviceCarrierLevel = new System.Windows.Forms.Label();
-            this.TextBoxViewEditCarrierLevel = new System.Windows.Forms.TextBox();
-            this.TextBoxNewCarrierLevel = new System.Windows.Forms.TextBox();
-            this.LabelNewDeviceCarrierLevel = new System.Windows.Forms.Label();
+            this.CheckBoxUseImages = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -1095,6 +1096,7 @@
             this.Settings.Controls.Add(this.CheckBoxCreateStoreOrderWithRts);
             this.Settings.Controls.Add(this.LabelLicenseCode);
             this.Settings.Controls.Add(this.LabelSettingsStationNumber);
+            this.Settings.Controls.Add(this.CheckBoxUseImages);
             this.Settings.Controls.Add(this.CheckBoxUseCostCenter);
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListManual);
             this.Settings.Controls.Add(this.CheckBoxRunUploadOnStartup);
@@ -2203,6 +2205,16 @@
             this.ComboBoxViewEditDeviceType.TabIndex = 2;
             this.ComboBoxViewEditDeviceType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxViewEditDeviceType_SelectedIndexChanged);
             // 
+            // TextBoxViewEditCarrierLevel
+            // 
+            this.TextBoxViewEditCarrierLevel.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxViewEditCarrierLevel.Location = new System.Drawing.Point(325, 355);
+            this.TextBoxViewEditCarrierLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxViewEditCarrierLevel.Name = "TextBoxViewEditCarrierLevel";
+            this.TextBoxViewEditCarrierLevel.Size = new System.Drawing.Size(98, 28);
+            this.TextBoxViewEditCarrierLevel.TabIndex = 5;
+            this.TextBoxViewEditCarrierLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // TextBoxViewEditCarrierWidth
             // 
             this.TextBoxViewEditCarrierWidth.BackColor = System.Drawing.SystemColors.Window;
@@ -2252,6 +2264,15 @@
             this.TextBoxViewEditCarrierDepth.Size = new System.Drawing.Size(98, 28);
             this.TextBoxViewEditCarrierDepth.TabIndex = 6;
             this.TextBoxViewEditCarrierDepth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelViewEditDeviceCarrierLevel
+            // 
+            this.LabelViewEditDeviceCarrierLevel.Location = new System.Drawing.Point(123, 351);
+            this.LabelViewEditDeviceCarrierLevel.Name = "LabelViewEditDeviceCarrierLevel";
+            this.LabelViewEditDeviceCarrierLevel.Size = new System.Drawing.Size(196, 36);
+            this.LabelViewEditDeviceCarrierLevel.TabIndex = 0;
+            this.LabelViewEditDeviceCarrierLevel.Text = "Carrier Level";
+            this.LabelViewEditDeviceCarrierLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelViewEditDeviceLogLevel
             // 
@@ -2406,6 +2427,25 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1117, 507);
             this.panel3.TabIndex = 21;
+            // 
+            // TextBoxNewCarrierLevel
+            // 
+            this.TextBoxNewCarrierLevel.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxNewCarrierLevel.Location = new System.Drawing.Point(325, 355);
+            this.TextBoxNewCarrierLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewCarrierLevel.Name = "TextBoxNewCarrierLevel";
+            this.TextBoxNewCarrierLevel.Size = new System.Drawing.Size(98, 28);
+            this.TextBoxNewCarrierLevel.TabIndex = 31;
+            this.TextBoxNewCarrierLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelNewDeviceCarrierLevel
+            // 
+            this.LabelNewDeviceCarrierLevel.Location = new System.Drawing.Point(123, 351);
+            this.LabelNewDeviceCarrierLevel.Name = "LabelNewDeviceCarrierLevel";
+            this.LabelNewDeviceCarrierLevel.Size = new System.Drawing.Size(196, 36);
+            this.LabelNewDeviceCarrierLevel.TabIndex = 30;
+            this.LabelNewDeviceCarrierLevel.Text = "Carrier Level";
+            this.LabelNewDeviceCarrierLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // NumericUpDownNewDeviceLogLevel
             // 
@@ -4215,43 +4255,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // LabelViewEditDeviceCarrierLevel
+            // CheckBoxUseImages
             // 
-            this.LabelViewEditDeviceCarrierLevel.Location = new System.Drawing.Point(123, 351);
-            this.LabelViewEditDeviceCarrierLevel.Name = "LabelViewEditDeviceCarrierLevel";
-            this.LabelViewEditDeviceCarrierLevel.Size = new System.Drawing.Size(196, 36);
-            this.LabelViewEditDeviceCarrierLevel.TabIndex = 0;
-            this.LabelViewEditDeviceCarrierLevel.Text = "Carrier Level";
-            this.LabelViewEditDeviceCarrierLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TextBoxViewEditCarrierLevel
-            // 
-            this.TextBoxViewEditCarrierLevel.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxViewEditCarrierLevel.Location = new System.Drawing.Point(325, 355);
-            this.TextBoxViewEditCarrierLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxViewEditCarrierLevel.Name = "TextBoxViewEditCarrierLevel";
-            this.TextBoxViewEditCarrierLevel.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxViewEditCarrierLevel.TabIndex = 5;
-            this.TextBoxViewEditCarrierLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TextBoxNewCarrierLevel
-            // 
-            this.TextBoxNewCarrierLevel.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxNewCarrierLevel.Location = new System.Drawing.Point(325, 355);
-            this.TextBoxNewCarrierLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxNewCarrierLevel.Name = "TextBoxNewCarrierLevel";
-            this.TextBoxNewCarrierLevel.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxNewCarrierLevel.TabIndex = 31;
-            this.TextBoxNewCarrierLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelNewDeviceCarrierLevel
-            // 
-            this.LabelNewDeviceCarrierLevel.Location = new System.Drawing.Point(123, 351);
-            this.LabelNewDeviceCarrierLevel.Name = "LabelNewDeviceCarrierLevel";
-            this.LabelNewDeviceCarrierLevel.Size = new System.Drawing.Size(196, 36);
-            this.LabelNewDeviceCarrierLevel.TabIndex = 30;
-            this.LabelNewDeviceCarrierLevel.Text = "Carrier Level";
-            this.LabelNewDeviceCarrierLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.CheckBoxUseImages.AutoSize = true;
+            this.CheckBoxUseImages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseImages.Location = new System.Drawing.Point(841, 379);
+            this.CheckBoxUseImages.Name = "CheckBoxUseImages";
+            this.CheckBoxUseImages.Size = new System.Drawing.Size(100, 20);
+            this.CheckBoxUseImages.TabIndex = 8;
+            this.CheckBoxUseImages.Text = "Use Images";
+            this.CheckBoxUseImages.UseVisualStyleBackColor = true;
             // 
             // FrmUtilities
             // 
@@ -4646,5 +4659,6 @@
         private System.Windows.Forms.Label LabelViewEditDeviceCarrierLevel;
         private System.Windows.Forms.TextBox TextBoxNewCarrierLevel;
         private System.Windows.Forms.Label LabelNewDeviceCarrierLevel;
+        private System.Windows.Forms.CheckBox CheckBoxUseImages;
     }
 }

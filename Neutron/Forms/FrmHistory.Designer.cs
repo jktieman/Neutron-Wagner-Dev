@@ -83,7 +83,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.RoyalBlue;
+            this.tabPage1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tabPage1.Controls.Add(this.ButtonClearAll);
             this.tabPage1.Controls.Add(this.ButtonCheckAll);
             this.tabPage1.Controls.Add(this.GroupBoxActionCodes);
@@ -146,6 +146,7 @@
             // 
             // PanelDateRanges
             // 
+            this.PanelDateRanges.BackColor = System.Drawing.SystemColors.Control;
             this.PanelDateRanges.Controls.Add(this.LabelTo);
             this.PanelDateRanges.Controls.Add(this.DateTimePickerTo);
             this.PanelDateRanges.Controls.Add(this.LabelFrom);
@@ -317,6 +318,7 @@
             this.DataGridView1.AllowUserToAddRows = false;
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.AllowUserToOrderColumns = true;
+            this.DataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
             this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DataGridView1.Location = new System.Drawing.Point(211, 126);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

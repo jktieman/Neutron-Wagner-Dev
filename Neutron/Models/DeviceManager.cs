@@ -22,7 +22,7 @@ namespace Neutron.Models
         // private Dictionary<int, Location> _currentLocations = new Dictionary<int, Location>();
         private DynamicLogger _logger;
         private Location[] _currentLocations = new Location[5];
-        private bool _firstMove = true;
+        private bool _firstMove;
 
 
         public DeviceManager(List<PickStop> car1List, List<PickStop> car2List

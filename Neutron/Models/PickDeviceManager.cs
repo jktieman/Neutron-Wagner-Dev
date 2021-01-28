@@ -1,24 +1,22 @@
-﻿using EnumsNET;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using EnumsNET;
 using Neutron.Enums;
 using Neutron.Global;
 using NeutronData.Models;
 using NeutronData.ModelViews;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Neutron.Models
 {
-    public class ReplenDeviceManager
+    public class PickDeviceManager
     {
         private readonly List<DeviceMover> _deviceMovers = new List<DeviceMover>();
         private readonly bool _shuttleEnabled = true;
         private Dictionary<int, Location> _currentLocations = new Dictionary<int, Location>();
 
-        public ReplenDeviceManager(List<List<ReplenPickStop>> carList, bool shuttleEnabled)
+        public PickDeviceManager(List<List<PickStop>> carList, bool shuttleEnabled)
         {
             for (int i = 0; i < carList.Count; i++)
             {
@@ -29,7 +27,7 @@ namespace Neutron.Models
             _shuttleEnabled = shuttleEnabled;
         }
 
-        private DeviceMover CreateDeviceMover(int deviceNumber, List<ReplenPickStop> carList)
+        private DeviceMover CreateDeviceMover(int deviceNumber, List<PickStop> carList)
         {
             bool firstLocation = true;
             var locs = new List<Location>();

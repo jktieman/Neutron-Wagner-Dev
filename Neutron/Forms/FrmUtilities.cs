@@ -668,6 +668,7 @@ namespace Neutron.Forms
             _neutronVariables.UploadDelay = TextBoxUploadDelay.Text.ParseInt();
             _neutronVariables.ActionCodes = TextBoxActionCodes.Text;
             _neutronVariables.UseCostCenter = CheckBoxUseCostCenter.Checked;
+            _neutronVariables.UseImages = CheckBoxUseImages.Checked;
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
@@ -754,6 +755,7 @@ namespace Neutron.Forms
             TextBoxActionCodes.Text = _neutronVariables.ActionCodes;
             SetPickMethod(_neutronVariables.PickMethod);
             CheckBoxUseCostCenter.Checked = _neutronVariables.UseCostCenter;
+            CheckBoxUseImages.Checked = _neutronVariables.UseImages;
 
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
         }

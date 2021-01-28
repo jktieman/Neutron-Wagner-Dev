@@ -80,6 +80,16 @@
             this.LabelSelectRole = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ComboBoxStation = new System.Windows.Forms.ComboBox();
+            this.TabPageDevice5 = new System.Windows.Forms.TabPage();
+            this.TabPageDevice6 = new System.Windows.Forms.TabPage();
+            this.LabelDevice5Information = new System.Windows.Forms.Label();
+            this.ButtonSaveDevice5 = new System.Windows.Forms.Button();
+            this.ButtonSelectDevice5 = new System.Windows.Forms.Button();
+            this.ListViewDevice5 = new System.Windows.Forms.ListView();
+            this.LabelDevice6Information = new System.Windows.Forms.Label();
+            this.ButtonSaveDevice6 = new System.Windows.Forms.Button();
+            this.ButtonSelectDevice6 = new System.Windows.Forms.Button();
+            this.ListViewDevice6 = new System.Windows.Forms.ListView();
             this.TabControlLAC.SuspendLayout();
             this.TabPageUsers.SuspendLayout();
             this.TabPageRoles.SuspendLayout();
@@ -89,6 +99,8 @@
             this.TabPageDevice4.SuspendLayout();
             this.TabPageNewUser.SuspendLayout();
             this.PanelNewUser.SuspendLayout();
+            this.TabPageDevice5.SuspendLayout();
+            this.TabPageDevice6.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabControlLAC
@@ -99,6 +111,8 @@
             this.TabControlLAC.Controls.Add(this.TabPageDevice2);
             this.TabControlLAC.Controls.Add(this.TabPageDevice3);
             this.TabControlLAC.Controls.Add(this.TabPageDevice4);
+            this.TabControlLAC.Controls.Add(this.TabPageDevice5);
+            this.TabControlLAC.Controls.Add(this.TabPageDevice6);
             this.TabControlLAC.Controls.Add(this.TabPageNewUser);
             this.TabControlLAC.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TabControlLAC.Location = new System.Drawing.Point(8, 105);
@@ -643,12 +657,122 @@
             this.ComboBoxStation.TabIndex = 6;
             this.ComboBoxStation.SelectedIndexChanged += new System.EventHandler(this.ComboBoxStation_SelectedIndexChanged);
             // 
+            // TabPageDevice5
+            // 
+            this.TabPageDevice5.Controls.Add(this.LabelDevice5Information);
+            this.TabPageDevice5.Controls.Add(this.ButtonSaveDevice5);
+            this.TabPageDevice5.Controls.Add(this.ButtonSelectDevice5);
+            this.TabPageDevice5.Controls.Add(this.ListViewDevice5);
+            this.TabPageDevice5.Location = new System.Drawing.Point(4, 29);
+            this.TabPageDevice5.Margin = new System.Windows.Forms.Padding(4);
+            this.TabPageDevice5.Name = "TabPageDevice5";
+            this.TabPageDevice5.Padding = new System.Windows.Forms.Padding(4);
+            this.TabPageDevice5.Size = new System.Drawing.Size(692, 512);
+            this.TabPageDevice5.TabIndex = 7;
+            this.TabPageDevice5.Text = "Device 5";
+            this.TabPageDevice5.UseVisualStyleBackColor = true;
+            // 
+            // TabPageDevice6
+            // 
+            this.TabPageDevice6.Controls.Add(this.LabelDevice6Information);
+            this.TabPageDevice6.Controls.Add(this.ButtonSaveDevice6);
+            this.TabPageDevice6.Controls.Add(this.ButtonSelectDevice6);
+            this.TabPageDevice6.Controls.Add(this.ListViewDevice6);
+            this.TabPageDevice6.Location = new System.Drawing.Point(4, 29);
+            this.TabPageDevice6.Margin = new System.Windows.Forms.Padding(4);
+            this.TabPageDevice6.Name = "TabPageDevice6";
+            this.TabPageDevice6.Padding = new System.Windows.Forms.Padding(4);
+            this.TabPageDevice6.Size = new System.Drawing.Size(692, 512);
+            this.TabPageDevice6.TabIndex = 8;
+            this.TabPageDevice6.Text = "Device 6";
+            this.TabPageDevice6.UseVisualStyleBackColor = true;
+            // 
+            // LabelDevice5Information
+            // 
+            this.LabelDevice5Information.Location = new System.Drawing.Point(21, 19);
+            this.LabelDevice5Information.Name = "LabelDevice5Information";
+            this.LabelDevice5Information.Size = new System.Drawing.Size(648, 29);
+            this.LabelDevice5Information.TabIndex = 18;
+            this.LabelDevice5Information.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ButtonSaveDevice5
+            // 
+            this.ButtonSaveDevice5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSaveDevice5.Location = new System.Drawing.Point(128, 69);
+            this.ButtonSaveDevice5.Name = "ButtonSaveDevice5";
+            this.ButtonSaveDevice5.Size = new System.Drawing.Size(108, 33);
+            this.ButtonSaveDevice5.TabIndex = 17;
+            this.ButtonSaveDevice5.Text = "Save";
+            this.ButtonSaveDevice5.UseVisualStyleBackColor = true;
+            // 
+            // ButtonSelectDevice5
+            // 
+            this.ButtonSelectDevice5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSelectDevice5.Location = new System.Drawing.Point(8, 69);
+            this.ButtonSelectDevice5.Name = "ButtonSelectDevice5";
+            this.ButtonSelectDevice5.Size = new System.Drawing.Size(108, 33);
+            this.ButtonSelectDevice5.TabIndex = 16;
+            this.ButtonSelectDevice5.Text = "Check All";
+            this.ButtonSelectDevice5.UseVisualStyleBackColor = true;
+            // 
+            // ListViewDevice5
+            // 
+            this.ListViewDevice5.CheckBoxes = true;
+            this.ListViewDevice5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListViewDevice5.Location = new System.Drawing.Point(8, 109);
+            this.ListViewDevice5.Margin = new System.Windows.Forms.Padding(4);
+            this.ListViewDevice5.Name = "ListViewDevice5";
+            this.ListViewDevice5.Size = new System.Drawing.Size(676, 384);
+            this.ListViewDevice5.TabIndex = 15;
+            this.ListViewDevice5.UseCompatibleStateImageBehavior = false;
+            this.ListViewDevice5.View = System.Windows.Forms.View.List;
+            // 
+            // LabelDevice6Information
+            // 
+            this.LabelDevice6Information.Location = new System.Drawing.Point(21, 19);
+            this.LabelDevice6Information.Name = "LabelDevice6Information";
+            this.LabelDevice6Information.Size = new System.Drawing.Size(648, 29);
+            this.LabelDevice6Information.TabIndex = 18;
+            this.LabelDevice6Information.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ButtonSaveDevice6
+            // 
+            this.ButtonSaveDevice6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSaveDevice6.Location = new System.Drawing.Point(128, 69);
+            this.ButtonSaveDevice6.Name = "ButtonSaveDevice6";
+            this.ButtonSaveDevice6.Size = new System.Drawing.Size(108, 33);
+            this.ButtonSaveDevice6.TabIndex = 17;
+            this.ButtonSaveDevice6.Text = "Save";
+            this.ButtonSaveDevice6.UseVisualStyleBackColor = true;
+            // 
+            // ButtonSelectDevice6
+            // 
+            this.ButtonSelectDevice6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSelectDevice6.Location = new System.Drawing.Point(8, 69);
+            this.ButtonSelectDevice6.Name = "ButtonSelectDevice6";
+            this.ButtonSelectDevice6.Size = new System.Drawing.Size(108, 33);
+            this.ButtonSelectDevice6.TabIndex = 16;
+            this.ButtonSelectDevice6.Text = "Check All";
+            this.ButtonSelectDevice6.UseVisualStyleBackColor = true;
+            // 
+            // ListViewDevice6
+            // 
+            this.ListViewDevice6.CheckBoxes = true;
+            this.ListViewDevice6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListViewDevice6.Location = new System.Drawing.Point(8, 109);
+            this.ListViewDevice6.Margin = new System.Windows.Forms.Padding(4);
+            this.ListViewDevice6.Name = "ListViewDevice6";
+            this.ListViewDevice6.Size = new System.Drawing.Size(676, 384);
+            this.ListViewDevice6.TabIndex = 15;
+            this.ListViewDevice6.UseCompatibleStateImageBehavior = false;
+            this.ListViewDevice6.View = System.Windows.Forms.View.List;
+            // 
             // FrmLAC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.ClientSize = new System.Drawing.Size(716, 654);
+            this.BackColor = System.Drawing.Color.DarkGray;
+            this.ClientSize = new System.Drawing.Size(715, 654);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ComboBoxStation);
             this.Controls.Add(this.LabelSelectRole);
@@ -672,6 +796,8 @@
             this.TabPageNewUser.ResumeLayout(false);
             this.PanelNewUser.ResumeLayout(false);
             this.PanelNewUser.PerformLayout();
+            this.TabPageDevice5.ResumeLayout(false);
+            this.TabPageDevice6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -729,6 +855,16 @@
         private System.Windows.Forms.Label LabelDevice4Information;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox ComboBoxStation;
+        private System.Windows.Forms.TabPage TabPageDevice5;
+        private System.Windows.Forms.Label LabelDevice5Information;
+        private System.Windows.Forms.Button ButtonSaveDevice5;
+        private System.Windows.Forms.Button ButtonSelectDevice5;
+        private System.Windows.Forms.ListView ListViewDevice5;
+        private System.Windows.Forms.TabPage TabPageDevice6;
+        private System.Windows.Forms.Label LabelDevice6Information;
+        private System.Windows.Forms.Button ButtonSaveDevice6;
+        private System.Windows.Forms.Button ButtonSelectDevice6;
+        private System.Windows.Forms.ListView ListViewDevice6;
     }
 }
 

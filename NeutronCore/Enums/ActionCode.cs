@@ -102,5 +102,11 @@ namespace NeutronCore.Enums
         SkipReplen = 50,
         [Description("Skip Pick")]
         SkipPick = 51,
+        [Description("Rack Adjust")]
+        RackAdjust = 52,
+        [Description("Kill Line")]
+        KillLine = 53,
+        [Description("Kill Order")]
+        KillOrder = 54
     }
 }

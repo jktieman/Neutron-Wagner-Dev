@@ -60,7 +60,7 @@
             this.CheckBoxViewEditInUse.AutoSize = true;
             this.CheckBoxViewEditInUse.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxViewEditInUse.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxViewEditInUse.Location = new System.Drawing.Point(683, 53);
+            this.CheckBoxViewEditInUse.Location = new System.Drawing.Point(582, 59);
             this.CheckBoxViewEditInUse.Margin = new System.Windows.Forms.Padding(6);
             this.CheckBoxViewEditInUse.Name = "CheckBoxViewEditInUse";
             this.CheckBoxViewEditInUse.Size = new System.Drawing.Size(71, 20);
@@ -73,7 +73,7 @@
             // 
             this.LabelViewEditSlot.AutoSize = true;
             this.LabelViewEditSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditSlot.Location = new System.Drawing.Point(503, 110);
+            this.LabelViewEditSlot.Location = new System.Drawing.Point(402, 116);
             this.LabelViewEditSlot.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditSlot.Name = "LabelViewEditSlot";
             this.LabelViewEditSlot.Size = new System.Drawing.Size(35, 16);
@@ -85,7 +85,7 @@
             // 
             this.ComboBoxViewEditDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditDevice.FormattingEnabled = true;
-            this.ComboBoxViewEditDevice.Location = new System.Drawing.Point(189, 98);
+            this.ComboBoxViewEditDevice.Location = new System.Drawing.Point(88, 104);
             this.ComboBoxViewEditDevice.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.ComboBoxViewEditDevice.Name = "ComboBoxViewEditDevice";
             this.ComboBoxViewEditDevice.Size = new System.Drawing.Size(176, 32);
@@ -93,7 +93,7 @@
             // 
             // TextBoxViewEditLoc5
             // 
-            this.TextBoxViewEditLoc5.Location = new System.Drawing.Point(189, 293);
+            this.TextBoxViewEditLoc5.Location = new System.Drawing.Point(88, 299);
             this.TextBoxViewEditLoc5.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.TextBoxViewEditLoc5.Name = "TextBoxViewEditLoc5";
             this.TextBoxViewEditLoc5.ReadOnly = true;
@@ -103,7 +103,7 @@
             // 
             // TextBoxViewEditLoc4
             // 
-            this.TextBoxViewEditLoc4.Location = new System.Drawing.Point(189, 245);
+            this.TextBoxViewEditLoc4.Location = new System.Drawing.Point(88, 251);
             this.TextBoxViewEditLoc4.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.TextBoxViewEditLoc4.Name = "TextBoxViewEditLoc4";
             this.TextBoxViewEditLoc4.ReadOnly = true;
@@ -113,7 +113,7 @@
             // 
             // TextBoxViewEditLoc3
             // 
-            this.TextBoxViewEditLoc3.Location = new System.Drawing.Point(189, 197);
+            this.TextBoxViewEditLoc3.Location = new System.Drawing.Point(88, 203);
             this.TextBoxViewEditLoc3.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.TextBoxViewEditLoc3.Name = "TextBoxViewEditLoc3";
             this.TextBoxViewEditLoc3.ReadOnly = true;
@@ -123,7 +123,7 @@
             // 
             // TextBoxViewEditLoc2
             // 
-            this.TextBoxViewEditLoc2.Location = new System.Drawing.Point(189, 149);
+            this.TextBoxViewEditLoc2.Location = new System.Drawing.Point(88, 155);
             this.TextBoxViewEditLoc2.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.TextBoxViewEditLoc2.Name = "TextBoxViewEditLoc2";
             this.TextBoxViewEditLoc2.ReadOnly = true;
@@ -133,7 +133,7 @@
             // 
             // TextBoxViewEditSlot
             // 
-            this.TextBoxViewEditSlot.Location = new System.Drawing.Point(553, 101);
+            this.TextBoxViewEditSlot.Location = new System.Drawing.Point(452, 107);
             this.TextBoxViewEditSlot.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.TextBoxViewEditSlot.Name = "TextBoxViewEditSlot";
             this.TextBoxViewEditSlot.ReadOnly = true;
@@ -145,7 +145,7 @@
             // 
             this.LabelViewEditTag.AutoSize = true;
             this.LabelViewEditTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditTag.Location = new System.Drawing.Point(141, 299);
+            this.LabelViewEditTag.Location = new System.Drawing.Point(40, 305);
             this.LabelViewEditTag.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditTag.Name = "LabelViewEditTag";
             this.LabelViewEditTag.Size = new System.Drawing.Size(36, 16);
@@ -157,7 +157,7 @@
             // 
             this.LabelViewEditBack.AutoSize = true;
             this.LabelViewEditBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditBack.Location = new System.Drawing.Point(134, 254);
+            this.LabelViewEditBack.Location = new System.Drawing.Point(33, 260);
             this.LabelViewEditBack.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditBack.Name = "LabelViewEditBack";
             this.LabelViewEditBack.Size = new System.Drawing.Size(43, 16);
@@ -169,7 +169,7 @@
             // 
             this.LabelViewEditOver.AutoSize = true;
             this.LabelViewEditOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditOver.Location = new System.Drawing.Point(136, 206);
+            this.LabelViewEditOver.Location = new System.Drawing.Point(35, 212);
             this.LabelViewEditOver.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditOver.Name = "LabelViewEditOver";
             this.LabelViewEditOver.Size = new System.Drawing.Size(41, 16);
@@ -181,7 +181,7 @@
             // 
             this.LabelViewEditTray.AutoSize = true;
             this.LabelViewEditTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditTray.Location = new System.Drawing.Point(137, 158);
+            this.LabelViewEditTray.Location = new System.Drawing.Point(36, 164);
             this.LabelViewEditTray.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditTray.Name = "LabelViewEditTray";
             this.LabelViewEditTray.Size = new System.Drawing.Size(40, 16);
@@ -193,7 +193,7 @@
             // 
             this.LabelViewEditDevice.AutoSize = true;
             this.LabelViewEditDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditDevice.Location = new System.Drawing.Point(120, 107);
+            this.LabelViewEditDevice.Location = new System.Drawing.Point(19, 113);
             this.LabelViewEditDevice.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditDevice.Name = "LabelViewEditDevice";
             this.LabelViewEditDevice.Size = new System.Drawing.Size(57, 16);
@@ -205,7 +205,7 @@
             // 
             this.LabelViewEditStation.AutoSize = true;
             this.LabelViewEditStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditStation.Location = new System.Drawing.Point(121, 54);
+            this.LabelViewEditStation.Location = new System.Drawing.Point(20, 60);
             this.LabelViewEditStation.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditStation.Name = "LabelViewEditStation";
             this.LabelViewEditStation.Size = new System.Drawing.Size(56, 16);
@@ -216,7 +216,7 @@
             // 
             this.ComboBoxViewEditLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditLocationCode.FormattingEnabled = true;
-            this.ComboBoxViewEditLocationCode.Location = new System.Drawing.Point(553, 290);
+            this.ComboBoxViewEditLocationCode.Location = new System.Drawing.Point(452, 296);
             this.ComboBoxViewEditLocationCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditLocationCode.Name = "ComboBoxViewEditLocationCode";
             this.ComboBoxViewEditLocationCode.Size = new System.Drawing.Size(345, 32);
@@ -226,7 +226,7 @@
             // 
             this.LabelViewEditLocation.AutoSize = true;
             this.LabelViewEditLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditLocation.Location = new System.Drawing.Point(474, 295);
+            this.LabelViewEditLocation.Location = new System.Drawing.Point(373, 301);
             this.LabelViewEditLocation.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditLocation.Name = "LabelViewEditLocation";
             this.LabelViewEditLocation.Size = new System.Drawing.Size(67, 16);
@@ -238,7 +238,7 @@
             // 
             this.ComboBoxViewEditHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditHeightCode.FormattingEnabled = true;
-            this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(553, 242);
+            this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(452, 248);
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(345, 32);
@@ -248,7 +248,7 @@
             // 
             this.LabelViewEditHeight.AutoSize = true;
             this.LabelViewEditHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditHeight.Location = new System.Drawing.Point(488, 247);
+            this.LabelViewEditHeight.Location = new System.Drawing.Point(387, 253);
             this.LabelViewEditHeight.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditHeight.Name = "LabelViewEditHeight";
             this.LabelViewEditHeight.Size = new System.Drawing.Size(53, 16);
@@ -260,7 +260,7 @@
             // 
             this.ComboBoxViewEditVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditVelocityCode.FormattingEnabled = true;
-            this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(553, 194);
+            this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(452, 200);
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditVelocityCode.Name = "ComboBoxViewEditVelocityCode";
             this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(345, 32);
@@ -270,7 +270,7 @@
             // 
             this.LabelViewEditVelocity.AutoSize = true;
             this.LabelViewEditVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditVelocity.Location = new System.Drawing.Point(477, 198);
+            this.LabelViewEditVelocity.Location = new System.Drawing.Point(376, 204);
             this.LabelViewEditVelocity.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditVelocity.Name = "LabelViewEditVelocity";
             this.LabelViewEditVelocity.Size = new System.Drawing.Size(64, 16);
@@ -282,7 +282,7 @@
             // 
             this.ComboBoxViewEditSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditSizeCode.FormattingEnabled = true;
-            this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(553, 146);
+            this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(452, 152);
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditSizeCode.Name = "ComboBoxViewEditSizeCode";
             this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(345, 32);
@@ -292,7 +292,7 @@
             // 
             this.LabelViewEditSize.AutoSize = true;
             this.LabelViewEditSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditSize.Location = new System.Drawing.Point(503, 150);
+            this.LabelViewEditSize.Location = new System.Drawing.Point(402, 156);
             this.LabelViewEditSize.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.LabelViewEditSize.Name = "LabelViewEditSize";
             this.LabelViewEditSize.Size = new System.Drawing.Size(38, 16);
@@ -305,7 +305,7 @@
             this.ButtonCancel.AutoSize = true;
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancel.Location = new System.Drawing.Point(632, 345);
+            this.ButtonCancel.Location = new System.Drawing.Point(531, 351);
             this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(122, 52);
@@ -319,7 +319,7 @@
             this.ButtonSave.AutoSize = true;
             this.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ButtonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(797, 345);
+            this.ButtonSave.Location = new System.Drawing.Point(696, 351);
             this.ButtonSave.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(103, 52);
@@ -330,7 +330,7 @@
             // 
             // TextBoxViewEditStation
             // 
-            this.TextBoxViewEditStation.Location = new System.Drawing.Point(189, 45);
+            this.TextBoxViewEditStation.Location = new System.Drawing.Point(88, 51);
             this.TextBoxViewEditStation.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.TextBoxViewEditStation.Name = "TextBoxViewEditStation";
             this.TextBoxViewEditStation.ReadOnly = true;
@@ -342,8 +342,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.ClientSize = new System.Drawing.Size(929, 424);
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.ClientSize = new System.Drawing.Size(834, 461);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.ComboBoxViewEditLocationCode);
@@ -372,7 +372,8 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "FrmEditLocationDefinition";
-            this.Text = "FrmEditLocationDefinition";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Location Definition";
             this.ResumeLayout(false);
             this.PerformLayout();
 

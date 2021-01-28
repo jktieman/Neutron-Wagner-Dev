@@ -41,6 +41,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.LabelChangeQuantityPosition);
             this.panel1.Controls.Add(this.TextBoxChangeQuantityPosition);
@@ -125,7 +126,7 @@
             // 
             this.AcceptButton = this.MBChangeQuantitySave;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.RoyalBlue;
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.CancelButton = this.MBChangeQuantityCancel;
             this.ClientSize = new System.Drawing.Size(405, 486);
             this.ControlBox = false;
