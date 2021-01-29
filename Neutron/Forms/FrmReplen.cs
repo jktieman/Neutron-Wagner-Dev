@@ -60,7 +60,7 @@ namespace Neutron.Forms
         //private string textToFind = string.Empty;
 
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
+       // private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocationRepository = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
@@ -190,11 +190,11 @@ namespace Neutron.Forms
 
         private void UpdateNomenclature()
         {
-            MBStoreAccept.Text = _nomenclature.MBStoreAccept;
-            LabelTray.Text = _nomenclature.LabelTray;
-            LabelOver.Text = _nomenclature.LabelOver;
-            LabelBack.Text = _nomenclature.LabelBack;
-            LabelDevice.Text = _nomenclature.LabelDevice;
+            //MBStoreAccept.Text = _nomenclature.MBStoreAccept;
+            //LabelTray.Text = _nomenclature.LabelTray;
+            //LabelOver.Text = _nomenclature.LabelOver;
+            //LabelBack.Text = _nomenclature.LabelBack;
+            //LabelDevice.Text = _nomenclature.LabelDevice;
         }
 
         private void FrmReplen_Load(object sender, EventArgs e)
@@ -4175,7 +4175,7 @@ namespace Neutron.Forms
                 NewQty = qty,
                 CountDate = System.DateTime.Now,
             };
-            _repoLocationCount.Insert(cnt);
+           // _repoLocationCount.Insert(cnt);
             GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, cnt);
         }
 

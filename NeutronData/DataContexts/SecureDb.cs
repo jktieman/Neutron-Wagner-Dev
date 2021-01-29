@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NeutronData.Models.Lookups;
 
 namespace NeutronData.DataContexts
 {
@@ -14,11 +15,11 @@ namespace NeutronData.DataContexts
 
         public DbSet<Station> Stations { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Language> Languages { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Carrier> Carriers { get; set; }
-        //public DbSet<SecureItem> SecureItems { get; set; }
         public DbSet<RoleUser> RoleUser { get; set; }
         public DbSet<RoleCarrier> RoleCarrier { get; set; }
         public DbSet<GroupUser> GroupUser { get; set; }

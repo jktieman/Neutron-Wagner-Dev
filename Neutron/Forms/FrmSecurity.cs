@@ -8,6 +8,7 @@ using NeutronData.Models.Lookups;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Migrations;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -30,17 +31,19 @@ namespace Neutron.Forms
         private bool _checkAllUsers;
         private bool _checkAllSecureItems;
         private SecureItem[] _secureItems;
-        readonly INomenclature _nomenclature;
         private readonly NeutronVariables _neutronVariables;
         private User _currentUser;
+        private List<User> _allUsers = new List<User>();
+        public bool CloseButtonPressed { get; set; }
+
         public FrmSecurity(INomenclature nomenclature, NeutronVariables neutronVariables)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
-            _nomenclature = nomenclature;
             _neutronVariables = neutronVariables;
             ButtonDeleteEditUser.Enabled = false;
+            CloseButtonPressed = false;
             SetupGrids();
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -50,17 +53,29 @@ namespace Neutron.Forms
             // SecureItem[] secureItems = context.SecureItems.ToArray();
             var groups = _context.Groups.ToArray();
             var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToArray();
-            var allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
+            _allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
             ListViewGroups.Items.AddRange(groups.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
             ListViewSecureItems.Items.AddRange(_secureItems.Select(r => new ListViewItem { Text = r.Name, Tag = r }).ToArray());
             ComboBoxGroups.DataSource = groups.ToList();
             ComboBoxGroups.DisplayMember = "Name";
             ComboBoxGroups.ValueMember = "GroupId";
-            ComboBoxUsers.DataSource = allUsers;
+            ComboBoxUsers.DataSource = _allUsers;
             ComboBoxUsers.DisplayMember = "FullName";
             ComboBoxUsers.ValueMember = "Id";
+            ComboBoxPreferredLanguage.DataSource = _context.Languages.ToList();
+            ComboBoxPreferredLanguage.DisplayMember = "Name";
+            ComboBoxPreferredLanguage.ValueMember = "Id";
+            ComboBoxEditPreferredLanguage.DataSource = _context.Languages.ToList();
+            ComboBoxEditPreferredLanguage.DisplayMember = "Name";
+            ComboBoxEditPreferredLanguage.ValueMember = "Id";
         }
+
+        private void FrmSecurity_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !CloseButtonPressed;
+        }
+
         private void LoadGroups()
         {
             ListViewGroups.Clear();
@@ -158,6 +173,7 @@ namespace Neutron.Forms
         }
         private void RefreshUsersAndSecureItems()
         {
+            _allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
             var group = (Group)ComboBoxGroups.SelectedItem;
             var users = _context.GroupUser.Where(r => r.GroupId == group.GroupId).Select(u => u.User).ToList();
             var secureItems = _context.GroupSecureItem.Where(r => r.GroupId == group.GroupId).Select(u => u.SecureItem).ToList();
@@ -168,6 +184,7 @@ namespace Neutron.Forms
             //usersWithThisGroup.SecureItems = context.SecureItems.Where(a => a.Groups. == group.);
             CheckUsers(users);
             CheckSecureItems(secureItems);
+            ComboBoxUsers.DataSource = _allUsers;
             UpdateInformation();
         }
         private void UpdateInformation()
@@ -196,6 +213,7 @@ namespace Neutron.Forms
             }
             _context.SaveChanges();
             SaveSelectedUsers(group);
+            RefreshUsersAndSecureItems();
         }
         private void SaveSelectedUsers(Group group)
         {
@@ -249,7 +267,7 @@ namespace Neutron.Forms
                         Username = TextBoxUsername.Text.Trim(),
                         Password = TextBoxPassword.Text.Trim(),
                         Disabled = CheckBoxDisabled.Checked,
-                        HomeLocationId = _contextNeutron.Locations.FirstOrDefault()?.Id,
+                        LanguageId = (int)ComboBoxPreferredLanguage.SelectedValue
                     };
                     _context.Users.Add(user);
                     _context.GroupUser.Add(new GroupUser { GroupId = group.GroupId, UserId = user.Id });
@@ -314,6 +332,7 @@ namespace Neutron.Forms
             TextBoxUsername.Text = string.Empty;
             TextBoxPassword.Text = string.Empty;
             CheckBoxDisabled.Checked = false;
+            ComboBoxPreferredLanguage.SelectedIndex = 0;
         }
         private void ButtonSaveSecureItems_Click(object sender, EventArgs e)
         {
@@ -434,43 +453,74 @@ namespace Neutron.Forms
         }
         private void ClearGrid()
         {
-            DataGridView1.Rows.Clear();
-            DataGridView1.Refresh();
+            if (DataGridView1.RowCount > 0)
+            {
+                DataGridView1.Rows.Clear();
+                DataGridView1.Refresh();
+            }
         }
         private void ButtonDeleteEditUser_Click(object sender, EventArgs e)
         {
             var empId = TextBoxEmpIdEditUser.Text.Trim();
+            var historyCount = 0;
             if (!string.IsNullOrEmpty(empId))
             {
-                var user = _context.Users.FirstOrDefault(u =>
-                    string.Equals(u.EmpId, empId, StringComparison.CurrentCultureIgnoreCase));
+                var user = _context.Users.FirstOrDefault(u => u.EmpId == empId);
                 if (user != null)
                 {
-                    _context.Users.Remove(user);
-                    _context.SaveChanges();
+                    //Check History to see if they've done anything
+                    //If they have just Disable else Remove
+                    using (var db = new NeutronDb())
+                    {
+                        historyCount = db.History.Count(r => r.EmpId == empId);
+                    }
+
+                    if (historyCount == 0)
+                    {
+                        var recs = _context.GroupUser.Where(r => r.UserId == user.Id).ToList();
+                        if (recs.Any())
+                        {
+                            foreach (var rec in recs)
+                            {
+                                _context.GroupUser.Remove(rec);
+                            }
+                        }
+
+                        _context.Users.Remove(user);
+                        _context.SaveChanges();
+                    }
+                    else  // Disable
+                    {
+                        user.Disabled = true;
+                        _context.Users.AddOrUpdate(user);
+                        _context.SaveChanges();
+                    }
+
                     ClearEditUserFields();
                     TextBoxEmpIdEditUser.Focus();
                     ButtonDeleteEditUser.Enabled = false;
                 }
             }
             ButtonDeleteEditUser.Enabled = false;
+            RefreshUsersAndSecureItems();
         }
         private void ButtonSaveEditUser_Click(object sender, EventArgs e)
         {
             try
             {
-                if (VerifyFields())
+                if (VerifyEditFields())
                 {
                     var user = _context.Users.Find(_currentUser.Id);
                     if (user != null)
                     {
-                        user.EmpId = TextBoxEmpId.Text.Trim();
+                        user.EmpId = TextBoxEmpIdEditUser.Text.Trim();
                         user.Pin = TextBoxPinEditUser.Text.Trim();
                         user.Firstname = TextBoxFirstnameEditUser.Text.Trim();
                         user.Lastname = TextBoxLastnameEditUser.Text.Trim();
                         user.Username = TextBoxUsernameEditUser.Text.Trim();
                         user.Password = TextBoxPasswordEditUser.Text.Trim();
                         user.Disabled = CheckBoxDisabledEditUser.Checked;
+                        user.LanguageId = (int)ComboBoxEditPreferredLanguage.SelectedValue;
                         _context.SaveChanges();
                     }
                 }
@@ -481,7 +531,55 @@ namespace Neutron.Forms
                 TextBoxEmpIdEditUser.Focus();
             }
             ButtonDeleteEditUser.Enabled = false;
+            RefreshUsersAndSecureItems();
         }
+
+        private bool VerifyEditFields()
+        {
+            var result = true;
+            var sb = new StringBuilder();
+            if (string.IsNullOrEmpty(TextBoxFirstnameEditUser.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a first name.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxLastnameEditUser.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a last name.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxEmpIdEditUser.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide an employee Id.");
+                result = false;
+            }
+            if (string.IsNullOrEmpty(TextBoxPinEditUser.Text.Trim()))
+            {
+                sb.AppendLine($"You must provide a PIN number.");
+                result = false;
+            }
+            if (!_neutronVariables.PinLoginOnly)
+            {
+                if (string.IsNullOrEmpty(TextBoxUsernameEditUser.Text.Trim()))
+                {
+                    sb.AppendLine("Login requires a user name and password.");
+                    sb.AppendLine($"You must provide a user name.");
+                    result = false;
+                }
+                if (string.IsNullOrEmpty(TextBoxPasswordEditUser.Text.Trim()))
+                {
+                    sb.AppendLine("Login requires a user name and password.");
+                    sb.AppendLine($"You must provide a password.");
+                    result = false;
+                }
+            }
+            if (!result)
+            {
+                MessageBox.Show(sb.ToString());
+            }
+            return result;
+        }
+
         private void ButtonClearEditUserFields_Click(object sender, EventArgs e)
         {
             ClearEditUserFields();
@@ -496,6 +594,7 @@ namespace Neutron.Forms
             TextBoxPasswordEditUser.Text = string.Empty;
             CheckBoxDisabledEditUser.Checked = false;
             ButtonDeleteEditUser.Enabled = false;
+            ComboBoxEditPreferredLanguage.SelectedIndex = 0;
             ClearGrid();
         }
         private void TextBoxEmpIdEditUser_Enter(object sender, EventArgs e)
@@ -572,7 +671,7 @@ namespace Neutron.Forms
             col.Name = "IssuedQuantity";
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             DataGridView1.Columns.Add(col);
-            }
+        }
 
         private void ComboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -586,6 +685,7 @@ namespace Neutron.Forms
             TextBoxPinEditUser.Text = user.Pin;
             TextBoxUsernameEditUser.Text = user.Username;
             CheckBoxDisabledEditUser.Checked = user.Disabled;
+            ComboBoxEditPreferredLanguage.SelectedValue = user.LanguageId;
             //if (string.IsNullOrEmpty(user.EmpId)) return;
             FindEditUser();
         }
@@ -630,6 +730,8 @@ namespace Neutron.Forms
                 LabelEditPin.Text = _resourceManager.GetString("Pin");
                 LabelEditEmpId.Text = _resourceManager.GetString("EmployeeId");
                 LabelSelectGroup.Text = _resourceManager.GetString("SelectSecurityGroup");
+                LabelPreferredLanguage.Text = _resourceManager.GetString("PreferredLanguage");
+                LabelEditPreferredLanguage.Text = _resourceManager.GetString("PreferredLanguage");
                 this.Text = _resourceManager.GetString("SecurityControl");
                 _resourceManager.GetString("Message0");
                 _resourceManager.GetString("Message1");
@@ -639,6 +741,17 @@ namespace Neutron.Forms
             {
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
+        }
+
+        private void TabPageEditUser_Enter(object sender, EventArgs e)
+        {
+            _allUsers = _context.Users.OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
+        }
+
+        private void ButtonClose_Click(object sender, EventArgs e)
+        {
+            CloseButtonPressed = true;
+            Close();
         }
     }
 }

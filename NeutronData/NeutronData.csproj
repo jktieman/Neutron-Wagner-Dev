@@ -89,6 +89,14 @@
     <Compile Include="Migrations\202003301606550_carrierlevel.Designer.cs">
       <DependentUpon>202003301606550_carrierlevel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101281319050_table changes.cs" />
+    <Compile Include="Migrations\202101281319050_table changes.Designer.cs">
+      <DependentUpon>202101281319050_table changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101281554096_Language and StationType.cs" />
+    <Compile Include="Migrations\202101281554096_Language and StationType.Designer.cs">
+      <DependentUpon>202101281554096_Language and StationType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ActionCodeItem.cs" />
     <Compile Include="Models\AkaType.cs" />
     <Compile Include="Models\Carrier.cs" />
@@ -108,7 +116,9 @@
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\ILookup.cs" />
     <Compile Include="Models\Lookups\DeviceType.cs" />
+    <Compile Include="Models\Lookups\Language.cs" />
     <Compile Include="Models\Lookups\LineStatus.cs" />
+    <Compile Include="Models\Lookups\StationType.cs" />
     <Compile Include="Models\LookupTable.cs" />
     <Compile Include="Interfaces\IRepositoryBase.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -235,6 +245,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003301606550_carrierlevel.resx">
       <DependentUpon>202003301606550_carrierlevel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101281319050_table changes.resx">
+      <DependentUpon>202101281319050_table changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101281554096_Language and StationType.resx">
+      <DependentUpon>202101281554096_Language and StationType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

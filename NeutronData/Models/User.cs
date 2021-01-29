@@ -26,9 +26,9 @@ namespace NeutronData.Models
         public bool Disabled { get; set; }
         public ICollection<Role> Roles { get; set; }
         public ICollection<Group> Groups { get; set; }
-        public int? HomeLocationId { get; set; }
-        [ForeignKey("HomeLocationId")]
-        public virtual Location HomeLocation { get; set; }
+        public int LanguageId { get; set; }
+        [ForeignKey("LanguageId")]
+        public virtual Language Language { get; set; }
         public string UserInfo => $"{Firstname} {Lastname}";
         public string Fullname => ($"{Lastname},{Firstname}");
     }

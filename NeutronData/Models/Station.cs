@@ -19,12 +19,12 @@ namespace NeutronData.Models
         public int Id { get; set; }
         public int StationNumber { get; set; }
         public string Name { get; set; }
-        public int? CommunicationTypeId { get; set; }
+        public int StationTypeId { get; set; }
         public int? TcpConfigurationId { get; set; }
         public int? SerialConfigurationId { get; set; }
         public int Sequence { get; set; }
-        [ForeignKey("CommunicationTypeId")]
-        public virtual CommunicationType CommunicationType { get; set; }
+        [ForeignKey("StationTypeId")]
+        public virtual StationType StationType { get; set; }
         public virtual List<HardwareDevice> HardwareDevices { get; set; }
     }
 }

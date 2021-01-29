@@ -30,7 +30,7 @@ namespace NeutronData.DataContexts
         public DbSet<ShipMethod> ShipMethods { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Shipper> Shippers { get; set; }
-        public DbSet<LocationCount> LocationCounts { get; set; }
+        //public DbSet<LocationCount> LocationCounts { get; set; }
         public DbSet<ReplenOrder> ReplenOrders { get; set; }
         public DbSet<ReplenOrderDetail> ReplenOrderDetails { get; set; }
         public DbSet<Container> Containers { get; set; }
@@ -46,7 +46,8 @@ namespace NeutronData.DataContexts
         public DbSet<History> History { get; set; }
         public DbSet<ActionCodeItem> ActionCodeItems { get; set; }
         public DbSet<LineStatus> LineStatus { get; set; }
-        
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<StationType> StationTypes { get; set; }
         public DbSet<LocationView> LocationViews { get; set; }
         
         public DbSet<AkaType> AkaTypes { get; set; }

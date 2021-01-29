@@ -280,11 +280,13 @@ namespace Neutron.Forms
                 builder.IntegratedSecurity = true;
             }
 
-            var config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
+            //var config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             var connSection = (ConnectionStringsSection)config.GetSection(sectionName: "connectionStrings");
             connSection.ConnectionStrings["Neutron"].ConnectionString = builder.ConnectionString;
-            config.Save(ConfigurationSaveMode.Modified);
-
+            //config.Save(ConfigurationSaveMode.Modified);
+            config.Save(ConfigurationSaveMode.Modified, true);
+            ConfigurationManager.RefreshSection("connectionStrings");
             LabelConnectionString.Text = builder.ConnectionString;
         }
 

@@ -165,7 +165,7 @@ namespace Neutron.Forms
             DataGridView1.Columns[2].Width = 300;
             //MessageBox.Show($"Elasped Time: {time}");
             //_dgvColumnWidthSizer.RunWorkerAsync();
-            DataGridView1.FastAutoSizeColumns();
+            if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
         }
         public int IndexOf(BindingSource bindingSource, int value)
         {
@@ -243,6 +243,8 @@ namespace Neutron.Forms
         }
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
+            if (_bindingSource.Count <= 0) return;
+
             // Check Inventory and OrderDetails for this item
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
             //var id = TextBoxViewEditId.Text.ParseInt();

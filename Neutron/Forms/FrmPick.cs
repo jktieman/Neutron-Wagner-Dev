@@ -57,7 +57,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly InventoryRepository _repoInv = new InventoryRepository();
-        private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
+        //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
@@ -1232,11 +1232,11 @@ namespace Neutron.Forms
 
         private void UpdateNomenclature()
         {
-            MBPickAccept.Text = _nomenclature.MBPickAccept;
-            LabelTray.Text = _nomenclature.LabelTray;
-            LabelOver.Text = _nomenclature.LabelOver;
-            LabelBack.Text = _nomenclature.LabelBack;
-            LabelDevice.Text = _nomenclature.LabelDevice;
+            //MBPickAccept.Text = _nomenclature.MBPickAccept;
+            //LabelTray.Text = _nomenclature.LabelTray;
+            //LabelOver.Text = _nomenclature.LabelOver;
+            //LabelBack.Text = _nomenclature.LabelBack;
+            //LabelDevice.Text = _nomenclature.LabelDevice;
         }
 
         private void FrmPick_Load(object sender, EventArgs e)
@@ -6158,7 +6158,7 @@ namespace Neutron.Forms
                 NewQty = qty,
                 CountDate = DateTime.Now,
             };
-            _repoLocationCount.Insert(locationCount);
+           // _repoLocationCount.Insert(locationCount);
             GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, locationCount);
         }
 

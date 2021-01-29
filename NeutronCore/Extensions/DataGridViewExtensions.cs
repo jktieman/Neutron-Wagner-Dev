@@ -13,7 +13,6 @@ namespace NeutronCore.Extensions
         {
             // We need to iterate through all the data in the grid and a DataTable supports enumeration.
             var gridTable = targetGrid.Table();
-
             // Create a graphics object from the target grid. Used for measuring text size.
             using (var gfx = targetGrid.CreateGraphics())
             {
@@ -27,19 +26,19 @@ namespace NeutronCore.Extensions
                         .Select(r => r.Field<object>(i).ToString()).ToArray();
 
                     // Sort the string array by string lengths.
-                    colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
+                        colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
 
-                    // Get the last and longest string in the array.
-                    var longestColString = colStringCollection.Last();
+                        // Get the last and longest string in the array.
+                        var longestColString = colStringCollection.Last();
 
-                    // Use the graphics object to measure the string size.
-                    var colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
+                        // Use the graphics object to measure the string size.
+                        var colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
 
                     var headerText = targetGrid.Columns[i].HeaderText;
                     var font = targetGrid.Columns[i].HeaderCell.Style.Font;
 
-                   //     targetGrid.Columns[i].HeaderCell.Style.Font
-                   var headerWidth = gfx.MeasureString(headerText, font);
+                    //     targetGrid.Columns[i].HeaderCell.Style.Font
+                    var headerWidth = gfx.MeasureString(headerText, font);
 
                     if (colWidth.Width > headerWidth.Width)
                     {

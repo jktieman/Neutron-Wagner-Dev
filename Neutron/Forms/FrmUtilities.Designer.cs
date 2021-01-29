@@ -134,11 +134,13 @@
             this.CheckBoxIptiDisplays = new System.Windows.Forms.CheckBox();
             this.CheckBoxAutoEnlargeImage = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseMenuSecurity = new System.Windows.Forms.CheckBox();
+            this.ComboBoxDefaultLanguage = new System.Windows.Forms.ComboBox();
             this.ComboBoxDeviceDriver = new System.Windows.Forms.ComboBox();
             this.TextBoxUploadDelay = new System.Windows.Forms.TextBox();
             this.LabelSettingsSlotFormat = new System.Windows.Forms.Label();
             this.TextBoxLoaderDelay = new System.Windows.Forms.TextBox();
             this.LabelSettingsLogLevel = new System.Windows.Forms.Label();
+            this.LabelDefaultLanguage = new System.Windows.Forms.Label();
             this.TextBoxActionCodes = new System.Windows.Forms.TextBox();
             this.LabelSettingsDeviceDriver = new System.Windows.Forms.Label();
             this.TextBoxFieldDelimiter = new System.Windows.Forms.TextBox();
@@ -152,6 +154,7 @@
             this.CheckBoxCreateStoreOrderWithRts = new System.Windows.Forms.CheckBox();
             this.LabelLicenseCode = new System.Windows.Forms.Label();
             this.LabelSettingsStationNumber = new System.Windows.Forms.Label();
+            this.CheckBoxUseImages = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseCostCenter = new System.Windows.Forms.CheckBox();
             this.CheckBoxPrintPackingListManual = new System.Windows.Forms.CheckBox();
             this.CheckBoxRunUploadOnStartup = new System.Windows.Forms.CheckBox();
@@ -362,7 +365,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxUseImages = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -524,6 +526,7 @@
             this.MBNomenclature.TabIndex = 26;
             this.MBNomenclature.Text = "Nomenclature";
             this.MBNomenclature.UseSelectable = true;
+            this.MBNomenclature.Visible = false;
             this.MBNomenclature.Click += new System.EventHandler(this.MBNomenclature_Click);
             // 
             // MBOptions
@@ -1078,11 +1081,13 @@
             this.Settings.Controls.Add(this.CheckBoxIptiDisplays);
             this.Settings.Controls.Add(this.CheckBoxAutoEnlargeImage);
             this.Settings.Controls.Add(this.CheckBoxUseMenuSecurity);
+            this.Settings.Controls.Add(this.ComboBoxDefaultLanguage);
             this.Settings.Controls.Add(this.ComboBoxDeviceDriver);
             this.Settings.Controls.Add(this.TextBoxUploadDelay);
             this.Settings.Controls.Add(this.LabelSettingsSlotFormat);
             this.Settings.Controls.Add(this.TextBoxLoaderDelay);
             this.Settings.Controls.Add(this.LabelSettingsLogLevel);
+            this.Settings.Controls.Add(this.LabelDefaultLanguage);
             this.Settings.Controls.Add(this.TextBoxActionCodes);
             this.Settings.Controls.Add(this.LabelSettingsDeviceDriver);
             this.Settings.Controls.Add(this.TextBoxFieldDelimiter);
@@ -1123,8 +1128,7 @@
             this.ComboBoxStoreBatchSize.Items.AddRange(new object[] {
             "4",
             "6",
-            "8",
-            "16"});
+            "8"});
             this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(197, 311);
             this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
             this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
@@ -1476,8 +1480,19 @@
             this.CheckBoxUseMenuSecurity.Text = "Use Menu Security";
             this.CheckBoxUseMenuSecurity.UseVisualStyleBackColor = true;
             // 
+            // ComboBoxDefaultLanguage
+            // 
+            this.ComboBoxDefaultLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxDefaultLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxDefaultLanguage.FormattingEnabled = true;
+            this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(197, 52);
+            this.ComboBoxDefaultLanguage.Name = "ComboBoxDefaultLanguage";
+            this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(179, 24);
+            this.ComboBoxDefaultLanguage.TabIndex = 12;
+            // 
             // ComboBoxDeviceDriver
             // 
+            this.ComboBoxDeviceDriver.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxDeviceDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxDeviceDriver.FormattingEnabled = true;
             this.ComboBoxDeviceDriver.Items.AddRange(new object[] {
@@ -1529,6 +1544,16 @@
             this.LabelSettingsLogLevel.TabIndex = 10;
             this.LabelSettingsLogLevel.Text = "Log Level";
             this.LabelSettingsLogLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelDefaultLanguage
+            // 
+            this.LabelDefaultLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDefaultLanguage.Location = new System.Drawing.Point(44, 54);
+            this.LabelDefaultLanguage.Name = "LabelDefaultLanguage";
+            this.LabelDefaultLanguage.Size = new System.Drawing.Size(137, 16);
+            this.LabelDefaultLanguage.TabIndex = 10;
+            this.LabelDefaultLanguage.Text = "Default Language";
+            this.LabelDefaultLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxActionCodes
             // 
@@ -1669,6 +1694,17 @@
             this.LabelSettingsStationNumber.TabIndex = 7;
             this.LabelSettingsStationNumber.Text = "Station Number";
             this.LabelSettingsStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CheckBoxUseImages
+            // 
+            this.CheckBoxUseImages.AutoSize = true;
+            this.CheckBoxUseImages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseImages.Location = new System.Drawing.Point(841, 379);
+            this.CheckBoxUseImages.Name = "CheckBoxUseImages";
+            this.CheckBoxUseImages.Size = new System.Drawing.Size(100, 20);
+            this.CheckBoxUseImages.TabIndex = 8;
+            this.CheckBoxUseImages.Text = "Use Images";
+            this.CheckBoxUseImages.UseVisualStyleBackColor = true;
             // 
             // CheckBoxUseCostCenter
             // 
@@ -4255,17 +4291,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxUseImages
-            // 
-            this.CheckBoxUseImages.AutoSize = true;
-            this.CheckBoxUseImages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseImages.Location = new System.Drawing.Point(841, 379);
-            this.CheckBoxUseImages.Name = "CheckBoxUseImages";
-            this.CheckBoxUseImages.Size = new System.Drawing.Size(100, 20);
-            this.CheckBoxUseImages.TabIndex = 8;
-            this.CheckBoxUseImages.Text = "Use Images";
-            this.CheckBoxUseImages.UseVisualStyleBackColor = true;
-            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4660,5 +4685,7 @@
         private System.Windows.Forms.TextBox TextBoxNewCarrierLevel;
         private System.Windows.Forms.Label LabelNewDeviceCarrierLevel;
         private System.Windows.Forms.CheckBox CheckBoxUseImages;
+        private System.Windows.Forms.ComboBox ComboBoxDefaultLanguage;
+        private System.Windows.Forms.Label LabelDefaultLanguage;
     }
 }

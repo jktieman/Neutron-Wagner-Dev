@@ -7,18 +7,18 @@ namespace NeutronData.Migrations
     {
         public override void Up()
         {
-            DropForeignKey("dbo.Stations", "CommunicationTypeId", "dbo.CommunicationTypes");
-            DropForeignKey("dbo.HardwareDevices", "CommunicationTypeId", "dbo.CommunicationTypes");
-            DropPrimaryKey("dbo.ActionCodeItems");
-            DropPrimaryKey("dbo.CommunicationTypes");
-            AddColumn("dbo.HardwareDevices", "CarrierLevel", c => c.Int(nullable: false));
-            AlterColumn("dbo.ActionCodeItems", "Id", c => c.Int(nullable: false));
-            AlterColumn("dbo.CommunicationTypes", "Id", c => c.Int(nullable: false));
-            AlterColumn("dbo.History", "OrderId", c => c.Int());
-            AlterColumn("dbo.History", "OrderDetailId", c => c.Int());
-            AddPrimaryKey("dbo.ActionCodeItems", "Id");
-            AddPrimaryKey("dbo.CommunicationTypes", "Id");
-            AddForeignKey("dbo.Stations", "CommunicationTypeId", "dbo.CommunicationTypes", "Id");
+           //DopForeignKey("dbo.Stations", "CommunicationTypeId", "dbo.CommunicationTypes");
+           //DropForeignKey("dbo.HardwareDevices", "CommunicationTypeId", "dbo.CommunicationTypes");
+           // DropPrimaryKey("dbo.ActionCodeItems");
+           // DropPrimaryKey("dbo.CommunicationTypes");
+            //AddColumn("dbo.HardwareDevices", "CarrierLevel", c => c.Int(nullable: false));
+            //AlterColumn("dbo.ActionCodeItems", "Id", c => c.Int(nullable: false));
+           // AlterColumn("dbo.CommunicationTypes", "Id", c => c.Int(nullable: false));
+            //AlterColumn("dbo.History", "OrderId", c => c.Int());
+            //AlterColumn("dbo.History", "OrderDetailId", c => c.Int());
+            //AddPrimaryKey("dbo.ActionCodeItems", "Id");
+            //AddPrimaryKey("dbo.CommunicationTypes", "Id");
+            //AddForeignKey("dbo.Stations", "CommunicationTypeId", "dbo.CommunicationTypes", "Id");
             AddForeignKey("dbo.HardwareDevices", "CommunicationTypeId", "dbo.CommunicationTypes", "Id");
         }
         

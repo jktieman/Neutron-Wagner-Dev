@@ -49,7 +49,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
-        private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
+        //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
         private LocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
@@ -78,7 +78,7 @@ namespace Neutron.Forms
         private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
-       // private DeviceIndicator _currentDeviceIndicator;
+        // private DeviceIndicator _currentDeviceIndicator;
         public enum GridDataType
         {
             None,
@@ -1319,12 +1319,16 @@ namespace Neutron.Forms
                         PrimeBin = _currentInventoryView.PrimeBin,
                         StationId = _currentInventoryView.StationId,
                     };
-                    _repoInventory.Insert(inventory);
+                    if (inventory.Quantity > 0)
+                    {
+                        _repoInventory.Insert(inventory);
 
-                    _locationsRepository.SetLocationInUse(inventory.LocationId, true);
-                    inv = _repoInventory.FindByKey(inventory.Id);
+                        _locationsRepository.SetLocationInUse(inventory.LocationId, true);
+                        inv = _repoInventory.FindByKey(inventory.Id);
 
-                    GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
+                        GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -1716,7 +1720,7 @@ namespace Neutron.Forms
                 NewQty = qty,
                 CountDate = DateTime.Now,
             };
-            _repoLocationCount.Insert(cnt);
+            //_repoLocationCount.Insert(cnt);
             GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, cnt);
         }
         private void MBHotActionCount_Click(object sender, EventArgs e)

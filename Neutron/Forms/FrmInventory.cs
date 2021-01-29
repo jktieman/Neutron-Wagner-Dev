@@ -154,7 +154,7 @@ namespace Neutron.Forms
                 SetCurrentInventoryItem();
                 DataGridView1.Refresh();
                 DataGridView1.ClearSelection();
-                DataGridView1.FastAutoSizeColumns();
+                if(DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
             }
             else
             {
@@ -406,7 +406,7 @@ namespace Neutron.Forms
         }
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
-            //SetCurrentItemDefinition();
+            if (DataGridView1.RowCount <= 0) return;
             LoadViewEdit();
         }
         private void LoadViewEdit()

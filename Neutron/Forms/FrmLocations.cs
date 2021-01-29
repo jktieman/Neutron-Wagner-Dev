@@ -134,7 +134,7 @@ namespace Neutron.Forms
                 DataGridView1.Rows[idx].Selected = true;
             }
             DataGridView1.ClearSelection();
-            DataGridView1.FastAutoSizeColumns();
+            if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
             Cursor.Current = Cursors.Default;
         }
         public int IndexOf(int value)
@@ -653,6 +653,7 @@ namespace Neutron.Forms
         }
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
+            if (DataGridView1.RowCount <= 0) return;
             LoadViewEditData();
             //var grid = (LocationView)DataGridView1;
             //if (grid.CurrentRow != null)

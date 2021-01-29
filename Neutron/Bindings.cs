@@ -3,6 +3,7 @@ using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
 using Neutron.Models;
+using NeutronCore.Global;
 using NeutronData.Interfaces;
 using NeutronData.Repositories;
 
@@ -19,6 +20,7 @@ namespace Neutron
             Bind<ILacProcessor>().To<LacProcessor>().InSingletonScope();
             Bind<IStationRepository>().To<StationRepository>();
             Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
+            
         }
     }
 }

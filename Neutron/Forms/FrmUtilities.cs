@@ -48,11 +48,11 @@ namespace Neutron.Forms
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly StationRepository _repoStation = new StationRepository();
 
-        private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes =
-            new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
+        private readonly GenericRepository<DeviceType> _repoDeviceTypes =
+            new GenericRepository<DeviceType>(new NeutronDb());
 
-        private readonly GenericRepository<NeutronData.Models.Lookups.CommunicationType> _repoCommunicationTypes =
-            new GenericRepository<NeutronData.Models.Lookups.CommunicationType>(new NeutronDb());
+        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes =
+            new GenericRepository<CommunicationType>(new NeutronDb());
 
         private readonly GenericRepository<TcpConfiguration> _repoTcpConfigurations =
             new GenericRepository<TcpConfiguration>(new NeutronDb());
@@ -60,6 +60,8 @@ namespace Neutron.Forms
         private readonly GenericRepository<SerialConfiguration> _repoSerialConfigurations =
             new GenericRepository<SerialConfiguration>(new NeutronDb());
 
+        private readonly GenericRepository<Language> _repoLanguages =
+            new GenericRepository<Language>(new NeutronDb());
 
         private BindingSource _bindingSourceHardwareDevices = new BindingSource();
         private BindingSource _bindingSourceTcp = new BindingSource();
@@ -101,6 +103,9 @@ namespace Neutron.Forms
             _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
                 $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}.{ApplicationVersion.MajorRevision}.{ApplicationVersion.MinorRevision}";
+            ComboBoxDefaultLanguage.DataSource = _repoLanguages.All();
+            ComboBoxDefaultLanguage.DisplayMember = "Name";
+            ComboBoxDefaultLanguage.ValueMember = "Id";
 
 
         }
@@ -148,6 +153,7 @@ namespace Neutron.Forms
             ComboBoxNewSerialConfiguration.DisplayMember = "Name";
             ComboBoxNewSerialConfiguration.ValueMember = "Id";
 
+         
             //ComboBoxNewStation.SelectedIndex = ComboBoxNewStation.FindString(_station.Name);
         }
 
@@ -669,6 +675,7 @@ namespace Neutron.Forms
             _neutronVariables.ActionCodes = TextBoxActionCodes.Text;
             _neutronVariables.UseCostCenter = CheckBoxUseCostCenter.Checked;
             _neutronVariables.UseImages = CheckBoxUseImages.Checked;
+            _neutronVariables.DefaultLanguage = (int)ComboBoxDefaultLanguage.SelectedValue;
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
@@ -756,7 +763,7 @@ namespace Neutron.Forms
             SetPickMethod(_neutronVariables.PickMethod);
             CheckBoxUseCostCenter.Checked = _neutronVariables.UseCostCenter;
             CheckBoxUseImages.Checked = _neutronVariables.UseImages;
-
+            ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage;
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
         }
 
@@ -1253,7 +1260,7 @@ namespace Neutron.Forms
             TextBoxViewEditCarrierWidth.Text = hardwareDevice.CarrierWidth.ToString();
             TextBoxViewEditCarrierDepth.Text = hardwareDevice.CarrierDepth.ToString();
             CheckBoxViewEditDeviceEnabled.Checked = hardwareDevice.Enabled;
-           // CheckBoxViewEditSimulationMode.Checked = hardwareDevice.SimulationMode;
+            CheckBoxViewEditSimulationMode.Checked = hardwareDevice.SimulationMode;
             NumericUpDownViewEditDeviceLogLevel.Text = hardwareDevice.LogLevel.ToString();
             if (hardwareDevice.CommunicationTypeId != null)
             {
@@ -1419,8 +1426,8 @@ namespace Neutron.Forms
         private void MBNewDeviceSave_Click(object sender, EventArgs e)
         {
             SaveNewHardwareDevice();
-            var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
-            LoadHardwareDevices(id);
+            //var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
+            //LoadHardwareDevices(id);
             tabControl2.SelectedTab = Listing;
         }
 
@@ -1445,13 +1452,14 @@ namespace Neutron.Forms
                 LogLevel = NumericUpDownNewDeviceLogLevel.Text.ParseInt(),
             };
             _repoHardwareDevices.Insert(hardwareDevice);
+            LoadHardwareDevices(hardwareDevice.Id);
         }
 
         private void MBViewEditDeviceSave_Click(object sender, EventArgs e)
         {
             UpdateViewEditHardwareDevice();
-            var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
-            LoadHardwareDevices(id);
+            //var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
+            //LoadHardwareDevices(id);
             tabControl2.SelectedTab = Listing;
         }
 
@@ -1493,14 +1501,12 @@ namespace Neutron.Forms
                     hardwareDevice.SerialConfigurationId = null;
                 }
 
-
-
-
                 hardwareDevice.SimulationMode = CheckBoxViewEditSimulationMode.Checked;
                 hardwareDevice.LogLevel = NumericUpDownViewEditDeviceLogLevel.Text.ParseInt();
             }
 
             _repoHardwareDevices.Update(hardwareDevice);
+            if (hardwareDevice != null) LoadHardwareDevices(hardwareDevice.Id);
         }
 
         private void MBViewEditDeviceDelete_Click(object sender, EventArgs e)

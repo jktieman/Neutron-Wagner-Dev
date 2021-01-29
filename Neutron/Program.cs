@@ -20,6 +20,7 @@ using System.IO;
 using System.Resources;
 using EnumsNET;
 using NeutronCore;
+using NeutronCore.Global;
 using Newtonsoft.Json;
 
 namespace Neutron
@@ -78,7 +79,6 @@ namespace Neutron
             //jsonData.RootDirectory = $"{Properties.Settings.Default.RootDirectory}";
             //LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
 
-
             var akaRepository = kernel.Get<IAkaRepository>();
             var securityProcessor = kernel.Get<ISecurityProcessor>();
             var lacProcessor = kernel.Get<ILacProcessor>();
@@ -86,9 +86,10 @@ namespace Neutron
 
             var stationRepository = kernel.Get<IStationRepository>();
 
-            INomenclature nomenclature = jsonData.LoadFile<Nomenclature>();
+            var neutronVariables = jsonData.LoadFile<NeutronVariables>(); 
+            //INomenclature nomenclature = jsonData.LoadFile<Nomenclature>();
 
-            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, nomenclature, stationRepository));
+            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, neutronVariables, stationRepository));
 
         }
 

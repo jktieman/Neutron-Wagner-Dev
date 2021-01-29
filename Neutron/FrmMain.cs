@@ -14,6 +14,7 @@ using Neutron.Enums;
 using Neutron.Forms;
 using Neutron.Global;
 using Neutron.Interfaces;
+using Neutron.Models;
 using Neutron.Properties;
 using NeutronCore;
 using NeutronCore.Global;
@@ -59,12 +60,12 @@ namespace Neutron
         /// <param name="akaRepository"></param>
         /// <param name="securityProcessor"></param>
         /// <param name="lacProcessor"></param>
-        /// <param name="nomenclature"></param>
+        /// <param name="neutronVariables"></param>
         /// <param name="stationRepository"></param>
 
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
-            , INomenclature nomenclature, IStationRepository stationRepository)
+            , NeutronVariables neutronVariables, IStationRepository stationRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -75,10 +76,11 @@ namespace Neutron
             _akaRepository = akaRepository;
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
-            _nomenclature = nomenclature;
+            _nomenclature = new Nomenclature();
             _stationRepository = stationRepository;
 
-            _neutronVariables = _jsonData.LoadFile<NeutronVariables>();
+            //_neutronVariables = _jsonData.LoadFile<NeutronVariables>();
+            _neutronVariables = neutronVariables;
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
 
             GlobalVar.HistoryManager = new HistoryManager();
