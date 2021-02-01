@@ -12,10 +12,6 @@ namespace NeutronData.Models
 {
     public class Station : ILookup, IEntity
     {
-       // public Station() { }
-        //{
-        //   // HardwareDevices = new List<HardwareDevice>();
-        //}
         public int Id { get; set; }
         public int StationNumber { get; set; }
         public string Name { get; set; }

@@ -26,11 +26,10 @@ namespace Neutron.Forms
         private ResourceManager _enumResourceManager;
 
         readonly IAkaRepository _akaRepository;
-        private readonly INomenclature _nomenclature;
         private BindingListView<HistoryView> _bindingSourceEquin;
         private DateTime _currentFromDateTime;
         private DateTime _currentToDateTime;
-        public FrmHistory(IAkaRepository akaRepository, INomenclature nomenclature)
+        public FrmHistory(IAkaRepository akaRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -38,7 +37,6 @@ namespace Neutron.Forms
             HideTabControlTabs();
             SetupCheckListBoxActionCodes();
             _akaRepository = akaRepository;
-            _nomenclature = nomenclature;
             SetupGrids();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
         }
@@ -323,8 +321,16 @@ namespace Neutron.Forms
             var codes = new Dictionary<int, string>();
             foreach (var code in actionCodes)
             {
-                //codes.Add((int)code, code.GetEnumDescription());
-                codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+                if ((int)code > 48)
+                {
+                    codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+                }
+                else
+                {
+                    //codes.Add((int)code, code.GetEnumDescription());
+                    codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+                }
+
             }
             CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
             CheckedListBoxActionCodes.DisplayMember = "Value";

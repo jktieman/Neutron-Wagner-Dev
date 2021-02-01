@@ -87,7 +87,6 @@ namespace Neutron
             var stationRepository = kernel.Get<IStationRepository>();
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>(); 
-            //INomenclature nomenclature = jsonData.LoadFile<Nomenclature>();
 
             Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, neutronVariables, stationRepository));
 

@@ -62,21 +62,19 @@ namespace Neutron.Forms
             new GenericRepository<UnitOfIssue>(new NeutronDb());
         private readonly StationRepository _repoStation = new StationRepository();
         private readonly LocationsRepository _locationsRepository;
-        // private readonly HistoryManager GlobalVar.HistoryManager = new HistoryManager();
         private readonly InventoryRepository _inventoryRepository = new InventoryRepository();
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
         private readonly StationView _station;
         private readonly IAkaRepository _akaRepository;
-        //private readonly INomenclature _nomenclature;
         private bool _allAvailable;
         public ItemDefinition CurrentItem { get; set; }
         public Location CurrentLocation { get; set; }
         public Inventory CurrentInventoryItem { get; set; }
         public bool CloseButtonPressed { get; set; }
         private bool _firstTime = true;
-        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
-            INomenclature nomenclature)
+
+        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -86,7 +84,6 @@ namespace Neutron.Forms
             _station = station;
             _jsonData = jsonData;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
-           // _nomenclature = nomenclature;
             _akaRepository = akaRepository;
             SetupGrids();
             HideTabControlTabs();
@@ -96,10 +93,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             var logFilePath = LoaderSettings.GetLogFileDirectory() + "Inventory.log";
             _locationsRepository = new LocationsRepository();
-            //LabelAddDetailDevice.Text = _nomenclature.LabelDevice;
-            //LabelAddDetailTray.Text = _nomenclature.LabelTray;
-            //LabelAddDetailOver.Text = _nomenclature.LabelOver;
-            //LabelAddDetailBack.Text = _nomenclature.LabelBack;
+
             if (_station.StationNumber >= 10)
             {
                 CheckBoxAllStations.Checked = true;

@@ -37,7 +37,6 @@ namespace Neutron.Forms
         private ResourceManager _gridResourceManager;
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
-        private readonly INomenclature _nomenclature;
         private readonly StationView _station;
         private DocumentPrinterPreferences _documentPrinter;
         private LabelPrinterPreferences _labelPrinter;
@@ -57,15 +56,13 @@ namespace Neutron.Forms
         private ISlot _slotName;
         private DocumentToPrint _documentToPrint;
 
-        public FrmLocations(IJsonData jsonData, StationView station, INomenclature nomenclature,
-            NeutronVariables neutronVariables)
+        public FrmLocations(IJsonData jsonData, StationView station, NeutronVariables neutronVariables)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
             _station = station;
-            _nomenclature = nomenclature;
             _neutronVariables = neutronVariables;
             InitForm();
         }
@@ -75,7 +72,8 @@ namespace Neutron.Forms
             KeyPreview = true;
             CloseButtonPressed = false;
             SetupGrid();
-            SetupTabControl();
+            //SetupTabControl();
+            HideTabControlTabs();
             SetupNewForm();
             SetupViewEditForm();
             SetupPrinters();
@@ -839,6 +837,29 @@ namespace Neutron.Forms
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SizeMode = TabSizeMode.Fixed;
             foreach (TabPage tab in tabControl1.TabPages) tab.Text = string.Empty;
+        }
+
+        private void HideTabControlTabs()
+        {
+            var controls = GetTabControls(this, typeof(TabControl));
+            foreach (var control1 in controls)
+            {
+                var control = (TabControl)control1;
+                control.Appearance = TabAppearance.FlatButtons;
+                control.ItemSize = new Size(0, 1);
+                control.SizeMode = TabSizeMode.Fixed;
+                foreach (TabPage tab in control.TabPages)
+                {
+                    tab.Text = string.Empty;
+                }
+            }
+        }
+
+        private IEnumerable<Control> GetTabControls(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+            var enumerable = controls.ToList();
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
         private void SetupNewForm()
         {

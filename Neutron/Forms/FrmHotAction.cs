@@ -30,6 +30,7 @@ using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
+using StorageType = Neutron.Enums.StorageType;
 
 
 namespace Neutron.Forms
@@ -65,7 +66,6 @@ namespace Neutron.Forms
         readonly StationView _station;
         string _imagesDirectory;
         readonly IAkaRepository _akaRepository;
-        private readonly INomenclature _nomenclature;
         private readonly IJsonData _jsonData;
         private CostCenterManager _costCenterManager;
         private ItemDefinitionView _currentItemDefinition;
@@ -89,7 +89,7 @@ namespace Neutron.Forms
         public delegate void UpdateDataGridDelegate(BindingSource bindingSource);
 
         public FrmHotAction(StationView station, IJsonData jsonData
-            , IAkaRepository akaRepository, NeutronVariables neutronVariables, INomenclature nomenclature, string item = @"")
+            , IAkaRepository akaRepository, NeutronVariables neutronVariables, string item = @"")
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -98,7 +98,6 @@ namespace Neutron.Forms
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _akaRepository = akaRepository;
-            _nomenclature = nomenclature;
             InitForm(item);
         }
         private void InitForm(string item)
@@ -107,7 +106,6 @@ namespace Neutron.Forms
             SetupLogger();
             SetupGridItemDefinition();
             InitDeviceIndicators();
-            UpdateNomenclature();
             _useCostCenter = _neutronVariables.UseCostCenter;
             LabelFormTitle.Text = _resourceManager.GetString("HotActions");
             LabelFormTitle.BackColor = Color.Red;
@@ -247,15 +245,7 @@ namespace Neutron.Forms
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
-        private void UpdateNomenclature()
-        {
-            //MBHotAccept.Text = _nomenclature.MBPickAccept;
-            //MBHotAccept.Text = _nomenclature.MBStoreAccept;
-            //LabelDevice.Text = _nomenclature.LabelDevice;
-            //LabelTray.Text = _nomenclature.LabelTray;
-            //LabelOver.Text = _nomenclature.LabelOver;
-            //LabelBack.Text = _nomenclature.LabelBack;
-        }
+
         //public int IndexOf(BindingSource bs, int value)
         //{
         //    int count = bs.Count;
@@ -1319,7 +1309,7 @@ namespace Neutron.Forms
                         PrimeBin = _currentInventoryView.PrimeBin,
                         StationId = _currentInventoryView.StationId,
                     };
-                    if (inventory.Quantity > 0)
+                    if (inventory.Quantity > 0 || inventory.StorageTypeId == (int)StorageType.Static)
                     {
                         _repoInventory.Insert(inventory);
 
@@ -1506,7 +1496,7 @@ namespace Neutron.Forms
             }
             if (e.KeyCode == Keys.F12)
             {
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
+                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository))
                 {
                     var result = frm.ShowDialog();
                     Show();

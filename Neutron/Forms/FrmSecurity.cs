@@ -36,7 +36,7 @@ namespace Neutron.Forms
         private List<User> _allUsers = new List<User>();
         public bool CloseButtonPressed { get; set; }
 
-        public FrmSecurity(INomenclature nomenclature, NeutronVariables neutronVariables)
+        public FrmSecurity(NeutronVariables neutronVariables)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;

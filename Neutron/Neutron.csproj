@@ -30,7 +30,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>388</ApplicationRevision>
+    <ApplicationRevision>389</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -403,7 +403,6 @@
     <Compile Include="Global\Variables.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\ILacProcessor.cs" />
-    <Compile Include="Interfaces\INomenclature.cs" />
     <Compile Include="Interfaces\ISecurityProcessor.cs" />
     <Compile Include="Interfaces\IShuttleDriver.cs" />
     <Compile Include="Models\CostCenterManager.cs" />
@@ -412,7 +411,6 @@
     <Compile Include="Models\InventoryManager.cs" />
     <Compile Include="Models\MyFileInfo.cs" />
     <Compile Include="Models\NeutronRootDirectory.cs" />
-    <Compile Include="Models\Nomenclature.cs" />
     <Compile Include="Models\PickDeviceManager.cs" />
     <Compile Include="Models\ProductivityGroup.cs" />
     <Compile Include="Models\Prompt.cs" />
@@ -730,10 +728,6 @@
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PrintRequest\PrintRequest.csproj">
-      <Project>{ac64b1bd-e3e7-49f5-8ddf-103fca0970fe}</Project>
-      <Name>PrintRequest</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

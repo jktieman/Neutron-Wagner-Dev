@@ -42,11 +42,14 @@ namespace Neutron.Forms
     {
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
+
         private readonly GenericRepository<HardwareDevice> _repoHardwareDevices =
             new GenericRepository<HardwareDevice>(new NeutronDb());
 
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository();
+
+        //private readonly StationRepository _repoStation = new StationRepository();
+        private readonly GenericRepository<Station> _repoStations = new GenericRepository<Station>(new NeutronDb());
 
         private readonly GenericRepository<DeviceType> _repoDeviceTypes =
             new GenericRepository<DeviceType>(new NeutronDb());
@@ -112,7 +115,8 @@ namespace Neutron.Forms
 
         private void SetupDeviceForms()
         {
-            ComboBoxViewEditDeviceStation.DataSource = _repoStation.Lookup();
+            //ComboBoxViewEditDeviceStation.DataSource = _repoStation.Lookup();
+            ComboBoxViewEditDeviceStation.DataSource = _repoStations.All();
             ComboBoxViewEditDeviceStation.DisplayMember = "Name";
             ComboBoxViewEditDeviceStation.ValueMember = "Id";
 
@@ -133,7 +137,8 @@ namespace Neutron.Forms
             ComboBoxViewEditSerialConfiguration.ValueMember = "Id";
 
 
-            ComboBoxNewDeviceStation.DataSource = _repoStation.Lookup();
+            //ComboBoxNewDeviceStation.DataSource = _repoStation.Lookup();
+            ComboBoxNewDeviceStation.DataSource = _repoStations.All();
             ComboBoxNewDeviceStation.DisplayMember = "Name";
             ComboBoxNewDeviceStation.ValueMember = "Id";
 
@@ -153,7 +158,7 @@ namespace Neutron.Forms
             ComboBoxNewSerialConfiguration.DisplayMember = "Name";
             ComboBoxNewSerialConfiguration.ValueMember = "Id";
 
-         
+
             //ComboBoxNewStation.SelectedIndex = ComboBoxNewStation.FindString(_station.Name);
         }
 
@@ -534,8 +539,60 @@ namespace Neutron.Forms
                 Name = "Id"
             };
             DataGridViewSerial.Columns.Add(col);
+
+
+            //--- Station Grid --------------------------
+
+            DataGridViewStations.AutoGenerateColumns = false;
+            DataGridViewStations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewStations.DefaultCellStyle.ForeColor = Color.Black;
+            DataGridViewStations.DefaultCellStyle.BackColor = Color.White;
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationNumber",
+                HeaderText = @"Station Number",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "StationNumber"
+            };
+            DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Name",
+                HeaderText = @"Station Name",
+                DefaultCellStyle =
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleLeft
+                },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "Name"
+            };
+            DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationType",
+                HeaderText = @"Station Type",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Name = "Station Type"
+            };
+            DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                HeaderText = @"Id",
+                Visible = false,
+                Name = "Id"
+            };
+            DataGridViewStations.Columns.Add(col);
         }
 
+
+        //-------------------------------------
         private void MBMainClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
@@ -543,21 +600,25 @@ namespace Neutron.Forms
 
         private void HideTabControlTabs()
         {
-            tabControl1.Appearance = TabAppearance.FlatButtons;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
-            foreach (TabPage tab in tabControl1.TabPages)
+            var controls = GetTabControls(this, typeof(TabControl));
+            foreach (var control1 in controls)
             {
-                tab.Text = string.Empty;
+                var control = (TabControl)control1;
+                control.Appearance = TabAppearance.FlatButtons;
+                control.ItemSize = new Size(0, 1);
+                control.SizeMode = TabSizeMode.Fixed;
+                foreach (TabPage tab in control.TabPages)
+                {
+                    tab.Text = string.Empty;
+                }
             }
+        }
 
-            tabControl2.Appearance = TabAppearance.FlatButtons;
-            tabControl2.ItemSize = new Size(0, 1);
-            tabControl2.SizeMode = TabSizeMode.Fixed;
-            foreach (TabPage tab in tabControl2.TabPages)
-            {
-                tab.Text = string.Empty;
-            }
+        private IEnumerable<Control> GetTabControls(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+            var enumerable = controls.ToList();
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
 
         private void FrmUtilities_FormClosing(object sender, FormClosingEventArgs e)
@@ -592,11 +653,6 @@ namespace Neutron.Forms
         }
 
         private void MBInterfaceFilesBack_Click(object sender, EventArgs e)
-        {
-            BackToMain();
-        }
-
-        private void MbNomenclatureBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
@@ -641,7 +697,7 @@ namespace Neutron.Forms
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
             _neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
             _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
-           // _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
+            // _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
             _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
@@ -679,9 +735,9 @@ namespace Neutron.Forms
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
-            _jsonData.SaveFile<NeutronLicense>(new NeutronLicense {CompanyCode = TextBoxLicenseCode.Text});
+            _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
 
-           // UpdateSimulationMode();
+            // UpdateSimulationMode();
 
         }
 
@@ -724,7 +780,7 @@ namespace Neutron.Forms
             CheckBoxUseReturnToStock.Checked = _neutronVariables.UseReturnToStock;
             TextBoxStationNumber.Text = _neutronVariables.StationNumber.ToString();
             ComboBoxDeviceDriver.SelectedIndex = ComboBoxDeviceDriver.FindStringExact(_neutronVariables.DeviceDriver);
-           // CheckBoxSimulationMode.Checked = _neutronVariables.SimulationMode;
+            // CheckBoxSimulationMode.Checked = _neutronVariables.SimulationMode;
             NumericUpDownLogLevel.Value = _neutronVariables.LogLevel == 0
                 ? NumericUpDownLogLevel.Minimum
                 : _neutronVariables.LogLevel;
@@ -979,42 +1035,6 @@ namespace Neutron.Forms
                 Name = "Name"
             };
             DataGridViewLookups.Columns.Add(col);
-        }
-
-        private void MBNomenclature_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "Nomenclature";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            LoadNomenclature();
-            tabControl1.SelectedTab = Nomenclature;
-        }
-
-        private void LoadNomenclature()
-        {
-            var nomenclature = _jsonData.LoadFile<Nomenclature>();
-            TextBoxPickAccept.Text = nomenclature.MBPickAccept;
-            TextBoxStoreAccept.Text = nomenclature.MBStoreAccept;
-            TextBoxDelete.Text = nomenclature.MBDelete;
-            TextBoxDevice.Text = nomenclature.LabelDevice;
-            TextBoxTray.Text = nomenclature.LabelTray;
-            TextBoxOver.Text = nomenclature.LabelOver;
-            TextBoxBack.Text = nomenclature.LabelBack;
-        }
-
-        private void MbNomenclatureSave_Click(object sender, EventArgs e)
-        {
-            var nomenclature = new Nomenclature
-            {
-                MBPickAccept = TextBoxPickAccept.Text,
-                MBStoreAccept = TextBoxStoreAccept.Text,
-                MBDelete = TextBoxDelete.Text,
-                LabelDevice = TextBoxDevice.Text,
-                LabelTray = TextBoxTray.Text,
-                LabelOver = TextBoxOver.Text,
-                LabelBack = TextBoxBack.Text
-            };
-
-            _jsonData.SaveFile<Nomenclature>(nomenclature);
         }
 
         private void MBPrintSetUpBack_Click(object sender, EventArgs e)
@@ -1608,18 +1628,18 @@ namespace Neutron.Forms
 
         private void MBTcpListing_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void MBTcpViewEdit_Click(object sender, EventArgs e)
         {
             LoadViewEditTcp();
-            tabControl2.SelectedTab = TcpViewEdit;
+            TabControlCommunications.SelectedTab = TcpViewEdit;
         }
 
         private void MBTcpNew_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = TcpNew;
+            TabControlCommunications.SelectedTab = TcpNew;
         }
 
         private void MBTcpSaveToFile_Click(object sender, EventArgs e)
@@ -1629,52 +1649,53 @@ namespace Neutron.Forms
 
         private void MBTcpBack_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Communication;
+            LabelFormTitle.Text = "Communications";
+            TabControlCommunications.SelectedTab = Communication;
         }
 
         private void MBTcpViewEditListing_Click(object sender, EventArgs e)
         {
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void MBTcpViewEditDelete_Click(object sender, EventArgs e)
         {
             DeleteTcpConfiguration();
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void MBTcpViewEditSave_Click(object sender, EventArgs e)
         {
             SaveTcpViewEdit();
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void MBTcpViewEditBack_Click(object sender, EventArgs e)
         {
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void TcpNewListing_Click(object sender, EventArgs e)
         {
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void TcpNewSave_Click(object sender, EventArgs e)
         {
             SaveTcpNew();
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void TcpNewBack_Click(object sender, EventArgs e)
         {
             LoadTcpConfigurations();
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
         #endregion
 
@@ -1682,20 +1703,20 @@ namespace Neutron.Forms
 
         private void MBSerialListing_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialViewEdit_Click(object sender, EventArgs e)
         {
             SetupSerialViewEditForm();
             LoadSerialViewEdit();
-            tabControl2.SelectedTab = SerialViewEdit;
+            TabControlCommunications.SelectedTab = SerialViewEdit;
         }
 
         private void MBSerialNew_Click(object sender, EventArgs e)
         {
             SetupSerialNewForm();
-            tabControl2.SelectedTab = SerialNew;
+            TabControlCommunications.SelectedTab = SerialNew;
         }
 
         private void MBSerialSaveToFile_Click(object sender, EventArgs e)
@@ -1705,48 +1726,49 @@ namespace Neutron.Forms
 
         private void MBSerialBack_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Communication;
+            LabelFormTitle.Text = "Communications";
+            TabControlCommunications.SelectedTab = Communication;
         }
 
         private void MBSerialViewEditListing_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialViewEditDelete_Click(object sender, EventArgs e)
         {
             DeleteSerialConfiguration();
             LoadSerialConfigurations();
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialViewEditSave_Click(object sender, EventArgs e)
         {
             SaveSerialViewEdit();
             LoadSerialConfigurations();
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialViewEditBack_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialNewListing_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialNewBack_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBSerialNewSave_Click(object sender, EventArgs e)
         {
             SaveSerialNew();
             LoadSerialConfigurations();
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
         #endregion
 
@@ -1754,26 +1776,26 @@ namespace Neutron.Forms
         private void MBCommunication_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Communications";
-            tabControl2.SelectedTab = Communication;
+            TabControlCommunications.SelectedTab = Communication;
         }
 
         private void MBCommunicationTcp_Click(object sender, EventArgs e)
         {
             LoadTcpConfigurations();
             LabelFormTitle.Text = "TCP";
-            tabControl2.SelectedTab = Tcp;
+            TabControlCommunications.SelectedTab = Tcp;
         }
 
         private void MBCommunicationSerial_Click(object sender, EventArgs e)
         {
             LoadSerialConfigurations();
             LabelFormTitle.Text = "Serial";
-            tabControl2.SelectedTab = Serial;
+            TabControlCommunications.SelectedTab = Serial;
         }
 
         private void MBCommunicationBack_Click(object sender, EventArgs e)
         {
-            tabControl2.SelectedTab = Listing;
+            BackToMain();
         }
         #endregion
 
@@ -2044,6 +2066,84 @@ namespace Neutron.Forms
             ClearHardwareDeviceForm();
             LoadViewEditDeviceData();
             tabControl2.SelectedTab = ViewEdit;
+        }
+
+        private void MBStations_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Stations";
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LoadStations();
+            tabControl1.SelectedTab = Stations;
+        }
+
+        private void LoadStations()
+        {
+            var recs = _repoStations.All().Select(s => new {Id = s.Id, Name = s.Name, StationNumber = s.StationNumber, StationType = s.StationType.Name }).ToList();
+            DataGridViewStations.DataSource = null;
+            DataGridViewStations.DataSource = recs;
+        }
+
+        private void MBStationsBack_Click(object sender, EventArgs e)
+        {
+            BackToMain();
+        }
+
+       private void MBStationsViewEdit_Click(object sender, EventArgs e)
+        {
+            TabControl3.SelectedTab = StationViewEdit;
+        }
+
+        private void MBStationsNew_Click(object sender, EventArgs e)
+        {
+            TabControl3.SelectedTab = StationNew;
+        }
+
+        private void MBStationsViewEditBack_Click(object sender, EventArgs e)
+        {
+            LoadStations();
+            TabControl3.SelectedTab = StationListing;
+        }
+
+        private void MBStationsViewEditSave_Click(object sender, EventArgs e)
+        {
+            SaveStation();
+            TabControl3.SelectedTab = StationListing;
+        }
+
+        private void SaveStation()
+        {
+            
+        }
+
+        private void MBStationsNewSave_Click(object sender, EventArgs e)
+        {
+            SaveStation();
+            TabControl3.SelectedTab = StationListing;
+        }
+
+        private void MBStationsNewBack_Click(object sender, EventArgs e)
+        {
+            LoadStations();
+            TabControl3.SelectedTab = StationListing;
+        }
+
+        private void MBStationsViewEditDelete_Click(object sender, EventArgs e)
+        {
+            DeleteStation();
+            LoadStations();
+            TabControl3.SelectedTab = StationListing;
+        }
+
+        private void DeleteStation()
+        {
+            
+        }
+
+        private void MBCommunications_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Communications";
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            tabControl1.SelectedTab = Communications;
         }
     }
 }

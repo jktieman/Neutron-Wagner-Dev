@@ -39,7 +39,6 @@ using CurrentDeviceIndicator;
 using JetBrains.Annotations;
 using Neutron.Controllers;
 using NeutronCore.Extensions;
-//using NeutronDllu;
 using NeutronEvents;
 //using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
 using static NeutronCore.Extensions.IntegerExtensions;
@@ -109,7 +108,6 @@ namespace Neutron.Forms
         private readonly IJsonData _jsonData;
         private readonly StationView _station;
         private readonly IAkaRepository _akaRepository;
-        private readonly INomenclature _nomenclature;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly ILacProcessor _lacProcessor;
         private DynamicLogger _logger;
@@ -139,7 +137,7 @@ namespace Neutron.Forms
         // public delegate void UpdateListBoxDelegate(byte[] request);
 
         public FrmPick(IJsonData jsonData, StationView station
-            , IAkaRepository akaRepository, INomenclature nomenclature
+            , IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor)
         {
             InitializeComponent();
@@ -148,7 +146,6 @@ namespace Neutron.Forms
 
             _station = station;
             _jsonData = jsonData;
-            _nomenclature = nomenclature;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();
             _lacProcessor = lacProcessor;
@@ -1230,16 +1227,7 @@ namespace Neutron.Forms
             _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
         }
 
-        private void UpdateNomenclature()
-        {
-            //MBPickAccept.Text = _nomenclature.MBPickAccept;
-            //LabelTray.Text = _nomenclature.LabelTray;
-            //LabelOver.Text = _nomenclature.LabelOver;
-            //LabelBack.Text = _nomenclature.LabelBack;
-            //LabelDevice.Text = _nomenclature.LabelDevice;
-        }
-
-        private void FrmPick_Load(object sender, EventArgs e)
+       private void FrmPick_Load(object sender, EventArgs e)
         {
             //Communication Monitoring Form use for TEsting
 
@@ -7335,7 +7323,7 @@ namespace Neutron.Forms
             {
                 var item = LabelPickItemNumber.Text;
                 Hide();
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _nomenclature, item))
+                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, item))
                 {
                     var result = frm.ShowDialog();
                     Show();
@@ -8168,7 +8156,7 @@ namespace Neutron.Forms
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
             var station = _stationRepository.GetStationView(8);
             Hide();
-            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository, _neutronVariables, _nomenclature))
+            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository, _neutronVariables))
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -8437,7 +8425,7 @@ namespace Neutron.Forms
 
             if (e.KeyCode == Keys.F12)
             {
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
+                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository))
                 {
                     var result = frm.ShowDialog();
                     Show();

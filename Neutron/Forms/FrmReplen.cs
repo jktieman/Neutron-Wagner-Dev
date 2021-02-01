@@ -110,7 +110,6 @@ namespace Neutron.Forms
         private readonly IJsonData _jsonData;
         private readonly StationView _station;
         private readonly IAkaRepository _akaRepository;
-        private readonly INomenclature _nomenclature;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly ILacProcessor _lacProcessor;
         private NeutronData.Models.Lookups.StorageType _defaultStorageType;
@@ -138,7 +137,7 @@ namespace Neutron.Forms
 
 
         public FrmReplen(IJsonData jsonData, StationView station
-            , IAkaRepository akaRepository, NeutronVariables neutronVariables, INomenclature nomenclature
+            , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor)
         {
             InitializeComponent();
@@ -152,11 +151,9 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();
             _akaRepository = akaRepository;
-            _nomenclature = nomenclature;
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
             _documentToPrint = new DocumentToPrint();
-            UpdateNomenclature();
             SetupPrinters();
             _synchronizationContext = SynchronizationContext.Current;
             _currentInventory = new List<Inventory>();
@@ -186,15 +183,6 @@ namespace Neutron.Forms
         {
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
             _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
-        }
-
-        private void UpdateNomenclature()
-        {
-            //MBStoreAccept.Text = _nomenclature.MBStoreAccept;
-            //LabelTray.Text = _nomenclature.LabelTray;
-            //LabelOver.Text = _nomenclature.LabelOver;
-            //LabelBack.Text = _nomenclature.LabelBack;
-            //LabelDevice.Text = _nomenclature.LabelDevice;
         }
 
         private void FrmReplen_Load(object sender, EventArgs e)
@@ -4831,7 +4819,7 @@ namespace Neutron.Forms
             {
                 var item = LabelPickItemNumber.Text;
                 Hide();
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _nomenclature, item))
+                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, item))
                 {
                     DialogResult result = frm.ShowDialog();
                     Show();
@@ -4958,7 +4946,7 @@ namespace Neutron.Forms
             {
                 // MessageBox.Show("Launch Find Box in PICK");
 
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _nomenclature))
+                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository))
                 {
                     DialogResult result = frm.ShowDialog();
                     this.Show();
@@ -5493,7 +5481,7 @@ namespace Neutron.Forms
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
             var station = _stationRepository.GetStationView(8);
             Hide();
-            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository, _neutronVariables, _nomenclature))
+            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository, _neutronVariables))
             {
                 var result = frm.ShowDialog();
                 Show();
