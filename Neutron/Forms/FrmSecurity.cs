@@ -267,7 +267,7 @@ namespace Neutron.Forms
                         Username = TextBoxUsername.Text.Trim(),
                         Password = TextBoxPassword.Text.Trim(),
                         Disabled = CheckBoxDisabled.Checked,
-                        LanguageId = (int)ComboBoxPreferredLanguage.SelectedValue
+                        LanguageId = ((Language)ComboBoxPreferredLanguage.SelectedItem).Id
                     };
                     _context.Users.Add(user);
                     _context.GroupUser.Add(new GroupUser { GroupId = group.GroupId, UserId = user.Id });
@@ -520,7 +520,7 @@ namespace Neutron.Forms
                         user.Username = TextBoxUsernameEditUser.Text.Trim();
                         user.Password = TextBoxPasswordEditUser.Text.Trim();
                         user.Disabled = CheckBoxDisabledEditUser.Checked;
-                        user.LanguageId = (int)ComboBoxEditPreferredLanguage.SelectedValue;
+                        user.LanguageId = ((Language)ComboBoxEditPreferredLanguage.SelectedItem).Id;
                         _context.SaveChanges();
                     }
                 }

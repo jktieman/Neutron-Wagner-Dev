@@ -51,6 +51,7 @@ namespace NeutronCore.Global
         public string ActionCodes { get; set; }
         public bool UseCostCenter { get; set; }
         public bool UseImages { get; set; }
-        public int DefaultLanguage { get; set; }
+        public string DefaultLanguage { get; set; }
+        public int DeviceFlashRate { get; set; }
     }
 }

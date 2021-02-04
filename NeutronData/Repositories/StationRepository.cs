@@ -27,6 +27,21 @@ namespace NeutronData.Repositories
             _dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
         }
 
+        public StationView GetRackStationView()
+        {
+            var station = _repoStation.All().FirstOrDefault(r => r.StationTypeId == 3);
+            if(station == null) return new StationView();
+            var stationView = new StationView
+            {
+                StationId = station.Id,
+                Name = station.Name,
+                StationNumber = station.StationNumber,
+                StationType = station.StationType,
+                Sequence = station.Sequence,
+            };
+            return stationView;
+        }
+
         public StationView GetStationView(int stationNumber)
         {
             var logFileDirectory = LoaderSettings.GetLogFileDirectory();
@@ -54,7 +69,7 @@ namespace NeutronData.Repositories
                             {
                                 case (int) DeviceType.Shuttle:
                                 {
-                                    key = _dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
+                                        //key = _dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
                                         logger.Log($"This is a Shuttle Device");
                                         //if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
                                         key = _dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
@@ -198,6 +213,7 @@ namespace NeutronData.Repositories
                             }
                         }
 
+                        stationView.StationType = station.StationType;
                         stationView.StationId = station.Id;
                         stationView.StationNumber = station.StationNumber;
                         stationView.Name = station.Name;
@@ -248,6 +264,38 @@ namespace NeutronData.Repositories
                 result = stations;
             }
             return result;
+        }
+
+        public List<Station> GetPickStations()
+        {
+        var stationTypesThatHaveInventory = new[] { 1, 2, 3 };  // 4 is a Supervisor 
+        var result = new List<Station>();
+            var stations = _repoStation.All().Where(r => stationTypesThatHaveInventory.Contains(r.Id)).ToList();
+            if (stations.Count > 0)
+            {
+                result = stations;
+            }
+            return result;
+        }
+
+        public List<Station> GetMovablePickStations()
+        {
+            var deviceTypesThatMove = new[] { 1, 2 };  // 1-Carousel 2-Vertical
+            var result = new List<Station>();
+            foreach (var station in _repoStation.All())
+            {
+                var devices = _repoHardwareDevices.All().Where(r => deviceTypesThatMove.Contains(r.DeviceTypeId) && r.StationId == station.Id)
+                    .ToList();
+                if (!devices.Any()) continue;
+                station.HardwareDevices.AddRange(devices);
+                result.Add(station);
+            }
+            return result;
+        }
+
+        public Station GetStation(int id)
+        {
+            return _repoStation.FindByKey(id);
         }
     }
 }

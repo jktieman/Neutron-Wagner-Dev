@@ -5,8 +5,10 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
+using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.Models;
+using NeutronData.Repositories;
 
 namespace Neutron.Forms
 {
@@ -15,7 +17,10 @@ namespace Neutron.Forms
     {
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
-        private readonly SecureDb context = new SecureDb();
+        private readonly SecureDb _context = new SecureDb();
+        private readonly StationRepository _repoStationRepository = new StationRepository();
+        private List<Station> _stations;
+
         private bool checkAllUsers;
         private bool checkAllDevice1;
         private bool checkAllDevice2;
@@ -24,41 +29,86 @@ namespace Neutron.Forms
         private bool checkAllDevice5;
         private bool checkAllDevice6;
 
-        private int currentStationNumber;
+        private int _currentStationNumber;
+        private Station _currentStation;
+        private NeutronVariables _neutronVariables;
 
-        public FrmLAC()
+        public FrmLAC(NeutronVariables neutronVariables)
         {
+            _neutronVariables = neutronVariables;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-           // SetCulture(_cultureInfo.Name);
+
+            InitLac();
+            // SetCulture(_cultureInfo.Name);
+        }
+
+        private void InitLac()
+        {
+            _stations = _repoStationRepository.GetMovablePickStations();
+            _currentStationNumber = _neutronVariables.StationNumber;
+            _currentStation = _stations.FirstOrDefault(r => r.StationNumber == _currentStationNumber);
+            InitCarriers();
+        }
+
+        private void InitCarriers()
+        {
+            foreach (var station in _stations)
+            {
+                var devices = _context.HardwareDevices.Where(r => r.StationId == station.Id).ToList();
+                if (devices.Any())
+                {
+                    foreach (var hardwareDevice in devices)
+                    {
+                        for (var i = 1; i <= hardwareDevice.NumberOfCarriers; i++)
+                        {
+                            var carrier = new Carrier
+                            {
+                                DeviceNumber = hardwareDevice.DeviceNumber,
+                                CarrierNumber = i,
+                                StationNumber = station.StationNumber
+                            };
+                            var carr = _context.Carriers
+                                .FirstOrDefault(r => r.DeviceNumber == carrier.DeviceNumber
+                                                     && r.CarrierNumber == carrier.CarrierNumber &&
+                                                     r.StationNumber == carrier.StationNumber);
+                            if (carr == null)
+                            {
+                                _context.Carriers.Add(carrier);
+                                _context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Location[] locations = context.Locations.ToArray();
-            Carrier[] carriers = context.Carriers.ToArray();
-            Role[] roles = context.Roles.ToArray();
-            User[] users = context.Users.ToArray();
-            Station[] stations = context.Stations.ToArray();
-            currentStationNumber = carriers.Min(c => c.StationNumber);
-
-            ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            // Location[] locations = _context.Locations.ToArray();
+            Carrier[] carriers = _context.Carriers.ToArray();
+            Role[] roles = _context.Roles.ToArray();
+            User[] users = _context.Users.ToArray();
+            //Station[] stations = _context.Stations.ToArray();
+            _currentStationNumber = carriers.Min(c => c.StationNumber);
+            if (_currentStationNumber == null) return;
+            ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
 
 
 
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
             ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
-            
+
             ComboBoxRoles.DataSource = roles.ToList();
             ComboBoxRoles.DisplayMember = "RoleName";
             ComboBoxRoles.ValueMember = "RoleId";
 
-            ComboBoxStation.DataSource = stations.ToList();
+            ComboBoxStation.DataSource = _stations.ToList();
             ComboBoxStation.DisplayMember = "Name";
             ComboBoxStation.ValueMember = "Id";
 
@@ -69,7 +119,7 @@ namespace Neutron.Forms
         private void LoadRoles()
         {
             ListViewRoles.Clear();
-            Role[] roles = context.Roles.ToArray();
+            Role[] roles = _context.Roles.ToArray();
             ListViewRoles.Items.AddRange(roles.Select(r => new ListViewItem { Text = r.RoleName, Tag = r }).ToArray());
             ComboBoxRoles.DataSource = roles.ToList();
         }
@@ -77,56 +127,56 @@ namespace Neutron.Forms
         private void LoadUsers()
         {
             ListViewUsers.Clear();
-            User[] users = context.Users.ToArray();
+            User[] users = _context.Users.ToArray();
             ListViewUsers.Items.AddRange(users.Select(r => new ListViewItem { Text = r.Fullname, Tag = r }).ToArray());
         }
 
         private void LoadDevice1()
         {
             ListViewDevice1.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            Carrier[] carriers = _context.Carriers.ToArray();
+            ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice2()
         {
             ListViewDevice2.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            Carrier[] carriers = _context.Carriers.ToArray();
+            ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice3()
         {
             ListViewDevice3.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            Carrier[] carriers = _context.Carriers.ToArray();
+            ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice4()
         {
             ListViewDevice4.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            Carrier[] carriers = _context.Carriers.ToArray();
+            ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice5()
         {
             ListViewDevice5.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            Carrier[] carriers = _context.Carriers.ToArray();
+            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice6()
         {
             ListViewDevice6.Clear();
-            Carrier[] carriers = context.Carriers.ToArray();
-            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            Carrier[] carriers = _context.Carriers.ToArray();
+            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void ListViewDevice1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             ListViewItem item = e.Item;
-            var carrier = (Carrier) item.Tag;
+            var carrier = (Carrier)item.Tag;
         }
 
         public bool CheckAllUsers
@@ -167,7 +217,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var usr in users)
                 {
-                    if (((User) item.Tag).Id == usr.Id)
+                    if (((User)item.Tag).Id == usr.Id)
                     {
                         item.Checked = true;
                         //break;
@@ -224,7 +274,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
                     {
                         item.Checked = true;
                         //break;
@@ -235,6 +285,7 @@ namespace Neutron.Forms
             }
         }
 
+        #region ClearDevices
         private void ClearDevice1()
         {
             foreach (ListViewItem item in ListViewDevice1.Items)
@@ -282,7 +333,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
                     {
                         item.Checked = true;
                         break;
@@ -340,7 +391,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
                     {
                         item.Checked = true;
                         break;
@@ -397,7 +448,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier) item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
                     {
                         item.Checked = true;
                         break;
@@ -532,14 +583,15 @@ namespace Neutron.Forms
             }
         }
 
+        #endregion
         //------
 
         private void ButtonSaveNewRole_Click(object sender, EventArgs e)
         {
             if (TextBoxNewRole.Text.Length > 3)
             {
-                context.Roles.Add(new Role { RoleName = TextBoxNewRole.Text });
-                context.SaveChanges();
+                _context.Roles.Add(new Role { RoleName = TextBoxNewRole.Text });
+                _context.SaveChanges();
                 LoadRoles();
                 RefreshUsersAndCarriers();
             }
@@ -562,7 +614,7 @@ namespace Neutron.Forms
         private void ComboBoxStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var station = ComboBoxStation.SelectedItem as Station;
-            currentStationNumber = station.StationNumber;
+            _currentStationNumber = station.StationNumber;
             RefreshUsersAndCarriers();
         }
 
@@ -575,8 +627,8 @@ namespace Neutron.Forms
         private void RefreshUsersAndCarriers()
         {
             var role = ComboBoxRoles.SelectedItem as Role;
-            List<User> users = context.RoleUser.Where(r => r.RoleId == role.RoleId).Select(u => u.User).ToList();
-            List<Carrier> carriers = context.RoleCarrier.Where(r => r.RoleId == role.RoleId).Select(u => u.Carrier).ToList();
+            List<User> users = _context.RoleUser.Where(r => r.RoleId == role.RoleId).Select(u => u.User).ToList();
+            List<Carrier> carriers = _context.RoleCarrier.Where(r => r.RoleId == role.RoleId).Select(u => u.Carrier).ToList();
 
 
 
@@ -602,16 +654,16 @@ namespace Neutron.Forms
         private void ButtonSaveUsers_Click(object sender, EventArgs e)
         {
             var role = ComboBoxRoles.SelectedItem as Role;
-            List<User> users = context.Users.Where(u => u.Disabled == false).ToList();
+            List<User> users = _context.Users.Where(u => u.Disabled == false).ToList();
             foreach (var user in users)
             {
-                RoleUser ru = context.RoleUser.Where(g => g.RoleId == role.RoleId && g.UserId == user.Id).FirstOrDefault();
+                RoleUser ru = _context.RoleUser.Where(g => g.RoleId == role.RoleId && g.UserId == user.Id).FirstOrDefault();
                 if (ru != null)
                 {
-                    context.RoleUser.Remove(ru);
+                    _context.RoleUser.Remove(ru);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedUsers(role);
             RefreshUsersAndCarriers();
             UpdateInformation();
@@ -625,16 +677,16 @@ namespace Neutron.Forms
                 {
                     if (item.Checked)
                     {
-                        var user = (User) item.Tag;
+                        var user = (User)item.Tag;
                         var roleUser = new RoleUser { RoleId = role.RoleId, UserId = user.Id };
-                        RoleUser gu = context.RoleUser.Find(role.RoleId, user.Id);
+                        RoleUser gu = _context.RoleUser.Find(role.RoleId, user.Id);
                         if (gu == null)
                         {
-                            context.RoleUser.Add(roleUser);
+                            _context.RoleUser.Add(roleUser);
                         }
                     }
                 }
-                context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -645,18 +697,18 @@ namespace Neutron.Forms
         private void ButtonSaveDevice1_Click(object sender, EventArgs e)
         {
             var role = ComboBoxRoles.SelectedItem as Role;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 1).ToList();
+            List<Carrier> carriers = _context.Carriers.Where(c => c.DeviceNumber == 1).ToList();
             foreach (var item in carriers)
             {
-                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == item.CarrierId).FirstOrDefault();
                 if (rc != null)
                 {
-                    context.RoleCarrier.Remove(rc);
+                    _context.RoleCarrier.Remove(rc);
                 }
             }
 
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedDevice1(role);
             RefreshUsersAndCarriers();
         }
@@ -669,31 +721,31 @@ namespace Neutron.Forms
                 {
                     var carrier = item.Tag as Carrier;
                     var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
-                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                    RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == carrier.CarrierId).FirstOrDefault();
                     if (rc == null)
                     {
-                        context.RoleCarrier.Add(roleCarrier);
+                        _context.RoleCarrier.Add(roleCarrier);
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveDevice2_Click(object sender, EventArgs e)
         {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 2).ToList();
+            var role = (Role)ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = _context.Carriers.Where(c => c.DeviceNumber == 2).ToList();
             foreach (var item in carriers)
             {
-                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == item.CarrierId).FirstOrDefault();
                 if (rc != null)
                 {
-                    context.RoleCarrier.Remove(rc);
+                    _context.RoleCarrier.Remove(rc);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedDevice2(role);
             RefreshUsersAndCarriers();
         }
@@ -706,31 +758,31 @@ namespace Neutron.Forms
                 {
                     var carrier = item.Tag as Carrier;
                     var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
-                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                    RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == carrier.CarrierId).FirstOrDefault();
                     if (rc == null)
                     {
-                        context.RoleCarrier.Add(roleCarrier);
+                        _context.RoleCarrier.Add(roleCarrier);
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveDevice3_Click(object sender, EventArgs e)
         {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 3).ToList();
+            var role = (Role)ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = _context.Carriers.Where(c => c.DeviceNumber == 3).ToList();
             foreach (var item in carriers)
             {
-                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == item.CarrierId).FirstOrDefault();
                 if (rc != null)
                 {
-                    context.RoleCarrier.Remove(rc);
+                    _context.RoleCarrier.Remove(rc);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedDevice3(role);
             RefreshUsersAndCarriers();
         }
@@ -743,31 +795,31 @@ namespace Neutron.Forms
                 {
                     var carrier = item.Tag as Carrier;
                     var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
-                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                    RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == carrier.CarrierId).FirstOrDefault();
                     if (rc == null)
                     {
-                        context.RoleCarrier.Add(roleCarrier);
+                        _context.RoleCarrier.Add(roleCarrier);
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveDevice4_Click(object sender, EventArgs e)
         {
-            var role = (Role) ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 4).ToList();
+            var role = (Role)ComboBoxRoles.SelectedItem;
+            List<Carrier> carriers = _context.Carriers.Where(c => c.DeviceNumber == 4).ToList();
             foreach (var item in carriers)
             {
-                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == item.CarrierId).FirstOrDefault();
                 if (rc != null)
                 {
-                    context.RoleCarrier.Remove(rc);
+                    _context.RoleCarrier.Remove(rc);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedDevice4(role);
             RefreshUsersAndCarriers();
         }
@@ -780,31 +832,31 @@ namespace Neutron.Forms
                 {
                     var carrier = item.Tag as Carrier;
                     var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
-                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                    RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                     && g.CarrierId == carrier.CarrierId).FirstOrDefault();
                     if (rc == null)
                     {
-                        context.RoleCarrier.Add(roleCarrier);
+                        _context.RoleCarrier.Add(roleCarrier);
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveDevice5_Click(object sender, EventArgs e)
         {
             var role = (Role)ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 5).ToList();
+            List<Carrier> carriers = _context.Carriers.Where(c => c.DeviceNumber == 5).ToList();
             foreach (var item in carriers)
             {
-                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                                                                 && g.CarrierId == item.CarrierId).FirstOrDefault();
                 if (rc != null)
                 {
-                    context.RoleCarrier.Remove(rc);
+                    _context.RoleCarrier.Remove(rc);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedDevice5(role);
             RefreshUsersAndCarriers();
         }
@@ -817,31 +869,31 @@ namespace Neutron.Forms
                 {
                     var carrier = item.Tag as Carrier;
                     var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
-                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                    RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                                                                     && g.CarrierId == carrier.CarrierId).FirstOrDefault();
                     if (rc == null)
                     {
-                        context.RoleCarrier.Add(roleCarrier);
+                        _context.RoleCarrier.Add(roleCarrier);
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveDevice6_Click(object sender, EventArgs e)
         {
             var role = (Role)ComboBoxRoles.SelectedItem;
-            List<Carrier> carriers = context.Carriers.Where(c => c.DeviceNumber == 6).ToList();
+            List<Carrier> carriers = _context.Carriers.Where(c => c.DeviceNumber == 6).ToList();
             foreach (var item in carriers)
             {
-                RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                                                                 && g.CarrierId == item.CarrierId).FirstOrDefault();
                 if (rc != null)
                 {
-                    context.RoleCarrier.Remove(rc);
+                    _context.RoleCarrier.Remove(rc);
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
             SaveSelectedDevice6(role);
             RefreshUsersAndCarriers();
         }
@@ -854,15 +906,15 @@ namespace Neutron.Forms
                 {
                     var carrier = item.Tag as Carrier;
                     var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
-                    RoleCarrier rc = context.RoleCarrier.Where(g => g.RoleId == role.RoleId
+                    RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
                                                                     && g.CarrierId == carrier.CarrierId).FirstOrDefault();
                     if (rc == null)
                     {
-                        context.RoleCarrier.Add(roleCarrier);
+                        _context.RoleCarrier.Add(roleCarrier);
                     }
                 }
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private void ButtonSaveNewUser_Click(object sender, EventArgs e)
@@ -879,8 +931,8 @@ namespace Neutron.Forms
                 Disabled = CheckBoxDisabled.Checked
             };
             user.Roles.Add(role);
-            context.Users.Add(user);
-            context.SaveChanges();
+            _context.Users.Add(user);
+            _context.SaveChanges();
 
             ClearFields();
             LoadUsers();
@@ -941,6 +993,6 @@ namespace Neutron.Forms
             UpdateInformation();
         }
 
-        
+
     }
 }

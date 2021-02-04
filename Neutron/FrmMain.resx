@@ -897,6 +897,9 @@
   <data name="GroupBoxLanguage.Text" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
     <value>GroupBoxLanguage</value>
   </data>

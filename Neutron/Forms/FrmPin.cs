@@ -55,7 +55,8 @@ namespace Neutron.Forms
                         Lastname = "Admin",
                         EmpId = "9999",
                         Username = "admin",
-                        Pin = "2277"
+                        Pin = "2277",
+                        LanguageId = 1
                     };
                 }
                 catch (Exception ex)
@@ -74,7 +75,7 @@ namespace Neutron.Forms
                 {
                     using (var db = new SecureDb())
                     {
-                        CurrentUser = db.Users.FirstOrDefault(u => u.Pin == pin);
+                        CurrentUser = db.Users.Include("Language").FirstOrDefault(u => u.Pin == pin);
                         if (CurrentUser == null) return;
                         DialogResult = DialogResult.OK;
                         Close();

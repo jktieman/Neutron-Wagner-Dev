@@ -2,6 +2,7 @@
 using NeutronData.Models.Lookups;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,13 @@ namespace NeutronData.Models
 {
     public class Station : ILookup, IEntity
     {
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+        [Required]
         public int StationNumber { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public int StationTypeId { get; set; }
         public int? TcpConfigurationId { get; set; }
         public int? SerialConfigurationId { get; set; }

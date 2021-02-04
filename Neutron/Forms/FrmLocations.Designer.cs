@@ -620,6 +620,7 @@
             this.ComboBoxViewEditStation.Name = "ComboBoxViewEditStation";
             this.ComboBoxViewEditStation.Size = new System.Drawing.Size(235, 32);
             this.ComboBoxViewEditStation.TabIndex = 0;
+            this.ComboBoxViewEditStation.SelectedIndexChanged += new System.EventHandler(this.ComboBoxViewEditStation_SelectedIndexChanged);
             // 
             // TextBoxViewEditLoc5
             // 
@@ -1039,6 +1040,7 @@
             this.ComboBoxNewStation.Name = "ComboBoxNewStation";
             this.ComboBoxNewStation.Size = new System.Drawing.Size(235, 32);
             this.ComboBoxNewStation.TabIndex = 0;
+            this.ComboBoxNewStation.SelectedIndexChanged += new System.EventHandler(this.ComboBoxNewStation_SelectedIndexChanged);
             // 
             // TextBoxNewLoc5
             // 

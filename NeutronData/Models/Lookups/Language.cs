@@ -6,6 +6,7 @@ namespace NeutronData.Models.Lookups
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string CultureInfo { get; set; }
         public int Sequence { get; set; }
     }
 }

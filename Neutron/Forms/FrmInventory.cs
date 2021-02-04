@@ -67,6 +67,7 @@ namespace Neutron.Forms
         private readonly NeutronVariables _neutronVariables;
         private readonly StationView _station;
         private readonly IAkaRepository _akaRepository;
+        private readonly ILacProcessor _lacProcessor;
         private bool _allAvailable;
         public ItemDefinition CurrentItem { get; set; }
         public Location CurrentLocation { get; set; }
@@ -74,7 +75,8 @@ namespace Neutron.Forms
         public bool CloseButtonPressed { get; set; }
         private bool _firstTime = true;
 
-        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository)
+        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
+            ILacProcessor lacProcessor)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -85,6 +87,7 @@ namespace Neutron.Forms
             _jsonData = jsonData;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _akaRepository = akaRepository;
+            _lacProcessor = lacProcessor;
             SetupGrids();
             HideTabControlTabs();
             SetupNewForm();
@@ -148,7 +151,7 @@ namespace Neutron.Forms
                 SetCurrentInventoryItem();
                 DataGridView1.Refresh();
                 DataGridView1.ClearSelection();
-                if(DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
             }
             else
             {
@@ -631,7 +634,7 @@ namespace Neutron.Forms
             var position = _gridResourceManager.GetString("Position");
             var bCol = new DataGridViewButtonColumn
             {
-HeaderText = _gridResourceManager.GetString(""),
+                HeaderText = _gridResourceManager.GetString(""),
                 Visible = true,
                 Name = "Position",
                 Text = position,
@@ -643,7 +646,7 @@ HeaderText = _gridResourceManager.GetString(""),
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationName",
-HeaderText = _gridResourceManager.GetString("StationName"),
+                HeaderText = _gridResourceManager.GetString("StationName"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StationName"
@@ -652,7 +655,7 @@ HeaderText = _gridResourceManager.GetString("StationName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-HeaderText = _gridResourceManager.GetString("Item"),
+                HeaderText = _gridResourceManager.GetString("Item"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Item"
@@ -661,7 +664,7 @@ HeaderText = _gridResourceManager.GetString("Item"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderText = _gridResourceManager.GetString("Description"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -670,7 +673,7 @@ HeaderText = _gridResourceManager.GetString("Description"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-HeaderText = _gridResourceManager.GetString("Quantity"),
+                HeaderText = _gridResourceManager.GetString("Quantity"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity"
@@ -679,7 +682,7 @@ HeaderText = _gridResourceManager.GetString("Quantity"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ReceivedDate",
-HeaderText = _gridResourceManager.GetString("ReceivedDate"),
+                HeaderText = _gridResourceManager.GetString("ReceivedDate"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
@@ -688,7 +691,7 @@ HeaderText = _gridResourceManager.GetString("ReceivedDate"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-HeaderText = _gridResourceManager.GetString("Slot"),
+                HeaderText = _gridResourceManager.GetString("Slot"),
                 Visible = true,
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
@@ -698,7 +701,7 @@ HeaderText = _gridResourceManager.GetString("Slot"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
-HeaderText = _gridResourceManager.GetString("SizeCodeName"),
+                HeaderText = _gridResourceManager.GetString("SizeCodeName"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SizeCodeName"
@@ -707,7 +710,7 @@ HeaderText = _gridResourceManager.GetString("SizeCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc1",
-HeaderText = _gridResourceManager.GetString("Loc1"),
+                HeaderText = _gridResourceManager.GetString("Loc1"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc1"
@@ -716,7 +719,7 @@ HeaderText = _gridResourceManager.GetString("Loc1"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc2",
-HeaderText = _gridResourceManager.GetString("Loc2"),
+                HeaderText = _gridResourceManager.GetString("Loc2"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc2"
@@ -725,7 +728,7 @@ HeaderText = _gridResourceManager.GetString("Loc2"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc3",
-HeaderText = _gridResourceManager.GetString("Loc3"),
+                HeaderText = _gridResourceManager.GetString("Loc3"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc3"
@@ -734,7 +737,7 @@ HeaderText = _gridResourceManager.GetString("Loc3"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc4",
-HeaderText = _gridResourceManager.GetString("Loc4"),
+                HeaderText = _gridResourceManager.GetString("Loc4"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc4"
@@ -743,7 +746,7 @@ HeaderText = _gridResourceManager.GetString("Loc4"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc5",
-HeaderText = _gridResourceManager.GetString("Loc5"),
+                HeaderText = _gridResourceManager.GetString("Loc5"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc5"
@@ -752,7 +755,7 @@ HeaderText = _gridResourceManager.GetString("Loc5"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
-HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
+                HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "VelocityCodeName"
@@ -761,7 +764,7 @@ HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
-HeaderText = _gridResourceManager.GetString("HeightCodeName"),
+                HeaderText = _gridResourceManager.GetString("HeightCodeName"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "HeightCodeName"
@@ -770,7 +773,7 @@ HeaderText = _gridResourceManager.GetString("HeightCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationCodeName",
-HeaderText = _gridResourceManager.GetString("LocationCodeName"),
+                HeaderText = _gridResourceManager.GetString("LocationCodeName"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LocationCodeName"
@@ -779,7 +782,7 @@ HeaderText = _gridResourceManager.GetString("LocationCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageTypeName",
-HeaderText = _gridResourceManager.GetString("StorageTypeName"),
+                HeaderText = _gridResourceManager.GetString("StorageTypeName"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StorageTypeName"
@@ -788,7 +791,7 @@ HeaderText = _gridResourceManager.GetString("StorageTypeName"),
             var xcol = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "PrimeBin",
-HeaderText = _gridResourceManager.GetString("PrimeBin"),
+                HeaderText = _gridResourceManager.GetString("PrimeBin"),
                 Visible = true,
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
@@ -798,7 +801,7 @@ HeaderText = _gridResourceManager.GetString("PrimeBin"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString("Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -814,7 +817,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
             DataGridViewInventoryLocations.AllowUserToAddRows = false;
             bCol = new DataGridViewButtonColumn
             {
-HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString("Id"),
                 Visible = true,
                 Name = "Position",
                 Text = position,
@@ -826,7 +829,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationName",
-HeaderText = _gridResourceManager.GetString("StationName"),
+                HeaderText = _gridResourceManager.GetString("StationName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "StationName"
@@ -835,7 +838,7 @@ HeaderText = _gridResourceManager.GetString("StationName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-HeaderText = _gridResourceManager.GetString("Quantity"),
+                HeaderText = _gridResourceManager.GetString("Quantity"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity"
@@ -844,7 +847,7 @@ HeaderText = _gridResourceManager.GetString("Quantity"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ReceivedDate",
-HeaderText = _gridResourceManager.GetString("ReceivedDate"),
+                HeaderText = _gridResourceManager.GetString("ReceivedDate"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "ReceivedDate"
@@ -853,7 +856,7 @@ HeaderText = _gridResourceManager.GetString("ReceivedDate"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-HeaderText = _gridResourceManager.GetString("Slot"),
+                HeaderText = _gridResourceManager.GetString("Slot"),
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
@@ -863,7 +866,7 @@ HeaderText = _gridResourceManager.GetString("Slot"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
-HeaderText = _gridResourceManager.GetString("SizeCodeName"),
+                HeaderText = _gridResourceManager.GetString("SizeCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "SizeCodeName"
@@ -872,7 +875,7 @@ HeaderText = _gridResourceManager.GetString("SizeCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc1",
-HeaderText = _gridResourceManager.GetString("Loc1"),
+                HeaderText = _gridResourceManager.GetString("Loc1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc1"
@@ -881,7 +884,7 @@ HeaderText = _gridResourceManager.GetString("Loc1"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc2",
-HeaderText = _gridResourceManager.GetString("Loc2"),
+                HeaderText = _gridResourceManager.GetString("Loc2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc2"
@@ -890,7 +893,7 @@ HeaderText = _gridResourceManager.GetString("Loc2"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc3",
-HeaderText = _gridResourceManager.GetString("Loc3"),
+                HeaderText = _gridResourceManager.GetString("Loc3"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc3"
@@ -899,7 +902,7 @@ HeaderText = _gridResourceManager.GetString("Loc3"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc4",
-HeaderText = _gridResourceManager.GetString("Loc4"),
+                HeaderText = _gridResourceManager.GetString("Loc4"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc4"
@@ -908,7 +911,7 @@ HeaderText = _gridResourceManager.GetString("Loc4"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc5",
-HeaderText = _gridResourceManager.GetString("Loc5"),
+                HeaderText = _gridResourceManager.GetString("Loc5"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc5"
@@ -917,7 +920,7 @@ HeaderText = _gridResourceManager.GetString("Loc5"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
-HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
+                HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "VelocityCodeName"
@@ -926,7 +929,7 @@ HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
-HeaderText = _gridResourceManager.GetString("HeightCodeName"),
+                HeaderText = _gridResourceManager.GetString("HeightCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "HeightCodeName"
@@ -935,7 +938,7 @@ HeaderText = _gridResourceManager.GetString("HeightCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageTypeName",
-HeaderText = _gridResourceManager.GetString("StorageTypeName"),
+                HeaderText = _gridResourceManager.GetString("StorageTypeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StorageTypeName"
@@ -944,7 +947,7 @@ HeaderText = _gridResourceManager.GetString("StorageTypeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationCodeName",
-HeaderText = _gridResourceManager.GetString("LocationCodeName"),
+                HeaderText = _gridResourceManager.GetString("LocationCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LocationCodeName"
@@ -953,7 +956,7 @@ HeaderText = _gridResourceManager.GetString("LocationCodeName"),
             xcol = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "PrimeBin",
-HeaderText = _gridResourceManager.GetString("PrimeBin"),
+                HeaderText = _gridResourceManager.GetString("PrimeBin"),
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
@@ -963,7 +966,7 @@ HeaderText = _gridResourceManager.GetString("PrimeBin"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString("Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -979,7 +982,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
             DataGridViewInventoryNewLocations.AllowUserToAddRows = false;
             bCol = new DataGridViewButtonColumn
             {
-HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString("Id"),
                 Visible = true,
                 Name = "Position",
                 Text = position,
@@ -991,7 +994,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
             xcol = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "InUse",
-HeaderText = _gridResourceManager.GetString("InUse"),
+                HeaderText = _gridResourceManager.GetString("InUse"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "InUse"
@@ -1000,7 +1003,7 @@ HeaderText = _gridResourceManager.GetString("InUse"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationName",
-HeaderText = _gridResourceManager.GetString("StationName"),
+                HeaderText = _gridResourceManager.GetString("StationName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "StationName",
@@ -1010,7 +1013,7 @@ HeaderText = _gridResourceManager.GetString("StationName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-HeaderText = _gridResourceManager.GetString("Slot"),
+                HeaderText = _gridResourceManager.GetString("Slot"),
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
@@ -1020,7 +1023,7 @@ HeaderText = _gridResourceManager.GetString("Slot"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
-HeaderText = _gridResourceManager.GetString("SizeCodeName"),
+                HeaderText = _gridResourceManager.GetString("SizeCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "SizeCodeName",
@@ -1030,7 +1033,7 @@ HeaderText = _gridResourceManager.GetString("SizeCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc1",
-HeaderText = _gridResourceManager.GetString("Loc1"),
+                HeaderText = _gridResourceManager.GetString("Loc1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc1",
@@ -1040,7 +1043,7 @@ HeaderText = _gridResourceManager.GetString("Loc1"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc2",
-HeaderText = _gridResourceManager.GetString("Loc2"),
+                HeaderText = _gridResourceManager.GetString("Loc2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc2",
@@ -1050,7 +1053,7 @@ HeaderText = _gridResourceManager.GetString("Loc2"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc3",
-HeaderText = _gridResourceManager.GetString("Loc3"),
+                HeaderText = _gridResourceManager.GetString("Loc3"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc3",
@@ -1060,7 +1063,7 @@ HeaderText = _gridResourceManager.GetString("Loc3"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc4",
-HeaderText = _gridResourceManager.GetString("Loc4"),
+                HeaderText = _gridResourceManager.GetString("Loc4"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc4",
@@ -1070,7 +1073,7 @@ HeaderText = _gridResourceManager.GetString("Loc4"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc5",
-HeaderText = _gridResourceManager.GetString("Loc5"),
+                HeaderText = _gridResourceManager.GetString("Loc5"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Loc5",
@@ -1080,7 +1083,7 @@ HeaderText = _gridResourceManager.GetString("Loc5"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
-HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
+                HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "VelocityCodeName",
@@ -1090,7 +1093,7 @@ HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
-HeaderText = _gridResourceManager.GetString("HeightCodeName"),
+                HeaderText = _gridResourceManager.GetString("HeightCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "HeightCodeName",
@@ -1100,7 +1103,7 @@ HeaderText = _gridResourceManager.GetString("HeightCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationCodeName",
-HeaderText = _gridResourceManager.GetString("LocationCodeName"),
+                HeaderText = _gridResourceManager.GetString("LocationCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LocationCodeName"
@@ -1109,7 +1112,7 @@ HeaderText = _gridResourceManager.GetString("LocationCodeName"),
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString("Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -1387,7 +1390,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
             if (itemDefinition == null) return;
             var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(itemDefinition.StationId,
                 itemDefinition.SizeCodeId, itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId,
-                itemDefinition.LocationCodeId, inUse:false));
+                itemDefinition.LocationCodeId, inUse: false));
             _newLocationBindingSourceEquin = new BindingListView<LocationView>(views.ToList());
             _newLocationBindingSource.DataSource = _newLocationBindingSourceEquin;
             DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
@@ -1591,7 +1594,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
                 //update
                 inventory = _repoInventory.FindByKey(IntegerExtensions.ParseInt(inventoryId));
                 inventory.Quantity = IntegerExtensions.ParseInt((TextBoxAddDetailQuantity.Text));
-                inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType) ComboBoxAddDetailStorageType.SelectedItem).Id;
+                inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType)ComboBoxAddDetailStorageType.SelectedItem).Id;
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
                 inventory.StationId = (int)ComboBoxAddDetailStation.SelectedValue;
@@ -1604,7 +1607,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
                 inventory.ItemDefinitionId = IntegerExtensions.ParseInt((TextBoxAddDetailItemDefinitionId.Text));
                 inventory.LocationId = IntegerExtensions.ParseInt((TextBoxAddDetailLocationId.Text));
                 inventory.Quantity = IntegerExtensions.ParseInt((TextBoxAddDetailQuantity.Text));
-                inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType) ComboBoxAddDetailStorageType.SelectedItem).Id;
+                inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType)ComboBoxAddDetailStorageType.SelectedItem).Id;
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
                 inventory.StationId = (int)ComboBoxAddDetailStation.SelectedValue;
@@ -1727,6 +1730,7 @@ HeaderText = _gridResourceManager.GetString("Id"),
             DataGridViewPosition((DataGridView)sender, e.RowIndex);
             SetCurrentInventoryItem();
         }
+
         private void DataGridViewPosition(DataGridView grid, int rowIndex)
         {
             var text = "----";
@@ -1740,53 +1744,68 @@ HeaderText = _gridResourceManager.GetString("Id"),
                     var partition = grid["Loc4", rowIndex].Value.ToString();
                     var part = IntegerExtensions.ParseInt(grid["Loc4", rowIndex].Value.ToString());
                     var display = string.Empty;
-                    if (_neutronVariables.ShuttleEnabled)
+                    if (_lacProcessor.MovePermitted(_station.StationNumber, deviceNumber, trayNumber))
                     {
-                        var hardwareDevice = _station.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
-                        if (hardwareDevice != null)
+                        if (_neutronVariables.ShuttleEnabled)
                         {
-                            if (hardwareDevice.Enabled == true)
+                            var hardwareDevice =
+                                _station.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                            if (hardwareDevice != null)
                             {
-                                if (GlobalVar.Shuttle != null)
+                                if (hardwareDevice.Enabled == true)
                                 {
-                                    var response = Task.Run(() =>
-                                        GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, 0, display));
-                                    if (response.Result != DeviceResponse.Success)
+                                    if (GlobalVar.Shuttle != null)
                                     {
-                                        MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: string.Empty, buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                                        var response = Task.Run(() =>
+                                            GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, 0,
+                                                display));
+                                        if (response.Result != DeviceResponse.Success)
+                                        {
+                                            MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                                                caption: string.Empty, buttons: MessageBoxButtons.OK,
+                                                icon: MessageBoxIcon.Error);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show(_resourceManager.GetString("Message11"));
                                     }
                                 }
                                 else
                                 {
-                                    MessageBox.Show(_resourceManager.GetString("Message11"));
+                                    MessageBox.Show(
+                                        $"{_resourceManager.GetString("Message12")} - {hardwareDevice.Name}");
                                 }
                             }
                             else
                             {
-                                MessageBox.Show($"{_resourceManager.GetString("Message12")} - {hardwareDevice.Name}");
+                                MessageBox.Show(_resourceManager.GetString("Message13"));
                             }
                         }
-                        else
+
+                        if (_neutronVariables.DisplaysEnabled)
                         {
-                            MessageBox.Show(_resourceManager.GetString("Message13"));
-                        }
-                    }
-                    if (_neutronVariables.DisplaysEnabled)
-                    {
-                        if (GlobalVar.Displays != null)
-                        {
-                            ClearAllShi();
-                            if (grid.Columns.Contains(columnName: "Quantity"))
+                            if (GlobalVar.Displays != null)
                             {
-                                var qty = grid["Quantity", rowIndex].Value.ToString();
-                                text = ($"{qty.PadLeft(6, paddingChar: ' ')}");
-                                GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
+                                ClearAllShi();
+                                if (grid.Columns.Contains(columnName: "Quantity"))
+                                {
+                                    var qty = grid["Quantity", rowIndex].Value.ToString();
+                                    text = ($"{qty.PadLeft(6, paddingChar: ' ')}");
+                                    GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
+                                }
                             }
                         }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Location Access Denied");
                     }
                 }
             }
         }
+
         private void ClearAllShi()
         {
             if (_neutronVariables.DisplaysEnabled)

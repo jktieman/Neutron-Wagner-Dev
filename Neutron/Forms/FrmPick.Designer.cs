@@ -2712,7 +2712,7 @@ namespace Neutron.Forms
             this.MBLocationCount.Location = new System.Drawing.Point(3, 2);
             this.MBLocationCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBLocationCount.Name = "MBLocationCount";
-            this.MBLocationCount.Size = new System.Drawing.Size(135, 30);
+            this.MBLocationCount.Size = new System.Drawing.Size(180, 30);
             this.MBLocationCount.TabIndex = 92;
             this.MBLocationCount.Text = "&Location Count";
             this.MBLocationCount.UseSelectable = true;
@@ -2724,7 +2724,7 @@ namespace Neutron.Forms
             this.MBResetCarousels.Location = new System.Drawing.Point(3, 101);
             this.MBResetCarousels.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBResetCarousels.Name = "MBResetCarousels";
-            this.MBResetCarousels.Size = new System.Drawing.Size(135, 30);
+            this.MBResetCarousels.Size = new System.Drawing.Size(180, 30);
             this.MBResetCarousels.TabIndex = 92;
             this.MBResetCarousels.Text = "&Reset Carousels";
             this.MBResetCarousels.UseSelectable = true;
@@ -2736,7 +2736,7 @@ namespace Neutron.Forms
             this.MBPickScreenHotPick.Location = new System.Drawing.Point(3, 68);
             this.MBPickScreenHotPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickScreenHotPick.Name = "MBPickScreenHotPick";
-            this.MBPickScreenHotPick.Size = new System.Drawing.Size(135, 30);
+            this.MBPickScreenHotPick.Size = new System.Drawing.Size(180, 30);
             this.MBPickScreenHotPick.TabIndex = 92;
             this.MBPickScreenHotPick.Text = "Hot &Action";
             this.MBPickScreenHotPick.UseSelectable = true;
@@ -2748,7 +2748,7 @@ namespace Neutron.Forms
             this.MBShowOrderOrQuantityToggle.Location = new System.Drawing.Point(3, 35);
             this.MBShowOrderOrQuantityToggle.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShowOrderOrQuantityToggle.Name = "MBShowOrderOrQuantityToggle";
-            this.MBShowOrderOrQuantityToggle.Size = new System.Drawing.Size(135, 30);
+            this.MBShowOrderOrQuantityToggle.Size = new System.Drawing.Size(180, 30);
             this.MBShowOrderOrQuantityToggle.TabIndex = 92;
             this.MBShowOrderOrQuantityToggle.Text = "&Show Jobs";
             this.MBShowOrderOrQuantityToggle.UseSelectable = true;
@@ -3081,10 +3081,10 @@ namespace Neutron.Forms
             // MBPrint
             // 
             this.MBPrint.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrint.Location = new System.Drawing.Point(1008, 68);
+            this.MBPrint.Location = new System.Drawing.Point(964, 68);
             this.MBPrint.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrint.Name = "MBPrint";
-            this.MBPrint.Size = new System.Drawing.Size(135, 30);
+            this.MBPrint.Size = new System.Drawing.Size(180, 30);
             this.MBPrint.TabIndex = 0;
             this.MBPrint.Text = "Print";
             this.MBPrint.UseSelectable = true;
@@ -3094,10 +3094,10 @@ namespace Neutron.Forms
             // MBPickNewItem
             // 
             this.MBPickNewItem.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickNewItem.Location = new System.Drawing.Point(1008, 35);
+            this.MBPickNewItem.Location = new System.Drawing.Point(964, 35);
             this.MBPickNewItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickNewItem.Name = "MBPickNewItem";
-            this.MBPickNewItem.Size = new System.Drawing.Size(135, 30);
+            this.MBPickNewItem.Size = new System.Drawing.Size(180, 30);
             this.MBPickNewItem.TabIndex = 0;
             this.MBPickNewItem.Text = "New Item";
             this.MBPickNewItem.UseSelectable = true;
@@ -3125,10 +3125,10 @@ namespace Neutron.Forms
             this.MBPickBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MBPickBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickBack.Location = new System.Drawing.Point(1008, 2);
+            this.MBPickBack.Location = new System.Drawing.Point(964, 2);
             this.MBPickBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickBack.Name = "MBPickBack";
-            this.MBPickBack.Size = new System.Drawing.Size(135, 30);
+            this.MBPickBack.Size = new System.Drawing.Size(180, 30);
             this.MBPickBack.TabIndex = 3;
             this.MBPickBack.Text = "&Back";
             this.MBPickBack.UseSelectable = true;

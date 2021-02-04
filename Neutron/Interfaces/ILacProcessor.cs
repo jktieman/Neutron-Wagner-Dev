@@ -10,9 +10,8 @@ namespace Neutron.Interfaces
     public interface ILacProcessor
     {
 
-        Dictionary<int, Carrier> LacProfile { get; set; }
+        List<Carrier> LacProfile { get; set; }
         void ReprocessLacSet(int userId);
-        bool LacAccess(int locationId);
-
+        bool MovePermitted(int station, int device, int carrier);
     }
 }

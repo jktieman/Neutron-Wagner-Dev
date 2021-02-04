@@ -13,20 +13,19 @@ namespace Neutron.Classes
 {
     public class LacProcessor : ILacProcessor
     {
-        public Dictionary<int, Carrier> LacProfile { get; set; }
+        public List<Carrier> LacProfile { get; set; }
 
         public LacProcessor()
         {
-            LacProfile = new Dictionary<int, Carrier>();
+            LacProfile = new List<Carrier>();
             ReprocessLacSet();
         }
 
         public void ReprocessLacSet(int userId = 0)
         {
-            LacProfile = new Dictionary<int, Carrier>();
+            LacProfile = new List<Carrier>();
             if (userId > 0)
             {
-                //var recs = new List<int>();
                 try
                 {
                     using (var context = new SecureDb())
@@ -35,7 +34,7 @@ namespace Neutron.Classes
                          var carriers = context.Database.SqlQuery<Carrier>("usp_GetLacSet @UserId", param).ToList();
                         foreach (var carrier in carriers)
                         {
-                            LacProfile.Add(carrier.CarrierId, carrier);
+                            LacProfile.Add(carrier);
                         }
                     }
                 }
@@ -46,9 +45,13 @@ namespace Neutron.Classes
             }
         }
 
-        public bool LacAccess(int locationId)
+        public bool MovePermitted(int station, int device, int carrier)
         {
-            return LacProfile.ContainsKey(locationId);
+            var result = false;
+            var x = LacProfile.Find(r =>
+                r.CarrierNumber == carrier && r.DeviceNumber == device && r.StationNumber == station);
+            if (x != null) result = true;
+            return result;
         }
     }
 }

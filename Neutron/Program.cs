@@ -38,8 +38,7 @@ namespace Neutron
 
         static void Main()
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
 
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
@@ -86,7 +85,19 @@ namespace Neutron
 
             var stationRepository = kernel.Get<IStationRepository>();
 
-            var neutronVariables = jsonData.LoadFile<NeutronVariables>(); 
+            var neutronVariables = jsonData.LoadFile<NeutronVariables>();
+
+            var cultureInfo = neutronVariables.DefaultLanguage;
+            if (cultureInfo.Length == 5 && cultureInfo.Contains('-'))
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
+            }
+            else
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            }
 
             Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, neutronVariables, stationRepository));
 

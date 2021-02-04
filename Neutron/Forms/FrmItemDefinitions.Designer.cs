@@ -51,6 +51,7 @@
             this.MbViewEditClose = new MetroFramework.Controls.MetroButton();
             this.MbViewEditSave = new MetroFramework.Controls.MetroButton();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.LabelViewEditDefaultImage = new System.Windows.Forms.Label();
             this.LabelViewEditChangeStationWarning = new System.Windows.Forms.Label();
             this.PictureBoxViewEditImage = new System.Windows.Forms.PictureBox();
             this.TextBoxViewEditWeight = new System.Windows.Forms.TextBox();
@@ -93,6 +94,7 @@
             this.MbNewClose = new MetroFramework.Controls.MetroButton();
             this.MbNewSave = new MetroFramework.Controls.MetroButton();
             this.PanelNew = new System.Windows.Forms.Panel();
+            this.LabelNewDefaultImage = new System.Windows.Forms.Label();
             this.PictureBoxNewImage = new System.Windows.Forms.PictureBox();
             this.ComboBoxNewLocationCode = new System.Windows.Forms.ComboBox();
             this.LabelNewLocation = new System.Windows.Forms.Label();
@@ -124,8 +126,6 @@
             this.LabelNewItem = new System.Windows.Forms.Label();
             this.LabelNewStation = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
-            this.LabelNewDefaultImage = new System.Windows.Forms.Label();
-            this.LabelViewEditDefaultImage = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Listing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -446,6 +446,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1141, 536);
             this.panel1.TabIndex = 0;
+            // 
+            // LabelViewEditDefaultImage
+            // 
+            this.LabelViewEditDefaultImage.Location = new System.Drawing.Point(862, 133);
+            this.LabelViewEditDefaultImage.Name = "LabelViewEditDefaultImage";
+            this.LabelViewEditDefaultImage.Size = new System.Drawing.Size(250, 29);
+            this.LabelViewEditDefaultImage.TabIndex = 39;
+            this.LabelViewEditDefaultImage.Text = "Default Image";
+            this.LabelViewEditDefaultImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelViewEditChangeStationWarning
             // 
@@ -915,6 +924,15 @@
             this.PanelNew.Size = new System.Drawing.Size(1141, 536);
             this.PanelNew.TabIndex = 21;
             // 
+            // LabelNewDefaultImage
+            // 
+            this.LabelNewDefaultImage.Location = new System.Drawing.Point(862, 133);
+            this.LabelNewDefaultImage.Name = "LabelNewDefaultImage";
+            this.LabelNewDefaultImage.Size = new System.Drawing.Size(250, 29);
+            this.LabelNewDefaultImage.TabIndex = 37;
+            this.LabelNewDefaultImage.Text = "Default Image";
+            this.LabelNewDefaultImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // PictureBoxNewImage
             // 
             this.PictureBoxNewImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -1213,24 +1231,6 @@
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // LabelNewDefaultImage
-            // 
-            this.LabelNewDefaultImage.Location = new System.Drawing.Point(862, 133);
-            this.LabelNewDefaultImage.Name = "LabelNewDefaultImage";
-            this.LabelNewDefaultImage.Size = new System.Drawing.Size(250, 29);
-            this.LabelNewDefaultImage.TabIndex = 37;
-            this.LabelNewDefaultImage.Text = "Default Image";
-            this.LabelNewDefaultImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelViewEditDefaultImage
-            // 
-            this.LabelViewEditDefaultImage.Location = new System.Drawing.Point(862, 133);
-            this.LabelViewEditDefaultImage.Name = "LabelViewEditDefaultImage";
-            this.LabelViewEditDefaultImage.Size = new System.Drawing.Size(250, 29);
-            this.LabelViewEditDefaultImage.TabIndex = 39;
-            this.LabelViewEditDefaultImage.Text = "Default Image";
-            this.LabelViewEditDefaultImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FrmItemDefinitions
             // 

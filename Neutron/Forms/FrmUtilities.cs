@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -27,6 +28,7 @@ using Neutron.Classes;
 using NeutronCore.Extensions;
 using NeutronCore.Models;
 using NeutronData.BaseClasses;
+using NeutronData.Interfaces;
 using NeutronData.Models.Lookups;
 using NeutronData.PrintModels;
 using NeutronDllu;
@@ -48,9 +50,8 @@ namespace Neutron.Forms
 
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
 
-        //private readonly StationRepository _repoStation = new StationRepository();
         private readonly GenericRepository<Station> _repoStations = new GenericRepository<Station>(new NeutronDb());
-
+        private readonly GenericRepository<StationType> _repoStationTypes = new GenericRepository<StationType>(new NeutronDb());
         private readonly GenericRepository<DeviceType> _repoDeviceTypes =
             new GenericRepository<DeviceType>(new NeutronDb());
 
@@ -69,12 +70,14 @@ namespace Neutron.Forms
         private BindingSource _bindingSourceHardwareDevices = new BindingSource();
         private BindingSource _bindingSourceTcp = new BindingSource();
         private BindingSource _bindingSourceSerial = new BindingSource();
+        private BindingSource _bindingSourceStations = new BindingSource();
 
         public bool CloseButtonPressed { get; set; }
 
         //public bool CloseForm = false;
         private readonly IJsonData _jsonData;
         public HardwareDeviceView CurrentItem;
+        public StationViewModel CurrentStation;
         public TcpConfiguration CurrentTcpConfiguration;
         public SerialConfiguration CurrentSerialConfiguration;
 
@@ -94,7 +97,7 @@ namespace Neutron.Forms
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            // SetCulture(_cultureInfo.Name);
+            //SetCulture(_cultureInfo.Name);
             KeyPreview = true;
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
@@ -108,10 +111,11 @@ namespace Neutron.Forms
                 $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}.{ApplicationVersion.MajorRevision}.{ApplicationVersion.MinorRevision}";
             ComboBoxDefaultLanguage.DataSource = _repoLanguages.All();
             ComboBoxDefaultLanguage.DisplayMember = "Name";
-            ComboBoxDefaultLanguage.ValueMember = "Id";
+            ComboBoxDefaultLanguage.ValueMember = "CultureInfo";
 
 
         }
+
 
         private void SetupDeviceForms()
         {
@@ -137,7 +141,6 @@ namespace Neutron.Forms
             ComboBoxViewEditSerialConfiguration.ValueMember = "Id";
 
 
-            //ComboBoxNewDeviceStation.DataSource = _repoStation.Lookup();
             ComboBoxNewDeviceStation.DataSource = _repoStations.All();
             ComboBoxNewDeviceStation.DisplayMember = "Name";
             ComboBoxNewDeviceStation.ValueMember = "Id";
@@ -158,8 +161,6 @@ namespace Neutron.Forms
             ComboBoxNewSerialConfiguration.DisplayMember = "Name";
             ComboBoxNewSerialConfiguration.ValueMember = "Id";
 
-
-            //ComboBoxNewStation.SelectedIndex = ComboBoxNewStation.FindString(_station.Name);
         }
 
         public Version ApplicationVersion
@@ -573,11 +574,21 @@ namespace Neutron.Forms
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationType",
+                DataPropertyName = "StationTypeName",
                 HeaderText = @"Station Type",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Station Type"
+            };
+            DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Sequence",
+                HeaderText = @"Sequence",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Name = "Sequence"
             };
             DataGridViewStations.Columns.Add(col);
 
@@ -589,10 +600,18 @@ namespace Neutron.Forms
                 Name = "Id"
             };
             DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "StationTypeId",
+                HeaderText = @"Station Type Id",
+                Visible = false,
+                Name = "StationTypeId"
+            };
+            DataGridViewStations.Columns.Add(col);
         }
 
 
-        //-------------------------------------
         private void MBMainClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
@@ -696,7 +715,7 @@ namespace Neutron.Forms
             _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
             _neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
-            _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
+            _neutronVariables.DeviceDriver =  ComboBoxDeviceDriver.SelectedItem.ToString();
             // _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
@@ -731,38 +750,13 @@ namespace Neutron.Forms
             _neutronVariables.ActionCodes = TextBoxActionCodes.Text;
             _neutronVariables.UseCostCenter = CheckBoxUseCostCenter.Checked;
             _neutronVariables.UseImages = CheckBoxUseImages.Checked;
-            _neutronVariables.DefaultLanguage = (int)ComboBoxDefaultLanguage.SelectedValue;
+            _neutronVariables.DefaultLanguage = ((Language)ComboBoxDefaultLanguage.SelectedItem).CultureInfo;
+            _neutronVariables.DeviceFlashRate = TextBoxDeviceFlashRate.Text.ParseInt();
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
             _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
-
-            // UpdateSimulationMode();
-
         }
-
-        //private void UpdateSimulationMode()
-        //{
-        //    var recs = _repoHardwareDevices.All().ToList();
-        //    if (_neutronVariables.SimulationMode)
-        //    {
-        //        foreach (var rec in recs)
-        //        {
-        //            rec.SimulationMode = true;
-        //            rec.LogLevel = 8;
-        //            _repoHardwareDevices.Update(rec);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (var rec in recs)
-        //        {
-        //            rec.SimulationMode = false;
-        //            rec.LogLevel = 2;
-        //            _repoHardwareDevices.Update(rec);
-        //        }
-        //    }
-        //}
 
         private void MBOptions_Click(object sender, EventArgs e)
         {
@@ -820,6 +814,7 @@ namespace Neutron.Forms
             CheckBoxUseCostCenter.Checked = _neutronVariables.UseCostCenter;
             CheckBoxUseImages.Checked = _neutronVariables.UseImages;
             ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage;
+            TextBoxDeviceFlashRate.Text = _neutronVariables.DeviceFlashRate.ToString();
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
         }
 
@@ -1266,6 +1261,25 @@ namespace Neutron.Forms
             tabControl2.SelectedTab = ViewEdit;
         }
 
+        private void LoadViewEditStationData()
+        {
+            var id = ((ObjectView<StationViewModel>)_bindingSourceStations.Current).Object.Id;
+            var station = _repoStations.FindByKey(id);
+            TextBoxViewEditStationName.Text = station.Name;
+            TextBoxViewEditStationNumber.Text = station.StationNumber.ToString();
+            TextBoxViewEditStationSequence.Text = station.Sequence.ToString();
+            ComboBoxViewEditStationType.SelectedValue = station.StationTypeId;
+
+        }
+
+        private void ClearViewEditStationForm()
+        {
+            TextBoxViewEditStationName.Text = string.Empty;
+            TextBoxViewEditStationNumber.Text = string.Empty;
+            TextBoxViewEditStationSequence.Text = string.Empty;
+            ComboBoxViewEditStationType.SelectedIndex = 0;
+        }
+
         private void LoadViewEditDeviceData()
         {
             var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
@@ -1534,6 +1548,8 @@ namespace Neutron.Forms
 
         }
 
+
+
         // Set the focus to the passed in recId if it's passed in
         private int LoadHardwareDevices(int recId = 0)
         {
@@ -1773,6 +1789,14 @@ namespace Neutron.Forms
         #endregion
 
         #region Communication
+
+        private void MBCommunications_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Communications";
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            tabControl1.SelectedTab = Communications;
+        }
+
         private void MBCommunication_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Communications";
@@ -2068,6 +2092,8 @@ namespace Neutron.Forms
             tabControl2.SelectedTab = ViewEdit;
         }
 
+        // Stations
+
         private void MBStations_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Stations";
@@ -2076,25 +2102,21 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = Stations;
         }
 
-        private void LoadStations()
-        {
-            var recs = _repoStations.All().Select(s => new {Id = s.Id, Name = s.Name, StationNumber = s.StationNumber, StationType = s.StationType.Name }).ToList();
-            DataGridViewStations.DataSource = null;
-            DataGridViewStations.DataSource = recs;
-        }
-
         private void MBStationsBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
 
-       private void MBStationsViewEdit_Click(object sender, EventArgs e)
+        private void MBStationsViewEdit_Click(object sender, EventArgs e)
         {
+            SetupStationForms();
+            LoadViewEditStationData();
             TabControl3.SelectedTab = StationViewEdit;
         }
 
         private void MBStationsNew_Click(object sender, EventArgs e)
         {
+            SetupStationForms();
             TabControl3.SelectedTab = StationNew;
         }
 
@@ -2106,18 +2128,57 @@ namespace Neutron.Forms
 
         private void MBStationsViewEditSave_Click(object sender, EventArgs e)
         {
-            SaveStation();
+            UpdateStation();
+            LoadStations();
             TabControl3.SelectedTab = StationListing;
+        }
+
+        private void UpdateStation()
+        {
+            CurrentStation = ((ObjectView<StationViewModel>)_bindingSourceStations.Current).Object;
+            var station = _repoStations.FindByKey(CurrentStation.Id);
+            station.Id = CurrentStation.Id;
+            station.Name = TextBoxViewEditStationName.Text;
+            station.StationTypeId = ((StationType)ComboBoxViewEditStationType.SelectedItem).Id;
+            station.Sequence = TextBoxViewEditStationSequence.Text.ParseInt();
+            _repoStations.Update(station);
         }
 
         private void SaveStation()
         {
-            
+            var station = new Station
+            {
+                Id = int.Parse(TextBoxNewStationNumber.Text),
+                Name = TextBoxNewStationName.Text,
+                StationNumber = int.Parse(TextBoxNewStationNumber.Text),
+                StationTypeId = ((StationType)ComboBoxNewStationType.SelectedItem).Id,
+                Sequence = int.Parse(TextBoxNewStationSequence.Text)
+            };
+            var result = ValidateStation(station);
+            if (string.IsNullOrEmpty(result))
+            {
+                _repoStations.Insert(station);
+            }
+            else
+            {
+                MessageBox.Show($"result");
+            }
+
+        }
+
+        private string ValidateStation(Station station)
+        {
+            // Does the station already exist
+            var rec = _repoStations.FindByKey(station.Id);
+            if (rec != null) return $"Station already exists";
+
+            return string.Empty;
         }
 
         private void MBStationsNewSave_Click(object sender, EventArgs e)
         {
             SaveStation();
+            LoadStations();
             TabControl3.SelectedTab = StationListing;
         }
 
@@ -2129,21 +2190,109 @@ namespace Neutron.Forms
 
         private void MBStationsViewEditDelete_Click(object sender, EventArgs e)
         {
-            DeleteStation();
-            LoadStations();
-            TabControl3.SelectedTab = StationListing;
+            var result = DeleteStation();
+            if (string.IsNullOrEmpty(result))
+            {
+                LoadStations();
+                TabControl3.SelectedTab = StationListing;
+            }
+            else
+            {
+                MessageBox.Show(result);
+            }
+
         }
 
-        private void DeleteStation()
+        private string DeleteStation()
         {
-            
+            var id = ((ObjectView<StationViewModel>)_bindingSourceStations.Current).Object.Id;
+            var result = string.Empty;
+            using (var context = new NeutronDb())
+            {
+                var rec1 = context.Inventory.FirstOrDefault(s => s.StationId == id);
+                if (rec1 != null) return $"Inventory Records Exist for Station {id}.";
+                var rec2 = context.Locations.FirstOrDefault(s => s.StationId == id);
+                if (rec2 != null) return $"Location Records Exist for Station {id}.";
+                var rec3 = context.ItemDefinitions.FirstOrDefault(s => s.StationId == id);
+                if (rec3 != null) return $"Item Definitions Exist for Station {id}.";
+            }
+            _repoStations.Delete(id);
+            return result;
         }
 
-        private void MBCommunications_Click(object sender, EventArgs e)
+        private int LoadStations(int recId = 0)
         {
-            LabelFormTitle.Text = "Communications";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = Communications;
+            var idx = 1;
+            Cursor.Current = Cursors.WaitCursor;
+
+            var recs = _repoStations.All().Select(s => new StationViewModel
+            {
+                Id = s.Id
+                ,
+                Name = s.Name
+                ,
+                StationNumber = s.StationNumber
+                ,
+                StationTypeName = s.StationType.Name
+                ,
+                Sequence = s.Sequence
+                ,
+                StationTypeId = s.StationTypeId
+            })
+                .OrderBy(o => o.Sequence)
+                .ToList();
+
+            if (recs.Any())
+            {
+                var blv = new BindingListView<StationViewModel>(recs.ToList());
+                _bindingSourceStations.DataSource = blv;
+                DataGridViewStations.DataSource = _bindingSourceStations;
+
+                if (GetRecordCount(_bindingSourceStations) > 0)
+                {
+                    if (recId != 0)
+                    {
+                        idx = IndexOf(_bindingSourceStations, recId);
+                        if (idx >= 0)
+                        {
+                            DataGridViewStations.FirstDisplayedScrollingRowIndex = DataGridViewStations.Rows[idx].Index;
+                        }
+                    }
+                    else
+                    {
+                        DataGridViewStations.ClearSelection();
+                    }
+
+                    DataGridViewStations.Refresh();
+                    CurrentStation = ((ObjectView<StationViewModel>)_bindingSourceStations.Current).Object;
+                }
+            }
+
+            Cursor.Current = Cursors.Default;
+            return idx;
+        }
+
+        private void SetupStationForms()
+        {
+            var stationTypes = _repoStationTypes.All();
+
+            ComboBoxViewEditStationType.DataSource = stationTypes;
+            ComboBoxViewEditStationType.DisplayMember = "Name";
+            ComboBoxViewEditStationType.ValueMember = "Id";
+
+            ComboBoxNewStationType.DataSource = stationTypes;
+            ComboBoxNewStationType.DisplayMember = "Name";
+            ComboBoxNewStationType.ValueMember = "Id";
+        }
+
+        public class StationViewModel
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public int StationNumber { get; set; }
+            public int StationTypeId { get; set; }
+            public string StationTypeName { get; set; }
+            public int Sequence { get; set; }
         }
     }
 }
