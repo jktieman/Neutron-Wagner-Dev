@@ -37,7 +37,6 @@
             this.GroupBoxInventoryFile = new System.Windows.Forms.GroupBox();
             this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.MBCreateInventoryFile = new MetroFramework.Controls.MetroButton();
-            this.LabelListingStation = new System.Windows.Forms.Label();
             this.CheckBoxAllStations = new System.Windows.Forms.CheckBox();
             this.MBPrintInventory = new MetroFramework.Controls.MetroButton();
             this.LabelFindDescription = new System.Windows.Forms.Label();
@@ -265,7 +264,6 @@
             // 
             this.GroupBoxInventoryFile.Controls.Add(this.ComboBoxStationNumber);
             this.GroupBoxInventoryFile.Controls.Add(this.MBCreateInventoryFile);
-            this.GroupBoxInventoryFile.Controls.Add(this.LabelListingStation);
             this.GroupBoxInventoryFile.Location = new System.Drawing.Point(875, 5);
             this.GroupBoxInventoryFile.Name = "GroupBoxInventoryFile";
             this.GroupBoxInventoryFile.Size = new System.Drawing.Size(135, 83);
@@ -285,33 +283,22 @@
             "4",
             "5",
             "8"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(68, 12);
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(6, 15);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(59, 24);
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(121, 24);
             this.ComboBoxStationNumber.TabIndex = 29;
             // 
             // MBCreateInventoryFile
             // 
             this.MBCreateInventoryFile.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCreateInventoryFile.Location = new System.Drawing.Point(6, 44);
+            this.MBCreateInventoryFile.Location = new System.Drawing.Point(6, 47);
             this.MBCreateInventoryFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCreateInventoryFile.Name = "MBCreateInventoryFile";
-            this.MBCreateInventoryFile.Size = new System.Drawing.Size(122, 30);
+            this.MBCreateInventoryFile.Size = new System.Drawing.Size(122, 26);
             this.MBCreateInventoryFile.TabIndex = 28;
             this.MBCreateInventoryFile.Text = "Inventory File";
             this.MBCreateInventoryFile.UseSelectable = true;
             this.MBCreateInventoryFile.Click += new System.EventHandler(this.MBCreateInventoryFile_Click);
-            // 
-            // LabelListingStation
-            // 
-            this.LabelListingStation.AutoSize = true;
-            this.LabelListingStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelListingStation.Location = new System.Drawing.Point(6, 15);
-            this.LabelListingStation.Name = "LabelListingStation";
-            this.LabelListingStation.Size = new System.Drawing.Size(56, 16);
-            this.LabelListingStation.TabIndex = 27;
-            this.LabelListingStation.Text = "Station";
-            this.LabelListingStation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CheckBoxAllStations
             // 
@@ -1860,7 +1847,6 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.GroupBoxInventoryFile.ResumeLayout(false);
-            this.GroupBoxInventoryFile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -2027,7 +2013,6 @@
         private System.Windows.Forms.GroupBox GroupBoxInventoryFile;
         private System.Windows.Forms.ComboBox ComboBoxStationNumber;
         private MetroFramework.Controls.MetroButton MBCreateInventoryFile;
-        private System.Windows.Forms.Label LabelListingStation;
         private System.Windows.Forms.Label LabelSlotInformation;
         private System.Windows.Forms.Label LabelStationName;
     }

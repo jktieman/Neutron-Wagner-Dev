@@ -89,7 +89,7 @@ namespace Neutron.Forms
             ComboBoxStationNumber.ValueMember = "Id";
             ComboBoxStationNumber.DisplayMember = "Name";
             ComboBoxStationNumber.SelectedIndex = 0;
-            if (_station.StationType.Id == (int) NeutronCore.Enums.StationType.Supervisor)
+            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
                 CheckBoxAllStations.Checked = true;
             }
@@ -296,39 +296,30 @@ namespace Neutron.Forms
         {
             var station = ((Station)ComboBoxNewStation.SelectedItem);
             if (station == null) return;
-            var stId = station.Id;
-            var device = ((HardwareDeviceLookup)ComboBoxNewDevice.SelectedItem);
+            var stationId = station.Id;
+            var device = (HardwareDeviceLookup)ComboBoxNewDevice.SelectedItem;
             if (device == null) return;
             var deviceNumber = device.Id;
-            if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxNewLoc2.Text)))
+            if (IntegerValidator(TextBoxNewLoc2.Text.ParseInt()))
             {
-                var loc2 = IntegerExtensions.ParseInt(TextBoxNewLoc2.Text);
-                if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxNewLoc3.Text)))
+                var loc2 = TextBoxNewLoc2.Text.ParseInt();
+                if (IntegerValidator(TextBoxNewLoc3.Text.ParseInt()))
                 {
-                    var loc3 = IntegerExtensions.ParseInt(TextBoxNewLoc3.Text);
-                    if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxNewLoc4.Text)))
+                    var loc3 = TextBoxNewLoc3.Text.ParseInt();
+                    if (IntegerValidator(TextBoxNewLoc4.Text.ParseInt()))
                     {
-                        var loc4 = IntegerExtensions.ParseInt(TextBoxNewLoc4.Text);
-                        if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxNewLoc5.Text)))
+                        var loc4 = TextBoxNewLoc4.Text.ParseInt();
+                        if (IntegerValidator(TextBoxNewLoc5.Text.ParseInt()))
                         {
-                            var loc5 = IntegerExtensions.ParseInt(TextBoxNewLoc5.Text);
-                            var rec = _repoLocation.All().FirstOrDefault(r => r.StationId == stId && r.Loc1 == deviceNumber && r.Loc2 == loc2
+                            var loc5 = TextBoxNewLoc5.Text.ParseInt();
+                            var rec = _repoLocation.All().FirstOrDefault(r => r.StationId == stationId && r.Loc1 == deviceNumber && r.Loc2 == loc2
                                                                               && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5);
                             if (rec == null)
                             {
-                                string slotName;
-                                if (stId != _rackStation.Id)
-                                {
-                                    _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
-                                    slotName = _slotName.SlotName;
-                                }
-                                else
-                                {
-                                    slotName = TextBoxNewSlot.Text;
-                                }
+                               var slotName = GlobalVar.SlotNameFactory.CreateSlotName(stationId, deviceNumber, loc2, loc3, loc4, loc5).SlotName;
                                 var loc = new Location
                                 {
-                                    StationId = stId,
+                                    StationId = stationId,
                                     Loc1 = deviceNumber,
                                     Loc2 = loc2,
                                     Loc3 = loc3,
@@ -403,8 +394,8 @@ namespace Neutron.Forms
                         {
                             var loc5 = TextBoxViewEditLoc5.Text.ParseInt();
 
-                                _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
-                                var slotName = _slotName.SlotName;
+                            _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
+                            var slotName = _slotName.SlotName;
 
                             var rec = new Location
                             {
@@ -656,7 +647,7 @@ namespace Neutron.Forms
                 LabelSlotInformation.Visible = true;   // stationView.StationType.Id == 3;
 
                 ComboBoxViewEditDevice.DataSource = stationView.HardwareDevices
-                    .Select(s => new HardwareDeviceLookup {Id = s.DeviceNumber, Name = s.Name}).ToList();
+                    .Select(s => new HardwareDeviceLookup { Id = s.DeviceNumber, Name = s.Name }).ToList();
                 ComboBoxViewEditDevice.DisplayMember = "Name";
                 ComboBoxViewEditDevice.ValueMember = "Id";
                 ComboBoxViewEditDevice.Refresh();

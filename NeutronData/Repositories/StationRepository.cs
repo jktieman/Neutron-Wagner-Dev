@@ -307,8 +307,7 @@ namespace NeutronData.Repositories
 
         public Station GetRackStation()
         {
-            var station = _repoStation.FindBy(r => r.StationType.Id == (int)NeutronCore.Enums.StationType.Rack).FirstOrDefault();
-            return station;
+            return _repoStation.FindBy(r => r.StationType.Id == (int)NeutronCore.Enums.StationType.Rack).FirstOrDefault();
         }
 
         public int[] GetMoveableDeviceTypeIds()

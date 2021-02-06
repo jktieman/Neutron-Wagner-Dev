@@ -102,7 +102,10 @@ namespace Neutron.Forms
             {
                 CheckBoxAllStations.Checked = true;
             }
-            ComboBoxStationNumber.SelectedIndex = 0;
+
+            ComboBoxStationNumber.DataSource = _repoStation.GetPickStations();
+            ComboBoxStationNumber.ValueMember = "Id";
+            ComboBoxStationNumber.DisplayMember = "Name";
             _firstTime = false;
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -125,7 +128,10 @@ namespace Neutron.Forms
             {
                 if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
                 {
-                    station = _rackStation;
+                    if (_rackStation != null)
+                    {
+                        station = _rackStation;
+                    }
                 }
 
                 IEnumerable<SqlInventoryView> views = CheckBoxAllStations.Checked
@@ -1593,13 +1599,25 @@ namespace Neutron.Forms
         }
         private void HideTabControlTabs()
         {
-            tabControl1.Appearance = TabAppearance.FlatButtons;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
-            foreach (TabPage tab in tabControl1.TabPages)
+            var controls = GetTabControls(this, typeof(TabControl));
+            foreach (var control1 in controls)
             {
-                tab.Text = string.Empty;
+                var control = (TabControl)control1;
+                control.Appearance = TabAppearance.FlatButtons;
+                control.ItemSize = new Size(0, 1);
+                control.SizeMode = TabSizeMode.Fixed;
+                foreach (TabPage tab in control.TabPages)
+                {
+                    tab.Text = string.Empty;
+                }
             }
+        }
+
+        private IEnumerable<Control> GetTabControls(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+            var enumerable = controls.ToList();
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
         private void MbAddDetailSave_Click(object sender, EventArgs e)
         {
@@ -1848,16 +1866,16 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             MBCreateInventoryFile.Enabled = false;
-            var comboBoxValue = ComboBoxStationNumber.Text;
-            CreateInventoryFileByStation(comboBoxValue);
+            var stationId = ((Station)ComboBoxStationNumber.SelectedItem).Id;
+            CreateInventoryFileByStation(stationId);
             Cursor.Current = Cursors.Default;
             MBCreateInventoryFile.Enabled = true;
         }
-        private void CreateInventoryFileByStation(string stationNumber)
+        private void CreateInventoryFileByStation(int stationId)
         {
             var fileName = GetFileName();
             //Task.Run(() => CsvUtility.SaveToCsv(fileName, stationNumber));
-            CsvUtility.SaveToCsv(fileName, stationNumber);
+            CsvUtility.SaveToCsv(fileName, stationId);
         }
         private string GetFileName()
         {
@@ -1898,7 +1916,6 @@ namespace Neutron.Forms
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
                 LabelFormTitle.Text = _resourceManager.GetString("Inventory");
                 MBCreateInventoryFile.Text = _resourceManager.GetString("InventoryFile");
-                LabelListingStation.Text = _resourceManager.GetString("Station");
                 CheckBoxAllStations.Text = _resourceManager.GetString("AllStations");
                 MBPrintInventory.Text = _resourceManager.GetString("SaveToFile");
                 LabelFindDescription.Text = _resourceManager.GetString("SearchFor");

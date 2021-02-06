@@ -189,6 +189,7 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
@@ -427,6 +428,7 @@
             // HotAction
             // 
             this.HotAction.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.HotAction.Controls.Add(this.panel6);
             this.HotAction.Controls.Add(this.GroupBoxHotPickLocation);
             this.HotAction.Controls.Add(this.ComboBoxLocationCodeItem);
             this.HotAction.Controls.Add(this.LabelMainLocation);
@@ -885,9 +887,9 @@
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonScrap);
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonWarranty);
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonPick);
-            this.GroupBoxHotActions.Location = new System.Drawing.Point(15, 136);
+            this.GroupBoxHotActions.Location = new System.Drawing.Point(15, 152);
             this.GroupBoxHotActions.Name = "GroupBoxHotActions";
-            this.GroupBoxHotActions.Size = new System.Drawing.Size(914, 99);
+            this.GroupBoxHotActions.Size = new System.Drawing.Size(914, 93);
             this.GroupBoxHotActions.TabIndex = 0;
             this.GroupBoxHotActions.TabStop = false;
             this.GroupBoxHotActions.Text = "Transaction Type";
@@ -2109,6 +2111,13 @@
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(140, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(860, 150);
+            this.panel6.TabIndex = 167;
+            // 
             // FrmHotAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2309,5 +2318,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label LabelItemNumber;
+        private System.Windows.Forms.Panel panel6;
     }
 }

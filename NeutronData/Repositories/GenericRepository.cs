@@ -58,7 +58,6 @@ namespace NeutronData.Repositories
 
         public TEntity FindByKey(int? id)
         {
-
             var rec = _dbSet.AsNoTracking().FirstOrDefault(s => s.Id == id);
             return rec;
         }

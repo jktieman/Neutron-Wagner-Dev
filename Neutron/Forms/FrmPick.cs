@@ -2885,9 +2885,25 @@ namespace Neutron.Forms
 
         private void HideTabControlTabs()
         {
-            tabControl1.Appearance = TabAppearance.FlatButtons;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
+            var controls = GetTabControls(this, typeof(TabControl));
+            foreach (var control1 in controls)
+            {
+                var control = (TabControl)control1;
+                control.Appearance = TabAppearance.FlatButtons;
+                control.ItemSize = new Size(0, 1);
+                control.SizeMode = TabSizeMode.Fixed;
+                foreach (TabPage tab in control.TabPages)
+                {
+                    tab.Text = string.Empty;
+                }
+            }
+        }
+
+        private IEnumerable<Control> GetTabControls(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+            var enumerable = controls.ToList();
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
 
         private void MButtonClearSelection_Click(object sender, EventArgs e)

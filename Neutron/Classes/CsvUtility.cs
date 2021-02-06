@@ -77,20 +77,11 @@ namespace Neutron.Classes
             }
         }
 
-        public static void SaveToCsv(string fileName, string stationNumber)
+        public static void SaveToCsv(string fileName, int stationId)
         {
             try
             {
-                List<Inventory> inventory;
-                if (stationNumber == "ALL")
-                {
-                    inventory = RepoInventory.All().OrderBy(o => o.ItemDefinition.Item).ToList();
-                }
-                else
-                {
-                    var stationNum = stationNumber.ParseInt();
-                    inventory = RepoInventory.All().Where(r => r.Station.StationNumber == stationNum).OrderBy(o => o.ItemDefinition.Item).ToList();
-                }
+                var inventory = RepoInventory.All().Where(r => r.StationId == stationId).OrderBy(o => o.ItemDefinition.Item).ToList();
                 const string columnNames = "sku" +
                                            ",Description" +
                                            ",Unit-Of_Issue" +

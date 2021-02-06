@@ -155,7 +155,10 @@ namespace Neutron.Forms
             TextBoxFind.Text = find;
             if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
-                station = _rackStation;
+                if (_rackStation != null)
+                {
+                    station = _rackStation;
+                }
             }
             var views = CheckBoxAllStations.Checked ? _itemDefinitionsRepository.FindItemDefinitionViews(find) : _itemDefinitionsRepository.FindItemDefinitionViewsByStation(find, station.Id);
 
@@ -431,7 +434,7 @@ namespace Neutron.Forms
             if (station != null)
             {
                 var stationNumber = station.StationNumber;
-                
+
                 var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
                 var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text)
                     ? "0"
@@ -983,7 +986,7 @@ namespace Neutron.Forms
                     MessageBox.Show($"{_resourceManager.GetString("Message10")}{Environment.NewLine}" +
                                     $"{ex.Message}{ex.InnerException}");
                 }
-                NewItem(); 
+                NewItem();
             }
         }
         private void MbLoadDefault_Click(object sender, EventArgs e)

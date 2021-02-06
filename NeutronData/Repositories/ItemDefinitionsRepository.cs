@@ -35,28 +35,22 @@ namespace NeutronData.Repositories
         public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByStation(string find = "", int stationId = 0)
         {
             var recs = new List<ItemDefinitionView>();
-            if (stationId != 0)
+            if (stationId == 0) return recs;
+            Logger.Log(msg: "Get All Item Definition Views Start");
+            try
             {
-
-                Logger.Log(msg: "Get All Item Definition Views Start");
-                try
+                using (var context = new NeutronDb())
                 {
-                    using (var context = new NeutronDb())
-                    {
-                        var param = new SqlParameter("@Find", find);
-                        var paramStation = new SqlParameter("@StationId", stationId);
-                        //recs = context.Database.SqlQuery<ItemDefinitionView>(sql: "usp_GetItemDefinitionViewFind_Station @Find, @StationId "
-                        //    , parameters: new object[] { param, paramStation }).ToList();
-
-                        recs = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Station @Find, @StationId ", param, paramStation).ToList();
-                    }
+                    var param = new SqlParameter("@Find", find);
+                    var paramStation = new SqlParameter("@StationId", stationId);
+                    recs = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Station @Find, @StationId ", param, paramStation).ToList();
                 }
-                catch (Exception ex)
-                {
-                    Logger.Log("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
-                }
-                Logger.Log("Get All Item Definition Views End: " + recs.Count.ToString());
             }
+            catch (Exception ex)
+            {
+                Logger.Log("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+            Logger.Log("Get All Item Definition Views End: " + recs.Count.ToString());
             return recs;
         }
 

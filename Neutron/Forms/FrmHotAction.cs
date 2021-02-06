@@ -156,11 +156,8 @@ namespace Neutron.Forms
                 _deviceIndicators.Add(hardwareDevice.DeviceNumber, device);
                 panel.Controls.Add(device);
             }
-
             HotAction.Controls.Add(panel);
-
         }
-
         private Point GetLocation(int sizeWidth, int numDevices, int deviceNumber)
         {
             Point point;
@@ -176,16 +173,13 @@ namespace Neutron.Forms
                 var pos = positionInBlock + (deviceNumber - 1) * eachBlock;
                 point = new Point(pos, 5);
             }
-
             return point;
 
         }
-
         private void InitialSearch(string item)
         {
             if (string.IsNullOrEmpty(item))
             {
-                //FindHotRecord();
                 TextBoxFindItem.Focus();
             }
             else
@@ -377,6 +371,7 @@ namespace Neutron.Forms
                 MBNewLocations.Enabled = false;
             }
         }
+        // Not Used
         public void UpdateDataGrid(BindingSource bindingSource)
         {
             if (DataGridViewHot.InvokeRequired)
@@ -391,41 +386,22 @@ namespace Neutron.Forms
                 var recordCount = GetRecordCount(bindingSource);
             }
         }
-        private async Task LoadItemDefinitions(int recId = 0)
+        private async Task LoadItemDefinitions(string find = @"", int recId = 0)
         {
             BindingListView<ItemDefinitionView> blv = null;
             Cursor.Current = Cursors.WaitCursor;
-            //if (_currentGridDataType != GridDataType.Item)
-            //{
             SetupGridItemDefinition();
-            //}
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
             var idx = 0;
-            var findWhat = TextBoxFindItem.Text.ToLower().Trim();
-            //var find = _akaRepository.Get(findWhat);
-            //TextBoxFindItem.Text = find;
-            _stopwatch.Restart();
-            IEnumerable<ItemDefinitionView> views;   // = new ItemDefinitionView[] { };
+            var findWhat = string.IsNullOrEmpty(find) ? TextBoxFindItem.Text.ToLower().Trim() : find;
+
+            IEnumerable<ItemDefinitionView> views;   
             // if its a Supervisor station, load the Rack items
             if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
             {
-                // var rackStation = _repoStation.All().FirstOrDefault(r => r.StationType.Id == (int)StationType.StationType.Rack);
                 if (_rackStation != null)
                 {
-                    //        stationNumber = rackStation.StationNumber;
-                    //        CheckBoxAll.Checked = true;
-                    //        CheckBoxAll.Visible = false;
-                    //    }
-                    //}
-
-
-
-                    //if (_station.StationNumber >= 10)
-                    //{
-                    //    var station = _repoStation.FindBy(r => r.StationNumber == 8).FirstOrDefault();
-                    //    if (station != null)
-                    //    {
                     views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _rackStation.Id);
                     blv = new BindingListView<ItemDefinitionView>(views.ToList());
                 }
@@ -451,7 +427,7 @@ namespace Neutron.Forms
                 }
                 try
                 {
-                    DataGridViewHot.FirstDisplayedScrollingRowIndex = idx; // DataGridViewHot.Rows[idx].Index;
+                    DataGridViewHot.FirstDisplayedScrollingRowIndex = idx; 
                     DataGridViewHot.Update();
                     DataGridViewHot.CurrentCell = DataGridViewHot.Rows[idx].Cells[1];
                     DataGridViewHot.Rows[idx].Selected = true;
@@ -465,7 +441,6 @@ namespace Neutron.Forms
                     MessageBox.Show($"{ex.Message}");
                     _currentGridDataType = GridDataType.None;
                 }
-
             }
             else
             {
@@ -476,8 +451,6 @@ namespace Neutron.Forms
                 }
                 ClearCurrentAndNew();
             }
-            _stopwatch.Stop();
-            Console.WriteLine($@"Item Definition Views Time: {_stopwatch.ElapsedMilliseconds.ToString()}");
             DataGridViewHot.ClearSelection();
             Cursor.Current = Cursors.Default;
         }
@@ -513,18 +486,14 @@ namespace Neutron.Forms
             LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
             return count;
         }
-
         private int GetRecordCount(IReadOnlyCollection<object> bs)
         {
             var count = bs.Count;
             LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
             return count;
         }
-
         private void SetupGridItemDefinition()
         {
-            _stopwatch = new Stopwatch();
-            _stopwatch.Start();
             if (_currentGridDataType == GridDataType.Item) return;
             DataGridViewHot.Columns.Clear();
             _currentGridDataType = GridDataType.Item;
@@ -644,8 +613,6 @@ namespace Neutron.Forms
                 column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             }
-            _stopwatch.Stop();
-            Console.WriteLine($@"Time to build Item Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
         }
         private void SetupGridNew()
         {
@@ -767,8 +734,6 @@ namespace Neutron.Forms
         }
         private void SetupGridCurrent()
         {
-            _stopwatch = new Stopwatch();
-            _stopwatch.Start();
             if (_currentGridDataType == GridDataType.Current) return;
             DataGridViewHot.Columns.Clear();
             _currentGridDataType = GridDataType.Current;
@@ -860,9 +825,25 @@ namespace Neutron.Forms
         }
         private void HideTabControlTabs()
         {
-            tabControl1.Appearance = TabAppearance.FlatButtons;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
+            var controls = GetTabControls(this, typeof(TabControl));
+            foreach (var control1 in controls)
+            {
+                var control = (TabControl)control1;
+                control.Appearance = TabAppearance.FlatButtons;
+                control.ItemSize = new Size(0, 1);
+                control.SizeMode = TabSizeMode.Fixed;
+                foreach (TabPage tab in control.TabPages)
+                {
+                    tab.Text = string.Empty;
+                }
+            }
+        }
+
+        private IEnumerable<Control> GetTabControls(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+            var enumerable = controls.ToList();
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
         private void UpdateHotImage(string image)
         {
