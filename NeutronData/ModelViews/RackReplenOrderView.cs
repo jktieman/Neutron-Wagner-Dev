@@ -11,7 +11,7 @@ namespace NeutronData.ModelViews
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
         public int Priority { get; set; }
-
+        public int StationNumber { get; set; }
 
         private int _lines;
         private int _pieces;
@@ -45,7 +45,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _lines = Order.ReplenOrderDetails.Where(o => o.StationNumber == 8).ToList().Count;
+                _lines = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).ToList().Count;
                 return _lines;
             }
             set { _lines = value; }
@@ -55,7 +55,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _pieces = Order.ReplenOrderDetails.Where(o => o.StationNumber == 8).Sum(s => s.Quantity);
+                _pieces = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).Sum(s => s.Quantity);
                 return _pieces;
             }
             set { _pieces = value; }

@@ -120,7 +120,8 @@ namespace Neutron.Forms
 
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private string _activeGrid = "Available";
-        private readonly int[] _controllableDeviceTypes = new[] { 1, 2 };
+        private readonly int[] _moveableDeviceTypes;
+        private readonly Station _rackStation;
 
         //GRIDS
         private bool _orderGridReady;
@@ -156,6 +157,8 @@ namespace Neutron.Forms
             SetupPrinters();
             _synchronizationContext = SynchronizationContext.Current;
             _currentInventory = new List<Inventory>();
+            _rackStation = _stationRepository.GetRackStation();
+            _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
             InitGrids();
             LoadInventory();
 
@@ -277,7 +280,7 @@ namespace Neutron.Forms
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new Dictionary<int, DeviceIndicator>();
 
-            var hardwareDevices = _station.HardwareDevices.Where(x => _controllableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            var hardwareDevices = _station.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
             var numDevices = hardwareDevices.Count;
             var panel = new Panel();
             panel.Location = new Point(140, 0);
@@ -3961,26 +3964,16 @@ namespace Neutron.Forms
 
         public void AvailableOrdersScreen()
         {
-            //Cursor.Current = Cursors.WaitCursor;
+            Cursor.Current = Cursors.WaitCursor;
             MBCompress.Enabled = false;
             LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
             LabelFormTitle.BackColor = Color.Green;
             ClearSelection(DataGridViewAvailableOrders);
             ClearOrderPositions();
-            //TODODon't need this
-            //InitOrdersToPick(_neutronVariables.StoreBatchSize);
 
             ShowAvailableOrders();
 
-            //if (_station.StationNumber == 8)
-            //{
-            //    tabControl1.SelectedTab = AvailableRack;
-            //}
-            //else
-            //{
-            //    tabControl1.SelectedTab = AvailableOrders;
-            //}
-            //Cursor.Current = Cursors.Default;
+            Cursor.Current = Cursors.Default;
         }
 
         private void ShowAvailableRackScreen()
@@ -5515,32 +5508,32 @@ namespace Neutron.Forms
         private void MBPrintRackDocument_Click(object sender, EventArgs e)
         {
 
-            PrintPickList(8);
+            PrintPickList(_rackStation);
             ShowAvailableOrdersRack();
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
-        private void PrintPickList(int stationId = 8)
+        private void PrintPickList(Station station)
         {
             var orderViews = GetCheckedOrdersRack();
             if (orderViews.Count <= 0) return;
             foreach (var orderView in orderViews)
             {
-                var recs = orderView.ReplenOrderDetails.Where(r => r.StationNumber == 8 && r.LineStatusId != 6).ToList();
+                var recs = orderView.ReplenOrderDetails.Where(r => r.StationNumber == station.StationNumber && r.LineStatusId != 6).ToList();
                 foreach (var rec in recs)
                 {
-                    // var recToUpdate = _repoReplenOrderDetail.FindByKey(rec.Id);
-                    // if (recToUpdate != null)
-                    // {
-                    rec.LineStatusId = 3;
+                    var recToUpdate = _repoReplenOrderDetail.FindByKey(rec.Id);
+                    if (recToUpdate != null)
+                    {
+                        rec.LineStatusId = 3;
 
                     _repoReplenOrderDetail.Update(rec);
-                    //}
+                    }
                 }
 
                 orderView.OrderStatusId = 3;
                 _repoReplenOrder.Update(orderView);
-                PrintPickListByStation(orderView.Id, stationId);
+                PrintPickListByStation(orderView.Id, station.Id);
             }
         }
 

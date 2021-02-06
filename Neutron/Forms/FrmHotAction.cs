@@ -61,7 +61,7 @@ namespace Neutron.Forms
         private BindingSource _bindingSourceItemDefinitions = new BindingSource();
         private readonly BindingSource _bindingSourceNewLocations = new BindingSource();
         public bool CloseButtonPressed { get; set; }
-        public RackOrderView CurrentItem;
+
         private SqlInventoryView _currentInventoryView = new SqlInventoryView();
         readonly NeutronVariables _neutronVariables;
         private readonly ILacProcessor _lacProcessor;
@@ -246,57 +246,9 @@ namespace Neutron.Forms
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
-
-        //public int IndexOf(BindingSource bs, int value)
-        //{
-        //    int count = bs.Count;
-        //    int itemIndex = -1;
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        int rec = ((OrderView)bs[i]).Id;
-        //        if (rec == value)
-        //        {
-        //            itemIndex = i;
-        //            break;
-        //        }
-        //    }
-        //    return itemIndex;
-        //}
-        //private int GetRecordCount(BindingSource bs)
-        //{
-        //    int count = bs.Count;
-        //    LabelRecordCount.Text = $"Records: {count.ToString()}";
-        //    return count;
-        //}
         private void LoadCurrent(ItemDefinitionView item)
         {
-            // if this is a Supervisor station load the Rack items
-            // first find the Rack Station Number
-            // if no Rack Station found, warn the user and exit LoadCurrent
-            //if (_station.StationType.Id == 4)  // 4 = Supervisor  3 = Rack 
-            //{
-            //    var rackStationNumber = _repoStation.All().Where(r => r.StationType.Id == 3).FirstOrDefault();
-            //    if (rackStationNumber != null)
-            //    {
-
-
-
-
-
-
-            //var stationNumber = _station.StationNumber;
-            //if (_station.StationNumber >= 10)
-            //{
-            //    var station = _repoStation.FindBy(r => r.StationNumber == 8).FirstOrDefault();
-            //    if (station != null)
-            //    {
-            //        stationNumber = station.StationNumber;
-            //    }
-            //}
-
-
             _currentItemDefinition = item;
-            //var recs = _repoInv.FindInventoryViewsByStation(item.Item, stationNumber).ToList();
             var recs = _repoInv.GetAllInventoryViewsByItemDefinitionId(item.Id).ToList();
             var blv = new BindingListView<SqlInventoryView>(recs);
             _bindingSourceCurrent.DataSource = blv;
@@ -314,12 +266,6 @@ namespace Neutron.Forms
                 MBHotStore.Enabled = false;
                 MBCurrentLocations.Enabled = false;
             }
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show($"Rack Station Not Set Up.  No Rack Items Defined.");
-            //    };
-            //};
         }
 
         private async Task LoadNewLocations(ItemDefinitionView item)

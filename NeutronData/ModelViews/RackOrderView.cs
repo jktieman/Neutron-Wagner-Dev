@@ -7,20 +7,20 @@ namespace NeutronData.ModelViews
 {
     public class RackOrderView
     {
+        
         public int Id { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
         public int Priority { get; set; }
-
-
         private int _lines;
         private int _pieces;
         private string _searchField;
         private string _statusName;
-
         public DateTime LoadDate { get; set; }
         public Order Order { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public int StationNumber { get; set; }
+
         public string StatusName
         {
             get
@@ -45,7 +45,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _lines = Order.OrderDetails.Where(o => o.StationNumber == 8).ToList().Count;
+                _lines = Order.OrderDetails.Where(o => o.StationNumber == StationNumber).ToList().Count;
                 return _lines;
             }
             set { _lines = value; }
@@ -55,7 +55,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _pieces = Order.OrderDetails.Where(o => o.StationNumber == 8).Sum(s => s.Quantity);
+                _pieces = Order.OrderDetails.Where(o => o.StationNumber == StationNumber).Sum(s => s.Quantity);
                 return _pieces;
             }
             set { _pieces = value; }

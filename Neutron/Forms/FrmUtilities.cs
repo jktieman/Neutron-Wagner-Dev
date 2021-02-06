@@ -119,7 +119,6 @@ namespace Neutron.Forms
 
         }
 
-
         private void SetupDeviceForms()
         {
             //ComboBoxViewEditDeviceStation.DataSource = _repoStation.Lookup();
@@ -165,7 +164,6 @@ namespace Neutron.Forms
             ComboBoxNewSerialConfiguration.ValueMember = "Id";
 
         }
-
         public Version ApplicationVersion
         {
             get
@@ -180,7 +178,6 @@ namespace Neutron.Forms
                 }
             }
         }
-
         private void SetupGrids()
         {
             DataGridView1.AutoGenerateColumns = false;
@@ -613,13 +610,10 @@ namespace Neutron.Forms
             };
             DataGridViewStations.Columns.Add(col);
         }
-
-
         private void MBMainClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
         }
-
         private void HideTabControlTabs()
         {
             var controls = GetTabControls(this, typeof(TabControl));
@@ -635,14 +629,12 @@ namespace Neutron.Forms
                 }
             }
         }
-
         private IEnumerable<Control> GetTabControls(Control control, Type type)
         {
             var controls = control.Controls.Cast<Control>();
             var enumerable = controls.ToList();
             return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
-
         private void FrmUtilities_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!CloseButtonPressed)
@@ -650,7 +642,6 @@ namespace Neutron.Forms
                 e.Cancel = true;
             }
         }
-
         public int IndexOf(BindingSource bs, int value)
         {
             if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
@@ -658,14 +649,12 @@ namespace Neutron.Forms
             itemIndex = bs.Find("Id", value);
             return itemIndex;
         }
-
         private int GetRecordCount(BindingSource bs)
         {
             var count = bs.Count;
             LabelRecordCount.Text = $"Records: {count.ToString()}";
             return count;
         }
-
         private void MBDevices_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Device Listing";
@@ -673,18 +662,15 @@ namespace Neutron.Forms
             LoadHardwareDevices();
             tabControl1.SelectedTab = HardwareDevices;
         }
-
         private void MBInterfaceFilesBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
-
         private string GetPickMethod()
         {
             var a = from RadioButton r in GroupBoxPickMethod.Controls where r.Checked == true select r.Name;
             return a.First();
         }
-
         private void SetPickMethod(string pickMethod)
         {
             switch (pickMethod)
@@ -706,7 +692,6 @@ namespace Neutron.Forms
                     break;
             }
         }
-
         private void MBSaveVariables_Click(object sender, EventArgs e)
         {
             _neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
@@ -719,7 +704,6 @@ namespace Neutron.Forms
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
             _neutronVariables.StationId = ((Station) ComboBoxStationNumber.SelectedItem).Id;
             _neutronVariables.DeviceDriver =  ComboBoxDeviceDriver.SelectedItem.ToString();
-            // _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
             _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
@@ -760,7 +744,6 @@ namespace Neutron.Forms
 
             _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
         }
-
         private void MBOptions_Click(object sender, EventArgs e)
         {
 
@@ -777,7 +760,6 @@ namespace Neutron.Forms
             CheckBoxUseReturnToStock.Checked = _neutronVariables.UseReturnToStock;
             ComboBoxStationNumber.SelectedValue = _neutronVariables.StationId;
             ComboBoxDeviceDriver.SelectedIndex = ComboBoxDeviceDriver.FindStringExact(_neutronVariables.DeviceDriver);
-            // CheckBoxSimulationMode.Checked = _neutronVariables.SimulationMode;
             NumericUpDownLogLevel.Value = _neutronVariables.LogLevel == 0
                 ? NumericUpDownLogLevel.Minimum
                 : _neutronVariables.LogLevel;
@@ -820,7 +802,6 @@ namespace Neutron.Forms
             TextBoxDeviceFlashRate.Text = _neutronVariables.DeviceFlashRate.ToString();
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
         }
-
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
         {
             DocumentPrinter = new DocumentPrinterPreferences
@@ -857,21 +838,18 @@ namespace Neutron.Forms
                     $"Error Saving Label Printer Information.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
-
         private void ButtonDocumentPrinter_Click(object sender, EventArgs e)
         {
             var pd = new PrintDialog();
             pd.ShowDialog();
             TextBoxDocumentPrinter.Text = pd.PrinterSettings.PrinterName;
         }
-
         private void ButtonLabelPrinter_Click(object sender, EventArgs e)
         {
             var pd = new PrintDialog();
             pd.ShowDialog();
             TextBoxLabelPrinter.Text = pd.PrinterSettings.PrinterName;
         }
-
         public void LoadDocumentPrinterPreferences()
         {
             DocumentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
@@ -881,7 +859,6 @@ namespace Neutron.Forms
             TextBoxDocumentRightMargin.Text = DocumentPrinter.RightMargin.ToString();
             TextBoxDocumentBottomMargin.Text = DocumentPrinter.BottomMargin.ToString();
         }
-
         public void LoadLabelPrinterPreferences()
         {
             LabelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
@@ -889,7 +866,6 @@ namespace Neutron.Forms
             TextBoxLabelHomeX.Text = LabelPrinter.HomeX.ToString();
             TextBoxLabelHomeY.Text = LabelPrinter.HomeY.ToString();
         }
-
         private void MBPrinterSetup_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Printer Settings";
@@ -898,7 +874,6 @@ namespace Neutron.Forms
             LoadLabelPrinterPreferences();
             tabControl1.SelectedTab = PrintSettings;
         }
-
         private void ButtonPrintTestDocument_Click(object sender, EventArgs e)
         {
             var printer = GetCurrentDocumentPrinter();
@@ -933,7 +908,6 @@ namespace Neutron.Forms
                 MessageBox.Show("Invalid Printer.");
             }
         }
-
         private List<PackingList> GetPackingList(int orderId)
         {
             var outs = new List<PackingList>();
@@ -946,7 +920,6 @@ namespace Neutron.Forms
 
             return outs;
         }
-
         private DocumentPrinterPreferences GetCurrentDocumentPrinter()
         {
             DocumentPrinterPreferences printer = null;
@@ -964,13 +937,11 @@ namespace Neutron.Forms
 
             return printer;
         }
-
         private static bool ValidPrinterName(string printer)
         {
             return PrinterSettings.InstalledPrinters.Cast<string>()
                 .Any(installedPrinter => installedPrinter == printer);
         }
-
         private void ButtonPrintTestToteLabel_Click(object sender, EventArgs e)
         {
             try
@@ -987,12 +958,10 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error Printing Tote Label.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
-
         private void ButtonPrintTestShortReport_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Set up Test Short Report.");
         }
-
         private void MBLookups_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Lookup Tables";
@@ -1001,7 +970,6 @@ namespace Neutron.Forms
             LoadLookups();
             tabControl1.SelectedTab = ManageLookups;
         }
-
         private void SetupLookupGrid()
         {
             DataGridViewLookups.AutoGenerateColumns = false;
@@ -1034,31 +1002,25 @@ namespace Neutron.Forms
             };
             DataGridViewLookups.Columns.Add(col);
         }
-
         private void MBPrintSetUpBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
-
         private void MBHardwareDevicesBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
-
         private void BackToMain()
         {
             LabelFormTitle.Text = "Utilities";
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
-
         //Lookup Tables
-
         private void MBManageLookupsBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
-
         private int RefreshData(int recId = 0)
         {
             _currentTableName = ((LookupTable)ListBoxCodeNames.SelectedItem).TableName;
@@ -1082,13 +1044,11 @@ namespace Neutron.Forms
             DataGridViewLookups.Rows[idx].Selected = true;
             return idx;
         }
-
         private int GetRecordCount()
         {
             int count = DataGridViewLookups.RowCount;
             return count;
         }
-
         private void LoadLookups()
         {
             try
@@ -1105,7 +1065,6 @@ namespace Neutron.Forms
 
             ListBoxCodeNames.DataSource = _lookupTables;
         }
-
         private List<LookupData> GetTableData(string tableName)
         {
             _currentTableName = tableName;
@@ -1163,19 +1122,16 @@ namespace Neutron.Forms
 
             return recs;
         }
-
         private void ListBoxCodeNames_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshData();
         }
-
         private async void MButtonSave_Click(object sender, EventArgs e)
         {
             var s = _currentRecs;
             var t = DataGridViewLookups.DataSource;
             await UpdateTableData();
         }
-
         private async Task UpdateTableData()
         {
             try
@@ -1236,7 +1192,6 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error updating Lookup Tables.  {ex.Message}");
             }
         }
-
         private void MBAddNew_Click(object sender, EventArgs e)
         {
             var r = new LookupData { Name = "", Sequence = 100 };
@@ -1245,17 +1200,14 @@ namespace Neutron.Forms
             DataGridViewLookups.DataSource = _bindingSource.DataSource;
             DataGridViewLookups.Update();
         }
-
         private void MBPrintLookup_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridViewLookups);
         }
-
         private void MBPrintHardwareDevices_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView1);
         }
-
         private void MBHardwareDevicesViewEdit_Click(object sender, EventArgs e)
         {
             SetupDeviceForms();

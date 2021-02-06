@@ -150,7 +150,7 @@ namespace NeutronData.Repositories
         public List<AvailableOrdersView> GetAvailableOrders(StationView station)
         {
             var recs = new List<AvailableOrdersView>();
-           
+
             try
             {
                 var parameters = new List<object>();
@@ -1100,17 +1100,18 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        public IEnumerable<RackOrderView> GetRackOrdersView(string search)
+        public IEnumerable<RackOrderView> GetRackOrdersView(int rackStationNumber, string search = @"")
         {
             IEnumerable<RackOrderView> recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
             {
+                StationNumber = rackStationNumber,
                 Id = s.Id,
                 Ord1 = s.Ord1,
                 Ord2 = s.Ord2,
                 Priority = s.Priority,
                 Order = s,
                 LoadDate = s.LoadDate,
-                OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == 8).ToList()
+                OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == rackStationNumber).ToList()
             }).Where(o => o.Order.OrderStatusId != 6)
                 .OrderBy(o => o.Ord2).ToList();
 
@@ -1121,11 +1122,11 @@ namespace NeutronData.Repositories
         public Order GetOrderAndOrderDetails(int? orderId, int stationNumber)
         {
             var ord = new Order();
-            var availableSkip = new int[] {1,9};
-           // Order ord;
+            var availableSkip = new int[] { 1, 9 };
+            // Order ord;
             if (orderId != null)
             {
-               ord = _repo.FindByKey(orderId);
+                ord = _repo.FindByKey(orderId);
                 //using (var db = new NeutronDb())
                 //{
                 //     ord = db.Orders
@@ -1142,7 +1143,7 @@ namespace NeutronData.Repositories
 
                     // var details = _repoOrderDetails.All()
                     ord.OrderDetails = ord.OrderDetails.Where(x => x.OrderId == orderId && x.StationNumber == stationNumber && availableSkip.Contains(x.LineStatusId)).ToList();
-                       //ord.OrderDetails = details;
+                    //ord.OrderDetails = details;
                 }
 
                 //}

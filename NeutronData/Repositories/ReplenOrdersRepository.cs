@@ -770,17 +770,18 @@ namespace NeutronData.Repositories
             return orderIds.ToArray();
         }
 
-        public IEnumerable<RackReplenOrderView> GetRackOrdersView(string search)
+        public IEnumerable<RackReplenOrderView> GetRackOrdersView(int stationNumber, string search)
         {
             IEnumerable<RackReplenOrderView> recs = _repo.AllInclude(r => r.ReplenOrderDetails).Select(s => new RackReplenOrderView
                 {
+                    StationNumber = stationNumber,
                     Id = s.Id,
                     Ord1 = s.Ord1,
                     Ord2 = s.Ord2,
                     Priority = s.Priority,
                     Order = s,
                     LoadDate = s.LoadDate,
-                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == 8).ToList()
+                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == stationNumber).ToList()
                 }).Where(o => o.Order.OrderStatusId != 6)
                 .OrderBy(o => o.Ord2).ToList();
 

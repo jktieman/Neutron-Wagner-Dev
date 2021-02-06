@@ -313,7 +313,8 @@ namespace NeutronLoader
         {
             return neutronBusyPath.EndsWith(@"\") ? string.Empty : @"\";
         }
-
+        
+        // Saint Francis Upload Format
         private string GetUploadDatRecord(History history)
         {
             var station = history.StationId == 8 ? "9" : history.StationId.ToString();

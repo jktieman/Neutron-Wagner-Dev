@@ -128,7 +128,8 @@ namespace Neutron.Forms
         private bool _adjustGridReady;
         private bool _skipGridReady;
         private bool _skipInventoryGridReady;
-        private readonly int[] _controllableDeviceTypes = new[] { 1, 2 };
+        private readonly int[] _moveableDeviceTypes;
+        private readonly Station _rackStation;
 
         private SynchronizationContext _synchronizationContext;
 
@@ -151,6 +152,8 @@ namespace Neutron.Forms
             _lacProcessor = lacProcessor;
             _akaRepository = akaRepository;
             _securityProcessor = securityProcessor;
+            _rackStation = _stationRepository.GetRackStation();
+            _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
             InitForm();
         }
 
@@ -159,7 +162,7 @@ namespace Neutron.Forms
             KeyPreview = true;
             SetupLogger();
             _logger.Log($"Form Pick Company Code: {_neutronLicense.CompanyCode}");
-            if (_station.StationNumber >= 10)
+            if (_station.StationType.Id == (int)StationType.Supervisor)
             {
                 MBMainLoadOrders.Visible = true;
                 MBMainUpload.Visible = true;
@@ -304,7 +307,7 @@ namespace Neutron.Forms
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new Dictionary<int, DeviceIndicator>();
 
-            var hardwareDevices = _station.HardwareDevices.Where(x => _controllableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            var hardwareDevices = _station.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
             var numDevices = hardwareDevices.Count;
 
             var panel = new Panel();
@@ -1341,7 +1344,7 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetRackOrdersView(findWhat);
+                var views = _ordersRepository.GetRackOrdersView(_rackStation.StationNumber, findWhat);
 
                 var rackOrderViews = views.ToList();
                 foreach (var rackOrderView in rackOrderViews)
@@ -1351,10 +1354,6 @@ namespace Neutron.Forms
                         rackOrderView.StatusName = _resourceManager.GetString($"OnFloor");
                     }
                 }
-
-
-                //var filteredViews = views.Where(v => v.Station_8_HasPicks != "C").ToList();
-
                 var bindingListView = new BindingListView<RackOrderView>(rackOrderViews.ToList());
 
                 _bindingSourceAvailableOrdersRack.DataSource = bindingListView;
@@ -5498,18 +5497,18 @@ namespace Neutron.Forms
         // Rack print - Pick List
         private void MBPrintDocument_Click(object sender, EventArgs e)
         {
-            PrintPickList(8);
+            PrintPickList(_rackStation);
             ShowAvailableOrdersRack();
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
-        private void PrintPickList(int stationId = 8)
+        private void PrintPickList(Station station)
         {
             var orderViews = GetCheckedOrdersRack();
             if (orderViews.Count <= 0) return;
             foreach (var orderView in orderViews)
             {
-                var recs = orderView.OrderDetails.Where(r => r.StationNumber == 8 && r.LineStatusId != 6).ToList();
+                var recs = orderView.OrderDetails.Where(r => r.StationNumber == station.StationNumber && r.LineStatusId != 6).ToList();
                 foreach (var rec in recs)
                 {
                     var recToUpdate = _repoOrderDetails.FindByKey(rec.Id);
@@ -5521,7 +5520,7 @@ namespace Neutron.Forms
                     }
                 }
 
-                PrintPickListByStation(orderView.Id, stationId);
+                PrintPickListByStation(orderView.Id, station.Id);
             }
         }
 
