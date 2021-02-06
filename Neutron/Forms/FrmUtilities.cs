@@ -113,6 +113,9 @@ namespace Neutron.Forms
             ComboBoxDefaultLanguage.DisplayMember = "Name";
             ComboBoxDefaultLanguage.ValueMember = "CultureInfo";
 
+            ComboBoxStationNumber.DataSource = _repoStations.All();
+            ComboBoxStationNumber.DisplayMember = "Name";
+            ComboBoxStationNumber.ValueMember = "Id";
 
         }
 
@@ -714,7 +717,7 @@ namespace Neutron.Forms
             _neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
             _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
-            _neutronVariables.StationNumber = int.Parse(TextBoxStationNumber.Text.ToString());
+            _neutronVariables.StationId = ((Station) ComboBoxStationNumber.SelectedItem).Id;
             _neutronVariables.DeviceDriver =  ComboBoxDeviceDriver.SelectedItem.ToString();
             // _neutronVariables.SimulationMode = CheckBoxSimulationMode.Checked;
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
@@ -772,7 +775,7 @@ namespace Neutron.Forms
             CheckBoxUseLAC.Checked = _neutronVariables.UseLAC;
             CheckBoxUseMenuSecurity.Checked = _neutronVariables.UseMenuSecurity;
             CheckBoxUseReturnToStock.Checked = _neutronVariables.UseReturnToStock;
-            TextBoxStationNumber.Text = _neutronVariables.StationNumber.ToString();
+            ComboBoxStationNumber.SelectedValue = _neutronVariables.StationId;
             ComboBoxDeviceDriver.SelectedIndex = ComboBoxDeviceDriver.FindStringExact(_neutronVariables.DeviceDriver);
             // CheckBoxSimulationMode.Checked = _neutronVariables.SimulationMode;
             NumericUpDownLogLevel.Value = _neutronVariables.LogLevel == 0

@@ -31,8 +31,9 @@ using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
+using DeviceType = NeutronCore.Enums.DeviceType;
 using StorageType = Neutron.Enums.StorageType;
-
+using StationType = NeutronCore.Enums;
 
 namespace Neutron.Forms
 {
@@ -52,12 +53,12 @@ namespace Neutron.Forms
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
+        private readonly StationRepository _stationRepository = new StationRepository();
         private LocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
-        private BindingListView<ItemDefinitionView> _bindingSourceItemDefinitionViewEquin = null;
         private readonly BindingSource _bindingSourceCurrent = new BindingSource();
-        private readonly BindingSource _bindingSourceItemDefinitions = new BindingSource();
+        private BindingSource _bindingSourceItemDefinitions = new BindingSource();
         private readonly BindingSource _bindingSourceNewLocations = new BindingSource();
         public bool CloseButtonPressed { get; set; }
         public RackOrderView CurrentItem;
@@ -80,8 +81,8 @@ namespace Neutron.Forms
         private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
-        private readonly int[] _controllableDeviceTypes = new[] { 1, 2 };
-
+        private readonly int[] _moveableDeviceTypes;
+        private readonly Station _rackStation;
         public enum GridDataType
         {
             None,
@@ -102,6 +103,8 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
             _akaRepository = akaRepository;
+            _rackStation = _stationRepository.GetRackStation();
+            _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
             InitForm(item);
         }
         private void InitForm(string item)
@@ -135,7 +138,7 @@ namespace Neutron.Forms
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new Dictionary<int, DeviceIndicator>();
 
-            var hardwareDevices = _station.HardwareDevices.Where(x => _controllableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            var hardwareDevices = _station.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
             var numDevices = hardwareDevices.Count;
             var panel = new Panel();
             panel.Location = new Point(140, 0);
@@ -327,13 +330,13 @@ namespace Neutron.Forms
 
         private async Task LoadNewLocations(ItemDefinitionView item)
         {
-            var stationNumber = _station.StationNumber;
-            if (_station.StationType.Id == 4)
+            var station =  _repoStation.FindByKey(_station.StationId);
+            if (_station.StationType.Id == (int) StationType.StationType.Supervisor)
             {
-                var rackStation = _repoStation.All().Where(r => r.StationType.Id == 3).FirstOrDefault();
-                if (rackStation != null)
+
+                if (_rackStation != null)
                 {
-                    stationNumber = rackStation.StationNumber;
+                    station = _rackStation;
                     CheckBoxAll.Checked = true;
                     CheckBoxAll.Visible = false;
                 }
@@ -344,7 +347,7 @@ namespace Neutron.Forms
             }
             if (CheckBoxAll.Checked)
             {
-                var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(stationNumber));
+                var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(station));
                 var locationViews = views.ToList();
                 var blvAll = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blvAll;
@@ -352,7 +355,7 @@ namespace Neutron.Forms
             }
             else
             {
-                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(stationNumber,
+                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(station,
                      item.SizeCodeId, item.VelocityCodeId, item.HeightCodeId, item.LocationCodeId, inUse: false));
                 var locationViews = views.ToList();
                 var blv = new BindingListView<LocationView>(locationViews.ToList());
@@ -404,10 +407,11 @@ namespace Neutron.Forms
             //TextBoxFindItem.Text = find;
             _stopwatch.Restart();
             IEnumerable<ItemDefinitionView> views;   // = new ItemDefinitionView[] { };
-            if (_station.StationType.Id == 4)
+            // if its a Supervisor station, load the Rack items
+            if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
             {
-                var rackStation = _repoStation.All().Where(r => r.StationType.Id == 3).FirstOrDefault();
-                if (rackStation != null)
+                // var rackStation = _repoStation.All().FirstOrDefault(r => r.StationType.Id == (int)StationType.StationType.Rack);
+                if (_rackStation != null)
                 {
                     //        stationNumber = rackStation.StationNumber;
                     //        CheckBoxAll.Checked = true;
@@ -422,7 +426,7 @@ namespace Neutron.Forms
                     //    var station = _repoStation.FindBy(r => r.StationNumber == 8).FirstOrDefault();
                     //    if (station != null)
                     //    {
-                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, rackStation.Id);
+                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _rackStation.Id);
                     blv = new BindingListView<ItemDefinitionView>(views.ToList());
                 }
             }
@@ -431,10 +435,13 @@ namespace Neutron.Forms
                 views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _station.StationId);
                 blv = new BindingListView<ItemDefinitionView>(views.ToList());
             }
-            _bindingSourceItemDefinitions.DataSource = blv;
+
+            _bindingSourceItemDefinitions = new BindingSource { DataSource = blv };
+
 
             DataGridViewHot.DataSource = _bindingSourceItemDefinitions;
-            UpdateDataGrid(_bindingSourceItemDefinitions);
+            DataGridViewHot.Update();
+            //UpdateDataGrid(_bindingSourceItemDefinitions);
             var recordCount = GetRecordCount(_bindingSourceItemDefinitions);
             if (recordCount > 0)
             {
@@ -456,7 +463,7 @@ namespace Neutron.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show($"{ex.Message}");
-
+                    _currentGridDataType = GridDataType.None;
                 }
 
             }
@@ -998,8 +1005,18 @@ namespace Neutron.Forms
             var loc3 = _currentInventoryView.Loc3;
             var loc4 = _currentInventoryView.Loc4;
 
-            var deviceType = _station.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1).DeviceTypeId;
-            if (deviceType == 1) // Vertical
+            var device = _station.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
+
+            if (device == null) //No Hardware devices
+            {
+                HotAction.BackColor = Color.Red;
+                LabelFormTitle.BackColor = Color.Red;
+                LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                await UpdateHotPickScreen(_currentInventoryView);
+                tabControl1.SelectedTab = HotAction;
+            }
+            else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
             {
                 if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
                 {
@@ -1019,7 +1036,7 @@ namespace Neutron.Forms
                     MessageBox.Show($"Location Access Denied");
                 }
             }
-            else if (deviceType == 2) //Carousel
+            else if (device.DeviceTypeId == (int)DeviceType.Carousel)
             {
                 if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
                 {
@@ -1084,7 +1101,7 @@ namespace Neutron.Forms
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
 
-                if (_controllableDeviceTypes.Contains(_station.StationType.Id))
+                if (_moveableDeviceTypes.Contains(_station.StationType.Id))
                 {
                     if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
                     {
@@ -1146,7 +1163,7 @@ namespace Neutron.Forms
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
 
-                if (_controllableDeviceTypes.Contains(_station.StationType.Id))
+                if (_moveableDeviceTypes.Contains(_station.StationType.Id))
                 {
                     if (_lacProcessor.MovePermitted(_station.StationNumber, location.Loc1, location.Loc2))
                     {

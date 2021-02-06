@@ -56,8 +56,9 @@ namespace Neutron.Forms
         private readonly IAkaRepository _akaRepository;
         public bool CloseButtonPressed { get; set; }
         private BackgroundWorker _dgvColumnWidthSizer;
-
-        private readonly int[] _stationTypesThatHaveInventory = new[] { 1, 2, 3 };  // 4 is a Supervisor 
+        private readonly Station _rackStation;
+        private readonly List<Station> _pickStations;
+        //private readonly int[] _stationTypesThatHaveInventory = new[] { 1, 2, 3 };  // 4 is a Supervisor 
 
         public FrmItemDefinitions(IJsonData jsonData, StationView station, IAkaRepository akaRepository)
         {
@@ -76,15 +77,17 @@ namespace Neutron.Forms
             SetupTabControl();
             SetupNewForm();
             SetupViewEditForm();
+            _rackStation = _repoStation.GetRackStation();
             _akaRepository = akaRepository;
+            _pickStations = _repoStation.GetPickStations();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
-            if (_station.StationNumber >= 10)
+            LabelStationName.Text = _station.Name;
+            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
                 CheckBoxAllStations.Checked = true;
             }
             SetupViewEditBindings();
             RefreshData();
-            //this.AutoValidate = AutoValidate.Disable;
         }
         private void DgvColumnWidthSizerOnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -144,15 +147,21 @@ namespace Neutron.Forms
         }
         private void RefreshData(int recId = 0)
         {
+            var station = _repoStation.GetStation(_station.StationId);
             Cursor.Current = Cursors.WaitCursor;
             var idx = 0;
             var findWhat = TextBoxFind.Text.ToLower().Trim();
             var find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
-            var views = CheckBoxAllStations.Checked ? _itemDefinitionsRepository.FindItemDefinitionViews(find) : _itemDefinitionsRepository.FindItemDefinitionViewsByStation(find, _station.StationId);
-            var bindingSourceItemDefinitionViewEquin = new BindingListView<ItemDefinitionView>(views.ToList());
-            _bindingSource.DataSource = bindingSourceItemDefinitionViewEquin;
-            //_bindingSource.DataSource = views.ToList();
+            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
+            {
+                station = _rackStation;
+            }
+            var views = CheckBoxAllStations.Checked ? _itemDefinitionsRepository.FindItemDefinitionViews(find) : _itemDefinitionsRepository.FindItemDefinitionViewsByStation(find, station.Id);
+
+            var blv = new BindingListView<ItemDefinitionView>(views.ToList());
+            _bindingSource.DataSource = blv;
+
             DataGridView1.DataSource = _bindingSource;
             if (GetRecordCount(_bindingSource) > 0)
             {
@@ -240,7 +249,6 @@ namespace Neutron.Forms
         private void MButtonClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
-            // this.Close();
         }
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
@@ -273,22 +281,6 @@ namespace Neutron.Forms
         private void MButtonNew_Click(object sender, EventArgs e)
         {
             NewItem();
-            //TextBoxNewItem.Text = string.Empty;
-            //TextBoxNewDescription.Text = string.Empty;
-            //TextBoxNewLocationMax.Text = string.Empty;
-            //TextBoxNewLocationMin.Text = string.Empty;
-            //TextBoxNewSystemMax.Text = string.Empty;
-            //TextBoxNewSystemMin.Text = string.Empty;
-            //TextBoxNewWeight.Text = string.Empty;
-            //ComboBoxNewStation.SelectedIndex = 0;
-            //ComboBoxNewHeightCode.SelectedIndex = 0;
-            //ComboBoxNewSizeCode.SelectedIndex = 0;
-            //ComboBoxNewVelocityCode.SelectedIndex = 0;
-            //ComboBoxNewLocationCode.SelectedIndex = 0;
-            //ComboBoxNewStorageType.SelectedIndex = 1;
-            //ComboBoxNewUnitOfIssue.SelectedIndex = 0;
-            //CheckBoxNewScale.Checked = false;
-            //tabControl1.SelectedTab = New;
         }
         private void NewItem()
         {
@@ -430,73 +422,83 @@ namespace Neutron.Forms
                 MessageBox.Show(_resourceManager.GetString("Message3"));
             }
         }
+
         private void UpdateViewEdit()
         {
-            int stationNumber = 1;
+            //int stationNumber = 1;
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
-            var stationId = ((Station)ComboBoxViewEditStation.SelectedItem).Id;
-            var station = _repoStation.GetStation(stationId);
+            var station = (Station)ComboBoxViewEditStation.SelectedItem;
             if (station != null)
             {
-                stationNumber = station.StationNumber;
-            }
-            var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
-            var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text) ? "0" : TextBoxViewEditLocationMax.Text;
-            var locationMin = string.IsNullOrEmpty(TextBoxViewEditLocationMin.Text) ? "0" : TextBoxViewEditLocationMin.Text;
-            var systemMax = string.IsNullOrEmpty(TextBoxViewEditSystemMax.Text) ? "0" : TextBoxViewEditSystemMax.Text;
-            var systemMin = string.IsNullOrEmpty(TextBoxViewEditSystemMin.Text) ? "0" : TextBoxViewEditSystemMin.Text;
-            if (!string.IsNullOrEmpty(TextBoxViewEditItem.Text))
-            {
-                var item = TextBoxViewEditItem.Text;
-                if (!string.IsNullOrEmpty(TextBoxViewEditDescription.Text))
+                var stationNumber = station.StationNumber;
+                
+                var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
+                var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text)
+                    ? "0"
+                    : TextBoxViewEditLocationMax.Text;
+                var locationMin = string.IsNullOrEmpty(TextBoxViewEditLocationMin.Text)
+                    ? "0"
+                    : TextBoxViewEditLocationMin.Text;
+                var systemMax = string.IsNullOrEmpty(TextBoxViewEditSystemMax.Text) ? "0" : TextBoxViewEditSystemMax.Text;
+                var systemMin = string.IsNullOrEmpty(TextBoxViewEditSystemMin.Text) ? "0" : TextBoxViewEditSystemMin.Text;
+                if (!string.IsNullOrEmpty(TextBoxViewEditItem.Text))
                 {
-                    var description = TextBoxViewEditDescription.Text;
-                    var itemDef = _repoItemDefinition.FindByKey(id);
-                    if (itemDef != null)
+                    var item = TextBoxViewEditItem.Text;
+                    if (!string.IsNullOrEmpty(TextBoxViewEditDescription.Text))
                     {
-                        itemDef.StationId = stationId;
-                        itemDef.Item = item;
-                        itemDef.Description = description;
-                        itemDef.LocationMax = IntegerExtensions.ParseInt((locationMax));
-                        itemDef.LocationMin = IntegerExtensions.ParseInt((locationMin));
-                        itemDef.SystemMax = IntegerExtensions.ParseInt((systemMax));
-                        itemDef.SystemMin = IntegerExtensions.ParseInt((systemMin));
-                        itemDef.SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
-                        itemDef.VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
-                        itemDef.HeightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
-                        itemDef.LocationCodeId = ((LocationCode)ComboBoxViewEditLocationCode.SelectedItem).Id;
-                        itemDef.StorageTypeId = ((StorageType)ComboBoxViewEditStorageType.SelectedItem).Id;
-                        itemDef.UnitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
-                        itemDef.Weight = float.Parse(weight);
-                        itemDef.Scale = CheckBoxViewEditScale.Checked;
-                        try
+                        var description = TextBoxViewEditDescription.Text;
+                        var itemDef = _repoItemDefinition.FindByKey(id);
+                        if (itemDef != null)
                         {
-                            _repoItemDefinition.Update(itemDef);
-                            var recs = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != 6).ToList();
-                            foreach (var rec in recs)
+                            itemDef.StationId = station.Id;
+                            itemDef.Item = item;
+                            itemDef.Description = description;
+                            itemDef.LocationMax = locationMax.ParseInt();
+                            itemDef.LocationMin = locationMin.ParseInt();
+                            itemDef.SystemMax = systemMax.ParseInt();
+                            itemDef.SystemMin = systemMin.ParseInt();
+                            itemDef.SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
+                            itemDef.VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
+                            itemDef.HeightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
+                            itemDef.LocationCodeId = ((LocationCode)ComboBoxViewEditLocationCode.SelectedItem).Id;
+                            itemDef.StorageTypeId = ((StorageType)ComboBoxViewEditStorageType.SelectedItem).Id;
+                            itemDef.UnitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
+                            itemDef.Weight = float.Parse(weight);
+                            itemDef.Scale = CheckBoxViewEditScale.Checked;
+                            try
                             {
-                                rec.StationNumber = stationNumber;
-                                _repoOrderDetails.Update(rec);
+                                _repoItemDefinition.Update(itemDef);
+                                var recs = _repoOrderDetails.All()
+                                    .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != 6).ToList();
+                                foreach (var rec in recs)
+                                {
+                                    rec.StationNumber = stationNumber;
+                                    _repoOrderDetails.Update(rec);
+                                }
                             }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(
+                                    $"{_resourceManager.GetString("Message4")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                            }
+
+                            RefreshData();
+                            tabControl1.SelectedTab = Listing;
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            MessageBox.Show($"{_resourceManager.GetString("Message4")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                            MessageBox.Show(_resourceManager.GetString("Message5"), string.Empty, MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                         }
-                        RefreshData();
-                        tabControl1.SelectedTab = Listing;
                     }
                     else
                     {
-                        MessageBox.Show(_resourceManager.GetString("Message5"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(_resourceManager.GetString("Message6"));
                     }
-                }
-                else
-                {
-                    MessageBox.Show(_resourceManager.GetString("Message6"));
                 }
             }
             else
+
             {
                 MessageBox.Show(_resourceManager.GetString("Message7"));
             }
@@ -756,7 +758,7 @@ namespace Neutron.Forms
         }
         private void SetupViewEditForm()
         {
-            
+
             //LabelFindDescription.Text = "Search any part of Item or Description fields";
             ComboBoxViewEditSizeCode.DataSource = _repoSizeCode.All();
             ComboBoxViewEditSizeCode.DisplayMember = "Name";
@@ -945,40 +947,44 @@ namespace Neutron.Forms
         }
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
-            var stationId = ((Station)ComboBoxNewStation.SelectedItem).Id;
-            var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
-            var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
-            var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
-            var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
-            var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
-            var rec = new ItemDefinition()
+            var station = ((Station)ComboBoxNewStation.SelectedItem);
+
+            if (station != null)
             {
-                StationId = stationId,
-                Item = string.Empty,
-                Description = string.Empty,
-                LocationMax = locationMax.ParseInt(),
-                LocationMin = locationMin.ParseInt(),
-                SystemMax = systemMax.ParseInt(),
-                SystemMin = systemMin.ParseInt(),
-                SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
-                VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
-                HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
-                LocationCodeId = ((LocationCode)ComboBoxNewLocationCode.SelectedItem).Id,
-                StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
-                UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
-                Weight = float.Parse(weight),
-                Scale = CheckBoxNewScale.Checked
-            };
-            try
-            {
-                _jsonData.SaveFile(rec);
+                var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
+                var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
+                var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
+                var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
+                var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
+                var rec = new ItemDefinition()
+                {
+                    StationId = station.Id,
+                    Item = string.Empty,
+                    Description = string.Empty,
+                    LocationMax = locationMax.ParseInt(),
+                    LocationMin = locationMin.ParseInt(),
+                    SystemMax = systemMax.ParseInt(),
+                    SystemMin = systemMin.ParseInt(),
+                    SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
+                    VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
+                    HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
+                    LocationCodeId = ((LocationCode)ComboBoxNewLocationCode.SelectedItem).Id,
+                    StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
+                    UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
+                    Weight = float.Parse(weight),
+                    Scale = CheckBoxNewScale.Checked
+                };
+                try
+                {
+                    _jsonData.SaveFile(rec);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{_resourceManager.GetString("Message10")}{Environment.NewLine}" +
+                                    $"{ex.Message}{ex.InnerException}");
+                }
+                NewItem(); 
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{_resourceManager.GetString("Message10")}{Environment.NewLine}" +
-                                $"{ex.Message}{ex.InnerException}");
-            }
-            NewItem();
         }
         private void MbLoadDefault_Click(object sender, EventArgs e)
         {

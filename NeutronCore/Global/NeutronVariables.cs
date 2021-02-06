@@ -15,7 +15,6 @@ namespace NeutronCore.Global
         public bool UseLAC = false;
         public bool UseMenuSecurity = false;
         public bool UseReturnToStock = false;
-        public int StationNumber = 3;
         public string DeviceDriver = "None";
         public bool SimulationMode = false;
         public int LogLevel = 2;
@@ -53,5 +52,6 @@ namespace NeutronCore.Global
         public bool UseImages { get; set; }
         public string DefaultLanguage { get; set; }
         public int DeviceFlashRate { get; set; }
+        public int StationId { get; set; }
     }
 }

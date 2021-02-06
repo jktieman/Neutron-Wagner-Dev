@@ -43,7 +43,7 @@ namespace Neutron
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private StationView _station;
-        private int _stationNumber;
+        private int _stationId;
         private DynamicLogger _logger;
         private string _logFileDir = string.Empty;
         private readonly IAkaRepository _akaRepository;
@@ -124,15 +124,13 @@ namespace Neutron
                 ButtonClearDisplays.Visible = _neutronLicense.CompanyCode == "TOP";
                 if (LoaderSettings.Init())
                 {
-                    _stationNumber = _neutronVariables.StationNumber;
-
-                    if (CreateLog("Main", _stationNumber))
+                    _stationId = _neutronVariables.StationId;
+                    if (_stationId > 0)
                     {
-                        _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
-
-                        if (_stationNumber > 0)
+                        _station = _stationRepository.GetStationView(_stationId);
+                        if (CreateLog("Main", _station.StationNumber))
                         {
-                            _station = _stationRepository.GetStationView(_stationNumber);
+                            _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
                             if (_station != null)
                             {
                                 if (SetupShuttle())
@@ -181,9 +179,14 @@ namespace Neutron
                         }
                         else
                         {
-                            MessageBox.Show("Station has not been configured.   Neutron Exiting.",
-                                caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
+                            MessageBox.Show("Unable to create the log file.   Neutron Exiting.",
+                                caption: "File Error", buttons: MessageBoxButtons.OK);
                         }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Station has not been configured.   Neutron Exiting.",
+                            caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
                     }
                 }
                 else

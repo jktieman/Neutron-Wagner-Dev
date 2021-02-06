@@ -114,6 +114,7 @@
             this.LabelNewTray = new System.Windows.Forms.Label();
             this.LabelNewDevice = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
+            this.LabelStationName = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -203,23 +204,16 @@
             this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxStationNumber.FormattingEnabled = true;
-            this.ComboBoxStationNumber.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "8"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(587, 50);
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(587, 54);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(58, 32);
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(169, 32);
             this.ComboBoxStationNumber.TabIndex = 25;
             // 
             // CheckBoxAllStations
             // 
             this.CheckBoxAllStations.AutoSize = true;
             this.CheckBoxAllStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAllStations.Location = new System.Drawing.Point(696, 69);
+            this.CheckBoxAllStations.Location = new System.Drawing.Point(778, 69);
             this.CheckBoxAllStations.Name = "CheckBoxAllStations";
             this.CheckBoxAllStations.Size = new System.Drawing.Size(90, 17);
             this.CheckBoxAllStations.TabIndex = 21;
@@ -229,12 +223,13 @@
             // 
             // LabelFindDescription
             // 
-            this.LabelFindDescription.Location = new System.Drawing.Point(693, 43);
+            this.LabelFindDescription.Location = new System.Drawing.Point(775, 43);
             this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(90, 20);
+            this.LabelFindDescription.Size = new System.Drawing.Size(26, 10);
             this.LabelFindDescription.TabIndex = 18;
             this.LabelFindDescription.Text = "Search For";
             this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelFindDescription.Visible = false;
             // 
             // TextBoxFind
             // 
@@ -1142,11 +1137,21 @@
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
+            // LabelStationName
+            // 
+            this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStationName.Location = new System.Drawing.Point(26, 129);
+            this.LabelStationName.Name = "LabelStationName";
+            this.LabelStationName.Size = new System.Drawing.Size(279, 35);
+            this.LabelStationName.TabIndex = 20;
+            this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // FrmLocations
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.Controls.Add(this.LabelStationName);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.LabelFormTitle);
@@ -1263,5 +1268,6 @@
         private System.Windows.Forms.Label LabelNewDevice;
         private System.Windows.Forms.Label LabelNewStation;
         private System.Windows.Forms.Label LabelViewEditSlotInformation;
+        private System.Windows.Forms.Label LabelStationName;
     }
 }

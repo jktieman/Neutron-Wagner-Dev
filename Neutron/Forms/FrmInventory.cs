@@ -39,9 +39,7 @@ namespace Neutron.Forms
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private ResourceManager _gridResourceManager;
-        private BindingListView<SqlInventoryView> _bindingSourceEquin;
-        private BindingListView<SqlInventoryView> _locationBindingSourceEquin;
-        private BindingListView<LocationView> _newLocationBindingSourceEquin;
+
         private readonly BindingSource _bindingSource = new BindingSource();
         private readonly BindingSource _locationBindingSource = new BindingSource();
         private readonly BindingSource _newLocationBindingSource = new BindingSource();
@@ -74,6 +72,7 @@ namespace Neutron.Forms
         public Inventory CurrentInventoryItem { get; set; }
         public bool CloseButtonPressed { get; set; }
         private bool _firstTime = true;
+        private readonly Station _rackStation;
 
         public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
             ILacProcessor lacProcessor)
@@ -88,6 +87,8 @@ namespace Neutron.Forms
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _akaRepository = akaRepository;
             _lacProcessor = lacProcessor;
+            _rackStation = _repoStation.GetRackStation();
+            LabelStationName.Text = _station.Name;
             SetupGrids();
             HideTabControlTabs();
             SetupNewForm();
@@ -97,7 +98,7 @@ namespace Neutron.Forms
             var logFilePath = LoaderSettings.GetLogFileDirectory() + "Inventory.log";
             _locationsRepository = new LocationsRepository();
 
-            if (_station.StationNumber >= 10)
+            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
                 CheckBoxAllStations.Checked = true;
             }
@@ -119,46 +120,58 @@ namespace Neutron.Forms
             var findWhat = TextBoxFind.Text.ToLower().Trim();
             var find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
-            IEnumerable<SqlInventoryView> views = CheckBoxAllStations.Checked
-                ? _inventoryRepository.FindInventoryViews(find)
-                : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
-            //Task<IEnumerable<SqlInventoryView>> views = CheckBoxAllStations.Checked
-            //    ?  _inventoryRepository.FindInventoryViews(find)
-            //    : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
-            _bindingSourceEquin = new BindingListView<SqlInventoryView>(views.ToList());
-            _bindingSource.DataSource = _bindingSourceEquin;
-            DataGridView1.DataSource = _bindingSource;
-            if (GetRecordCount(_bindingSource) > 0)
+            var station = _repoStation.GetStation(_station.StationId);
+            if (station != null)
             {
-                //var item = views.FirstOrDefault();
-                //if (item != null)
-                //{
-                //    SetCurrentItemDefinition(item.ItemDefinitionId);
-                //    SetCurrentLocation(item.LocationId);
-                //}
-                if (recId != 0)
+                if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
                 {
-                    var idx = IndexOf(_bindingSource, recId);
-                    DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
-                    DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
-                    DataGridView1.Rows[idx].Selected = true;
-                    // SetCurrentInventoryItem();
+                    station = _rackStation;
                 }
-                //else
-                //{
-                //    DataGridView1.ClearSelection();
-                //}
-                SetCurrentInventoryItem();
-                DataGridView1.Refresh();
-                DataGridView1.ClearSelection();
-                if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
-            }
-            else
-            {
-                CurrentItem = null;
-                CurrentLocation = null;
-                CurrentInventoryItem = null;
-                //LoadViewEdit();
+
+                IEnumerable<SqlInventoryView> views = CheckBoxAllStations.Checked
+                    ? _inventoryRepository.FindInventoryViews(find)
+                    : _inventoryRepository.FindInventoryViewsByStation(find, station.Id);
+
+
+                //Task<IEnumerable<SqlInventoryView>> views = CheckBoxAllStations.Checked
+                //    ?  _inventoryRepository.FindInventoryViews(find)
+                //    : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
+                var blv = new BindingListView<SqlInventoryView>(views.ToList());
+                _bindingSource.DataSource = blv;
+                DataGridView1.DataSource = _bindingSource;
+                if (GetRecordCount(_bindingSource) > 0)
+                {
+                    //var item = views.FirstOrDefault();
+                    //if (item != null)
+                    //{
+                    //    SetCurrentItemDefinition(item.ItemDefinitionId);
+                    //    SetCurrentLocation(item.LocationId);
+                    //}
+                    if (recId != 0)
+                    {
+                        var idx = IndexOf(_bindingSource, recId);
+                        DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+                        DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
+                        DataGridView1.Rows[idx].Selected = true;
+                        // SetCurrentInventoryItem();
+                    }
+
+                    //else
+                    //{
+                    //    DataGridView1.ClearSelection();
+                    //}
+                    SetCurrentInventoryItem();
+                    DataGridView1.Refresh();
+                    DataGridView1.ClearSelection();
+                    if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                }
+                else
+                {
+                    CurrentItem = null;
+                    CurrentLocation = null;
+                    CurrentInventoryItem = null;
+                    //LoadViewEdit();
+                }
             }
         }
         private void SetCurrentInventoryItem()
@@ -414,8 +427,8 @@ namespace Neutron.Forms
                 TextBoxViewEditItem.Text = CurrentItem.Item;
                 TextBoxViewEditDescription.Text = CurrentItem.Description;
                 var views = GetInventoryViewListByItem(CurrentItem.Id);
-                _locationBindingSourceEquin = new BindingListView<SqlInventoryView>(views.ToList());
-                _locationBindingSource.DataSource = _locationBindingSourceEquin;
+                var blv = new BindingListView<SqlInventoryView>(views.ToList());
+                _locationBindingSource.DataSource = blv;
                 DataGridViewInventoryLocations.DataSource = _locationBindingSource;
                 tabControl1.SelectedTab = tabPage2;
                 DataGridViewInventoryLocations.ClearSelection();
@@ -1363,16 +1376,6 @@ namespace Neutron.Forms
         }
         private void AddLocation()
         {
-            // var id = CurrentItem.Id;
-            //  var itemDefinition = _repoItemDefinition.FindByKey(id);
-            //  if (itemDefinition != null)
-            //{
-            //    TextBoxInventoryNewLocationsItem.Text = itemDefinition.Item;
-            //    TextBoxInventoryNewLocationsDescription.Text = itemDefinition.Description;
-            //    TextBoxNewLocationsItemDefinitionId.Text = itemDefinition.Id.ToString();
-            //    ComboBoxInventoryNewLocationsStorageType.SelectedIndex = 2;
-            //    GetAvailableLocations(itemDefinition);
-            //}
             if (CurrentItem != null)
             {
                 TextBoxInventoryNewLocationsItem.Text = CurrentItem.Item;
@@ -1387,46 +1390,59 @@ namespace Neutron.Forms
         public async void GetAvailableLocations(ItemDefinition itemDefinition, int recId = 0)
         {
             var idx = recId;
-            if (itemDefinition == null) return;
-            var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(itemDefinition.StationId,
-                itemDefinition.SizeCodeId, itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId,
-                itemDefinition.LocationCodeId, inUse: false));
-            _newLocationBindingSourceEquin = new BindingListView<LocationView>(views.ToList());
-            _newLocationBindingSource.DataSource = _newLocationBindingSourceEquin;
-            DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
-            if (GetRecordCount(_newLocationBindingSource) > 0)
+            var station = _repoStation.GetStation(itemDefinition.StationId);
+            if (station != null)
             {
-                if (recId != 0)
+                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(station,
+                    itemDefinition.SizeCodeId, itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId,
+                    itemDefinition.LocationCodeId, inUse: false));
+
+                var blv = new BindingListView<LocationView>(views.ToList());
+                _newLocationBindingSource.DataSource = blv;
+                DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
+                if (GetRecordCount(_newLocationBindingSource) > 0)
                 {
-                    idx = IndexOf(_newLocationBindingSource, recId);
+                    if (recId != 0)
+                    {
+                        idx = IndexOf(_newLocationBindingSource, recId);
+                    }
+
+                    DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex =
+                        DataGridViewInventoryNewLocations.Rows[idx].Index;
+                    DataGridViewInventoryNewLocations.Refresh();
+                    DataGridViewInventoryNewLocations.CurrentCell =
+                        DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
+                    DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
                 }
-                DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex =
-                    DataGridViewInventoryNewLocations.Rows[idx].Index;
-                DataGridViewInventoryNewLocations.Refresh();
-                DataGridViewInventoryNewLocations.CurrentCell = DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
-                DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
             }
         }
+
         public async void GetAllAvailableLocations(ItemDefinition itemDefinition, int recId = 0)
         {
             var idx = recId;
-            IEnumerable<LocationView> views = new List<LocationView>();
-            IEnumerable<LocationView> recs = new List<LocationView>();
-            views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(itemDefinition.StationId));
-            _newLocationBindingSourceEquin = new BindingListView<LocationView>(views.ToList());
-            _newLocationBindingSource.DataSource = _newLocationBindingSourceEquin;
-            DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
-            if (GetRecordCount(_newLocationBindingSource) > 0)
+            var station = _repoStation.GetStation(itemDefinition.StationId);
+            if (station != null)
             {
-                if (recId != 0)
+                IEnumerable<LocationView> views = new List<LocationView>();
+                IEnumerable<LocationView> recs = new List<LocationView>();
+                views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(station));
+                var blv = new BindingListView<LocationView>(views.ToList());
+                _newLocationBindingSource.DataSource = blv;
+                DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
+                if (GetRecordCount(_newLocationBindingSource) > 0)
                 {
-                    idx = IndexOf(_newLocationBindingSource, recId);
+                    if (recId != 0)
+                    {
+                        idx = IndexOf(_newLocationBindingSource, recId);
+                    }
+
+                    DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex =
+                        DataGridViewInventoryNewLocations.Rows[idx].Index;
+                    DataGridViewInventoryNewLocations.Refresh();
+                    DataGridViewInventoryNewLocations.CurrentCell =
+                        DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
+                    DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
                 }
-                DataGridViewInventoryNewLocations.FirstDisplayedScrollingRowIndex =
-                    DataGridViewInventoryNewLocations.Rows[idx].Index;
-                DataGridViewInventoryNewLocations.Refresh();
-                DataGridViewInventoryNewLocations.CurrentCell = DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
-                DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
             }
         }
         private void FrmInventory_FormClosing(object sender, FormClosingEventArgs e)
@@ -1504,8 +1520,8 @@ namespace Neutron.Forms
         }
         private void MbNewLocationsSave_Click(object sender, EventArgs e)
         {
-            if (IntegerExtensions.ParseInt(TextBoxInventoryNewLocationsQuantity.Text) == 0 &&
-                IntegerExtensions.ParseInt(ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString()) ==
+            if (TextBoxInventoryNewLocationsQuantity.Text.ParseInt() == 0 &&
+                ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString().ParseInt() ==
                 (int)StorageType.Release)
             {
                 MessageBox.Show(_resourceManager.GetString("Message9"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1527,10 +1543,10 @@ namespace Neutron.Forms
                         {
                             ItemDefinitionId = CurrentItem.Id,
                             LocationId = locView.Id,
-                            Quantity = IntegerExtensions.ParseInt(TextBoxInventoryNewLocationsQuantity.Text),
+                            Quantity = TextBoxInventoryNewLocationsQuantity.Text.ParseInt(),
                             ReceivedDate = DateTimePickerInventoryNewLocationsReceivedDate.Value,
                             StorageTypeId =
-                                IntegerExtensions.ParseInt(ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString()),
+                                ComboBoxInventoryNewLocationsStorageType.SelectedValue.ToString().ParseInt(),
                             PrimeBin = CheckBoxInventoryNewLocationsPrimeBin.Checked,
                             StationId = CurrentItem.StationId
                         };
@@ -1626,8 +1642,8 @@ namespace Neutron.Forms
                 TextBoxViewEditDescription.Text = CurrentItem.Description;
             }
             var views = GetInventoryViewListByItem(CurrentItem.Id);
-            _locationBindingSourceEquin = new BindingListView<SqlInventoryView>(views.ToList());
-            _locationBindingSource.DataSource = _locationBindingSourceEquin;
+            var blv = new BindingListView<SqlInventoryView>(views.ToList());
+            _locationBindingSource.DataSource = blv;
             DataGridViewInventoryLocations.DataSource = _locationBindingSource;
             tabControl1.SelectedTab = tabPage2;
         }

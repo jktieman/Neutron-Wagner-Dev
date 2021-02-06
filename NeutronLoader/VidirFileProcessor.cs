@@ -45,7 +45,7 @@ namespace NeutronLoader
 
         public void LoadFile(FileInfo fileInfo)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationNumber);
+            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationId);
             var orders = new List<HostOrder>();
 
             var filename = fileInfo.FullName;
@@ -68,7 +68,7 @@ namespace NeutronLoader
 
         public void LoadFiles(List<FileInfo> files)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationNumber);
+            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationId);
             var orders = new List<HostOrder>();
             Thread.Sleep(millisecondsTimeout: 100);
             foreach (var fileInfo in files)

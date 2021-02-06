@@ -23,5 +23,6 @@ namespace Neutron.Global
         public static bool UploadRunning { get; set; }
 
         public static HistoryManager HistoryManager { get; set; }
+
     }
 }

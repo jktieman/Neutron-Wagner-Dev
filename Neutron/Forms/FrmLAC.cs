@@ -46,9 +46,9 @@ namespace Neutron.Forms
         private void InitLac()
         {
             _stations = _repoStationRepository.GetMovablePickStations();
-            _currentStationNumber = _neutronVariables.StationNumber;
-            _currentStation = _stations.FirstOrDefault(r => r.StationNumber == _currentStationNumber);
-            InitCarriers();
+            _currentStation = _stations.FirstOrDefault(r => r.Id == _neutronVariables.StationId);
+            if(_currentStation != null) _currentStationNumber = _currentStation.StationNumber;
+            if(_stations != null) InitCarriers();
         }
 
         private void InitCarriers()

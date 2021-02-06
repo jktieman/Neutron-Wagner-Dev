@@ -61,6 +61,7 @@
     <Compile Include="Enums\ActionCode.cs" />
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\EnumModel.cs" />
+    <Compile Include="Enums\StationType.cs" />
     <Compile Include="Extensions\ByteExtensions.cs" />
     <Compile Include="Extensions\DataGridViewExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />

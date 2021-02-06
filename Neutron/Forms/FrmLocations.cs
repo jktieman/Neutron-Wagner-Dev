@@ -56,7 +56,7 @@ namespace Neutron.Forms
             new GenericRepository<VelocityCode>(new NeutronDb());
         private ISlot _slotName;
         private DocumentToPrint _documentToPrint;
-
+        private readonly Station _rackStation;
 
         public FrmLocations(IJsonData jsonData, StationView station, NeutronVariables neutronVariables, ILacProcessor lacProcessor)
         {
@@ -67,6 +67,7 @@ namespace Neutron.Forms
             _station = station;
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
+            _rackStation = _repoStation.GetRackStation();
             InitForm();
         }
         private void InitForm()
@@ -82,8 +83,13 @@ namespace Neutron.Forms
             SetupPrinters();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             _locationRepository = new LocationsRepository();
+            LabelStationName.Text = _station.Name;
+            var pickStations = _repoStation.GetPickStations();
+            ComboBoxStationNumber.DataSource = pickStations;
+            ComboBoxStationNumber.ValueMember = "Id";
+            ComboBoxStationNumber.DisplayMember = "Name";
             ComboBoxStationNumber.SelectedIndex = 0;
-            if (_station.StationType.Id == 4)
+            if (_station.StationType.Id == (int) NeutronCore.Enums.StationType.Supervisor)
             {
                 CheckBoxAllStations.Checked = true;
             }
@@ -116,36 +122,48 @@ namespace Neutron.Forms
             IEnumerable<LocationView> recs;
             var idx = 0;
             var find = TextBoxFind.Text.ToLower().Trim();
-
-
-            views = CheckBoxAllStations.Checked
-                ? _locationRepository.FindLocationViews(find)
-                : _locationRepository.FindLocationViewsByStation(_station.StationId);
-
-            if (MButtonAllLocations.Text == _resourceManager.GetString("Available"))
+            var station = _repoStation.GetStation(_station.StationId);
+            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
-                recs = views;
+                // Show the rack locations if this is a Supervisor Station
+                if (_rackStation != null)
+                {
+                    station = _rackStation;
+                }
             }
-            else
+            if (station != null)
             {
-                recs = views.Where(v => v.InUse == false).ToList();
-            }
 
-            var blv = new BindingListView<LocationView>(recs.ToList());
-            _bindingSource.DataSource = blv;
-            DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.DataSource = _bindingSource;
-            if (GetRecordCount() > 0)
-            {
-                if (recId != 0) idx = IndexOf(recId);
-                DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
-                DataGridView1.Refresh();
-                DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
-                DataGridView1.Rows[idx].Selected = true;
+                views = CheckBoxAllStations.Checked
+                    ? _locationRepository.FindLocationViews(find)
+                    : _locationRepository.FindLocationViewsByStation(station);
+
+                if (MButtonAllLocations.Text == _resourceManager.GetString("Available"))
+                {
+                    recs = views;
+                }
+                else
+                {
+                    recs = views.Where(v => v.InUse == false).ToList();
+                }
+
+                var blv = new BindingListView<LocationView>(recs.ToList());
+                _bindingSource.DataSource = blv;
+                DataGridView1.AutoGenerateColumns = false;
+                DataGridView1.DataSource = _bindingSource;
+                if (GetRecordCount() > 0)
+                {
+                    if (recId != 0) idx = IndexOf(recId);
+                    DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+                    DataGridView1.Refresh();
+                    DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
+                    DataGridView1.Rows[idx].Selected = true;
+                }
+
+                DataGridView1.ClearSelection();
+                if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                Cursor.Current = Cursors.Default;
             }
-            DataGridView1.ClearSelection();
-            if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
-            Cursor.Current = Cursors.Default;
         }
         public int IndexOf(int value)
         {
@@ -299,7 +317,7 @@ namespace Neutron.Forms
                             if (rec == null)
                             {
                                 string slotName;
-                                if (stId != 8)
+                                if (stId != _rackStation.Id)
                                 {
                                     _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
                                     slotName = _slotName.SlotName;
@@ -372,28 +390,22 @@ namespace Neutron.Forms
             var device = ((HardwareDeviceLookup)ComboBoxViewEditDevice.SelectedItem);
             if (device == null) return;
             var deviceNumber = device.Id;
-            if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxViewEditLoc2.Text)))
+            if (IntegerValidator(TextBoxViewEditLoc2.Text.ParseInt()))
             {
-                var loc2 = IntegerExtensions.ParseInt(TextBoxViewEditLoc2.Text);
-                if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxViewEditLoc3.Text)))
+                var loc2 = TextBoxViewEditLoc2.Text.ParseInt();
+                if (IntegerValidator(TextBoxViewEditLoc3.Text.ParseInt()))
                 {
-                    var loc3 = IntegerExtensions.ParseInt(TextBoxViewEditLoc3.Text);
-                    if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxViewEditLoc4.Text)))
+                    var loc3 = TextBoxViewEditLoc3.Text.ParseInt();
+                    if (IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt()))
                     {
-                        var loc4 = IntegerExtensions.ParseInt(TextBoxViewEditLoc4.Text);
-                        if (IntegerValidator(IntegerExtensions.ParseInt(TextBoxViewEditLoc5.Text)))
+                        var loc4 = TextBoxViewEditLoc4.Text.ParseInt();
+                        if (IntegerValidator(TextBoxViewEditLoc5.Text.ParseInt()))
                         {
-                            var loc5 = IntegerExtensions.ParseInt(TextBoxViewEditLoc5.Text);
-                            string slotName;
-                            if (stId != 8)
-                            {
+                            var loc5 = TextBoxViewEditLoc5.Text.ParseInt();
+
                                 _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
-                                slotName = _slotName.SlotName;
-                            }
-                            else
-                            {
-                                slotName = TextBoxViewEditSlot.Text;
-                            }
+                                var slotName = _slotName.SlotName;
+
                             var rec = new Location
                             {
                                 Id = id,
@@ -608,7 +620,7 @@ namespace Neutron.Forms
         }
         private List<Location> GetAvailableLocations()
         {
-            var stationId = ComboBoxStationNumber.Text.ParseInt();
+            var stationId = ((Station)ComboBoxStationNumber.SelectedItem).Id;
             List<Location> outs;
             using (var context = new NeutronDb())
             {
@@ -636,16 +648,19 @@ namespace Neutron.Forms
         }
         private void ComboBoxViewEditStation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var stationId = ((Station)ComboBoxViewEditStation.SelectedItem)?.Id ?? 1;
-            var stationView = _repoStation.GetStationView(stationId);
-            TextBoxViewEditSlot.ReadOnly = stationView.StationType.Id != 3;
-            LabelSlotInformation.Visible = stationView.StationType.Id == 3;
+            var station = ((Station)ComboBoxViewEditStation.SelectedItem);
+            if (station != null)
+            {
+                var stationView = _repoStation.GetStationView(station.Id);
+                TextBoxViewEditSlot.ReadOnly = true;  //stationView.StationType.Id != 3;
+                LabelSlotInformation.Visible = true;   // stationView.StationType.Id == 3;
 
-            ComboBoxViewEditDevice.DataSource = stationView.HardwareDevices
-                .Select(s => new HardwareDeviceLookup { Id = s.DeviceNumber, Name = s.Name }).ToList();
-            ComboBoxViewEditDevice.DisplayMember = "Name";
-            ComboBoxViewEditDevice.ValueMember = "Id";
-            ComboBoxViewEditDevice.Refresh();
+                ComboBoxViewEditDevice.DataSource = stationView.HardwareDevices
+                    .Select(s => new HardwareDeviceLookup {Id = s.DeviceNumber, Name = s.Name}).ToList();
+                ComboBoxViewEditDevice.DisplayMember = "Name";
+                ComboBoxViewEditDevice.ValueMember = "Id";
+                ComboBoxViewEditDevice.Refresh();
+            }
         }
         #region Find Functions
         private void MButtonFind_Click(object sender, EventArgs e)

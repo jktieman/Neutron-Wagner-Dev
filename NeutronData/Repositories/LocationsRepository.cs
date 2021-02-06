@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronCore;
+using NeutronCore.Enums;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
@@ -76,7 +77,7 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public async Task<IEnumerable<LocationView>> GetAllLocationViewsExact(int stationId, int sizeCodeId,
+        public async Task<IEnumerable<LocationView>> GetAllLocationViewsExact(Station station, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int locationCodeId, bool inUse)
         {
             var recs = new List<LocationView>();
@@ -84,7 +85,7 @@ namespace NeutronData.Repositories
             {
                 using (var context = new NeutronDb())
                 {
-                    var param1 = new SqlParameter("@StationId", stationId);
+                    var param1 = new SqlParameter("@StationId", station.Id);
                     var param2 = new SqlParameter("@SizeCodeId", sizeCodeId);
                     var param3 = new SqlParameter("@VelocityCodeId", velocityCodeId);
                     var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
@@ -105,7 +106,7 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public IEnumerable<LocationView> FindLocationViewsByStation(int stationId = 0)
+        public IEnumerable<LocationView> FindRackLocationViewsByStation(int stationId = 0)
         {
             var recs = new List<LocationView>();
             if (stationId != 0)
@@ -116,7 +117,35 @@ namespace NeutronData.Repositories
                     using (var context = new NeutronDb())
                     {
                         var paramStation = new SqlParameter("@StationId", stationId);
-                        if (stationId == 8)
+                        
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllRackLocationViews @StationId", paramStation).ToList();
+                       
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+                }
+
+                Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+            }
+
+            return recs;
+        }
+
+        public IEnumerable<LocationView> FindLocationViewsByStation(Station station)
+        {
+            var recs = new List<LocationView>();
+            if (station != null)
+            {
+                Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+                try
+                {
+                    using (var context = new NeutronDb())
+                    {
+                        var paramStation = new SqlParameter("@StationId", station.Id);
+
+                        if (station.StationType.Id == (int) StationType.Rack)
                         {
                             recs = context.Database.SqlQuery<LocationView>("usp_GetAllRackLocationViews @StationId", paramStation).ToList();
                         }

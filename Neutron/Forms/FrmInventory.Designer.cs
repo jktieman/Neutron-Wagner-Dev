@@ -168,6 +168,7 @@
             this.TextBoxAddDetailItemDefinitionId = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailLocationId = new System.Windows.Forms.TextBox();
             this.LabelRecordCount = new System.Windows.Forms.Label();
+            this.LabelStationName = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.GroupBoxInventoryFile.SuspendLayout();
@@ -1828,11 +1829,21 @@
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
+            // LabelStationName
+            // 
+            this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStationName.Location = new System.Drawing.Point(26, 129);
+            this.LabelStationName.Name = "LabelStationName";
+            this.LabelStationName.Size = new System.Drawing.Size(279, 35);
+            this.LabelStationName.TabIndex = 21;
+            this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // FrmInventory
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.Controls.Add(this.LabelStationName);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.LabelFormTitle);
@@ -2018,5 +2029,6 @@
         private MetroFramework.Controls.MetroButton MBCreateInventoryFile;
         private System.Windows.Forms.Label LabelListingStation;
         private System.Windows.Forms.Label LabelSlotInformation;
+        private System.Windows.Forms.Label LabelStationName;
     }
 }

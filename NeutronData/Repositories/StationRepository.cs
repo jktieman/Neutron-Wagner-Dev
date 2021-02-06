@@ -29,7 +29,7 @@ namespace NeutronData.Repositories
 
         public StationView GetRackStationView()
         {
-            var station = _repoStation.All().FirstOrDefault(r => r.StationTypeId == 3);
+            var station = _repoStation.All().FirstOrDefault(r => r.StationTypeId == (int)NeutronCore.Enums.StationType.Rack);
             if(station == null) return new StationView();
             var stationView = new StationView
             {
@@ -42,16 +42,16 @@ namespace NeutronData.Repositories
             return stationView;
         }
 
-        public StationView GetStationView(int stationNumber)
+        public StationView GetStationView(int stationId)
         {
             var logFileDirectory = LoaderSettings.GetLogFileDirectory();
-            var folderName = $"StationView_{stationNumber.ToString()}";
+            var folderName = $"StationView_{stationId.ToString()}";
             var logger = new AlliedLogger.DynamicLogger(logFileDirectory, folderName, @"true");
             var stationView = new StationView();
             Station station;
             try
             {
-                station = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
+                station = _repoStation.FindByKey(stationId);
 
                 if (station != null)
                 {
@@ -258,17 +258,23 @@ namespace NeutronData.Repositories
         public List<string> GetPickStationIds()
         {
             var result = new List<string>();
-            var stations = _repoStation.All().Where(r => r.Id <= 8).Select(s => s.Id.ToString()).OrderBy(s => s).ToList();
+            var stations = GetPickStations();
             if (stations.Count > 0)
             {
-                result = stations;
+                foreach (var station in stations)
+                {
+                    result.Add(station.Id.ToString());
+                }
             }
             return result;
         }
 
         public List<Station> GetPickStations()
         {
-        var stationTypesThatHaveInventory = new[] { 1, 2, 3 };  // 4 is a Supervisor 
+        var stationTypesThatHaveInventory = new[] { (int)NeutronCore.Enums.StationType.Carousel,
+            (int)NeutronCore.Enums.StationType.Vertical,
+            (int)NeutronCore.Enums.StationType.Rack
+        };  
         var result = new List<Station>();
             var stations = _repoStation.All().Where(r => stationTypesThatHaveInventory.Contains(r.Id)).ToList();
             if (stations.Count > 0)
@@ -280,7 +286,8 @@ namespace NeutronData.Repositories
 
         public List<Station> GetMovablePickStations()
         {
-            var deviceTypesThatMove = new[] { 1, 2 };  // 1-Carousel 2-Vertical
+            var deviceTypesThatMove = new[] { (int)NeutronCore.Enums.StationType.Carousel,
+                (int)NeutronCore.Enums.StationType.Vertical };  // 1-Carousel 2-Vertical
             var result = new List<Station>();
             foreach (var station in _repoStation.All())
             {
@@ -296,6 +303,21 @@ namespace NeutronData.Repositories
         public Station GetStation(int id)
         {
             return _repoStation.FindByKey(id);
+        }
+
+        public Station GetRackStation()
+        {
+            var station = _repoStation.FindBy(r => r.StationType.Id == (int)NeutronCore.Enums.StationType.Rack).FirstOrDefault();
+            return station;
+        }
+
+        public int[] GetMoveableDeviceTypeIds()
+        {
+            return new[]
+            {
+                (int) NeutronCore.Enums.StationType.Carousel,
+                (int) NeutronCore.Enums.StationType.Vertical
+            };
         }
     }
 }

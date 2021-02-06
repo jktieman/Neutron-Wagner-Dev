@@ -100,6 +100,7 @@
             this.CheckBoxShiEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxBliEnabled = new System.Windows.Forms.CheckBox();
             this.LabelUploadDelay = new System.Windows.Forms.Label();
+            this.LabelFlashRate = new System.Windows.Forms.Label();
             this.LabelLoaderDelay = new System.Windows.Forms.Label();
             this.LabelActionCodes = new System.Windows.Forms.Label();
             this.LabelFieldDelimiter = new System.Windows.Forms.Label();
@@ -124,6 +125,7 @@
             this.ComboBoxDefaultLanguage = new System.Windows.Forms.ComboBox();
             this.ComboBoxDeviceDriver = new System.Windows.Forms.ComboBox();
             this.TextBoxUploadDelay = new System.Windows.Forms.TextBox();
+            this.TextBoxDeviceFlashRate = new System.Windows.Forms.TextBox();
             this.LabelSettingsSlotFormat = new System.Windows.Forms.Label();
             this.TextBoxLoaderDelay = new System.Windows.Forms.TextBox();
             this.LabelSettingsLogLevel = new System.Windows.Forms.Label();
@@ -383,8 +385,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.TextBoxDeviceFlashRate = new System.Windows.Forms.TextBox();
-            this.LabelFlashRate = new System.Windows.Forms.Label();
+            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -920,6 +921,7 @@
             this.Settings.Controls.Add(this.CheckBoxPrintPreview);
             this.Settings.Controls.Add(this.CheckBoxEnableLabelPrinter);
             this.Settings.Controls.Add(this.CheckBoxEnableDocumentPrinter);
+            this.Settings.Controls.Add(this.ComboBoxStationNumber);
             this.Settings.Controls.Add(this.ComboBoxSlotFormat);
             this.Settings.Controls.Add(this.NumericUpDownLogLevel);
             this.Settings.Controls.Add(this.CheckBoxPinLoginOnly);
@@ -972,6 +974,7 @@
             // 
             // ComboBoxStoreBatchSize
             // 
+            this.ComboBoxStoreBatchSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxStoreBatchSize.FormattingEnabled = true;
             this.ComboBoxStoreBatchSize.Items.AddRange(new object[] {
@@ -985,6 +988,7 @@
             // 
             // ComboBoxPickBatchSize
             // 
+            this.ComboBoxPickBatchSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxPickBatchSize.FormattingEnabled = true;
             this.ComboBoxPickBatchSize.Items.AddRange(new object[] {
@@ -1084,6 +1088,16 @@
             this.LabelUploadDelay.TabIndex = 19;
             this.LabelUploadDelay.Text = "Upload Delay (Seconds)";
             this.LabelUploadDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelFlashRate
+            // 
+            this.LabelFlashRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFlashRate.Location = new System.Drawing.Point(838, 415);
+            this.LabelFlashRate.Name = "LabelFlashRate";
+            this.LabelFlashRate.Size = new System.Drawing.Size(166, 16);
+            this.LabelFlashRate.TabIndex = 19;
+            this.LabelFlashRate.Text = "Device Flash Rate (MS)";
+            this.LabelFlashRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelLoaderDelay
             // 
@@ -1214,6 +1228,7 @@
             // 
             // ComboBoxSlotFormat
             // 
+            this.ComboBoxSlotFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxSlotFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxSlotFormat.FormattingEnabled = true;
             this.ComboBoxSlotFormat.Items.AddRange(new object[] {
@@ -1334,7 +1349,7 @@
             this.ComboBoxDefaultLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxDefaultLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxDefaultLanguage.FormattingEnabled = true;
-            this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(197, 52);
+            this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(197, 90);
             this.ComboBoxDefaultLanguage.Name = "ComboBoxDefaultLanguage";
             this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(179, 24);
             this.ComboBoxDefaultLanguage.TabIndex = 12;
@@ -1363,6 +1378,16 @@
             this.TextBoxUploadDelay.TabIndex = 9;
             this.TextBoxUploadDelay.Text = "60";
             this.TextBoxUploadDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxDeviceFlashRate
+            // 
+            this.TextBoxDeviceFlashRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxDeviceFlashRate.Location = new System.Drawing.Point(1022, 412);
+            this.TextBoxDeviceFlashRate.Name = "TextBoxDeviceFlashRate";
+            this.TextBoxDeviceFlashRate.Size = new System.Drawing.Size(62, 22);
+            this.TextBoxDeviceFlashRate.TabIndex = 9;
+            this.TextBoxDeviceFlashRate.Text = "500";
+            this.TextBoxDeviceFlashRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelSettingsSlotFormat
             // 
@@ -1397,7 +1422,7 @@
             // LabelDefaultLanguage
             // 
             this.LabelDefaultLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDefaultLanguage.Location = new System.Drawing.Point(44, 54);
+            this.LabelDefaultLanguage.Location = new System.Drawing.Point(44, 92);
             this.LabelDefaultLanguage.Name = "LabelDefaultLanguage";
             this.LabelDefaultLanguage.Size = new System.Drawing.Size(137, 16);
             this.LabelDefaultLanguage.TabIndex = 10;
@@ -1437,7 +1462,7 @@
             // TextBoxLicenseCode
             // 
             this.TextBoxLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLicenseCode.Location = new System.Drawing.Point(197, 88);
+            this.TextBoxLicenseCode.Location = new System.Drawing.Point(197, 126);
             this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
             this.TextBoxLicenseCode.Size = new System.Drawing.Size(55, 22);
             this.TextBoxLicenseCode.TabIndex = 9;
@@ -1447,7 +1472,7 @@
             // TextBoxStationNumber
             // 
             this.TextBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxStationNumber.Location = new System.Drawing.Point(197, 124);
+            this.TextBoxStationNumber.Location = new System.Drawing.Point(498, 35);
             this.TextBoxStationNumber.Name = "TextBoxStationNumber";
             this.TextBoxStationNumber.Size = new System.Drawing.Size(31, 22);
             this.TextBoxStationNumber.TabIndex = 9;
@@ -1527,7 +1552,7 @@
             // LabelLicenseCode
             // 
             this.LabelLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLicenseCode.Location = new System.Drawing.Point(41, 89);
+            this.LabelLicenseCode.Location = new System.Drawing.Point(41, 127);
             this.LabelLicenseCode.Name = "LabelLicenseCode";
             this.LabelLicenseCode.Size = new System.Drawing.Size(140, 16);
             this.LabelLicenseCode.TabIndex = 7;
@@ -1537,11 +1562,11 @@
             // LabelSettingsStationNumber
             // 
             this.LabelSettingsStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsStationNumber.Location = new System.Drawing.Point(41, 125);
+            this.LabelSettingsStationNumber.Location = new System.Drawing.Point(41, 58);
             this.LabelSettingsStationNumber.Name = "LabelSettingsStationNumber";
             this.LabelSettingsStationNumber.Size = new System.Drawing.Size(140, 16);
             this.LabelSettingsStationNumber.TabIndex = 7;
-            this.LabelSettingsStationNumber.Text = "Station Number";
+            this.LabelSettingsStationNumber.Text = "This Station";
             this.LabelSettingsStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CheckBoxUseImages
@@ -4505,25 +4530,20 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // TextBoxDeviceFlashRate
+            // ComboBoxStationNumber
             // 
-            this.TextBoxDeviceFlashRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxDeviceFlashRate.Location = new System.Drawing.Point(1022, 412);
-            this.TextBoxDeviceFlashRate.Name = "TextBoxDeviceFlashRate";
-            this.TextBoxDeviceFlashRate.Size = new System.Drawing.Size(62, 22);
-            this.TextBoxDeviceFlashRate.TabIndex = 9;
-            this.TextBoxDeviceFlashRate.Text = "500";
-            this.TextBoxDeviceFlashRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelFlashRate
-            // 
-            this.LabelFlashRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFlashRate.Location = new System.Drawing.Point(838, 415);
-            this.LabelFlashRate.Name = "LabelFlashRate";
-            this.LabelFlashRate.Size = new System.Drawing.Size(166, 16);
-            this.LabelFlashRate.TabIndex = 19;
-            this.LabelFlashRate.Text = "Device Flash Rate (MS)";
-            this.LabelFlashRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxStationNumber.FormattingEnabled = true;
+            this.ComboBoxStationNumber.Items.AddRange(new object[] {
+            "Default",
+            "T101-01-01",
+            "V101",
+            "01--01--01--01"});
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(197, 55);
+            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(179, 24);
+            this.ComboBoxStationNumber.TabIndex = 16;
             // 
             // FrmUtilities
             // 
@@ -4946,5 +4966,6 @@
         private System.Windows.Forms.TextBox TextBoxNewStationSequence;
         private System.Windows.Forms.Label LabelFlashRate;
         private System.Windows.Forms.TextBox TextBoxDeviceFlashRate;
+        private System.Windows.Forms.ComboBox ComboBoxStationNumber;
     }
 }
