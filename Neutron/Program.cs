@@ -81,7 +81,7 @@ namespace Neutron
             var akaRepository = kernel.Get<IAkaRepository>();
             var securityProcessor = kernel.Get<ISecurityProcessor>();
             var lacProcessor = kernel.Get<ILacProcessor>();
-
+            var imageManager = kernel.Get<IImageManager>();
 
             var stationRepository = kernel.Get<IStationRepository>();
 
@@ -99,7 +99,7 @@ namespace Neutron
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             }
 
-            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, neutronVariables, stationRepository));
+            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor, lacProcessor, neutronVariables, stationRepository, imageManager));
 
         }
 

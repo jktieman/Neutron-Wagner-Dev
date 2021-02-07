@@ -390,6 +390,8 @@
     <Compile Include="Models\Command.cs" />
     <Compile Include="Models\Global.cs" />
     <Compile Include="Interfaces\INeutronRootDirectory.cs" />
+    <Compile Include="Interfaces\IImageManager.cs" />
+    <Compile Include="Models\ImageManager.cs" />
     <Compile Include="Models\IptiButtonResponse.cs" />
     <Compile Include="Forms\TopUploadProcessor.cs" />
     <Compile Include="FrmMain.cs">

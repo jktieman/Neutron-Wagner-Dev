@@ -7,7 +7,6 @@ namespace NeutronData.ModelViews
 {
     public class RackOrderView
     {
-        
         public int Id { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }

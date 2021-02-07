@@ -23,6 +23,8 @@ namespace Neutron.Global
     {
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
         private readonly InventoryRepository _repoInventory = new InventoryRepository();
+        private readonly StationRepository _stationRepository = new StationRepository();
+
         private static bool _actionCodesInited = false;
 
         public HistoryManager()
@@ -31,8 +33,10 @@ namespace Neutron.Global
             SaveActionCodesToDatabase();
         }
 
-        public void SaveHistory(ActionCode actionCode, Order order)
+        public void SaveHistory(ActionCode actionCode, Order order, int stationId = 1)
         {
+            
+
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -43,7 +47,8 @@ namespace Neutron.Global
                 OrderId = order.Id,
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = order.OrderInfo,
-                OrderDetailInfo = string.Empty
+                OrderDetailInfo = string.Empty,
+                StationId = stationId
             };
             Save(history);
 
@@ -73,7 +78,7 @@ namespace Neutron.Global
                         Description = pickView.Description,
                         RequestedQuantity = pickView.Quantity,
                         IssuedQuantity = pickLocation.Quantity,
-                        StationId = pickLocation.Inventory.Location.Station.StationNumber,
+                        StationId = pickLocation.Inventory.Location.Station.Id,
                         Loc1 = pickLocation.Inventory.Location.Loc1,
                         Loc2 = pickLocation.Inventory.Location.Loc2,
                         Loc3 = pickLocation.Inventory.Location.Loc3,
@@ -107,7 +112,7 @@ namespace Neutron.Global
                         Description = pickView.Description,
                         RequestedQuantity = pickView.Quantity,
                         IssuedQuantity = pickLocation.Quantity,
-                        StationId = pickLocation.Inventory.Location.StationId,
+                        StationId = pickLocation.Inventory.Location.Station.Id,
                         Loc1 = pickLocation.Inventory.Location.Loc1,
                         Loc2 = pickLocation.Inventory.Location.Loc2,
                         Loc3 = pickLocation.Inventory.Location.Loc3,
@@ -124,26 +129,8 @@ namespace Neutron.Global
             }
         }
         // Off Carousel Complete
-        public void SaveHistory(ActionCode actionCode, OrderDetail value)
+        public void SaveHistory(ActionCode actionCode, OrderDetail value,int stationId = 1)
         {
-            //var cCenter = "          ";
-            //var orderDetailInfo = string.Empty;
-
-
-            //if (!string.IsNullOrEmpty(value.OrderDetailInfo))
-            //{
-            //    var info = value.OrderDetailInfo.Trim();
-            //    if (info.EndsWith("261") || info.Length == 24)
-            //    {
-            //        orderDetailInfo = cCenter + info;
-            //    }
-
-            //    if (info.Length == 36)
-            //    {
-            //        cCenter = info.Substring(0, 10);
-            //        orderDetailInfo = info;
-            //    }
-            //}
 
             var cCenter = "          ";
             var orderDetailInfo = string.Empty;
@@ -177,7 +164,7 @@ namespace Neutron.Global
                 IssuedQuantity = value.PickedQuantity,
                 Slot = value.PrimeBin,
                 EmpId = GlobalVar.User.EmpId,
-                StationId = value.StationNumber,
+                StationId = stationId,
                 OrderDetailId = value.Id,
                 CostCenter = cCenter,
                 OrderInfo = value.Order.OrderInfo,
@@ -202,7 +189,7 @@ namespace Neutron.Global
                 Description = inv.ItemDefinition.Description,
                 IssuedQuantity = inv.Quantity,
                 RequestedQuantity = 0,
-                StationId = inv.Location.StationId,
+                StationId = inv.Location.Station.Id,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,
@@ -251,7 +238,7 @@ namespace Neutron.Global
                 Description = inv.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickView.Quantity,
-                StationId = inv.Location.StationId,
+                StationId = inv.Location.Station.Id,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,
@@ -301,7 +288,7 @@ namespace Neutron.Global
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickedQty,
-                StationId = inventory.Location.StationId,
+                StationId = inventory.Location.Station.Id,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -333,7 +320,7 @@ namespace Neutron.Global
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickedQty,
-                StationId = inventory.Location.StationId,
+                StationId = inventory.Location.Station.Id,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -363,7 +350,7 @@ namespace Neutron.Global
                 Description = inv.Description,
                 RequestedQuantity = cnt.PreviousQty,
                 IssuedQuantity = cnt.NewQty,
-                StationId = inv.Location.StationId,
+                StationId = inv.Location.Station.Id,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,
@@ -390,7 +377,7 @@ namespace Neutron.Global
                 ActionDateTime = DateTime.Now,
                 Item = null,
                 Description = null,
-                StationId = location.StationId,
+                StationId = location.Station.Id,
                 Loc1 = location.Loc1,
                 Loc2 = location.Loc2,
                 Loc3 = location.Loc3,
@@ -415,7 +402,7 @@ namespace Neutron.Global
                 ActionDateTime = DateTime.Now,
                 Item = null,
                 Description = null,
-                StationId = location.StationId,
+                StationId = location.Station.Id,
                 Loc1 = location.Loc1,
                 Loc2 = location.Loc2,
                 Loc3 = location.Loc3,
@@ -441,7 +428,7 @@ namespace Neutron.Global
                 Item = itemDefinition.Item,
                 Description = itemDefinition.Description,
                 EmpId = GlobalVar.User.EmpId,
-                StationId = itemDefinition.StationId
+                StationId = itemDefinition.Station.Id
 
             };
             await SaveAsync(history);
@@ -457,7 +444,7 @@ namespace Neutron.Global
                 Item = itemDefinition.Item,
                 Description = itemDefinition.Description,
                 EmpId = GlobalVar.User.EmpId,
-                StationId = itemDefinition.StationId
+                StationId = itemDefinition.Station.Id
 
             };
             Save(history);
@@ -487,7 +474,7 @@ namespace Neutron.Global
             }
         }
 
-        public void SaveHistory(ActionCode actionCode, ReplenOrderDetail value)
+        public void SaveHistory(ActionCode actionCode, ReplenOrderDetail value, int stationId = 1)
         {
             var history = new History
             {
@@ -503,7 +490,7 @@ namespace Neutron.Global
                 IssuedQuantity = value.PickedQuantity,
                 Slot = value.PrimeBin,
                 EmpId = GlobalVar.User.EmpId,
-                StationId = value.StationNumber,
+                StationId = stationId,
                 OrderDetailId = value.Id,
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
@@ -512,7 +499,7 @@ namespace Neutron.Global
             Save(history);
         }
 
-        public void SaveHistory(ActionCode actionCode, ReplenOrder order)
+        public void SaveHistory(ActionCode actionCode, ReplenOrder order, int stationId = 1)
         {
             var history = new History
             {
@@ -525,7 +512,8 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
-                OrderDetailInfo = string.Empty
+                OrderDetailInfo = string.Empty,
+                StationId = stationId
             };
             Save(history);
         }
@@ -635,7 +623,7 @@ namespace Neutron.Global
             return result;
         }
 
-        public void SaveHistory(ActionCode actionCode, SkipView skipView)
+        public void SaveHistory(ActionCode actionCode, SkipView skipView, int stationId = 1)
         {
             var history = new History
             {
@@ -651,7 +639,7 @@ namespace Neutron.Global
                 IssuedQuantity = skipView.Picked,
                 Slot = "Skip",
                 EmpId = GlobalVar.User.EmpId,
-                StationId = skipView.StationNumber,
+                StationId = stationId,
                 OrderDetailId = skipView.Id,
                 CostCenter = skipView.OrderDetail.OrderDetailInfo?.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,

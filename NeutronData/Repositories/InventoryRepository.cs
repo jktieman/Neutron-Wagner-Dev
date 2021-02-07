@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NeutronData.SqlModelViews;
 using System.Data.SqlClient;
+using System.Globalization;
 using AlliedLogger;
 
 namespace NeutronData.Repositories
@@ -43,7 +44,7 @@ namespace NeutronData.Repositories
                     HeightCodeId = r.Location.HeightCodeId,
                     LocationCodeId = r.Location.LocationCodeId,
                     StorageTypeId = r.StorageTypeId,
-                    ReceivedDate = r.ReceivedDate == null ? string.Empty : r.ReceivedDate.ToString(),
+                    ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
                     SizeCodeName = r.Location.SizeCode.Name,
                     VelocityCodeName = r.Location.VelocityCode.Name,
                     HeightCodeName = r.Location.HeightCode.Name,
@@ -59,13 +60,13 @@ namespace NeutronData.Repositories
 
         public InventoryView GetInventoryViewById(int id)
         {
-            var projection = new InventoryView();
+            var inventoryView = new InventoryView();
 
             Inventory r = _repo.FindByKey(id);
 
             if (r != null)
             {
-                projection = new InventoryView
+                inventoryView = new InventoryView
                 {
                     Id = r.Id,
                     Item = r.ItemDefinition.Item,
@@ -85,7 +86,7 @@ namespace NeutronData.Repositories
                     HeightCodeId = r.Location.HeightCodeId,
                     LocationCodeId = r.Location.LocationCodeId,
                     StorageTypeId = r.StorageTypeId,
-                    ReceivedDate = r.ReceivedDate == null ? string.Empty : r.ReceivedDate.ToString(),
+                    ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
                     SizeCodeName = r.Location.SizeCode.Name,
                     VelocityCodeName = r.Location.VelocityCode.Name,
                     HeightCodeName = r.Location.HeightCode.Name,
@@ -97,7 +98,7 @@ namespace NeutronData.Repositories
                     Location = r.Location
                 };
             }
-            return projection;
+            return inventoryView;
         }
 
         public List<InventoryView> GetInventoryViewByItem(string item)
@@ -129,7 +130,7 @@ namespace NeutronData.Repositories
                         HeightCodeId = r.Location.HeightCodeId,
                         LocationCodeId = r.Location.LocationCodeId,
                         StorageTypeId = r.StorageTypeId,
-                        ReceivedDate = r.ReceivedDate == null ? string.Empty : r.ReceivedDate.ToString(),
+                        ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
                         SizeCodeName = r.Location.SizeCode.Name,
                         VelocityCodeName = r.Location.VelocityCode.Name,
                         HeightCodeName = r.Location.HeightCode.Name,

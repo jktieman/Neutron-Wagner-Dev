@@ -548,7 +548,8 @@ namespace Neutron.Forms
         }
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
-            var station = ((Station)ComboBoxNewStation.SelectedItem)?.Id ?? 1;
+            var station = ((Station)ComboBoxNewStation.SelectedItem);
+            if (station == null) return;
             var loc1 = ((HardwareDeviceLookup)ComboBoxNewDevice.SelectedItem)?.Id ?? 1;
             var loc2 = string.IsNullOrEmpty(TextBoxNewLoc2.Text) ? "0" : TextBoxNewLoc2.Text;
             var loc3 = string.IsNullOrEmpty(TextBoxNewLoc3.Text) ? "0" : TextBoxNewLoc3.Text;
@@ -556,12 +557,12 @@ namespace Neutron.Forms
             var loc5 = string.IsNullOrEmpty(TextBoxNewLoc5.Text) ? "0" : TextBoxNewLoc5.Text;
             var rec = new Location
             {
-                StationId = station,
+                StationId = station.Id,
                 Loc1 = loc1,
-                Loc2 = IntegerExtensions.ParseInt(loc2),
-                Loc3 = IntegerExtensions.ParseInt(loc3),
-                Loc4 = IntegerExtensions.ParseInt(loc4),
-                Loc5 = IntegerExtensions.ParseInt(loc5),
+                Loc2 = loc2.ParseInt(),
+                Loc3 = loc3.ParseInt(),
+                Loc4 = loc4.ParseInt(),
+                Loc5 = loc5.ParseInt(),
                 Slot = TextBoxNewSlot.Text,
                 SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
                 VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
@@ -626,12 +627,13 @@ namespace Neutron.Forms
         }
         private void ComboBoxNewStation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var stationId = ((Station)ComboBoxNewStation.SelectedItem)?.Id ?? 1;
-            var sv = _repoStation.GetStationView(stationId);
-            TextBoxNewSlot.ReadOnly = sv.StationType.Id != 3;
-            LabelSlotInformation.Visible = sv.StationType.Id == 3;
+            var station = ((Station)ComboBoxNewStation.SelectedItem);
+            if (station == null) return;
+            var stationView = _repoStation.GetStationView(station.Id);
+            TextBoxNewSlot.ReadOnly = true;
+            LabelSlotInformation.Visible = true;
 
-            ComboBoxNewDevice.DataSource = sv.HardwareDevices
+            ComboBoxNewDevice.DataSource = stationView.HardwareDevices
                 .Select(s => new HardwareDeviceLookup { Id = s.DeviceNumber, Name = s.Name }).ToList();
             ComboBoxNewDevice.DisplayMember = "Name";
             ComboBoxNewDevice.ValueMember = "Id";
@@ -643,8 +645,8 @@ namespace Neutron.Forms
             if (station != null)
             {
                 var stationView = _repoStation.GetStationView(station.Id);
-                TextBoxViewEditSlot.ReadOnly = true;  //stationView.StationType.Id != 3;
-                LabelSlotInformation.Visible = true;   // stationView.StationType.Id == 3;
+                TextBoxViewEditSlot.ReadOnly = true;  
+                LabelSlotInformation.Visible = true;  
 
                 ComboBoxViewEditDevice.DataSource = stationView.HardwareDevices
                     .Select(s => new HardwareDeviceLookup { Id = s.DeviceNumber, Name = s.Name }).ToList();

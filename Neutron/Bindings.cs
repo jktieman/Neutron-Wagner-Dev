@@ -20,7 +20,7 @@ namespace Neutron
             Bind<ILacProcessor>().To<LacProcessor>().InSingletonScope();
             Bind<IStationRepository>().To<StationRepository>();
             Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
-            
+            Bind<IImageManager>().To<ImageManager>().InSingletonScope();
         }
     }
 }

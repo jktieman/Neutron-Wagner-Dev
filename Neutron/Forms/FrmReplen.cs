@@ -112,6 +112,7 @@ namespace Neutron.Forms
         private readonly IAkaRepository _akaRepository;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly ILacProcessor _lacProcessor;
+        private readonly IImageManager _imageManager;
         private NeutronData.Models.Lookups.StorageType _defaultStorageType;
 
         private CurrentDataSet _currentDataSet;
@@ -138,7 +139,8 @@ namespace Neutron.Forms
 
         public FrmReplen(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
-            , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor)
+            , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
+            , IImageManager imageManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -153,6 +155,7 @@ namespace Neutron.Forms
             _akaRepository = akaRepository;
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
+            _imageManager = imageManager;
             _documentToPrint = new DocumentToPrint();
             SetupPrinters();
             _synchronizationContext = SynchronizationContext.Current;
@@ -2916,7 +2919,7 @@ namespace Neutron.Forms
             UpdateCurrentDeviceIndicator();
             UpdatePickPosition();
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-            if (_neutronVariables.UseImages) UpdateImages();
+            if (_neutronVariables.UseImages) PictureBoxItemImage.LoadAsync(_imageManager.GetImageFile(_currentPickStop.Item).ToString());
             LabelFormTitle.Text = _resourceManager.GetString($"Selection");
             LabelPickDescription.Text = _currentPickStop.Description;
             LabelPickItemNumber.Text = _currentPickStop.Item;
@@ -2962,37 +2965,6 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]"));
         }
 
-        private void UpdateImages()
-        {
-            PictureBoxItemImage.Visible = false;
-            Task.Run(() => _logger.Log($"UpdateImages Start : [{System.DateTime.Now.ToLongTimeString()}]"));
-            if (!string.IsNullOrEmpty(_imagesDirectory))
-            {
-                try
-                {
-                    string path = string.Concat(_imagesDirectory, _currentPickStop.Item, str2: @".jpg");
-                    if (File.Exists(path))
-                    {
-                        PictureBoxItemImage.Load(path);
-                        PictureBoxItemImage.Visible = true;
-                    }
-                    //else
-                    //{
-                    //    path = string.Concat(_imagesDirectory, str1: @"Unknown.jpg");
-                    //    if (File.Exists(path))
-                    //    {
-                    //        PictureBoxItemImage.Load(path);
-                    //        PictureBoxItemImage.Visible = true;
-                    //    }
-                    //}
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error getting Image.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                }
-            }
-            Task.Run(() => _logger.Log($"UpdateImages End : [{System.DateTime.Now.ToLongTimeString()}]"));
-        }
 
         //private void UpdateInventoryLocation()
         //{
@@ -3286,9 +3258,22 @@ namespace Neutron.Forms
 
         private void MBStoreAccept_Click(object sender, EventArgs e)
         {
+            StoreAccept();
+            MBStoreAccept.Focus();
+        }
+
+        private void StoreAccept()
+        {
+            if (InvokeRequired)
+            {
+                var method = new MethodInvoker(StoreAccept);
+                Invoke(method);
+                return;
+            }
 
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"StoreAccept_Click Start : [{System.DateTime.Now.ToLongTimeString()}]"));
+            
             //bool pick = false;
             //pick = currentPickStop.CurrentInventoryLocation.Quantity < currentPickStop.QuantityToBePicked ? false : true;
 
@@ -3996,12 +3981,12 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetRackOrdersView(findWhat);
+                var views = _ordersRepository.GetRackOrdersView(_rackStation.StationNumber, findWhat);
 
                 var rackOrderViews = views.ToList();
                 foreach (var rackOrderView in rackOrderViews)
                 {
-                    if (rackOrderView.OrderDetails.First().LineStatusId == 3)
+                    if (rackOrderView.OrderDetails.First().LineStatusId == (int)LineStatus.Picking)
                     {
                         rackOrderView.StatusName = _resourceManager.GetString($"OnFloor");
                     }
@@ -4830,7 +4815,7 @@ namespace Neutron.Forms
             {
                 var item = LabelPickItemNumber.Text;
                 Hide();
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor, item))
+                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor, _imageManager, item))
                 {
                     DialogResult result = frm.ShowDialog();
                     Show();
@@ -5142,6 +5127,7 @@ namespace Neutron.Forms
 
         private void PictureBoxItemImage_MouseEnter(object sender, EventArgs e)
         {
+            if (!_neutronVariables.UseImages) return;
             if (!_neutronVariables.AutoEnlargeImage) return;
             PictureBoxItemImage.Location = new Point(318, 117);
             PictureBoxItemImage.Size = new Size(512, 512);
@@ -5150,6 +5136,7 @@ namespace Neutron.Forms
 
         private void PictureBoxItemImage_MouseLeave(object sender, EventArgs e)
         {
+            if (!_neutronVariables.UseImages) return;
             if (!_neutronVariables.AutoEnlargeImage) return;
             PictureBoxItemImage.Location = new Point(398, 499);
             PictureBoxItemImage.Size = new Size(256, 256);
@@ -5492,7 +5479,8 @@ namespace Neutron.Forms
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
             var station = _stationRepository.GetStationView(8);
             Hide();
-            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor))
+            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository
+                , _neutronVariables, _lacProcessor, _imageManager))
             {
                 var result = frm.ShowDialog();
                 Show();

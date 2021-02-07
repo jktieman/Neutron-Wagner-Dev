@@ -48,6 +48,7 @@
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.HotAction = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.ComboBoxLocationCodeLocation = new System.Windows.Forms.ComboBox();
             this.LabelLocation = new System.Windows.Forms.Label();
@@ -189,7 +190,6 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
@@ -458,6 +458,13 @@
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
             this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
+            // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(140, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(860, 150);
+            this.panel6.TabIndex = 167;
             // 
             // GroupBoxHotPickLocation
             // 
@@ -1098,7 +1105,6 @@
             this.PictureBoxItemHotImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBoxItemHotImage.TabIndex = 166;
             this.PictureBoxItemHotImage.TabStop = false;
-            this.PictureBoxItemHotImage.Visible = false;
             this.PictureBoxItemHotImage.MouseEnter += new System.EventHandler(this.PictureBoxItemHotImage_MouseEnter);
             this.PictureBoxItemHotImage.MouseLeave += new System.EventHandler(this.PictureBoxItemHotImage_MouseLeave);
             // 
@@ -2110,13 +2116,6 @@
             this.LabelFormHeaderText.TabIndex = 26;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel6
-            // 
-            this.panel6.Location = new System.Drawing.Point(140, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(860, 150);
-            this.panel6.TabIndex = 167;
             // 
             // FrmHotAction
             // 

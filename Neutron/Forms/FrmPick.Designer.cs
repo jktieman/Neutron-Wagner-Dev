@@ -3116,7 +3116,6 @@ namespace Neutron.Forms
             this.PictureBoxItemImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBoxItemImage.TabIndex = 113;
             this.PictureBoxItemImage.TabStop = false;
-            this.PictureBoxItemImage.Visible = false;
             this.PictureBoxItemImage.MouseEnter += new System.EventHandler(this.PictureBoxItemImage_MouseEnter);
             this.PictureBoxItemImage.MouseLeave += new System.EventHandler(this.PictureBoxItemImage_MouseLeave);
             // 

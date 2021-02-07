@@ -65,6 +65,7 @@ namespace Neutron.Forms
         private SqlInventoryView _currentInventoryView = new SqlInventoryView();
         readonly NeutronVariables _neutronVariables;
         private readonly ILacProcessor _lacProcessor;
+        private readonly IImageManager _imageManager;
         private DynamicLogger _logger;
         readonly StationView _station;
         string _imagesDirectory;
@@ -93,7 +94,8 @@ namespace Neutron.Forms
         public delegate void UpdateDataGridDelegate(BindingSource bindingSource);
 
         public FrmHotAction(StationView station, IJsonData jsonData
-            , IAkaRepository akaRepository, NeutronVariables neutronVariables, ILacProcessor lacProcessor, string item = @"")
+            , IAkaRepository akaRepository, NeutronVariables neutronVariables
+            , ILacProcessor lacProcessor, IImageManager imageManager , string item = @"")
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -102,6 +104,7 @@ namespace Neutron.Forms
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
+            _imageManager = imageManager;
             _akaRepository = akaRepository;
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
@@ -791,30 +794,7 @@ namespace Neutron.Forms
             var enumerable = controls.ToList();
             return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
-        private void UpdateHotImage(string image)
-        {
-            PictureBoxItemHotImage.Visible = false;
-            Task.Run(() => _logger.Log($"Update Hot Images Start : [{DateTime.Now.ToLongTimeString()}]"));
-            if (!string.IsNullOrEmpty(_imagesDirectory))
-            {
-                try
-                {
-                    var path = string.Concat(_imagesDirectory, image, str2: @".jpg");
-                    if (File.Exists(path))
-                    {
-                        PictureBoxItemHotImage.Load(path);
-                        PictureBoxItemHotImage.Visible = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"{_resourceManager.GetString("Message1")}{Environment.NewLine}" +
-                                    $"{ex.Message}{Environment.NewLine}" +
-                                    $"{ex.InnerException}");
-                }
-            }
-            Task.Run(() => _logger.Log($"Update Hot Images End : [{DateTime.Now.ToLongTimeString()}]"));
-        }
+ 
         private void ShowShi(int loc1, int loc2, int loc3, string loc4, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
@@ -1149,7 +1129,7 @@ namespace Neutron.Forms
                         : invItem.ReceivedDate.ToShortDateString();
                     LabelPrimeBin.Visible = invItem.PrimeBin;
                     LabelStaticRelease.Text = invItem.StorageTypeName;
-                    if (_neutronVariables.UseImages) UpdateHotImage(invItem.Item);
+                    if (_neutronVariables.UseImages) PictureBoxItemHotImage.Load(_imageManager.GetImageFile(invItem.Item));
                 }
             }
             catch (Exception ex)
@@ -1195,8 +1175,6 @@ namespace Neutron.Forms
                         label.Refresh();
                     }
 
-
-
                     LabelSlotTray.Text = location.Slot;
                     // ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
                     // ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
@@ -1214,7 +1192,7 @@ namespace Neutron.Forms
                         : invItem.ReceivedDate.ToShortDateString();
                     LabelPrimeBinTray.Visible = invItem.PrimeBin;
                     LabelStaticReleaseTray.Text = invItem.StorageTypeName;
-                    if (_neutronVariables.UseImages) UpdateHotImage(invItem.Item);
+                    if (_neutronVariables.UseImages) PictureBoxItemHotImage.LoadAsync(_imageManager.GetImageFile(invItem.Item).ToString());
                 }
             }
             catch (Exception ex)

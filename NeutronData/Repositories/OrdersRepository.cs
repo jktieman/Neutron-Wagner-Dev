@@ -1102,21 +1102,39 @@ namespace NeutronData.Repositories
 
         public IEnumerable<RackOrderView> GetRackOrdersView(int rackStationNumber, string search = @"")
         {
-            IEnumerable<RackOrderView> recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
+            IEnumerable<RackOrderView> recs;
+            if (string.IsNullOrEmpty(search.Trim()))
             {
-                StationNumber = rackStationNumber,
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                Priority = s.Priority,
-                Order = s,
-                LoadDate = s.LoadDate,
-                OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == rackStationNumber).ToList()
-            }).Where(o => o.Order.OrderStatusId != 6)
-                .OrderBy(o => o.Ord2).ToList();
-
-            var result = recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0);
-            return result;
+                recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
+                {
+                    StationNumber = rackStationNumber,
+                    Id = s.Id,
+                    Ord1 = s.Ord1,
+                    Ord2 = s.Ord2,
+                    Priority = s.Priority,
+                    Order = s,
+                    LoadDate = s.LoadDate,
+                    OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == rackStationNumber).ToList()
+                }).Where(o => o.Order.OrderStatusId != 6 && o.OrderDetails.Count > 0)
+                    .OrderBy(o => o.Ord2).ToList();
+            }
+            else
+            {
+                recs = _repo.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
+                    {
+                        StationNumber = rackStationNumber,
+                        Id = s.Id,
+                        Ord1 = s.Ord1,
+                        Ord2 = s.Ord2,
+                        Priority = s.Priority,
+                        Order = s,
+                        LoadDate = s.LoadDate,
+                        OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == rackStationNumber).ToList()
+                    }).Where(o => o.Order.OrderStatusId != 6 && o.SearchField.Contains(search) && o.OrderDetails.Count > 0)
+                    .OrderBy(o => o.Ord2).ToList();
+            }
+            //var result = recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0);
+            return recs;
         }
 
         public Order GetOrderAndOrderDetails(int? orderId, int stationNumber)

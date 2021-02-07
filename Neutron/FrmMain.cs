@@ -38,6 +38,7 @@ namespace Neutron
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private readonly IStationRepository _stationRepository;
+        private readonly IImageManager _imageManager;
         private readonly IJsonData _jsonData;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
@@ -62,10 +63,10 @@ namespace Neutron
         /// <param name="lacProcessor"></param>
         /// <param name="neutronVariables"></param>
         /// <param name="stationRepository"></param>
-
+        /// <param name="imageManager"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
-            , NeutronVariables neutronVariables, IStationRepository stationRepository)
+            , NeutronVariables neutronVariables, IStationRepository stationRepository, IImageManager imageManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -77,6 +78,7 @@ namespace Neutron
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
             _stationRepository = stationRepository;
+            _imageManager = imageManager;
 
             //_neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _neutronVariables = neutronVariables;
@@ -562,7 +564,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageItems])
             {
                 Hide();
-                using (MetroForm frm = new FrmItemDefinitions(_jsonData, _station, _akaRepository))
+                using (MetroForm frm = new FrmItemDefinitions(_jsonData, _station, _akaRepository, _imageManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -603,7 +605,8 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
             {
                 Hide();
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor))
+                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository
+                    , _neutronVariables, _lacProcessor, _imageManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -629,7 +632,7 @@ namespace Neutron
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
             Hide();
             using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository
-                                                , _securityProcessor, _lacProcessor))
+                                                , _securityProcessor, _lacProcessor, _imageManager))
             {
                 frm.ShowDialog();
 
@@ -687,7 +690,8 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.StoreItemsandOrders])
             {
                 Hide();
-                using (MetroForm frm = new FrmReplen(_jsonData, _station, _akaRepository, _neutronVariables, _securityProcessor, _lacProcessor))
+                using (MetroForm frm = new FrmReplen(_jsonData, _station, _akaRepository,
+                    _neutronVariables, _securityProcessor, _lacProcessor, _imageManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -784,7 +788,8 @@ namespace Neutron
 
             if (e.KeyCode == Keys.F5 || e.KeyCode == Keys.F6)
             {
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor))
+                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository
+                    , _neutronVariables, _lacProcessor, _imageManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -794,7 +799,7 @@ namespace Neutron
             if (e.KeyCode == Keys.F7 || e.KeyCode == Keys.F8)
             {
                 using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository,
-                    _securityProcessor, _lacProcessor))
+                    _securityProcessor, _lacProcessor, _imageManager))
                 {
                     frm.ShowDialog();
                     Show();

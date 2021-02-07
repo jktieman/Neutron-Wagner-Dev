@@ -23,10 +23,12 @@ using JsonManager;
 using NeutronCore.Global;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Resources;
 using System.Threading;
 using AlliedLogger;
 using Microsoft.VisualBasic;
+using Neutron.Interfaces;
 using NeutronCore.Extensions;
 using NeutronCore;
 using NeutronData.Interfaces;
@@ -54,13 +56,14 @@ namespace Neutron.Forms
         readonly IJsonData _jsonData;
         private readonly StationView _station;
         private readonly IAkaRepository _akaRepository;
+        private readonly IImageManager _imageManager;
         public bool CloseButtonPressed { get; set; }
         private BackgroundWorker _dgvColumnWidthSizer;
         private readonly Station _rackStation;
         private readonly List<Station> _pickStations;
         //private readonly int[] _stationTypesThatHaveInventory = new[] { 1, 2, 3 };  // 4 is a Supervisor 
 
-        public FrmItemDefinitions(IJsonData jsonData, StationView station, IAkaRepository akaRepository)
+        public FrmItemDefinitions(IJsonData jsonData, StationView station, IAkaRepository akaRepository, IImageManager imageManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -79,6 +82,7 @@ namespace Neutron.Forms
             SetupViewEditForm();
             _rackStation = _repoStation.GetRackStation();
             _akaRepository = akaRepository;
+            _imageManager = imageManager;
             _pickStations = _repoStation.GetPickStations();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             LabelStationName.Text = _station.Name;
@@ -258,11 +262,11 @@ namespace Neutron.Forms
             if (_bindingSource.Count <= 0) return;
 
             // Check Inventory and OrderDetails for this item
-            var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
-            //var id = TextBoxViewEditId.Text.ParseInt();
-            var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == id).ToList();
+            var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
+            if (itemDefinitionView == null) return;
+            var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id).ToList();
             var msg = $"{recs.Count} {_resourceManager.GetString("Message14")} {Environment.NewLine}";
-            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == id && r.LineStatusId != 6).ToList();
+            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id && r.LineStatusId != 6).ToList();
             msg += $"{recs2.Count} {_resourceManager.GetString("Message13")}{Environment.NewLine}";
             if (recs.Count == 0)
             {
@@ -276,6 +280,7 @@ namespace Neutron.Forms
                 LabelViewEditChangeStationWarning.ForeColor = Color.Red;
                 msg += _resourceManager.GetString("Message12");
             }
+            PictureBoxViewEditImage.LoadAsync(_imageManager.GetImageFile(itemDefinitionView.Item));
             LabelViewEditChangeStationWarning.Text = msg;
             tabControl1.SelectedTab = ViewEdit;
         }
@@ -325,8 +330,12 @@ namespace Neutron.Forms
                 ? "0"
                 : item.Weight.ToString(CultureInfo.InvariantCulture);
             CheckBoxNewScale.Checked = item.Scale;
+            PictureBoxNewImage.LoadAsync(_imageManager.GetImageFile());
+
             tabControl1.SelectedTab = New;
         }
+
+      
         private void MbViewEditListing_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = Listing;
@@ -986,21 +995,17 @@ namespace Neutron.Forms
                     MessageBox.Show($"{_resourceManager.GetString("Message10")}{Environment.NewLine}" +
                                     $"{ex.Message}{ex.InnerException}");
                 }
-                NewItem();
+                //NewItem();
             }
         }
         private void MbLoadDefault_Click(object sender, EventArgs e)
         {
             MbNewSave.Enabled = false;
             MbSaveAsDefault.Enabled = true;
-            TextBoxNewItem.Visible = false;
-            TextBoxNewDescription.Visible = false;
-            LabelNewDescription.Visible = false;
-            LabelNewItem.Visible = false;
             var item = _jsonData.LoadFile<ItemDefinition>();
+            TextBoxNewItem.Text = item.Item;
+            TextBoxNewDescription.Text = item.Description;
             ComboBoxNewStation.SelectedValue = string.IsNullOrEmpty(item.StationId.ToString()) ? _station.StationId : item.StationId;            //item.StationId;
-            TextBoxNewItem.Text = string.Empty;
-            TextBoxNewDescription.Text = string.Empty;
             TextBoxNewLocationMax.Text = string.IsNullOrEmpty(item.LocationMax.ToString()) ? "0" : item.LocationMax.ToString();                // item.LocationMax.ToString();
             TextBoxNewLocationMin.Text = string.IsNullOrEmpty(item.LocationMin.ToString()) ? "0" : item.LocationMin.ToString();
             TextBoxNewSystemMax.Text = string.IsNullOrEmpty(item.SystemMax.ToString()) ? "0" : item.SystemMax.ToString();
