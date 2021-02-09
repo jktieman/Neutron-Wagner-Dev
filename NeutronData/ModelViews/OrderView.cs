@@ -31,7 +31,8 @@ namespace NeutronData.ModelViews
         public Order Order { get; set; }
         public int CurrentPickStation { get; set; }
         public int FirstPickStation { get; set; }
-
+        public string OrderStatus1 = "1000";
+        public string OrderStatus2 = "2000";
         public string SearchField
         {
             get

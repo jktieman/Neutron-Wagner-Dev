@@ -173,6 +173,7 @@
     <Compile Include="ModelViews\LocationView.cs" />
     <Compile Include="ModelViews\NewItemView.cs" />
     <Compile Include="ModelViews\OrderDetailsView.cs" />
+    <Compile Include="ModelViews\OrderViewWithDetails.cs" />
     <Compile Include="ModelViews\ProductivityDetail.cs" />
     <Compile Include="ModelViews\ProductivitySummary.cs" />
     <Compile Include="ModelViews\RackOrderView.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="ModelViews\PickView.cs" />
     <Compile Include="ModelViews\SkipInventoryView.cs" />
     <Compile Include="ModelViews\SkipView.cs" />
+    <Compile Include="ModelViews\StationOrderDetail.cs" />
     <Compile Include="ModelViews\StationView.cs" />
     <Compile Include="ModelViews\UserView.cs" />
     <Compile Include="PrintModels\AnticipatedOut.cs" />

@@ -14,7 +14,6 @@ using Equin.ApplicationFramework;
 using JsonManager;
 using MetroFramework.Forms;
 using Neutron.Classes;
-using Neutron.Enums;
 using Neutron.Global;
 using Neutron.Models;
 using NeutronCore;
@@ -38,6 +37,7 @@ using System.Data.SqlClient;
 using CurrentDeviceIndicator;
 using JetBrains.Annotations;
 using Neutron.Controllers;
+using Neutron.Enums;
 using NeutronCore.Extensions;
 using NeutronEvents;
 //using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
@@ -45,6 +45,8 @@ using static NeutronCore.Extensions.IntegerExtensions;
 using Timer = System.Threading.Timer;
 using NeutronDllu;
 using Remotion.Logging;
+using LineStatus = NeutronCore.Enums.LineStatus;
+using OrderStatus = NeutronCore.Enums.OrderStatus;
 
 namespace Neutron.Forms
 {
@@ -131,6 +133,7 @@ namespace Neutron.Forms
         private bool _skipInventoryGridReady;
         private readonly int[] _moveableDeviceTypes;
         private readonly Station _rackStation;
+        private readonly List<Station> _pickStations;
 
         private SynchronizationContext _synchronizationContext;
 
@@ -157,6 +160,7 @@ namespace Neutron.Forms
             _securityProcessor = securityProcessor;
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
+            _pickStations = _stationRepository.GetPickStations();
             InitForm();
         }
 
@@ -198,7 +202,11 @@ namespace Neutron.Forms
             InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
-            if (_station.StationNumber >= 8) MBMainAvailableOrders.Text = _resourceManager.GetString($"OffCarousel");
+
+            if (_station.StationType.Id == (int)StationType.Supervisor || _station.StationType.Id == (int)StationType.Rack)
+            {
+                MBMainAvailableOrders.Text = _resourceManager.GetString($"OffCarousel");
+            }
 
             //Mediator.GetInstance().IptiButtonPressed += (s, e) => SetFocus(e.ResponseInfo);
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
@@ -356,7 +364,7 @@ namespace Neutron.Forms
 
         private void FillComboBoxStationNumber()
         {
-            var stationNumbers = _stationRepository.GetPickStationIds();
+            var stationNumbers = _stationRepository.GetPickStationNumbers();
             if (stationNumbers.Count > 0)
             {
                 stationNumbers.Insert(0, _resourceManager.GetString($"ALL"));
@@ -1310,6 +1318,7 @@ namespace Neutron.Forms
             else
             {
                 var views = _ordersRepository.GetRackOrders();
+                //var views = _ordersRepository.GetRackOrdersAll();
                 var bindingListView = new BindingListView<OrderView>(views.ToList());
                 _bindingSourceOrderView.DataSource = bindingListView;
                 DataGridView1.DataSource = _bindingSourceOrderView;
@@ -1351,7 +1360,7 @@ namespace Neutron.Forms
                 var rackOrderViews = views.ToList();
                 foreach (var rackOrderView in rackOrderViews)
                 {
-                    if (rackOrderView.OrderDetails.First().LineStatusId == (int)LineStatus.Picking)
+                    if (rackOrderView.OrderDetails.First().LineStatusId == (int)NeutronCore.Enums.LineStatus.Picking)
                     {
                         rackOrderView.StatusName = _resourceManager.GetString($"OnFloor");
                     }
@@ -1683,6 +1692,21 @@ namespace Neutron.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
+
+            ////foreach (var pickStation in _pickStations)
+            ////{
+            //    var dataPropertyName = $"OrderStatus{_pickStations.First().StationNumber.ToString()}";
+            //    col = new DataGridViewTextBoxColumn
+            //    {
+            //        DataPropertyName = "OrderStatus1",
+            //        HeaderText = _pickStations.First().StationNumber.ToString(),
+            //        DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+            //        Name = dataPropertyName,
+            //        AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            //    };
+            //    DataGridView1.Columns.Add(col);
+            ////}
+
 
             col = new DataGridViewTextBoxColumn
             {
@@ -7521,7 +7545,7 @@ namespace Neutron.Forms
             if (linesNotComplete.Any()) return false;
 
             order.OrderStatusId = 6;
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order: order);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _station.StationId);
             _repoOrders.Update(order);
             Mediator.GetInstance().OnOrderComplete(this, order);
             return true;
@@ -7777,7 +7801,16 @@ namespace Neutron.Forms
 
         private void MBAdjustOrder_Click(object sender, EventArgs e)
         {
-            var stationNumber = 8;
+
+            int stationNumber;
+            if (_station.StationType.Id == (int)StationType.Supervisor)
+            {
+                stationNumber = _rackStation.StationNumber;
+            }
+            else
+            {
+                stationNumber = _station.StationNumber;
+            }
             var recs = GetCheckedOrdersRack();
             if (recs.Any())
             {
@@ -7821,7 +7854,15 @@ namespace Neutron.Forms
 
         private void MBRackOrderComplete_Click(object sender, EventArgs e)
         {
-            const int stationNumber = 8;
+            int stationNumber;
+            if (_station.StationType.Id == (int) StationType.Supervisor)
+            {
+                stationNumber = _rackStation.StationNumber;
+            }
+            else
+            {
+                stationNumber = _station.StationNumber;
+            }
             var orders = GetCheckedOrdersRack();
             if (orders.Count > 0)
             {
@@ -7835,7 +7876,7 @@ namespace Neutron.Forms
                             detail.LineStatusId = 6;
                             detail.PickedQuantity = detail.Quantity;
                             detail.EmpId = GlobalVar.User.EmpId;
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.PickRack, value: detail);
+                            GlobalVar.HistoryManager.SaveHistory(ActionCode.PickRack, detail, _rackStation.Id);
                             _repoOrderDetails.Update(detail);
                         }
                         // Mediator.GetInstance().OnBatchComplete(this);
@@ -8068,7 +8109,6 @@ namespace Neutron.Forms
         private void MBShowRackOrders_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            //DataGridView1.Columns.Clear();
             _currentDataSet = CurrentDataSet.Rack;
             ShowRackOrders();
             Cursor.Current = Cursors.Default;

@@ -1,9 +1,9 @@
 ﻿
 using System.ComponentModel;
 
-namespace Neutron.Enums
+namespace NeutronCore.Enums
 {
-    public enum OrderStatus
+    public enum LineStatus
     {
         [Description("Available")] Available = 1,
         [Description("Hold")] Hold = 2,

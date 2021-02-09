@@ -207,9 +207,7 @@
     <Compile Include="Enums\ControllerTypeEnum.cs" />
     <Compile Include="Enums\CurrentDataSet.cs" />
     <Compile Include="Enums\DeviceResponse.cs" />
-    <Compile Include="Enums\LineStatus.cs" />
     <Compile Include="Enums\NeutronSecurity.cs" />
-    <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\StorageType.cs" />
     <Compile Include="Forms\FrmChangePriority.cs">
       <SubType>Form</SubType>
@@ -420,6 +418,7 @@
     <Compile Include="Models\ResponseManager.cs" />
     <Compile Include="Models\RuleResult.cs" />
     <Compile Include="Models\ReplenDeviceManager.cs" />
+    <Compile Include="Models\StationOrderDetail.cs" />
     <Compile Include="Models\UserIdString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

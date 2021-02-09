@@ -5,8 +5,6 @@ using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NeutronCore;
 using NeutronData.Models.Lookups;
 using DeviceType = NeutronCore.Enums.DeviceType;
@@ -25,21 +23,6 @@ namespace NeutronData.Repositories
         public StationRepository()
         {
             _dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
-        }
-
-        public StationView GetRackStationView()
-        {
-            var station = _repoStation.All().FirstOrDefault(r => r.StationTypeId == (int)NeutronCore.Enums.StationType.Rack);
-            if(station == null) return new StationView();
-            var stationView = new StationView
-            {
-                StationId = station.Id,
-                Name = station.Name,
-                StationNumber = station.StationNumber,
-                StationType = station.StationType,
-                Sequence = station.Sequence,
-            };
-            return stationView;
         }
 
         public StationView GetStationView(int stationId)
@@ -249,13 +232,18 @@ namespace NeutronData.Repositories
             return stationId;
         }
 
+        public Station GetStation(int id)
+        {
+            return _repoStation.FindByKey(id);
+        }
+
         public List<Station> Lookup()
         {
             List<Station> stations = _repoStation.All().ToList();
             return stations;
         }
 
-        public List<string> GetPickStationIds()
+        public List<string> GetPickStationNumbers()
         {
             var result = new List<string>();
             var stations = GetPickStations();
@@ -269,18 +257,33 @@ namespace NeutronData.Repositories
             return result;
         }
 
+        public int[] GetPickStationIds()
+        {
+            var result = GetPickStations().Select(r => r.Id).ToArray();
+
+            return result;
+        }
+
         public List<Station> GetPickStations()
         {
-        var stationTypesThatHaveInventory = new[] { (int)NeutronCore.Enums.StationType.Carousel,
-            (int)NeutronCore.Enums.StationType.Vertical,
-            (int)NeutronCore.Enums.StationType.Rack
-        };  
+  
         var result = new List<Station>();
-            var stations = _repoStation.All().Where(r => stationTypesThatHaveInventory.Contains(r.Id)).ToList();
+        var stations = _repoStation.All().Where(r => r.StationType.Name == NeutronCore.Enums.StationType.Carousel.ToString()
+                                                     || r.StationType.Name == NeutronCore.Enums.StationType.Rack.ToString()
+                                                     || r.StationType.Name == NeutronCore.Enums.StationType.Vertical.ToString())
+            .ToList();
+           
             if (stations.Count > 0)
             {
                 result = stations;
             }
+            return result;
+        }
+
+        public int[] GetMoveablePickStationIds()
+        {
+            var result = GetMovablePickStations().Select(r => r.Id).ToArray();
+
             return result;
         }
 
@@ -289,7 +292,7 @@ namespace NeutronData.Repositories
             var deviceTypesThatMove = new[] { (int)NeutronCore.Enums.StationType.Carousel,
                 (int)NeutronCore.Enums.StationType.Vertical };  // 1-Carousel 2-Vertical
             var result = new List<Station>();
-            foreach (var station in _repoStation.All())
+            foreach (var station in _repoStation.All().OrderBy(o => o.Sequence))
             {
                 var devices = _repoHardwareDevices.All().Where(r => deviceTypesThatMove.Contains(r.DeviceTypeId) && r.StationId == station.Id)
                     .ToList();
@@ -300,14 +303,24 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        public Station GetStation(int id)
-        {
-            return _repoStation.FindByKey(id);
-        }
-
         public Station GetRackStation()
         {
             return _repoStation.FindBy(r => r.StationType.Id == (int)NeutronCore.Enums.StationType.Rack).FirstOrDefault();
+        }
+
+        public StationView GetRackStationView()
+        {
+            var station = _repoStation.All().FirstOrDefault(r => r.StationTypeId == (int)NeutronCore.Enums.StationType.Rack);
+            if (station == null) return new StationView();
+            var stationView = new StationView
+            {
+                StationId = station.Id,
+                Name = station.Name,
+                StationNumber = station.StationNumber,
+                StationType = station.StationType,
+                Sequence = station.Sequence,
+            };
+            return stationView;
         }
 
         public int[] GetMoveableDeviceTypeIds()
