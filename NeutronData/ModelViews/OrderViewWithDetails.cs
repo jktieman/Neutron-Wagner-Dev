@@ -10,10 +10,6 @@ namespace NeutronData.ModelViews
     
     public class OrderViewWithDetails : OrderView
     {
-        //readonly int[] _statusToGet = { 1, 2, 3, 4 };
-
-        
         public List<StationOrderDetail> StationOrderDetails { get; set; }
-
     }
 }

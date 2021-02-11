@@ -20,7 +20,7 @@ using System.Windows.Forms;
 
 namespace NeutronLoader
 {
-    internal class VidirFileProcessor : IFileProcessor
+    internal class TopFileProcessor : IFileProcessor
     {
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
@@ -35,7 +35,7 @@ namespace NeutronLoader
         DynamicLogger _logger;
         private readonly IJsonData _jsonData;
 
-        public VidirFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
+        public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -45,7 +45,7 @@ namespace NeutronLoader
 
         public void LoadFile(FileInfo fileInfo)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationNumber);
+            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationId);
             var orders = new List<HostOrder>();
 
             var filename = fileInfo.FullName;
@@ -68,7 +68,7 @@ namespace NeutronLoader
 
         public void LoadFiles(List<FileInfo> files)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationNumber);
+            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationId);
             var orders = new List<HostOrder>();
             Thread.Sleep(millisecondsTimeout: 100);
             foreach (var fileInfo in files)

@@ -103,6 +103,16 @@ namespace NeutronLoader
             _interfaceFileQueue.CompleteAdding();
         }
 
+        public void RunLoaderOnce()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RunLoaderContinuously()
+        {
+            throw new NotImplementedException();
+        }
+
         public FileInfo[] GetFiles()
         {
             _logger.Log("Call to Get Files Function.");

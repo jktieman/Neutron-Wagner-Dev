@@ -1,24 +1,20 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
 using AlliedFileSystemWatcher;
 using AlliedLogger;
 using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronEvents;
 using Timer = System.Threading.Timer;
-
 
 namespace NeutronLoader
 {
-    class InterfaceProcessorSfh : IInterfaceProcessor
+    internal class InterfaceProcessorSfh : IInterfaceProcessor
     {
         private BlockingCollection<FileInfo> _interfaceFileQueue;
         private static BackgroundWorker _backgroundWorker;
@@ -33,6 +29,7 @@ namespace NeutronLoader
         private string _neutronDownFileName;
         private Timer _downTimer;
         private bool _loadOrdersBusy;
+        private int _loaderDelay;
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
 
@@ -52,15 +49,16 @@ namespace NeutronLoader
             _inputFileFilter = LoaderSettings.GetHostOrderFileFilter();
             var logFileDir = LoaderSettings.GetLogFileDirectory();
             var logActivity = LoaderSettings.EnableLogging;
+            _loaderDelay = _neutronVariables.LoaderDelay;
             _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
-            _fileProcessor = new Pr1FileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData);
+            _fileProcessor = new SfhFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData);
         }
 
         public void StartProcessingInterfaceFiles()
         {
             InitBackgroundWorker();
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(5);
+            var periodTimeSpan = TimeSpan.FromMinutes(_loaderDelay);
             _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
         }
 

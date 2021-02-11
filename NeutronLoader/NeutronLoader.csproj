@@ -75,8 +75,11 @@
   <ItemGroup>
     <Compile Include="HostFilePr1.cs" />
     <Compile Include="InterfaceProcessor.cs" />
+    <Compile Include="InterfaceProcessorPr1.cs" />
+    <Compile Include="InterfaceProcessorTop.cs" />
     <Compile Include="InterfaceProcessorVidir.cs" />
     <Compile Include="IUploadProcessor.cs" />
+    <Compile Include="SfhFileProcessor.cs" />
     <Compile Include="StartStopUploadManager.cs" />
     <Compile Include="TmgFileProcessor.cs" />
     <Compile Include="HostFile.cs" />
@@ -97,6 +100,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="StartStopLoaderManager.cs" />
+    <Compile Include="TopFileProcessor.cs" />
     <Compile Include="UploadProcessor.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
     <Compile Include="VidirFileProcessor.cs" />

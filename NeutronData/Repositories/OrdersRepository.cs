@@ -22,8 +22,7 @@ using LineStatus = NeutronCore.Enums.LineStatus;
 namespace NeutronData.Repositories
 {
 
-   
-    public class OrdersRepository
+    public class OrdersRepository : IOrdersRepository
     {
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
@@ -40,7 +39,7 @@ namespace NeutronData.Repositories
         public OrdersRepository(IStationRepository stationRepository)
         {
             _stationRepository = stationRepository;
-           Init();
+            Init();
         }
 
         private void Init()
@@ -62,7 +61,7 @@ namespace NeutronData.Repositories
             return ord;
         }
 
-        public IEnumerable<OrderView> GetOrderViewNotCompleted()
+        public IEnumerable<OrderView> GetOrderViewNotCompleted(string search = "")
         {
             IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
                 .Where(r => r.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete)
@@ -75,48 +74,47 @@ namespace NeutronData.Repositories
                     ShipMethodName = s.ShipMethod.Name,
                     Priority = s.Priority,
                     Order = s,
-                    Station_1_HasPicks =  CheckForPicks3(1, s.OrderDetails),
-                    Station_2_HasPicks = CheckForPicks3(2, s.OrderDetails),
-                    Station_3_HasPicks = CheckForPicks3(3, s.OrderDetails),
-                    Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
-                    Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
-                    Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
+                    Station_1_HasPicks = HasPicks(_moveablePickStationIds, 1, s.OrderDetails),
+                    Station_2_HasPicks = HasPicks(_moveablePickStationIds, 2, s.OrderDetails),
+                    Station_3_HasPicks = HasPicks(_moveablePickStationIds, 3, s.OrderDetails),
+                    Station_4_HasPicks = HasPicks(_moveablePickStationIds, 4, s.OrderDetails),
+                    Station_5_HasPicks = HasPicks(_moveablePickStationIds, 5, s.OrderDetails),
+                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
                 })
-                .OrderBy(o => o.Id).ToList();
-
-            return recs;
+                .OrderByDescending(o => o.Priority).ToList();
+            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
         }
 
-        public IEnumerable<OrderView> GetOrderViewNotCompleted(string search)
-        {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
-                .Where(r => r.OrderStatusId != 6)
-                .Select(s => new OrderView
-                {
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
-                    Priority = s.Priority,
-                    Order = s,
-                    Station_1_HasPicks = CheckForPicks3(1, s.OrderDetails),
-                    Station_2_HasPicks = CheckForPicks3(2, s.OrderDetails),
-                    Station_3_HasPicks = CheckForPicks3(3, s.OrderDetails),
-                    Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
-                    Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
-                    Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-                    LoadDate = s.LoadDate,
-                    OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
-                })
-                .OrderBy(o => o.Ord1).ToList();
-            IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
-            return result;
-        }
+        //public IEnumerable<OrderView> GetOrderViewNotCompleted()
+        //{
+        //    IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+        //        .Where(r => r.OrderStatusId != 6)
+        //        .Select(s => new OrderView
+        //        {
+        //            Id = s.Id,
+        //            Ord1 = s.Ord1,
+        //            Ord2 = s.Ord2,
+        //            OrderStatusName = s.OrderStatus.Name,
+        //            ShipMethodName = s.ShipMethod.Name,
+        //            Priority = s.Priority,
+        //            Order = s,
+        //            Station_1_HasPicks = HasPicks(_moveablePickStationIds, 1, s.OrderDetails),
+        //            Station_2_HasPicks = HasPicks(_moveablePickStationIds, 2, s.OrderDetails),
+        //            Station_3_HasPicks = HasPicks(_moveablePickStationIds, 3, s.OrderDetails),
+        //            Station_4_HasPicks = HasPicks(_moveablePickStationIds, 4, s.OrderDetails),
+        //            Station_5_HasPicks = HasPicks(_moveablePickStationIds, 5, s.OrderDetails),
+        //            Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
+        //            LoadDate = s.LoadDate,
+        //            OrderStatusId = s.OrderStatusId,
+        //            ShipMethodId = s.ShipMethodId
+        //        })
+        //        .OrderBy(o => o.Ord1).ToList();
+        //    IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
+        //    return result;
+        //}
 
         public IEnumerable<OrderView> GetOrderView()
         {
@@ -132,12 +130,12 @@ namespace NeutronData.Repositories
                     ShipMethodName = s.ShipMethod.Name,
                     Priority = s.Priority,
                     Order = s,
-                    Station_1_HasPicks = CheckForPicks3(1, s.OrderDetails),
-                    Station_2_HasPicks = CheckForPicks3(2, s.OrderDetails),
-                    Station_3_HasPicks = CheckForPicks3(3, s.OrderDetails),
-                    Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
-                    Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
-                    Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
+                    Station_1_HasPicks = HasPicks(_moveablePickStationIds, 1, s.OrderDetails),
+                    Station_2_HasPicks = HasPicks(_moveablePickStationIds, 2, s.OrderDetails),
+                    Station_3_HasPicks = HasPicks(_moveablePickStationIds, 3, s.OrderDetails),
+                    Station_4_HasPicks = HasPicks(_moveablePickStationIds, 4, s.OrderDetails),
+                    Station_5_HasPicks = HasPicks(_moveablePickStationIds, 5, s.OrderDetails),
+                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
@@ -182,7 +180,7 @@ namespace NeutronData.Repositories
                 var parameters = new List<object>();
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter(parameterName: "@STATIONID", value: station.StationNumber);
+                    var param = new SqlParameter(parameterName: "@STATIONID", value: station.StationId);
                     parameters.Add(param);
 
                     recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrders @STATIONID", parameters.ToArray()).ToList();
@@ -553,56 +551,55 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        public IEnumerable<OrderView> GetCompletedOrders()
-        {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new OrderView
-            {
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
-                Priority = s.Priority,
-                Order = s,
-                Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
-                Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
-                Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
-                Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
-                Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
-                Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate,
-                OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
-            }).Where(r => r.OrderStatusId == 6)
-            .OrderByDescending(o => o.Priority).ToList();
+        //public IEnumerable<OrderView> GetCompletedOrders()
+        //{
+        //    IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new OrderView
+        //    {
+        //        Id = s.Id,
+        //        Ord1 = s.Ord1,
+        //        Ord2 = s.Ord2,
+        //        OrderStatusName = s.OrderStatus.Name,
+        //        ShipMethodName = s.ShipMethod.Name,
+        //        Priority = s.Priority,
+        //        Order = s,
+        //        Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
+        //        Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
+        //        Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
+        //        Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
+        //        Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
+        //        Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
+        //        LoadDate = s.LoadDate,
+        //        OrderStatusId = s.OrderStatusId,
+        //        ShipMethodId = s.ShipMethodId
+        //    }).Where(r => r.OrderStatusId == 6)
+        //    .OrderByDescending(o => o.Priority).ToList();
 
-            return recs;
-        }
+        //    return recs;
+        //}
 
         public IEnumerable<OrderView> GetCompletedOrders(string search)
         {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new OrderView
-            {
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
-                Priority = s.Priority,
-                Order = s,
-                Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
-                Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
-                Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
-                Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
-                Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
-                Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate,
-                OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
-            }).Where(r => r.OrderStatusId == 6 && r.SearchField.Contains(search))
-                .OrderByDescending(o => o.Priority).ToList();
-
-            return recs;
+            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+                .Where(r => r.OrderStatusId == (int)NeutronCore.Enums.OrderStatus.Complete).Select(s => new OrderView
+                {
+                    Id = s.Id,
+                    Ord1 = s.Ord1,
+                    Ord2 = s.Ord2,
+                    OrderStatusName = s.OrderStatus.Name,
+                    ShipMethodName = s.ShipMethod.Name,
+                    Priority = s.Priority,
+                    Order = s,
+                    Station_1_HasPicks = HasPicks(_moveablePickStationIds, 1, s.OrderDetails),
+                    Station_2_HasPicks = HasPicks(_moveablePickStationIds, 2, s.OrderDetails),
+                    Station_3_HasPicks = HasPicks(_moveablePickStationIds, 3, s.OrderDetails),
+                    Station_4_HasPicks = HasPicks(_moveablePickStationIds, 4, s.OrderDetails),
+                    Station_5_HasPicks = HasPicks(_moveablePickStationIds, 5, s.OrderDetails),
+                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
+                    LoadDate = s.LoadDate,
+                    OrderStatusId = s.OrderStatusId,
+                    ShipMethodId = s.ShipMethodId
+                }).OrderByDescending(o => o.Ord1).ToList();
+            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
         }
 
         public Order GetOrder()
@@ -691,12 +688,12 @@ namespace NeutronData.Repositories
                 ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 Order = s,
-                Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
-                Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
-                Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
-                Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
-                Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
-                Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
+                Station_1_HasPicks = HasPicks(_moveablePickStationIds, 1, s.OrderDetails),
+                Station_2_HasPicks = HasPicks(_moveablePickStationIds, 2, s.OrderDetails),
+                Station_3_HasPicks = HasPicks(_moveablePickStationIds, 3, s.OrderDetails),
+                Station_4_HasPicks = HasPicks(_moveablePickStationIds, 4, s.OrderDetails),
+                Station_5_HasPicks = HasPicks(_moveablePickStationIds, 5, s.OrderDetails),
+                Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId,
@@ -1018,7 +1015,9 @@ namespace NeutronData.Repositories
         public List<SkipView> GetSkippedOrders()
         {
             var skipViews = new List<SkipView>();
-            var records = _repoOrderDetails.AllInclude(r => r.Order).Where(o => o.LineStatusId == 9).ToList();
+            var records = _repoOrderDetails.AllInclude(r => r.Order)
+                .Where(o => o.LineStatusId == (int)LineStatus.Skipped
+                && o.Order.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete).ToList();
             foreach (var rec in records)
             {
                 var totalInventory = _repoInventory.FindBy(r => r.ItemDefinitionId == rec.ItemDefinitionId)
@@ -1044,64 +1043,37 @@ namespace NeutronData.Repositories
             }
 
             return skipViews;
-
-            //// var statusToGet = new int[] { 1, 2, 3, 4 };
-            //List<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
-            //    //.Where(r => r.OrderDetails.                                           //statusToGet.Contains(r.OrderStatusId))
-            //    .Select(s => new OrderView
-            //    {
-            //        Id = s.Id,
-            //        Ord1 = s.Ord1,
-            //        Ord2 = s.Ord2,
-            //        OrderStatusName = s.OrderStatus.Name,
-            //        ShipMethodName = s.ShipMethod.Name,
-            //        Priority = s.Priority,
-            //        Order = s,
-            //        Station_1_HasPicks = CheckForPicks3(1, s.OrderDetails),
-            //        Station_2_HasPicks = CheckForPicks3(2, s.OrderDetails),
-            //        Station_3_HasPicks = CheckForPicks3(3, s.OrderDetails),
-            //        Station_4_HasPicks = CheckForPicks3(4, s.OrderDetails),
-            //        Station_5_HasPicks = CheckForPicks3(5, s.OrderDetails),
-            //        Station_8_HasPicks = CheckForPicks3(8, s.OrderDetails),
-            //        LoadDate = s.LoadDate,
-            //        OrderStatusId = s.OrderStatusId,
-            //        ShipMethodId = s.ShipMethodId
-            //    })
-            //    .OrderBy(o => o.Id).ToList();
-
-            //return recs;
-
         }
 
-        public IEnumerable<OrderViewWithDetails> GetRackOrdersAll(int rackStationId)
-        {
-            IEnumerable<OrderViewWithDetails> recs = _repoOrders.AllInclude(r => r.OrderDetails)
-                .Select(s => new OrderViewWithDetails
-                {
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
-                    Priority = s.Priority,
-                    Order = s,
-                    StationOrderDetails = GetStationOrderDetails(s.Id, s.OrderDetails),
-                    //OrderStatus1 = s.OrderDetails.FirstOrDefault() == null ? string.Empty : s.OrderDetails.FirstOrDefault()?.LineStatus.Name.Substring(0, 1),
-                    OrderStatus1 = CheckForPicks(1, s.OrderDetails),
-                    Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
-                    //Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
-                    //Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
-                    //Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
-                    //Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
-                    //Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                    LoadDate = s.LoadDate,
-                    OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
-                }).OrderByDescending(o => o.Priority).ToList();                                                 //.Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
+        //public IEnumerable<OrderViewWithDetails> GetRackOrdersAll(int rackStationId)
+        //{
+        //    IEnumerable<OrderViewWithDetails> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+        //        .Select(s => new OrderViewWithDetails
+        //        {
+        //            Id = s.Id,
+        //            Ord1 = s.Ord1,
+        //            Ord2 = s.Ord2,
+        //            OrderStatusName = s.OrderStatus.Name,
+        //            ShipMethodName = s.ShipMethod.Name,
+        //            Priority = s.Priority,
+        //            Order = s,
+        //            StationOrderDetails = GetStationOrderDetails(s.Id, s.OrderDetails),
+        //            //OrderStatus1 = s.OrderDetails.FirstOrDefault() == null ? string.Empty : s.OrderDetails.FirstOrDefault()?.LineStatus.Name.Substring(0, 1),
+        //            OrderStatus1 = CheckForPicks(1, s.OrderDetails),
+        //            Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
+        //            //Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
+        //            //Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
+        //            //Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
+        //            //Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
+        //            //Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
+        //            LoadDate = s.LoadDate,
+        //            OrderStatusId = s.OrderStatusId,
+        //            ShipMethodId = s.ShipMethodId
+        //        }).OrderByDescending(o => o.Priority).ToList();                                                 //.Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
 
 
-            return recs;
-        }
+        //    return recs;
+        //}
 
         private List<StationOrderDetail> GetStationOrderDetails(int orderId, ICollection<OrderDetail> orderDetails)
         {
@@ -1125,9 +1097,11 @@ namespace NeutronData.Repositories
         }
 
         //Tested
-        public IEnumerable<OrderView> GetRackOrders()
+        public IEnumerable<OrderView> GetRackOrders(string search = "")
         {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new OrderView
+            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+                .Where(r => r.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete)
+                .Select(s => new OrderView
             {
                 Id = s.Id,
                 Ord1 = s.Ord1,
@@ -1147,8 +1121,7 @@ namespace NeutronData.Repositories
                 ShipMethodId = s.ShipMethodId
             }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
                 .OrderByDescending(o => o.Priority).ToList();
-
-            return recs;
+            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
         }
 
         private string HasPicks(int[] moveableStationIds, int hasPickNum, ICollection<OrderDetail> orderDetails)
@@ -1207,8 +1180,8 @@ namespace NeutronData.Repositories
                         break;
                     }
                 case "Multiple":
-                {
-                    var codes = new List<string>();
+                    {
+                        var codes = new List<string>();
                         foreach (var group in groups)
                         {
                             key = group.Key.LineStatusId;
@@ -1225,38 +1198,37 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        public IEnumerable<OrderView> GetRackOrders(string search)
-        {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new OrderView
-            {
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
-                Priority = s.Priority,
-                Order = s,
-                Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
-                Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
-                Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
-                Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
-                Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
-                Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
-                LoadDate = s.LoadDate,
-                OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
-            }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
-                .OrderBy(o => o.Ord1).ToList();
-            IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
-            return result;
-        }
+        //public IEnumerable<OrderView> GetRackOrders()
+        //{
+        //    IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new OrderView
+        //    {
+        //        Id = s.Id,
+        //        Ord1 = s.Ord1,
+        //        Ord2 = s.Ord2,
+        //        OrderStatusName = s.OrderStatus.Name,
+        //        ShipMethodName = s.ShipMethod.Name,
+        //        Priority = s.Priority,
+        //        Order = s,
+        //        Station_1_HasPicks = CheckForPicks(1, s.OrderDetails),
+        //        Station_2_HasPicks = CheckForPicks(2, s.OrderDetails),
+        //        Station_3_HasPicks = CheckForPicks(3, s.OrderDetails),
+        //        Station_4_HasPicks = CheckForPicks(4, s.OrderDetails),
+        //        Station_5_HasPicks = CheckForPicks(5, s.OrderDetails),
+        //        Station_8_HasPicks = CheckForPicks(8, s.OrderDetails),
+        //        LoadDate = s.LoadDate,
+        //        OrderStatusId = s.OrderStatusId,
+        //        ShipMethodId = s.ShipMethodId
+        //    }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
+        //        .OrderBy(o => o.Ord1).ToList();
+        //    IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
+        //    return result;
+        //}
 
         public IEnumerable<RackOrderView> GetRackOrdersView(int rackStationNumber, string search = @"")
         {
-            IEnumerable<RackOrderView> recs;
-            if (string.IsNullOrEmpty(search.Trim()))
-            {
-                recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
+            IEnumerable<RackOrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+                .Where(o => o.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete && o.OrderDetails.Count > 0)
+                .Select(s => new RackOrderView
                 {
                     StationNumber = rackStationNumber,
                     Id = s.Id,
@@ -1265,27 +1237,9 @@ namespace NeutronData.Repositories
                     Priority = s.Priority,
                     Order = s,
                     LoadDate = s.LoadDate,
-                    OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == rackStationNumber).ToList()
-                }).Where(o => o.Order.OrderStatusId != 6 && o.OrderDetails.Count > 0)
-                    .OrderBy(o => o.Ord2).ToList();
-            }
-            else
-            {
-                recs = _repoOrders.AllInclude(r => r.OrderDetails).Select(s => new RackOrderView
-                {
-                    StationNumber = rackStationNumber,
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    Priority = s.Priority,
-                    Order = s,
-                    LoadDate = s.LoadDate,
-                    OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == rackStationNumber).ToList()
-                }).Where(o => o.Order.OrderStatusId != 6 && o.SearchField.Contains(search) && o.OrderDetails.Count > 0)
-                    .OrderBy(o => o.Ord2).ToList();
-            }
-            //var result = recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0);
-            return recs;
+                    OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != (int)NeutronCore.Enums.LineStatus.Complete && o.StationNumber == rackStationNumber).ToList()
+                }).OrderBy(o => o.Ord2).ToList();
+            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0) : recs.Where(r => r.OrderDetails.Count > 0);
         }
 
         public Order GetOrderAndOrderDetails(int? orderId, int stationNumber)

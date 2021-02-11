@@ -113,6 +113,11 @@ namespace NeutronLoader
             }
         }
 
+        public void RunLoaderContinuously()
+        {
+            throw new NotImplementedException();
+        }
+
         public FileInfo[] GetFiles()
         {
             _logger.Log("Call to Get Files Function.");

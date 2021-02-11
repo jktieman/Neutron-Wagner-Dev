@@ -16,12 +16,12 @@ namespace NeutronLoader
        // private static Timer _upTimer;
        // private static bool _processingUpload;
 
-        public StartStopUploadManager(IJsonData jsonData, DynamicLogger logger)
+        public StartStopUploadManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
         {
             _jsonData = jsonData;
             _logger = logger;
-            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            _neutronLicense = jsonData.LoadFile<NeutronLicense>();
+            _neutronVariables = neutronVariables;
+            _neutronLicense = neutronLicense;
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopAction(e.StartStop);
         }
 

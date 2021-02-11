@@ -13,7 +13,6 @@ namespace Neutron
     {
         public override void Load()
         {
-
             Bind<IJsonData>().To<JsonData>();
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();
@@ -21,6 +20,8 @@ namespace Neutron
             Bind<IStationRepository>().To<StationRepository>();
             Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
             Bind<IImageManager>().To<ImageManager>().InSingletonScope();
+            Bind<IOrdersRepository>().To<OrdersRepository>();
+            Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>();
         }
     }
 }

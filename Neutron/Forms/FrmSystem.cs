@@ -109,12 +109,6 @@ namespace Neutron.Forms
             Mediator.GetInstance().OnStartStopLoader(this, !GlobalVar.LoaderRunning ? "Start" : "Stop");
         }
 
-        private void RunLoaderContinuously()
-        {
-            var interfaceProcessor = new InterfaceProcessor(_neutronVariables, _neutronLicense, _jsonData);
-            interfaceProcessor.RunLoaderContinuously();
-        }
-
         private void MBRunLoaderOnce_Click(object sender, EventArgs e)
         {
             RunLoaderOnce();
@@ -122,8 +116,8 @@ namespace Neutron.Forms
 
         private void RunLoaderOnce()
         {
-            var interfaceProcessor = new InterfaceProcessor(_neutronVariables, _neutronLicense, _jsonData);
-            interfaceProcessor.RunLoaderOnce();
+            //var interfaceProcessor = new InterfaceProcessor(_neutronVariables, _neutronLicense, _jsonData);
+            //interfaceProcessor.RunLoaderOnce();
         }
 
         private void MBStartUpload_Click(object sender, EventArgs e)

@@ -95,7 +95,7 @@ namespace Neutron.Forms
 
         public FrmHotAction(StationView station, IJsonData jsonData
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
-            , ILacProcessor lacProcessor, IImageManager imageManager , string item = @"")
+            , ILacProcessor lacProcessor, IImageManager imageManager, string item = @"")
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -128,7 +128,8 @@ namespace Neutron.Forms
             _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
             InitialSearch(item);
 
-            if (_station.StationType.Id == 1 || _station.StationType.Id == 2) return;
+            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
+                || _station.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
 
             _newLocationButtonText = _resourceManager.GetString("AllLocations");
             MBNewLocations.Text = _newLocationButtonText;
@@ -179,6 +180,7 @@ namespace Neutron.Forms
             return point;
 
         }
+
         private void InitialSearch(string item)
         {
             if (string.IsNullOrEmpty(item))
@@ -257,24 +259,24 @@ namespace Neutron.Forms
             _bindingSourceCurrent.DataSource = blv;
             var recordCount = GetRecordCount(recs);
             MBCurrentLocations.Text = $"{_resourceManager.GetString("CurrentLocations")} ({_bindingSourceCurrent.Count})";
-            if (_bindingSourceCurrent.Count > 0)
-            {
-                MBHotPick.Enabled = true;
-                MBHotStore.Enabled = true;
-                MBCurrentLocations.Enabled = true;
-            }
-            else
-            {
-                MBHotPick.Enabled = false;
-                MBHotStore.Enabled = false;
-                MBCurrentLocations.Enabled = false;
-            }
+            //if (_bindingSourceCurrent.Count > 0)
+            //{
+            //    MBHotPick.Enabled = true;
+            //    MBHotStore.Enabled = true;
+            //    MBCurrentLocations.Enabled = true;
+            //}
+            //else
+            //{
+            //    MBHotPick.Enabled = false;
+            //    MBHotStore.Enabled = false;
+            //    MBCurrentLocations.Enabled = false;
+            //}
         }
 
         private async Task LoadNewLocations(ItemDefinitionView item)
         {
-            var station =  _repoStation.FindByKey(_station.StationId);
-            if (_station.StationType.Id == (int) StationType.StationType.Supervisor)
+            var station = _repoStation.FindByKey(_station.StationId);
+            if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
             {
 
                 if (_rackStation != null)
@@ -308,17 +310,17 @@ namespace Neutron.Forms
             //var blv = new BindingListView<LocationView>(views.ToList());
             //_bindingSourceNewLocations.DataSource = blv;
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
-            if (_bindingSourceNewLocations.Count > 0)
-            {
-                MBHotStore.Enabled = true;
-                MBNewLocations.Enabled = true;
-            }
-            else
-            {
-                MBHotPick.Enabled = false;
-                MBHotStore.Enabled = false;
-                MBNewLocations.Enabled = false;
-            }
+            //if (_bindingSourceNewLocations.Count > 0)
+            //{
+            //    MBHotStore.Enabled = true;
+            //    MBNewLocations.Enabled = true;
+            //}
+            //else
+            //{
+            //    MBHotPick.Enabled = false;
+            //    MBHotStore.Enabled = false;
+            //    MBNewLocations.Enabled = false;
+            //}
         }
         // Not Used
         public void UpdateDataGrid(BindingSource bindingSource)
@@ -345,7 +347,7 @@ namespace Neutron.Forms
             var idx = 0;
             var findWhat = string.IsNullOrEmpty(find) ? TextBoxFindItem.Text.ToLower().Trim() : find;
 
-            IEnumerable<ItemDefinitionView> views;   
+            IEnumerable<ItemDefinitionView> views;
             // if its a Supervisor station, load the Rack items
             if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
             {
@@ -376,7 +378,7 @@ namespace Neutron.Forms
                 }
                 try
                 {
-                    DataGridViewHot.FirstDisplayedScrollingRowIndex = idx; 
+                    DataGridViewHot.FirstDisplayedScrollingRowIndex = idx;
                     DataGridViewHot.Update();
                     DataGridViewHot.CurrentCell = DataGridViewHot.Rows[idx].Cells[1];
                     DataGridViewHot.Rows[idx].Selected = true;
@@ -389,6 +391,7 @@ namespace Neutron.Forms
                 {
                     MessageBox.Show($"{ex.Message}");
                     _currentGridDataType = GridDataType.None;
+                    SetupGridItemDefinition();
                 }
             }
             else
@@ -443,7 +446,7 @@ namespace Neutron.Forms
         }
         private void SetupGridItemDefinition()
         {
-            if (_currentGridDataType == GridDataType.Item) return;
+            //if (_currentGridDataType == GridDataType.Item) return;
             DataGridViewHot.Columns.Clear();
             _currentGridDataType = GridDataType.Item;
             DataGridViewHot.AutoGenerateColumns = false;
@@ -794,7 +797,7 @@ namespace Neutron.Forms
             var enumerable = controls.ToList();
             return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
         }
- 
+
         private void ShowShi(int loc1, int loc2, int loc3, string loc4, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
@@ -1226,8 +1229,6 @@ namespace Neutron.Forms
         }
         private async void DataGridViewHot_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            _stopwatch = new Stopwatch();
-            _stopwatch.Start();
             Cursor.Current = Cursors.WaitCursor;
             switch (_currentGridDataType)
             {
@@ -1250,50 +1251,61 @@ namespace Neutron.Forms
                 {
                     var s = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
                     TextBoxFindItem.Text = s.Item;
-                    _stopwatch.Stop();
-                    Console.WriteLine($@"Speed: LoadCurrentAndNew: {_stopwatch.ElapsedMilliseconds.ToString()}");
-                    _stopwatch.Restart();
-                    // LoadItemDefinitions();
-                    _stopwatch.Stop();
-                    Console.WriteLine($@"Speed: LoadItemDefinitions: {_stopwatch.ElapsedMilliseconds.ToString()}");
-                    _stopwatch.Restart();
                     LoadCurrent(s);
-                    //LoadCurrent(_currentItemDefinition);
-                    _stopwatch.Stop();
-                    Console.WriteLine($@"Speed: LoadCurrent: {_stopwatch.ElapsedMilliseconds.ToString()}");
-                    _stopwatch.Restart();
-                    // await LoadNewLocations(_currentItemDefinition);
                     await LoadNewLocations(s);
-                    _stopwatch.Stop();
-                    Console.WriteLine($@"Speed: await LoadNewLocations: {_stopwatch.ElapsedMilliseconds.ToString()}");
-                    _stopwatch.Restart();
                     if (_bindingSourceCurrent.Count > 0)
                     {
                         SetupGridCurrent();
-                        _stopwatch.Stop();
-                        Console.WriteLine($@"Speed: BindingSource Current Setup Grid: {_stopwatch.ElapsedMilliseconds.ToString()}");
-                        _stopwatch.Restart();
                         DataGridViewHot.DataSource = _bindingSourceCurrent;
                         var recordCount = GetRecordCount(_bindingSourceCurrent);
-                        _stopwatch.Stop();
-                        Console.WriteLine($@"Speed: BindingSource Current DataSource: {_stopwatch.ElapsedMilliseconds.ToString()}");
-                        _stopwatch.Restart();
-                        DataGridViewHot.ClearSelection();
-                        _stopwatch.Stop();
-                        Console.WriteLine($@"Speed: BindingSource Current Clear Selection: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        DataGridViewHot.SelectedRows[0].Selected = true;
+                        //DataGridViewHot.ClearSelection();
                     }
                     else if (_bindingSourceNewLocations.Count > 0)
                     {
                         SetupGridNew();
                         DataGridViewHot.DataSource = _bindingSourceNewLocations;
                         var recordCount = GetRecordCount(_bindingSourceNewLocations);
-                        DataGridViewHot.ClearSelection();
-                        _stopwatch.Stop();
-                        Console.WriteLine($@"Speed: BindingSource New Locations: {_stopwatch.ElapsedMilliseconds.ToString()}");
+                        DataGridViewHot.SelectedRows[0].Selected = true;
+                        //DataGridViewHot.ClearSelection();
                     }
+
+                    SetHotButtonStatus();
                 }
             }
         }
+
+        private void SetHotButtonStatus()
+        {
+            MBHotPick.Enabled = true;
+            MBHotStore.Enabled = true;
+            MBCurrentLocations.Enabled = true;
+            MBNewLocations.Enabled = true;
+
+            if (_bindingSourceNewLocations.Count == 0 && _bindingSourceCurrent.Count == 0)
+            {
+                MBHotPick.Enabled = false;
+                MBHotStore.Enabled = false;
+                MBNewLocations.Enabled = false;
+                MBCurrentLocations.Enabled = false;
+            }
+
+            if (_bindingSourceCurrent.Count > 0 && _bindingSourceNewLocations.Count == 0)
+            {
+                MBHotPick.Enabled = true;
+                MBHotStore.Enabled = true;
+                MBCurrentLocations.Enabled = true;
+                MBNewLocations.Enabled = false;
+            }
+            if (_bindingSourceCurrent.Count == 0 && _bindingSourceNewLocations.Count > 0)
+            {
+                MBHotPick.Enabled = false;
+                MBHotStore.Enabled = true;
+                MBCurrentLocations.Enabled = false;
+                MBNewLocations.Enabled = true;
+            }
+        }
+
         private async void MBHotActionBack_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = false;

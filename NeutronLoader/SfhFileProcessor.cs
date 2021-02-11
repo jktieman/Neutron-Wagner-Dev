@@ -16,7 +16,7 @@ using NeutronCore.Global;
 
 namespace NeutronLoader
 {
-    public class Pr1FileProcessor : IFileProcessor
+    public class SfhFileProcessor : IFileProcessor
     {
         private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
@@ -29,7 +29,7 @@ namespace NeutronLoader
         private readonly DynamicLogger _logger;
         private readonly IJsonData _jsonData;
 
-        public Pr1FileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
+        public SfhFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -69,6 +69,13 @@ namespace NeutronLoader
             }
             _logger.Log($"Pr1FileProcessor --- Done");
         }
+
+
+
+
+
+
+
 
         private void ProcessNormalOrder(string[] allLines)
         {
@@ -320,8 +327,7 @@ namespace NeutronLoader
                         replenDetail.Quantity = line.Substring(38, 9).ParseInt();
                         replenDetail.PrimeBin = primeBin;
                         replenDetail.PartDesc = description;
-                        replenDetail.OrderDetailInfo =
-                            line.Length >= 205 ? line.Substring(105, 100) : line.Substring(105);
+                        replenDetail.OrderDetailInfo = line.Substring(105, 100);
                         replenDetail.StationNumber = stationNumber;
                         replenDetail.LineStatusId = 1;
                         replenDetail.PickedQuantity = 0;
@@ -367,155 +373,6 @@ namespace NeutronLoader
             }
         }
 
-        private void ProcessReplenOrderNewNotUsed(string[] allLines)
-        {
-            _logger.Log($"Process Replen Order Line Count: {allLines.Length} ");
-            var orders = new List<ReplenOrder>();
-            var order = new ReplenOrder();
-            var orderDetail = new ReplenOrderDetail();
-            var orderInfo = new StringBuilder();
-            var orderDetailInfo = new StringBuilder();
-            var orderId = 0;
-            var replenOrderDetails = new List<ReplenOrderDetail>();
-            var orderWorking = false;
-            var lineWorking = false;
-
-            for (var i = 0; i < allLines.Length; i++)
-            {
-                var line = allLines[i];
-                var lineType = line.Substring(0, 1);
-
-                if (lineType == "1")
-                {
-                    if (orderWorking)
-                    {
-                        //Build the order
-                        order.OrderInfo = orderInfo.ToString();
-                        _repoReplenOrder.Insert(order);
-                        orderId = order.Id;
-                        foreach (var detail in replenOrderDetails)
-                        {
-                            detail.ReplenOrderId = orderId;
-                            _repoReplenOrderDetail.Insert(detail);
-                        }
-                        orderWorking = false;
-                    }
-
-                    if (!orderWorking)
-                    {
-                        replenOrderDetails = new List<ReplenOrderDetail>();
-                        orderInfo = new StringBuilder();
-                        orderDetailInfo = new StringBuilder();
-                        order = CreateOrder(line);
-                        orderWorking = true;
-                    }
-
-                }
-
-                if (lineType == "3"
-                    || lineType == "4"
-                    || lineType == "5"
-                    || lineType == "6"
-                    || lineType == "7")
-                {
-                    orderInfo.AppendLine(line);
-                }
-
-
-                if (lineType == "2")
-                {
-                    // build the line
-                    if (lineWorking)
-                    {
-                        orderDetail.OrderDetailInfo = orderDetailInfo.ToString();
-                        replenOrderDetails.Add(orderDetail);
-                        lineWorking = false;
-                    }
-
-                    if (!lineWorking)
-                    {
-                        orderDetail = CreateOrderDetail(line);
-                        lineWorking = true;
-                    }
-
-                }
-
-                if (lineType == "8"
-                    || lineType == "9")
-                {
-                    orderDetailInfo.AppendLine(line);
-                }
-            }
-
-            if (order != null)
-            {
-                // add the last detail record
-                if (orderDetail != null)
-                {
-                    orderDetail.OrderDetailInfo = orderDetailInfo.ToString();
-                    replenOrderDetails.Add(orderDetail); 
-                }
-
-                //Build the last order
-                order.OrderInfo = orderInfo.ToString();
-                _repoReplenOrder.Insert(order);
-                orderId = order.Id;
-                foreach (var detail in replenOrderDetails)
-                {
-                    detail.ReplenOrderId = orderId;
-                    _repoReplenOrderDetail.Insert(detail);
-                }
-            }
-        }
-
-        private ReplenOrderDetail CreateOrderDetail(string line)
-        {
-            ItemDefinition itemDef = null;
-
-            string partNum = line.Substring(2, 35);
-            string description = line.Substring(74, 30);
-
-            itemDef = GetItemDefinition(partNum, description);
-
-            if (_neutronVariables.UpdateItemDefinitionDescription)
-            {
-                itemDef = UpdateItemDefinitionDescription(itemDef, description);
-            }
-
-            int stationNumber = GetStationNumber(itemDef.StationId);
-            string primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
-            var replenDetail = new ReplenOrderDetail();
-            //replenDetail.ReplenOrderId = order.Id;
-            replenDetail.ItemDefinitionId = itemDef.Id;
-            replenDetail.PartNum = partNum;
-            replenDetail.Quantity = line.Substring(38, 9).ParseInt();
-            replenDetail.PrimeBin = primeBin;
-            replenDetail.PartDesc = description;
-            replenDetail.OrderDetailInfo =
-                line.Length >= 205 ? line.Substring(105, 100) : line.Substring(105);
-            replenDetail.StationNumber = stationNumber;
-            replenDetail.LineStatusId = 1;
-            replenDetail.PickedQuantity = 0;
-
-            return replenDetail;
-        }
-
-        private ReplenOrder CreateOrder(string line)
-        {
-            var order = new ReplenOrder();
-            order.Ord1 = line.Substring(8, 10) == "REPLENOPRP" ? $@"R{line.Substring(20, 9)}" : line.Substring(8, 10);
-            order.Ord2 = line.Substring(19, 10);
-            order.Priority = line.Substring(31, 2).ParseInt();
-            order.LoadDate = DateTime.Now;
-            order.OrderStatusId = 1;
-            order.ShipMethodId = 1;
-            order.ShipperId = 1;
-            order.OrderInfo = string.Empty;
-
-            //_repoReplenOrder.Insert(order);
-            return order;
-        }
-
         private ItemDefinition GetItemDefinition(string partNum, string description, string oc = "C")
         {
             ItemDefinition item = null;
@@ -534,6 +391,10 @@ namespace NeutronLoader
                     _logger.Log($"Error Finding Item Definition 1. {ex.Message} \r\n {ex.InnerException}");
                 }
             }
+
+
+
+
             else
             {
                 try
@@ -550,6 +411,9 @@ namespace NeutronLoader
 
             return item;
         }
+
+
+
 
         private ItemDefinition GetItemDefinition(string partNum, string description)
         {

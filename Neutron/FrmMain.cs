@@ -39,6 +39,8 @@ namespace Neutron
         private ResourceManager _resourceManager;
         private readonly IStationRepository _stationRepository;
         private readonly IImageManager _imageManager;
+        private readonly IOrdersRepository _ordersRepository;
+        private readonly IReplenOrdersRepository _replenOrdersRepository;
         private readonly IJsonData _jsonData;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
@@ -64,9 +66,11 @@ namespace Neutron
         /// <param name="neutronVariables"></param>
         /// <param name="stationRepository"></param>
         /// <param name="imageManager"></param>
+        /// <param name="ordersRepository"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
-            , NeutronVariables neutronVariables, IStationRepository stationRepository, IImageManager imageManager)
+            , NeutronVariables neutronVariables, IImageManager imageManager, IStationRepository stationRepository
+            ,IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -79,6 +83,8 @@ namespace Neutron
             _lacProcessor = lacProcessor;
             _stationRepository = stationRepository;
             _imageManager = imageManager;
+            _ordersRepository = ordersRepository;
+            _replenOrdersRepository = replenOrdersRepository;
 
             //_neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             _neutronVariables = neutronVariables;
@@ -141,8 +147,8 @@ namespace Neutron
                                     {
                                         if (SetupSlotFactory())
                                         {
-                                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger);
-                                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger);
+                                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
+                                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
                                             if (StartLoader())
                                             {
                                                 if (StartUpload())
@@ -631,8 +637,9 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
             Hide();
-            using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository
-                                                , _securityProcessor, _lacProcessor, _imageManager))
+            using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables
+                                                , _securityProcessor, _lacProcessor, _imageManager
+                                                , _stationRepository, _ordersRepository))
             {
                 frm.ShowDialog();
 
@@ -691,7 +698,7 @@ namespace Neutron
             {
                 Hide();
                 using (MetroForm frm = new FrmReplen(_jsonData, _station, _akaRepository,
-                    _neutronVariables, _securityProcessor, _lacProcessor, _imageManager))
+                    _neutronVariables, _securityProcessor, _lacProcessor, _imageManager, _stationRepository, _replenOrdersRepository))
                 {
                     frm.ShowDialog();
                     Show();
@@ -798,8 +805,10 @@ namespace Neutron
 
             if (e.KeyCode == Keys.F7 || e.KeyCode == Keys.F8)
             {
-                using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository,
-                    _securityProcessor, _lacProcessor, _imageManager))
+                
+                using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables,
+                    _securityProcessor, _lacProcessor, _imageManager, _stationRepository
+                    , _ordersRepository))
                 {
                     frm.ShowDialog();
                     Show();

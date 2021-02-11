@@ -23,13 +23,47 @@ namespace NeutronLoader
         private static Timer _upTimer;
         private static bool _processingUpload;
 
-        public StartStopLoaderManager(IJsonData jsonData, DynamicLogger logger)
+        public StartStopLoaderManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
         {
             _jsonData = jsonData;
             _logger = logger;
-            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            _neutronLicense = jsonData.LoadFile<NeutronLicense>();
+            _neutronVariables = neutronVariables;
+            _neutronLicense = neutronLicense;
+            InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+        }
+
+        private void InitInterfaceFile()
+        {
+            switch (_neutronLicense.CompanyCode)
+            {
+                case "SFH":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData);
+                        break;
+                    }
+                case "TOP":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
+                        break;
+                    }
+                case "TMG":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData);
+                        break;
+                    }
+                case "PR1":
+                    {
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+                        break;
+                    }
+                default:
+                    {
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+                        break;
+                    }
+            }
+
         }
 
         private void StartStopLoaderAction(string startStop)
@@ -48,38 +82,13 @@ namespace NeutronLoader
 
         private void StartProcessingInterfaceFiles()
         {
-            switch (_neutronLicense.CompanyCode)
+            if (_neutronLicense.CompanyCode == "SFH")
             {
-                case "SFH":
-                    {
-                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData);
-                        _interfaceProcessor.StartProcessingInterfaceFiles();
-
-                        var startTimeSpan = TimeSpan.Zero;
-                        var periodTimeSpan = TimeSpan.FromMinutes(5);
-                        _upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
-                        break;
-                    }
-                case "TOP":
-                    {
-                        //_interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
-                        //_interfaceProcessor.StartProcessingInterfaceFiles();
-                        break;
-                    }
-                case "TMG":
-                    {
-                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData);
-                        _interfaceProcessor.StartProcessingInterfaceFiles();
-                        break;
-                    }
-                case "PR1":
-                {
-                    //_interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
-                    //_interfaceProcessor.StartProcessingInterfaceFiles();
-                    break;
-                }
+                var startTimeSpan = TimeSpan.Zero;
+                var periodTimeSpan = TimeSpan.FromMinutes(5);
+                _upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
             }
-
+            _interfaceProcessor.StartProcessingInterfaceFiles();
         }
 
         private void StopProcessingInterfaceFiles()

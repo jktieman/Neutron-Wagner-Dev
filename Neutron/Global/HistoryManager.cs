@@ -641,7 +641,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 StationId = stationId,
                 OrderDetailId = skipView.Id,
-                CostCenter = skipView.OrderDetail.OrderDetailInfo?.Substring(0, 5),
+                CostCenter =  skipView.OrderDetail.OrderDetailInfo.Length < 5 ? string.Empty : skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,
                 OrderDetailInfo = skipView.OrderDetail.OrderDetailInfo
             };

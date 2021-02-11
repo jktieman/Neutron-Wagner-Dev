@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MetroFramework.Forms;
 using Neutron.Global;
@@ -17,7 +16,6 @@ using NeutronData.Repositories;
 using NeutronCore.Extensions;
 using System.Threading.Tasks;
 using System.Threading;
-using Neutron.Controllers;
 using Neutron.Interfaces;
 using System.Diagnostics;
 using System.Globalization;
@@ -26,7 +24,6 @@ using Neutron.Enums;
 using Neutron.Classes;
 using Equin.ApplicationFramework;
 using EnumsNET;
-using System.IO;
 using System.Resources;
 using NeutronLoader;
 using NeutronCore.Global;
@@ -34,12 +31,10 @@ using NeutronCore;
 using AlliedLogger;
 using System.Text;
 using CurrentDeviceIndicator;
-using NeutronData.SqlModelViews;
 using NeutronData.Interfaces;
 using NeutronCore.Models;
 using NeutronCore.Enums;
 using NeutronDllu;
-using NeutronEvents;
 
 namespace Neutron.Forms
 {
@@ -65,10 +60,10 @@ namespace Neutron.Forms
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly ReplenOrdersRepository _ordersRepository = new ReplenOrdersRepository();
+        private readonly IReplenOrdersRepository _replenOrdersRepository;
         private readonly ReplenOrderDetailsRepository _orderDetailsRepository = new ReplenOrderDetailsRepository();
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
-        private readonly StationRepository _stationRepository = new StationRepository();
+        private readonly IStationRepository _stationRepository;
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
         private readonly GenericRepository<PrintJob> _repoPrintJob = new GenericRepository<PrintJob>(new NeutronDb());
         private readonly BindingSource _bindingSourceOrderView = new BindingSource();
@@ -140,7 +135,8 @@ namespace Neutron.Forms
         public FrmReplen(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
-            , IImageManager imageManager)
+            , IImageManager imageManager, IStationRepository stationRepository
+            , IReplenOrdersRepository replenOrdersRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -156,6 +152,9 @@ namespace Neutron.Forms
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
             _imageManager = imageManager;
+            _stationRepository = stationRepository;
+            _replenOrdersRepository = replenOrdersRepository;
+
             _documentToPrint = new DocumentToPrint();
             SetupPrinters();
             _synchronizationContext = SynchronizationContext.Current;
@@ -1325,24 +1324,13 @@ namespace Neutron.Forms
             // string find = _akaRepository.Get(findWhat);
             // TextBoxFind.Text = find;
 
-            if (!string.IsNullOrEmpty(findWhat))
-            {
-                var views = _ordersRepository.GetOrderViewNotCompleted(findWhat);
-                var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
-                _bindingSourceOrderView.DataSource = bindingListView;
-            }
-            else
-            {
-                var views = _ordersRepository.GetOrderViewNotCompleted();
-                var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
-                _bindingSourceOrderView.DataSource = bindingListView;
-            }
-
+            var views = _replenOrdersRepository.GetOrderViewNotCompleted(findWhat);
+            var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
+            _bindingSourceOrderView.DataSource = bindingListView;
             DataGridView1.DataSource = _bindingSourceOrderView;
 
             if (GetRecordCount(_bindingSourceOrderView) > 0)
             {
-                MBCompress.Enabled = false;
                 if (recId != 0)
                 {
                     idx = IndexOf(_bindingSourceOrderView, recId);
@@ -1386,7 +1374,7 @@ namespace Neutron.Forms
             {
                 var sw = new Stopwatch();
                 sw.Start();
-                var views = !string.IsNullOrEmpty(findWhat) ? _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking) : _ordersRepository.GetAvailableOrders(_station);
+                var views = !string.IsNullOrEmpty(findWhat) ? _replenOrdersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking) : _replenOrdersRepository.GetAvailableOrders(_station);
 
                 sw.Stop();
 
@@ -1440,7 +1428,7 @@ namespace Neutron.Forms
 
         //    try
         //    {
-        //        var views = ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking);
+        //        var views = replenOrdersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking);
 
         //        var bindingListView = new BindingListView<AvailableReplenOrdersView>(views.ToList());
 
@@ -1869,7 +1857,7 @@ namespace Neutron.Forms
                 if (row.Cells["IsChecked"].Value != null && (bool)row.Cells["IsChecked"].Value == true)
                 {
                     var ordId = (int)row.Cells["Id"].Value;
-                    ReplenOrderView view = _ordersRepository.GetOrderView().Where(r => r.Id == ordId).FirstOrDefault();
+                    ReplenOrderView view = _replenOrdersRepository.GetOrderView().Where(r => r.Id == ordId).FirstOrDefault();
                     if (view != null)
                     {
                         ordViews.Add(view);
@@ -2215,7 +2203,7 @@ namespace Neutron.Forms
                 var currentItem = ((ObjectView<AvailableReplenOrdersView>)_bindingSourceAvailableOrders.Current).Object;
                 var firstTime = true;
                 var counter = 0;
-                var orderAndDetails = _ordersRepository.GetOrderAndOrderDetails(bp.OrderId, _station.StationNumber);
+                var orderAndDetails = _replenOrdersRepository.GetOrderAndOrderDetails(bp.OrderId, _station.StationNumber);
                 currentItem.Order = orderAndDetails;
                 var details = currentItem.Order.ReplenOrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
@@ -3273,7 +3261,7 @@ namespace Neutron.Forms
 
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"StoreAccept_Click Start : [{System.DateTime.Now.ToLongTimeString()}]"));
-            
+
             //bool pick = false;
             //pick = currentPickStop.CurrentInventoryLocation.Quantity < currentPickStop.QuantityToBePicked ? false : true;
 
@@ -3876,16 +3864,12 @@ namespace Neutron.Forms
 
         private void ShowOrderDetailsByOrder(int orderId)
         {
-            //List<int> recs = GetCheckedOrderIds();
-            //if (recs.Count() > 0)
-            // {
             var details = _orderDetailsRepository.GetOrderDetailsViewByOrder(orderId);
             _bindingSourceOrderDetailsView.DataSource = details;
             DataGridViewOrderDetails.DataSource = _bindingSourceOrderDetailsView;
+            GetRecordCount(_bindingSourceOrderDetailsView);
             LabelFormTitle.Text = "Job Details";
             tabControl1.SelectedTab = OrderDetails;
-            // }
-
         }
 
         private void MBCreateOrder_Click(object sender, EventArgs e)
@@ -3904,13 +3888,10 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"Job Manager Main Screen Start"));
-            var watch = new Stopwatch();
-            watch.Start();
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.Green;
             ShowAllOrders();
             tabControl1.SelectedTab = OrderListing;
-            Task.Run(() => _logger.Log($"Job Manager Main screen Elasped MSec:  {watch.ElapsedMilliseconds}ms"));
             Cursor.Current = Cursors.Default;
         }
 
@@ -3981,7 +3962,7 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetRackOrdersView(_rackStation.StationNumber, findWhat);
+                var views = _replenOrdersRepository.GetRackOrdersView(_rackStation.StationNumber, findWhat);
 
                 var rackOrderViews = views.ToList();
                 foreach (var rackOrderView in rackOrderViews)
@@ -4237,7 +4218,7 @@ namespace Neutron.Forms
             // string find = _akaRepository.Get(findWhat);
             // TextBoxFind.Text = find;
 
-            var views = _ordersRepository.GetCompletedOrders(findWhat);
+            var views = _replenOrdersRepository.GetCompletedOrders(findWhat);
             var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
             _bindingSourceCompleted.DataSource = bindingListView;
 
@@ -4971,7 +4952,18 @@ namespace Neutron.Forms
 
         private void MBRackOrderComplete_Click(object sender, EventArgs e)
         {
-            const int stationNumber = 8;
+            int stationNumber;
+            if (_station.StationType.Id == (int)StationType.Supervisor)
+            {
+                stationNumber = _rackStation.StationNumber;
+            }
+            else
+            {
+                stationNumber = _station.StationNumber;
+            }
+
+
+
             var orders = GetCheckedOrdersRack();
             if (orders.Count > 0)
             {
@@ -5377,20 +5369,20 @@ namespace Neutron.Forms
             // string find = akaRepository.Get(findWhat);
             // TextBoxFind.Text = find;
 
-            if (!string.IsNullOrEmpty(findWhat))
-            {
-                var views = _ordersRepository.GetRackOrders(findWhat);
+            //if (!string.IsNullOrEmpty(findWhat))
+            //{
+                var views = _replenOrdersRepository.GetRackOrders(findWhat);
                 var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
                 _bindingSourceOrderView.DataSource = bindingListView;
                 DataGridView1.DataSource = _bindingSourceOrderView;
-            }
-            else
-            {
-                var views = _ordersRepository.GetRackOrders();
-                var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
-                _bindingSourceOrderView.DataSource = bindingListView;
-                DataGridView1.DataSource = _bindingSourceOrderView;
-            }
+            //}
+            //else
+            //{
+            //    var views = _replenOrdersRepository.GetRackOrders();
+            //    var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
+            //    _bindingSourceOrderView.DataSource = bindingListView;
+            //    DataGridView1.DataSource = _bindingSourceOrderView;
+            //}
 
             if (GetRecordCount(_bindingSourceOrderView) > 0)
             {
@@ -5515,7 +5507,7 @@ namespace Neutron.Forms
                     {
                         rec.LineStatusId = 3;
 
-                    _repoReplenOrderDetail.Update(rec);
+                        _repoReplenOrderDetail.Update(rec);
                     }
                 }
 

@@ -73,6 +73,7 @@
     <Compile Include="BaseClasses\LookupData.cs" />
     <Compile Include="DataContexts\SecureDb.cs" />
     <Compile Include="Interfaces\IAkaRepository.cs" />
+    <Compile Include="Interfaces\IReplenOrdersRepository.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.Designer.cs">
       <DependentUpon>201902271513321_PickLocationSkip.cs</DependentUpon>
@@ -187,6 +188,7 @@
     <Compile Include="ModelViews\ReplenOrderView.cs" />
     <Compile Include="ModelViews\OrderView.cs" />
     <Compile Include="ModelViews\PickView.cs" />
+    <Compile Include="ModelViews\ReplenRackOrderView.cs" />
     <Compile Include="ModelViews\SkipInventoryView.cs" />
     <Compile Include="ModelViews\SkipView.cs" />
     <Compile Include="ModelViews\StationOrderDetail.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Repositories\IGenericRepository.cs" />
     <Compile Include="Repositories\InventoryRepository.cs" />
     <Compile Include="Interfaces\IStationRepository.cs" />
+    <Compile Include="Interfaces\IOrdersRepository.cs" />
     <Compile Include="Repositories\ItemDefinitionsRepository.cs" />
     <Compile Include="Repositories\LocationsRepository.cs" />
     <Compile Include="Repositories\OrderDetailsRepository.cs" />
