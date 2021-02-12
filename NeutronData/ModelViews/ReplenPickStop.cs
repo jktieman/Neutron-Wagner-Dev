@@ -1,5 +1,4 @@
-﻿using NeutronData.BaseClasses;
-using NeutronData.DataContexts;
+﻿using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
 using System;

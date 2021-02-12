@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Threading;
@@ -328,7 +326,7 @@ namespace Neutron.Forms
             if (DataGridViewHot.InvokeRequired)
             {
                 var d = new UpdateDataGridDelegate(UpdateDataGrid);
-                this.BeginInvoke(d, new object[] { bindingSource });
+                BeginInvoke(d, new object[] { bindingSource });
             }
             else
             {

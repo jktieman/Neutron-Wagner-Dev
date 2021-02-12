@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Neutron.Models
@@ -20,7 +19,7 @@ namespace Neutron.Models
 
         public string FullPath
         {
-            get { return $"{this.Directory}{this.FileName}"; }
+            get { return $"{Directory}{FileName}"; }
         }
 
         public bool Exists()
@@ -51,9 +50,9 @@ namespace Neutron.Models
             {
                 if (File.Exists(FullPath))
                 {
-                    var toPath = $"{this.Directory}{this.FileName}.bak";
+                    var toPath = $"{Directory}{FileName}.bak";
                     File.Delete(toPath);
-                    File.Move(this.FullPath, toPath );
+                    File.Move(FullPath, toPath );
                 }
             }
             catch (Exception ex)

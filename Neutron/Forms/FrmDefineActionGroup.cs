@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,7 +9,6 @@ using JsonManager;
 using Neutron.Models;
 using NeutronCore;
 using NeutronCore.Enums;
-using NeutronCore.Extensions;
 
 namespace Neutron.Forms
 {
@@ -121,7 +119,7 @@ namespace Neutron.Forms
                     resourceDir: languageDirectory, usingResourceSet: null);
                 ButtonCancel.Text = _resourceManager.GetString("Cancel");
                 ButtonSave.Text = _resourceManager.GetString("Save");
-                this.Text = _resourceManager.GetString("DefineActionGroup");
+                Text = _resourceManager.GetString("DefineActionGroup");
             }
             catch (Exception ex)
             {

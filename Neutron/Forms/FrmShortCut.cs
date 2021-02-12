@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronCore;
 
@@ -43,7 +36,7 @@ namespace Neutron.Forms
                 Label_Q_Key.Text = _resourceManager.GetString("QKey");
                 Label_K_Key.Text = _resourceManager.GetString("KKey");
                 Label_H_Key.Text = _resourceManager.GetString("HKey");
-                this.Text = _resourceManager.GetString("ShortcutKeys");
+                Text = _resourceManager.GetString("ShortcutKeys");
             }
             catch (Exception ex)
             {

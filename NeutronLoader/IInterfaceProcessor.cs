@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using NeutronData.Models;
-
-namespace NeutronLoader
+﻿namespace NeutronLoader
 {
     public interface IInterfaceProcessor
     {

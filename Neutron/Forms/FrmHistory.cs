@@ -13,7 +13,6 @@ using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
 using Equin.ApplicationFramework;
-using Neutron.Interfaces;
 using NeutronCore;
 using NeutronCore.Enums;
 namespace Neutron.Forms
@@ -512,7 +511,7 @@ namespace Neutron.Forms
                 LabelFormTitle.Text = _resourceManager.GetString("History");
                 mlUserInfo.Text = _resourceManager.GetString("Login");
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseManagement");
-                this.Text = _resourceManager.GetString("History");
+                Text = _resourceManager.GetString("History");
             }
             catch (Exception ex)
             {

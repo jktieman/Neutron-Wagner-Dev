@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JsonManager
 {
@@ -70,7 +67,7 @@ namespace JsonManager
             {
                 using (TextWriter writer = new StreamWriter(fileInfo.FullName, append: false))
                 {
-                    writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                    writer.Write(JsonConvert.SerializeObject(data));
                 }
             }
             catch (Exception)
@@ -123,7 +120,7 @@ namespace JsonManager
             {
                 using (TextWriter writer = new StreamWriter(fileInfo.FullName, append: false))
                 {
-                    writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                    writer.Write(JsonConvert.SerializeObject(data));
                 }
             }
             catch (Exception)

@@ -9,7 +9,7 @@ namespace AlliedFileSystemWatcher
 
         public FileInfoArgs(FileInfo fileInfo)
         {
-            this.FileInfo = fileInfo;
+            FileInfo = fileInfo;
         }
     }
 }

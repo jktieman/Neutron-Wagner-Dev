@@ -27,7 +27,7 @@ using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using NeutronDllu;
 using SlotNameFactory;
-using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
+
 namespace Neutron.Forms
 {
     public partial class FrmLocations : MetroForm
@@ -208,11 +208,11 @@ namespace Neutron.Forms
             if (e.RowIndex >= 0)
                 if (grid.CurrentCell.ColumnIndex == grid.Columns["Position"].Index)
                 {
-                    var deviceNumber = IntegerExtensions.ParseInt(grid["Loc1", e.RowIndex].Value.ToString());
-                    var trayNumber = IntegerExtensions.ParseInt(grid["Loc2", e.RowIndex].Value.ToString());
-                    var level = IntegerExtensions.ParseInt(grid["Loc3", e.RowIndex].Value.ToString());
+                    var deviceNumber = grid["Loc1", e.RowIndex].Value.ToString().ParseInt();
+                    var trayNumber = grid["Loc2", e.RowIndex].Value.ToString().ParseInt();
+                    var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
                     var partition = grid["Loc4", e.RowIndex].Value.ToString();
-                    var part = IntegerExtensions.ParseInt(grid["Loc4", e.RowIndex].Value.ToString());
+                    var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
                     _logger.Log($"Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
                     _logger.Log($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
                     MoveDevice(deviceNumber, trayNumber, level, part, 0, "");
@@ -227,8 +227,8 @@ namespace Neutron.Forms
         }
         private void TurnOnShi(int deviceNumber, int trayNumber, int level, string partition)
         {
-            var lArrow = "";
-            var rArrow = "";
+            string lArrow;
+            string rArrow;
             ClearAllShi();
             if (_neutronVariables.DisplaysEnabled)
                 if (GlobalVar.Displays != null)

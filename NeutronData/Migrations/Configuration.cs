@@ -1,18 +1,15 @@
 namespace NeutronData.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<NeutronData.DataContexts.NeutronDb>
+    internal sealed class Configuration : DbMigrationsConfiguration<DataContexts.NeutronDb>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(NeutronData.DataContexts.NeutronDb context)
+        protected override void Seed(DataContexts.NeutronDb context)
         {
             //  This method will be called after migrating to the latest version.
 

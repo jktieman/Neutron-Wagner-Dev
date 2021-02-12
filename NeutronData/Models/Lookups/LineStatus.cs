@@ -1,14 +1,5 @@
 ﻿using NeutronData.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using NeutronCore.Enums;
-using NeutronCore.Extensions;
-using NeutronData.DataContexts;
 
 namespace NeutronData.Models.Lookups
 {

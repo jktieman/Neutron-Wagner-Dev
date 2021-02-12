@@ -6,33 +6,24 @@ using NeutronData.Models;
 using NeutronData.Repositories;
 using System;
 using System.Collections;
-using System.Data.Entity;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronData.ModelViews;
 using NeutronData.Models.Lookups;
 using Neutron.Classes;
 using JsonManager;
-using NeutronCore.Global;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Resources;
 using System.Threading;
 using AlliedLogger;
-using Microsoft.VisualBasic;
 using Neutron.Interfaces;
 using NeutronCore.Extensions;
 using NeutronCore;
 using NeutronData.Interfaces;
-using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
+
 namespace Neutron.Forms
 {
     public partial class FrmItemDefinitions : MetroForm
@@ -72,7 +63,7 @@ namespace Neutron.Forms
             _dgvColumnWidthSizer.DoWork += DgvColumnWidthSizerOnDoWork;
             _dgvColumnWidthSizer.RunWorkerCompleted += DgvColumnWidthSizerOnRunWorkerCompleted;
             KeyPreview = true;
-            this._station = station;
+            _station = station;
             _logger = CreateLog();
             _jsonData = jsonData;
             CloseButtonPressed = false;

@@ -1,5 +1,4 @@
-﻿using Neutron.Models;
-using NeutronEvents;
+﻿using NeutronEvents;
 
 namespace Neutron.Builders.Interfaces
 {

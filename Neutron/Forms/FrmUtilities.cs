@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Windows.Forms;
 using MetroFramework.Forms;
 using Neutron.Global;
-using Neutron.Models;
 using NeutronData.DataContexts;
 using NeutronData.ModelViews;
 using NeutronData.Models;
@@ -28,7 +26,6 @@ using Neutron.Classes;
 using NeutronCore.Extensions;
 using NeutronCore.Models;
 using NeutronData.BaseClasses;
-using NeutronData.Interfaces;
 using NeutronData.Models.Lookups;
 using NeutronData.PrintModels;
 using NeutronDllu;
@@ -1435,7 +1432,7 @@ namespace Neutron.Forms
                 Enabled = CheckBoxNewDeviceEnabled.Checked,
                 TcpConfigurationId = ((TcpConfiguration)ComboBoxNewTcpConfiguration.SelectedItem)?.Id,
                 CommunicationTypeId =
-                    ((NeutronData.Models.Lookups.CommunicationType)ComboBoxNewCommunicationType.SelectedItem)?.Id,
+                    ((CommunicationType)ComboBoxNewCommunicationType.SelectedItem)?.Id,
                 SerialConfigurationId = ((SerialConfiguration)ComboBoxNewSerialConfiguration.SelectedItem)?.Id,
                 SimulationMode = CheckBoxNewSimulationMode.Checked,
                 LogLevel = NumericUpDownNewDeviceLogLevel.Text.ParseInt(),
@@ -1578,7 +1575,7 @@ namespace Neutron.Forms
                 SetCommunicationDisplay(null);
             else
             {
-                var communicationType = ((NeutronData.Models.Lookups.CommunicationType)comboBox.SelectedItem).Id;
+                var communicationType = ((CommunicationType)comboBox.SelectedItem).Id;
                 SetCommunicationDisplay(communicationType);
             }
         }
@@ -1590,7 +1587,7 @@ namespace Neutron.Forms
                 SetCommunicationDisplay(null);
             else
             {
-                var communicationType = ((NeutronData.Models.Lookups.CommunicationType)comboBox.SelectedItem).Id;
+                var communicationType = ((CommunicationType)comboBox.SelectedItem).Id;
                 SetCommunicationDisplay(communicationType);
             }
         }
@@ -1969,7 +1966,7 @@ namespace Neutron.Forms
             var validDataBits = new[] { 5, 6, 7, 8, 9 };
             var validStopBits = new[] { 0, 1, 1.5, 2 };
 
-            ComboBoxSerialNewParity.DataSource = Enum.GetValues(typeof(System.IO.Ports.Parity));
+            ComboBoxSerialNewParity.DataSource = Enum.GetValues(typeof(Parity));
             ComboBoxSerialNewBaudRate.DataSource = validBaudRate;
             ComboBoxSerialNewDataBits.DataSource = validDataBits;
             ComboBoxSerialNewStopBits.DataSource = validStopBits;
@@ -1981,7 +1978,7 @@ namespace Neutron.Forms
             var validDataBits = new[] { 5, 6, 7, 8, 9 };
             var validStopBits = new[] { 0, 1, 1.5, 2 };
 
-            ComboBoxSerialViewEditParity.DataSource = Enum.GetValues(typeof(System.IO.Ports.Parity));
+            ComboBoxSerialViewEditParity.DataSource = Enum.GetValues(typeof(Parity));
             ComboBoxSerialViewEditBaudRate.DataSource = validBaudRate;
             ComboBoxSerialViewEditDataBits.DataSource = validDataBits;
             ComboBoxSerialViewEditStopBits.DataSource = validStopBits;

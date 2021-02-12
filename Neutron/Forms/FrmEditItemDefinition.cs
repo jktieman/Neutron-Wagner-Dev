@@ -167,7 +167,7 @@ namespace Neutron.Forms
                 LabelViewEditStation.Text = _resourceManager.GetString("Station");
                 ButtonSave.Text = _resourceManager.GetString("Save");
                 ButtonCancel.Text = _resourceManager.GetString("Cancel");
-                this.Text = _resourceManager.GetString("EditItemDefinition");
+                Text = _resourceManager.GetString("EditItemDefinition");
             }
             catch (Exception ex)
             {

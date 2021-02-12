@@ -1,13 +1,11 @@
 ﻿using AlliedLogger;
 using Microsoft.Win32.SafeHandles;
-using NeutronData.Interfaces;
 using NeutronData.Models;
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace NeutronData.Repositories
 {
@@ -53,7 +51,7 @@ namespace NeutronData.Repositories
                 if (dataContext == null)
                 {
                     dataContext = new C();
-                    this.AllowSerialization = true;
+                    AllowSerialization = true;
                 }
                 return dataContext;
             }

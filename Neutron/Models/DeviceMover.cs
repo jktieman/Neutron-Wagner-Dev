@@ -1,9 +1,5 @@
 using NeutronData.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Neutron.Models
 {
@@ -15,8 +11,8 @@ namespace Neutron.Models
 
         public DeviceMover(int moverNumber, List<Location> locations)
         {
-            this.MoverNumber = moverNumber;
-            this.Locations = locations;
+            MoverNumber = moverNumber;
+            Locations = locations;
         }
 
         public Location MoveNext()

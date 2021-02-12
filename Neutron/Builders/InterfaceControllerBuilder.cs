@@ -2,7 +2,6 @@
 using System.Linq;
 using Neutron.Builders.Interfaces;
 using Neutron.Builders.Rules.InterfaceControllerRules;
-using Neutron.Models;
 using NeutronEvents;
 
 namespace Neutron.Builders

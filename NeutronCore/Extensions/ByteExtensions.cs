@@ -28,7 +28,7 @@ namespace NeutronCore.Extensions
 
         public static string ByteArrayToString(this byte[] bytes)
         {
-            return System.Text.Encoding.UTF8.GetString(bytes);
+            return Encoding.UTF8.GetString(bytes);
         }
 
         public static string ByteArrayToRawString(this byte[] bytes)
@@ -39,7 +39,7 @@ namespace NeutronCore.Extensions
         public static string ByteArrayToHumanString(this byte[] bytes)
         {
             var txt = string.Empty;
-            var arr = System.Text.Encoding.UTF8.GetString(bytes);
+            var arr = Encoding.UTF8.GetString(bytes);
             var len = arr.Length;
             var txtLen = len - 10;
             if (arr.Substring(3, 2) == "39")

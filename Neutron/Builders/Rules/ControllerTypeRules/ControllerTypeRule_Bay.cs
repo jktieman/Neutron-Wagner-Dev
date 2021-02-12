@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Neutron.Builders.Interfaces;
-using Neutron.Models;
 using NeutronEvents;
 
 namespace Neutron.Builders.Rules.ControllerTypeRules

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Neutron.Builders.Interfaces;
 using Neutron.Builders.Rules.BayControllerRules;
-using Neutron.Models;
 using NeutronEvents;
 
 namespace Neutron.Builders

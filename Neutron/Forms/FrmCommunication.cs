@@ -46,7 +46,7 @@ namespace Neutron.Forms
                     resourceDir: languageDirectory, usingResourceSet: null);
                 ButtonClear.Text = _resourceManager.GetString("Clear");
                 ButtonClose.Text = _resourceManager.GetString("Close");
-                this.Text = _resourceManager.GetString("SerialCommunication");
+                Text = _resourceManager.GetString("SerialCommunication");
             }
             catch (Exception ex)
             {

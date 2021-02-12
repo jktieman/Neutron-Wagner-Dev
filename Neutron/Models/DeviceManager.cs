@@ -5,8 +5,6 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -165,7 +163,7 @@ namespace Neutron.Models
                                     {
                                         sb.AppendLine($"Device {deviceMover.MoverNumber} is in Motion.");
                                         var sb1 = sb;
-                                        Task.Run(() => _logger.Log($"{sb1}"));
+                                        await Task.Run(() => _logger.Log($"{sb1}"));
 
                                         var num = deviceMover.MoverNumber;
                                         await Task.Run(() => ProcessInMotion(num, loc2));

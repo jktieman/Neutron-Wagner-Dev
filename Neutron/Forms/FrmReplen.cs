@@ -1318,7 +1318,7 @@ namespace Neutron.Forms
         // Set the focus to the passed in recId if it's passed in
         private int ShowAllOrders(int recId = 0)
         {
-            Task.Run(() => _logger.Log($"ShowAllOrders Replen Start: [{System.DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
+            Task.Run(() => _logger.Log($"ShowAllOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
             var idx = 0;
             var findWhat = TextBoxFind.Text.Trim().ToLower();
             // string find = _akaRepository.Get(findWhat);
@@ -1346,7 +1346,7 @@ namespace Neutron.Forms
                 CurrentItem = ((ObjectView<ReplenOrderView>)_bindingSourceOrderView[recId]).Object;
 
             }
-            Task.Run(() => _logger.Log($"ShowAllOrders End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"ShowAllOrders End: [{DateTime.Now.ToLongTimeString()}]"));
             return idx;
         }
 
@@ -1559,7 +1559,7 @@ namespace Neutron.Forms
 
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
-            this.tabControl1.SelectedTab = AvailableOrders;
+            tabControl1.SelectedTab = AvailableOrders;
         }
 
         //private void MButtonNew_Click(object sender, EventArgs e)
@@ -1634,7 +1634,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"ClearSelection Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"ClearSelection Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
         }
 
@@ -2285,7 +2285,7 @@ namespace Neutron.Forms
 
         private ReplenPickView CreatePickView(int pos, ReplenOrderDetail detail)
         {
-            Task.Run(() => _logger.Log($"CreatePickView Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"CreatePickView Start: [{DateTime.Now.ToLongTimeString()}]"));
             var pickView = new ReplenPickView()
             {
                 PickPosition = pos,
@@ -2356,31 +2356,31 @@ namespace Neutron.Forms
             {
                 MessageBox.Show("No Inventory for Item: " + pickView.Item);
             }
-            Task.Run(() => _logger.Log($"CreatePickView End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"CreatePickView End: [{DateTime.Now.ToLongTimeString()}]"));
             return pickView;
         }
 
         private List<Inventory> GetInventory(int itemId)
         {
-            Task.Run(() => _logger.Log($"GetInventory Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetInventory Start: [{DateTime.Now.ToLongTimeString()}]"));
             var pickableLocations = new int[] { 1, 2 };
             if (_currentInventory.Count != 0) return _currentInventory;
 
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                                 .Where(f => f.ItemDefinitionId == itemId && pickableLocations.Contains(f.StorageTypeId)).ToList();
-            Task.Run(() => _logger.Log($"GetInventory End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetInventory End: [{DateTime.Now.ToLongTimeString()}]"));
             return _currentInventory;
         }
 
         private void LoadInventory()
         {
-            Task.Run(() => _logger.Log($"LoadInventory Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"LoadInventory Start: [{DateTime.Now.ToLongTimeString()}]"));
             var pickableLocations = new int[] { 1, 2 };
             if (_currentInventory.Count != 0) return;
 
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                 .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
-            Task.Run(() => _logger.Log($"LoadInventory End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"LoadInventory End: [{DateTime.Now.ToLongTimeString()}]"));
             return;
         }
 
@@ -2560,37 +2560,37 @@ namespace Neutron.Forms
             var font = new Font("Microsoft Sans Serif", 20);
             var pos = position.ToString();
 
-            Control c = this.Controls.Find("LabelPickPos" + pos, true).Single() as Label;
+            Control c = Controls.Find("LabelPickPos" + pos, true).Single() as Label;
             if (c != null) c.Visible = true;
 
-            c = this.Controls.Find("LabelPos" + pos, true).Single() as Label;
+            c = Controls.Find("LabelPos" + pos, true).Single() as Label;
             if (c != null) c.Visible = true;
 
-            c = this.Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
+            c = Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
             if (c != null)
             {
                 c.Visible = true;
                 c.Font = font;
             }
 
-            c = this.Controls.Find("TextBoxPos" + pos, true).Single() as TextBox;
+            c = Controls.Find("TextBoxPos" + pos, true).Single() as TextBox;
             if (c != null) c.Visible = true;
 
-            c = this.Controls.Find("Pos" + pos + "Display", true).Single();
+            c = Controls.Find("Pos" + pos + "Display", true).Single();
             ((Panel)c).Visible = true;
 
-            c = this.Controls.Find("AvailablePos" + pos + "Display", true).Single();
+            c = Controls.Find("AvailablePos" + pos + "Display", true).Single();
             ((Panel)c).Visible = true;
         }
 
         private void ShowOrdersToPick()
         {
-            Task.Run(() => _logger.Log($"ShowOrdersToPick Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"ShowOrdersToPick Start: [{DateTime.Now.ToLongTimeString()}]"));
             var font = new Font("Microsoft Sans Serif", 10);
             for (var i = 0; i < _ordersToPick.Count; i++)
             {
                 var pos = (i + 1).ToString();
-                Control c = this.Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
+                Control c = Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
                 if (c == null) continue;
                 c.Font = font;
                 c.Text = _ordersToPick[i].Ord1 + Environment.NewLine + _ordersToPick[i].Ord2;
@@ -2612,7 +2612,7 @@ namespace Neutron.Forms
                     }
                 }
             }
-            Task.Run(() => _logger.Log($"ShowOrdersToPick End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"ShowOrdersToPick End: [{DateTime.Now.ToLongTimeString()}]"));
         }
         private void MBShowOrderOrQuantityToggle_Click(object sender, EventArgs e)
         {
@@ -2725,7 +2725,7 @@ namespace Neutron.Forms
 
         private List<ReplenPickStop> FinalPickSequence(List<ReplenPickStop> pickStops)
         {
-            Task.Run(() => _logger.Log($"FinalPickSequence Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"FinalPickSequence Start: [{DateTime.Now.ToLongTimeString()}]"));
             var newCarList = new List<List<ReplenPickStop>>();
             var newList = new List<ReplenPickStop>();
             for (var i = 0; i < _station.HardwareDevices.Count; i++)
@@ -2752,14 +2752,15 @@ namespace Neutron.Forms
                     }
                 }
             }
-            Task.Run(() => _logger.Log($"FinalPickSequence Start Carousel Move: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
             _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
-            for (var i = 0; i < _station.HardwareDevices.Count; i++)
+            for (var k = 0; k < _station.HardwareDevices.Count; k++)
             {
-                Task.Run(() => _deviceManager.MoveNext(i));
+                var z = k;
+                Task.Run(() => _deviceManager.MoveNext(z));
             }
-            Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{System.DateTime.Now.ToLongTimeString()}]"));
-            Task.Run(() => _logger.Log($"FinalPickSequence End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
             return newList;
         }
 
@@ -2810,7 +2811,7 @@ namespace Neutron.Forms
 
         private void GetFirstStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"GetFirstStop: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetFirstStop: [{DateTime.Now.ToLongTimeString()}]"));
             var numberOfStops = _bindingSourcePickStops.Count;
             if (numberOfStops > 0)
             {
@@ -2828,7 +2829,7 @@ namespace Neutron.Forms
 
         private void GetNextStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"GetNextStop: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetNextStop: [{DateTime.Now.ToLongTimeString()}]"));
             var numberOfStops = _bindingSourcePickStops.Count;
             if (_currentPickStop.Sequence < numberOfStops)
             {
@@ -2842,7 +2843,7 @@ namespace Neutron.Forms
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
-            Task.Run(() => _logger.Log($"GetNextStop Return: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetNextStop Return: [{DateTime.Now.ToLongTimeString()}]"));
         }
 
         private void GetPreviousStop(bool moveDevice = true)
@@ -2901,7 +2902,7 @@ namespace Neutron.Forms
 
         private void UpdatePickScreen()
         {
-            Task.Run(() => _logger.Log($"UpdatePickScreen Start: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"UpdatePickScreen Start: [{DateTime.Now.ToLongTimeString()}]"));
             UpdateTowerDisplay();
 
             UpdateCurrentDeviceIndicator();
@@ -2920,7 +2921,7 @@ namespace Neutron.Forms
             TextBoxPickedSoFar.Text = pickedSoFar.ToString();
 
             LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
-            Task.Run(() => _logger.Log($"UpdatePickScreen End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"UpdatePickScreen End: [{DateTime.Now.ToLongTimeString()}]"));
         }
 
         private void UpdateTowerDisplay()
@@ -3024,7 +3025,7 @@ namespace Neutron.Forms
 
         private void UpdatePickPosition()
         {
-            Task.Run(() => _logger.Log($"UpdatePickPosition Start : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"UpdatePickPosition Start : [{DateTime.Now.ToLongTimeString()}]"));
             ClearPickPositions();
             ClearPickDisplays();
             ClearAllBli();
@@ -3095,7 +3096,7 @@ namespace Neutron.Forms
                         break;
                 }
             }
-            Task.Run(() => _logger.Log($"UpdatePickPosition End : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"UpdatePickPosition End : [{DateTime.Now.ToLongTimeString()}]"));
         }
 
         private void TurnOnBatchPositionDisplay(int position, int beacon, string text)
@@ -3194,7 +3195,7 @@ namespace Neutron.Forms
         {
 
             Cursor.Current = Cursors.WaitCursor;
-            Task.Run(() => _logger.Log($"PickAccept_Click Start : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"PickAccept_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
             bool pick = false;
             pick = _currentPickStop.CurrentInventoryLocation.Quantity < _currentPickStop.QuantityToBePicked ? false : true;
 
@@ -3203,12 +3204,12 @@ namespace Neutron.Forms
                 _currentPickStop.UpdatePickViews(GlobalVar.User);  //good
                 _currentPickStop.PickedQty = GetPickedSoFar(_currentPickStop.PickViews);
                 _currentPickStop.QuantityToBePicked = GetTotalQuantityToBePicked(_currentPickStop.PickViews);  // QuantityToBePicked on ALL PickViews
-                Task.Run(() => _logger.Log($"PickAccept_Click 1 : [{System.DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"PickAccept_Click 1 : [{DateTime.Now.ToLongTimeString()}]"));
                 if (StopComplete())
                 {
                     //Getting next location on the current device/ the one that was just picked from.
                     Task.Run(() => _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1));
-                    Task.Run(() => _logger.Log($"PickAccept_Click 2 Stop Complete Start : [{System.DateTime.Now.ToLongTimeString()}]"));
+                    Task.Run(() => _logger.Log($"PickAccept_Click 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
 
                     UpdateInventoryQuantity(_currentPickStop);
 
@@ -3216,7 +3217,7 @@ namespace Neutron.Forms
 
                     _currentPickStop.SetPickViewsComplete(GlobalVar.User);
 
-                    Task.Run(() => _logger.Log($"PickAccept_Click Stop Complete End : [{System.DateTime.Now.ToLongTimeString()}]"));
+                    Task.Run(() => _logger.Log($"PickAccept_Click Stop Complete End : [{DateTime.Now.ToLongTimeString()}]"));
 
                     int numberOfStops = _bindingSourcePickStops.Count;
                     if (_currentPickStop.Sequence < numberOfStops)
@@ -3240,7 +3241,7 @@ namespace Neutron.Forms
             {
                 MessageBox.Show("Pick Exceeds Inventory at this location.  Add Inventory or Change Quantity before continuing.", "Inventory", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
-            Task.Run(() => _logger.Log($"PickAccept_Click End : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"PickAccept_Click End : [{DateTime.Now.ToLongTimeString()}]"));
             Cursor.Current = Cursors.Default;
         }
 
@@ -3260,7 +3261,7 @@ namespace Neutron.Forms
             }
 
             Cursor.Current = Cursors.WaitCursor;
-            Task.Run(() => _logger.Log($"StoreAccept_Click Start : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"StoreAccept_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
 
             //bool pick = false;
             //pick = currentPickStop.CurrentInventoryLocation.Quantity < currentPickStop.QuantityToBePicked ? false : true;
@@ -3270,12 +3271,12 @@ namespace Neutron.Forms
             _currentPickStop.UpdatePickViews(GlobalVar.User);  //good
             _currentPickStop.PickedQty = GetPickedSoFar(_currentPickStop.PickViews);
             _currentPickStop.QuantityToBePicked = GetTotalQuantityToBePicked(_currentPickStop.PickViews);  // QuantityToBePicked on ALL PickViews
-            Task.Run(() => _logger.Log($"PickAccept_Click 1 : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"PickAccept_Click 1 : [{DateTime.Now.ToLongTimeString()}]"));
             if (StopComplete())
             {
                 //Getting next location on the current device/ the one that was just picked from.
                 Task.Run(() => _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1));
-                Task.Run(() => _logger.Log($"PickAccept_Click 2 Stop Complete Start : [{System.DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"PickAccept_Click 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
 
                 UpdateInventoryQuantity(_currentPickStop);
 
@@ -3283,7 +3284,7 @@ namespace Neutron.Forms
 
                 _currentPickStop.SetPickViewsComplete(GlobalVar.User);
 
-                Task.Run(() => _logger.Log($"PickAccept_Click Stop Complete End : [{System.DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.Log($"PickAccept_Click Stop Complete End : [{DateTime.Now.ToLongTimeString()}]"));
 
                 int numberOfStops = _bindingSourcePickStops.Count;
                 if (_currentPickStop.Sequence < numberOfStops)
@@ -3307,7 +3308,7 @@ namespace Neutron.Forms
             //{
             //    MessageBox.Show("Pick Exceeds Inventory at this location.  Add Inventory or Change Quantity before continuing.", "Inventory", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             //}
-            Task.Run(() => _logger.Log($"StoreAccept_Click End : [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"StoreAccept_Click End : [{DateTime.Now.ToLongTimeString()}]"));
             Cursor.Current = Cursors.Default;
         }
 
@@ -4138,7 +4139,7 @@ namespace Neutron.Forms
                 UserId = GlobalVar.User.Id,
                 PreviousQty = prevQty,
                 NewQty = qty,
-                CountDate = System.DateTime.Now,
+                CountDate = DateTime.Now,
             };
             // _repoLocationCount.Insert(cnt);
             GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, cnt);
@@ -4211,7 +4212,7 @@ namespace Neutron.Forms
 
         private void ShowCompleted(int recId = 0)
         {
-            Task.Run(() => _logger.Log($"ShowCompletedOrders Replen Start: [{System.DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
+            Task.Run(() => _logger.Log($"ShowCompletedOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
             var idx = 0;
 
             var findWhat = string.IsNullOrEmpty(TextBoxFind.Text.Trim().ToLower()) ? string.Empty : TextBoxFind.Text.Trim().ToLower();
@@ -4244,7 +4245,7 @@ namespace Neutron.Forms
                 CurrentItem = ((ObjectView<ReplenOrderView>)_bindingSourceCompleted[recId]).Object;
 
             }
-            Task.Run(() => _logger.Log($"ShowCompletedOrders End: [{System.DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"ShowCompletedOrders End: [{DateTime.Now.ToLongTimeString()}]"));
             return;
 
         }
@@ -4926,7 +4927,7 @@ namespace Neutron.Forms
                 using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
                 {
                     DialogResult result = frm.ShowDialog();
-                    this.Show();
+                    Show();
                 }
 
 

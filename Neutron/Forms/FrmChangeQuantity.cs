@@ -152,7 +152,7 @@ namespace Neutron.Forms
                 MBChangeQuantityCancel.Text = _resourceManager.GetString("Cancel");
                 MBChangeQuantitySave.Text = _resourceManager.GetString("Save");
                 LabelNewQuantity.Text = _resourceManager.GetString("NewQuantity");
-                this.Text = _resourceManager.GetString("ChangeQuantity");
+                Text = _resourceManager.GetString("ChangeQuantity");
 
             }
             catch (Exception ex)

@@ -6,14 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
-using AlliedFileSystemWatcher;
 using AlliedLogger;
 using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronEvents;
 using Timer = System.Threading.Timer;
 
 #endregion

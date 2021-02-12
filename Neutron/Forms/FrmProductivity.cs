@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
@@ -82,11 +81,11 @@ namespace Neutron.Forms
 
         private void EnableEvents()
         {
-            CheckedListBoxUsers.ItemCheck += new ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
+            CheckedListBoxUsers.ItemCheck += new ItemCheckEventHandler(CheckedListBoxUsers_ItemCheck);
         }
         private void DisableEvents()
         {
-            CheckedListBoxUsers.ItemCheck -= new ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
+            CheckedListBoxUsers.ItemCheck -= new ItemCheckEventHandler(CheckedListBoxUsers_ItemCheck);
         }
         private void SetInitialDateTimePickers()
         {
@@ -1098,7 +1097,7 @@ namespace Neutron.Forms
                 MButtonRun.Text = _resourceManager.GetString("Refresh");
                 LabelFormTitle.Text = _resourceManager.GetString("Productivity");
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
-                this.Text = _resourceManager.GetString("Productivity");
+                Text = _resourceManager.GetString("Productivity");
             }
             catch (Exception ex)
             {

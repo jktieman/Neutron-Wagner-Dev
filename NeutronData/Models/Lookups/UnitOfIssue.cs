@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using NeutronData.Interfaces;
+﻿using NeutronData.Interfaces;
 
 namespace NeutronData.Models.Lookups
 {

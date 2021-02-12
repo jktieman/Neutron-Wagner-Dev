@@ -4,19 +4,13 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Windows.Forms;
 using AlliedLogger;
-using JetBrains.Annotations;
 using NeutronCore.Extensions;
 using NeutronData.Interfaces;
-using NeutronData.Models.Lookups;
-using NeutronData.Repositories;
 using LineStatus = NeutronCore.Enums.LineStatus;
 
 namespace NeutronData.Repositories
@@ -1237,7 +1231,7 @@ namespace NeutronData.Repositories
                     Priority = s.Priority,
                     Order = s,
                     LoadDate = s.LoadDate,
-                    OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != (int)NeutronCore.Enums.LineStatus.Complete && o.StationNumber == rackStationNumber).ToList()
+                    OrderDetails = s.OrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.StationNumber == rackStationNumber).ToList()
                 }).OrderBy(o => o.Ord2).ToList();
             return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0) : recs.Where(r => r.OrderDetails.Count > 0);
         }

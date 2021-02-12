@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronCore;
 
@@ -29,14 +22,14 @@ namespace Neutron.Forms
 
         private void ButtonOk_Click(object sender, EventArgs e)
         {
-            this.NewQty = TextBoxNewQuantity.Text;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            NewQty = TextBoxNewQuantity.Text;
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void SetCulture(string lang)
@@ -50,7 +43,7 @@ namespace Neutron.Forms
                 ButtonCancel.Text = _resourceManager.GetString("Cancel");
                 ButtonOk.Text = _resourceManager.GetString("Ok");
                 LabelNewQuantity.Text = _resourceManager.GetString("NewQuantity");
-                this.Text = _resourceManager.GetString("LocationCount");
+                Text = _resourceManager.GetString("LocationCount");
             }
             catch (Exception ex)
             {

@@ -2,7 +2,6 @@
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using System.Data.Entity;
-using NeutronData.BaseClasses;
 
 namespace NeutronData.DataContexts
 {

@@ -398,7 +398,7 @@ namespace NeutronLoader
                 }
             }
 
-            this._logFileDirectory = GetDirectory(LoaderSettings.GetLogFileDirectory());
+            _logFileDirectory = GetDirectory(LoaderSettings.GetLogFileDirectory());
             if (_logFileDirectory != null && LoaderSettings.EnableLogging == "true")
             {
                 SaveUploadLog(order);

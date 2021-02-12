@@ -5,10 +5,8 @@ using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
 using NeutronCore.Enums;
@@ -84,7 +82,7 @@ namespace NeutronData.Repositories
         public IEnumerable<ReplenOrderView> GetOrderViewNotCompleted(string search = "")
         {
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails)
-                .Where(r => r.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete)
+                .Where(r => r.OrderStatusId != (int)OrderStatus.Complete)
                 .Select(s => new ReplenOrderView
                 {
                     Id = s.Id,
@@ -331,7 +329,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"GetAvailableReplenOrders Error Phase 1 Recs Count: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+                MessageBox.Show($"GetAvailableReplenOrders Error Phase 1 Recs Count: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]");
             }
 
             try
@@ -395,7 +393,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+                MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]");
             }
            
             try
@@ -409,7 +407,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Assign Detail Lines this Station - {station.StationNumber}: Rec Count: {recs.Count()}\r\n  {ex.Message} \r\n {ex.InnerException} [{System.DateTime.Now.ToLongTimeString()}]");
+                MessageBox.Show($"Assign Detail Lines this Station - {station.StationNumber}: Rec Count: {recs.Count()}\r\n  {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]");
             }
 
             IEnumerable<ReplenOrderView> result = availableRecs.Where(s => s.SearchField.Contains(search));

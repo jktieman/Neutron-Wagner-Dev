@@ -1,15 +1,8 @@
 ﻿using NeutronCore.Extensions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronCore;
 
@@ -30,17 +23,17 @@ namespace Neutron.Forms
 
         private void MBReprintPrint_Click(object sender, EventArgs e)
         {
-            printData = new Forms.FrmReprint.PrintData();
+            printData = new PrintData();
             printData.Position = TextBoxReprintPosition.Text.ParseInt();
             printData.PrintDocument = CheckBoxDocument.Checked;
             printData.PrintToteLabel = CheckBoxToteLabel.Checked;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void MBReprintCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         public class PrintData
@@ -63,7 +56,7 @@ namespace Neutron.Forms
                 LabelChangeQuantityPosition.Text = _resourceManager.GetString("PickPosition");
                 MBReprintCancel.Text = _resourceManager.GetString("Cancel");
                 MBReprintPrint.Text = _resourceManager.GetString("Print");
-                this.Text = _resourceManager.GetString("FrmReprint");
+                Text = _resourceManager.GetString("FrmReprint");
             }
             catch (Exception ex)
             {

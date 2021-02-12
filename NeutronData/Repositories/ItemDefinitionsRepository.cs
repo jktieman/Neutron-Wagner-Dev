@@ -1,13 +1,10 @@
 ﻿using AlliedLogger;
 using NeutronData.DataContexts;
 using NeutronData.ModelViews;
-using NeutronData.SqlModelViews;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeutronData.Repositories
 {

@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Forms;
-using NeutronData.Models;
-using NeutronData.Repositories;
 using System.Threading;
-using Neutron.Forms;
-using NeutronData.DataContexts;
 using AlliedLogger;
-using Neutron.Global;
 using Neutron.Enums;
 using NeutronData.ModelViews;
 
 using Neutron.Interfaces;
 
 using Hart_DeviceControllers;
-using Hart_DisplayControllers;
-
-using Neutron.Models;
 using NeutronCore;
 using NeutronCore.Enums;
 

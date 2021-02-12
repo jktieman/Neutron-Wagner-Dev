@@ -3,9 +3,6 @@ using NeutronData.Models;
 using NeutronData.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Data.Odbc;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +11,6 @@ using NeutronData.ModelViews;
 using NeutronCore.Enums;
 using System.Data.SqlClient;
 using NeutronCore.Extensions;
-using NeutronData.BaseClasses;
 
 namespace Neutron.Global
 {

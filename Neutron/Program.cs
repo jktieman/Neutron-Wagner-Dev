@@ -1,12 +1,6 @@
-﻿using NeutronData;
-using Neutron.Forms;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using NeutronData.DataContexts;
 using Ninject;
 using System.Reflection;
 using JsonManager;
@@ -17,8 +11,6 @@ using NeutronData.Interfaces;
 using Neutron.Models;
 using System.Globalization;
 using System.IO;
-using System.Resources;
-using EnumsNET;
 using NeutronCore;
 using NeutronCore.Global;
 using Newtonsoft.Json;
@@ -145,7 +137,7 @@ namespace Neutron
             {
                 using (TextWriter writer = new StreamWriter(fileInfo.FullName, append: false))
                 {
-                    writer.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                    writer.Write(JsonConvert.SerializeObject(data));
                 }
             }
             catch (Exception)

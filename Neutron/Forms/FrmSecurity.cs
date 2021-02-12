@@ -1,13 +1,11 @@
 using Neutron.Enums;
 using Neutron.Global;
-using Neutron.Interfaces;
 using NeutronCore.Extensions;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity.Migrations;
 using System.Drawing;
 using System.Globalization;
@@ -17,7 +15,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NeutronCore.Global;
-using NeutronData.ModelViews;
 using NeutronCore;
 namespace Neutron.Forms
 {
@@ -205,7 +202,7 @@ namespace Neutron.Forms
             var users = _context.Users.Where(u => u.Disabled == false).OrderBy(o => o.Lastname).ThenBy(p => p.Firstname).ToList();
             foreach (var user in users)
             {
-                var gu = _context.GroupUser.FirstOrDefault(g => g.GroupId == @group.GroupId && g.UserId == user.Id);
+                var gu = _context.GroupUser.FirstOrDefault(g => g.GroupId == group.GroupId && g.UserId == user.Id);
                 if (gu != null)
                 {
                     _context.GroupUser.Remove(gu);
@@ -676,17 +673,18 @@ namespace Neutron.Forms
         private void ComboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
             var user = ((ComboBox)sender).SelectedItem as User;
-            if (user == null) return;
-            _currentUser = user;
-            TextBoxEmpIdEditUser.Text = user.EmpId;
-            TextBoxFirstnameEditUser.Text = user.Firstname;
-            TextBoxLastnameEditUser.Text = user.Lastname;
-            TextBoxPasswordEditUser.Text = user.Password;
-            TextBoxPinEditUser.Text = user.Pin;
-            TextBoxUsernameEditUser.Text = user.Username;
-            CheckBoxDisabledEditUser.Checked = user.Disabled;
-            ComboBoxEditPreferredLanguage.SelectedValue = user.LanguageId;
-            //if (string.IsNullOrEmpty(user.EmpId)) return;
+            if (user != null)
+            {
+                _currentUser = user;
+                TextBoxEmpIdEditUser.Text = string.IsNullOrEmpty(user?.EmpId) ? "" : user.EmpId;
+                TextBoxFirstnameEditUser.Text = user.Firstname;
+                TextBoxLastnameEditUser.Text = user.Lastname;
+                TextBoxPasswordEditUser.Text = user.Password;
+                TextBoxPinEditUser.Text = user.Pin;
+                TextBoxUsernameEditUser.Text = user.Username;
+                CheckBoxDisabledEditUser.Checked = user.Disabled;
+                ComboBoxEditPreferredLanguage.SelectedValue = user.LanguageId;
+            }
             FindEditUser();
         }
         private void SetCulture(string lang)
@@ -732,7 +730,7 @@ namespace Neutron.Forms
                 LabelSelectGroup.Text = _resourceManager.GetString("SelectSecurityGroup");
                 LabelPreferredLanguage.Text = _resourceManager.GetString("PreferredLanguage");
                 LabelEditPreferredLanguage.Text = _resourceManager.GetString("PreferredLanguage");
-                this.Text = _resourceManager.GetString("SecurityControl");
+                Text = _resourceManager.GetString("SecurityControl");
                 _resourceManager.GetString("Message0");
                 _resourceManager.GetString("Message1");
                 _resourceManager.GetString("Message2");

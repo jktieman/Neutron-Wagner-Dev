@@ -69,7 +69,7 @@ namespace Neutron.Forms
                         }
                         GlobalVar.User = CurrentUser;
                         DialogResult = DialogResult.OK;
-                        this.Close();
+                        Close();
                     }
                 }
                 catch (Exception ex)

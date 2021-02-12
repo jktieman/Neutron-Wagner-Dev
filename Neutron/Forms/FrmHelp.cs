@@ -1,16 +1,9 @@
 ﻿using MetroFramework.Forms;
 using Neutron.Global;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronCore;
 
@@ -53,7 +46,7 @@ namespace Neutron.Forms
                 mlUserInfo.Text = _resourceManager.GetString("Login");
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseManagement");
                 MBMainClose.Text = _resourceManager.GetString("Home");
-                this.Text = _resourceManager.GetString("Help");
+                Text = _resourceManager.GetString("Help");
             }
             catch (Exception ex)
             {

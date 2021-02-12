@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace NeutronCore.Global
+﻿namespace NeutronCore.Global
 {
 
     public class NeutronVariables

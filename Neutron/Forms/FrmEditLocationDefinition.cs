@@ -165,7 +165,7 @@ namespace Neutron.Forms
                 LabelViewEditSize.Text = _resourceManager.GetString("Size");
                 ButtonCancel.Text = _resourceManager.GetString("Cancel");
                 ButtonSave.Text = _resourceManager.GetString("Save");
-                this.Text = _resourceManager.GetString("FrmEditLocationDefinition");
+                Text = _resourceManager.GetString("FrmEditLocationDefinition");
             }
             catch (Exception ex)
             {

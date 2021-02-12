@@ -1,13 +1,10 @@
 ﻿using NeutronCore.Extensions;
-using Neutron.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Neutron.Models;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
@@ -72,7 +69,7 @@ namespace Neutron.Classes
                         output[i] += result + ",";
                     }
                 }
-                System.IO.File.WriteAllLines(sfd.FileName, output, System.Text.Encoding.UTF8);
+                File.WriteAllLines(sfd.FileName, output, Encoding.UTF8);
                 MessageBox.Show("Your file was generated and its ready for use.");
             }
         }

@@ -1,5 +1,4 @@
 ﻿using NeutronData.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NeutronData.Models
 {

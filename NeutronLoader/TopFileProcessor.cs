@@ -2,7 +2,6 @@
 using JsonManager;
 using Microsoft.VisualBasic.FileIO;
 using NeutronCore;
-using NeutronCore.Enums;
 using NeutronCore.Extensions;
 using NeutronCore.Global;
 using NeutronCore.Models;
@@ -15,7 +14,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeutronLoader
@@ -371,7 +369,7 @@ namespace NeutronLoader
                     Ord1 = firstRec.PartNum, //.JobNum,
                     Ord2 = firstRec.PartDesc, // .EmpId,
                     Priority = GetTrayNumber(firstRec.PrimeBin),
-                    LoadDate = System.DateTime.Now,
+                    LoadDate = DateTime.Now,
                     ShipperId = 1,
                     ShipMethodId = 1,
                     OrderStatusId = 1
@@ -742,7 +740,7 @@ namespace NeutronLoader
                     Ord1 = firstRec.JobNum,
                     Ord2 = firstRec.EmpId,
                     Priority = 99,
-                    LoadDate = System.DateTime.Now,
+                    LoadDate = DateTime.Now,
                     ShipperId = 1,
                     ShipMethodId = 1,
                     OrderStatusId = 1

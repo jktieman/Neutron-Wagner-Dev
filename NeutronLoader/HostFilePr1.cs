@@ -1,6 +1,5 @@
 ﻿using AlliedLogger;
 using NeutronCore;
-using NeutronCore.Enums;
 using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.DataContexts;
@@ -11,8 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace NeutronLoader
 {

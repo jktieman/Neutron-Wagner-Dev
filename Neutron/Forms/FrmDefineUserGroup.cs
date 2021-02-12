@@ -332,7 +332,7 @@ namespace Neutron.Forms
                 LabelClearCheckBox.Text = _resourceManager.GetString("ClearCheckBoxtoAddNewGroup");
                 LabelUsers.Text = _resourceManager.GetString("Users");
                 LabelGroups.Text = _resourceManager.GetString("Groups");
-                this.Text = _resourceManager.GetString("DefineUserGroup");
+                Text = _resourceManager.GetString("DefineUserGroup");
 
             }
             catch (Exception ex)

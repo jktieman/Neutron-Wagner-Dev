@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Neutron.Interfaces
+﻿namespace Neutron.Interfaces
 {
     public interface IImageManager
     {

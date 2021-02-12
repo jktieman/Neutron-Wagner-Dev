@@ -5,38 +5,34 @@ namespace AlliedFileSystemWatcher
 {
     public class AlliedFileWatcher : IDisposable
     {
-        private readonly FileSystemWatcher watcher;
-        private string path;
-        private string filter;
-        private bool watch = false;
-        private bool includeSubdirectories = false;
-        private bool enableRaisingEvents = false;
-
+        private readonly FileSystemWatcher _watcher;
 
         public event EventHandler<FileInfoArgs> FileCreated;
 
         public AlliedFileWatcher(string path, string filter, bool includeSubdirectories)
         {
-            this.path = path + @"\";
-            this.filter = filter;
-            this.includeSubdirectories = includeSubdirectories;
-            watcher = new FileSystemWatcher();
-            watcher.Path = path;
-            watcher.Filter = filter;
-            watcher.IncludeSubdirectories = includeSubdirectories;
-            watcher.Created += OnCreated;
+            Path = path + @"\";
+            Filter = filter;
+            IncludeSubdirectories = includeSubdirectories;
+            _watcher = new FileSystemWatcher
+            {
+                Path = path
+                , Filter = filter
+                , IncludeSubdirectories = includeSubdirectories
+            };
+            _watcher.Created += OnCreated;
         }
 
         public void Start()
         {
-            enableRaisingEvents = true;
-            watcher.EnableRaisingEvents = enableRaisingEvents;
+            EnableRaisingEvents = true;
+            _watcher.EnableRaisingEvents = EnableRaisingEvents;
         }
 
         public void Stop()
         {
-            enableRaisingEvents = false;
-            watcher.EnableRaisingEvents = enableRaisingEvents;
+            EnableRaisingEvents = false;
+            _watcher.EnableRaisingEvents = EnableRaisingEvents;
         }
 
         protected virtual void OnCreated(object sender, FileSystemEventArgs e)
@@ -48,50 +44,23 @@ namespace AlliedFileSystemWatcher
 
                 FileCreated(sender: null, e: fileInfoArgs);
             }
-
         }
 
-        public string Filter
-        {
-            get { return filter; }
-            set { filter = value; }
-        }
+        public string Filter { get; set; }
 
-        public bool EnableRaisingEvents
-        {
-            get { return enableRaisingEvents; }
-            set { enableRaisingEvents = value; }
-        }
+        public bool EnableRaisingEvents { get; set; }
 
+        public bool IncludeSubdirectories { get; set; }
 
-        public bool IncludeSubdirectories
-        {
-            get { return includeSubdirectories; }
-            set { includeSubdirectories = value; }
-        }
-
-
-        public bool Watch
-        {
-            get { return watch; }
-            set { watch = value; }
-        }
-
-
-        public string Path
-        {
-            get { return path; }
-            set { path = value; }
-        }
+        public bool Watch { get; set; }
+        
+        public string Path { get; set; }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                if (watcher != null)
-                {
-                    watcher.Dispose();
-                }
+                _watcher?.Dispose();
             }
         }
 
@@ -100,7 +69,5 @@ namespace AlliedFileSystemWatcher
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-
     }
 }

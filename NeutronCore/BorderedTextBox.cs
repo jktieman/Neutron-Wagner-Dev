@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeutronCore
@@ -27,7 +23,7 @@ namespace NeutronCore
                 Padding = new Padding(-1)
             };
             container.Controls.Add(textBox);
-            this.Controls.Add(container);
+            Controls.Add(container);
 
             DefaultBorderColor = SystemColors.ControlDark;
             FocusedBorderColor = Color.Red;

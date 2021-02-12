@@ -1,12 +1,4 @@
-﻿using Neutron.Controllers;
-using Neutron.Enums;
-using Neutron.Interfaces;
-using NeutronData.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NeutronData.Models;
 
 namespace Neutron.Global
 {

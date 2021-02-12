@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronCore;
 using NeutronData.ModelViews;
@@ -181,7 +176,7 @@ namespace Neutron.Forms
                     resourceDir: languageDirectory, usingResourceSet: null);
 
                 ButtonClose.Text = _resourceManager.GetString("Close");
-                this.Text = _resourceManager.GetString("Summary");
+                Text = _resourceManager.GetString("Summary");
             }
             catch (Exception ex)
             {
