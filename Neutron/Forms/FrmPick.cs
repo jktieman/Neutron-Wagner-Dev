@@ -46,27 +46,25 @@ namespace Neutron.Forms
     {
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
+
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly InventoryRepository _repoInv = new InventoryRepository();
-        //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-
-        private readonly OrderDetailsRepository _orderDetailsRepository = new OrderDetailsRepository();
         private readonly GenericRepository<PrintJob> _repoPrintJob = new GenericRepository<PrintJob>(new NeutronDb());
+
+        private readonly InventoryRepository _repoInv = new InventoryRepository();
+        private readonly OrderDetailsRepository _orderDetailsRepository = new OrderDetailsRepository();
         private readonly LocationsRepository _locationsRepository = new LocationsRepository();
-
-
         private readonly IStationRepository _stationRepository;
         private readonly IOrdersRepository _ordersRepository;
 
+        private BindingListView<AvailableOrdersView> _bindingListViewAvailableOrdersViews;
 
         private readonly BindingSource _bindingSourceCompleted = new BindingSource();
         private readonly BindingSource _bindingSourceOrderView = new BindingSource();
-        private BindingListView<AvailableOrdersView> _bindingListViewAvailableOrdersViews;
         private readonly BindingSource _bindingSourceAvailableOrders = new BindingSource();
         private readonly BindingSource _bindingSourceAvailableOrdersRack = new BindingSource();
         private readonly BindingSource _bindingSourcePickViews = new BindingSource();
@@ -74,11 +72,8 @@ namespace Neutron.Forms
         private readonly BindingSource _bindingSourceHot = new BindingSource();
         private readonly BindingSource _bindingSourceOrderDetailsView = new BindingSource();
         private readonly BindingSource _bindingSourceSkipView = new BindingSource();
-        //New Order
         private readonly BindingSource _bindingSourceItems = new BindingSource();
         private BindingSource _bindingSourceNewItems = new BindingSource();
-        //----
-
 
         public bool CloseButtonPressed { get; set; }
         public OrderView CurrentItem;
@@ -127,15 +122,12 @@ namespace Neutron.Forms
         private bool _adjustGridReady;
         private bool _skipGridReady;
         private bool _skipInventoryGridReady;
+
         private readonly int[] _moveableDeviceTypes;
         private readonly Station _rackStation;
         private readonly List<Station> _pickStations;
 
         private SynchronizationContext _synchronizationContext;
-
-        // public delegate void UpdateTextBoxDelegate1(ResponseInfo responseInfo);
-        // public delegate void UpdateTextBoxDelegate2(ResponseInfo responseInfo);
-        // public delegate void UpdateListBoxDelegate(byte[] request);
 
         public FrmPick(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
@@ -147,19 +139,22 @@ namespace Neutron.Forms
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
 
-            _station = station;
             _jsonData = jsonData;
+            _station = station;
+            _akaRepository = akaRepository;
             _neutronVariables = neutronVariables;
-            _neutronLicense = neutronLicense;
+            _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
             _imageManager = imageManager;
-            _ordersRepository = ordersRepository;
             _stationRepository = stationRepository;
-            _akaRepository = akaRepository;
-            _securityProcessor = securityProcessor;
+            _ordersRepository = ordersRepository;
+            _neutronLicense = neutronLicense;
+
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
             _pickStations = _stationRepository.GetPickStations();
+            _synchronizationContext = SynchronizationContext.Current;
+
             InitForm();
         }
 
@@ -176,7 +171,6 @@ namespace Neutron.Forms
                 MBRunUpload.Visible = true;
             }
             SetupPrinters();
-            _synchronizationContext = SynchronizationContext.Current;
 
             InitGrids();
 
@@ -1167,37 +1161,6 @@ namespace Neutron.Forms
         {
             Mediator.GetInstance().OnStartStopUpload(this, !GlobalVar.UploadRunning ? "Start" : "Stop");
         }
-
-        //public void UpdateTextBox1(ResponseInfo responseInfo)
-        //{
-        //    if (this.TextBoxPos1.InvokeRequired)
-        //    {
-        //        var d = new UpdateTextBoxDelegate1(UpdateTextBox1);
-        //        this.BeginInvoke(d, new object[] { responseInfo });
-        //    }
-        //    else
-        //    {
-        //        _logger.Log($"Update TextBoxPos1 Display Number:  {responseInfo.DisplayNumber}");
-
-        //        PickAccept();
-        //        // TextBoxPos1.Focus();
-        //        // TextBoxPos1.Text = responseInfo.DisplayNumber;
-        //    }
-        //}
-        //public void UpdateTextBox2(ResponseInfo responseInfo)
-        //{
-        //    if (this.TextBoxPos2.InvokeRequired)
-        //    {
-        //        var d = new UpdateTextBoxDelegate2(UpdateTextBox2);
-        //        this.BeginInvoke(d, new object[] { responseInfo });
-        //    }
-        //    else
-        //    {
-        //        _logger.Log($"Update TextBoxPos2 Display Number:  {responseInfo.DisplayNumber}");
-        //        TextBoxPos2.Focus();
-        //        TextBoxPos2.Text = responseInfo.DisplayNumber;
-        //    }
-        //}
 
         private void SetupLogger()
         {
@@ -5100,32 +5063,6 @@ namespace Neutron.Forms
             ClearBatchPositions();
             Console.WriteLine("Clear All Device Indicators - Close Batch");
             ClearAllDeviceIndicators();
-
-            //_logger.Log($"Start Upload Processor: {_neutronLicense.CompanyCode}");
-            //switch (_neutronLicense.CompanyCode)
-            //{
-            //    case "TMG":
-            //        //var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
-            //        //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
-            //        break;
-            //    case "SFH":
-            //        // Mediator.GetInstance().OnBatchComplete(this);
-            //        _logger.Log("Choosing the SFH case.");
-            //        //uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
-            //        //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
-            //        break;
-            //    case "AES":
-            //        //var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
-            //        //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
-            //        break;
-            //    case "TOP":
-            //        var topUploadProcessor = new TopUploadProcessor(_neutronVariables, _neutronLicense);
-            //        topUploadProcessor.CreateHostFile(_bindingSourcePickStops);
-            //        break;
-
-            //    default:
-            //        break;
-            //}
             // check for Inventory locations that need to be Released
             using (var db = new NeutronDb())
             {

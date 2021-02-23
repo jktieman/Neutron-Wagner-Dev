@@ -64,7 +64,7 @@
             this.CheckBoxViewEditInUse.Margin = new System.Windows.Forms.Padding(6);
             this.CheckBoxViewEditInUse.Name = "CheckBoxViewEditInUse";
             this.CheckBoxViewEditInUse.Size = new System.Drawing.Size(71, 20);
-            this.CheckBoxViewEditInUse.TabIndex = 11;
+            this.CheckBoxViewEditInUse.TabIndex = 6;
             this.CheckBoxViewEditInUse.Text = "In Use";
             this.CheckBoxViewEditInUse.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxViewEditInUse.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
             this.TextBoxViewEditSlot.Name = "TextBoxViewEditSlot";
             this.TextBoxViewEditSlot.ReadOnly = true;
             this.TextBoxViewEditSlot.Size = new System.Drawing.Size(345, 29);
-            this.TextBoxViewEditSlot.TabIndex = 6;
+            this.TextBoxViewEditSlot.TabIndex = 7;
             this.TextBoxViewEditSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelViewEditTag
@@ -220,7 +220,7 @@
             this.ComboBoxViewEditLocationCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditLocationCode.Name = "ComboBoxViewEditLocationCode";
             this.ComboBoxViewEditLocationCode.Size = new System.Drawing.Size(345, 32);
-            this.ComboBoxViewEditLocationCode.TabIndex = 10;
+            this.ComboBoxViewEditLocationCode.TabIndex = 11;
             // 
             // LabelViewEditLocation
             // 
@@ -242,7 +242,7 @@
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(345, 32);
-            this.ComboBoxViewEditHeightCode.TabIndex = 9;
+            this.ComboBoxViewEditHeightCode.TabIndex = 10;
             // 
             // LabelViewEditHeight
             // 
@@ -264,7 +264,7 @@
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditVelocityCode.Name = "ComboBoxViewEditVelocityCode";
             this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(345, 32);
-            this.ComboBoxViewEditVelocityCode.TabIndex = 8;
+            this.ComboBoxViewEditVelocityCode.TabIndex = 9;
             // 
             // LabelViewEditVelocity
             // 
@@ -286,7 +286,7 @@
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditSizeCode.Name = "ComboBoxViewEditSizeCode";
             this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(345, 32);
-            this.ComboBoxViewEditSizeCode.TabIndex = 7;
+            this.ComboBoxViewEditSizeCode.TabIndex = 8;
             // 
             // LabelViewEditSize
             // 
@@ -335,7 +335,7 @@
             this.TextBoxViewEditStation.Name = "TextBoxViewEditStation";
             this.TextBoxViewEditStation.ReadOnly = true;
             this.TextBoxViewEditStation.Size = new System.Drawing.Size(235, 29);
-            this.TextBoxViewEditStation.TabIndex = 6;
+            this.TextBoxViewEditStation.TabIndex = 0;
             this.TextBoxViewEditStation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FrmEditLocationDefinition

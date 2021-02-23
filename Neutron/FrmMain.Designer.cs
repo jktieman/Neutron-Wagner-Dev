@@ -54,11 +54,8 @@ namespace Neutron
             this.LabelWarehouseManagement = new System.Windows.Forms.Label();
             this.ButtonPark = new System.Windows.Forms.Button();
             this.ButtonClose = new System.Windows.Forms.Button();
-            this.ButtonClearDisplays = new System.Windows.Forms.Button();
             this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
-            this.ButtonPortTest = new System.Windows.Forms.Button();
-            this.ButtonPortTestOff = new System.Windows.Forms.Button();
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
             this.GroupBoxLanguage = new System.Windows.Forms.GroupBox();
             this.RadioButtonFrenchCanadian = new System.Windows.Forms.RadioButton();
@@ -290,33 +287,12 @@ namespace Neutron
             this.ButtonClose.UseVisualStyleBackColor = true;
             this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
             // 
-            // ButtonClearDisplays
-            // 
-            resources.ApplyResources(this.ButtonClearDisplays, "ButtonClearDisplays");
-            this.ButtonClearDisplays.Name = "ButtonClearDisplays";
-            this.ButtonClearDisplays.UseVisualStyleBackColor = true;
-            this.ButtonClearDisplays.Click += new System.EventHandler(this.ButtonClearDisplays_Click);
-            // 
             // PictureBoxLogo
             // 
             this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
             resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
             this.PictureBoxLogo.Name = "PictureBoxLogo";
             this.PictureBoxLogo.TabStop = false;
-            // 
-            // ButtonPortTest
-            // 
-            resources.ApplyResources(this.ButtonPortTest, "ButtonPortTest");
-            this.ButtonPortTest.Name = "ButtonPortTest";
-            this.ButtonPortTest.UseVisualStyleBackColor = false;
-            this.ButtonPortTest.Click += new System.EventHandler(this.ButtonPortTest_Click);
-            // 
-            // ButtonPortTestOff
-            // 
-            resources.ApplyResources(this.ButtonPortTestOff, "ButtonPortTestOff");
-            this.ButtonPortTestOff.Name = "ButtonPortTestOff";
-            this.ButtonPortTestOff.UseVisualStyleBackColor = true;
-            this.ButtonPortTestOff.Click += new System.EventHandler(this.ButtonPortTestOff_Click);
             // 
             // GroupBoxLanguage
             // 
@@ -350,9 +326,6 @@ namespace Neutron
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.GroupBoxLanguage);
             this.Controls.Add(this.ButtonClose);
-            this.Controls.Add(this.ButtonPortTestOff);
-            this.Controls.Add(this.ButtonPortTest);
-            this.Controls.Add(this.ButtonClearDisplays);
             this.Controls.Add(this.ButtonPark);
             this.Controls.Add(this.PictureBoxLogo);
             this.Controls.Add(this.metroPanelMain);
@@ -402,9 +375,6 @@ namespace Neutron
         private System.Windows.Forms.PictureBox PictureBoxLogo;
         private System.Windows.Forms.Button ButtonPark;
         private System.Windows.Forms.Button ButtonClose;
-        private System.Windows.Forms.Button ButtonClearDisplays;
-        private System.Windows.Forms.Button ButtonPortTest;
-        private System.Windows.Forms.Button ButtonPortTestOff;
         private MetroFramework.Controls.MetroTile MtProductivity;
         private System.Windows.Forms.GroupBox GroupBoxLanguage;
         private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;

@@ -79,7 +79,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1155, 796);
-            this.tabControl1.TabIndex = 23;
+            this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
             // 
@@ -108,7 +108,7 @@
             this.ButtonClearAll.Location = new System.Drawing.Point(112, 99);
             this.ButtonClearAll.Name = "ButtonClearAll";
             this.ButtonClearAll.Size = new System.Drawing.Size(96, 23);
-            this.ButtonClearAll.TabIndex = 23;
+            this.ButtonClearAll.TabIndex = 2;
             this.ButtonClearAll.Text = "Clear All";
             this.ButtonClearAll.UseVisualStyleBackColor = true;
             this.ButtonClearAll.Click += new System.EventHandler(this.ButtonClearAll_Click);
@@ -118,7 +118,7 @@
             this.ButtonCheckAll.Location = new System.Drawing.Point(10, 99);
             this.ButtonCheckAll.Name = "ButtonCheckAll";
             this.ButtonCheckAll.Size = new System.Drawing.Size(96, 23);
-            this.ButtonCheckAll.TabIndex = 23;
+            this.ButtonCheckAll.TabIndex = 1;
             this.ButtonCheckAll.Text = "Check All";
             this.ButtonCheckAll.UseVisualStyleBackColor = true;
             this.ButtonCheckAll.Click += new System.EventHandler(this.ButtonCheckAll_Click);
@@ -129,7 +129,7 @@
             this.GroupBoxActionCodes.Location = new System.Drawing.Point(11, 126);
             this.GroupBoxActionCodes.Name = "GroupBoxActionCodes";
             this.GroupBoxActionCodes.Size = new System.Drawing.Size(194, 624);
-            this.GroupBoxActionCodes.TabIndex = 22;
+            this.GroupBoxActionCodes.TabIndex = 3;
             this.GroupBoxActionCodes.TabStop = false;
             this.GroupBoxActionCodes.Text = "Action Codes";
             // 
@@ -158,7 +158,7 @@
             this.PanelDateRanges.Location = new System.Drawing.Point(6, 8);
             this.PanelDateRanges.Name = "PanelDateRanges";
             this.PanelDateRanges.Size = new System.Drawing.Size(477, 80);
-            this.PanelDateRanges.TabIndex = 21;
+            this.PanelDateRanges.TabIndex = 0;
             // 
             // LabelTo
             // 
@@ -177,7 +177,7 @@
             this.DateTimePickerTo.Location = new System.Drawing.Point(310, 46);
             this.DateTimePickerTo.Name = "DateTimePickerTo";
             this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
-            this.DateTimePickerTo.TabIndex = 23;
+            this.DateTimePickerTo.TabIndex = 5;
             this.DateTimePickerTo.Enter += new System.EventHandler(this.DateTimePickerTo_Enter);
             // 
             // LabelFrom
@@ -197,7 +197,7 @@
             this.DateTimePickerFrom.Location = new System.Drawing.Point(310, 14);
             this.DateTimePickerFrom.Name = "DateTimePickerFrom";
             this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
-            this.DateTimePickerFrom.TabIndex = 21;
+            this.DateTimePickerFrom.TabIndex = 4;
             this.DateTimePickerFrom.Value = new System.DateTime(2018, 1, 1, 5, 20, 0, 0);
             this.DateTimePickerFrom.Enter += new System.EventHandler(this.DateTimePickerFrom_Enter);
             // 
@@ -207,7 +207,7 @@
             this.RadioButtonDateRange.Location = new System.Drawing.Point(122, 47);
             this.RadioButtonDateRange.Name = "RadioButtonDateRange";
             this.RadioButtonDateRange.Size = new System.Drawing.Size(100, 18);
-            this.RadioButtonDateRange.TabIndex = 0;
+            this.RadioButtonDateRange.TabIndex = 3;
             this.RadioButtonDateRange.TabStop = true;
             this.RadioButtonDateRange.Text = "Date Range";
             this.RadioButtonDateRange.UseVisualStyleBackColor = true;
@@ -218,7 +218,7 @@
             this.RadioButtonMonth.Location = new System.Drawing.Point(122, 14);
             this.RadioButtonMonth.Name = "RadioButtonMonth";
             this.RadioButtonMonth.Size = new System.Drawing.Size(100, 18);
-            this.RadioButtonMonth.TabIndex = 0;
+            this.RadioButtonMonth.TabIndex = 2;
             this.RadioButtonMonth.Text = "Month";
             this.RadioButtonMonth.UseVisualStyleBackColor = true;
             this.RadioButtonMonth.CheckedChanged += new System.EventHandler(this.RadioButtonMonth_CheckedChanged);
@@ -228,7 +228,7 @@
             this.RadioButtonWeek.Location = new System.Drawing.Point(8, 47);
             this.RadioButtonWeek.Name = "RadioButtonWeek";
             this.RadioButtonWeek.Size = new System.Drawing.Size(100, 18);
-            this.RadioButtonWeek.TabIndex = 0;
+            this.RadioButtonWeek.TabIndex = 1;
             this.RadioButtonWeek.Text = "Week";
             this.RadioButtonWeek.UseVisualStyleBackColor = true;
             this.RadioButtonWeek.CheckedChanged += new System.EventHandler(this.RadioButtonWeek_CheckedChanged);
@@ -260,7 +260,7 @@
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
             this.TextBoxFind.Size = new System.Drawing.Size(145, 29);
-            this.TextBoxFind.TabIndex = 17;
+            this.TextBoxFind.TabIndex = 5;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // MButtonClose
@@ -271,7 +271,7 @@
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(136, 76);
-            this.MButtonClose.TabIndex = 12;
+            this.MButtonClose.TabIndex = 8;
             this.MButtonClose.Text = "Close";
             this.MButtonClose.UseSelectable = true;
             // 
@@ -283,7 +283,7 @@
             this.MBHistoryTransmitSelected.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHistoryTransmitSelected.Name = "MBHistoryTransmitSelected";
             this.MBHistoryTransmitSelected.Size = new System.Drawing.Size(206, 37);
-            this.MBHistoryTransmitSelected.TabIndex = 12;
+            this.MBHistoryTransmitSelected.TabIndex = 4;
             this.MBHistoryTransmitSelected.Text = "Transmit Selected";
             this.MBHistoryTransmitSelected.UseSelectable = true;
             this.MBHistoryTransmitSelected.Visible = false;
@@ -296,7 +296,7 @@
             this.MBSaveHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveHistory.Name = "MBSaveHistory";
             this.MBSaveHistory.Size = new System.Drawing.Size(145, 37);
-            this.MBSaveHistory.TabIndex = 12;
+            this.MBSaveHistory.TabIndex = 6;
             this.MBSaveHistory.Text = "Save to File";
             this.MBSaveHistory.UseSelectable = true;
             this.MBSaveHistory.Click += new System.EventHandler(this.MBSaveHistory_Click);
@@ -308,7 +308,7 @@
             this.MButtonRun.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonRun.Name = "MButtonRun";
             this.MButtonRun.Size = new System.Drawing.Size(136, 76);
-            this.MButtonRun.TabIndex = 12;
+            this.MButtonRun.TabIndex = 7;
             this.MButtonRun.Text = "Run";
             this.MButtonRun.UseSelectable = true;
             this.MButtonRun.Click += new System.EventHandler(this.MButtonRun_Click);

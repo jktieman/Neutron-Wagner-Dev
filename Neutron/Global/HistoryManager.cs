@@ -19,9 +19,9 @@ namespace Neutron.Global
     {
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
         private readonly InventoryRepository _repoInventory = new InventoryRepository();
-        private readonly StationRepository _stationRepository = new StationRepository();
 
-        private static bool _actionCodesInited = false;
+
+        private static bool _actionCodesInited;
 
         public HistoryManager()
         {
@@ -648,10 +648,8 @@ namespace Neutron.Global
         {
             //Run this one time at startup
             //break down the ActionCode Enum into a List and save to the database.
-
             var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
                 .Select(r => new ActionCodeItem { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
-
             try
             {
                 using (var db = new NeutronDb())
@@ -663,15 +661,9 @@ namespace Neutron.Global
                          WHERE S.Name = 'dbo' AND T.Name = 'ActionCodeItems'")
                                       .SingleOrDefault() != null;
 
-                    if (!exists)
-                    {
-                        db.Database.ExecuteSqlCommand("CREATE TABLE [dbo].[ActionCodeItems] ([Id] [int] NOT NULL, Name varchar(64) not null)");
-
-                    }
-                    else
-                    {
-                        db.Database.ExecuteSqlCommand("TRUNCATE TABLE ActionCodeItems");
-                    }
+                    db.Database.ExecuteSqlCommand(!exists
+                        ? "CREATE TABLE [dbo].[ActionCodeItems] ([Id] [int] NOT NULL, Name varchar(64) not null)"
+                        : "TRUNCATE TABLE ActionCodeItems");
 
                     foreach (var actionCode in actionCodes)
                     {
@@ -686,7 +678,6 @@ namespace Neutron.Global
                 MessageBox.Show($"Save Action Codes to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
                                 $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
             }
-
             //set static variable to show the action codes have been created.
             _actionCodesInited = true;
         }

@@ -23,6 +23,7 @@ namespace Neutron
             Bind<IOrdersRepository>().To<OrdersRepository>();
             Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>();
             Bind<IInventoryManager>().To<InventoryManager>();
+            Bind<FrmMain>().To<FrmMain>().InSingletonScope();
         }
     }
 }

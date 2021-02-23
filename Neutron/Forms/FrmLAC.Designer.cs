@@ -152,7 +152,7 @@
             this.ButtonSaveUsers.Location = new System.Drawing.Point(129, 67);
             this.ButtonSaveUsers.Name = "ButtonSaveUsers";
             this.ButtonSaveUsers.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveUsers.TabIndex = 9;
+            this.ButtonSaveUsers.TabIndex = 2;
             this.ButtonSaveUsers.Text = "Save";
             this.ButtonSaveUsers.UseVisualStyleBackColor = true;
             this.ButtonSaveUsers.Click += new System.EventHandler(this.ButtonSaveUsers_Click);
@@ -163,7 +163,7 @@
             this.ButtonSelectUsers.Location = new System.Drawing.Point(9, 67);
             this.ButtonSelectUsers.Name = "ButtonSelectUsers";
             this.ButtonSelectUsers.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectUsers.TabIndex = 5;
+            this.ButtonSelectUsers.TabIndex = 0;
             this.ButtonSelectUsers.Text = "Check All";
             this.ButtonSelectUsers.UseVisualStyleBackColor = true;
             this.ButtonSelectUsers.Click += new System.EventHandler(this.ButtonSelectUsers_Click);
@@ -176,7 +176,7 @@
             this.ListViewUsers.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewUsers.Name = "ListViewUsers";
             this.ListViewUsers.Size = new System.Drawing.Size(676, 384);
-            this.ListViewUsers.TabIndex = 4;
+            this.ListViewUsers.TabIndex = 1;
             this.ListViewUsers.UseCompatibleStateImageBehavior = false;
             this.ListViewUsers.View = System.Windows.Forms.View.List;
             // 
@@ -263,7 +263,7 @@
             this.ButtonSaveDevice1.Location = new System.Drawing.Point(129, 67);
             this.ButtonSaveDevice1.Name = "ButtonSaveDevice1";
             this.ButtonSaveDevice1.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveDevice1.TabIndex = 9;
+            this.ButtonSaveDevice1.TabIndex = 1;
             this.ButtonSaveDevice1.Text = "Save";
             this.ButtonSaveDevice1.UseVisualStyleBackColor = true;
             this.ButtonSaveDevice1.Click += new System.EventHandler(this.ButtonSaveDevice1_Click);
@@ -274,7 +274,7 @@
             this.ButtonSelectDevice1.Location = new System.Drawing.Point(9, 67);
             this.ButtonSelectDevice1.Name = "ButtonSelectDevice1";
             this.ButtonSelectDevice1.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectDevice1.TabIndex = 3;
+            this.ButtonSelectDevice1.TabIndex = 0;
             this.ButtonSelectDevice1.Text = "Check All";
             this.ButtonSelectDevice1.UseVisualStyleBackColor = true;
             this.ButtonSelectDevice1.Click += new System.EventHandler(this.ButtonSelectDevice1_Click);
@@ -321,7 +321,7 @@
             this.ButtonSaveDevice2.Location = new System.Drawing.Point(130, 67);
             this.ButtonSaveDevice2.Name = "ButtonSaveDevice2";
             this.ButtonSaveDevice2.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveDevice2.TabIndex = 9;
+            this.ButtonSaveDevice2.TabIndex = 2;
             this.ButtonSaveDevice2.Text = "Save";
             this.ButtonSaveDevice2.UseVisualStyleBackColor = true;
             this.ButtonSaveDevice2.Click += new System.EventHandler(this.ButtonSaveDevice2_Click);
@@ -332,7 +332,7 @@
             this.ButtonSelectDevice2.Location = new System.Drawing.Point(10, 67);
             this.ButtonSelectDevice2.Name = "ButtonSelectDevice2";
             this.ButtonSelectDevice2.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectDevice2.TabIndex = 4;
+            this.ButtonSelectDevice2.TabIndex = 0;
             this.ButtonSelectDevice2.Text = "Check All";
             this.ButtonSelectDevice2.UseVisualStyleBackColor = true;
             this.ButtonSelectDevice2.Click += new System.EventHandler(this.ButtonSelectDevice2_Click);
@@ -345,7 +345,7 @@
             this.ListViewDevice2.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewDevice2.Name = "ListViewDevice2";
             this.ListViewDevice2.Size = new System.Drawing.Size(676, 384);
-            this.ListViewDevice2.TabIndex = 3;
+            this.ListViewDevice2.TabIndex = 1;
             this.ListViewDevice2.UseCompatibleStateImageBehavior = false;
             this.ListViewDevice2.View = System.Windows.Forms.View.List;
             // 
@@ -378,7 +378,7 @@
             this.ButtonSaveDevice3.Location = new System.Drawing.Point(129, 67);
             this.ButtonSaveDevice3.Name = "ButtonSaveDevice3";
             this.ButtonSaveDevice3.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveDevice3.TabIndex = 9;
+            this.ButtonSaveDevice3.TabIndex = 2;
             this.ButtonSaveDevice3.Text = "Save";
             this.ButtonSaveDevice3.UseVisualStyleBackColor = true;
             this.ButtonSaveDevice3.Click += new System.EventHandler(this.ButtonSaveDevice3_Click);
@@ -389,7 +389,7 @@
             this.ButtonSelectDevice3.Location = new System.Drawing.Point(9, 67);
             this.ButtonSelectDevice3.Name = "ButtonSelectDevice3";
             this.ButtonSelectDevice3.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectDevice3.TabIndex = 5;
+            this.ButtonSelectDevice3.TabIndex = 1;
             this.ButtonSelectDevice3.Text = "Check All";
             this.ButtonSelectDevice3.UseVisualStyleBackColor = true;
             this.ButtonSelectDevice3.Click += new System.EventHandler(this.ButtonSelectDevice3_Click);
@@ -402,7 +402,7 @@
             this.ListViewDevice3.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewDevice3.Name = "ListViewDevice3";
             this.ListViewDevice3.Size = new System.Drawing.Size(676, 384);
-            this.ListViewDevice3.TabIndex = 3;
+            this.ListViewDevice3.TabIndex = 0;
             this.ListViewDevice3.UseCompatibleStateImageBehavior = false;
             this.ListViewDevice3.View = System.Windows.Forms.View.List;
             // 
@@ -435,7 +435,7 @@
             this.ButtonSaveDevice4.Location = new System.Drawing.Point(129, 67);
             this.ButtonSaveDevice4.Name = "ButtonSaveDevice4";
             this.ButtonSaveDevice4.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveDevice4.TabIndex = 9;
+            this.ButtonSaveDevice4.TabIndex = 2;
             this.ButtonSaveDevice4.Text = "Save";
             this.ButtonSaveDevice4.UseVisualStyleBackColor = true;
             this.ButtonSaveDevice4.Click += new System.EventHandler(this.ButtonSaveDevice4_Click);
@@ -446,7 +446,7 @@
             this.ButtonSelectDevice4.Location = new System.Drawing.Point(9, 67);
             this.ButtonSelectDevice4.Name = "ButtonSelectDevice4";
             this.ButtonSelectDevice4.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectDevice4.TabIndex = 5;
+            this.ButtonSelectDevice4.TabIndex = 1;
             this.ButtonSelectDevice4.Text = "Check All";
             this.ButtonSelectDevice4.UseVisualStyleBackColor = true;
             this.ButtonSelectDevice4.Click += new System.EventHandler(this.ButtonSelectDevice4_Click);
@@ -459,7 +459,7 @@
             this.ListViewDevice4.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewDevice4.Name = "ListViewDevice4";
             this.ListViewDevice4.Size = new System.Drawing.Size(676, 384);
-            this.ListViewDevice4.TabIndex = 3;
+            this.ListViewDevice4.TabIndex = 0;
             this.ListViewDevice4.UseCompatibleStateImageBehavior = false;
             this.ListViewDevice4.View = System.Windows.Forms.View.List;
             // 
@@ -492,7 +492,7 @@
             this.ButtonSaveDevice5.Location = new System.Drawing.Point(128, 69);
             this.ButtonSaveDevice5.Name = "ButtonSaveDevice5";
             this.ButtonSaveDevice5.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveDevice5.TabIndex = 17;
+            this.ButtonSaveDevice5.TabIndex = 2;
             this.ButtonSaveDevice5.Text = "Save";
             this.ButtonSaveDevice5.UseVisualStyleBackColor = true;
             this.ButtonSaveDevice5.Click += new System.EventHandler(this.ButtonSaveDevice5_Click);
@@ -503,7 +503,7 @@
             this.ButtonSelectDevice5.Location = new System.Drawing.Point(8, 69);
             this.ButtonSelectDevice5.Name = "ButtonSelectDevice5";
             this.ButtonSelectDevice5.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectDevice5.TabIndex = 16;
+            this.ButtonSelectDevice5.TabIndex = 1;
             this.ButtonSelectDevice5.Text = "Check All";
             this.ButtonSelectDevice5.UseVisualStyleBackColor = true;
             this.ButtonSelectDevice5.Click += new System.EventHandler(this.ButtonSelectDevice5_Click);
@@ -516,7 +516,7 @@
             this.ListViewDevice5.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewDevice5.Name = "ListViewDevice5";
             this.ListViewDevice5.Size = new System.Drawing.Size(676, 384);
-            this.ListViewDevice5.TabIndex = 15;
+            this.ListViewDevice5.TabIndex = 0;
             this.ListViewDevice5.UseCompatibleStateImageBehavior = false;
             this.ListViewDevice5.View = System.Windows.Forms.View.List;
             // 
@@ -549,7 +549,7 @@
             this.ButtonSaveDevice6.Location = new System.Drawing.Point(128, 69);
             this.ButtonSaveDevice6.Name = "ButtonSaveDevice6";
             this.ButtonSaveDevice6.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSaveDevice6.TabIndex = 17;
+            this.ButtonSaveDevice6.TabIndex = 2;
             this.ButtonSaveDevice6.Text = "Save";
             this.ButtonSaveDevice6.UseVisualStyleBackColor = true;
             this.ButtonSaveDevice6.Click += new System.EventHandler(this.ButtonSaveDevice6_Click);
@@ -560,7 +560,7 @@
             this.ButtonSelectDevice6.Location = new System.Drawing.Point(8, 69);
             this.ButtonSelectDevice6.Name = "ButtonSelectDevice6";
             this.ButtonSelectDevice6.Size = new System.Drawing.Size(108, 33);
-            this.ButtonSelectDevice6.TabIndex = 16;
+            this.ButtonSelectDevice6.TabIndex = 1;
             this.ButtonSelectDevice6.Text = "Check All";
             this.ButtonSelectDevice6.UseVisualStyleBackColor = true;
             this.ButtonSelectDevice6.Click += new System.EventHandler(this.ButtonSelectDevice6_Click);
@@ -573,7 +573,7 @@
             this.ListViewDevice6.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewDevice6.Name = "ListViewDevice6";
             this.ListViewDevice6.Size = new System.Drawing.Size(676, 384);
-            this.ListViewDevice6.TabIndex = 15;
+            this.ListViewDevice6.TabIndex = 0;
             this.ListViewDevice6.UseCompatibleStateImageBehavior = false;
             this.ListViewDevice6.View = System.Windows.Forms.View.List;
             // 
@@ -609,7 +609,7 @@
             this.PanelNewUser.Location = new System.Drawing.Point(76, 36);
             this.PanelNewUser.Name = "PanelNewUser";
             this.PanelNewUser.Size = new System.Drawing.Size(541, 210);
-            this.PanelNewUser.TabIndex = 3;
+            this.PanelNewUser.TabIndex = 0;
             // 
             // CheckBoxDisabled
             // 
@@ -618,7 +618,7 @@
             this.CheckBoxDisabled.Location = new System.Drawing.Point(41, 136);
             this.CheckBoxDisabled.Name = "CheckBoxDisabled";
             this.CheckBoxDisabled.Size = new System.Drawing.Size(98, 24);
-            this.CheckBoxDisabled.TabIndex = 16;
+            this.CheckBoxDisabled.TabIndex = 3;
             this.CheckBoxDisabled.Text = "Disabled";
             this.CheckBoxDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.CheckBoxDisabled.UseVisualStyleBackColor = true;
@@ -628,7 +628,7 @@
             this.ButtonSaveNewUser.Location = new System.Drawing.Point(392, 141);
             this.ButtonSaveNewUser.Name = "ButtonSaveNewUser";
             this.ButtonSaveNewUser.Size = new System.Drawing.Size(135, 31);
-            this.ButtonSaveNewUser.TabIndex = 15;
+            this.ButtonSaveNewUser.TabIndex = 7;
             this.ButtonSaveNewUser.Text = "Save";
             this.ButtonSaveNewUser.UseVisualStyleBackColor = true;
             this.ButtonSaveNewUser.Click += new System.EventHandler(this.ButtonSaveNewUser_Click);
@@ -638,7 +638,7 @@
             this.TextBoxPassword.Location = new System.Drawing.Point(392, 99);
             this.TextBoxPassword.Name = "TextBoxPassword";
             this.TextBoxPassword.Size = new System.Drawing.Size(135, 26);
-            this.TextBoxPassword.TabIndex = 9;
+            this.TextBoxPassword.TabIndex = 6;
             // 
             // LabelPassword
             // 
@@ -654,14 +654,14 @@
             this.TextBoxLastname.Location = new System.Drawing.Point(392, 67);
             this.TextBoxLastname.Name = "TextBoxLastname";
             this.TextBoxLastname.Size = new System.Drawing.Size(135, 26);
-            this.TextBoxLastname.TabIndex = 10;
+            this.TextBoxLastname.TabIndex = 5;
             // 
             // TextBoxUsername
             // 
             this.TextBoxUsername.Location = new System.Drawing.Point(124, 99);
             this.TextBoxUsername.Name = "TextBoxUsername";
             this.TextBoxUsername.Size = new System.Drawing.Size(148, 26);
-            this.TextBoxUsername.TabIndex = 11;
+            this.TextBoxUsername.TabIndex = 2;
             // 
             // LabelLastname
             // 
@@ -686,7 +686,7 @@
             this.TextBoxFirstname.Location = new System.Drawing.Point(124, 67);
             this.TextBoxFirstname.Name = "TextBoxFirstname";
             this.TextBoxFirstname.Size = new System.Drawing.Size(148, 26);
-            this.TextBoxFirstname.TabIndex = 12;
+            this.TextBoxFirstname.TabIndex = 1;
             // 
             // LabelFirstname
             // 
@@ -702,7 +702,7 @@
             this.TextBoxPin.Location = new System.Drawing.Point(392, 35);
             this.TextBoxPin.Name = "TextBoxPin";
             this.TextBoxPin.Size = new System.Drawing.Size(100, 26);
-            this.TextBoxPin.TabIndex = 13;
+            this.TextBoxPin.TabIndex = 4;
             // 
             // LabelPin
             // 
@@ -718,7 +718,7 @@
             this.TextBoxEmpId.Location = new System.Drawing.Point(124, 35);
             this.TextBoxEmpId.Name = "TextBoxEmpId";
             this.TextBoxEmpId.Size = new System.Drawing.Size(100, 26);
-            this.TextBoxEmpId.TabIndex = 14;
+            this.TextBoxEmpId.TabIndex = 0;
             // 
             // LabelEmpId
             // 
@@ -736,7 +736,7 @@
             this.ComboBoxRoles.Location = new System.Drawing.Point(375, 10);
             this.ComboBoxRoles.Name = "ComboBoxRoles";
             this.ComboBoxRoles.Size = new System.Drawing.Size(151, 28);
-            this.ComboBoxRoles.TabIndex = 3;
+            this.ComboBoxRoles.TabIndex = 0;
             this.ComboBoxRoles.SelectedIndexChanged += new System.EventHandler(this.ComboBoxRoles_SelectedIndexChanged);
             // 
             // LabelSelectRole
@@ -768,7 +768,7 @@
             this.ComboBoxStation.Location = new System.Drawing.Point(375, 53);
             this.ComboBoxStation.Name = "ComboBoxStation";
             this.ComboBoxStation.Size = new System.Drawing.Size(151, 28);
-            this.ComboBoxStation.TabIndex = 6;
+            this.ComboBoxStation.TabIndex = 1;
             this.ComboBoxStation.SelectedIndexChanged += new System.EventHandler(this.ComboBoxStation_SelectedIndexChanged);
             // 
             // FrmLAC

@@ -152,7 +152,7 @@
             this.MBPickZero.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickZero.Name = "MBPickZero";
             this.MBPickZero.Size = new System.Drawing.Size(162, 76);
-            this.MBPickZero.TabIndex = 10;
+            this.MBPickZero.TabIndex = 1;
             this.MBPickZero.Text = "Pick Zero";
             this.MBPickZero.UseSelectable = true;
             this.MBPickZero.Click += new System.EventHandler(this.MBPickZero_Click);
@@ -165,7 +165,7 @@
             this.MBSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSkip.Name = "MBSkip";
             this.MBSkip.Size = new System.Drawing.Size(162, 76);
-            this.MBSkip.TabIndex = 9;
+            this.MBSkip.TabIndex = 0;
             this.MBSkip.Text = "Skip Pick";
             this.MBSkip.UseSelectable = true;
             this.MBSkip.Click += new System.EventHandler(this.MBSkip_Click);

@@ -60,7 +60,7 @@
             this.CheckBoxToteLabel.Location = new System.Drawing.Point(126, 212);
             this.CheckBoxToteLabel.Name = "CheckBoxToteLabel";
             this.CheckBoxToteLabel.Size = new System.Drawing.Size(113, 24);
-            this.CheckBoxToteLabel.TabIndex = 34;
+            this.CheckBoxToteLabel.TabIndex = 2;
             this.CheckBoxToteLabel.Text = "Tote Label";
             this.CheckBoxToteLabel.UseVisualStyleBackColor = true;
             // 
@@ -71,7 +71,7 @@
             this.CheckBoxDocument.Location = new System.Drawing.Point(126, 168);
             this.CheckBoxDocument.Name = "CheckBoxDocument";
             this.CheckBoxDocument.Size = new System.Drawing.Size(125, 24);
-            this.CheckBoxDocument.TabIndex = 34;
+            this.CheckBoxDocument.TabIndex = 1;
             this.CheckBoxDocument.Text = "Packing List";
             this.CheckBoxDocument.UseVisualStyleBackColor = true;
             // 
@@ -91,7 +91,7 @@
             this.TextBoxReprintPosition.Location = new System.Drawing.Point(126, 26);
             this.TextBoxReprintPosition.Name = "TextBoxReprintPosition";
             this.TextBoxReprintPosition.Size = new System.Drawing.Size(124, 80);
-            this.TextBoxReprintPosition.TabIndex = 32;
+            this.TextBoxReprintPosition.TabIndex = 0;
             this.TextBoxReprintPosition.Text = "1";
             this.TextBoxReprintPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -103,7 +103,7 @@
             this.MBReprintCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReprintCancel.Name = "MBReprintCancel";
             this.MBReprintCancel.Size = new System.Drawing.Size(162, 76);
-            this.MBReprintCancel.TabIndex = 30;
+            this.MBReprintCancel.TabIndex = 4;
             this.MBReprintCancel.Text = "Cancel";
             this.MBReprintCancel.UseSelectable = true;
             this.MBReprintCancel.Click += new System.EventHandler(this.MBReprintCancel_Click);
@@ -116,7 +116,7 @@
             this.MBReprintPrint.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReprintPrint.Name = "MBReprintPrint";
             this.MBReprintPrint.Size = new System.Drawing.Size(162, 76);
-            this.MBReprintPrint.TabIndex = 31;
+            this.MBReprintPrint.TabIndex = 3;
             this.MBReprintPrint.Text = "Print";
             this.MBReprintPrint.UseSelectable = true;
             this.MBReprintPrint.Click += new System.EventHandler(this.MBReprintPrint_Click);

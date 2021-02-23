@@ -154,7 +154,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelFormHeaderText.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>7</value>
   </data>
   <data name="mlUserInfo.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -184,7 +184,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mlUserInfo.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>5</value>
   </data>
   <metadata name="metroStyleManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1090, 17</value>
@@ -202,7 +202,7 @@
     <value>412, 66</value>
   </data>
   <data name="MtProductivity.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
+    <value>7</value>
   </data>
   <data name="MtProductivity.Text" xml:space="preserve">
     <value>Productivity</value>
@@ -232,7 +232,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtHotAction.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
+    <value>2</value>
   </data>
   <data name="MtHotAction.Text" xml:space="preserve">
     <value>Hot Action</value>
@@ -262,7 +262,7 @@
     <value>260, 144</value>
   </data>
   <data name="MtLogOff.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
+    <value>12</value>
   </data>
   <data name="MtLogOff.Text" xml:space="preserve">
     <value>Log On</value>
@@ -292,7 +292,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtStore.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
+    <value>1</value>
   </data>
   <data name="MtStore.Text" xml:space="preserve">
     <value>Store</value>
@@ -322,7 +322,7 @@
     <value>412, 66</value>
   </data>
   <data name="MtHistory.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
+    <value>6</value>
   </data>
   <data name="MtHistory.Text" xml:space="preserve">
     <value>History</value>
@@ -352,7 +352,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtPick.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
+    <value>0</value>
   </data>
   <data name="MtPick.Text" xml:space="preserve">
     <value>Pick</value>
@@ -382,7 +382,7 @@
     <value>260, 144</value>
   </data>
   <data name="MtUtilities.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
+    <value>9</value>
   </data>
   <data name="MtUtilities.Text" xml:space="preserve">
     <value>Utilities</value>
@@ -412,7 +412,7 @@
     <value>260, 144</value>
   </data>
   <data name="MtSystem.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
+    <value>10</value>
   </data>
   <data name="MtSystem.Text" xml:space="preserve">
     <value>System</value>
@@ -442,7 +442,7 @@
     <value>260, 144</value>
   </data>
   <data name="MtLac.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
+    <value>11</value>
   </data>
   <data name="MtLac.Text" xml:space="preserve">
     <value>Location Access Control</value>
@@ -472,7 +472,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtUsers.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+    <value>8</value>
   </data>
   <data name="MtUsers.Text" xml:space="preserve">
     <value>Users</value>
@@ -502,7 +502,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtItemDefinitions.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+    <value>4</value>
   </data>
   <data name="MtItemDefinitions.Text" xml:space="preserve">
     <value>Item Definitions</value>
@@ -532,7 +532,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtLocations.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+    <value>5</value>
   </data>
   <data name="MtLocations.Text" xml:space="preserve">
     <value>Locations</value>
@@ -562,7 +562,7 @@
     <value>412, 144</value>
   </data>
   <data name="MtInventory.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>3</value>
   </data>
   <data name="MtInventory.Text" xml:space="preserve">
     <value>Inventory</value>
@@ -601,7 +601,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;metroPanelMain.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>4</value>
   </data>
   <data name="LabelWarehouseManagement.Font" type="System.Drawing.Font, System.Drawing">
     <value>Comic Sans MS, 12pt, style=Bold</value>
@@ -631,7 +631,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelWarehouseManagement.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>6</value>
   </data>
   <data name="ButtonPark.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -664,7 +664,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonPark.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>2</value>
   </data>
   <data name="ButtonClose.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -679,7 +679,7 @@
     <value>130, 33</value>
   </data>
   <data name="ButtonClose.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
+    <value>0</value>
   </data>
   <data name="ButtonClose.Text" xml:space="preserve">
     <value>Close</value>
@@ -695,39 +695,6 @@
   </data>
   <data name="&gt;&gt;ButtonClose.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="ButtonClearDisplays.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt</value>
-  </data>
-  <data name="ButtonClearDisplays.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ButtonClearDisplays.Location" type="System.Drawing.Point, System.Drawing">
-    <value>758, 134</value>
-  </data>
-  <data name="ButtonClearDisplays.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 33</value>
-  </data>
-  <data name="ButtonClearDisplays.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="ButtonClearDisplays.Text" xml:space="preserve">
-    <value>Clear Displays</value>
-  </data>
-  <data name="ButtonClearDisplays.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;ButtonClearDisplays.Name" xml:space="preserve">
-    <value>ButtonClearDisplays</value>
-  </data>
-  <data name="&gt;&gt;ButtonClearDisplays.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ButtonClearDisplays.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;ButtonClearDisplays.ZOrder" xml:space="preserve">
-    <value>4</value>
   </data>
   <data name="PictureBoxLogo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -751,77 +718,11 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;PictureBoxLogo.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>3</value>
   </data>
   <metadata name="BindingSourceLocations.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 60</value>
   </metadata>
-  <data name="ButtonPortTest.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt</value>
-  </data>
-  <data name="ButtonPortTest.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ButtonPortTest.Location" type="System.Drawing.Point, System.Drawing">
-    <value>617, 134</value>
-  </data>
-  <data name="ButtonPortTest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 33</value>
-  </data>
-  <data name="ButtonPortTest.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="ButtonPortTest.Text" xml:space="preserve">
-    <value>Fix Orders</value>
-  </data>
-  <data name="ButtonPortTest.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTest.Name" xml:space="preserve">
-    <value>ButtonPortTest</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTest.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTest.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTest.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="ButtonPortTestOff.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt</value>
-  </data>
-  <data name="ButtonPortTestOff.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ButtonPortTestOff.Location" type="System.Drawing.Point, System.Drawing">
-    <value>476, 134</value>
-  </data>
-  <data name="ButtonPortTestOff.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 33</value>
-  </data>
-  <data name="ButtonPortTestOff.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="ButtonPortTestOff.Text" xml:space="preserve">
-    <value>Port Test Off</value>
-  </data>
-  <data name="ButtonPortTestOff.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTestOff.Name" xml:space="preserve">
-    <value>ButtonPortTestOff</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTestOff.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTestOff.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;ButtonPortTestOff.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <metadata name="BindingSourceItemDefinition.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>837, 17</value>
   </metadata>

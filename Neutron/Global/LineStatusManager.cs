@@ -33,7 +33,8 @@ namespace Neutron.Global
                 new LineStatus() {Id = 6, Name = "Complete", Sequence = 60},
                 new LineStatus() {Id = 7, Name = "Returned", Sequence = 70},
                 new LineStatus() {Id = 8, Name = "Archive", Sequence = 80},
-                new LineStatus() {Id = 9, Name = "Skipped", Sequence = 90}
+                new LineStatus() {Id = 9, Name = "Skipped", Sequence = 90},
+                new LineStatus() {Id = 10, Name = "Kill", Sequence = 100}
             };
 
             try

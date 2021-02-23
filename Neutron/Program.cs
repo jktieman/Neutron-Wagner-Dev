@@ -92,59 +92,13 @@ namespace Neutron
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             }
 
+            var frmMain = kernel.Get<FrmMain>();
+            Application.Run(frmMain);
 
-            Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor
-                , lacProcessor, neutronVariables, imageManager, stationRepository
-                , ordersRepository, replenOrdersRepository));
+            //Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor
+            //    , lacProcessor, imageManager, stationRepository
+            //    , ordersRepository, replenOrdersRepository));
 
-        }
-
-        private static string GetRootDirectory()
-        {
-            var data = new NeutronRootDirectory();
-            var fileName = ($"{typeof(NeutronRootDirectory).Name}.json");
-
-            var fileInfo = new FileInfo($"Json\\{fileName}");
-            if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
-            {
-                if (fileInfo.DirectoryName != null) Directory.CreateDirectory(fileInfo.DirectoryName);
-            }
-
-            if (!fileInfo.Exists)
-            {
-                SaveNew(fileInfo, data);
-            }
-
-            if (fileInfo.Exists)
-            {
-                try
-                {
-                    using (TextReader reader = new StreamReader(fileInfo.FullName))
-                    {
-                        data = JsonConvert.DeserializeObject<NeutronRootDirectory>(reader.ReadToEnd());
-                    }
-                }
-                catch (Exception)
-                {
-                    Console.Write($"Error reading from Json file.  {fileInfo.FullName}");
-                }
-            }
-            return data.RootDirectory;
-        }
-
-        public static void SaveNew(FileInfo fileInfo, NeutronRootDirectory data)
-        {
-            try
-            {
-                using (TextWriter writer = new StreamWriter(fileInfo.FullName, append: false))
-                {
-                    writer.Write(JsonConvert.SerializeObject(data));
-                }
-            }
-            catch (Exception)
-            {
-                Console.Write("Error writing NeutronRootDirectory to Json file.");
-            }
         }
     }
 }

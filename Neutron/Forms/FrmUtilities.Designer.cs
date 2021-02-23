@@ -123,12 +123,14 @@
             this.CheckBoxIptiDisplays = new System.Windows.Forms.CheckBox();
             this.CheckBoxAutoEnlargeImage = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseMenuSecurity = new System.Windows.Forms.CheckBox();
+            this.ComboBoxDefaultStorageType = new System.Windows.Forms.ComboBox();
             this.ComboBoxDefaultLanguage = new System.Windows.Forms.ComboBox();
             this.ComboBoxDeviceDriver = new System.Windows.Forms.ComboBox();
             this.TextBoxUploadDelay = new System.Windows.Forms.TextBox();
             this.TextBoxDeviceFlashRate = new System.Windows.Forms.TextBox();
             this.LabelSettingsSlotFormat = new System.Windows.Forms.Label();
             this.TextBoxLoaderDelay = new System.Windows.Forms.TextBox();
+            this.LabelDefaultStorageType = new System.Windows.Forms.Label();
             this.LabelSettingsLogLevel = new System.Windows.Forms.Label();
             this.LabelDefaultLanguage = new System.Windows.Forms.Label();
             this.TextBoxActionCodes = new System.Windows.Forms.TextBox();
@@ -386,8 +388,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.LabelDefaultStorageType = new System.Windows.Forms.Label();
-            this.ComboBoxDefaultStorageType = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -461,7 +461,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1155, 670);
-            this.tabControl1.TabIndex = 23;
+            this.tabControl1.TabIndex = 0;
             // 
             // Main
             // 
@@ -508,7 +508,7 @@
             this.MBUtilitiesClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBUtilitiesClose.Name = "MBUtilitiesClose";
             this.MBUtilitiesClose.Size = new System.Drawing.Size(126, 76);
-            this.MBUtilitiesClose.TabIndex = 28;
+            this.MBUtilitiesClose.TabIndex = 6;
             this.MBUtilitiesClose.Text = "Close";
             this.MBUtilitiesClose.UseSelectable = true;
             this.MBUtilitiesClose.Click += new System.EventHandler(this.MBMainClose_Click);
@@ -520,7 +520,7 @@
             this.MBManageLookups.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBManageLookups.Name = "MBManageLookups";
             this.MBManageLookups.Size = new System.Drawing.Size(350, 100);
-            this.MBManageLookups.TabIndex = 21;
+            this.MBManageLookups.TabIndex = 4;
             this.MBManageLookups.Text = "Manage Lookups";
             this.MBManageLookups.UseSelectable = true;
             this.MBManageLookups.Click += new System.EventHandler(this.MBLookups_Click);
@@ -532,7 +532,7 @@
             this.MBPrinterSetup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrinterSetup.Name = "MBPrinterSetup";
             this.MBPrinterSetup.Size = new System.Drawing.Size(350, 100);
-            this.MBPrinterSetup.TabIndex = 21;
+            this.MBPrinterSetup.TabIndex = 5;
             this.MBPrinterSetup.Text = "Printer Setup";
             this.MBPrinterSetup.UseSelectable = true;
             this.MBPrinterSetup.Click += new System.EventHandler(this.MBPrinterSetup_Click);
@@ -544,7 +544,7 @@
             this.MBCommunications.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunications.Name = "MBCommunications";
             this.MBCommunications.Size = new System.Drawing.Size(350, 100);
-            this.MBCommunications.TabIndex = 25;
+            this.MBCommunications.TabIndex = 0;
             this.MBCommunications.Text = "Communications";
             this.MBCommunications.UseSelectable = true;
             this.MBCommunications.Click += new System.EventHandler(this.MBCommunications_Click);
@@ -556,7 +556,7 @@
             this.MBDevices.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDevices.Name = "MBDevices";
             this.MBDevices.Size = new System.Drawing.Size(350, 100);
-            this.MBDevices.TabIndex = 25;
+            this.MBDevices.TabIndex = 1;
             this.MBDevices.Text = "Device Setup";
             this.MBDevices.UseSelectable = true;
             this.MBDevices.Click += new System.EventHandler(this.MBDevices_Click);
@@ -568,7 +568,7 @@
             this.MBStations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStations.Name = "MBStations";
             this.MBStations.Size = new System.Drawing.Size(350, 100);
-            this.MBStations.TabIndex = 26;
+            this.MBStations.TabIndex = 2;
             this.MBStations.Text = "Stations";
             this.MBStations.UseSelectable = true;
             this.MBStations.Click += new System.EventHandler(this.MBStations_Click);
@@ -580,7 +580,7 @@
             this.MBOptions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOptions.Name = "MBOptions";
             this.MBOptions.Size = new System.Drawing.Size(350, 100);
-            this.MBOptions.TabIndex = 27;
+            this.MBOptions.TabIndex = 3;
             this.MBOptions.Text = "Options";
             this.MBOptions.UseSelectable = true;
             this.MBOptions.Click += new System.EventHandler(this.MBOptions_Click);
@@ -618,7 +618,7 @@
             this.MBPrintSetUpSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintSetUpSave.Name = "MBPrintSetUpSave";
             this.MBPrintSetUpSave.Size = new System.Drawing.Size(125, 76);
-            this.MBPrintSetUpSave.TabIndex = 54;
+            this.MBPrintSetUpSave.TabIndex = 8;
             this.MBPrintSetUpSave.Text = "Save";
             this.MBPrintSetUpSave.UseSelectable = true;
             this.MBPrintSetUpSave.Click += new System.EventHandler(this.MBPrintSetUpSave_Click);
@@ -640,7 +640,7 @@
             this.TextBoxTestOrderNumber.Location = new System.Drawing.Point(781, 236);
             this.TextBoxTestOrderNumber.Name = "TextBoxTestOrderNumber";
             this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(144, 23);
-            this.TextBoxTestOrderNumber.TabIndex = 52;
+            this.TextBoxTestOrderNumber.TabIndex = 2;
             // 
             // ButtonPrintTestToteLabel
             // 
@@ -648,7 +648,7 @@
             this.ButtonPrintTestToteLabel.Location = new System.Drawing.Point(750, 497);
             this.ButtonPrintTestToteLabel.Name = "ButtonPrintTestToteLabel";
             this.ButtonPrintTestToteLabel.Size = new System.Drawing.Size(175, 23);
-            this.ButtonPrintTestToteLabel.TabIndex = 51;
+            this.ButtonPrintTestToteLabel.TabIndex = 7;
             this.ButtonPrintTestToteLabel.Text = "Print Test Tote Label";
             this.ButtonPrintTestToteLabel.UseVisualStyleBackColor = true;
             this.ButtonPrintTestToteLabel.Click += new System.EventHandler(this.ButtonPrintTestToteLabel_Click);
@@ -659,7 +659,7 @@
             this.ButtonPrintTestDocument.Location = new System.Drawing.Point(781, 266);
             this.ButtonPrintTestDocument.Name = "ButtonPrintTestDocument";
             this.ButtonPrintTestDocument.Size = new System.Drawing.Size(144, 23);
-            this.ButtonPrintTestDocument.TabIndex = 51;
+            this.ButtonPrintTestDocument.TabIndex = 3;
             this.ButtonPrintTestDocument.Text = "Print Test Document";
             this.ButtonPrintTestDocument.UseVisualStyleBackColor = true;
             this.ButtonPrintTestDocument.Click += new System.EventHandler(this.ButtonPrintTestDocument_Click);
@@ -670,7 +670,7 @@
             this.ButtonPrintTestShortReport.Location = new System.Drawing.Point(750, 343);
             this.ButtonPrintTestShortReport.Name = "ButtonPrintTestShortReport";
             this.ButtonPrintTestShortReport.Size = new System.Drawing.Size(175, 23);
-            this.ButtonPrintTestShortReport.TabIndex = 51;
+            this.ButtonPrintTestShortReport.TabIndex = 4;
             this.ButtonPrintTestShortReport.Text = "Print Test Short Report";
             this.ButtonPrintTestShortReport.UseVisualStyleBackColor = true;
             this.ButtonPrintTestShortReport.Click += new System.EventHandler(this.ButtonPrintTestShortReport_Click);
@@ -694,7 +694,7 @@
             this.TextBoxLabelHomeY.Location = new System.Drawing.Point(262, 44);
             this.TextBoxLabelHomeY.Name = "TextBoxLabelHomeY";
             this.TextBoxLabelHomeY.Size = new System.Drawing.Size(68, 22);
-            this.TextBoxLabelHomeY.TabIndex = 6;
+            this.TextBoxLabelHomeY.TabIndex = 1;
             this.TextBoxLabelHomeY.Text = "0";
             this.TextBoxLabelHomeY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -703,7 +703,7 @@
             this.TextBoxLabelHomeX.Location = new System.Drawing.Point(104, 44);
             this.TextBoxLabelHomeX.Name = "TextBoxLabelHomeX";
             this.TextBoxLabelHomeX.Size = new System.Drawing.Size(68, 22);
-            this.TextBoxLabelHomeX.TabIndex = 5;
+            this.TextBoxLabelHomeX.TabIndex = 0;
             this.TextBoxLabelHomeX.Text = "0";
             this.TextBoxLabelHomeX.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -731,7 +731,7 @@
             this.ButtonLabelPrinter.Location = new System.Drawing.Point(798, 408);
             this.ButtonLabelPrinter.Name = "ButtonLabelPrinter";
             this.ButtonLabelPrinter.Size = new System.Drawing.Size(127, 25);
-            this.ButtonLabelPrinter.TabIndex = 49;
+            this.ButtonLabelPrinter.TabIndex = 6;
             this.ButtonLabelPrinter.Text = "Select Printer";
             this.ButtonLabelPrinter.UseVisualStyleBackColor = true;
             this.ButtonLabelPrinter.Click += new System.EventHandler(this.ButtonLabelPrinter_Click);
@@ -743,7 +743,7 @@
             this.TextBoxLabelPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxLabelPrinter.Name = "TextBoxLabelPrinter";
             this.TextBoxLabelPrinter.Size = new System.Drawing.Size(438, 22);
-            this.TextBoxLabelPrinter.TabIndex = 48;
+            this.TextBoxLabelPrinter.TabIndex = 5;
             // 
             // LabelPrintSettingsEnterTestOrderNumber
             // 
@@ -790,7 +790,7 @@
             this.TextBoxDocumentBottomMargin.Location = new System.Drawing.Point(143, 129);
             this.TextBoxDocumentBottomMargin.Name = "TextBoxDocumentBottomMargin";
             this.TextBoxDocumentBottomMargin.Size = new System.Drawing.Size(68, 22);
-            this.TextBoxDocumentBottomMargin.TabIndex = 7;
+            this.TextBoxDocumentBottomMargin.TabIndex = 2;
             this.TextBoxDocumentBottomMargin.Text = "100";
             this.TextBoxDocumentBottomMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -799,7 +799,7 @@
             this.TextBoxDocumentRightMargin.Location = new System.Drawing.Point(210, 94);
             this.TextBoxDocumentRightMargin.Name = "TextBoxDocumentRightMargin";
             this.TextBoxDocumentRightMargin.Size = new System.Drawing.Size(68, 22);
-            this.TextBoxDocumentRightMargin.TabIndex = 6;
+            this.TextBoxDocumentRightMargin.TabIndex = 1;
             this.TextBoxDocumentRightMargin.Text = "100";
             this.TextBoxDocumentRightMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -808,7 +808,7 @@
             this.TextBoxDocumentLeftMargin.Location = new System.Drawing.Point(75, 94);
             this.TextBoxDocumentLeftMargin.Name = "TextBoxDocumentLeftMargin";
             this.TextBoxDocumentLeftMargin.Size = new System.Drawing.Size(68, 22);
-            this.TextBoxDocumentLeftMargin.TabIndex = 5;
+            this.TextBoxDocumentLeftMargin.TabIndex = 3;
             this.TextBoxDocumentLeftMargin.Text = "100";
             this.TextBoxDocumentLeftMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -817,7 +817,7 @@
             this.TextBoxDocumentTopMargin.Location = new System.Drawing.Point(143, 60);
             this.TextBoxDocumentTopMargin.Name = "TextBoxDocumentTopMargin";
             this.TextBoxDocumentTopMargin.Size = new System.Drawing.Size(68, 22);
-            this.TextBoxDocumentTopMargin.TabIndex = 4;
+            this.TextBoxDocumentTopMargin.TabIndex = 0;
             this.TextBoxDocumentTopMargin.Text = "100";
             this.TextBoxDocumentTopMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -863,7 +863,7 @@
             this.ButtonDocumentPrinter.Location = new System.Drawing.Point(798, 145);
             this.ButtonDocumentPrinter.Name = "ButtonDocumentPrinter";
             this.ButtonDocumentPrinter.Size = new System.Drawing.Size(127, 25);
-            this.ButtonDocumentPrinter.TabIndex = 45;
+            this.ButtonDocumentPrinter.TabIndex = 1;
             this.ButtonDocumentPrinter.Text = "Select Printer";
             this.ButtonDocumentPrinter.UseVisualStyleBackColor = true;
             this.ButtonDocumentPrinter.Click += new System.EventHandler(this.ButtonDocumentPrinter_Click);
@@ -875,7 +875,7 @@
             this.TextBoxDocumentPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxDocumentPrinter.Name = "TextBoxDocumentPrinter";
             this.TextBoxDocumentPrinter.Size = new System.Drawing.Size(438, 22);
-            this.TextBoxDocumentPrinter.TabIndex = 42;
+            this.TextBoxDocumentPrinter.TabIndex = 0;
             // 
             // LabelCheckPrinter
             // 
@@ -896,7 +896,7 @@
             this.MBPrintSetUpBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintSetUpBack.Name = "MBPrintSetUpBack";
             this.MBPrintSetUpBack.Size = new System.Drawing.Size(125, 76);
-            this.MBPrintSetUpBack.TabIndex = 39;
+            this.MBPrintSetUpBack.TabIndex = 9;
             this.MBPrintSetUpBack.Text = "Back";
             this.MBPrintSetUpBack.UseSelectable = true;
             this.MBPrintSetUpBack.Click += new System.EventHandler(this.MBPrintSetUpBack_Click);
@@ -988,7 +988,7 @@
             this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(167, 311);
             this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
             this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
-            this.ComboBoxStoreBatchSize.TabIndex = 24;
+            this.ComboBoxStoreBatchSize.TabIndex = 7;
             // 
             // ComboBoxPickBatchSize
             // 
@@ -1003,7 +1003,7 @@
             this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(167, 274);
             this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
             this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(65, 24);
-            this.ComboBoxPickBatchSize.TabIndex = 24;
+            this.ComboBoxPickBatchSize.TabIndex = 6;
             // 
             // GroupBoxPickMethod
             // 
@@ -1025,7 +1025,7 @@
             this.RadioButtonLifo.Location = new System.Drawing.Point(30, 125);
             this.RadioButtonLifo.Name = "RadioButtonLifo";
             this.RadioButtonLifo.Size = new System.Drawing.Size(54, 20);
-            this.RadioButtonLifo.TabIndex = 0;
+            this.RadioButtonLifo.TabIndex = 3;
             this.RadioButtonLifo.Text = "LIFO";
             this.RadioButtonLifo.UseVisualStyleBackColor = true;
             // 
@@ -1036,7 +1036,7 @@
             this.RadioButtonFifo.Location = new System.Drawing.Point(30, 91);
             this.RadioButtonFifo.Name = "RadioButtonFifo";
             this.RadioButtonFifo.Size = new System.Drawing.Size(55, 20);
-            this.RadioButtonFifo.TabIndex = 0;
+            this.RadioButtonFifo.TabIndex = 2;
             this.RadioButtonFifo.TabStop = true;
             this.RadioButtonFifo.Text = "FIFO";
             this.RadioButtonFifo.UseVisualStyleBackColor = true;
@@ -1047,7 +1047,7 @@
             this.RadioButtonPrimeBinLast.Location = new System.Drawing.Point(30, 57);
             this.RadioButtonPrimeBinLast.Name = "RadioButtonPrimeBinLast";
             this.RadioButtonPrimeBinLast.Size = new System.Drawing.Size(150, 20);
-            this.RadioButtonPrimeBinLast.TabIndex = 0;
+            this.RadioButtonPrimeBinLast.TabIndex = 1;
             this.RadioButtonPrimeBinLast.Text = "Prime Bin Last - FIFO";
             this.RadioButtonPrimeBinLast.UseVisualStyleBackColor = true;
             // 
@@ -1068,7 +1068,7 @@
             this.CheckBoxShiEnabled.Location = new System.Drawing.Point(598, 379);
             this.CheckBoxShiEnabled.Name = "CheckBoxShiEnabled";
             this.CheckBoxShiEnabled.Size = new System.Drawing.Size(214, 20);
-            this.CheckBoxShiEnabled.TabIndex = 22;
+            this.CheckBoxShiEnabled.TabIndex = 31;
             this.CheckBoxShiEnabled.Text = "Shelf Height Indicators Enabled";
             this.CheckBoxShiEnabled.UseVisualStyleBackColor = true;
             // 
@@ -1079,7 +1079,7 @@
             this.CheckBoxBliEnabled.Location = new System.Drawing.Point(598, 343);
             this.CheckBoxBliEnabled.Name = "CheckBoxBliEnabled";
             this.CheckBoxBliEnabled.Size = new System.Drawing.Size(207, 20);
-            this.CheckBoxBliEnabled.TabIndex = 21;
+            this.CheckBoxBliEnabled.TabIndex = 30;
             this.CheckBoxBliEnabled.Text = "Batch Light Indicators Enabled";
             this.CheckBoxBliEnabled.UseVisualStyleBackColor = true;
             // 
@@ -1109,7 +1109,7 @@
             this.LabelLoaderDelay.Location = new System.Drawing.Point(838, 237);
             this.LabelLoaderDelay.Name = "LabelLoaderDelay";
             this.LabelLoaderDelay.Size = new System.Drawing.Size(166, 16);
-            this.LabelLoaderDelay.TabIndex = 19;
+            this.LabelLoaderDelay.TabIndex = 40;
             this.LabelLoaderDelay.Text = "Loader Delay (Seconds)";
             this.LabelLoaderDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1160,7 +1160,7 @@
             this.CheckBoxUsePr1Processor.Location = new System.Drawing.Point(349, 559);
             this.CheckBoxUsePr1Processor.Name = "CheckBoxUsePr1Processor";
             this.CheckBoxUsePr1Processor.Size = new System.Drawing.Size(146, 20);
-            this.CheckBoxUsePr1Processor.TabIndex = 18;
+            this.CheckBoxUsePr1Processor.TabIndex = 23;
             this.CheckBoxUsePr1Processor.Text = "Use PR1 Processor";
             this.CheckBoxUsePr1Processor.UseVisualStyleBackColor = true;
             // 
@@ -1171,7 +1171,7 @@
             this.CheckBoxUsePr1StyleOutputProcessor.Location = new System.Drawing.Point(349, 523);
             this.CheckBoxUsePr1StyleOutputProcessor.Name = "CheckBoxUsePr1StyleOutputProcessor";
             this.CheckBoxUsePr1StyleOutputProcessor.Size = new System.Drawing.Size(180, 20);
-            this.CheckBoxUsePr1StyleOutputProcessor.TabIndex = 18;
+            this.CheckBoxUsePr1StyleOutputProcessor.TabIndex = 22;
             this.CheckBoxUsePr1StyleOutputProcessor.Text = "Use PR1 Style Output File";
             this.CheckBoxUsePr1StyleOutputProcessor.UseVisualStyleBackColor = true;
             // 
@@ -1182,7 +1182,7 @@
             this.CheckBoxUsePr1StyleInputProcessor.Location = new System.Drawing.Point(349, 487);
             this.CheckBoxUsePr1StyleInputProcessor.Name = "CheckBoxUsePr1StyleInputProcessor";
             this.CheckBoxUsePr1StyleInputProcessor.Size = new System.Drawing.Size(170, 20);
-            this.CheckBoxUsePr1StyleInputProcessor.TabIndex = 18;
+            this.CheckBoxUsePr1StyleInputProcessor.TabIndex = 21;
             this.CheckBoxUsePr1StyleInputProcessor.Text = "Use PR1 Style Input File";
             this.CheckBoxUsePr1StyleInputProcessor.UseVisualStyleBackColor = true;
             // 
@@ -1193,7 +1193,7 @@
             this.CheckBoxParkPositionAfterBatch.Location = new System.Drawing.Point(349, 451);
             this.CheckBoxParkPositionAfterBatch.Name = "CheckBoxParkPositionAfterBatch";
             this.CheckBoxParkPositionAfterBatch.Size = new System.Drawing.Size(173, 20);
-            this.CheckBoxParkPositionAfterBatch.TabIndex = 18;
+            this.CheckBoxParkPositionAfterBatch.TabIndex = 20;
             this.CheckBoxParkPositionAfterBatch.Text = "Park Position After Batch";
             this.CheckBoxParkPositionAfterBatch.UseVisualStyleBackColor = true;
             // 
@@ -1204,7 +1204,7 @@
             this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 415);
             this.CheckBoxPrintPreview.Name = "CheckBoxPrintPreview";
             this.CheckBoxPrintPreview.Size = new System.Drawing.Size(193, 20);
-            this.CheckBoxPrintPreview.TabIndex = 18;
+            this.CheckBoxPrintPreview.TabIndex = 19;
             this.CheckBoxPrintPreview.Text = "Print Preview All Documents";
             this.CheckBoxPrintPreview.UseVisualStyleBackColor = true;
             // 
@@ -1243,7 +1243,7 @@
             this.ComboBoxStationNumber.Location = new System.Drawing.Point(167, 55);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
             this.ComboBoxStationNumber.Size = new System.Drawing.Size(150, 24);
-            this.ComboBoxStationNumber.TabIndex = 16;
+            this.ComboBoxStationNumber.TabIndex = 0;
             // 
             // ComboBoxSlotFormat
             // 
@@ -1258,7 +1258,7 @@
             this.ComboBoxSlotFormat.Location = new System.Drawing.Point(167, 234);
             this.ComboBoxSlotFormat.Name = "ComboBoxSlotFormat";
             this.ComboBoxSlotFormat.Size = new System.Drawing.Size(150, 24);
-            this.ComboBoxSlotFormat.TabIndex = 16;
+            this.ComboBoxSlotFormat.TabIndex = 5;
             // 
             // NumericUpDownLogLevel
             // 
@@ -1276,7 +1276,7 @@
             0});
             this.NumericUpDownLogLevel.Name = "NumericUpDownLogLevel";
             this.NumericUpDownLogLevel.Size = new System.Drawing.Size(65, 22);
-            this.NumericUpDownLogLevel.TabIndex = 15;
+            this.NumericUpDownLogLevel.TabIndex = 4;
             this.NumericUpDownLogLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownLogLevel.Value = new decimal(new int[] {
             2,
@@ -1291,7 +1291,7 @@
             this.CheckBoxPinLoginOnly.Location = new System.Drawing.Point(598, 307);
             this.CheckBoxPinLoginOnly.Name = "CheckBoxPinLoginOnly";
             this.CheckBoxPinLoginOnly.Size = new System.Drawing.Size(112, 20);
-            this.CheckBoxPinLoginOnly.TabIndex = 14;
+            this.CheckBoxPinLoginOnly.TabIndex = 29;
             this.CheckBoxPinLoginOnly.Text = "Pin Login Only";
             this.CheckBoxPinLoginOnly.UseVisualStyleBackColor = true;
             // 
@@ -1304,7 +1304,7 @@
             this.CheckBoxUpdateItemDefinitionDescription.Location = new System.Drawing.Point(601, 559);
             this.CheckBoxUpdateItemDefinitionDescription.Name = "CheckBoxUpdateItemDefinitionDescription";
             this.CheckBoxUpdateItemDefinitionDescription.Size = new System.Drawing.Size(229, 20);
-            this.CheckBoxUpdateItemDefinitionDescription.TabIndex = 14;
+            this.CheckBoxUpdateItemDefinitionDescription.TabIndex = 36;
             this.CheckBoxUpdateItemDefinitionDescription.Text = "Update Item Definition Description";
             this.CheckBoxUpdateItemDefinitionDescription.UseVisualStyleBackColor = true;
             // 
@@ -1315,7 +1315,7 @@
             this.CheckBoxSerialPicking.Location = new System.Drawing.Point(600, 523);
             this.CheckBoxSerialPicking.Name = "CheckBoxSerialPicking";
             this.CheckBoxSerialPicking.Size = new System.Drawing.Size(109, 20);
-            this.CheckBoxSerialPicking.TabIndex = 14;
+            this.CheckBoxSerialPicking.TabIndex = 35;
             this.CheckBoxSerialPicking.Text = "Serial Picking";
             this.CheckBoxSerialPicking.UseVisualStyleBackColor = true;
             // 
@@ -1326,7 +1326,7 @@
             this.CheckBoxLoadRackOrders.Location = new System.Drawing.Point(598, 487);
             this.CheckBoxLoadRackOrders.Name = "CheckBoxLoadRackOrders";
             this.CheckBoxLoadRackOrders.Size = new System.Drawing.Size(137, 20);
-            this.CheckBoxLoadRackOrders.TabIndex = 14;
+            this.CheckBoxLoadRackOrders.TabIndex = 34;
             this.CheckBoxLoadRackOrders.Text = "Load Rack Orders";
             this.CheckBoxLoadRackOrders.UseVisualStyleBackColor = true;
             // 
@@ -1337,7 +1337,7 @@
             this.CheckBoxIptiDisplays.Location = new System.Drawing.Point(598, 451);
             this.CheckBoxIptiDisplays.Name = "CheckBoxIptiDisplays";
             this.CheckBoxIptiDisplays.Size = new System.Drawing.Size(107, 20);
-            this.CheckBoxIptiDisplays.TabIndex = 14;
+            this.CheckBoxIptiDisplays.TabIndex = 33;
             this.CheckBoxIptiDisplays.Text = "IPTI Displays";
             this.CheckBoxIptiDisplays.UseVisualStyleBackColor = true;
             // 
@@ -1348,7 +1348,7 @@
             this.CheckBoxAutoEnlargeImage.Location = new System.Drawing.Point(598, 415);
             this.CheckBoxAutoEnlargeImage.Name = "CheckBoxAutoEnlargeImage";
             this.CheckBoxAutoEnlargeImage.Size = new System.Drawing.Size(145, 20);
-            this.CheckBoxAutoEnlargeImage.TabIndex = 14;
+            this.CheckBoxAutoEnlargeImage.TabIndex = 32;
             this.CheckBoxAutoEnlargeImage.Text = "Auto Enlarge Image";
             this.CheckBoxAutoEnlargeImage.UseVisualStyleBackColor = true;
             // 
@@ -1359,9 +1359,19 @@
             this.CheckBoxUseMenuSecurity.Location = new System.Drawing.Point(598, 271);
             this.CheckBoxUseMenuSecurity.Name = "CheckBoxUseMenuSecurity";
             this.CheckBoxUseMenuSecurity.Size = new System.Drawing.Size(139, 20);
-            this.CheckBoxUseMenuSecurity.TabIndex = 13;
+            this.CheckBoxUseMenuSecurity.TabIndex = 28;
             this.CheckBoxUseMenuSecurity.Text = "Use Menu Security";
             this.CheckBoxUseMenuSecurity.UseVisualStyleBackColor = true;
+            // 
+            // ComboBoxDefaultStorageType
+            // 
+            this.ComboBoxDefaultStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxDefaultStorageType.FormattingEnabled = true;
+            this.ComboBoxDefaultStorageType.Location = new System.Drawing.Point(167, 597);
+            this.ComboBoxDefaultStorageType.Name = "ComboBoxDefaultStorageType";
+            this.ComboBoxDefaultStorageType.Size = new System.Drawing.Size(150, 24);
+            this.ComboBoxDefaultStorageType.TabIndex = 10;
             // 
             // ComboBoxDefaultLanguage
             // 
@@ -1371,7 +1381,7 @@
             this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(167, 90);
             this.ComboBoxDefaultLanguage.Name = "ComboBoxDefaultLanguage";
             this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(150, 24);
-            this.ComboBoxDefaultLanguage.TabIndex = 12;
+            this.ComboBoxDefaultLanguage.TabIndex = 1;
             // 
             // ComboBoxDeviceDriver
             // 
@@ -1386,7 +1396,7 @@
             this.ComboBoxDeviceDriver.Location = new System.Drawing.Point(167, 160);
             this.ComboBoxDeviceDriver.Name = "ComboBoxDeviceDriver";
             this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(150, 24);
-            this.ComboBoxDeviceDriver.TabIndex = 12;
+            this.ComboBoxDeviceDriver.TabIndex = 3;
             // 
             // TextBoxUploadDelay
             // 
@@ -1394,7 +1404,7 @@
             this.TextBoxUploadDelay.Location = new System.Drawing.Point(1022, 269);
             this.TextBoxUploadDelay.Name = "TextBoxUploadDelay";
             this.TextBoxUploadDelay.Size = new System.Drawing.Size(62, 22);
-            this.TextBoxUploadDelay.TabIndex = 9;
+            this.TextBoxUploadDelay.TabIndex = 42;
             this.TextBoxUploadDelay.Text = "60";
             this.TextBoxUploadDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1404,7 +1414,7 @@
             this.TextBoxDeviceFlashRate.Location = new System.Drawing.Point(1022, 412);
             this.TextBoxDeviceFlashRate.Name = "TextBoxDeviceFlashRate";
             this.TextBoxDeviceFlashRate.Size = new System.Drawing.Size(62, 22);
-            this.TextBoxDeviceFlashRate.TabIndex = 9;
+            this.TextBoxDeviceFlashRate.TabIndex = 46;
             this.TextBoxDeviceFlashRate.Text = "500";
             this.TextBoxDeviceFlashRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1424,9 +1434,19 @@
             this.TextBoxLoaderDelay.Location = new System.Drawing.Point(1022, 234);
             this.TextBoxLoaderDelay.Name = "TextBoxLoaderDelay";
             this.TextBoxLoaderDelay.Size = new System.Drawing.Size(62, 22);
-            this.TextBoxLoaderDelay.TabIndex = 9;
+            this.TextBoxLoaderDelay.TabIndex = 41;
             this.TextBoxLoaderDelay.Text = "60";
             this.TextBoxLoaderDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelDefaultStorageType
+            // 
+            this.LabelDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDefaultStorageType.Location = new System.Drawing.Point(14, 600);
+            this.LabelDefaultStorageType.Name = "LabelDefaultStorageType";
+            this.LabelDefaultStorageType.Size = new System.Drawing.Size(137, 16);
+            this.LabelDefaultStorageType.TabIndex = 10;
+            this.LabelDefaultStorageType.Text = "Default Storage Type";
+            this.LabelDefaultStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelSettingsLogLevel
             // 
@@ -1454,7 +1474,7 @@
             this.TextBoxActionCodes.Location = new System.Drawing.Point(1022, 305);
             this.TextBoxActionCodes.Name = "TextBoxActionCodes";
             this.TextBoxActionCodes.Size = new System.Drawing.Size(103, 22);
-            this.TextBoxActionCodes.TabIndex = 9;
+            this.TextBoxActionCodes.TabIndex = 43;
             this.TextBoxActionCodes.Text = "1, 5, 46, 51";
             this.TextBoxActionCodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1474,7 +1494,7 @@
             this.TextBoxFieldDelimiter.Location = new System.Drawing.Point(167, 347);
             this.TextBoxFieldDelimiter.Name = "TextBoxFieldDelimiter";
             this.TextBoxFieldDelimiter.Size = new System.Drawing.Size(31, 22);
-            this.TextBoxFieldDelimiter.TabIndex = 9;
+            this.TextBoxFieldDelimiter.TabIndex = 8;
             this.TextBoxFieldDelimiter.Text = "|";
             this.TextBoxFieldDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1484,7 +1504,7 @@
             this.TextBoxLicenseCode.Location = new System.Drawing.Point(167, 126);
             this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
             this.TextBoxLicenseCode.Size = new System.Drawing.Size(150, 22);
-            this.TextBoxLicenseCode.TabIndex = 9;
+            this.TextBoxLicenseCode.TabIndex = 2;
             this.TextBoxLicenseCode.Text = "PR1";
             this.TextBoxLicenseCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1505,7 +1525,7 @@
             this.CheckBoxUseLAC.Location = new System.Drawing.Point(349, 307);
             this.CheckBoxUseLAC.Name = "CheckBoxUseLAC";
             this.CheckBoxUseLAC.Size = new System.Drawing.Size(199, 20);
-            this.CheckBoxUseLAC.TabIndex = 8;
+            this.CheckBoxUseLAC.TabIndex = 16;
             this.CheckBoxUseLAC.Text = "Use Location Access Control";
             this.CheckBoxUseLAC.UseVisualStyleBackColor = true;
             // 
@@ -1516,7 +1536,7 @@
             this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(64, 572);
             this.CheckBoxUsePrimeBin.Name = "CheckBoxUsePrimeBin";
             this.CheckBoxUsePrimeBin.Size = new System.Drawing.Size(205, 20);
-            this.CheckBoxUsePrimeBin.TabIndex = 8;
+            this.CheckBoxUsePrimeBin.TabIndex = 9;
             this.CheckBoxUsePrimeBin.Text = "Use Prime Bin Replenishment";
             this.CheckBoxUsePrimeBin.UseVisualStyleBackColor = true;
             // 
@@ -1527,7 +1547,7 @@
             this.CheckBoxSendAllPicksToHost.Location = new System.Drawing.Point(349, 271);
             this.CheckBoxSendAllPicksToHost.Name = "CheckBoxSendAllPicksToHost";
             this.CheckBoxSendAllPicksToHost.Size = new System.Drawing.Size(164, 20);
-            this.CheckBoxSendAllPicksToHost.TabIndex = 8;
+            this.CheckBoxSendAllPicksToHost.TabIndex = 15;
             this.CheckBoxSendAllPicksToHost.Text = "Send All Picks To Host";
             this.CheckBoxSendAllPicksToHost.UseVisualStyleBackColor = true;
             // 
@@ -1540,7 +1560,7 @@
             this.CheckBoxDisplaysEnabled.Location = new System.Drawing.Point(349, 235);
             this.CheckBoxDisplaysEnabled.Name = "CheckBoxDisplaysEnabled";
             this.CheckBoxDisplaysEnabled.Size = new System.Drawing.Size(134, 20);
-            this.CheckBoxDisplaysEnabled.TabIndex = 8;
+            this.CheckBoxDisplaysEnabled.TabIndex = 14;
             this.CheckBoxDisplaysEnabled.Text = "Displays Enabled";
             this.CheckBoxDisplaysEnabled.UseVisualStyleBackColor = true;
             // 
@@ -1553,7 +1573,7 @@
             this.CheckBoxShuttleEnabled.Location = new System.Drawing.Point(349, 199);
             this.CheckBoxShuttleEnabled.Name = "CheckBoxShuttleEnabled";
             this.CheckBoxShuttleEnabled.Size = new System.Drawing.Size(131, 20);
-            this.CheckBoxShuttleEnabled.TabIndex = 8;
+            this.CheckBoxShuttleEnabled.TabIndex = 13;
             this.CheckBoxShuttleEnabled.Text = "Devices Enabled";
             this.CheckBoxShuttleEnabled.UseVisualStyleBackColor = true;
             // 
@@ -1564,7 +1584,7 @@
             this.CheckBoxCreateStoreOrderWithRts.Location = new System.Drawing.Point(349, 163);
             this.CheckBoxCreateStoreOrderWithRts.Name = "CheckBoxCreateStoreOrderWithRts";
             this.CheckBoxCreateStoreOrderWithRts.Size = new System.Drawing.Size(199, 20);
-            this.CheckBoxCreateStoreOrderWithRts.TabIndex = 8;
+            this.CheckBoxCreateStoreOrderWithRts.TabIndex = 12;
             this.CheckBoxCreateStoreOrderWithRts.Text = "Create Store Order With RTS";
             this.CheckBoxCreateStoreOrderWithRts.UseVisualStyleBackColor = true;
             // 
@@ -1595,7 +1615,7 @@
             this.CheckBoxUseImages.Location = new System.Drawing.Point(841, 379);
             this.CheckBoxUseImages.Name = "CheckBoxUseImages";
             this.CheckBoxUseImages.Size = new System.Drawing.Size(100, 20);
-            this.CheckBoxUseImages.TabIndex = 8;
+            this.CheckBoxUseImages.TabIndex = 45;
             this.CheckBoxUseImages.Text = "Use Images";
             this.CheckBoxUseImages.UseVisualStyleBackColor = true;
             // 
@@ -1606,7 +1626,7 @@
             this.CheckBoxUseCostCenter.Location = new System.Drawing.Point(841, 343);
             this.CheckBoxUseCostCenter.Name = "CheckBoxUseCostCenter";
             this.CheckBoxUseCostCenter.Size = new System.Drawing.Size(177, 20);
-            this.CheckBoxUseCostCenter.TabIndex = 8;
+            this.CheckBoxUseCostCenter.TabIndex = 44;
             this.CheckBoxUseCostCenter.Text = "Use Cost Center Hot Pick";
             this.CheckBoxUseCostCenter.UseVisualStyleBackColor = true;
             // 
@@ -1617,7 +1637,7 @@
             this.CheckBoxPrintPackingListManual.Location = new System.Drawing.Point(841, 200);
             this.CheckBoxPrintPackingListManual.Name = "CheckBoxPrintPackingListManual";
             this.CheckBoxPrintPackingListManual.Size = new System.Drawing.Size(185, 20);
-            this.CheckBoxPrintPackingListManual.TabIndex = 8;
+            this.CheckBoxPrintPackingListManual.TabIndex = 39;
             this.CheckBoxPrintPackingListManual.Text = "Print Packing List Manually";
             this.CheckBoxPrintPackingListManual.UseVisualStyleBackColor = true;
             // 
@@ -1628,7 +1648,7 @@
             this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 236);
             this.CheckBoxRunUploadOnStartup.Name = "CheckBoxRunUploadOnStartup";
             this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(164, 20);
-            this.CheckBoxRunUploadOnStartup.TabIndex = 8;
+            this.CheckBoxRunUploadOnStartup.TabIndex = 27;
             this.CheckBoxRunUploadOnStartup.Text = "Run Upload On Startup";
             this.CheckBoxRunUploadOnStartup.UseVisualStyleBackColor = true;
             // 
@@ -1639,7 +1659,7 @@
             this.CheckBoxRunLoaderOnStartup.Location = new System.Drawing.Point(598, 199);
             this.CheckBoxRunLoaderOnStartup.Name = "CheckBoxRunLoaderOnStartup";
             this.CheckBoxRunLoaderOnStartup.Size = new System.Drawing.Size(162, 20);
-            this.CheckBoxRunLoaderOnStartup.TabIndex = 8;
+            this.CheckBoxRunLoaderOnStartup.TabIndex = 26;
             this.CheckBoxRunLoaderOnStartup.Text = "Run Loader On Startup";
             this.CheckBoxRunLoaderOnStartup.UseVisualStyleBackColor = true;
             // 
@@ -1650,7 +1670,7 @@
             this.CheckBoxPrintPackingListEnd.Location = new System.Drawing.Point(841, 164);
             this.CheckBoxPrintPackingListEnd.Name = "CheckBoxPrintPackingListEnd";
             this.CheckBoxPrintPackingListEnd.Size = new System.Drawing.Size(222, 20);
-            this.CheckBoxPrintPackingListEnd.TabIndex = 8;
+            this.CheckBoxPrintPackingListEnd.TabIndex = 38;
             this.CheckBoxPrintPackingListEnd.Text = "Print Packing List at End Of Order";
             this.CheckBoxPrintPackingListEnd.UseVisualStyleBackColor = true;
             // 
@@ -1661,7 +1681,7 @@
             this.CheckBoxPrintPackingListStart.Location = new System.Drawing.Point(841, 128);
             this.CheckBoxPrintPackingListStart.Name = "CheckBoxPrintPackingListStart";
             this.CheckBoxPrintPackingListStart.Size = new System.Drawing.Size(223, 20);
-            this.CheckBoxPrintPackingListStart.TabIndex = 8;
+            this.CheckBoxPrintPackingListStart.TabIndex = 37;
             this.CheckBoxPrintPackingListStart.Text = "Print Packing List at Start of Order";
             this.CheckBoxPrintPackingListStart.UseVisualStyleBackColor = true;
             // 
@@ -1672,7 +1692,7 @@
             this.CheckBoxCheckForUsedItem.Location = new System.Drawing.Point(598, 163);
             this.CheckBoxCheckForUsedItem.Name = "CheckBoxCheckForUsedItem";
             this.CheckBoxCheckForUsedItem.Size = new System.Drawing.Size(152, 20);
-            this.CheckBoxCheckForUsedItem.TabIndex = 8;
+            this.CheckBoxCheckForUsedItem.TabIndex = 25;
             this.CheckBoxCheckForUsedItem.Text = "Check For Used Item";
             this.CheckBoxCheckForUsedItem.UseVisualStyleBackColor = true;
             // 
@@ -1683,7 +1703,7 @@
             this.CheckBoxAutoLogOff.Location = new System.Drawing.Point(598, 127);
             this.CheckBoxAutoLogOff.Name = "CheckBoxAutoLogOff";
             this.CheckBoxAutoLogOff.Size = new System.Drawing.Size(166, 20);
-            this.CheckBoxAutoLogOff.TabIndex = 8;
+            this.CheckBoxAutoLogOff.TabIndex = 24;
             this.CheckBoxAutoLogOff.Text = "Auto Log Off After Batch";
             this.CheckBoxAutoLogOff.UseVisualStyleBackColor = true;
             // 
@@ -1694,7 +1714,7 @@
             this.CheckBoxUseReturnToStock.Location = new System.Drawing.Point(349, 127);
             this.CheckBoxUseReturnToStock.Name = "CheckBoxUseReturnToStock";
             this.CheckBoxUseReturnToStock.Size = new System.Drawing.Size(151, 20);
-            this.CheckBoxUseReturnToStock.TabIndex = 8;
+            this.CheckBoxUseReturnToStock.TabIndex = 11;
             this.CheckBoxUseReturnToStock.Text = "Use Return To Stock";
             this.CheckBoxUseReturnToStock.UseVisualStyleBackColor = true;
             // 
@@ -1706,7 +1726,7 @@
             this.MBSaveVariables.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveVariables.Name = "MBSaveVariables";
             this.MBSaveVariables.Size = new System.Drawing.Size(126, 76);
-            this.MBSaveVariables.TabIndex = 3;
+            this.MBSaveVariables.TabIndex = 47;
             this.MBSaveVariables.Text = "Save";
             this.MBSaveVariables.UseSelectable = true;
             this.MBSaveVariables.Click += new System.EventHandler(this.MBSaveVariables_Click);
@@ -1719,7 +1739,7 @@
             this.MBInterfaceFilesBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBInterfaceFilesBack.Name = "MBInterfaceFilesBack";
             this.MBInterfaceFilesBack.Size = new System.Drawing.Size(126, 76);
-            this.MBInterfaceFilesBack.TabIndex = 3;
+            this.MBInterfaceFilesBack.TabIndex = 48;
             this.MBInterfaceFilesBack.Text = "Back";
             this.MBInterfaceFilesBack.UseSelectable = true;
             this.MBInterfaceFilesBack.Click += new System.EventHandler(this.MBInterfaceFilesBack_Click);
@@ -1774,7 +1794,7 @@
             this.MBHardwareDevicesBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHardwareDevicesBack.Name = "MBHardwareDevicesBack";
             this.MBHardwareDevicesBack.Size = new System.Drawing.Size(126, 76);
-            this.MBHardwareDevicesBack.TabIndex = 44;
+            this.MBHardwareDevicesBack.TabIndex = 6;
             this.MBHardwareDevicesBack.Text = "Back";
             this.MBHardwareDevicesBack.UseSelectable = true;
             this.MBHardwareDevicesBack.Click += new System.EventHandler(this.MBHardwareDevicesBack_Click);
@@ -1819,7 +1839,7 @@
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
             this.DataGridView1.Size = new System.Drawing.Size(1113, 505);
-            this.DataGridView1.TabIndex = 43;
+            this.DataGridView1.TabIndex = 5;
             this.DataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             // 
             // MBHardwareDevicesNew
@@ -1829,7 +1849,7 @@
             this.MBHardwareDevicesNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHardwareDevicesNew.Name = "MBHardwareDevicesNew";
             this.MBHardwareDevicesNew.Size = new System.Drawing.Size(126, 76);
-            this.MBHardwareDevicesNew.TabIndex = 16;
+            this.MBHardwareDevicesNew.TabIndex = 2;
             this.MBHardwareDevicesNew.Text = "New";
             this.MBHardwareDevicesNew.UseSelectable = true;
             this.MBHardwareDevicesNew.Click += new System.EventHandler(this.MBHardwareDevicesNew_Click);
@@ -1841,7 +1861,7 @@
             this.MBCommunication.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunication.Name = "MBCommunication";
             this.MBCommunication.Size = new System.Drawing.Size(137, 76);
-            this.MBCommunication.TabIndex = 15;
+            this.MBCommunication.TabIndex = 3;
             this.MBCommunication.Text = "Communication";
             this.MBCommunication.UseSelectable = true;
             this.MBCommunication.Click += new System.EventHandler(this.MBCommunication_Click);
@@ -1853,7 +1873,7 @@
             this.MBPrintHardwareDevices.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintHardwareDevices.Name = "MBPrintHardwareDevices";
             this.MBPrintHardwareDevices.Size = new System.Drawing.Size(126, 76);
-            this.MBPrintHardwareDevices.TabIndex = 15;
+            this.MBPrintHardwareDevices.TabIndex = 4;
             this.MBPrintHardwareDevices.Text = "Save To File";
             this.MBPrintHardwareDevices.UseSelectable = true;
             this.MBPrintHardwareDevices.Click += new System.EventHandler(this.MBPrintHardwareDevices_Click);
@@ -1865,7 +1885,7 @@
             this.MBHardwareDevicesListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHardwareDevicesListing.Name = "MBHardwareDevicesListing";
             this.MBHardwareDevicesListing.Size = new System.Drawing.Size(126, 76);
-            this.MBHardwareDevicesListing.TabIndex = 15;
+            this.MBHardwareDevicesListing.TabIndex = 0;
             this.MBHardwareDevicesListing.Text = "Listing";
             this.MBHardwareDevicesListing.UseSelectable = true;
             this.MBHardwareDevicesListing.Click += new System.EventHandler(this.MBHardwareDevicesListing_Click);
@@ -1877,7 +1897,7 @@
             this.MBHardwareDevicesViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHardwareDevicesViewEdit.Name = "MBHardwareDevicesViewEdit";
             this.MBHardwareDevicesViewEdit.Size = new System.Drawing.Size(126, 76);
-            this.MBHardwareDevicesViewEdit.TabIndex = 15;
+            this.MBHardwareDevicesViewEdit.TabIndex = 1;
             this.MBHardwareDevicesViewEdit.Text = "View/Edit";
             this.MBHardwareDevicesViewEdit.UseSelectable = true;
             this.MBHardwareDevicesViewEdit.Click += new System.EventHandler(this.MBHardwareDevicesViewEdit_Click);
@@ -2636,7 +2656,7 @@
             this.ListBoxCodeNames.Location = new System.Drawing.Point(34, 112);
             this.ListBoxCodeNames.Name = "ListBoxCodeNames";
             this.ListBoxCodeNames.Size = new System.Drawing.Size(271, 504);
-            this.ListBoxCodeNames.TabIndex = 36;
+            this.ListBoxCodeNames.TabIndex = 2;
             this.ListBoxCodeNames.ValueMember = "TableName";
             this.ListBoxCodeNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxCodeNames_SelectedIndexChanged);
             // 
@@ -2667,7 +2687,7 @@
             this.DataGridViewLookups.RowTemplate.Height = 28;
             this.DataGridViewLookups.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewLookups.Size = new System.Drawing.Size(798, 504);
-            this.DataGridViewLookups.TabIndex = 35;
+            this.DataGridViewLookups.TabIndex = 3;
             // 
             // MBPrintLookup
             // 
@@ -2677,7 +2697,7 @@
             this.MBPrintLookup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintLookup.Name = "MBPrintLookup";
             this.MBPrintLookup.Size = new System.Drawing.Size(126, 76);
-            this.MBPrintLookup.TabIndex = 16;
+            this.MBPrintLookup.TabIndex = 1;
             this.MBPrintLookup.Text = "Save To File";
             this.MBPrintLookup.UseSelectable = true;
             this.MBPrintLookup.Click += new System.EventHandler(this.MBPrintLookup_Click);
@@ -2690,7 +2710,7 @@
             this.MButtonSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSave.Name = "MButtonSave";
             this.MButtonSave.Size = new System.Drawing.Size(126, 76);
-            this.MButtonSave.TabIndex = 17;
+            this.MButtonSave.TabIndex = 4;
             this.MButtonSave.Text = "Save";
             this.MButtonSave.UseSelectable = true;
             this.MButtonSave.Click += new System.EventHandler(this.MButtonSave_Click);
@@ -2716,7 +2736,7 @@
             this.MBManageLookupsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBManageLookupsBack.Name = "MBManageLookupsBack";
             this.MBManageLookupsBack.Size = new System.Drawing.Size(126, 76);
-            this.MBManageLookupsBack.TabIndex = 13;
+            this.MBManageLookupsBack.TabIndex = 5;
             this.MBManageLookupsBack.Text = "Back";
             this.MBManageLookupsBack.UseSelectable = true;
             this.MBManageLookupsBack.Click += new System.EventHandler(this.MBManageLookupsBack_Click);
@@ -2729,7 +2749,7 @@
             this.MBAddNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAddNew.Name = "MBAddNew";
             this.MBAddNew.Size = new System.Drawing.Size(126, 76);
-            this.MBAddNew.TabIndex = 17;
+            this.MBAddNew.TabIndex = 0;
             this.MBAddNew.Text = "New";
             this.MBAddNew.UseSelectable = true;
             this.MBAddNew.Click += new System.EventHandler(this.MBAddNew_Click);
@@ -2779,7 +2799,7 @@
             this.MBStationsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsBack.Name = "MBStationsBack";
             this.MBStationsBack.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsBack.TabIndex = 50;
+            this.MBStationsBack.TabIndex = 4;
             this.MBStationsBack.Text = "Back";
             this.MBStationsBack.UseSelectable = true;
             this.MBStationsBack.Click += new System.EventHandler(this.MBStationsBack_Click);
@@ -2824,7 +2844,7 @@
             this.DataGridViewStations.RowTemplate.Height = 28;
             this.DataGridViewStations.RowTemplate.ReadOnly = true;
             this.DataGridViewStations.Size = new System.Drawing.Size(692, 500);
-            this.DataGridViewStations.TabIndex = 49;
+            this.DataGridViewStations.TabIndex = 2;
             // 
             // MBStationsNew
             // 
@@ -2833,7 +2853,7 @@
             this.MBStationsNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsNew.Name = "MBStationsNew";
             this.MBStationsNew.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsNew.TabIndex = 48;
+            this.MBStationsNew.TabIndex = 1;
             this.MBStationsNew.Text = "New";
             this.MBStationsNew.UseSelectable = true;
             this.MBStationsNew.Click += new System.EventHandler(this.MBStationsNew_Click);
@@ -2845,7 +2865,7 @@
             this.MBStationsSaveToFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsSaveToFile.Name = "MBStationsSaveToFile";
             this.MBStationsSaveToFile.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsSaveToFile.TabIndex = 45;
+            this.MBStationsSaveToFile.TabIndex = 3;
             this.MBStationsSaveToFile.Text = "Save To File";
             this.MBStationsSaveToFile.UseSelectable = true;
             // 
@@ -2856,7 +2876,7 @@
             this.MBStationsViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsViewEdit.Name = "MBStationsViewEdit";
             this.MBStationsViewEdit.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsViewEdit.TabIndex = 47;
+            this.MBStationsViewEdit.TabIndex = 0;
             this.MBStationsViewEdit.Text = "View/Edit";
             this.MBStationsViewEdit.UseSelectable = true;
             this.MBStationsViewEdit.Click += new System.EventHandler(this.MBStationsViewEdit_Click);
@@ -2892,7 +2912,7 @@
             this.MBStationsViewEditDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsViewEditDelete.Name = "MBStationsViewEditDelete";
             this.MBStationsViewEditDelete.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsViewEditDelete.TabIndex = 25;
+            this.MBStationsViewEditDelete.TabIndex = 0;
             this.MBStationsViewEditDelete.Text = "Delete";
             this.MBStationsViewEditDelete.UseSelectable = true;
             this.MBStationsViewEditDelete.Click += new System.EventHandler(this.MBStationsViewEditDelete_Click);
@@ -2905,7 +2925,7 @@
             this.MBStationsViewEditBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsViewEditBack.Name = "MBStationsViewEditBack";
             this.MBStationsViewEditBack.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsViewEditBack.TabIndex = 24;
+            this.MBStationsViewEditBack.TabIndex = 2;
             this.MBStationsViewEditBack.Text = "Back";
             this.MBStationsViewEditBack.UseSelectable = true;
             this.MBStationsViewEditBack.Click += new System.EventHandler(this.MBStationsViewEditBack_Click);
@@ -2917,7 +2937,7 @@
             this.MBStationsViewEditSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsViewEditSave.Name = "MBStationsViewEditSave";
             this.MBStationsViewEditSave.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsViewEditSave.TabIndex = 22;
+            this.MBStationsViewEditSave.TabIndex = 1;
             this.MBStationsViewEditSave.Text = "Save";
             this.MBStationsViewEditSave.UseSelectable = true;
             this.MBStationsViewEditSave.Click += new System.EventHandler(this.MBStationsViewEditSave_Click);
@@ -2956,7 +2976,7 @@
             this.TextBoxViewEditStationSequence.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStationSequence.Name = "TextBoxViewEditStationSequence";
             this.TextBoxViewEditStationSequence.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxViewEditStationSequence.TabIndex = 18;
+            this.TextBoxViewEditStationSequence.TabIndex = 3;
             this.TextBoxViewEditStationSequence.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelViewEditStationType
@@ -2986,7 +3006,7 @@
             this.ComboBoxViewEditStationType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditStationType.Name = "ComboBoxViewEditStationType";
             this.ComboBoxViewEditStationType.Size = new System.Drawing.Size(209, 30);
-            this.ComboBoxViewEditStationType.TabIndex = 1;
+            this.ComboBoxViewEditStationType.TabIndex = 2;
             // 
             // TextBoxViewEditStationName
             // 
@@ -2995,7 +3015,7 @@
             this.TextBoxViewEditStationName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStationName.Name = "TextBoxViewEditStationName";
             this.TextBoxViewEditStationName.Size = new System.Drawing.Size(247, 28);
-            this.TextBoxViewEditStationName.TabIndex = 0;
+            this.TextBoxViewEditStationName.TabIndex = 1;
             // 
             // TextBoxViewEditStationNumber
             // 
@@ -3005,7 +3025,7 @@
             this.TextBoxViewEditStationNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStationNumber.Name = "TextBoxViewEditStationNumber";
             this.TextBoxViewEditStationNumber.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxViewEditStationNumber.TabIndex = 6;
+            this.TextBoxViewEditStationNumber.TabIndex = 0;
             this.TextBoxViewEditStationNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelViewEditStationName
@@ -3064,7 +3084,7 @@
             this.TextBoxNewStationSequence.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewStationSequence.Name = "TextBoxNewStationSequence";
             this.TextBoxNewStationSequence.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxNewStationSequence.TabIndex = 16;
+            this.TextBoxNewStationSequence.TabIndex = 3;
             this.TextBoxNewStationSequence.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelNewStationType
@@ -3094,7 +3114,7 @@
             this.ComboBoxNewStationType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewStationType.Name = "ComboBoxNewStationType";
             this.ComboBoxNewStationType.Size = new System.Drawing.Size(209, 30);
-            this.ComboBoxNewStationType.TabIndex = 1;
+            this.ComboBoxNewStationType.TabIndex = 2;
             // 
             // TextBoxNewStationName
             // 
@@ -3103,7 +3123,7 @@
             this.TextBoxNewStationName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewStationName.Name = "TextBoxNewStationName";
             this.TextBoxNewStationName.Size = new System.Drawing.Size(247, 28);
-            this.TextBoxNewStationName.TabIndex = 0;
+            this.TextBoxNewStationName.TabIndex = 1;
             // 
             // TextBoxNewStationNumber
             // 
@@ -3112,7 +3132,7 @@
             this.TextBoxNewStationNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewStationNumber.Name = "TextBoxNewStationNumber";
             this.TextBoxNewStationNumber.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxNewStationNumber.TabIndex = 6;
+            this.TextBoxNewStationNumber.TabIndex = 0;
             this.TextBoxNewStationNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelNewStationName
@@ -3142,7 +3162,7 @@
             this.MBStationsNewBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsNewBack.Name = "MBStationsNewBack";
             this.MBStationsNewBack.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsNewBack.TabIndex = 28;
+            this.MBStationsNewBack.TabIndex = 1;
             this.MBStationsNewBack.Text = "Back";
             this.MBStationsNewBack.UseSelectable = true;
             this.MBStationsNewBack.Click += new System.EventHandler(this.MBStationsNewBack_Click);
@@ -3154,7 +3174,7 @@
             this.MBStationsNewSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsNewSave.Name = "MBStationsNewSave";
             this.MBStationsNewSave.Size = new System.Drawing.Size(126, 76);
-            this.MBStationsNewSave.TabIndex = 27;
+            this.MBStationsNewSave.TabIndex = 0;
             this.MBStationsNewSave.Text = "Save";
             this.MBStationsNewSave.UseSelectable = true;
             this.MBStationsNewSave.Click += new System.EventHandler(this.MBStationsNewSave_Click);
@@ -3205,7 +3225,7 @@
             this.MBCommunicationSerial.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunicationSerial.Name = "MBCommunicationSerial";
             this.MBCommunicationSerial.Size = new System.Drawing.Size(350, 100);
-            this.MBCommunicationSerial.TabIndex = 55;
+            this.MBCommunicationSerial.TabIndex = 0;
             this.MBCommunicationSerial.Text = "Serial";
             this.MBCommunicationSerial.UseSelectable = true;
             this.MBCommunicationSerial.Click += new System.EventHandler(this.MBCommunicationSerial_Click);
@@ -3218,7 +3238,7 @@
             this.MBCommunicationBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunicationBack.Name = "MBCommunicationBack";
             this.MBCommunicationBack.Size = new System.Drawing.Size(126, 76);
-            this.MBCommunicationBack.TabIndex = 54;
+            this.MBCommunicationBack.TabIndex = 2;
             this.MBCommunicationBack.Text = "Back";
             this.MBCommunicationBack.UseSelectable = true;
             this.MBCommunicationBack.Click += new System.EventHandler(this.MBCommunicationBack_Click);
@@ -3230,7 +3250,7 @@
             this.MBCommunicationTcp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunicationTcp.Name = "MBCommunicationTcp";
             this.MBCommunicationTcp.Size = new System.Drawing.Size(350, 100);
-            this.MBCommunicationTcp.TabIndex = 53;
+            this.MBCommunicationTcp.TabIndex = 1;
             this.MBCommunicationTcp.Text = "TCP/IP";
             this.MBCommunicationTcp.UseSelectable = true;
             this.MBCommunicationTcp.Click += new System.EventHandler(this.MBCommunicationTcp_Click);
@@ -3257,7 +3277,7 @@
             this.MBTcpBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpBack.Name = "MBTcpBack";
             this.MBTcpBack.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpBack.TabIndex = 56;
+            this.MBTcpBack.TabIndex = 4;
             this.MBTcpBack.Text = "Back";
             this.MBTcpBack.UseSelectable = true;
             this.MBTcpBack.Click += new System.EventHandler(this.MBTcpBack_Click);
@@ -3302,7 +3322,7 @@
             this.DataGridViewTcp.RowTemplate.Height = 28;
             this.DataGridViewTcp.RowTemplate.ReadOnly = true;
             this.DataGridViewTcp.Size = new System.Drawing.Size(806, 440);
-            this.DataGridViewTcp.TabIndex = 55;
+            this.DataGridViewTcp.TabIndex = 2;
             // 
             // MBTcpNew
             // 
@@ -3311,7 +3331,7 @@
             this.MBTcpNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpNew.Name = "MBTcpNew";
             this.MBTcpNew.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpNew.TabIndex = 54;
+            this.MBTcpNew.TabIndex = 1;
             this.MBTcpNew.Text = "New";
             this.MBTcpNew.UseSelectable = true;
             this.MBTcpNew.Click += new System.EventHandler(this.MBTcpNew_Click);
@@ -3323,7 +3343,7 @@
             this.MBTcpSaveToFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpSaveToFile.Name = "MBTcpSaveToFile";
             this.MBTcpSaveToFile.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpSaveToFile.TabIndex = 51;
+            this.MBTcpSaveToFile.TabIndex = 3;
             this.MBTcpSaveToFile.Text = "Save To File";
             this.MBTcpSaveToFile.UseSelectable = true;
             this.MBTcpSaveToFile.Click += new System.EventHandler(this.MBTcpSaveToFile_Click);
@@ -3335,7 +3355,7 @@
             this.MBTcpViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpViewEdit.Name = "MBTcpViewEdit";
             this.MBTcpViewEdit.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpViewEdit.TabIndex = 53;
+            this.MBTcpViewEdit.TabIndex = 0;
             this.MBTcpViewEdit.Text = "View/Edit";
             this.MBTcpViewEdit.UseSelectable = true;
             this.MBTcpViewEdit.Click += new System.EventHandler(this.MBTcpViewEdit_Click);
@@ -3371,7 +3391,7 @@
             this.MBTcpViewEditDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpViewEditDelete.Name = "MBTcpViewEditDelete";
             this.MBTcpViewEditDelete.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpViewEditDelete.TabIndex = 31;
+            this.MBTcpViewEditDelete.TabIndex = 0;
             this.MBTcpViewEditDelete.Text = "Delete";
             this.MBTcpViewEditDelete.UseSelectable = true;
             this.MBTcpViewEditDelete.Click += new System.EventHandler(this.MBTcpViewEditDelete_Click);
@@ -3384,7 +3404,7 @@
             this.MBTcpViewEditBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpViewEditBack.Name = "MBTcpViewEditBack";
             this.MBTcpViewEditBack.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpViewEditBack.TabIndex = 30;
+            this.MBTcpViewEditBack.TabIndex = 2;
             this.MBTcpViewEditBack.Text = "Back";
             this.MBTcpViewEditBack.UseSelectable = true;
             this.MBTcpViewEditBack.Click += new System.EventHandler(this.MBTcpViewEditBack_Click);
@@ -3396,7 +3416,7 @@
             this.MBTcpViewEditSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBTcpViewEditSave.Name = "MBTcpViewEditSave";
             this.MBTcpViewEditSave.Size = new System.Drawing.Size(126, 76);
-            this.MBTcpViewEditSave.TabIndex = 28;
+            this.MBTcpViewEditSave.TabIndex = 1;
             this.MBTcpViewEditSave.Text = "Save";
             this.MBTcpViewEditSave.UseSelectable = true;
             this.MBTcpViewEditSave.Click += new System.EventHandler(this.MBTcpViewEditSave_Click);
@@ -3437,7 +3457,7 @@
             this.TextBoxTcpViewEditDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditDeviceCount.Name = "TextBoxTcpViewEditDeviceCount";
             this.TextBoxTcpViewEditDeviceCount.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxTcpViewEditDeviceCount.TabIndex = 5;
+            this.TextBoxTcpViewEditDeviceCount.TabIndex = 3;
             this.TextBoxTcpViewEditDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxTcpViewEditPort
@@ -3447,7 +3467,7 @@
             this.TextBoxTcpViewEditPort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditPort.Name = "TextBoxTcpViewEditPort";
             this.TextBoxTcpViewEditPort.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxTcpViewEditPort.TabIndex = 4;
+            this.TextBoxTcpViewEditPort.TabIndex = 2;
             this.TextBoxTcpViewEditPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxTcpViewEditName
@@ -3467,7 +3487,7 @@
             this.TextBoxTcpViewEditIPAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditIPAddress.Name = "TextBoxTcpViewEditIPAddress";
             this.TextBoxTcpViewEditIPAddress.Size = new System.Drawing.Size(246, 28);
-            this.TextBoxTcpViewEditIPAddress.TabIndex = 3;
+            this.TextBoxTcpViewEditIPAddress.TabIndex = 1;
             this.TextBoxTcpViewEditIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxTcpViewEditNotificationTimeout
@@ -3477,7 +3497,7 @@
             this.TextBoxTcpViewEditNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditNotificationTimeout.Name = "TextBoxTcpViewEditNotificationTimeout";
             this.TextBoxTcpViewEditNotificationTimeout.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxTcpViewEditNotificationTimeout.TabIndex = 6;
+            this.TextBoxTcpViewEditNotificationTimeout.TabIndex = 4;
             this.TextBoxTcpViewEditNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelTcpViewEditDeviceCount
@@ -3565,7 +3585,7 @@
             this.TextBoxTcpNewDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewDeviceCount.Name = "TextBoxTcpNewDeviceCount";
             this.TextBoxTcpNewDeviceCount.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxTcpNewDeviceCount.TabIndex = 5;
+            this.TextBoxTcpNewDeviceCount.TabIndex = 3;
             this.TextBoxTcpNewDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxTcpNewPort
@@ -3575,7 +3595,7 @@
             this.TextBoxTcpNewPort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewPort.Name = "TextBoxTcpNewPort";
             this.TextBoxTcpNewPort.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxTcpNewPort.TabIndex = 4;
+            this.TextBoxTcpNewPort.TabIndex = 2;
             this.TextBoxTcpNewPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxTcpNewName
@@ -3595,7 +3615,7 @@
             this.TextBoxTcpNewIPAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewIPAddress.Name = "TextBoxTcpNewIPAddress";
             this.TextBoxTcpNewIPAddress.Size = new System.Drawing.Size(246, 28);
-            this.TextBoxTcpNewIPAddress.TabIndex = 3;
+            this.TextBoxTcpNewIPAddress.TabIndex = 1;
             this.TextBoxTcpNewIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxTcpNewNotificationTimeout
@@ -3605,7 +3625,7 @@
             this.TextBoxTcpNewNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewNotificationTimeout.Name = "TextBoxTcpNewNotificationTimeout";
             this.TextBoxTcpNewNotificationTimeout.Size = new System.Drawing.Size(98, 28);
-            this.TextBoxTcpNewNotificationTimeout.TabIndex = 6;
+            this.TextBoxTcpNewNotificationTimeout.TabIndex = 4;
             this.TextBoxTcpNewNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelTcpNewDeviceCount
@@ -3662,7 +3682,7 @@
             this.TcpNewBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TcpNewBack.Name = "TcpNewBack";
             this.TcpNewBack.Size = new System.Drawing.Size(126, 76);
-            this.TcpNewBack.TabIndex = 34;
+            this.TcpNewBack.TabIndex = 1;
             this.TcpNewBack.Text = "Back";
             this.TcpNewBack.UseSelectable = true;
             this.TcpNewBack.Click += new System.EventHandler(this.TcpNewBack_Click);
@@ -3674,7 +3694,7 @@
             this.TcpNewSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TcpNewSave.Name = "TcpNewSave";
             this.TcpNewSave.Size = new System.Drawing.Size(126, 76);
-            this.TcpNewSave.TabIndex = 33;
+            this.TcpNewSave.TabIndex = 0;
             this.TcpNewSave.Text = "Save";
             this.TcpNewSave.UseSelectable = true;
             this.TcpNewSave.Click += new System.EventHandler(this.TcpNewSave_Click);
@@ -3701,7 +3721,7 @@
             this.MBSerialBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialBack.Name = "MBSerialBack";
             this.MBSerialBack.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialBack.TabIndex = 56;
+            this.MBSerialBack.TabIndex = 4;
             this.MBSerialBack.Text = "Back";
             this.MBSerialBack.UseSelectable = true;
             this.MBSerialBack.Click += new System.EventHandler(this.MBSerialBack_Click);
@@ -3746,7 +3766,7 @@
             this.DataGridViewSerial.RowTemplate.Height = 28;
             this.DataGridViewSerial.RowTemplate.ReadOnly = true;
             this.DataGridViewSerial.Size = new System.Drawing.Size(1113, 501);
-            this.DataGridViewSerial.TabIndex = 55;
+            this.DataGridViewSerial.TabIndex = 2;
             // 
             // MBSerialNew
             // 
@@ -3755,7 +3775,7 @@
             this.MBSerialNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialNew.Name = "MBSerialNew";
             this.MBSerialNew.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialNew.TabIndex = 54;
+            this.MBSerialNew.TabIndex = 1;
             this.MBSerialNew.Text = "New";
             this.MBSerialNew.UseSelectable = true;
             this.MBSerialNew.Click += new System.EventHandler(this.MBSerialNew_Click);
@@ -3767,7 +3787,7 @@
             this.MBSerialSaveToFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialSaveToFile.Name = "MBSerialSaveToFile";
             this.MBSerialSaveToFile.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialSaveToFile.TabIndex = 51;
+            this.MBSerialSaveToFile.TabIndex = 3;
             this.MBSerialSaveToFile.Text = "Save To File";
             this.MBSerialSaveToFile.UseSelectable = true;
             this.MBSerialSaveToFile.Click += new System.EventHandler(this.MBSerialSaveToFile_Click);
@@ -3779,7 +3799,7 @@
             this.MBSerialViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialViewEdit.Name = "MBSerialViewEdit";
             this.MBSerialViewEdit.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialViewEdit.TabIndex = 53;
+            this.MBSerialViewEdit.TabIndex = 0;
             this.MBSerialViewEdit.Text = "View/Edit";
             this.MBSerialViewEdit.UseSelectable = true;
             this.MBSerialViewEdit.Click += new System.EventHandler(this.MBSerialViewEdit_Click);
@@ -3815,7 +3835,7 @@
             this.MBSerialViewEditDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialViewEditDelete.Name = "MBSerialViewEditDelete";
             this.MBSerialViewEditDelete.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialViewEditDelete.TabIndex = 31;
+            this.MBSerialViewEditDelete.TabIndex = 0;
             this.MBSerialViewEditDelete.Text = "Delete";
             this.MBSerialViewEditDelete.UseSelectable = true;
             this.MBSerialViewEditDelete.Click += new System.EventHandler(this.MBSerialViewEditDelete_Click);
@@ -3828,7 +3848,7 @@
             this.MBSerialViewEditBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialViewEditBack.Name = "MBSerialViewEditBack";
             this.MBSerialViewEditBack.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialViewEditBack.TabIndex = 30;
+            this.MBSerialViewEditBack.TabIndex = 2;
             this.MBSerialViewEditBack.Text = "Back";
             this.MBSerialViewEditBack.UseSelectable = true;
             this.MBSerialViewEditBack.Click += new System.EventHandler(this.MBSerialViewEditBack_Click);
@@ -3840,7 +3860,7 @@
             this.MBSerialViewEditSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialViewEditSave.Name = "MBSerialViewEditSave";
             this.MBSerialViewEditSave.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialViewEditSave.TabIndex = 28;
+            this.MBSerialViewEditSave.TabIndex = 1;
             this.MBSerialViewEditSave.Text = "Save";
             this.MBSerialViewEditSave.UseSelectable = true;
             this.MBSerialViewEditSave.Click += new System.EventHandler(this.MBSerialViewEditSave_Click);
@@ -3902,7 +3922,7 @@
             0});
             this.NumericUpDownSerialViewEditPortNumber.Name = "NumericUpDownSerialViewEditPortNumber";
             this.NumericUpDownSerialViewEditPortNumber.Size = new System.Drawing.Size(56, 28);
-            this.NumericUpDownSerialViewEditPortNumber.TabIndex = 9;
+            this.NumericUpDownSerialViewEditPortNumber.TabIndex = 2;
             this.NumericUpDownSerialViewEditPortNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownSerialViewEditPortNumber.Value = new decimal(new int[] {
             1,
@@ -4006,7 +4026,7 @@
             this.ComboBoxSerialViewEditBaudRate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditBaudRate.Name = "ComboBoxSerialViewEditBaudRate";
             this.ComboBoxSerialViewEditBaudRate.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialViewEditBaudRate.TabIndex = 1;
+            this.ComboBoxSerialViewEditBaudRate.TabIndex = 3;
             // 
             // LabelSerialViewEditBaudRate
             // 
@@ -4026,7 +4046,7 @@
             this.ComboBoxSerialViewEditStopBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditStopBits.Name = "ComboBoxSerialViewEditStopBits";
             this.ComboBoxSerialViewEditStopBits.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialViewEditStopBits.TabIndex = 2;
+            this.ComboBoxSerialViewEditStopBits.TabIndex = 6;
             // 
             // ComboBoxSerialViewEditDataBits
             // 
@@ -4037,7 +4057,7 @@
             this.ComboBoxSerialViewEditDataBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditDataBits.Name = "ComboBoxSerialViewEditDataBits";
             this.ComboBoxSerialViewEditDataBits.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialViewEditDataBits.TabIndex = 2;
+            this.ComboBoxSerialViewEditDataBits.TabIndex = 5;
             // 
             // ComboBoxSerialViewEditParity
             // 
@@ -4048,7 +4068,7 @@
             this.ComboBoxSerialViewEditParity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditParity.Name = "ComboBoxSerialViewEditParity";
             this.ComboBoxSerialViewEditParity.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialViewEditParity.TabIndex = 2;
+            this.ComboBoxSerialViewEditParity.TabIndex = 4;
             // 
             // TextBoxSerialViewEditName
             // 
@@ -4067,7 +4087,7 @@
             this.TextBoxSerialViewEditControllerId.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditControllerId.Name = "TextBoxSerialViewEditControllerId";
             this.TextBoxSerialViewEditControllerId.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxSerialViewEditControllerId.TabIndex = 6;
+            this.TextBoxSerialViewEditControllerId.TabIndex = 11;
             this.TextBoxSerialViewEditControllerId.Text = "1";
             this.TextBoxSerialViewEditControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4078,7 +4098,7 @@
             this.TextBoxSerialViewEditNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditNotificationTimeout.Name = "TextBoxSerialViewEditNotificationTimeout";
             this.TextBoxSerialViewEditNotificationTimeout.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxSerialViewEditNotificationTimeout.TabIndex = 6;
+            this.TextBoxSerialViewEditNotificationTimeout.TabIndex = 10;
             this.TextBoxSerialViewEditNotificationTimeout.Text = "60";
             this.TextBoxSerialViewEditNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4089,7 +4109,7 @@
             this.TextBoxSerialViewEditDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditDeviceCount.Name = "TextBoxSerialViewEditDeviceCount";
             this.TextBoxSerialViewEditDeviceCount.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxSerialViewEditDeviceCount.TabIndex = 6;
+            this.TextBoxSerialViewEditDeviceCount.TabIndex = 7;
             this.TextBoxSerialViewEditDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelSerialViewEditLogLevel
@@ -4206,7 +4226,7 @@
             this.ComboBoxSerialNewStopBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewStopBits.Name = "ComboBoxSerialNewStopBits";
             this.ComboBoxSerialNewStopBits.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialNewStopBits.TabIndex = 15;
+            this.ComboBoxSerialNewStopBits.TabIndex = 6;
             // 
             // ComboBoxSerialNewDataBits
             // 
@@ -4222,7 +4242,7 @@
             this.ComboBoxSerialNewDataBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewDataBits.Name = "ComboBoxSerialNewDataBits";
             this.ComboBoxSerialNewDataBits.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialNewDataBits.TabIndex = 16;
+            this.ComboBoxSerialNewDataBits.TabIndex = 5;
             // 
             // LabelSerialNewPortName
             // 
@@ -4248,7 +4268,7 @@
             0});
             this.NumericUpDownSerialNewPortNumber.Name = "NumericUpDownSerialNewPortNumber";
             this.NumericUpDownSerialNewPortNumber.Size = new System.Drawing.Size(56, 28);
-            this.NumericUpDownSerialNewPortNumber.TabIndex = 9;
+            this.NumericUpDownSerialNewPortNumber.TabIndex = 2;
             this.NumericUpDownSerialNewPortNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownSerialNewPortNumber.Value = new decimal(new int[] {
             1,
@@ -4352,7 +4372,7 @@
             this.ComboBoxSerialNewBaudRate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewBaudRate.Name = "ComboBoxSerialNewBaudRate";
             this.ComboBoxSerialNewBaudRate.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialNewBaudRate.TabIndex = 1;
+            this.ComboBoxSerialNewBaudRate.TabIndex = 3;
             // 
             // LabelSerialNewBaudRate
             // 
@@ -4372,7 +4392,7 @@
             this.ComboBoxSerialNewParity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewParity.Name = "ComboBoxSerialNewParity";
             this.ComboBoxSerialNewParity.Size = new System.Drawing.Size(133, 30);
-            this.ComboBoxSerialNewParity.TabIndex = 2;
+            this.ComboBoxSerialNewParity.TabIndex = 4;
             // 
             // TextBoxSerialNewName
             // 
@@ -4391,7 +4411,7 @@
             this.TextBoxSerialNewControllerId.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewControllerId.Name = "TextBoxSerialNewControllerId";
             this.TextBoxSerialNewControllerId.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxSerialNewControllerId.TabIndex = 6;
+            this.TextBoxSerialNewControllerId.TabIndex = 11;
             this.TextBoxSerialNewControllerId.Text = "1";
             this.TextBoxSerialNewControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4402,7 +4422,7 @@
             this.TextBoxSerialNewNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewNotificationTimeout.Name = "TextBoxSerialNewNotificationTimeout";
             this.TextBoxSerialNewNotificationTimeout.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxSerialNewNotificationTimeout.TabIndex = 6;
+            this.TextBoxSerialNewNotificationTimeout.TabIndex = 10;
             this.TextBoxSerialNewNotificationTimeout.Text = "60";
             this.TextBoxSerialNewNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4413,7 +4433,7 @@
             this.TextBoxSerialNewDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewDeviceCount.Name = "TextBoxSerialNewDeviceCount";
             this.TextBoxSerialNewDeviceCount.Size = new System.Drawing.Size(55, 28);
-            this.TextBoxSerialNewDeviceCount.TabIndex = 6;
+            this.TextBoxSerialNewDeviceCount.TabIndex = 7;
             this.TextBoxSerialNewDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelSerialNewLogLevel
@@ -4488,7 +4508,7 @@
             this.MBSerialNewBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialNewBack.Name = "MBSerialNewBack";
             this.MBSerialNewBack.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialNewBack.TabIndex = 34;
+            this.MBSerialNewBack.TabIndex = 1;
             this.MBSerialNewBack.Text = "Back";
             this.MBSerialNewBack.UseSelectable = true;
             this.MBSerialNewBack.Click += new System.EventHandler(this.MBSerialNewBack_Click);
@@ -4500,7 +4520,7 @@
             this.MBSerialNewSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSerialNewSave.Name = "MBSerialNewSave";
             this.MBSerialNewSave.Size = new System.Drawing.Size(126, 76);
-            this.MBSerialNewSave.TabIndex = 33;
+            this.MBSerialNewSave.TabIndex = 0;
             this.MBSerialNewSave.Text = "Save";
             this.MBSerialNewSave.UseSelectable = true;
             this.MBSerialNewSave.Click += new System.EventHandler(this.MBSerialNewSave_Click);
@@ -4548,26 +4568,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // LabelDefaultStorageType
-            // 
-            this.LabelDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDefaultStorageType.Location = new System.Drawing.Point(14, 600);
-            this.LabelDefaultStorageType.Name = "LabelDefaultStorageType";
-            this.LabelDefaultStorageType.Size = new System.Drawing.Size(137, 16);
-            this.LabelDefaultStorageType.TabIndex = 10;
-            this.LabelDefaultStorageType.Text = "Default Storage Type";
-            this.LabelDefaultStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // ComboBoxDefaultStorageType
-            // 
-            this.ComboBoxDefaultStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxDefaultStorageType.FormattingEnabled = true;
-            this.ComboBoxDefaultStorageType.Location = new System.Drawing.Point(167, 597);
-            this.ComboBoxDefaultStorageType.Name = "ComboBoxDefaultStorageType";
-            this.ComboBoxDefaultStorageType.Size = new System.Drawing.Size(150, 24);
-            this.ComboBoxDefaultStorageType.TabIndex = 12;
             // 
             // FrmUtilities
             // 

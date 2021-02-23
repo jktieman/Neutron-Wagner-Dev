@@ -108,10 +108,6 @@
             this.MBInterfaceFilesBack = new MetroFramework.Controls.MetroButton();
             this.LabelInterfaceFiles = new System.Windows.Forms.Label();
             this.ButtonSave = new System.Windows.Forms.Button();
-            this.Spare1 = new System.Windows.Forms.TabPage();
-            this.MBSpare1Back = new MetroFramework.Controls.MetroButton();
-            this.Spare2 = new System.Windows.Forms.TabPage();
-            this.MBSpare2Back = new MetroFramework.Controls.MetroButton();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
@@ -125,8 +121,6 @@
             this.groupBox1.SuspendLayout();
             this.InterfaceFiles.SuspendLayout();
             this.PanelFile.SuspendLayout();
-            this.Spare1.SuspendLayout();
-            this.Spare2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -144,14 +138,12 @@
             this.tabControl1.Controls.Add(this.Main);
             this.tabControl1.Controls.Add(this.SqlServer);
             this.tabControl1.Controls.Add(this.InterfaceFiles);
-            this.tabControl1.Controls.Add(this.Spare1);
-            this.tabControl1.Controls.Add(this.Spare2);
             this.tabControl1.Location = new System.Drawing.Point(23, 168);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1155, 670);
-            this.tabControl1.TabIndex = 23;
+            this.tabControl1.TabIndex = 4;
             // 
             // Main
             // 
@@ -207,7 +199,7 @@
             this.MBMainClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainClose.Name = "MBMainClose";
             this.MBMainClose.Size = new System.Drawing.Size(135, 76);
-            this.MBMainClose.TabIndex = 28;
+            this.MBMainClose.TabIndex = 6;
             this.MBMainClose.Text = "Close";
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
@@ -219,7 +211,7 @@
             this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunUpload.Name = "MBRunUpload";
             this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
-            this.MBRunUpload.TabIndex = 21;
+            this.MBRunUpload.TabIndex = 4;
             this.MBRunUpload.Text = "Run Upload Once";
             this.MBRunUpload.UseSelectable = true;
             this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
@@ -231,7 +223,7 @@
             this.MBStartUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartUpload.Name = "MBStartUpload";
             this.MBStartUpload.Size = new System.Drawing.Size(350, 70);
-            this.MBStartUpload.TabIndex = 21;
+            this.MBStartUpload.TabIndex = 5;
             this.MBStartUpload.Text = "Run Upload Continuously";
             this.MBStartUpload.UseSelectable = true;
             this.MBStartUpload.Click += new System.EventHandler(this.MBStartUpload_Click);
@@ -243,7 +235,7 @@
             this.MBRunLoaderOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunLoaderOnce.Name = "MBRunLoaderOnce";
             this.MBRunLoaderOnce.Size = new System.Drawing.Size(350, 70);
-            this.MBRunLoaderOnce.TabIndex = 26;
+            this.MBRunLoaderOnce.TabIndex = 2;
             this.MBRunLoaderOnce.Text = "Run Loader Once";
             this.MBRunLoaderOnce.UseSelectable = true;
             this.MBRunLoaderOnce.Click += new System.EventHandler(this.MBRunLoaderOnce_Click);
@@ -255,7 +247,7 @@
             this.MBMainSqlServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainSqlServer.Name = "MBMainSqlServer";
             this.MBMainSqlServer.Size = new System.Drawing.Size(350, 70);
-            this.MBMainSqlServer.TabIndex = 25;
+            this.MBMainSqlServer.TabIndex = 0;
             this.MBMainSqlServer.Text = "SQL Server";
             this.MBMainSqlServer.UseSelectable = true;
             this.MBMainSqlServer.Click += new System.EventHandler(this.MBMainSqlServer_Click);
@@ -267,7 +259,7 @@
             this.MBStartLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartLoader.Name = "MBStartLoader";
             this.MBStartLoader.Size = new System.Drawing.Size(350, 70);
-            this.MBStartLoader.TabIndex = 26;
+            this.MBStartLoader.TabIndex = 3;
             this.MBStartLoader.Text = "Run Loader Continuously";
             this.MBStartLoader.UseSelectable = true;
             this.MBStartLoader.Click += new System.EventHandler(this.MBStartLoader_Click);
@@ -279,7 +271,7 @@
             this.MBMainInterfaceFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainInterfaceFile.Name = "MBMainInterfaceFile";
             this.MBMainInterfaceFile.Size = new System.Drawing.Size(350, 70);
-            this.MBMainInterfaceFile.TabIndex = 27;
+            this.MBMainInterfaceFile.TabIndex = 1;
             this.MBMainInterfaceFile.Text = "Interface Information";
             this.MBMainInterfaceFile.UseSelectable = true;
             this.MBMainInterfaceFile.Click += new System.EventHandler(this.MBMainInterfaceFiles_Click);
@@ -321,7 +313,7 @@
             this.CheckBoxSqlServerAuthentication.Location = new System.Drawing.Point(267, 189);
             this.CheckBoxSqlServerAuthentication.Name = "CheckBoxSqlServerAuthentication";
             this.CheckBoxSqlServerAuthentication.Size = new System.Drawing.Size(270, 24);
-            this.CheckBoxSqlServerAuthentication.TabIndex = 33;
+            this.CheckBoxSqlServerAuthentication.TabIndex = 2;
             this.CheckBoxSqlServerAuthentication.Text = "Use Sql Server Authentication";
             this.CheckBoxSqlServerAuthentication.UseVisualStyleBackColor = true;
             this.CheckBoxSqlServerAuthentication.CheckedChanged += new System.EventHandler(this.CheckBoxSqlServerAuthentication_CheckedChanged);
@@ -357,7 +349,7 @@
             this.TextBoxPassword.Name = "TextBoxPassword";
             this.TextBoxPassword.PasswordChar = '*';
             this.TextBoxPassword.Size = new System.Drawing.Size(357, 29);
-            this.TextBoxPassword.TabIndex = 30;
+            this.TextBoxPassword.TabIndex = 1;
             // 
             // TextBoxUserId
             // 
@@ -367,7 +359,7 @@
             this.TextBoxUserId.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxUserId.Name = "TextBoxUserId";
             this.TextBoxUserId.Size = new System.Drawing.Size(356, 29);
-            this.TextBoxUserId.TabIndex = 29;
+            this.TextBoxUserId.TabIndex = 0;
             // 
             // LabelPassword
             // 
@@ -396,7 +388,7 @@
             this.ButtonTest.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonTest.Name = "ButtonTest";
             this.ButtonTest.Size = new System.Drawing.Size(150, 50);
-            this.ButtonTest.TabIndex = 27;
+            this.ButtonTest.TabIndex = 3;
             this.ButtonTest.Text = "Test";
             this.ButtonTest.UseVisualStyleBackColor = true;
             this.ButtonTest.Click += new System.EventHandler(this.ButtonTest_Click);
@@ -408,7 +400,7 @@
             this.TextBoxInitialCatalog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxInitialCatalog.Name = "TextBoxInitialCatalog";
             this.TextBoxInitialCatalog.Size = new System.Drawing.Size(356, 29);
-            this.TextBoxInitialCatalog.TabIndex = 24;
+            this.TextBoxInitialCatalog.TabIndex = 1;
             // 
             // LabelInitialCatalog
             // 
@@ -438,7 +430,7 @@
             this.ButtonCloseSql.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonCloseSql.Name = "ButtonCloseSql";
             this.ButtonCloseSql.Size = new System.Drawing.Size(150, 50);
-            this.ButtonCloseSql.TabIndex = 19;
+            this.ButtonCloseSql.TabIndex = 5;
             this.ButtonCloseSql.Text = "Close";
             this.ButtonCloseSql.UseVisualStyleBackColor = true;
             this.ButtonCloseSql.Click += new System.EventHandler(this.MBSqlServerBack_Click);
@@ -450,7 +442,7 @@
             this.ButtonSaveConnectionString.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonSaveConnectionString.Name = "ButtonSaveConnectionString";
             this.ButtonSaveConnectionString.Size = new System.Drawing.Size(150, 50);
-            this.ButtonSaveConnectionString.TabIndex = 17;
+            this.ButtonSaveConnectionString.TabIndex = 4;
             this.ButtonSaveConnectionString.Text = "Save";
             this.ButtonSaveConnectionString.UseVisualStyleBackColor = true;
             this.ButtonSaveConnectionString.Click += new System.EventHandler(this.ButtonSaveConnectionString_Click);
@@ -462,7 +454,7 @@
             this.TextBoxDataSource.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxDataSource.Name = "TextBoxDataSource";
             this.TextBoxDataSource.Size = new System.Drawing.Size(356, 29);
-            this.TextBoxDataSource.TabIndex = 15;
+            this.TextBoxDataSource.TabIndex = 0;
             // 
             // LabelSqlServerInterface
             // 
@@ -483,7 +475,7 @@
             this.MBSqlServerBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSqlServerBack.Name = "MBSqlServerBack";
             this.MBSqlServerBack.Size = new System.Drawing.Size(135, 76);
-            this.MBSqlServerBack.TabIndex = 39;
+            this.MBSqlServerBack.TabIndex = 0;
             this.MBSqlServerBack.Text = "Back";
             this.MBSqlServerBack.UseSelectable = true;
             this.MBSqlServerBack.Click += new System.EventHandler(this.MBSqlServerBack_Click);
@@ -558,7 +550,7 @@
             this.ButtonLanguageDirectory.Location = new System.Drawing.Point(862, 466);
             this.ButtonLanguageDirectory.Name = "ButtonLanguageDirectory";
             this.ButtonLanguageDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonLanguageDirectory.TabIndex = 104;
+            this.ButtonLanguageDirectory.TabIndex = 27;
             this.ButtonLanguageDirectory.Text = "&Browse";
             this.ButtonLanguageDirectory.UseVisualStyleBackColor = true;
             this.ButtonLanguageDirectory.Click += new System.EventHandler(this.ButtonLanguageDirectory_Click);
@@ -579,7 +571,7 @@
             this.LanguageDirectory.Location = new System.Drawing.Point(351, 465);
             this.LanguageDirectory.Name = "LanguageDirectory";
             this.LanguageDirectory.Size = new System.Drawing.Size(505, 26);
-            this.LanguageDirectory.TabIndex = 102;
+            this.LanguageDirectory.TabIndex = 26;
             this.LanguageDirectory.Text = "Language\\";
             // 
             // ButtonFindCostCenterFile
@@ -588,7 +580,7 @@
             this.ButtonFindCostCenterFile.Location = new System.Drawing.Point(862, 425);
             this.ButtonFindCostCenterFile.Name = "ButtonFindCostCenterFile";
             this.ButtonFindCostCenterFile.Size = new System.Drawing.Size(100, 26);
-            this.ButtonFindCostCenterFile.TabIndex = 101;
+            this.ButtonFindCostCenterFile.TabIndex = 25;
             this.ButtonFindCostCenterFile.Text = "&Browse";
             this.ButtonFindCostCenterFile.UseVisualStyleBackColor = true;
             this.ButtonFindCostCenterFile.Click += new System.EventHandler(this.ButtonFindCostCenterFile_Click);
@@ -599,7 +591,7 @@
             this.ButtonCostCenterDirectory.Location = new System.Drawing.Point(862, 386);
             this.ButtonCostCenterDirectory.Name = "ButtonCostCenterDirectory";
             this.ButtonCostCenterDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonCostCenterDirectory.TabIndex = 100;
+            this.ButtonCostCenterDirectory.TabIndex = 23;
             this.ButtonCostCenterDirectory.Text = "&Browse";
             this.ButtonCostCenterDirectory.UseVisualStyleBackColor = true;
             this.ButtonCostCenterDirectory.Click += new System.EventHandler(this.ButtonCostCenterDirectory_Click);
@@ -610,7 +602,7 @@
             this.ButtonMaintenanceFileDirectory.Location = new System.Drawing.Point(686, 346);
             this.ButtonMaintenanceFileDirectory.Name = "ButtonMaintenanceFileDirectory";
             this.ButtonMaintenanceFileDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonMaintenanceFileDirectory.TabIndex = 100;
+            this.ButtonMaintenanceFileDirectory.TabIndex = 20;
             this.ButtonMaintenanceFileDirectory.Text = "&Browse";
             this.ButtonMaintenanceFileDirectory.UseVisualStyleBackColor = true;
             this.ButtonMaintenanceFileDirectory.Click += new System.EventHandler(this.ButtonMaintenanceFileDirectory_Click);
@@ -651,7 +643,7 @@
             this.CostCenterFileName.Location = new System.Drawing.Point(351, 424);
             this.CostCenterFileName.Name = "CostCenterFileName";
             this.CostCenterFileName.Size = new System.Drawing.Size(505, 26);
-            this.CostCenterFileName.TabIndex = 98;
+            this.CostCenterFileName.TabIndex = 24;
             this.CostCenterFileName.Text = "Costcntr.txt";
             // 
             // CostCenterDirectory
@@ -660,7 +652,7 @@
             this.CostCenterDirectory.Location = new System.Drawing.Point(351, 386);
             this.CostCenterDirectory.Name = "CostCenterDirectory";
             this.CostCenterDirectory.Size = new System.Drawing.Size(505, 26);
-            this.CostCenterDirectory.TabIndex = 98;
+            this.CostCenterDirectory.TabIndex = 22;
             this.CostCenterDirectory.Text = "C:\\Neutron\\Cost Center\\";
             // 
             // MaintenanceFileDirectory
@@ -669,7 +661,7 @@
             this.MaintenanceFileDirectory.Location = new System.Drawing.Point(351, 346);
             this.MaintenanceFileDirectory.Name = "MaintenanceFileDirectory";
             this.MaintenanceFileDirectory.Size = new System.Drawing.Size(325, 26);
-            this.MaintenanceFileDirectory.TabIndex = 98;
+            this.MaintenanceFileDirectory.TabIndex = 19;
             this.MaintenanceFileDirectory.Text = "C:\\Neutron\\Maintenance\\";
             // 
             // ButtonRootDirectory
@@ -678,7 +670,7 @@
             this.ButtonRootDirectory.Location = new System.Drawing.Point(862, 17);
             this.ButtonRootDirectory.Name = "ButtonRootDirectory";
             this.ButtonRootDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonRootDirectory.TabIndex = 97;
+            this.ButtonRootDirectory.TabIndex = 1;
             this.ButtonRootDirectory.Text = "&Browse";
             this.ButtonRootDirectory.UseVisualStyleBackColor = true;
             this.ButtonRootDirectory.Visible = false;
@@ -701,7 +693,7 @@
             this.RootDirectory.Location = new System.Drawing.Point(351, 17);
             this.RootDirectory.Name = "RootDirectory";
             this.RootDirectory.Size = new System.Drawing.Size(505, 26);
-            this.RootDirectory.TabIndex = 95;
+            this.RootDirectory.TabIndex = 0;
             this.RootDirectory.Visible = false;
             this.RootDirectory.TextChanged += new System.EventHandler(this.RootDirectory_TextChanged);
             // 
@@ -711,7 +703,7 @@
             this.TextBoxMaintenanceFileFilter.Location = new System.Drawing.Point(862, 345);
             this.TextBoxMaintenanceFileFilter.Name = "TextBoxMaintenanceFileFilter";
             this.TextBoxMaintenanceFileFilter.Size = new System.Drawing.Size(100, 26);
-            this.TextBoxMaintenanceFileFilter.TabIndex = 92;
+            this.TextBoxMaintenanceFileFilter.TabIndex = 21;
             this.TextBoxMaintenanceFileFilter.Text = "MNT.*";
             this.TextBoxMaintenanceFileFilter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -721,7 +713,7 @@
             this.TextBoxHostOrderFileFilter.Location = new System.Drawing.Point(756, 138);
             this.TextBoxHostOrderFileFilter.Name = "TextBoxHostOrderFileFilter";
             this.TextBoxHostOrderFileFilter.Size = new System.Drawing.Size(100, 26);
-            this.TextBoxHostOrderFileFilter.TabIndex = 92;
+            this.TextBoxHostOrderFileFilter.TabIndex = 8;
             this.TextBoxHostOrderFileFilter.Text = "PR1.*";
             this.TextBoxHostOrderFileFilter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -751,7 +743,7 @@
             this.ButtonFindImagesDirectory.Location = new System.Drawing.Point(862, 59);
             this.ButtonFindImagesDirectory.Name = "ButtonFindImagesDirectory";
             this.ButtonFindImagesDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonFindImagesDirectory.TabIndex = 90;
+            this.ButtonFindImagesDirectory.TabIndex = 3;
             this.ButtonFindImagesDirectory.Text = "&Browse";
             this.ButtonFindImagesDirectory.UseVisualStyleBackColor = true;
             this.ButtonFindImagesDirectory.Click += new System.EventHandler(this.ButtonFindImagesDirectory_Click);
@@ -772,7 +764,7 @@
             this.ImagesDirectory.Location = new System.Drawing.Point(351, 59);
             this.ImagesDirectory.Name = "ImagesDirectory";
             this.ImagesDirectory.Size = new System.Drawing.Size(505, 26);
-            this.ImagesDirectory.TabIndex = 88;
+            this.ImagesDirectory.TabIndex = 2;
             // 
             // ButtonDocumentsDirectory
             // 
@@ -780,7 +772,7 @@
             this.ButtonDocumentsDirectory.Location = new System.Drawing.Point(862, 264);
             this.ButtonDocumentsDirectory.Name = "ButtonDocumentsDirectory";
             this.ButtonDocumentsDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonDocumentsDirectory.TabIndex = 87;
+            this.ButtonDocumentsDirectory.TabIndex = 14;
             this.ButtonDocumentsDirectory.Text = "&Browse";
             this.ButtonDocumentsDirectory.UseVisualStyleBackColor = true;
             this.ButtonDocumentsDirectory.Click += new System.EventHandler(this.ButtonDocumentsDirectory_Click);
@@ -791,7 +783,7 @@
             this.ButtonLogFileDirectory.Location = new System.Drawing.Point(686, 305);
             this.ButtonLogFileDirectory.Name = "ButtonLogFileDirectory";
             this.ButtonLogFileDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonLogFileDirectory.TabIndex = 87;
+            this.ButtonLogFileDirectory.TabIndex = 16;
             this.ButtonLogFileDirectory.Text = "&Browse";
             this.ButtonLogFileDirectory.UseVisualStyleBackColor = true;
             this.ButtonLogFileDirectory.Click += new System.EventHandler(this.ButtonLogFileDirectory_Click);
@@ -822,7 +814,7 @@
             this.DocumentsDirectory.Location = new System.Drawing.Point(351, 264);
             this.DocumentsDirectory.Name = "DocumentsDirectory";
             this.DocumentsDirectory.Size = new System.Drawing.Size(505, 26);
-            this.DocumentsDirectory.TabIndex = 85;
+            this.DocumentsDirectory.TabIndex = 13;
             // 
             // LogFileDirectory
             // 
@@ -830,7 +822,7 @@
             this.LogFileDirectory.Location = new System.Drawing.Point(351, 305);
             this.LogFileDirectory.Name = "LogFileDirectory";
             this.LogFileDirectory.Size = new System.Drawing.Size(325, 26);
-            this.LogFileDirectory.TabIndex = 85;
+            this.LogFileDirectory.TabIndex = 15;
             // 
             // label7
             // 
@@ -838,7 +830,7 @@
             this.label7.Location = new System.Drawing.Point(792, 305);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(138, 26);
-            this.label7.TabIndex = 84;
+            this.label7.TabIndex = 17;
             this.label7.Text = "Enable Logging";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -849,7 +841,7 @@
             this.EnableLogging.Location = new System.Drawing.Point(936, 311);
             this.EnableLogging.Name = "EnableLogging";
             this.EnableLogging.Size = new System.Drawing.Size(15, 14);
-            this.EnableLogging.TabIndex = 83;
+            this.EnableLogging.TabIndex = 18;
             this.EnableLogging.UseVisualStyleBackColor = true;
             // 
             // ButtonFindHostUploadDirectory
@@ -858,7 +850,7 @@
             this.ButtonFindHostUploadDirectory.Location = new System.Drawing.Point(862, 178);
             this.ButtonFindHostUploadDirectory.Name = "ButtonFindHostUploadDirectory";
             this.ButtonFindHostUploadDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonFindHostUploadDirectory.TabIndex = 75;
+            this.ButtonFindHostUploadDirectory.TabIndex = 10;
             this.ButtonFindHostUploadDirectory.Text = "&Browse";
             this.ButtonFindHostUploadDirectory.UseVisualStyleBackColor = true;
             this.ButtonFindHostUploadDirectory.Click += new System.EventHandler(this.ButtonFindHostUploadDirectory_Click);
@@ -879,7 +871,7 @@
             this.HostUploadDirectory.Location = new System.Drawing.Point(351, 178);
             this.HostUploadDirectory.Name = "HostUploadDirectory";
             this.HostUploadDirectory.Size = new System.Drawing.Size(505, 26);
-            this.HostUploadDirectory.TabIndex = 73;
+            this.HostUploadDirectory.TabIndex = 9;
             // 
             // ButtonFindHostUploadFile
             // 
@@ -887,7 +879,7 @@
             this.ButtonFindHostUploadFile.Location = new System.Drawing.Point(558, 221);
             this.ButtonFindHostUploadFile.Name = "ButtonFindHostUploadFile";
             this.ButtonFindHostUploadFile.Size = new System.Drawing.Size(100, 26);
-            this.ButtonFindHostUploadFile.TabIndex = 72;
+            this.ButtonFindHostUploadFile.TabIndex = 12;
             this.ButtonFindHostUploadFile.Text = "&Browse";
             this.ButtonFindHostUploadFile.UseVisualStyleBackColor = true;
             this.ButtonFindHostUploadFile.Click += new System.EventHandler(this.ButtonFindHostUploadFile_Click);
@@ -908,7 +900,7 @@
             this.HostUploadFile.Location = new System.Drawing.Point(351, 222);
             this.HostUploadFile.Name = "HostUploadFile";
             this.HostUploadFile.Size = new System.Drawing.Size(192, 26);
-            this.HostUploadFile.TabIndex = 70;
+            this.HostUploadFile.TabIndex = 11;
             this.HostUploadFile.Text = "Upload.dat";
             // 
             // ButtonFindHostOrderDirectory
@@ -917,7 +909,7 @@
             this.ButtonFindHostOrderDirectory.Location = new System.Drawing.Point(862, 97);
             this.ButtonFindHostOrderDirectory.Name = "ButtonFindHostOrderDirectory";
             this.ButtonFindHostOrderDirectory.Size = new System.Drawing.Size(100, 26);
-            this.ButtonFindHostOrderDirectory.TabIndex = 56;
+            this.ButtonFindHostOrderDirectory.TabIndex = 5;
             this.ButtonFindHostOrderDirectory.Text = "&Browse";
             this.ButtonFindHostOrderDirectory.UseVisualStyleBackColor = true;
             this.ButtonFindHostOrderDirectory.Click += new System.EventHandler(this.ButtonFindHostOrderDirectory_Click);
@@ -938,7 +930,7 @@
             this.HostOrderDirectory.Location = new System.Drawing.Point(351, 97);
             this.HostOrderDirectory.Name = "HostOrderDirectory";
             this.HostOrderDirectory.Size = new System.Drawing.Size(505, 26);
-            this.HostOrderDirectory.TabIndex = 54;
+            this.HostOrderDirectory.TabIndex = 4;
             // 
             // ButtonFindHostOrderFile
             // 
@@ -946,7 +938,7 @@
             this.ButtonFindHostOrderFile.Location = new System.Drawing.Point(558, 138);
             this.ButtonFindHostOrderFile.Name = "ButtonFindHostOrderFile";
             this.ButtonFindHostOrderFile.Size = new System.Drawing.Size(100, 26);
-            this.ButtonFindHostOrderFile.TabIndex = 53;
+            this.ButtonFindHostOrderFile.TabIndex = 7;
             this.ButtonFindHostOrderFile.Text = "&Browse";
             this.ButtonFindHostOrderFile.UseVisualStyleBackColor = true;
             this.ButtonFindHostOrderFile.Click += new System.EventHandler(this.ButtonFindHostOrderFile_Click);
@@ -967,7 +959,7 @@
             this.HostOrderFile.Location = new System.Drawing.Point(351, 137);
             this.HostOrderFile.Name = "HostOrderFile";
             this.HostOrderFile.Size = new System.Drawing.Size(192, 26);
-            this.HostOrderFile.TabIndex = 51;
+            this.HostOrderFile.TabIndex = 6;
             // 
             // MBInterfaceFilesBack
             // 
@@ -977,7 +969,7 @@
             this.MBInterfaceFilesBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBInterfaceFilesBack.Name = "MBInterfaceFilesBack";
             this.MBInterfaceFilesBack.Size = new System.Drawing.Size(135, 76);
-            this.MBInterfaceFilesBack.TabIndex = 3;
+            this.MBInterfaceFilesBack.TabIndex = 1;
             this.MBInterfaceFilesBack.Text = "Back";
             this.MBInterfaceFilesBack.UseSelectable = true;
             this.MBInterfaceFilesBack.Click += new System.EventHandler(this.MBInterfaceFilesBack_Click);
@@ -999,56 +991,10 @@
             this.ButtonSave.Location = new System.Drawing.Point(849, 10);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(137, 76);
-            this.ButtonSave.TabIndex = 60;
+            this.ButtonSave.TabIndex = 0;
             this.ButtonSave.Text = "Save";
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
-            // 
-            // Spare1
-            // 
-            this.Spare1.BackColor = System.Drawing.Color.Turquoise;
-            this.Spare1.Controls.Add(this.MBSpare1Back);
-            this.Spare1.Location = new System.Drawing.Point(4, 22);
-            this.Spare1.Name = "Spare1";
-            this.Spare1.Size = new System.Drawing.Size(1147, 644);
-            this.Spare1.TabIndex = 4;
-            this.Spare1.Text = "Spare 1";
-            // 
-            // MBSpare1Back
-            // 
-            this.MBSpare1Back.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBSpare1Back.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSpare1Back.Location = new System.Drawing.Point(1000, 10);
-            this.MBSpare1Back.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSpare1Back.Name = "MBSpare1Back";
-            this.MBSpare1Back.Size = new System.Drawing.Size(135, 76);
-            this.MBSpare1Back.TabIndex = 27;
-            this.MBSpare1Back.Text = "Back";
-            this.MBSpare1Back.UseSelectable = true;
-            this.MBSpare1Back.Click += new System.EventHandler(this.MBSpare1Back_Click);
-            // 
-            // Spare2
-            // 
-            this.Spare2.BackColor = System.Drawing.Color.Turquoise;
-            this.Spare2.Controls.Add(this.MBSpare2Back);
-            this.Spare2.Location = new System.Drawing.Point(4, 22);
-            this.Spare2.Name = "Spare2";
-            this.Spare2.Size = new System.Drawing.Size(1147, 644);
-            this.Spare2.TabIndex = 7;
-            this.Spare2.Text = "Spare 2";
-            // 
-            // MBSpare2Back
-            // 
-            this.MBSpare2Back.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBSpare2Back.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSpare2Back.Location = new System.Drawing.Point(1000, 10);
-            this.MBSpare2Back.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSpare2Back.Name = "MBSpare2Back";
-            this.MBSpare2Back.Size = new System.Drawing.Size(135, 76);
-            this.MBSpare2Back.TabIndex = 2;
-            this.MBSpare2Back.Text = "Back";
-            this.MBSpare2Back.UseSelectable = true;
-            this.MBSpare2Back.Click += new System.EventHandler(this.MBSpare2Back_Click);
             // 
             // LabelFormTitle
             // 
@@ -1123,8 +1069,6 @@
             this.InterfaceFiles.PerformLayout();
             this.PanelFile.ResumeLayout(false);
             this.PanelFile.PerformLayout();
-            this.Spare1.ResumeLayout(false);
-            this.Spare2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
@@ -1136,15 +1080,11 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage InterfaceFiles;
         private MetroFramework.Controls.MetroButton MBInterfaceFilesBack;
-        private System.Windows.Forms.TabPage Spare1;
         private System.Windows.Forms.Label LabelFormTitle;
         private MetroFramework.Controls.MetroLabel mlUserInfo;
         private System.Windows.Forms.Label LabelFormHeaderText;
         private System.Windows.Forms.TabPage SqlServer;
-        private MetroFramework.Controls.MetroButton MBSpare1Back;
         private MetroFramework.Controls.MetroButton MBSqlServerBack;
-        private System.Windows.Forms.TabPage Spare2;
-        private MetroFramework.Controls.MetroButton MBSpare2Back;
         private System.Windows.Forms.TabPage Main;
         private MetroFramework.Controls.MetroButton MBMainClose;
         private MetroFramework.Controls.MetroButton MBStartUpload;

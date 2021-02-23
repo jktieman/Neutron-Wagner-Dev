@@ -69,7 +69,7 @@
             this.TextBoxViewEditWeight.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.TextBoxViewEditWeight.Name = "TextBoxViewEditWeight";
             this.TextBoxViewEditWeight.Size = new System.Drawing.Size(95, 29);
-            this.TextBoxViewEditWeight.TabIndex = 11;
+            this.TextBoxViewEditWeight.TabIndex = 13;
             this.TextBoxViewEditWeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelViewEditWeight
@@ -92,7 +92,7 @@
             this.CheckBoxViewEditScale.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.CheckBoxViewEditScale.Name = "CheckBoxViewEditScale";
             this.CheckBoxViewEditScale.Size = new System.Drawing.Size(99, 20);
-            this.CheckBoxViewEditScale.TabIndex = 12;
+            this.CheckBoxViewEditScale.TabIndex = 14;
             this.CheckBoxViewEditScale.Text = "Use Scale";
             this.CheckBoxViewEditScale.UseVisualStyleBackColor = true;
             // 
@@ -104,7 +104,7 @@
             this.ComboBoxViewEditUnitOfIssue.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditUnitOfIssue.Name = "ComboBoxViewEditUnitOfIssue";
             this.ComboBoxViewEditUnitOfIssue.Size = new System.Drawing.Size(256, 32);
-            this.ComboBoxViewEditUnitOfIssue.TabIndex = 10;
+            this.ComboBoxViewEditUnitOfIssue.TabIndex = 12;
             // 
             // LabelViewEditUnitOfIssue
             // 
@@ -126,7 +126,7 @@
             this.ComboBoxViewEditStorageType.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditStorageType.Name = "ComboBoxViewEditStorageType";
             this.ComboBoxViewEditStorageType.Size = new System.Drawing.Size(256, 32);
-            this.ComboBoxViewEditStorageType.TabIndex = 9;
+            this.ComboBoxViewEditStorageType.TabIndex = 11;
             // 
             // LabelViewEditStorageType
             // 
@@ -148,7 +148,7 @@
             this.ComboBoxViewEditLocationCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditLocationCode.Name = "ComboBoxViewEditLocationCode";
             this.ComboBoxViewEditLocationCode.Size = new System.Drawing.Size(253, 32);
-            this.ComboBoxViewEditLocationCode.TabIndex = 8;
+            this.ComboBoxViewEditLocationCode.TabIndex = 7;
             // 
             // LabelViewEditLocation
             // 
@@ -170,7 +170,7 @@
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(253, 32);
-            this.ComboBoxViewEditHeightCode.TabIndex = 7;
+            this.ComboBoxViewEditHeightCode.TabIndex = 6;
             // 
             // LabelViewEditHeight
             // 
@@ -192,7 +192,7 @@
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditVelocityCode.Name = "ComboBoxViewEditVelocityCode";
             this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(253, 32);
-            this.ComboBoxViewEditVelocityCode.TabIndex = 6;
+            this.ComboBoxViewEditVelocityCode.TabIndex = 5;
             // 
             // LabelViewEditVelocity
             // 
@@ -226,7 +226,7 @@
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ComboBoxViewEditSizeCode.Name = "ComboBoxViewEditSizeCode";
             this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(253, 32);
-            this.ComboBoxViewEditSizeCode.TabIndex = 5;
+            this.ComboBoxViewEditSizeCode.TabIndex = 4;
             // 
             // LabelViewEditSize
             // 
@@ -248,6 +248,7 @@
             this.ComboBoxViewEditStation.Name = "ComboBoxViewEditStation";
             this.ComboBoxViewEditStation.Size = new System.Drawing.Size(126, 32);
             this.ComboBoxViewEditStation.TabIndex = 20;
+            this.ComboBoxViewEditStation.TabStop = false;
             this.ComboBoxViewEditStation.Visible = false;
             // 
             // TextBoxViewEditId
@@ -277,7 +278,7 @@
             this.TextBoxViewEditLocationMin.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.TextBoxViewEditLocationMin.Name = "TextBoxViewEditLocationMin";
             this.TextBoxViewEditLocationMin.Size = new System.Drawing.Size(253, 29);
-            this.TextBoxViewEditLocationMin.TabIndex = 2;
+            this.TextBoxViewEditLocationMin.TabIndex = 9;
             this.TextBoxViewEditLocationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxViewEditLocationMax
@@ -286,7 +287,7 @@
             this.TextBoxViewEditLocationMax.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.TextBoxViewEditLocationMax.Name = "TextBoxViewEditLocationMax";
             this.TextBoxViewEditLocationMax.Size = new System.Drawing.Size(253, 29);
-            this.TextBoxViewEditLocationMax.TabIndex = 1;
+            this.TextBoxViewEditLocationMax.TabIndex = 2;
             this.TextBoxViewEditLocationMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxViewEditDescription
@@ -295,7 +296,7 @@
             this.TextBoxViewEditDescription.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.TextBoxViewEditDescription.Name = "TextBoxViewEditDescription";
             this.TextBoxViewEditDescription.Size = new System.Drawing.Size(392, 29);
-            this.TextBoxViewEditDescription.TabIndex = 0;
+            this.TextBoxViewEditDescription.TabIndex = 1;
             this.TextBoxViewEditDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxViewEditSystemMin
@@ -305,7 +306,7 @@
             this.TextBoxViewEditSystemMin.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.TextBoxViewEditSystemMin.Name = "TextBoxViewEditSystemMin";
             this.TextBoxViewEditSystemMin.Size = new System.Drawing.Size(256, 29);
-            this.TextBoxViewEditSystemMin.TabIndex = 4;
+            this.TextBoxViewEditSystemMin.TabIndex = 10;
             this.TextBoxViewEditSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxViewEditStation
@@ -315,7 +316,7 @@
             this.TextBoxViewEditStation.Name = "TextBoxViewEditStation";
             this.TextBoxViewEditStation.ReadOnly = true;
             this.TextBoxViewEditStation.Size = new System.Drawing.Size(253, 29);
-            this.TextBoxViewEditStation.TabIndex = 23;
+            this.TextBoxViewEditStation.TabIndex = 0;
             this.TextBoxViewEditStation.TabStop = false;
             this.TextBoxViewEditStation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -326,7 +327,7 @@
             this.TextBoxViewEditItem.Name = "TextBoxViewEditItem";
             this.TextBoxViewEditItem.ReadOnly = true;
             this.TextBoxViewEditItem.Size = new System.Drawing.Size(253, 29);
-            this.TextBoxViewEditItem.TabIndex = 22;
+            this.TextBoxViewEditItem.TabIndex = 8;
             this.TextBoxViewEditItem.TabStop = false;
             this.TextBoxViewEditItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -410,7 +411,7 @@
             this.ButtonSave.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(103, 52);
-            this.ButtonSave.TabIndex = 15;
+            this.ButtonSave.TabIndex = 16;
             this.ButtonSave.Text = "Save";
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
@@ -424,7 +425,7 @@
             this.ButtonCancel.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(122, 52);
-            this.ButtonCancel.TabIndex = 13;
+            this.ButtonCancel.TabIndex = 15;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);

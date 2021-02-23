@@ -70,7 +70,7 @@
             this.TextBoxChangeQuantityPosition.Location = new System.Drawing.Point(126, 26);
             this.TextBoxChangeQuantityPosition.Name = "TextBoxChangeQuantityPosition";
             this.TextBoxChangeQuantityPosition.Size = new System.Drawing.Size(124, 80);
-            this.TextBoxChangeQuantityPosition.TabIndex = 2;
+            this.TextBoxChangeQuantityPosition.TabIndex = 0;
             this.TextBoxChangeQuantityPosition.Text = "1";
             this.TextBoxChangeQuantityPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxChangeQuantityPosition.Leave += new System.EventHandler(this.TextBoxChangeQuantityPosition_TextChanged);
@@ -96,7 +96,7 @@
             this.MBChangeQuantitySave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBChangeQuantitySave.Name = "MBChangeQuantitySave";
             this.MBChangeQuantitySave.Size = new System.Drawing.Size(162, 76);
-            this.MBChangeQuantitySave.TabIndex = 1;
+            this.MBChangeQuantitySave.TabIndex = 2;
             this.MBChangeQuantitySave.Text = "Save";
             this.MBChangeQuantitySave.UseSelectable = true;
             this.MBChangeQuantitySave.Click += new System.EventHandler(this.MBChangeQuantitySave_Click);
@@ -117,7 +117,7 @@
             this.TextBoxNewQuantity.Location = new System.Drawing.Point(103, 155);
             this.TextBoxNewQuantity.Name = "TextBoxNewQuantity";
             this.TextBoxNewQuantity.Size = new System.Drawing.Size(170, 80);
-            this.TextBoxNewQuantity.TabIndex = 0;
+            this.TextBoxNewQuantity.TabIndex = 1;
             this.TextBoxNewQuantity.Text = "1";
             this.TextBoxNewQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewQuantity.Leave += new System.EventHandler(this.TextBoxNewQuantity_TextChanged);

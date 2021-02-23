@@ -42,7 +42,7 @@
             this.ButtonCancel.Location = new System.Drawing.Point(209, 233);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(152, 76);
-            this.ButtonCancel.TabIndex = 5;
+            this.ButtonCancel.TabIndex = 2;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
@@ -54,7 +54,7 @@
             this.ButtonOk.Location = new System.Drawing.Point(42, 233);
             this.ButtonOk.Name = "ButtonOk";
             this.ButtonOk.Size = new System.Drawing.Size(152, 76);
-            this.ButtonOk.TabIndex = 6;
+            this.ButtonOk.TabIndex = 1;
             this.ButtonOk.Text = "Ok";
             this.ButtonOk.UseVisualStyleBackColor = true;
             this.ButtonOk.Click += new System.EventHandler(this.ButtonOk_Click);
@@ -76,7 +76,7 @@
             this.TextBoxAuthCode.Name = "TextBoxAuthCode";
             this.TextBoxAuthCode.PasswordChar = '*';
             this.TextBoxAuthCode.Size = new System.Drawing.Size(319, 80);
-            this.TextBoxAuthCode.TabIndex = 3;
+            this.TextBoxAuthCode.TabIndex = 0;
             this.TextBoxAuthCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxAuthCode.UseSystemPasswordChar = true;
             // 

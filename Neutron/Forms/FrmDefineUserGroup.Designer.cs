@@ -69,7 +69,7 @@
             this.ButtonClearAllUsers.Location = new System.Drawing.Point(181, 587);
             this.ButtonClearAllUsers.Name = "ButtonClearAllUsers";
             this.ButtonClearAllUsers.Size = new System.Drawing.Size(120, 28);
-            this.ButtonClearAllUsers.TabIndex = 32;
+            this.ButtonClearAllUsers.TabIndex = 2;
             this.ButtonClearAllUsers.Text = "Clear All";
             this.ButtonClearAllUsers.UseVisualStyleBackColor = true;
             this.ButtonClearAllUsers.Click += new System.EventHandler(this.ButtonClearAllUsers_Click);
@@ -80,7 +80,7 @@
             this.ButtonCheckAllUsers.Location = new System.Drawing.Point(50, 587);
             this.ButtonCheckAllUsers.Name = "ButtonCheckAllUsers";
             this.ButtonCheckAllUsers.Size = new System.Drawing.Size(120, 28);
-            this.ButtonCheckAllUsers.TabIndex = 33;
+            this.ButtonCheckAllUsers.TabIndex = 1;
             this.ButtonCheckAllUsers.Text = "Check All";
             this.ButtonCheckAllUsers.UseVisualStyleBackColor = true;
             this.ButtonCheckAllUsers.Click += new System.EventHandler(this.ButtonCheckAllUsers_Click);
@@ -105,7 +105,7 @@
             this.ButtonRemove.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonRemove.Name = "ButtonRemove";
             this.ButtonRemove.Size = new System.Drawing.Size(110, 28);
-            this.ButtonRemove.TabIndex = 8;
+            this.ButtonRemove.TabIndex = 5;
             this.ButtonRemove.Text = "Remove";
             this.ButtonRemove.UseVisualStyleBackColor = true;
             this.ButtonRemove.Click += new System.EventHandler(this.ButtonRemove_Click);
@@ -117,7 +117,7 @@
             this.ButtonSave.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(110, 28);
-            this.ButtonSave.TabIndex = 8;
+            this.ButtonSave.TabIndex = 6;
             this.ButtonSave.Text = "Save";
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
@@ -127,7 +127,7 @@
             this.TextBoxGroupName.Location = new System.Drawing.Point(361, 553);
             this.TextBoxGroupName.Name = "TextBoxGroupName";
             this.TextBoxGroupName.Size = new System.Drawing.Size(325, 22);
-            this.TextBoxGroupName.TabIndex = 6;
+            this.TextBoxGroupName.TabIndex = 4;
             // 
             // LabelClearCheckBox
             // 
@@ -194,7 +194,7 @@
             this.CheckedListBoxUsers.Margin = new System.Windows.Forms.Padding(4);
             this.CheckedListBoxUsers.Name = "CheckedListBoxUsers";
             this.CheckedListBoxUsers.Size = new System.Drawing.Size(335, 531);
-            this.CheckedListBoxUsers.TabIndex = 4;
+            this.CheckedListBoxUsers.TabIndex = 0;
             this.CheckedListBoxUsers.ThreeDCheckBoxes = true;
             // 
             // FrmDefineUserGroup

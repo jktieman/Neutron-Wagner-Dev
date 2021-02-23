@@ -42,14 +42,14 @@
             this.ListBoxRequests.Location = new System.Drawing.Point(12, 37);
             this.ListBoxRequests.Name = "ListBoxRequests";
             this.ListBoxRequests.Size = new System.Drawing.Size(258, 706);
-            this.ListBoxRequests.TabIndex = 120;
+            this.ListBoxRequests.TabIndex = 2;
             // 
             // ButtonClear
             // 
             this.ButtonClear.Location = new System.Drawing.Point(12, 8);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(113, 23);
-            this.ButtonClear.TabIndex = 121;
+            this.ButtonClear.TabIndex = 0;
             this.ButtonClear.Text = "Clear";
             this.ButtonClear.UseVisualStyleBackColor = true;
             this.ButtonClear.Click += new System.EventHandler(this.ButtonClear_Click);
@@ -60,7 +60,7 @@
             this.ButtonClose.Location = new System.Drawing.Point(156, 8);
             this.ButtonClose.Name = "ButtonClose";
             this.ButtonClose.Size = new System.Drawing.Size(113, 23);
-            this.ButtonClose.TabIndex = 121;
+            this.ButtonClose.TabIndex = 1;
             this.ButtonClose.Text = "Close";
             this.ButtonClose.UseVisualStyleBackColor = true;
             this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);

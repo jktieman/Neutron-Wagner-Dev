@@ -55,8 +55,8 @@ namespace NeutronLoader
                     }
                 case "TOP":
                     {
-                    //    _uploadProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
-                    //    _uploadProcessor.StartProcessingInterfaceFiles();
+                        //_uploadProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
+                        //_uploadProcessor.StartProcessingInterfaceFiles();
                         break;
                     }
                 case "TMG":

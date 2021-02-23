@@ -40,7 +40,7 @@
             this.ButtonCancel.Location = new System.Drawing.Point(195, 528);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(120, 23);
-            this.ButtonCancel.TabIndex = 4;
+            this.ButtonCancel.TabIndex = 2;
             this.ButtonCancel.Text = "Cancel";
             this.ButtonCancel.UseVisualStyleBackColor = true;
             this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
@@ -52,7 +52,7 @@
             this.ButtonSave.Location = new System.Drawing.Point(69, 528);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(120, 23);
-            this.ButtonSave.TabIndex = 3;
+            this.ButtonSave.TabIndex = 1;
             this.ButtonSave.Text = "Save";
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
@@ -64,7 +64,7 @@
             this.CheckedListBox.Location = new System.Drawing.Point(22, 8);
             this.CheckedListBox.Name = "CheckedListBox";
             this.CheckedListBox.Size = new System.Drawing.Size(340, 514);
-            this.CheckedListBox.TabIndex = 2;
+            this.CheckedListBox.TabIndex = 0;
             // 
             // FrmDefineActionGroup
             // 

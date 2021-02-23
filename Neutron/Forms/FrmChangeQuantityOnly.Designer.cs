@@ -56,7 +56,7 @@
             this.MBChangeQuantityCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBChangeQuantityCancel.Name = "MBChangeQuantityCancel";
             this.MBChangeQuantityCancel.Size = new System.Drawing.Size(162, 76);
-            this.MBChangeQuantityCancel.TabIndex = 3;
+            this.MBChangeQuantityCancel.TabIndex = 2;
             this.MBChangeQuantityCancel.Text = "Cancel";
             this.MBChangeQuantityCancel.UseSelectable = true;
             // 

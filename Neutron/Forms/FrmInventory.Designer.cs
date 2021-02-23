@@ -286,7 +286,7 @@
             this.ComboBoxStationNumber.Location = new System.Drawing.Point(6, 15);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
             this.ComboBoxStationNumber.Size = new System.Drawing.Size(121, 24);
-            this.ComboBoxStationNumber.TabIndex = 29;
+            this.ComboBoxStationNumber.TabIndex = 0;
             // 
             // MBCreateInventoryFile
             // 
@@ -295,7 +295,7 @@
             this.MBCreateInventoryFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCreateInventoryFile.Name = "MBCreateInventoryFile";
             this.MBCreateInventoryFile.Size = new System.Drawing.Size(122, 26);
-            this.MBCreateInventoryFile.TabIndex = 28;
+            this.MBCreateInventoryFile.TabIndex = 1;
             this.MBCreateInventoryFile.Text = "Inventory File";
             this.MBCreateInventoryFile.UseSelectable = true;
             this.MBCreateInventoryFile.Click += new System.EventHandler(this.MBCreateInventoryFile_Click);
@@ -319,7 +319,7 @@
             this.MBPrintInventory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintInventory.Name = "MBPrintInventory";
             this.MBPrintInventory.Size = new System.Drawing.Size(135, 76);
-            this.MBPrintInventory.TabIndex = 19;
+            this.MBPrintInventory.TabIndex = 2;
             this.MBPrintInventory.Text = "Save To File";
             this.MBPrintInventory.UseSelectable = true;
             this.MBPrintInventory.Click += new System.EventHandler(this.MBPrintInventory_Click);
@@ -340,7 +340,7 @@
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
             this.TextBoxFind.Size = new System.Drawing.Size(269, 29);
-            this.TextBoxFind.TabIndex = 17;
+            this.TextBoxFind.TabIndex = 3;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
             // 
@@ -351,7 +351,7 @@
             this.MButtonNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonNew.Name = "MButtonNew";
             this.MButtonNew.Size = new System.Drawing.Size(135, 76);
-            this.MButtonNew.TabIndex = 16;
+            this.MButtonNew.TabIndex = 0;
             this.MButtonNew.Text = "New";
             this.MButtonNew.UseSelectable = true;
             this.MButtonNew.Click += new System.EventHandler(this.MButtonNew_Click);
@@ -363,7 +363,7 @@
             this.MButtonViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonViewEdit.Name = "MButtonViewEdit";
             this.MButtonViewEdit.Size = new System.Drawing.Size(135, 76);
-            this.MButtonViewEdit.TabIndex = 15;
+            this.MButtonViewEdit.TabIndex = 1;
             this.MButtonViewEdit.Text = "View/Edit";
             this.MButtonViewEdit.UseSelectable = true;
             this.MButtonViewEdit.Click += new System.EventHandler(this.MButtonViewEdit_Click);
@@ -375,7 +375,7 @@
             this.ButtonClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(34, 38);
-            this.ButtonClear.TabIndex = 14;
+            this.ButtonClear.TabIndex = 4;
             this.ButtonClear.Text = "X";
             this.ButtonClear.UseVisualStyleBackColor = true;
             this.ButtonClear.Click += new System.EventHandler(this.ButtonClear_Click);
@@ -388,7 +388,7 @@
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(120, 76);
-            this.MButtonClose.TabIndex = 12;
+            this.MButtonClose.TabIndex = 7;
             this.MButtonClose.Text = "Home";
             this.MButtonClose.UseSelectable = true;
             this.MButtonClose.Click += new System.EventHandler(this.MButtonClose_Click);
@@ -400,7 +400,7 @@
             this.MButtonSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSearch.Name = "MButtonSearch";
             this.MButtonSearch.Size = new System.Drawing.Size(120, 76);
-            this.MButtonSearch.TabIndex = 12;
+            this.MButtonSearch.TabIndex = 5;
             this.MButtonSearch.Text = "Search";
             this.MButtonSearch.UseSelectable = true;
             this.MButtonSearch.Click += new System.EventHandler(this.MButtonFind_Click);
@@ -416,7 +416,7 @@
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.Size = new System.Drawing.Size(1141, 536);
-            this.DataGridView1.TabIndex = 0;
+            this.DataGridView1.TabIndex = 6;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             // 
             // tabPage2
@@ -443,7 +443,7 @@
             this.MbViewEditEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditEdit.Name = "MbViewEditEdit";
             this.MbViewEditEdit.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditEdit.TabIndex = 1;
+            this.MbViewEditEdit.TabIndex = 3;
             this.MbViewEditEdit.Text = "Edit Location";
             this.MbViewEditEdit.UseSelectable = true;
             this.MbViewEditEdit.Click += new System.EventHandler(this.MbViewEditEdit_Click);
@@ -456,7 +456,7 @@
             this.MbViewEditAddLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditAddLocation.Name = "MbViewEditAddLocation";
             this.MbViewEditAddLocation.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditAddLocation.TabIndex = 0;
+            this.MbViewEditAddLocation.TabIndex = 2;
             this.MbViewEditAddLocation.Text = "Add Location";
             this.MbViewEditAddLocation.UseSelectable = true;
             this.MbViewEditAddLocation.Click += new System.EventHandler(this.MbViewEditAddLocation_Click);
@@ -468,7 +468,7 @@
             this.MbViewEditListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditListing.Name = "MbViewEditListing";
             this.MbViewEditListing.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditListing.TabIndex = 3;
+            this.MbViewEditListing.TabIndex = 0;
             this.MbViewEditListing.Text = "Listing";
             this.MbViewEditListing.UseSelectable = true;
             this.MbViewEditListing.Click += new System.EventHandler(this.MbViewEditListing_Click);
@@ -480,7 +480,7 @@
             this.MbViewEditDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditDelete.Name = "MbViewEditDelete";
             this.MbViewEditDelete.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditDelete.TabIndex = 2;
+            this.MbViewEditDelete.TabIndex = 1;
             this.MbViewEditDelete.Text = "Delete Location";
             this.MbViewEditDelete.UseSelectable = true;
             this.MbViewEditDelete.Click += new System.EventHandler(this.MbViewEditDelete_Click);
@@ -524,7 +524,7 @@
             this.DataGridViewInventoryLocations.RowTemplate.Height = 28;
             this.DataGridViewInventoryLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewInventoryLocations.Size = new System.Drawing.Size(1135, 449);
-            this.DataGridViewInventoryLocations.TabIndex = 36;
+            this.DataGridViewInventoryLocations.TabIndex = 2;
             this.DataGridViewInventoryLocations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewInventoryLocations_CellClick);
             this.DataGridViewInventoryLocations.Click += new System.EventHandler(this.DataGridViewInventoryLocations_Click);
             // 
@@ -641,7 +641,7 @@
             this.MbNewClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewClose.Name = "MbNewClose";
             this.MbNewClose.Size = new System.Drawing.Size(135, 78);
-            this.MbNewClose.TabIndex = 3;
+            this.MbNewClose.TabIndex = 1;
             this.MbNewClose.Text = "Back";
             this.MbNewClose.UseSelectable = true;
             this.MbNewClose.Click += new System.EventHandler(this.MbNewClose_Click);
@@ -653,7 +653,7 @@
             this.MbNewFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewFind.Name = "MbNewFind";
             this.MbNewFind.Size = new System.Drawing.Size(135, 78);
-            this.MbNewFind.TabIndex = 2;
+            this.MbNewFind.TabIndex = 0;
             this.MbNewFind.Text = "Find";
             this.MbNewFind.UseSelectable = true;
             this.MbNewFind.Click += new System.EventHandler(this.MbNewFind_Click);
@@ -820,7 +820,7 @@
             this.TextBoxNewSystemMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSystemMin.Name = "TextBoxNewSystemMin";
             this.TextBoxNewSystemMin.Size = new System.Drawing.Size(100, 29);
-            this.TextBoxNewSystemMin.TabIndex = 5;
+            this.TextBoxNewSystemMin.TabIndex = 9;
             this.TextBoxNewSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelNewSystemMin
@@ -842,7 +842,7 @@
             this.ComboBoxNewLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewLocationCode.Name = "ComboBoxNewLocationCode";
             this.ComboBoxNewLocationCode.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxNewLocationCode.TabIndex = 9;
+            this.ComboBoxNewLocationCode.TabIndex = 7;
             // 
             // LabelNewUser
             // 
@@ -863,7 +863,7 @@
             this.ComboBoxNewHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewHeightCode.Name = "ComboBoxNewHeightCode";
             this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxNewHeightCode.TabIndex = 8;
+            this.ComboBoxNewHeightCode.TabIndex = 6;
             // 
             // LabelNewHeight
             // 
@@ -884,7 +884,7 @@
             this.ComboBoxNewVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewVelocityCode.Name = "ComboBoxNewVelocityCode";
             this.ComboBoxNewVelocityCode.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxNewVelocityCode.TabIndex = 7;
+            this.ComboBoxNewVelocityCode.TabIndex = 5;
             // 
             // LabelNewVelocity
             // 
@@ -905,7 +905,7 @@
             this.ComboBoxNewSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewSizeCode.Name = "ComboBoxNewSizeCode";
             this.ComboBoxNewSizeCode.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxNewSizeCode.TabIndex = 6;
+            this.ComboBoxNewSizeCode.TabIndex = 4;
             // 
             // LabelNewSize
             // 
@@ -935,7 +935,7 @@
             this.TextBoxNewSystemMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSystemMax.Name = "TextBoxNewSystemMax";
             this.TextBoxNewSystemMax.Size = new System.Drawing.Size(100, 29);
-            this.TextBoxNewSystemMax.TabIndex = 4;
+            this.TextBoxNewSystemMax.TabIndex = 3;
             this.TextBoxNewSystemMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxNewLocationMin
@@ -945,7 +945,7 @@
             this.TextBoxNewLocationMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewLocationMin.Name = "TextBoxNewLocationMin";
             this.TextBoxNewLocationMin.Size = new System.Drawing.Size(100, 29);
-            this.TextBoxNewLocationMin.TabIndex = 3;
+            this.TextBoxNewLocationMin.TabIndex = 8;
             this.TextBoxNewLocationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxNewLocationMax
@@ -1052,7 +1052,7 @@
             this.MbNewLocationsListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewLocationsListing.Name = "MbNewLocationsListing";
             this.MbNewLocationsListing.Size = new System.Drawing.Size(135, 76);
-            this.MbNewLocationsListing.TabIndex = 3;
+            this.MbNewLocationsListing.TabIndex = 0;
             this.MbNewLocationsListing.Text = "Listing";
             this.MbNewLocationsListing.UseSelectable = true;
             this.MbNewLocationsListing.Click += new System.EventHandler(this.MbNewLocationsListing_Click);
@@ -1064,7 +1064,7 @@
             this.MbNewAvailableLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewAvailableLocations.Name = "MbNewAvailableLocations";
             this.MbNewAvailableLocations.Size = new System.Drawing.Size(135, 76);
-            this.MbNewAvailableLocations.TabIndex = 2;
+            this.MbNewAvailableLocations.TabIndex = 1;
             this.MbNewAvailableLocations.Text = "Show All";
             this.MbNewAvailableLocations.UseSelectable = true;
             this.MbNewAvailableLocations.Click += new System.EventHandler(this.MbNewAvailableLocations_Click);
@@ -1077,7 +1077,7 @@
             this.MbNewLocationsClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewLocationsClose.Name = "MbNewLocationsClose";
             this.MbNewLocationsClose.Size = new System.Drawing.Size(135, 76);
-            this.MbNewLocationsClose.TabIndex = 1;
+            this.MbNewLocationsClose.TabIndex = 3;
             this.MbNewLocationsClose.Text = "Back";
             this.MbNewLocationsClose.UseSelectable = true;
             this.MbNewLocationsClose.Click += new System.EventHandler(this.MbNewLocationsClose_Click);
@@ -1089,7 +1089,7 @@
             this.MbNewLocationsSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewLocationsSave.Name = "MbNewLocationsSave";
             this.MbNewLocationsSave.Size = new System.Drawing.Size(135, 76);
-            this.MbNewLocationsSave.TabIndex = 0;
+            this.MbNewLocationsSave.TabIndex = 2;
             this.MbNewLocationsSave.Text = "Save";
             this.MbNewLocationsSave.UseSelectable = true;
             this.MbNewLocationsSave.Click += new System.EventHandler(this.MbNewLocationsSave_Click);
@@ -1155,7 +1155,7 @@
             this.ComboBoxInventoryNewLocationsStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxInventoryNewLocationsStorageType.Name = "ComboBoxInventoryNewLocationsStorageType";
             this.ComboBoxInventoryNewLocationsStorageType.Size = new System.Drawing.Size(155, 32);
-            this.ComboBoxInventoryNewLocationsStorageType.TabIndex = 4;
+            this.ComboBoxInventoryNewLocationsStorageType.TabIndex = 2;
             // 
             // LabelNewLocationsStorageType
             // 
@@ -1173,7 +1173,7 @@
             this.DateTimePickerInventoryNewLocationsReceivedDate.Location = new System.Drawing.Point(613, 51);
             this.DateTimePickerInventoryNewLocationsReceivedDate.Name = "DateTimePickerInventoryNewLocationsReceivedDate";
             this.DateTimePickerInventoryNewLocationsReceivedDate.Size = new System.Drawing.Size(373, 29);
-            this.DateTimePickerInventoryNewLocationsReceivedDate.TabIndex = 3;
+            this.DateTimePickerInventoryNewLocationsReceivedDate.TabIndex = 4;
             // 
             // LabelNewLocationsReceivedDate
             // 
@@ -1192,7 +1192,7 @@
             this.TextBoxInventoryNewLocationsQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxInventoryNewLocationsQuantity.Name = "TextBoxInventoryNewLocationsQuantity";
             this.TextBoxInventoryNewLocationsQuantity.Size = new System.Drawing.Size(105, 29);
-            this.TextBoxInventoryNewLocationsQuantity.TabIndex = 2;
+            this.TextBoxInventoryNewLocationsQuantity.TabIndex = 1;
             this.TextBoxInventoryNewLocationsQuantity.Text = "0";
             this.TextBoxInventoryNewLocationsQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1214,7 +1214,7 @@
             this.TextBoxInventoryNewLocationsDescription.Name = "TextBoxInventoryNewLocationsDescription";
             this.TextBoxInventoryNewLocationsDescription.ReadOnly = true;
             this.TextBoxInventoryNewLocationsDescription.Size = new System.Drawing.Size(450, 29);
-            this.TextBoxInventoryNewLocationsDescription.TabIndex = 1;
+            this.TextBoxInventoryNewLocationsDescription.TabIndex = 3;
             this.TextBoxInventoryNewLocationsDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxInventoryNewLocationsItem
@@ -1304,7 +1304,7 @@
             this.MbAddDetailListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbAddDetailListing.Name = "MbAddDetailListing";
             this.MbAddDetailListing.Size = new System.Drawing.Size(135, 76);
-            this.MbAddDetailListing.TabIndex = 1;
+            this.MbAddDetailListing.TabIndex = 0;
             this.MbAddDetailListing.Text = "Listing";
             this.MbAddDetailListing.UseSelectable = true;
             this.MbAddDetailListing.Click += new System.EventHandler(this.MbAddDetailListing_Click);
@@ -1329,7 +1329,7 @@
             this.MbAddDetailSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbAddDetailSave.Name = "MbAddDetailSave";
             this.MbAddDetailSave.Size = new System.Drawing.Size(135, 76);
-            this.MbAddDetailSave.TabIndex = 0;
+            this.MbAddDetailSave.TabIndex = 1;
             this.MbAddDetailSave.Text = "Save";
             this.MbAddDetailSave.UseSelectable = true;
             this.MbAddDetailSave.Click += new System.EventHandler(this.MbAddDetailSave_Click);
@@ -1385,7 +1385,7 @@
             this.DateTimePickerAddDetailReceivedDate.Location = new System.Drawing.Point(613, 51);
             this.DateTimePickerAddDetailReceivedDate.Name = "DateTimePickerAddDetailReceivedDate";
             this.DateTimePickerAddDetailReceivedDate.Size = new System.Drawing.Size(373, 29);
-            this.DateTimePickerAddDetailReceivedDate.TabIndex = 3;
+            this.DateTimePickerAddDetailReceivedDate.TabIndex = 4;
             // 
             // LabelAddDetailReceivedDate
             // 
@@ -1404,7 +1404,7 @@
             this.TextBoxAddDetailDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailDescription.Name = "TextBoxAddDetailDescription";
             this.TextBoxAddDetailDescription.Size = new System.Drawing.Size(450, 29);
-            this.TextBoxAddDetailDescription.TabIndex = 1;
+            this.TextBoxAddDetailDescription.TabIndex = 3;
             this.TextBoxAddDetailDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxAddDetailItem
@@ -1447,7 +1447,7 @@
             this.ComboBoxAddDetailStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxAddDetailStorageType.Name = "ComboBoxAddDetailStorageType";
             this.ComboBoxAddDetailStorageType.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxAddDetailStorageType.TabIndex = 4;
+            this.ComboBoxAddDetailStorageType.TabIndex = 2;
             // 
             // LabelAddDetailStorageType
             // 
@@ -1465,7 +1465,7 @@
             this.TextBoxAddDetailQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailQuantity.Name = "TextBoxAddDetailQuantity";
             this.TextBoxAddDetailQuantity.Size = new System.Drawing.Size(100, 29);
-            this.TextBoxAddDetailQuantity.TabIndex = 2;
+            this.TextBoxAddDetailQuantity.TabIndex = 1;
             this.TextBoxAddDetailQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelAddDetailQuantity

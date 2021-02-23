@@ -207,7 +207,7 @@
             this.ComboBoxStationNumber.Location = new System.Drawing.Point(587, 54);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
             this.ComboBoxStationNumber.Size = new System.Drawing.Size(169, 32);
-            this.ComboBoxStationNumber.TabIndex = 25;
+            this.ComboBoxStationNumber.TabIndex = 8;
             // 
             // CheckBoxAllStations
             // 
@@ -216,7 +216,7 @@
             this.CheckBoxAllStations.Location = new System.Drawing.Point(778, 69);
             this.CheckBoxAllStations.Name = "CheckBoxAllStations";
             this.CheckBoxAllStations.Size = new System.Drawing.Size(90, 17);
-            this.CheckBoxAllStations.TabIndex = 21;
+            this.CheckBoxAllStations.TabIndex = 9;
             this.CheckBoxAllStations.Text = "All Stations";
             this.CheckBoxAllStations.UseVisualStyleBackColor = true;
             this.CheckBoxAllStations.CheckedChanged += new System.EventHandler(this.CheckBoxAllStations_CheckedChanged);
@@ -238,7 +238,7 @@
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
             this.TextBoxFind.Size = new System.Drawing.Size(233, 29);
-            this.TextBoxFind.TabIndex = 17;
+            this.TextBoxFind.TabIndex = 5;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
             // 
@@ -249,7 +249,7 @@
             this.MButtonNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonNew.Name = "MButtonNew";
             this.MButtonNew.Size = new System.Drawing.Size(125, 76);
-            this.MButtonNew.TabIndex = 16;
+            this.MButtonNew.TabIndex = 0;
             this.MButtonNew.Text = "New";
             this.MButtonNew.UseSelectable = true;
             this.MButtonNew.Click += new System.EventHandler(this.MButtonNew_Click);
@@ -261,7 +261,7 @@
             this.ButtonAvailableLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonAvailableLocations.Name = "ButtonAvailableLocations";
             this.ButtonAvailableLocations.Size = new System.Drawing.Size(177, 36);
-            this.ButtonAvailableLocations.TabIndex = 15;
+            this.ButtonAvailableLocations.TabIndex = 4;
             this.ButtonAvailableLocations.Text = "Available Locations";
             this.ButtonAvailableLocations.UseSelectable = true;
             this.ButtonAvailableLocations.Click += new System.EventHandler(this.ButtonAvailableLocations_Click);
@@ -273,7 +273,7 @@
             this.MBPrintLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintLocations.Name = "MBPrintLocations";
             this.MBPrintLocations.Size = new System.Drawing.Size(177, 36);
-            this.MBPrintLocations.TabIndex = 15;
+            this.MBPrintLocations.TabIndex = 3;
             this.MBPrintLocations.Text = "Save To File";
             this.MBPrintLocations.UseSelectable = true;
             this.MBPrintLocations.Click += new System.EventHandler(this.MBPrintLocations_Click);
@@ -285,7 +285,7 @@
             this.MButtonAllLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonAllLocations.Name = "MButtonAllLocations";
             this.MButtonAllLocations.Size = new System.Drawing.Size(125, 76);
-            this.MButtonAllLocations.TabIndex = 15;
+            this.MButtonAllLocations.TabIndex = 2;
             this.MButtonAllLocations.Text = "Show All";
             this.MButtonAllLocations.UseSelectable = true;
             this.MButtonAllLocations.Click += new System.EventHandler(this.MButtonAllLocations_Click);
@@ -297,7 +297,7 @@
             this.MButtonViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonViewEdit.Name = "MButtonViewEdit";
             this.MButtonViewEdit.Size = new System.Drawing.Size(125, 76);
-            this.MButtonViewEdit.TabIndex = 15;
+            this.MButtonViewEdit.TabIndex = 1;
             this.MButtonViewEdit.Text = "View/Edit";
             this.MButtonViewEdit.UseSelectable = true;
             this.MButtonViewEdit.Click += new System.EventHandler(this.MButtonViewEdit_Click);
@@ -309,7 +309,7 @@
             this.ButtonClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(34, 38);
-            this.ButtonClear.TabIndex = 14;
+            this.ButtonClear.TabIndex = 6;
             this.ButtonClear.Text = "X";
             this.ButtonClear.UseVisualStyleBackColor = true;
             this.ButtonClear.Click += new System.EventHandler(this.ButtonClear_Click);
@@ -322,7 +322,7 @@
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(125, 76);
-            this.MButtonClose.TabIndex = 12;
+            this.MButtonClose.TabIndex = 11;
             this.MButtonClose.Text = "Home";
             this.MButtonClose.UseSelectable = true;
             this.MButtonClose.Click += new System.EventHandler(this.MButtonClose_Click);
@@ -334,7 +334,7 @@
             this.MButtonSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSearch.Name = "MButtonSearch";
             this.MButtonSearch.Size = new System.Drawing.Size(125, 76);
-            this.MButtonSearch.TabIndex = 12;
+            this.MButtonSearch.TabIndex = 7;
             this.MButtonSearch.Text = "Search";
             this.MButtonSearch.UseSelectable = true;
             this.MButtonSearch.Click += new System.EventHandler(this.MButtonFind_Click);
@@ -351,7 +351,7 @@
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.Size = new System.Drawing.Size(1141, 536);
-            this.DataGridView1.TabIndex = 0;
+            this.DataGridView1.TabIndex = 10;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             // 
             // tabPage2
@@ -388,7 +388,7 @@
             this.MbViewEditListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditListing.Name = "MbViewEditListing";
             this.MbViewEditListing.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditListing.TabIndex = 2;
+            this.MbViewEditListing.TabIndex = 0;
             this.MbViewEditListing.Text = "Listing";
             this.MbViewEditListing.UseSelectable = true;
             this.MbViewEditListing.Click += new System.EventHandler(this.MbViewEditListing_Click);
@@ -400,7 +400,7 @@
             this.MbViewEditDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditDelete.Name = "MbViewEditDelete";
             this.MbViewEditDelete.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditDelete.TabIndex = 3;
+            this.MbViewEditDelete.TabIndex = 1;
             this.MbViewEditDelete.Text = "Delete";
             this.MbViewEditDelete.UseSelectable = true;
             this.MbViewEditDelete.Click += new System.EventHandler(this.MbViewEditDelete_Click);
@@ -413,7 +413,7 @@
             this.MbViewEditClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditClose.Name = "MbViewEditClose";
             this.MbViewEditClose.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditClose.TabIndex = 1;
+            this.MbViewEditClose.TabIndex = 3;
             this.MbViewEditClose.Text = "Back";
             this.MbViewEditClose.UseSelectable = true;
             this.MbViewEditClose.Click += new System.EventHandler(this.MbViewEditClose_Click);
@@ -425,7 +425,7 @@
             this.MbViewEditSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditSave.Name = "MbViewEditSave";
             this.MbViewEditSave.Size = new System.Drawing.Size(135, 76);
-            this.MbViewEditSave.TabIndex = 0;
+            this.MbViewEditSave.TabIndex = 2;
             this.MbViewEditSave.Text = "Save";
             this.MbViewEditSave.UseSelectable = true;
             this.MbViewEditSave.Click += new System.EventHandler(this.MbViewEditSave_Click);
@@ -769,7 +769,7 @@
             this.MbLoadDefault.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbLoadDefault.Name = "MbLoadDefault";
             this.MbLoadDefault.Size = new System.Drawing.Size(135, 36);
-            this.MbLoadDefault.TabIndex = 3;
+            this.MbLoadDefault.TabIndex = 1;
             this.MbLoadDefault.Text = "Load Default";
             this.MbLoadDefault.UseSelectable = true;
             this.MbLoadDefault.Click += new System.EventHandler(this.MbLoadDefault_Click);
@@ -781,7 +781,7 @@
             this.MbSaveAsDefault.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbSaveAsDefault.Name = "MbSaveAsDefault";
             this.MbSaveAsDefault.Size = new System.Drawing.Size(135, 36);
-            this.MbSaveAsDefault.TabIndex = 4;
+            this.MbSaveAsDefault.TabIndex = 2;
             this.MbSaveAsDefault.Text = "Save As Default";
             this.MbSaveAsDefault.UseSelectable = true;
             this.MbSaveAsDefault.Click += new System.EventHandler(this.MbSaveAsDefault_Click);
@@ -803,7 +803,7 @@
             this.MbNewListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewListing.Name = "MbNewListing";
             this.MbNewListing.Size = new System.Drawing.Size(135, 76);
-            this.MbNewListing.TabIndex = 2;
+            this.MbNewListing.TabIndex = 0;
             this.MbNewListing.Text = "Listing";
             this.MbNewListing.UseSelectable = true;
             this.MbNewListing.Click += new System.EventHandler(this.MbNewListing_Click);
@@ -816,7 +816,7 @@
             this.MbNewClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewClose.Name = "MbNewClose";
             this.MbNewClose.Size = new System.Drawing.Size(135, 76);
-            this.MbNewClose.TabIndex = 1;
+            this.MbNewClose.TabIndex = 4;
             this.MbNewClose.Text = "Back";
             this.MbNewClose.UseSelectable = true;
             this.MbNewClose.Click += new System.EventHandler(this.MbNewClose_Click);
@@ -828,7 +828,7 @@
             this.MbNewSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewSave.Name = "MbNewSave";
             this.MbNewSave.Size = new System.Drawing.Size(135, 76);
-            this.MbNewSave.TabIndex = 0;
+            this.MbNewSave.TabIndex = 3;
             this.MbNewSave.Text = "Save";
             this.MbNewSave.UseSelectable = true;
             this.MbNewSave.Click += new System.EventHandler(this.MbNewSave_Click);

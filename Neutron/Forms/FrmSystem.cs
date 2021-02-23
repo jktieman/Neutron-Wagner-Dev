@@ -170,7 +170,6 @@ namespace Neutron.Forms
             if (!CloseButtonPressed)
             {
                 e.Cancel = true;
-                return;
             }
         }
 
@@ -188,15 +187,6 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = InterfaceFiles;
         }
 
-
-        private void MBMainSpare1_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "Spare 1";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = Spare1;
-        }
-
-
         private void MBSqlServerBack_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
@@ -205,20 +195,6 @@ namespace Neutron.Forms
         }
 
         private void MBInterfaceFilesBack_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = Main;
-        }
-
-        private void MBSpare1Back_Click(object sender, EventArgs e)
-        {
-            LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
-            tabControl1.SelectedTab = Main;
-        }
-
-        private void MBSpare2Back_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
             LabelFormTitle.BackColor = Color.RoyalBlue;

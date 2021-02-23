@@ -48,10 +48,8 @@ namespace Neutron
         private string _logFileDir = string.Empty;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
-        private string _error1 = @"Unknown Error";
-        private string _errorCaption = "Error Message";
-        private StartStopLoaderManager _startStopLoaderManager;
-        private StartStopUploadManager _startStopUploadManager;
+        //private StartStopLoaderManager _startStopLoaderManager;
+        //private StartStopUploadManager _startStopUploadManager;
 
         /// <summary>
         /// Passed from NInject Kernel
@@ -60,13 +58,13 @@ namespace Neutron
         /// <param name="akaRepository"></param>
         /// <param name="securityProcessor"></param>
         /// <param name="lacProcessor"></param>
-        /// <param name="neutronVariables"></param>
         /// <param name="stationRepository"></param>
         /// <param name="imageManager"></param>
         /// <param name="ordersRepository"></param>
+        /// <param name="replenOrdersRepository"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
-            , NeutronVariables neutronVariables, IImageManager imageManager, IStationRepository stationRepository
+            , IImageManager imageManager, IStationRepository stationRepository
             ,IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository)
         {
             InitializeComponent();
@@ -82,9 +80,7 @@ namespace Neutron
             _imageManager = imageManager;
             _ordersRepository = ordersRepository;
             _replenOrdersRepository = replenOrdersRepository;
-
-            //_neutronVariables = _jsonData.LoadFile<NeutronVariables>();
-            _neutronVariables = neutronVariables;
+            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
 
             GlobalVar.HistoryManager = new HistoryManager();
@@ -102,9 +98,7 @@ namespace Neutron
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
-                // Close();
             }
-
 
             int id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
@@ -119,14 +113,7 @@ namespace Neutron
             LineStatusManager.SaveLineStatusToDatabase();
             try
             {
-                //Communication Monitoring Form use for TEsting
-
-                //var frmCommunication = new FrmCommunication();
-                //frmCommunication.Show();
-
-
                 ButtonPark.Visible = _neutronLicense.CompanyCode == "TOP";
-                ButtonClearDisplays.Visible = _neutronLicense.CompanyCode == "TOP";
                 if (LoaderSettings.Init())
                 {
                     _stationId = _neutronVariables.StationId;
@@ -144,8 +131,8 @@ namespace Neutron
                                     {
                                         if (SetupSlotFactory())
                                         {
-                                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
-                                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
+                                            //_startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
+                                            //_startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
                                             if (StartLoader())
                                             {
                                                 if (StartUpload())
@@ -294,7 +281,7 @@ namespace Neutron
                         {
                             // ReSharper disable once UseObjectOrCollectionInitializer
                             GlobalVar.Displays = new IptiController(_jsonData, _station, _neutronVariables);
-                            GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
+                            //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
                             result = GlobalVar.Displays != null;
                         }
                         else
@@ -479,9 +466,9 @@ namespace Neutron
 
         private void LogOnOff()
         {
-            if (MtLogOff.Text == _resourceManager.GetString("LogOff")) //@"Log Off")  //
+            if (MtLogOff.Text == _resourceManager.GetString("LogOff")) 
             {
-                MtLogOff.Text = _resourceManager.GetString("LogOn"); // @"Log On";  // 
+                MtLogOff.Text = _resourceManager.GetString("LogOn"); 
                 GlobalVar.User = null;
                 _currentUser = null;
                 mlUserInfo.Text = "";
@@ -492,7 +479,7 @@ namespace Neutron
             {
                 try
                 {
-                    MtLogOff.Text = _resourceManager.GetString("LogOff"); //@"Log Off"; //
+                    MtLogOff.Text = _resourceManager.GetString("LogOff"); 
                     if (_neutronVariables.PinLoginOnly)
                     {
                         using (var frm = new FrmPin())
@@ -550,15 +537,6 @@ namespace Neutron
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //if (GlobalVar.Shuttle != null)
-            //{
-            //    GlobalVar.Shuttle.CloseController();
-            //}
-            //if (GlobalVar.Displays != null)
-            //{
-            //    GlobalVar.Displays.CloseController();
-            //}
-
             Application.Exit();
         }
 
@@ -619,14 +597,12 @@ namespace Neutron
 
         private void MtSystem_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem])
+            if (!_securityProcessor.SecurityProfile[(int) NeutronSecurity.ManageSystem]) return;
+            Hide();
+            using (MetroForm frm = new FrmSystem(_jsonData, _logger))
             {
-                Hide();
-                using (MetroForm frm = new FrmSystem(_jsonData, _logger))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
 
@@ -764,22 +740,6 @@ namespace Neutron
             Close();
         }
 
-        private void ButtonClearDisplays_Click(object sender, EventArgs e)
-        {
-            if (GlobalVar.Displays != null)
-            {
-                if (_neutronVariables.BliEnabled)
-                {
-                    GlobalVar.Displays.ClearAllBli();
-                }
-
-                if (_neutronVariables.ShiEnabled)
-                {
-                    GlobalVar.Displays.ClearAllShi();
-                }
-            }
-        }
-
         private void FrmMain_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F12)
@@ -823,8 +783,6 @@ namespace Neutron
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmMain",
                     resourceDir: languageDirectory, usingResourceSet: null);
-                _error1 = _resourceManager.GetString("Error1");
-                _errorCaption = _resourceManager.GetString("ErrorCaption");
                 LabelWarehouseManagement.Text = _resourceManager.GetString("WarehouseManagement");
                 MtInventory.Text = _resourceManager.GetString("Inventory");
                 MtItemDefinitions.Text = _resourceManager.GetString("ItemDefinitions");
@@ -839,7 +797,6 @@ namespace Neutron
                 MtUtilities.Text = _resourceManager.GetString("Utilities");
                 MtSystem.Text = _resourceManager.GetString("System");
                 MtLac.Text = _resourceManager.GetString("LocationAccessControl");
-                ButtonClearDisplays.Text = _resourceManager.GetString("ClearDisplays");
                 ButtonPark.Text = _resourceManager.GetString("Park");
                 ButtonClose.Text = _resourceManager.GetString("Close");
             }
@@ -847,40 +804,6 @@ namespace Neutron
             {
                 MessageBox.Show($"Error loading languages.  FrmMain  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
-        }
-
-        private void ButtonPortTest_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Show Port Display");
-            //GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
-            //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
-
-
-            //var bli = new Ipti_BLI(5, "9999");
-
-            //GlobalVar.Displays.ShowBli(bli);
-        }
-
-        private void ButtonPortClear_Click(object sender, EventArgs e)
-        {
-            GlobalVar.Displays.ClearAllBli();
-        }
-
-        public void ProcessDataReceived(object sender, IptiController.MySerialDataReceivedEventArgs args)
-        {
-            MessageBox.Show(args.FormText);
-            var t = args.FormText;
-        }
-
-        private void ButtonPortTestOff_Click(object sender, EventArgs e)
-        {
-            GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
-            GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
-
-
-            var bli = new Ipti_BLI(5, "9999");
-
-            GlobalVar.Displays.ClearBli(bli);
         }
 
         private void RadioButtonLanguage_CheckedChanged(object sender, EventArgs e)

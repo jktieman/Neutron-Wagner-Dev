@@ -13,6 +13,7 @@ namespace NeutronCore.Enums
         [Description("Complete")] Complete = 6,
         [Description("Returned")] Returned = 7,
         [Description("Archive")] Archive = 8,
-        [Description("Skipped")] Skipped = 9
+        [Description("Skipped")] Skipped = 9,
+        [Description("Kill")] Kill = 10
     }
 }
