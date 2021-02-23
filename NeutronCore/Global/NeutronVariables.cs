@@ -49,5 +49,6 @@
         public string DefaultLanguage { get; set; }
         public int DeviceFlashRate { get; set; }
         public int StationId { get; set; }
+        public int DefaultStorageTypeId { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace NeutronData.Models
         public virtual HeightCode HeightCode { get; set; }
         [ForeignKey("LocationCodeId")]
         public virtual LocationCode LocationCode { get; set; }
-        [ForeignKey("StationId")]
+       // [ForeignKey("StationId")]
         public virtual Station Station { get; set; }
 
     }

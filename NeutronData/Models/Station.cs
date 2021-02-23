@@ -8,7 +8,7 @@ namespace NeutronData.Models
 {
     public class Station : ILookup, IEntity
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, Required]
         public int Id { get; set; }
         [Required]
         public int StationNumber { get; set; }

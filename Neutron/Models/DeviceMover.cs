@@ -7,12 +7,13 @@ namespace Neutron.Models
     {
         public readonly List<Location> Locations;
         public int MoverNumber = 0;
-        public int NextIndex = 0;
+        public int Position = 0;
 
         public DeviceMover(int moverNumber, List<Location> locations)
         {
             MoverNumber = moverNumber;
             Locations = locations;
+            Position = 0;
         }
 
         public Location MoveNext()
@@ -20,10 +21,10 @@ namespace Neutron.Models
             Location result = null;
             if (Locations.Count > 0)
             {
-                if (NextIndex < Locations.Count)
+                if (Position + 1 < Locations.Count)
                 {
-                    result = Locations[NextIndex];
-                    NextIndex += 1;
+                    Position += 1;
+                    result = Locations[Position];
                 }
             }
             return result;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -52,6 +53,8 @@ namespace Neutron.Forms
         private readonly GenericRepository<DeviceType> _repoDeviceTypes =
             new GenericRepository<DeviceType>(new NeutronDb());
 
+        private readonly GenericRepository<StorageType> _repoStorageTypes =
+            new GenericRepository<StorageType>(new NeutronDb());
         private readonly GenericRepository<CommunicationType> _repoCommunicationTypes =
             new GenericRepository<CommunicationType>(new NeutronDb());
 
@@ -113,6 +116,10 @@ namespace Neutron.Forms
             ComboBoxStationNumber.DataSource = _repoStations.All();
             ComboBoxStationNumber.DisplayMember = "Name";
             ComboBoxStationNumber.ValueMember = "Id";
+
+            ComboBoxDefaultStorageType.DataSource = _repoStorageTypes.All();
+            ComboBoxDefaultStorageType.DisplayMember = "Name";
+            ComboBoxDefaultStorageType.ValueMember = "Id";
 
         }
 
@@ -736,7 +743,7 @@ namespace Neutron.Forms
             _neutronVariables.UseImages = CheckBoxUseImages.Checked;
             _neutronVariables.DefaultLanguage = ((Language)ComboBoxDefaultLanguage.SelectedItem).CultureInfo;
             _neutronVariables.DeviceFlashRate = TextBoxDeviceFlashRate.Text.ParseInt();
-
+            _neutronVariables.DefaultStorageTypeId = ((StorageType) ComboBoxDefaultStorageType.SelectedItem).Id;
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
             _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
@@ -798,7 +805,9 @@ namespace Neutron.Forms
             ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage;
             TextBoxDeviceFlashRate.Text = _neutronVariables.DeviceFlashRate.ToString();
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
+            ComboBoxDefaultStorageType.SelectedValue = _neutronVariables.DefaultStorageTypeId;
         }
+
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
         {
             DocumentPrinter = new DocumentPrinterPreferences

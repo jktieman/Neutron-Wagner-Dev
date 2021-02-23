@@ -157,7 +157,7 @@
     <Compile Include="Models\StationOcLocation.cs" />
     <Compile Include="Models\Lookups\StorageType.cs" />
     <Compile Include="Models\TcpConfiguration.cs" />
-    <Compile Include="Models\Lookups\UnitOfIssue.cs" />
+    <Compile Include="Models\UnitOfIssue.cs" />
     <Compile Include="Models\TowerLevelInfo.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Lookups\VelocityCode.cs" />

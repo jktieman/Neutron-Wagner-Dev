@@ -82,6 +82,8 @@ namespace Neutron.Forms
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private readonly int[] _moveableDeviceTypes;
         private readonly Station _rackStation;
+        private readonly int _initialQuantity;
+
         public enum GridDataType
         {
             None,
@@ -93,7 +95,7 @@ namespace Neutron.Forms
 
         public FrmHotAction(StationView station, IJsonData jsonData
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
-            , ILacProcessor lacProcessor, IImageManager imageManager, string item = @"")
+            , ILacProcessor lacProcessor, IImageManager imageManager, string item = @"", int quantity = 1)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -106,6 +108,7 @@ namespace Neutron.Forms
             _akaRepository = akaRepository;
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
+            _initialQuantity = quantity;
             InitForm(item);
         }
         private void InitForm(string item)
@@ -1122,7 +1125,7 @@ namespace Neutron.Forms
                     ComboBoxVelocityCodeLocation.SelectedIndex = ComboBoxVelocityCodeLocation.FindStringExact(location.VelocityCode.Name);
                     ComboBoxHeightCodeLocation.SelectedIndex = ComboBoxHeightCodeLocation.FindStringExact(location.HeightCode.Name);
                     ComboBoxLocationCodeLocation.SelectedIndex = ComboBoxLocationCodeLocation.FindStringExact(location.LocationCode.Name);
-                    TextBoxHotPickQuantity.Text = string.Empty;
+                    TextBoxHotPickQuantity.Text = _initialQuantity.ToString();
                     TextBoxHotPickQuantity.Focus();
                     TextBoxHotPickLocationQuantity.Text = invItem.Quantity.ToString();
                     TextBoxHotPickReceivedDate.Text = string.IsNullOrEmpty(invItem.ReceivedDate.ToString("d"))

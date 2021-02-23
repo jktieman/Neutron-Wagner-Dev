@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using Ninject.Modules;
 using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
@@ -21,6 +22,7 @@ namespace Neutron
             Bind<IImageManager>().To<ImageManager>().InSingletonScope();
             Bind<IOrdersRepository>().To<OrdersRepository>();
             Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>();
+            Bind<IInventoryManager>().To<InventoryManager>();
         }
     }
 }

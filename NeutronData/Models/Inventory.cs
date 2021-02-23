@@ -22,7 +22,7 @@ namespace NeutronData.Models
         public virtual Location Location { get; set; }
         [ForeignKey("StorageTypeId")]
         public virtual StorageType StorageType { get; set; }
-        [ForeignKey("StationId")]
+        //[ForeignKey("StationId")]
         public virtual Station Station { get; set; }
     }
 }

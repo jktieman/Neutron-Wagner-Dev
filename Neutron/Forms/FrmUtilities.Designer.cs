@@ -113,6 +113,7 @@
             this.CheckBoxPrintPreview = new System.Windows.Forms.CheckBox();
             this.CheckBoxEnableLabelPrinter = new System.Windows.Forms.CheckBox();
             this.CheckBoxEnableDocumentPrinter = new System.Windows.Forms.CheckBox();
+            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.ComboBoxSlotFormat = new System.Windows.Forms.ComboBox();
             this.NumericUpDownLogLevel = new System.Windows.Forms.NumericUpDown();
             this.CheckBoxPinLoginOnly = new System.Windows.Forms.CheckBox();
@@ -385,7 +386,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
+            this.LabelDefaultStorageType = new System.Windows.Forms.Label();
+            this.ComboBoxDefaultStorageType = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -931,12 +933,14 @@
             this.Settings.Controls.Add(this.CheckBoxIptiDisplays);
             this.Settings.Controls.Add(this.CheckBoxAutoEnlargeImage);
             this.Settings.Controls.Add(this.CheckBoxUseMenuSecurity);
+            this.Settings.Controls.Add(this.ComboBoxDefaultStorageType);
             this.Settings.Controls.Add(this.ComboBoxDefaultLanguage);
             this.Settings.Controls.Add(this.ComboBoxDeviceDriver);
             this.Settings.Controls.Add(this.TextBoxUploadDelay);
             this.Settings.Controls.Add(this.TextBoxDeviceFlashRate);
             this.Settings.Controls.Add(this.LabelSettingsSlotFormat);
             this.Settings.Controls.Add(this.TextBoxLoaderDelay);
+            this.Settings.Controls.Add(this.LabelDefaultStorageType);
             this.Settings.Controls.Add(this.LabelSettingsLogLevel);
             this.Settings.Controls.Add(this.LabelDefaultLanguage);
             this.Settings.Controls.Add(this.TextBoxActionCodes);
@@ -981,7 +985,7 @@
             "4",
             "6",
             "8"});
-            this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(197, 311);
+            this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(167, 311);
             this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
             this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
             this.ComboBoxStoreBatchSize.TabIndex = 24;
@@ -996,7 +1000,7 @@
             "6",
             "8",
             "16"});
-            this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(197, 274);
+            this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(167, 274);
             this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
             this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(65, 24);
             this.ComboBoxPickBatchSize.TabIndex = 24;
@@ -1008,7 +1012,7 @@
             this.GroupBoxPickMethod.Controls.Add(this.RadioButtonPrimeBinLast);
             this.GroupBoxPickMethod.Controls.Add(this.RadioButtonPrimeBinFirst);
             this.GroupBoxPickMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxPickMethod.Location = new System.Drawing.Point(94, 391);
+            this.GroupBoxPickMethod.Location = new System.Drawing.Point(64, 391);
             this.GroupBoxPickMethod.Name = "GroupBoxPickMethod";
             this.GroupBoxPickMethod.Size = new System.Drawing.Size(200, 162);
             this.GroupBoxPickMethod.TabIndex = 23;
@@ -1122,7 +1126,7 @@
             // LabelFieldDelimiter
             // 
             this.LabelFieldDelimiter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFieldDelimiter.Location = new System.Drawing.Point(73, 350);
+            this.LabelFieldDelimiter.Location = new System.Drawing.Point(43, 350);
             this.LabelFieldDelimiter.Name = "LabelFieldDelimiter";
             this.LabelFieldDelimiter.Size = new System.Drawing.Size(108, 16);
             this.LabelFieldDelimiter.TabIndex = 19;
@@ -1132,7 +1136,7 @@
             // LabelSettingsStoreBatchSize
             // 
             this.LabelSettingsStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsStoreBatchSize.Location = new System.Drawing.Point(73, 314);
+            this.LabelSettingsStoreBatchSize.Location = new System.Drawing.Point(43, 314);
             this.LabelSettingsStoreBatchSize.Name = "LabelSettingsStoreBatchSize";
             this.LabelSettingsStoreBatchSize.Size = new System.Drawing.Size(108, 16);
             this.LabelSettingsStoreBatchSize.TabIndex = 19;
@@ -1142,7 +1146,7 @@
             // LabelSettingsPickBatchSize
             // 
             this.LabelSettingsPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsPickBatchSize.Location = new System.Drawing.Point(70, 277);
+            this.LabelSettingsPickBatchSize.Location = new System.Drawing.Point(40, 277);
             this.LabelSettingsPickBatchSize.Name = "LabelSettingsPickBatchSize";
             this.LabelSettingsPickBatchSize.Size = new System.Drawing.Size(111, 16);
             this.LabelSettingsPickBatchSize.TabIndex = 19;
@@ -1226,6 +1230,21 @@
             this.CheckBoxEnableDocumentPrinter.Text = "Enable Document Printer";
             this.CheckBoxEnableDocumentPrinter.UseVisualStyleBackColor = true;
             // 
+            // ComboBoxStationNumber
+            // 
+            this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxStationNumber.FormattingEnabled = true;
+            this.ComboBoxStationNumber.Items.AddRange(new object[] {
+            "Default",
+            "T101-01-01",
+            "V101",
+            "01--01--01--01"});
+            this.ComboBoxStationNumber.Location = new System.Drawing.Point(167, 55);
+            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(150, 24);
+            this.ComboBoxStationNumber.TabIndex = 16;
+            // 
             // ComboBoxSlotFormat
             // 
             this.ComboBoxSlotFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1236,15 +1255,15 @@
             "T101-01-01",
             "V101",
             "01--01--01--01"});
-            this.ComboBoxSlotFormat.Location = new System.Drawing.Point(197, 234);
+            this.ComboBoxSlotFormat.Location = new System.Drawing.Point(167, 234);
             this.ComboBoxSlotFormat.Name = "ComboBoxSlotFormat";
-            this.ComboBoxSlotFormat.Size = new System.Drawing.Size(121, 24);
+            this.ComboBoxSlotFormat.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxSlotFormat.TabIndex = 16;
             // 
             // NumericUpDownLogLevel
             // 
             this.NumericUpDownLogLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumericUpDownLogLevel.Location = new System.Drawing.Point(197, 198);
+            this.NumericUpDownLogLevel.Location = new System.Drawing.Point(167, 198);
             this.NumericUpDownLogLevel.Maximum = new decimal(new int[] {
             8,
             0,
@@ -1256,7 +1275,7 @@
             0,
             0});
             this.NumericUpDownLogLevel.Name = "NumericUpDownLogLevel";
-            this.NumericUpDownLogLevel.Size = new System.Drawing.Size(55, 22);
+            this.NumericUpDownLogLevel.Size = new System.Drawing.Size(65, 22);
             this.NumericUpDownLogLevel.TabIndex = 15;
             this.NumericUpDownLogLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownLogLevel.Value = new decimal(new int[] {
@@ -1349,9 +1368,9 @@
             this.ComboBoxDefaultLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxDefaultLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxDefaultLanguage.FormattingEnabled = true;
-            this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(197, 90);
+            this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(167, 90);
             this.ComboBoxDefaultLanguage.Name = "ComboBoxDefaultLanguage";
-            this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(179, 24);
+            this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDefaultLanguage.TabIndex = 12;
             // 
             // ComboBoxDeviceDriver
@@ -1364,9 +1383,9 @@
             "C2000",
             "C3000",
             "RCC2"});
-            this.ComboBoxDeviceDriver.Location = new System.Drawing.Point(197, 160);
+            this.ComboBoxDeviceDriver.Location = new System.Drawing.Point(167, 160);
             this.ComboBoxDeviceDriver.Name = "ComboBoxDeviceDriver";
-            this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(121, 24);
+            this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDeviceDriver.TabIndex = 12;
             // 
             // TextBoxUploadDelay
@@ -1392,7 +1411,7 @@
             // LabelSettingsSlotFormat
             // 
             this.LabelSettingsSlotFormat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsSlotFormat.Location = new System.Drawing.Point(91, 236);
+            this.LabelSettingsSlotFormat.Location = new System.Drawing.Point(61, 236);
             this.LabelSettingsSlotFormat.Name = "LabelSettingsSlotFormat";
             this.LabelSettingsSlotFormat.Size = new System.Drawing.Size(90, 16);
             this.LabelSettingsSlotFormat.TabIndex = 10;
@@ -1412,7 +1431,7 @@
             // LabelSettingsLogLevel
             // 
             this.LabelSettingsLogLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsLogLevel.Location = new System.Drawing.Point(91, 199);
+            this.LabelSettingsLogLevel.Location = new System.Drawing.Point(61, 199);
             this.LabelSettingsLogLevel.Name = "LabelSettingsLogLevel";
             this.LabelSettingsLogLevel.Size = new System.Drawing.Size(90, 16);
             this.LabelSettingsLogLevel.TabIndex = 10;
@@ -1422,7 +1441,7 @@
             // LabelDefaultLanguage
             // 
             this.LabelDefaultLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDefaultLanguage.Location = new System.Drawing.Point(44, 92);
+            this.LabelDefaultLanguage.Location = new System.Drawing.Point(14, 92);
             this.LabelDefaultLanguage.Name = "LabelDefaultLanguage";
             this.LabelDefaultLanguage.Size = new System.Drawing.Size(137, 16);
             this.LabelDefaultLanguage.TabIndex = 10;
@@ -1442,7 +1461,7 @@
             // LabelSettingsDeviceDriver
             // 
             this.LabelSettingsDeviceDriver.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsDeviceDriver.Location = new System.Drawing.Point(91, 162);
+            this.LabelSettingsDeviceDriver.Location = new System.Drawing.Point(61, 162);
             this.LabelSettingsDeviceDriver.Name = "LabelSettingsDeviceDriver";
             this.LabelSettingsDeviceDriver.Size = new System.Drawing.Size(90, 16);
             this.LabelSettingsDeviceDriver.TabIndex = 10;
@@ -1452,7 +1471,7 @@
             // TextBoxFieldDelimiter
             // 
             this.TextBoxFieldDelimiter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFieldDelimiter.Location = new System.Drawing.Point(197, 347);
+            this.TextBoxFieldDelimiter.Location = new System.Drawing.Point(167, 347);
             this.TextBoxFieldDelimiter.Name = "TextBoxFieldDelimiter";
             this.TextBoxFieldDelimiter.Size = new System.Drawing.Size(31, 22);
             this.TextBoxFieldDelimiter.TabIndex = 9;
@@ -1462,9 +1481,9 @@
             // TextBoxLicenseCode
             // 
             this.TextBoxLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLicenseCode.Location = new System.Drawing.Point(197, 126);
+            this.TextBoxLicenseCode.Location = new System.Drawing.Point(167, 126);
             this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
-            this.TextBoxLicenseCode.Size = new System.Drawing.Size(55, 22);
+            this.TextBoxLicenseCode.Size = new System.Drawing.Size(150, 22);
             this.TextBoxLicenseCode.TabIndex = 9;
             this.TextBoxLicenseCode.Text = "PR1";
             this.TextBoxLicenseCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1494,7 +1513,7 @@
             // 
             this.CheckBoxUsePrimeBin.AutoSize = true;
             this.CheckBoxUsePrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(94, 572);
+            this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(64, 572);
             this.CheckBoxUsePrimeBin.Name = "CheckBoxUsePrimeBin";
             this.CheckBoxUsePrimeBin.Size = new System.Drawing.Size(205, 20);
             this.CheckBoxUsePrimeBin.TabIndex = 8;
@@ -1552,7 +1571,7 @@
             // LabelLicenseCode
             // 
             this.LabelLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLicenseCode.Location = new System.Drawing.Point(41, 127);
+            this.LabelLicenseCode.Location = new System.Drawing.Point(11, 127);
             this.LabelLicenseCode.Name = "LabelLicenseCode";
             this.LabelLicenseCode.Size = new System.Drawing.Size(140, 16);
             this.LabelLicenseCode.TabIndex = 7;
@@ -1562,7 +1581,7 @@
             // LabelSettingsStationNumber
             // 
             this.LabelSettingsStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsStationNumber.Location = new System.Drawing.Point(41, 58);
+            this.LabelSettingsStationNumber.Location = new System.Drawing.Point(11, 58);
             this.LabelSettingsStationNumber.Name = "LabelSettingsStationNumber";
             this.LabelSettingsStationNumber.Size = new System.Drawing.Size(140, 16);
             this.LabelSettingsStationNumber.TabIndex = 7;
@@ -4530,20 +4549,25 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // ComboBoxStationNumber
+            // LabelDefaultStorageType
             // 
-            this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxStationNumber.FormattingEnabled = true;
-            this.ComboBoxStationNumber.Items.AddRange(new object[] {
-            "Default",
-            "T101-01-01",
-            "V101",
-            "01--01--01--01"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(197, 55);
-            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(179, 24);
-            this.ComboBoxStationNumber.TabIndex = 16;
+            this.LabelDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDefaultStorageType.Location = new System.Drawing.Point(14, 600);
+            this.LabelDefaultStorageType.Name = "LabelDefaultStorageType";
+            this.LabelDefaultStorageType.Size = new System.Drawing.Size(137, 16);
+            this.LabelDefaultStorageType.TabIndex = 10;
+            this.LabelDefaultStorageType.Text = "Default Storage Type";
+            this.LabelDefaultStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // ComboBoxDefaultStorageType
+            // 
+            this.ComboBoxDefaultStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxDefaultStorageType.FormattingEnabled = true;
+            this.ComboBoxDefaultStorageType.Location = new System.Drawing.Point(167, 597);
+            this.ComboBoxDefaultStorageType.Name = "ComboBoxDefaultStorageType";
+            this.ComboBoxDefaultStorageType.Size = new System.Drawing.Size(150, 24);
+            this.ComboBoxDefaultStorageType.TabIndex = 12;
             // 
             // FrmUtilities
             // 
@@ -4967,5 +4991,7 @@
         private System.Windows.Forms.Label LabelFlashRate;
         private System.Windows.Forms.TextBox TextBoxDeviceFlashRate;
         private System.Windows.Forms.ComboBox ComboBoxStationNumber;
+        private System.Windows.Forms.ComboBox ComboBoxDefaultStorageType;
+        private System.Windows.Forms.Label LabelDefaultStorageType;
     }
 }

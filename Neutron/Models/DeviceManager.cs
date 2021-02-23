@@ -88,7 +88,7 @@ namespace Neutron.Models
             {
                 _logger.Log($"");
                 _logger.Log($"Device Mover Number: {deviceMover.MoverNumber}");
-                _logger.Log($"Next Location Index: {deviceMover.NextIndex}");
+                _logger.Log($"Current Position: {deviceMover.Position}");
                 foreach (var location in deviceMover.Locations)
                 {
                     _logger.Log(location != null

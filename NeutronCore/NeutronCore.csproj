@@ -64,6 +64,7 @@
     <Compile Include="Enums\LineStatus.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\StationType.cs" />
+    <Compile Include="Enums\StorageType.cs" />
     <Compile Include="Extensions\ByteExtensions.cs" />
     <Compile Include="Extensions\DataGridViewExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />

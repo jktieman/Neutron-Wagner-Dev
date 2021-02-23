@@ -238,7 +238,7 @@ namespace NeutronData.Repositories
         }
 
 
-        public List<AvailableReplenOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking)
+        public List<AvailableReplenOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
         {
             var recs = new List<AvailableReplenOrdersView>();
             try
@@ -441,11 +441,6 @@ namespace NeutronData.Repositories
             return orderDetails.Min(o => o.StationNumber);
         }
 
-        public List<AvailableReplenOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<ReplenOrderView> GetCompletedOrders(string find = "")
         {
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
@@ -495,14 +490,14 @@ namespace NeutronData.Repositories
                 {
                     var pickView = new ReplenPickView()
                     {
-                        ReplenOrderId = detail.ReplenOrderId,
+                        OrderId = detail.ReplenOrderId,
                         Ord1 = detail.ReplenOrder.Ord1,
                         Ord2 = detail.ReplenOrder.Ord2,
                         ItemId = detail.ItemDefinitionId,
                         Item = string.Empty,
                         Description = string.Empty,
                         Quantity = detail.Quantity,
-                        QuantityToBePicked = detail.Quantity,
+                        PickedQty = 0,
                         Slot = string.Empty,
                         SlotQty = 0,
                         OrderDetail = detail,
@@ -707,14 +702,13 @@ namespace NeutronData.Repositories
                                 var pickView = new ReplenPickView()
                                 {
                                     PickPosition = pos,
-                                    ReplenOrderId = detail.ReplenOrder.Id,
+                                    OrderId = detail.ReplenOrder.Id,
                                     Ord1 = detail.ReplenOrder.Ord1,
                                     Ord2 = detail.ReplenOrder.Ord2,
                                     ItemId = detail.ItemDefinitionId,
                                     Item = string.Empty,
                                     Description = string.Empty,
                                     Quantity = detail.Quantity,
-                                    QuantityToBePicked = detail.Quantity,
                                     PickedQty = 0,
                                     Slot = string.Empty,
                                     SlotQty = 0,
@@ -788,14 +782,13 @@ namespace NeutronData.Repositories
                                         var pickView = new ReplenPickView()
                                         {
                                             PickPosition = pos,
-                                            ReplenOrderId = detail.ReplenOrder.Id,
+                                            OrderId = detail.ReplenOrder.Id,
                                             Ord1 = detail.ReplenOrder.Ord1,
                                             Ord2 = detail.ReplenOrder.Ord2,
                                             ItemId = detail.ItemDefinitionId,
                                             Item = string.Empty,
                                             Description = string.Empty,
                                             Quantity = detail.Quantity,
-                                            QuantityToBePicked = detail.Quantity,
                                             PickedQty = 0,
                                             Slot = string.Empty,
                                             SlotQty = 0,
@@ -876,6 +869,11 @@ namespace NeutronData.Repositories
             return orderIds.ToArray();
         }
 
+        //IEnumerable<RackOrderView> IReplenOrdersRepository.GetRackOrdersView(int rackStationNumber, string search)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
         public IEnumerable<RackReplenOrderView> GetRackOrdersView(int stationNumber, string search)
         {
             IEnumerable<RackReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new RackReplenOrderView
@@ -898,39 +896,37 @@ namespace NeutronData.Repositories
         ReplenOrder IReplenOrdersRepository.GetOrderAndOrderDetails(int? orderId, int stationNumber)
         {
             var ord = new ReplenOrder();
-            var availableSkip = new int[] { 1, 9 };
-            // Order ord;
-            if (orderId != null)
+            var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
+
+            if (orderId == null) return ord;
+            ord = _repoReplenOrders.FindByKey(orderId);
+
+            //using (var db = new NeutronDb())
+            //{
+            //    ord = db.ReplenOrders.FirstOrDefault(x => x.Id == orderId);
+
+            //    if (ord != null)
+            //    {
+            //        var q2 = ord.ReplenOrderDetails.Include("ItemDefinition").Where(d => d.StationNumber == stationNumber
+            //                    && availableSkip.Contains(d.LineStatusId)).ToList();
+            //        ord.ReplenOrderDetails = q2.ToList(); 
+            //    }
+            //}
+
+            if (ord != null)
             {
-                ord = _repoReplenOrders.FindByKey(orderId);
-                //using (var db = new NeutronDb())
-                //{
-                //     ord = db.Orders
-                //        //.Include(s => s.Shipper)
-                //        //.Include(s => s.ShipMethod)
-                //        //.Include(s => s.OrderStatus)
-                //        //.Include(s => s.OrderDetails.Select(x => x.ItemDefinition))
-                //        //.Include(s => s.OrderDetails.Select(x => x.LineStatus))
-                //        .FirstOrDefault(s => s.Id == orderId);
+                //ord.OrderDetails = null;
 
-                if (ord != null)
-                {
-                    //ord.OrderDetails = null;
-
-                    // var details = _repoOrderDetails.All()
-                    ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.StationNumber == stationNumber && availableSkip.Contains(x.LineStatusId)).ToList();
-                    //ord.OrderDetails = details;
-                }
-
-                //}
+                // var details = _repoOrderDetails.All()
+                ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.StationNumber == stationNumber && availableSkip.Contains(x.LineStatusId)).ToList();
+                //ord.OrderDetails = details;
             }
+
+            //}
             return ord;
         }
 
-        IEnumerable<RackOrderView> IReplenOrdersRepository.GetRackOrdersView(int rackStationNumber, string search)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public ReplenOrder GetOrderAndOrderDetails(int? orderId, int stationNumber)
         {

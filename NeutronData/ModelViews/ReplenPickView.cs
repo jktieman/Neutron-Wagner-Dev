@@ -14,7 +14,7 @@ namespace NeutronData.ModelViews
         }
         public int Sequence { get; set; }
         public int PickPosition { get; set; }
-        public int ReplenOrderId { get; set; }
+        public int OrderId { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
         public int ItemId { get; set; }
@@ -23,7 +23,9 @@ namespace NeutronData.ModelViews
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }
-        public int QuantityToBePicked { get; set; }
+        // if the quantity is not changed, the QuantityThisPick is the same as Quantity
+        public int QuantityThisPick { get; set; }
+        public int QuantityToBePicked => Quantity - PickedQty > 0 ? Quantity - PickedQty : 0;
         public int PickedQty { get; set; }
         public string Slot { get; set; }
         public int SlotQty { get; set; }

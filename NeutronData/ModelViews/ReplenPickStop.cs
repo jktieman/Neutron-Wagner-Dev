@@ -29,7 +29,7 @@ namespace NeutronData.ModelViews
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }
-        public int QuantityToBePicked { get; set; }
+        public int QuantityToBePicked => Quantity - PickedQty > 0 ? Quantity - PickedQty : 0;
         public int PickedQty { get; set; }
         public string Slot { get; set; }
         public int SlotQty { get; set; }
@@ -59,16 +59,16 @@ namespace NeutronData.ModelViews
                 var pickLocation = new PickLocation
                 {
                     Inventory = CurrentInventoryLocation
-                    , Quantity = pickView.QuantityToBePicked
+                    , Quantity = pickView.QuantityThisPick
                     , PickDate = DateTime.Now
-                    , RequestedQuantity = pickView.QuantityToBePicked
+                    , RequestedQuantity = pickView.Quantity
                     , User = user
                 };
                 pickView.PickLocations.Add(pickLocation);
                 pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
                 // save this for the close when  all it picked or all that's going to be picked
                 //pickView.OrderDetail.PickedQuantity = pickView.PickedQty;
-                pickView.QuantityToBePicked = pickView.GetQuantityToBePicked();
+                //pickView.QuantityToBePicked = pickView.GetQuantityToBePicked();
             }
         }
 
@@ -113,7 +113,7 @@ namespace NeutronData.ModelViews
                     item.OrderDetail.LineStatusId = 6;
                     item.OrderDetail.EmpId = user.EmpId;
                     _repoOrderDetails.Update(item.OrderDetail);
-                    SetOrderComplete(item.ReplenOrderId);
+                    SetOrderComplete(item.OrderId);
                 }
             }
             catch (Exception ex)

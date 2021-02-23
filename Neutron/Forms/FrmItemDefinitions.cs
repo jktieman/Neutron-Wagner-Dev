@@ -472,7 +472,7 @@ namespace Neutron.Forms
                             {
                                 _repoItemDefinition.Update(itemDef);
                                 var recs = _repoOrderDetails.All()
-                                    .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != 6).ToList();
+                                    .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != (int)NeutronCore.Enums.LineStatus.Available).ToList();
                                 foreach (var rec in recs)
                                 {
                                     rec.StationNumber = stationNumber;

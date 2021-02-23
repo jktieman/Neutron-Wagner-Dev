@@ -24,7 +24,6 @@ namespace Neutron.Forms
             SetCulture(_cultureInfo.Name);
             SetupSkipZeroGrid(new object());
 
-
             var skipZeroList = new List<SkipZero>();
             foreach (var view in skipPickableViews)
             {
@@ -77,7 +76,6 @@ namespace Neutron.Forms
 
         private void SetupSkipZeroGrid(object state)
         {
-            var result = false;
 
             DataGridViewSkipZeroSummary.AutoGenerateColumns = false;
             DataGridViewSkipZeroSummary.SelectionMode = DataGridViewSelectionMode.FullRowSelect;

@@ -23,7 +23,9 @@ namespace NeutronData.ModelViews
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }
-        public int QuantityToBePicked { get; set; }
+        // if the quantity is not changed, the QuantityThisPick is the same as Quantity
+        public int QuantityThisPick { get; set; }
+        public int QuantityToBePicked => Quantity - PickedQty > 0 ? Quantity - PickedQty : 0;
         public int PickedQty { get; set; }  //sum of PickLocations
         public string Slot { get; set; }
         public int SlotQty { get; set; }
@@ -36,10 +38,10 @@ namespace NeutronData.ModelViews
         public List<PickLocation> PickLocations { get; set; }
         public DateTime ReceivedDate { get; set; }
         public int StationNumber { get; set; }
-        public int GetQuantityToBePicked()
-        {
-            var result = Quantity - PickedQty;
-            return result > 0 ? result : 0;
-        }
+        //public int GetQuantityToBePicked()
+        //{
+        //    var result = Quantity - PickedQty;
+        //    return result > 0 ? result : 0;
+        //}
     }
 }

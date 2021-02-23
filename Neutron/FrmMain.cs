@@ -636,7 +636,7 @@ namespace Neutron
             Hide();
             using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables
                                                 , _securityProcessor, _lacProcessor, _imageManager
-                                                , _stationRepository, _ordersRepository))
+                                                , _stationRepository, _ordersRepository, _neutronLicense))
             {
                 frm.ShowDialog();
 
@@ -695,7 +695,8 @@ namespace Neutron
             {
                 Hide();
                 using (MetroForm frm = new FrmReplen(_jsonData, _station, _akaRepository,
-                    _neutronVariables, _securityProcessor, _lacProcessor, _imageManager, _stationRepository, _replenOrdersRepository))
+                    _neutronVariables, _securityProcessor, _lacProcessor, _imageManager,
+                    _stationRepository, _replenOrdersRepository, _neutronLicense))
                 {
                     frm.ShowDialog();
                     Show();
@@ -805,7 +806,7 @@ namespace Neutron
                 
                 using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables,
                     _securityProcessor, _lacProcessor, _imageManager, _stationRepository
-                    , _ordersRepository))
+                    , _ordersRepository, _neutronLicense))
                 {
                     frm.ShowDialog();
                     Show();

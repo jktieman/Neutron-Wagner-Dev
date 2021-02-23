@@ -19,7 +19,7 @@ namespace NeutronData.Interfaces
         List<ReplenPickView> GetOrderLines(List<BatchPosition> ordersToPick);
         IEnumerable<ReplenPickView> GetPickViewsByItem(List<BatchPosition> ordersToPick, string partNum);
         IEnumerable<ReplenOrderView> GetRackOrders(string search);
-        IEnumerable<RackOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
+        IEnumerable<RackReplenOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
         ReplenOrder GetOrderAndOrderDetails(int? orderId, int stationNumber);
     }
 }

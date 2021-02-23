@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AlliedLogger;
+using NeutronCore.Enums;
 
 namespace NeutronData.ModelViews
 {
@@ -29,7 +30,7 @@ namespace NeutronData.ModelViews
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }
-        public int QuantityToBePicked { get; set; }
+        public int QuantityToBePicked => Quantity - PickedQty > 0 ? Quantity - PickedQty : 0;
         public int PickedQty { get; set; }
         public string Slot { get; set; }
         public int SlotQty { get; set; }
@@ -63,7 +64,7 @@ namespace NeutronData.ModelViews
                 pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
                 // save this for the close when  all it picked or all that's going to be picked
                 //pickView.OrderDetail.PickedQuantity = pickView.PickedQty;
-                pickView.QuantityToBePicked = pickView.GetQuantityToBePicked();
+                
             }
         }
 
@@ -108,15 +109,15 @@ namespace NeutronData.ModelViews
             sb.AppendLine($"Set Pick Views Complete, Update OrderDetail Record");
             try
             {
-                foreach (var item in PickViews)
+                foreach (var pickView in PickViews)
                 {
-                    var total = GetPickViewTotal(item);
-                    item.OrderDetail.PickedQuantity = total;
-                    item.OrderDetail.LineStatusId = 6;
-                    item.OrderDetail.EmpId = user.EmpId;
-                    _repoOrderDetails.Update(item.OrderDetail);
+                    var total = GetPickViewTotal(pickView);
+                    pickView.OrderDetail.PickedQuantity = total;
+                    pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
+                    pickView.OrderDetail.EmpId = user.EmpId;
+                    _repoOrderDetails.Update(pickView.OrderDetail);
                     sb.AppendLine(
-                        $"Item: {item.Item}  Picked Qty: {item.OrderDetail.PickedQuantity} Line Status: {item.OrderDetail.LineStatusId}  Emp: {user.Fullname} ");
+                        $"pickView: {pickView.Item}  Picked Qty: {pickView.OrderDetail.PickedQuantity} Line Status: {pickView.OrderDetail.LineStatusId}  Emp: {user.Fullname} ");
                 }
             }
             catch (Exception ex)

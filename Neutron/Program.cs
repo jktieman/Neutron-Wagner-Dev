@@ -92,6 +92,7 @@ namespace Neutron
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             }
 
+
             Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor
                 , lacProcessor, neutronVariables, imageManager, stationRepository
                 , ordersRepository, replenOrdersRepository));

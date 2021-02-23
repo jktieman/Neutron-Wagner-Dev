@@ -1,6 +1,6 @@
 ﻿using NeutronData.Interfaces;
 
-namespace NeutronData.Models.Lookups
+namespace NeutronData.Models
 {
     public class UnitOfIssue : ILookup, IEntity
     {

@@ -4,10 +4,11 @@ using NeutronData.Repositories;
 using Neutron.Enums;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
+using Neutron.Interfaces;
 
 namespace Neutron.Models
 {
-    public class InventoryManager
+    public class InventoryManager : IInventoryManager
     {
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly LocationsRepository _locationsRepository;
@@ -25,7 +26,7 @@ namespace Neutron.Models
             if (inventory == null) return;
             if (releaseOnly)
             {
-                if (inventory.StorageTypeId == (int)StorageType.Release)
+                if (inventory.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release)
                 {
                     GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                     _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
@@ -44,7 +45,7 @@ namespace Neutron.Models
 
         public void ReleaseCheck(Inventory inventory)
         {
-            if (inventory.Quantity <= 0 && inventory.StorageTypeId == (int)StorageType.Release)
+            if (inventory.Quantity <= 0 && inventory.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release)
             {
                 DeleteInventoryRecord(inventory.Id, releaseOnly: true);
             }
