@@ -44,7 +44,7 @@ namespace NeutronData.DataContexts
 
         public DbSet<History> History { get; set; }
         public DbSet<ActionCodeItem> ActionCodeItems { get; set; }
-        public DbSet<LineStatus> LineStatus { get; set; }
+        public DbSet<LineStatusLookup> LineStatusLookup { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<StationType> StationTypes { get; set; }
         public DbSet<LocationView> LocationViews { get; set; }

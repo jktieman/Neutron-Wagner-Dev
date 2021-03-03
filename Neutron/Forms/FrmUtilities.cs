@@ -20,10 +20,12 @@ using System.Drawing.Printing;
 using System.Globalization;
 using System.IO.Ports;
 using System.Resources;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Equin.ApplicationFramework;
 using Neutron.Classes;
+using Neutron.Models;
 using NeutronCore.Extensions;
 using NeutronCore.Models;
 using NeutronData.BaseClasses;
@@ -47,7 +49,7 @@ namespace Neutron.Forms
             new GenericRepository<HardwareDevice>(new NeutronDb());
 
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-
+        private readonly GenericRepository<Location> _repoLocations = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStations = new GenericRepository<Station>(new NeutronDb());
         private readonly GenericRepository<StationType> _repoStationTypes = new GenericRepository<StationType>(new NeutronDb());
         private readonly GenericRepository<DeviceType> _repoDeviceTypes =
@@ -74,6 +76,7 @@ namespace Neutron.Forms
 
         public bool CloseButtonPressed { get; set; }
 
+        private bool _formOpening = true;
         //public bool CloseForm = false;
         private readonly IJsonData _jsonData;
         public HardwareDeviceView CurrentItem;
@@ -105,6 +108,7 @@ namespace Neutron.Forms
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
+
             SetupGrids();
             _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
@@ -120,7 +124,6 @@ namespace Neutron.Forms
             ComboBoxDefaultStorageType.DataSource = _repoStorageTypes.All();
             ComboBoxDefaultStorageType.DisplayMember = "Name";
             ComboBoxDefaultStorageType.ValueMember = "Id";
-
         }
 
         private void SetupDeviceForms()
@@ -706,8 +709,8 @@ namespace Neutron.Forms
             _neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
             _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
-            _neutronVariables.StationId = ((Station) ComboBoxStationNumber.SelectedItem).Id;
-            _neutronVariables.DeviceDriver =  ComboBoxDeviceDriver.SelectedItem.ToString();
+            _neutronVariables.StationId = ((Station)ComboBoxStationNumber.SelectedItem).Id;
+            _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
             _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
@@ -743,7 +746,11 @@ namespace Neutron.Forms
             _neutronVariables.UseImages = CheckBoxUseImages.Checked;
             _neutronVariables.DefaultLanguage = ((Language)ComboBoxDefaultLanguage.SelectedItem).CultureInfo;
             _neutronVariables.DeviceFlashRate = TextBoxDeviceFlashRate.Text.ParseInt();
-            _neutronVariables.DefaultStorageTypeId = ((StorageType) ComboBoxDefaultStorageType.SelectedItem).Id;
+            _neutronVariables.DefaultStorageTypeId = ((StorageType)ComboBoxDefaultStorageType.SelectedItem).Id;
+            _neutronVariables.UseAutoCompress = CheckBoxUseAutoCompress.Checked;
+            _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
+
+
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
             _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
@@ -806,6 +813,8 @@ namespace Neutron.Forms
             TextBoxDeviceFlashRate.Text = _neutronVariables.DeviceFlashRate.ToString();
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
             ComboBoxDefaultStorageType.SelectedValue = _neutronVariables.DefaultStorageTypeId;
+            CheckBoxUseAutoCompress.Checked = _neutronVariables.UseAutoCompress;
+            TextBoxCompressDays.Text = _neutronVariables.CompressDays.ToString();
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -1420,10 +1429,12 @@ namespace Neutron.Forms
 
         private void MBNewDeviceSave_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             SaveNewHardwareDevice();
             //var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
             //LoadHardwareDevices(id);
             tabControl2.SelectedTab = Listing;
+            Cursor.Current = Cursors.Default;
         }
 
         private void SaveNewHardwareDevice()
@@ -1448,14 +1459,182 @@ namespace Neutron.Forms
             };
             _repoHardwareDevices.Insert(hardwareDevice);
             LoadHardwareDevices(hardwareDevice.Id);
+
+            AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
+                , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+
+            if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
+                hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
+            {
+                AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
+            }
+        }
+
+        private void AddOrUpdateCarriers(int stationId, int device, int numberOfCarriers)
+        {
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    int i;
+                    for (i = 1; i <= numberOfCarriers; i++)
+                    {
+                        var i1 = i;
+
+                        var carrier = context.Carriers.FirstOrDefault(r => r.StationNumber == stationId
+                                                                           && r.DeviceNumber == device
+                                                                           && r.CarrierNumber == i1);
+                        if (carrier != null) continue;
+                        var newCarrier = new Carrier
+                        {
+                            DeviceNumber = device,
+                            CarrierNumber = i1,
+                            StationNumber = stationId
+                        };
+                        context.Carriers.Add(newCarrier);
+                    }
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error Adding or Updating Carriers {Environment.NewLine}{ex.Message}", "Carrier Maintenance", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void AddOrUpdateLocations(int stationId, int device, int numberOfCarriers, int levels, int widths, int depths)
+        {
+            int i;
+
+            for (i = 1; i <= numberOfCarriers; i++)
+            {
+                int j;
+                for (j = 1; j <= levels; j++)
+                {
+                    int k;
+                    for (k = 1; k <= widths; k++)
+                    {
+                        int l;
+                        for (l = 1; l <= depths; l++)
+                        {
+                            var i1 = i;
+                            var j1 = j;
+                            var k1 = k;
+                            var locations = _repoLocations.All().Where(r => r.StationId == stationId
+                                                                      && r.Loc1 == device
+                                                                      && r.Loc2 == i1
+                                                                      && r.Loc3 == j1
+                                                                      && r.Loc4 == k1);
+                            if (!locations.Any())
+                            {
+                                SaveNew(stationId, device, i1, j1, k1, l);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SaveNew(int stationId, int deviceId, int carrier, int level, int width, int depth = 1)
+        {
+            int sizeCodeId;
+            int velocityCodeId;
+            int heightCodeId;
+            int locationCodeId;
+
+            using (var context = new NeutronDb())
+            {
+                sizeCodeId = context.SizeCodes.Min(r => r.Id);
+                velocityCodeId = context.VelocityCodes.Min(r => r.Id);
+                heightCodeId = context.HeightCodes.Min(r => r.Id);
+                locationCodeId = context.LocationCodes.Min(r => r.Id);
+            }
+
+            if (IntegerValidator(carrier))
+            {
+                var loc2 = carrier;
+                if (IntegerValidator(level))
+                {
+                    var loc3 = level;
+                    if (IntegerValidator(width))
+                    {
+                        var loc4 = width;
+                        if (IntegerValidator(1))
+                        {
+                            var loc5 = depth;
+
+                            var slotName = GlobalVar.SlotNameFactory.CreateSlotName(stationId, deviceId, loc2, loc3, loc4, loc5).SlotName;
+                            var loc = new Location
+                            {
+                                StationId = stationId,
+                                Loc1 = deviceId,
+                                Loc2 = loc2,
+                                Loc3 = loc3,
+                                Loc4 = loc4,
+                                Loc5 = loc5,
+                                Slot = slotName,
+                                InUse = false,
+                                SizeCodeId = sizeCodeId,
+                                VelocityCodeId = velocityCodeId,
+                                HeightCodeId = heightCodeId,
+                                LocationCodeId = locationCodeId
+                            };
+                            try
+                            {
+                                _repoLocations.Insert(loc);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(_resourceManager.GetString("Message3") + ex.Message + "\n\r" +
+                                                ex.InnerException);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(_resourceManager.GetString("Message5"));
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(_resourceManager.GetString("Message6"));
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(_resourceManager.GetString("Message7"));
+                }
+            }
+            else
+            {
+                MessageBox.Show(_resourceManager.GetString("Message8"));
+            }
+        }
+
+        //validate integer 
+        private bool IntegerValidator(int input)
+        {
+            var pattern = "^[0-9]+$";
+            if (Regex.IsMatch(input.ToString(), pattern))
+            {
+                if (input <= 0)
+                {
+                    MessageBox.Show(_resourceManager.GetString("Message14"));
+                    return false;
+                }
+                return true;
+            }
+            return false;
         }
 
         private void MBViewEditDeviceSave_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             UpdateViewEditHardwareDevice();
             //var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
             //LoadHardwareDevices(id);
             tabControl2.SelectedTab = Listing;
+            Cursor.Current = Cursors.Default;
         }
 
         private void UpdateViewEditHardwareDevice()
@@ -1502,6 +1681,17 @@ namespace Neutron.Forms
 
             _repoHardwareDevices.Update(hardwareDevice);
             if (hardwareDevice != null) LoadHardwareDevices(hardwareDevice.Id);
+
+            if (hardwareDevice != null)
+                AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber,
+                    hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
+                    , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+
+            if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
+                hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
+            {
+                AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
+            }
         }
 
         private void MBViewEditDeviceDelete_Click(object sender, EventArgs e)
@@ -2254,6 +2444,17 @@ namespace Neutron.Forms
             public int StationTypeId { get; set; }
             public string StationTypeName { get; set; }
             public int Sequence { get; set; }
+        }
+
+        private void CheckBoxUseAutoCompress_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_formOpening)
+            {
+                _formOpening = false;
+                return;
+            }
+            var compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now.AddDays(-1) };
+            _jsonData.SaveFile(compressLastRunDate);
         }
     }
 }

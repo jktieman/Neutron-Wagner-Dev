@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -80,6 +81,15 @@ namespace NeutronCore.Extensions
                 dataTable.Rows.Add(dr);
             }
             return dataTable;
+        }
+
+        //example usage: [List<Location> | var] locations = dataGridViewLocations.SelectedRows.ToList<Location>();
+        public static List<T> ToList<T>(this DataGridViewSelectedRowCollection rows)
+        {
+            var list = new List<T>();
+            for (int i = 0; i < rows.Count; i++)
+                list.Add((T)rows[i].DataBoundItem);
+            return list;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace NeutronData.Repositories
 
         //public IEnumerable<ReplenOrderView> GetOrderViewNotCompleted()
         //{
-        //    // var statusToGet = new int[] { 1, 2, 3, 4 };
+        //    // var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking,(int)LineStatus.Partial };
         //    IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails)
         //        // .Where(r => statusToGet.Contains(r.OrderStatusId))
         //        .Where(r => r.OrderStatusId != 6)
@@ -76,7 +76,12 @@ namespace NeutronData.Repositories
 
         public ReplenOrder GetOrder(int id)
         {
-            throw new NotImplementedException();
+            ReplenOrder order;
+            using (var db = new NeutronDb())
+            {
+                order = db.ReplenOrders.Include("ReplenOrderDetails").FirstOrDefault(r => r.Id == id);
+            }
+            return order;
         }
 
         public IEnumerable<ReplenOrderView> GetOrderViewNotCompleted(string search = "")
@@ -183,7 +188,7 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetOrderView()
         {
-             var statusToGet = new int[] { 1, 2, 3, 4, 8 };
+             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All()
                 // .Where(r => statusToGet.Contains(r.OrderStatusId))
                 .Select(s => new ReplenOrderView
@@ -212,7 +217,8 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetOrderView(string search)
         {
-            var statusToGet = new int[] { 1, 2, 3, 4, 8 };
+            
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
             {
                 Id = s.Id,
@@ -245,8 +251,8 @@ namespace NeutronData.Repositories
             {
                 using (var context = new NeutronDb())
                 {
-                    var records = context.ReplenOrderDetails.Include("ReplenOrder").Where(o => o.StationNumber == station.StationNumber && (o.ReplenOrder.OrderStatusId == 1))
-                        .Where(p => p.LineStatusId == 1).ToList();
+                    var records = context.ReplenOrderDetails.Include("ReplenOrder").Where(o => o.StationNumber == station.StationNumber && o.ReplenOrder.OrderStatusId == (int)OrderStatus.Available)
+                        .Where(p => p.LineStatusId == (int)LineStatus.Available).ToList();
                    
                     var ords = records.GroupBy(r => new { r.ReplenOrderId, r.ReplenOrder.Ord1, r.ReplenOrder.Ord2, r.ReplenOrder.Priority, r.ReplenOrder.LoadDate })
                          .Select(r => new AvailableReplenOrdersView
@@ -479,7 +485,7 @@ namespace NeutronData.Repositories
 
         public List<ReplenPickView> GetOrderLines()
         {
-            var statusToGet = new int[] { 1, 4 };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
             var pickList = new List<ReplenPickView>();
             List<ReplenOrder> result = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails).Where(r => statusToGet.Contains(r.OrderStatusId)).ToList();
             foreach (ReplenOrder ord in result)
@@ -559,7 +565,7 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetAvailableOrders(string search)
         {
-            var statusToGet = new int[] { 1, 4 };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
             {
                 Id = s.Id,
@@ -586,7 +592,7 @@ namespace NeutronData.Repositories
 
         private string CheckForPicks(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
         {
-            var statusToGet = new int[] { 1, 2, 6 };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Complete };
             string result = @"";
             foreach (var item in orderDetails)
             {
@@ -610,7 +616,7 @@ namespace NeutronData.Repositories
 
         private string CheckForPicks2(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
         {
-            var statusToGet = new int[] { 1, 2, 6 };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Complete };
             string result = @"";
             foreach (var item in orderDetails)
             {
@@ -682,7 +688,7 @@ namespace NeutronData.Repositories
         public List<ReplenPickView> GetOrderLines(List<BatchPosition> ordersToPick)
         {
             var pickViews = new List<ReplenPickView>();
-            var statusToGet = new int[] { 1, 4 };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
             int[] orderIds = GetOrderIdArray(ordersToPick);
 
             if (orderIds.Length > 0)
@@ -749,7 +755,7 @@ namespace NeutronData.Repositories
         public IEnumerable<ReplenPickView> GetPickViewsByItem(List<BatchPosition> ordersToPick, string partNum)
         {
             var pickViews = new List<ReplenPickView>();
-            var statusToGet = new int[] { 1, 4 };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
             int[] orderIds = GetOrderIdArray(ordersToPick);
             ItemDefinition newItemDefinition = _repoItemDefinition.FindBy(r => r.Item == partNum).FirstOrDefault();
             if (newItemDefinition != null)
@@ -885,8 +891,8 @@ namespace NeutronData.Repositories
                     Priority = s.Priority,
                     Order = s,
                     LoadDate = s.LoadDate,
-                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != 6 && o.StationNumber == stationNumber).ToList()
-                }).Where(o => o.Order.OrderStatusId != 6)
+                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.StationNumber == stationNumber).ToList()
+                }).Where(o => o.Order.OrderStatusId != (int)LineStatus.Complete)
                 .OrderBy(o => o.Ord2).ToList();
 
             var result = recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0);
@@ -931,7 +937,7 @@ namespace NeutronData.Repositories
         public ReplenOrder GetOrderAndOrderDetails(int? orderId, int stationNumber)
         {
             var ord = new ReplenOrder();
-            var availableSkip = new int[] { 1, 9 };
+            var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
             if (orderId != null)
             {
                 ord = _repoReplenOrders.FindByKey(orderId);

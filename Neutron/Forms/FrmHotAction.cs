@@ -27,6 +27,7 @@ using NeutronData.Interfaces;
 using NeutronData.ModelViews;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
+using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
 using DeviceType = NeutronCore.Enums.DeviceType;
@@ -48,6 +49,8 @@ namespace Neutron.Forms
         private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
+            new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
@@ -64,6 +67,7 @@ namespace Neutron.Forms
         readonly NeutronVariables _neutronVariables;
         private readonly ILacProcessor _lacProcessor;
         private readonly IImageManager _imageManager;
+
         private DynamicLogger _logger;
         readonly StationView _station;
         string _imagesDirectory;
@@ -82,7 +86,10 @@ namespace Neutron.Forms
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private readonly int[] _moveableDeviceTypes;
         private readonly Station _rackStation;
-        private readonly int _initialQuantity;
+        private string _item;
+        private int _initialQuantity;
+        private int _quantityToPick;
+        private readonly PickList _pickList;
 
         public enum GridDataType
         {
@@ -95,7 +102,7 @@ namespace Neutron.Forms
 
         public FrmHotAction(StationView station, IJsonData jsonData
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
-            , ILacProcessor lacProcessor, IImageManager imageManager, string item = @"", int quantity = 1)
+            , ILacProcessor lacProcessor, IImageManager imageManager, string item = @"", int quantity = 1, PickList pickList = null)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -105,35 +112,77 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
             _imageManager = imageManager;
+
             _akaRepository = akaRepository;
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
+            _pickList = pickList;
+            _item = item;
             _initialQuantity = quantity;
-            InitForm(item);
+            _quantityToPick = quantity;
+
+            InitForm();
         }
-        private void InitForm(string item)
+        private void InitForm()
         {
-            KeyPreview = true;
-            SetupLogger();
-            SetupGridItemDefinition();
-            InitDeviceIndicators();
-            _useCostCenter = _neutronVariables.UseCostCenter;
-            LabelFormTitle.Text = _resourceManager.GetString("HotActions");
-            LabelFormTitle.BackColor = Color.Red;
-            HideTabControlTabs();
-            mlUserInfo.Text = GlobalVar.User?.UserInfo;
-            CloseButtonPressed = false;
-            _imagesDirectory = LoaderSettings.GetImagesDirectory();
-            _locationsRepository = new LocationsRepository();
-            FillComboBoxes();
-            _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
-            InitialSearch(item);
+            if (_pickList == null)
+            {
+                KeyPreview = true;
+                SetupLogger();
+                SetupGridItemDefinition();
+                InitDeviceIndicators();
+                _useCostCenter = _neutronVariables.UseCostCenter;
+                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.BackColor = Color.Red;
+                HideTabControlTabs();
+                mlUserInfo.Text = GlobalVar.User?.UserInfo;
+                CloseButtonPressed = false;
+                _imagesDirectory = LoaderSettings.GetImagesDirectory();
+                _locationsRepository = new LocationsRepository();
+                FillComboBoxes();
+                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+                InitialSearch(_item);
+                LabelStationName.Text = _station.Name;
+                LabelStationName2.Text = _station.Name;
+                if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
+                    || _station.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
 
-            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
-                || _station.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
+                _newLocationButtonText = _resourceManager.GetString("AllLocations");
+                MBNewLocations.Text = _newLocationButtonText;
+            }
+            else
+            {
+                _item = _pickList.Item;
+                _initialQuantity = _pickList.Ordered.ParseInt();
+                _quantityToPick  = _pickList.Ordered.ParseInt();
+                KeyPreview = true;
+                SetupLogger();
+                SetupGridItemDefinition();
+                //InitDeviceIndicators();
+                _useCostCenter = _neutronVariables.UseCostCenter;
+                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.BackColor = Color.Green;
+                HideTabControlTabs();
+                mlUserInfo.Text = GlobalVar.User?.UserInfo;
+                CloseButtonPressed = false;
+                _imagesDirectory = LoaderSettings.GetImagesDirectory();
+                _locationsRepository = new LocationsRepository();
+                FillComboBoxes();
+                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+                InitialSearch(_item);
+                LabelStationName.Text = _station.Name;
+                LabelStationName2.Text = _station.Name;
+                if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
+                    || _station.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
 
-            _newLocationButtonText = _resourceManager.GetString("AllLocations");
-            MBNewLocations.Text = _newLocationButtonText;
+                _newLocationButtonText = _resourceManager.GetString("AllLocations");
+                MBNewLocations.Text = _newLocationButtonText;
+                MBHotPick.Visible = false;
+                TextBoxFindItem.ReadOnly = true;
+                ButtonClearFindItem.Visible = false;
+                MBFindItem.Visible = false;
+                MBHotActionCount.Visible = false;
+            }
         }
 
         private void InitDeviceIndicators()
@@ -338,6 +387,20 @@ namespace Neutron.Forms
                 var recordCount = GetRecordCount(bindingSource);
             }
         }
+
+        private async Task LoadLocationData(string slot = @"")
+        {
+            var stationId = _station.StationType.Id == (int)StationType.StationType.Supervisor 
+                ? _rackStation.Id 
+                : _station.StationId;
+
+            var inventory = _repoInventory.FindBy(r => r.Location.Slot == slot && r.StationId == stationId).ToList();
+            if (inventory.Any())
+            {
+                await LoadItemDefinitions(inventory.First().ItemDefinition.Item);
+            }
+        }
+
         private async Task LoadItemDefinitions(string find = @"", int recId = 0)
         {
             BindingListView<ItemDefinitionView> blv = null;
@@ -982,6 +1045,7 @@ namespace Neutron.Forms
         private async void MBHotStore_Click(object sender, EventArgs e)
         {
 
+            TextBoxHotPickQuantity.Text = _quantityToPick.ToString();
             _hotPickButtonPressed = false;
             _hotStoreButtonPressed = true;
             CloseButtonPressed = false;
@@ -1104,6 +1168,7 @@ namespace Neutron.Forms
             {
                 using (var db = new NeutronDb())
                 {
+                    _initialQuantity = _quantityToPick;
                     var itemDefinition = await db.ItemDefinitions.FindAsync(invItem.ItemDefinitionId);
                     if (itemDefinition == null) throw new ArgumentNullException(nameof(itemDefinition));
                     var location = await db.Locations.FindAsync(invItem.LocationId);
@@ -1309,13 +1374,25 @@ namespace Neutron.Forms
 
         private async void MBHotActionBack_Click(object sender, EventArgs e)
         {
-            CloseButtonPressed = false;
-            ClearAllShi();
-            await ClearAllDeviceIndicators();
-            FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-            LabelFormTitle.Text = _resourceManager.GetString("HotActions");
-            LabelFormTitle.BackColor = Color.Red;
-            tabControl1.SelectedTab = HotPick;
+            if (_pickList == null)
+            {
+                CloseButtonPressed = false;
+                ClearAllShi();
+                await ClearAllDeviceIndicators();
+                FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
+                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.BackColor = Color.Red;
+                tabControl1.SelectedTab = HotPick;
+            }
+            else
+            {
+CloseButtonPressed = false;
+               
+                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.BackColor = Color.Green;
+                tabControl1.SelectedTab = HotPick;
+            }
+
         }
         private async void MBHotAccept_Click(object sender, EventArgs e)
         {
@@ -1324,26 +1401,36 @@ namespace Neutron.Forms
 
         private async Task Accept()
         {
+            ReplenOrderDetail orderDetail = null;
             var pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
             if (CheckForOverPick(pickQty)) return;
 
             Cursor.Current = Cursors.WaitCursor;
             Inventory inv = null;
             var actionCode = ActionCode.PickHot;
-
-            ClearAllShi();
-            await ClearAllDeviceIndicators();
-
-            if (_useCostCenter)
+            if (_pickList == null)
             {
-                actionCode = GetHotActionCode();
+                actionCode = ActionCode.PickHot;
+
+                ClearAllShi();
+                await ClearAllDeviceIndicators();
+
+                if (_useCostCenter)
+                {
+                    actionCode = GetHotActionCode();
+                }
+                else
+                {
+                    if (_hotPickButtonPressed) actionCode = ActionCode.PickHot;
+                    if (_hotStoreButtonPressed) actionCode = ActionCode.StoreHot;
+                }
             }
             else
             {
-                if (_hotPickButtonPressed) actionCode = ActionCode.PickHot;
-                if (_hotStoreButtonPressed) actionCode = ActionCode.StoreHot;
-            }
+                actionCode = ActionCode.StoreRack;
+                orderDetail = _repoReplenOrderDetails.FindByKey(_pickList.OrderDetailId.ParseInt());
 
+            }
 
             if (_currentInventoryView.Id == 0)  //New Inventory Record can't be for a HOT PICK
             {
@@ -1366,7 +1453,16 @@ namespace Neutron.Forms
                         _locationsRepository.SetLocationInUse(inventory.LocationId, true);
                         inv = _repoInventory.FindByKey(inventory.Id);
 
-                        GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
+                        if (_pickList == null)
+                        {
+                            GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
+                        }
+                        else
+                        {
+                            if (orderDetail != null) orderDetail.PickedQuantity += pickQty;
+                            GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty, _pickList);
+                        }
+
                     }
 
                 }
@@ -1384,26 +1480,39 @@ namespace Neutron.Forms
                     inv = _repoInventory.FindByKey(_currentInventoryView.Id);
                     if (inv != null)
                     {
-                        if (_hotPickButtonPressed)
+                        if (_pickList == null)
                         {
-                            inv.Quantity -= pickQty;
-                        }
-                        else if (_hotStoreButtonPressed)
-                        {
-                            inv.Quantity += pickQty;
-                        }
-                        TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
-                        _repoInventory.Update(inv);
+                            if (_hotPickButtonPressed)
+                            {
+                                inv.Quantity -= pickQty;
+                            }
+                            else if (_hotStoreButtonPressed)
+                            {
+                                inv.Quantity += pickQty;
+                            }
 
-                        if (RadioButtonCostCenter.Checked && _useCostCenter && _hotPickButtonPressed)
-                        {
-                            GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty, (string)ComboBoxCostCenter.SelectedValue);
+                            TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
+
+                            _repoInventory.Update(inv);
+
+                            if (RadioButtonCostCenter.Checked && _useCostCenter && _hotPickButtonPressed)
+                            {
+                                GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty, (string)ComboBoxCostCenter.SelectedValue);
+                            }
+                            else
+                            {
+                                GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
+                            }
+                            await Task.Run(() => _inventoryManager.ReleaseCheck(inv));
                         }
                         else
                         {
-                            GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty);
+                            inv.Quantity += pickQty;
+                            _repoInventory.Update(inv);
+                            if (orderDetail != null) orderDetail.PickedQuantity += pickQty;
+                            GlobalVar.HistoryManager.SaveHistory(actionCode, inv, pickQty, _pickList);
                         }
-                        await Task.Run(() => _inventoryManager.ReleaseCheck(inv));
+
                     }
                 }
                 catch (Exception ex)
@@ -1413,13 +1522,43 @@ namespace Neutron.Forms
                                     $" {ex.InnerException}");
                 }
             }
-            if (inv != null) TextBoxFindItem.Text = inv.ItemDefinition.Item;
-            await LoadItemDefinitions();
-            await LoadCurrentAndNew();
-            LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
-            LabelFormTitle.BackColor = Color.Red;
-            Cursor.Current = Cursors.Default;
-            tabControl1.SelectedTab = HotPick;
+
+            if (_pickList == null)
+            {
+                if (inv != null) TextBoxFindItem.Text = inv.ItemDefinition.Item;
+                await LoadItemDefinitions();
+                await LoadCurrentAndNew();
+                LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
+                LabelFormTitle.BackColor = Color.Red;
+                Cursor.Current = Cursors.Default;
+                tabControl1.SelectedTab = HotPick;
+            }
+            else
+            {
+                if (orderDetail != null && orderDetail.PickedQuantity >= _pickList.Ordered.ParseInt())
+                {
+                    _quantityToPick = 0;
+                    orderDetail.LineStatusId = (int)LineStatus.Complete;
+                    _repoReplenOrderDetails.Update(orderDetail);
+
+                    //close the form
+                    CloseButtonPressed = true;
+                    Close();
+                }
+                else
+                {
+                    _quantityToPick = _pickList.Ordered.ParseInt() - orderDetail.PickedQuantity;
+                    _repoReplenOrderDetails.Update(orderDetail);
+                    TextBoxHotPickQuantity.Text = _quantityToPick.ToString();
+                    if (inv != null) TextBoxFindItem.Text = inv.ItemDefinition.Item;
+                    await LoadItemDefinitions();
+                    await LoadCurrentAndNew();
+                    LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
+                    LabelFormTitle.BackColor = Color.Green;
+                    Cursor.Current = Cursors.Default;
+                    tabControl1.SelectedTab = HotPick;
+                }
+            }
         }
 
         private bool CheckForOverPick(int pickQty)
@@ -1529,6 +1668,11 @@ namespace Neutron.Forms
                 if (TextBoxFindItem.Focused)
                 {
                     FindItem();
+                }
+                else if (TextBoxScanLocation.Focused)
+                {
+                    var slot = TextBoxScanLocation.Text;
+                   await LoadLocationData( slot);
                 }
                 else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
                 {
@@ -1988,6 +2132,12 @@ namespace Neutron.Forms
                 Color.Black, 10, ButtonBorderStyle.Dashed, // top
                 Color.Black, 10, ButtonBorderStyle.Dashed, // right
                 Color.Black, 10, ButtonBorderStyle.Dashed);// bottom
+        }
+
+        private void TextBoxScanLocation_Enter(object sender, EventArgs e)
+        {
+            TextBoxScanLocation.Text = string.Empty;
+            TextBoxScanLocation.Focus();
         }
     }
 }

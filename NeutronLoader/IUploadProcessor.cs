@@ -4,5 +4,6 @@
     {
         void StartProcessingUploadFiles();
         void StopProcessingUploadFiles();
+        void RunUploadOnce();
     }
 }

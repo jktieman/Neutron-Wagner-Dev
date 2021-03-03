@@ -4,6 +4,7 @@ using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
 using Neutron.Models;
+using NeutronData.General;
 using NeutronData.Interfaces;
 using NeutronData.Repositories;
 
@@ -24,6 +25,7 @@ namespace Neutron
             Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>();
             Bind<IInventoryManager>().To<InventoryManager>();
             Bind<FrmMain>().To<FrmMain>().InSingletonScope();
+            Bind<IEnumManager>().To<EnumManager>().InSingletonScope();
         }
     }
 }

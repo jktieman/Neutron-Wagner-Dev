@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace NeutronCore.Extensions
@@ -27,6 +28,20 @@ namespace NeutronCore.Extensions
             else
             {
                 return value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets all items for an enum value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetAllItems<T>(this Enum value)
+        {
+            foreach (object item in Enum.GetValues(typeof(T)))
+            {
+                yield return (T)item;
             }
         }
     }

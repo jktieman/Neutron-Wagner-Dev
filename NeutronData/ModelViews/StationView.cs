@@ -15,6 +15,7 @@ namespace NeutronData.ModelViews
         public int StationNumber { get; set; }
         public string Name { get; set; }
         public StationType StationType { get; set; }
+        public int StationTypeId { get; set; }
         //public int? CommunicationTypeId { get; set; }
         //public string CommunicationTypeName { get; set; }
         //public TcpConfiguration TcpConfiguration { get; set; }

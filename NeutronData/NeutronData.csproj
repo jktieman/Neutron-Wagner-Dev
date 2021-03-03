@@ -72,6 +72,8 @@
   <ItemGroup>
     <Compile Include="BaseClasses\LookupData.cs" />
     <Compile Include="DataContexts\SecureDb.cs" />
+    <Compile Include="General\EnumManager.cs" />
+    <Compile Include="Interfaces\IEnumManager.cs" />
     <Compile Include="Interfaces\IAkaRepository.cs" />
     <Compile Include="Interfaces\IReplenOrdersRepository.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
@@ -118,7 +120,7 @@
     <Compile Include="Interfaces\ILookup.cs" />
     <Compile Include="Models\Lookups\DeviceType.cs" />
     <Compile Include="Models\Lookups\Language.cs" />
-    <Compile Include="Models\Lookups\LineStatus.cs" />
+    <Compile Include="Models\Lookups\LineStatusLookup.cs" />
     <Compile Include="Models\Lookups\StationType.cs" />
     <Compile Include="Models\LookupTable.cs" />
     <Compile Include="Interfaces\IRepositoryBase.cs" />

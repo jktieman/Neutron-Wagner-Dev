@@ -52,11 +52,12 @@ namespace NeutronLoader
             _loaderDelay = _neutronVariables.LoaderDelay;
             _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
             _fileProcessor = new SfhFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData);
+            InitBackgroundWorker();
         }
 
         public void StartProcessingInterfaceFiles()
         {
-            InitBackgroundWorker();
+
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromMinutes(_loaderDelay);
             _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
@@ -108,12 +109,7 @@ namespace NeutronLoader
 
         public void RunLoaderOnce()
         {
-            throw new NotImplementedException();
-        }
-
-        public void RunLoaderContinuously()
-        {
-            throw new NotImplementedException();
+            LoadOrders();
         }
 
         public FileInfo[] GetFiles()
@@ -148,7 +144,7 @@ namespace NeutronLoader
 
         private void StopBackgroundWorker()
         {
-            _backgroundWorker.CancelAsync();
+            _backgroundWorker?.CancelAsync();
         }
 
         private void InitBackgroundWorker()

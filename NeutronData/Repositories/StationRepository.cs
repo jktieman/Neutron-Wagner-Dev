@@ -196,6 +196,7 @@ namespace NeutronData.Repositories
                             }
                         }
 
+                        stationView.StationTypeId = station.StationTypeId;
                         stationView.StationType = station.StationType;
                         stationView.StationId = station.Id;
                         stationView.StationNumber = station.StationNumber;

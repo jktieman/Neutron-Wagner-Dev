@@ -22,7 +22,9 @@ using AlliedLogger;
 using Neutron.Interfaces;
 using NeutronCore.Extensions;
 using NeutronCore;
+using NeutronCore.Enums;
 using NeutronData.Interfaces;
+using StorageType = NeutronData.Models.Lookups.StorageType;
 
 namespace Neutron.Forms
 {
@@ -257,7 +259,7 @@ namespace Neutron.Forms
             if (itemDefinitionView == null) return;
             var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id).ToList();
             var msg = $"{recs.Count} {_resourceManager.GetString("Message14")} {Environment.NewLine}";
-            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id && r.LineStatusId != 6).ToList();
+            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id && r.LineStatusId != (int)LineStatus.Complete).ToList();
             msg += $"{recs2.Count} {_resourceManager.GetString("Message13")}{Environment.NewLine}";
             if (recs.Count == 0)
             {
@@ -472,7 +474,7 @@ namespace Neutron.Forms
                             {
                                 _repoItemDefinition.Update(itemDef);
                                 var recs = _repoOrderDetails.All()
-                                    .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != (int)NeutronCore.Enums.LineStatus.Available).ToList();
+                                    .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != (int)LineStatus.Available).ToList();
                                 foreach (var rec in recs)
                                 {
                                     rec.StationNumber = stationNumber;

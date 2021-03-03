@@ -12,6 +12,7 @@ namespace NeutronData.ModelViews
         }
         public int Id { get; set; }
         public int StationNumber { get; set; }
+        public int OrderDetailId { get; set; }
         public int OrderId { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }

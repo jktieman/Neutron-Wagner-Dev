@@ -3,6 +3,7 @@ using NeutronCore.Global;
 using NeutronCore.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronData.DataContexts;
 using static System.Int32;
@@ -16,13 +17,18 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly DynamicLogger _logger;
         private Timer _timer;
-        private bool _uploadBusy = false;
+        private bool _uploadBusy;
 
-        public UploadProcessorPr1(NeutronLicense neutronLicense, NeutronVariables neutronVariables, DynamicLogger logger)
+        public UploadProcessorPr1(NeutronVariables neutronVariables,NeutronLicense neutronLicense,  DynamicLogger logger)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
+        }
+
+        public void RunUploadOnce()
+        {
+
         }
 
         public void StartProcessingUploadFiles()
@@ -39,7 +45,14 @@ namespace NeutronLoader
 
         public void CreateHostFile()
         {
-            if (_uploadBusy) return;
+            var counter = 0;
+            while (_uploadBusy)
+            {
+                Task.Delay(200);
+                ++counter;
+                if (counter >= 20) return;
+            }
+
             _uploadBusy = true;
             var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             try
@@ -51,7 +64,7 @@ namespace NeutronLoader
                     {
                         var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables);
                         var result = hostFile.CreateHostFile(recs);
-                        if (result == true)
+                        if (result)
                         {
                             foreach (var rec in recs)
                             {

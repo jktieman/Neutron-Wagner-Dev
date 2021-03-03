@@ -101,7 +101,7 @@
     </Compile>
     <Compile Include="StartStopLoaderManager.cs" />
     <Compile Include="TopFileProcessor.cs" />
-    <Compile Include="UploadProcessor.cs" />
+    <Compile Include="UploadProcessorTop.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
     <Compile Include="VidirFileProcessor.cs" />
   </ItemGroup>

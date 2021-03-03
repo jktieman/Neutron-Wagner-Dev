@@ -4,6 +4,9 @@ using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
 
 namespace NeutronData.Repositories
 {
@@ -62,7 +65,7 @@ namespace NeutronData.Repositories
                                  Quantity = s.Quantity,
                                  PickedQuantity = s.PickedQuantity,
                                  LineStatusId = s.LineStatusId,
-                                 LineStatusName = s.LineStatus.Name,
+                                 LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
                                  StationNumber = s.StationNumber
                              }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item).ToList();
 
@@ -110,6 +113,12 @@ namespace NeutronData.Repositories
         {
             var recs = repo.All().Where(r => r.OrderId == orderId && r.StationNumber == stationNumber).ToList();
             return recs.ToList();
+        }
+
+        public Order GetOrder(int orderDetailId)
+        {
+            var order = repo.FindByKey(orderDetailId).Order;
+            return order;
         }
     }
 }

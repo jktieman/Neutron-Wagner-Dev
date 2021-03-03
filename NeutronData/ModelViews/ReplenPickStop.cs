@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using NeutronCore.Enums;
 
 namespace NeutronData.ModelViews
 {
@@ -110,7 +111,7 @@ namespace NeutronData.ModelViews
                 {
                     int total = GetPickViewTotal(item);
                     item.OrderDetail.PickedQuantity = total;
-                    item.OrderDetail.LineStatusId = 6;
+                    item.OrderDetail.LineStatusId = (int)LineStatus.Complete;
                     item.OrderDetail.EmpId = user.EmpId;
                     _repoOrderDetails.Update(item.OrderDetail);
                     SetOrderComplete(item.OrderId);

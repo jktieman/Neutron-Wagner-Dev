@@ -29,16 +29,16 @@ namespace NeutronCore.Extensions
             return table;
         }
 
-        public static List<T> ToList<T>(this DataGridViewSelectedRowCollection rows)
-        {
-            //example usage: [List<Location> | var] locations = dataGridViewLocations.SelectedRows.ToList<Location>();
-            var list = new List<T>();
-            for (var i = 0; i < rows.Count; i++)
-            {
-                list.Add((T) rows[i].DataBoundItem);
-            }
-            return list;
-        }
+        //public static List<T> ToList<T>(this DataGridViewSelectedRowCollection rows)
+        //{
+        //    //example usage: [List<Location> | var] locations = dataGridViewLocations.SelectedRows.ToList<Location>();
+        //    var list = new List<T>();
+        //    for (var i = 0; i < rows.Count; i++)
+        //    {
+        //        list.Add((T) rows[i].DataBoundItem);
+        //    }
+        //    return list;
+        //}
 
         public static void FocusAndHighlightText(this TextBox textBox)
         {

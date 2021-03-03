@@ -388,6 +388,10 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.CheckBoxUseAutoCompress = new System.Windows.Forms.CheckBox();
+            this.TextBoxCompressDays = new System.Windows.Forms.TextBox();
+            this.LabelCompress1 = new System.Windows.Forms.Label();
+            this.LabelCompress2 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -910,6 +914,8 @@
             this.Settings.Controls.Add(this.CheckBoxShiEnabled);
             this.Settings.Controls.Add(this.CheckBoxBliEnabled);
             this.Settings.Controls.Add(this.LabelUploadDelay);
+            this.Settings.Controls.Add(this.LabelCompress2);
+            this.Settings.Controls.Add(this.LabelCompress1);
             this.Settings.Controls.Add(this.LabelFlashRate);
             this.Settings.Controls.Add(this.LabelLoaderDelay);
             this.Settings.Controls.Add(this.LabelActionCodes);
@@ -936,6 +942,7 @@
             this.Settings.Controls.Add(this.ComboBoxDefaultStorageType);
             this.Settings.Controls.Add(this.ComboBoxDefaultLanguage);
             this.Settings.Controls.Add(this.ComboBoxDeviceDriver);
+            this.Settings.Controls.Add(this.TextBoxCompressDays);
             this.Settings.Controls.Add(this.TextBoxUploadDelay);
             this.Settings.Controls.Add(this.TextBoxDeviceFlashRate);
             this.Settings.Controls.Add(this.LabelSettingsSlotFormat);
@@ -956,6 +963,7 @@
             this.Settings.Controls.Add(this.CheckBoxCreateStoreOrderWithRts);
             this.Settings.Controls.Add(this.LabelLicenseCode);
             this.Settings.Controls.Add(this.LabelSettingsStationNumber);
+            this.Settings.Controls.Add(this.CheckBoxUseAutoCompress);
             this.Settings.Controls.Add(this.CheckBoxUseImages);
             this.Settings.Controls.Add(this.CheckBoxUseCostCenter);
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListManual);
@@ -1517,6 +1525,7 @@
             this.TextBoxStationNumber.TabIndex = 9;
             this.TextBoxStationNumber.Text = "1";
             this.TextBoxStationNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxStationNumber.Visible = false;
             // 
             // CheckBoxUseLAC
             // 
@@ -4569,6 +4578,48 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // CheckBoxUseAutoCompress
+            // 
+            this.CheckBoxUseAutoCompress.AutoSize = true;
+            this.CheckBoxUseAutoCompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseAutoCompress.Location = new System.Drawing.Point(841, 448);
+            this.CheckBoxUseAutoCompress.Name = "CheckBoxUseAutoCompress";
+            this.CheckBoxUseAutoCompress.Size = new System.Drawing.Size(147, 20);
+            this.CheckBoxUseAutoCompress.TabIndex = 45;
+            this.CheckBoxUseAutoCompress.Text = "Use Auto Compress";
+            this.CheckBoxUseAutoCompress.UseVisualStyleBackColor = true;
+            this.CheckBoxUseAutoCompress.CheckedChanged += new System.EventHandler(this.CheckBoxUseAutoCompress_CheckedChanged);
+            // 
+            // TextBoxCompressDays
+            // 
+            this.TextBoxCompressDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxCompressDays.Location = new System.Drawing.Point(994, 479);
+            this.TextBoxCompressDays.Name = "TextBoxCompressDays";
+            this.TextBoxCompressDays.Size = new System.Drawing.Size(40, 22);
+            this.TextBoxCompressDays.TabIndex = 46;
+            this.TextBoxCompressDays.Text = "30";
+            this.TextBoxCompressDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelCompress1
+            // 
+            this.LabelCompress1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompress1.Location = new System.Drawing.Point(838, 482);
+            this.LabelCompress1.Name = "LabelCompress1";
+            this.LabelCompress1.Size = new System.Drawing.Size(150, 16);
+            this.LabelCompress1.TabIndex = 19;
+            this.LabelCompress1.Text = "Compress Older Than";
+            this.LabelCompress1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelCompress2
+            // 
+            this.LabelCompress2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompress2.Location = new System.Drawing.Point(1040, 482);
+            this.LabelCompress2.Name = "LabelCompress2";
+            this.LabelCompress2.Size = new System.Drawing.Size(49, 16);
+            this.LabelCompress2.TabIndex = 19;
+            this.LabelCompress2.Text = "Days";
+            this.LabelCompress2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4993,5 +5044,9 @@
         private System.Windows.Forms.ComboBox ComboBoxStationNumber;
         private System.Windows.Forms.ComboBox ComboBoxDefaultStorageType;
         private System.Windows.Forms.Label LabelDefaultStorageType;
+        private System.Windows.Forms.Label LabelCompress2;
+        private System.Windows.Forms.Label LabelCompress1;
+        private System.Windows.Forms.TextBox TextBoxCompressDays;
+        private System.Windows.Forms.CheckBox CheckBoxUseAutoCompress;
     }
 }

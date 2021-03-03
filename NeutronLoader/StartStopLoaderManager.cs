@@ -27,6 +27,8 @@ namespace NeutronLoader
             _neutronLicense = neutronLicense;
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+            Mediator.GetInstance().RunLoaderOnce += (s, e) => RunLoaderOnce();
+
         }
 
         private void InitInterfaceFile()
@@ -60,6 +62,11 @@ namespace NeutronLoader
                     }
             }
 
+        }
+
+        private void RunLoaderOnce()
+        {
+            _interfaceProcessor.RunLoaderOnce();
         }
 
         private void StartStopLoaderAction(string startStop)
@@ -103,7 +110,7 @@ namespace NeutronLoader
 
             if (_processingUpload) return;
             _processingUpload = true;
-            var uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
+            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense,  _logger);
             uploadProcessor.CreateHostFile();
             _processingUpload = false;
         }

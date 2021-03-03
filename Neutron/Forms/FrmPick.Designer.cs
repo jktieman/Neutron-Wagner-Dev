@@ -63,6 +63,8 @@ namespace Neutron.Forms
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -75,6 +77,7 @@ namespace Neutron.Forms
             this.MBMainOrderManager = new MetroFramework.Controls.MetroButton();
             this.MBMainAvailableOrders = new MetroFramework.Controls.MetroButton();
             this.OrderListing = new System.Windows.Forms.TabPage();
+            this.MBKillOrder = new MetroFramework.Controls.MetroButton();
             this.panel12 = new System.Windows.Forms.Panel();
             this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.MBPrintPick = new MetroFramework.Controls.MetroButton();
@@ -90,9 +93,7 @@ namespace Neutron.Forms
             this.MBShowAvailable = new MetroFramework.Controls.MetroButton();
             this.LabelFindDescription = new System.Windows.Forms.Label();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
-            this.MBSelectAll = new MetroFramework.Controls.MetroButton();
             this.MBShowRackOrders = new MetroFramework.Controls.MetroButton();
-            this.MButtonClearSelection = new MetroFramework.Controls.MetroButton();
             this.ButtonClear = new System.Windows.Forms.Button();
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
             this.MBOffCarousel = new MetroFramework.Controls.MetroButton();
@@ -273,11 +274,10 @@ namespace Neutron.Forms
             this.PictureBoxItemImage = new System.Windows.Forms.PictureBox();
             this.MBPickBack = new MetroFramework.Controls.MetroButton();
             this.OrderDetails = new System.Windows.Forms.TabPage();
+            this.MBKillLine = new MetroFramework.Controls.MetroButton();
             this.MBHoldDetail = new MetroFramework.Controls.MetroButton();
             this.MBPrintOrderDetails = new MetroFramework.Controls.MetroButton();
             this.MBReleaseDetail = new MetroFramework.Controls.MetroButton();
-            this.MBSelectAllDetail = new MetroFramework.Controls.MetroButton();
-            this.MBClearSelectionDetail = new MetroFramework.Controls.MetroButton();
             this.MBReturnToStockOrderDetail = new MetroFramework.Controls.MetroButton();
             this.DataGridViewOrderDetails = new System.Windows.Forms.DataGridView();
             this.MBOrderDetailsBack = new MetroFramework.Controls.MetroButton();
@@ -311,6 +311,7 @@ namespace Neutron.Forms
             this.MBNewOrderSave = new MetroFramework.Controls.MetroButton();
             this.MBNewOrderClose = new MetroFramework.Controls.MetroButton();
             this.AvailableRack = new System.Windows.Forms.TabPage();
+            this.MBKillOrderRack = new MetroFramework.Controls.MetroButton();
             this.DataGridViewAvailableOrdersRack = new System.Windows.Forms.DataGridView();
             this.MBPrintToteLabel = new MetroFramework.Controls.MetroButton();
             this.MBPrintDocument = new MetroFramework.Controls.MetroButton();
@@ -329,14 +330,13 @@ namespace Neutron.Forms
             this.MBAdjustOrderSave = new MetroFramework.Controls.MetroButton();
             this.MBAdjustOrderBack = new MetroFramework.Controls.MetroButton();
             this.Skip = new System.Windows.Forms.TabPage();
+            this.MBKillLineSkip = new MetroFramework.Controls.MetroButton();
             this.panel11 = new System.Windows.Forms.Panel();
             this.DataGridViewSkip = new System.Windows.Forms.DataGridView();
             this.MBAdjustQuantity = new MetroFramework.Controls.MetroButton();
             this.MBPrintSkip = new MetroFramework.Controls.MetroButton();
             this.MBPickZero = new MetroFramework.Controls.MetroButton();
             this.MBInventorySkip = new MetroFramework.Controls.MetroButton();
-            this.MBSelectAllSkip = new MetroFramework.Controls.MetroButton();
-            this.MBClearSelectionSkip = new MetroFramework.Controls.MetroButton();
             this.MBPickComplete = new MetroFramework.Controls.MetroButton();
             this.MBBackSkip = new MetroFramework.Controls.MetroButton();
             this.SkipInventory = new System.Windows.Forms.TabPage();
@@ -485,7 +485,7 @@ namespace Neutron.Forms
             this.MBMainUpload.Name = "MBMainUpload";
             this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
             this.MBMainUpload.TabIndex = 5;
-            this.MBMainUpload.Text = "Run Upload Continuously";
+            this.MBMainUpload.Text = "Start upload";
             this.MBMainUpload.UseSelectable = true;
             this.MBMainUpload.Visible = false;
             this.MBMainUpload.Click += new System.EventHandler(this.MBMainUpload_Click);
@@ -498,7 +498,7 @@ namespace Neutron.Forms
             this.MBMainLoadOrders.Name = "MBMainLoadOrders";
             this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 53);
             this.MBMainLoadOrders.TabIndex = 3;
-            this.MBMainLoadOrders.Text = "Run Loader Continuously";
+            this.MBMainLoadOrders.Text = "Start Loader";
             this.MBMainLoadOrders.UseSelectable = true;
             this.MBMainLoadOrders.Visible = false;
             this.MBMainLoadOrders.Click += new System.EventHandler(this.MBMainLoadOrders_Click);
@@ -542,6 +542,7 @@ namespace Neutron.Forms
             // OrderListing
             // 
             this.OrderListing.BackColor = System.Drawing.Color.RoyalBlue;
+            this.OrderListing.Controls.Add(this.MBKillOrder);
             this.OrderListing.Controls.Add(this.panel12);
             this.OrderListing.Controls.Add(this.MBCompress);
             this.OrderListing.Controls.Add(this.MBPrintOrderListing);
@@ -554,9 +555,7 @@ namespace Neutron.Forms
             this.OrderListing.Controls.Add(this.MBShowAvailable);
             this.OrderListing.Controls.Add(this.LabelFindDescription);
             this.OrderListing.Controls.Add(this.TextBoxFind);
-            this.OrderListing.Controls.Add(this.MBSelectAll);
             this.OrderListing.Controls.Add(this.MBShowRackOrders);
-            this.OrderListing.Controls.Add(this.MButtonClearSelection);
             this.OrderListing.Controls.Add(this.ButtonClear);
             this.OrderListing.Controls.Add(this.MButtonClose);
             this.OrderListing.Controls.Add(this.MBOffCarousel);
@@ -573,13 +572,25 @@ namespace Neutron.Forms
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
+            // MBKillOrder
+            // 
+            this.MBKillOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBKillOrder.Location = new System.Drawing.Point(759, 647);
+            this.MBKillOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBKillOrder.Name = "MBKillOrder";
+            this.MBKillOrder.Size = new System.Drawing.Size(115, 37);
+            this.MBKillOrder.TabIndex = 26;
+            this.MBKillOrder.Text = "Kill Order";
+            this.MBKillOrder.UseSelectable = true;
+            this.MBKillOrder.Click += new System.EventHandler(this.MBKillOrder_Click);
+            // 
             // panel12
             // 
             this.panel12.BackColor = System.Drawing.Color.MidnightBlue;
             this.panel12.Controls.Add(this.ComboBoxStationNumber);
             this.panel12.Controls.Add(this.MBPrintPick);
             this.panel12.Controls.Add(this.ButtonPrintAO);
-            this.panel12.Location = new System.Drawing.Point(141, 642);
+            this.panel12.Location = new System.Drawing.Point(8, 644);
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(388, 45);
             this.panel12.TabIndex = 25;
@@ -630,10 +641,10 @@ namespace Neutron.Forms
             // 
             this.MBCompress.Enabled = false;
             this.MBCompress.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCompress.Location = new System.Drawing.Point(615, 690);
+            this.MBCompress.Location = new System.Drawing.Point(640, 692);
             this.MBCompress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCompress.Name = "MBCompress";
-            this.MBCompress.Size = new System.Drawing.Size(125, 37);
+            this.MBCompress.Size = new System.Drawing.Size(115, 36);
             this.MBCompress.TabIndex = 15;
             this.MBCompress.Text = "Compress";
             this.MBCompress.UseSelectable = true;
@@ -667,10 +678,10 @@ namespace Neutron.Forms
             // MBPriority
             // 
             this.MBPriority.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPriority.Location = new System.Drawing.Point(615, 646);
+            this.MBPriority.Location = new System.Drawing.Point(402, 692);
             this.MBPriority.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPriority.Name = "MBPriority";
-            this.MBPriority.Size = new System.Drawing.Size(125, 37);
+            this.MBPriority.Size = new System.Drawing.Size(115, 36);
             this.MBPriority.TabIndex = 14;
             this.MBPriority.Text = "Priority";
             this.MBPriority.UseSelectable = true;
@@ -679,10 +690,10 @@ namespace Neutron.Forms
             // MBHold
             // 
             this.MBHold.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHold.Location = new System.Drawing.Point(536, 646);
+            this.MBHold.Location = new System.Drawing.Point(402, 647);
             this.MBHold.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHold.Name = "MBHold";
-            this.MBHold.Size = new System.Drawing.Size(72, 36);
+            this.MBHold.Size = new System.Drawing.Size(115, 37);
             this.MBHold.TabIndex = 12;
             this.MBHold.Text = "Hold";
             this.MBHold.UseSelectable = true;
@@ -691,10 +702,10 @@ namespace Neutron.Forms
             // MBRelease
             // 
             this.MBRelease.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRelease.Location = new System.Drawing.Point(527, 690);
+            this.MBRelease.Location = new System.Drawing.Point(521, 647);
             this.MBRelease.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRelease.Name = "MBRelease";
-            this.MBRelease.Size = new System.Drawing.Size(82, 36);
+            this.MBRelease.Size = new System.Drawing.Size(115, 37);
             this.MBRelease.TabIndex = 13;
             this.MBRelease.Text = "Release";
             this.MBRelease.UseSelectable = true;
@@ -757,18 +768,6 @@ namespace Neutron.Forms
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
             // 
-            // MBSelectAll
-            // 
-            this.MBSelectAll.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSelectAll.Location = new System.Drawing.Point(7, 646);
-            this.MBSelectAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSelectAll.Name = "MBSelectAll";
-            this.MBSelectAll.Size = new System.Drawing.Size(124, 36);
-            this.MBSelectAll.TabIndex = 8;
-            this.MBSelectAll.Text = "Select All";
-            this.MBSelectAll.UseSelectable = true;
-            this.MBSelectAll.Click += new System.EventHandler(this.MBSelectAll_Click);
-            // 
             // MBShowRackOrders
             // 
             this.MBShowRackOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
@@ -780,18 +779,6 @@ namespace Neutron.Forms
             this.MBShowRackOrders.Text = "Off";
             this.MBShowRackOrders.UseSelectable = true;
             this.MBShowRackOrders.Click += new System.EventHandler(this.MBShowRackOrders_Click);
-            // 
-            // MButtonClearSelection
-            // 
-            this.MButtonClearSelection.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClearSelection.Location = new System.Drawing.Point(7, 689);
-            this.MButtonClearSelection.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MButtonClearSelection.Name = "MButtonClearSelection";
-            this.MButtonClearSelection.Size = new System.Drawing.Size(124, 36);
-            this.MButtonClearSelection.TabIndex = 9;
-            this.MButtonClearSelection.Text = "Clear Selection";
-            this.MButtonClearSelection.UseSelectable = true;
-            this.MButtonClearSelection.Click += new System.EventHandler(this.MButtonClearSelection_Click);
             // 
             // ButtonClear
             // 
@@ -821,7 +808,7 @@ namespace Neutron.Forms
             // MBOffCarousel
             // 
             this.MBOffCarousel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOffCarousel.Location = new System.Drawing.Point(334, 690);
+            this.MBOffCarousel.Location = new System.Drawing.Point(201, 692);
             this.MBOffCarousel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOffCarousel.Name = "MBOffCarousel";
             this.MBOffCarousel.Size = new System.Drawing.Size(187, 36);
@@ -833,7 +820,7 @@ namespace Neutron.Forms
             // ButtonPrintPacking
             // 
             this.ButtonPrintPacking.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonPrintPacking.Location = new System.Drawing.Point(141, 690);
+            this.ButtonPrintPacking.Location = new System.Drawing.Point(8, 692);
             this.ButtonPrintPacking.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonPrintPacking.Name = "ButtonPrintPacking";
             this.ButtonPrintPacking.Size = new System.Drawing.Size(187, 36);
@@ -896,16 +883,14 @@ namespace Neutron.Forms
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1131, 544);
             this.DataGridView1.TabIndex = 7;
-            this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
-            this.DataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.DataGridView1_KeyUp);
             // 
             // MBDeleteOrder
             // 
             this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 690);
+            this.MBDeleteOrder.Location = new System.Drawing.Point(640, 647);
             this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDeleteOrder.Name = "MBDeleteOrder";
-            this.MBDeleteOrder.Size = new System.Drawing.Size(130, 36);
+            this.MBDeleteOrder.Size = new System.Drawing.Size(115, 37);
             this.MBDeleteOrder.TabIndex = 17;
             this.MBDeleteOrder.Text = "Delete";
             this.MBDeleteOrder.UseSelectable = true;
@@ -914,13 +899,14 @@ namespace Neutron.Forms
             // MBReturnToStock
             // 
             this.MBReturnToStock.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStock.Location = new System.Drawing.Point(746, 646);
+            this.MBReturnToStock.Location = new System.Drawing.Point(759, 692);
             this.MBReturnToStock.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReturnToStock.Name = "MBReturnToStock";
-            this.MBReturnToStock.Size = new System.Drawing.Size(130, 36);
+            this.MBReturnToStock.Size = new System.Drawing.Size(115, 36);
             this.MBReturnToStock.TabIndex = 16;
-            this.MBReturnToStock.Text = "Return to Stock";
+            this.MBReturnToStock.Text = "Return";
             this.MBReturnToStock.UseSelectable = true;
+            this.MBReturnToStock.Visible = false;
             this.MBReturnToStock.Click += new System.EventHandler(this.MBReturnToStock_Click);
             // 
             // AvailableOrders
@@ -1778,6 +1764,7 @@ namespace Neutron.Forms
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
+            this.DataGridPickView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridPickView.Size = new System.Drawing.Size(1135, 630);
             this.DataGridPickView.TabIndex = 2;
             this.DataGridPickView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridPickView_DataBindingComplete);
@@ -3107,11 +3094,10 @@ namespace Neutron.Forms
             // OrderDetails
             // 
             this.OrderDetails.BackColor = System.Drawing.Color.RoyalBlue;
+            this.OrderDetails.Controls.Add(this.MBKillLine);
             this.OrderDetails.Controls.Add(this.MBHoldDetail);
             this.OrderDetails.Controls.Add(this.MBPrintOrderDetails);
             this.OrderDetails.Controls.Add(this.MBReleaseDetail);
-            this.OrderDetails.Controls.Add(this.MBSelectAllDetail);
-            this.OrderDetails.Controls.Add(this.MBClearSelectionDetail);
             this.OrderDetails.Controls.Add(this.MBReturnToStockOrderDetail);
             this.OrderDetails.Controls.Add(this.DataGridViewOrderDetails);
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
@@ -3121,10 +3107,22 @@ namespace Neutron.Forms
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
+            // MBKillLine
+            // 
+            this.MBKillLine.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBKillLine.Location = new System.Drawing.Point(19, 10);
+            this.MBKillLine.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBKillLine.Name = "MBKillLine";
+            this.MBKillLine.Size = new System.Drawing.Size(135, 79);
+            this.MBKillLine.TabIndex = 8;
+            this.MBKillLine.Text = "Kill Line";
+            this.MBKillLine.UseSelectable = true;
+            this.MBKillLine.Click += new System.EventHandler(this.MBKillLine_Click);
+            // 
             // MBHoldDetail
             // 
             this.MBHoldDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHoldDetail.Location = new System.Drawing.Point(455, 11);
+            this.MBHoldDetail.Location = new System.Drawing.Point(407, 11);
             this.MBHoldDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHoldDetail.Name = "MBHoldDetail";
             this.MBHoldDetail.Size = new System.Drawing.Size(135, 79);
@@ -3136,7 +3134,7 @@ namespace Neutron.Forms
             // MBPrintOrderDetails
             // 
             this.MBPrintOrderDetails.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderDetails.Location = new System.Drawing.Point(741, 11);
+            this.MBPrintOrderDetails.Location = new System.Drawing.Point(795, 11);
             this.MBPrintOrderDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderDetails.Name = "MBPrintOrderDetails";
             this.MBPrintOrderDetails.Size = new System.Drawing.Size(135, 79);
@@ -3148,7 +3146,7 @@ namespace Neutron.Forms
             // MBReleaseDetail
             // 
             this.MBReleaseDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReleaseDetail.Location = new System.Drawing.Point(600, 11);
+            this.MBReleaseDetail.Location = new System.Drawing.Point(601, 11);
             this.MBReleaseDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReleaseDetail.Name = "MBReleaseDetail";
             this.MBReleaseDetail.Size = new System.Drawing.Size(135, 79);
@@ -3157,40 +3155,17 @@ namespace Neutron.Forms
             this.MBReleaseDetail.UseSelectable = true;
             this.MBReleaseDetail.Click += new System.EventHandler(this.MBReleaseDetail_Click);
             // 
-            // MBSelectAllDetail
-            // 
-            this.MBSelectAllDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSelectAllDetail.Location = new System.Drawing.Point(20, 10);
-            this.MBSelectAllDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSelectAllDetail.Name = "MBSelectAllDetail";
-            this.MBSelectAllDetail.Size = new System.Drawing.Size(135, 79);
-            this.MBSelectAllDetail.TabIndex = 0;
-            this.MBSelectAllDetail.Text = "Select All";
-            this.MBSelectAllDetail.UseSelectable = true;
-            this.MBSelectAllDetail.Click += new System.EventHandler(this.MBSelectAllDetail_Click);
-            // 
-            // MBClearSelectionDetail
-            // 
-            this.MBClearSelectionDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBClearSelectionDetail.Location = new System.Drawing.Point(165, 10);
-            this.MBClearSelectionDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBClearSelectionDetail.Name = "MBClearSelectionDetail";
-            this.MBClearSelectionDetail.Size = new System.Drawing.Size(135, 79);
-            this.MBClearSelectionDetail.TabIndex = 1;
-            this.MBClearSelectionDetail.Text = "Clear Selection";
-            this.MBClearSelectionDetail.UseSelectable = true;
-            this.MBClearSelectionDetail.Click += new System.EventHandler(this.MBClearSelectionDetail_Click);
-            // 
             // MBReturnToStockOrderDetail
             // 
             this.MBReturnToStockOrderDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStockOrderDetail.Location = new System.Drawing.Point(310, 10);
+            this.MBReturnToStockOrderDetail.Location = new System.Drawing.Point(213, 10);
             this.MBReturnToStockOrderDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReturnToStockOrderDetail.Name = "MBReturnToStockOrderDetail";
             this.MBReturnToStockOrderDetail.Size = new System.Drawing.Size(135, 79);
             this.MBReturnToStockOrderDetail.TabIndex = 2;
             this.MBReturnToStockOrderDetail.Text = "Return to Stock";
             this.MBReturnToStockOrderDetail.UseSelectable = true;
+            this.MBReturnToStockOrderDetail.Visible = false;
             this.MBReturnToStockOrderDetail.Click += new System.EventHandler(this.MBReturnToStockOrderDetail_Click);
             // 
             // DataGridViewOrderDetails
@@ -3234,13 +3209,12 @@ namespace Neutron.Forms
             this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1106, 631);
             this.DataGridViewOrderDetails.TabIndex = 6;
-            this.DataGridViewOrderDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellClick);
             // 
             // MBOrderDetailsBack
             // 
             this.MBOrderDetailsBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBOrderDetailsBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOrderDetailsBack.Location = new System.Drawing.Point(990, 10);
+            this.MBOrderDetailsBack.Location = new System.Drawing.Point(989, 10);
             this.MBOrderDetailsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOrderDetailsBack.Name = "MBOrderDetailsBack";
             this.MBOrderDetailsBack.Size = new System.Drawing.Size(135, 79);
@@ -3368,6 +3342,7 @@ namespace Neutron.Forms
             this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewNewOrder.RowTemplate.Height = 28;
             this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
+            this.DataGridViewNewOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewNewOrder.Size = new System.Drawing.Size(621, 511);
             this.DataGridViewNewOrder.TabIndex = 67;
             this.DataGridViewNewOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewNewOrder_CellContentClick);
@@ -3403,6 +3378,7 @@ namespace Neutron.Forms
             this.DataGridViewNewItems.MultiSelect = false;
             this.DataGridViewNewItems.Name = "DataGridViewNewItems";
             this.DataGridViewNewItems.ReadOnly = true;
+            this.DataGridViewNewItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewNewItems.Size = new System.Drawing.Size(458, 274);
             this.DataGridViewNewItems.TabIndex = 0;
             // 
@@ -3615,6 +3591,7 @@ namespace Neutron.Forms
             // AvailableRack
             // 
             this.AvailableRack.BackColor = System.Drawing.Color.RoyalBlue;
+            this.AvailableRack.Controls.Add(this.MBKillOrderRack);
             this.AvailableRack.Controls.Add(this.DataGridViewAvailableOrdersRack);
             this.AvailableRack.Controls.Add(this.MBPrintToteLabel);
             this.AvailableRack.Controls.Add(this.MBPrintDocument);
@@ -3633,6 +3610,18 @@ namespace Neutron.Forms
             this.AvailableRack.Size = new System.Drawing.Size(1147, 734);
             this.AvailableRack.TabIndex = 11;
             this.AvailableRack.Text = "Available Rack";
+            // 
+            // MBKillOrderRack
+            // 
+            this.MBKillOrderRack.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBKillOrderRack.Location = new System.Drawing.Point(476, 645);
+            this.MBKillOrderRack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBKillOrderRack.Name = "MBKillOrderRack";
+            this.MBKillOrderRack.Size = new System.Drawing.Size(190, 76);
+            this.MBKillOrderRack.TabIndex = 124;
+            this.MBKillOrderRack.Text = "Kill Order";
+            this.MBKillOrderRack.UseSelectable = true;
+            this.MBKillOrderRack.Click += new System.EventHandler(this.MBKillOrderRack_Click);
             // 
             // DataGridViewAvailableOrdersRack
             // 
@@ -3674,30 +3663,31 @@ namespace Neutron.Forms
             this.DataGridViewAvailableOrdersRack.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrdersRack.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrdersRack.RowTemplate.ReadOnly = true;
+            this.DataGridViewAvailableOrdersRack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1136, 538);
             this.DataGridViewAvailableOrdersRack.TabIndex = 7;
-            this.DataGridViewAvailableOrdersRack.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrdersRack_CellClick);
             // 
             // MBPrintToteLabel
             // 
             this.MBPrintToteLabel.Enabled = false;
             this.MBPrintToteLabel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintToteLabel.Location = new System.Drawing.Point(312, 646);
+            this.MBPrintToteLabel.Location = new System.Drawing.Point(241, 645);
             this.MBPrintToteLabel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintToteLabel.Name = "MBPrintToteLabel";
-            this.MBPrintToteLabel.Size = new System.Drawing.Size(238, 76);
+            this.MBPrintToteLabel.Size = new System.Drawing.Size(190, 76);
             this.MBPrintToteLabel.TabIndex = 9;
             this.MBPrintToteLabel.Text = "Print Tote Label";
             this.MBPrintToteLabel.UseSelectable = true;
+            this.MBPrintToteLabel.Visible = false;
             this.MBPrintToteLabel.Click += new System.EventHandler(this.MBPrintToteLabel_Click);
             // 
             // MBPrintDocument
             // 
             this.MBPrintDocument.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintDocument.Location = new System.Drawing.Point(27, 646);
+            this.MBPrintDocument.Location = new System.Drawing.Point(6, 645);
             this.MBPrintDocument.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintDocument.Name = "MBPrintDocument";
-            this.MBPrintDocument.Size = new System.Drawing.Size(238, 76);
+            this.MBPrintDocument.Size = new System.Drawing.Size(190, 76);
             this.MBPrintDocument.TabIndex = 8;
             this.MBPrintDocument.Text = "Print Pick List";
             this.MBPrintDocument.UseSelectable = true;
@@ -3776,10 +3766,10 @@ namespace Neutron.Forms
             // 
             this.MBAdjustOrder.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBAdjustOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAdjustOrder.Location = new System.Drawing.Point(882, 646);
+            this.MBAdjustOrder.Location = new System.Drawing.Point(946, 645);
             this.MBAdjustOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAdjustOrder.Name = "MBAdjustOrder";
-            this.MBAdjustOrder.Size = new System.Drawing.Size(238, 76);
+            this.MBAdjustOrder.Size = new System.Drawing.Size(190, 76);
             this.MBAdjustOrder.Style = MetroFramework.MetroColorStyle.Pink;
             this.MBAdjustOrder.TabIndex = 11;
             this.MBAdjustOrder.Text = "Adjust Order and Close";
@@ -3790,10 +3780,10 @@ namespace Neutron.Forms
             // 
             this.MBRackOrderComplete.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBRackOrderComplete.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRackOrderComplete.Location = new System.Drawing.Point(597, 646);
+            this.MBRackOrderComplete.Location = new System.Drawing.Point(711, 645);
             this.MBRackOrderComplete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRackOrderComplete.Name = "MBRackOrderComplete";
-            this.MBRackOrderComplete.Size = new System.Drawing.Size(238, 76);
+            this.MBRackOrderComplete.Size = new System.Drawing.Size(190, 76);
             this.MBRackOrderComplete.TabIndex = 10;
             this.MBRackOrderComplete.Text = "Close Order";
             this.MBRackOrderComplete.UseSelectable = true;
@@ -3841,11 +3831,28 @@ namespace Neutron.Forms
             // DataGridViewAdjust
             // 
             this.DataGridViewAdjust.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAdjust.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
             this.DataGridViewAdjust.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle26.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAdjust.DefaultCellStyle = dataGridViewCellStyle26;
             this.DataGridViewAdjust.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.DataGridViewAdjust.Location = new System.Drawing.Point(273, 118);
+            this.DataGridViewAdjust.Location = new System.Drawing.Point(149, 108);
             this.DataGridViewAdjust.Name = "DataGridViewAdjust";
-            this.DataGridViewAdjust.Size = new System.Drawing.Size(600, 499);
+            this.DataGridViewAdjust.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewAdjust.Size = new System.Drawing.Size(848, 622);
             this.DataGridViewAdjust.TabIndex = 0;
             // 
             // MBAdjustOrderSave
@@ -3876,13 +3883,12 @@ namespace Neutron.Forms
             // Skip
             // 
             this.Skip.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Skip.Controls.Add(this.MBKillLineSkip);
             this.Skip.Controls.Add(this.panel11);
             this.Skip.Controls.Add(this.MBAdjustQuantity);
             this.Skip.Controls.Add(this.MBPrintSkip);
             this.Skip.Controls.Add(this.MBPickZero);
             this.Skip.Controls.Add(this.MBInventorySkip);
-            this.Skip.Controls.Add(this.MBSelectAllSkip);
-            this.Skip.Controls.Add(this.MBClearSelectionSkip);
             this.Skip.Controls.Add(this.MBPickComplete);
             this.Skip.Controls.Add(this.MBBackSkip);
             this.Skip.Location = new System.Drawing.Point(4, 22);
@@ -3891,6 +3897,19 @@ namespace Neutron.Forms
             this.Skip.Size = new System.Drawing.Size(1147, 734);
             this.Skip.TabIndex = 13;
             this.Skip.Text = "Skip";
+            // 
+            // MBKillLineSkip
+            // 
+            this.MBKillLineSkip.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MBKillLineSkip.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBKillLineSkip.Location = new System.Drawing.Point(836, 10);
+            this.MBKillLineSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBKillLineSkip.Name = "MBKillLineSkip";
+            this.MBKillLineSkip.Size = new System.Drawing.Size(135, 79);
+            this.MBKillLineSkip.TabIndex = 57;
+            this.MBKillLineSkip.Text = "Kill Line";
+            this.MBKillLineSkip.UseSelectable = true;
+            this.MBKillLineSkip.Click += new System.EventHandler(this.MBKillLineSkip_Click);
             // 
             // panel11
             // 
@@ -3905,49 +3924,48 @@ namespace Neutron.Forms
             this.DataGridViewSkip.AllowUserToAddRows = false;
             this.DataGridViewSkip.AllowUserToDeleteRows = false;
             this.DataGridViewSkip.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkip.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
-            this.DataGridViewSkip.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle26.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewSkip.DefaultCellStyle = dataGridViewCellStyle26;
-            this.DataGridViewSkip.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataGridViewSkip.Location = new System.Drawing.Point(0, 0);
-            this.DataGridViewSkip.Name = "DataGridViewSkip";
-            this.DataGridViewSkip.ReadOnly = true;
             dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkip.RowHeadersDefaultCellStyle = dataGridViewCellStyle27;
-            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewSkip.RowsDefaultCellStyle = dataGridViewCellStyle28;
+            this.DataGridViewSkip.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle27;
+            this.DataGridViewSkip.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewSkip.DefaultCellStyle = dataGridViewCellStyle28;
+            this.DataGridViewSkip.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridViewSkip.Location = new System.Drawing.Point(0, 0);
+            this.DataGridViewSkip.Name = "DataGridViewSkip";
+            this.DataGridViewSkip.ReadOnly = true;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkip.RowHeadersDefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewSkip.RowsDefaultCellStyle = dataGridViewCellStyle30;
             this.DataGridViewSkip.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkip.RowTemplate.Height = 28;
             this.DataGridViewSkip.RowTemplate.ReadOnly = true;
             this.DataGridViewSkip.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewSkip.Size = new System.Drawing.Size(1104, 612);
             this.DataGridViewSkip.TabIndex = 0;
-            this.DataGridViewSkip.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewSkip_CellClick);
             // 
             // MBAdjustQuantity
             // 
             this.MBAdjustQuantity.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAdjustQuantity.Location = new System.Drawing.Point(629, 10);
+            this.MBAdjustQuantity.Location = new System.Drawing.Point(510, 10);
             this.MBAdjustQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAdjustQuantity.Name = "MBAdjustQuantity";
             this.MBAdjustQuantity.Size = new System.Drawing.Size(135, 79);
@@ -3959,7 +3977,7 @@ namespace Neutron.Forms
             // MBPrintSkip
             // 
             this.MBPrintSkip.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintSkip.Location = new System.Drawing.Point(325, 10);
+            this.MBPrintSkip.Location = new System.Drawing.Point(184, 10);
             this.MBPrintSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintSkip.Name = "MBPrintSkip";
             this.MBPrintSkip.Size = new System.Drawing.Size(135, 79);
@@ -3971,7 +3989,7 @@ namespace Neutron.Forms
             // MBPickZero
             // 
             this.MBPickZero.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickZero.Location = new System.Drawing.Point(781, 10);
+            this.MBPickZero.Location = new System.Drawing.Point(673, 10);
             this.MBPickZero.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickZero.Name = "MBPickZero";
             this.MBPickZero.Size = new System.Drawing.Size(135, 79);
@@ -3983,7 +4001,7 @@ namespace Neutron.Forms
             // MBInventorySkip
             // 
             this.MBInventorySkip.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBInventorySkip.Location = new System.Drawing.Point(175, 10);
+            this.MBInventorySkip.Location = new System.Drawing.Point(21, 10);
             this.MBInventorySkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBInventorySkip.Name = "MBInventorySkip";
             this.MBInventorySkip.Size = new System.Drawing.Size(135, 79);
@@ -3992,34 +4010,10 @@ namespace Neutron.Forms
             this.MBInventorySkip.UseSelectable = true;
             this.MBInventorySkip.Click += new System.EventHandler(this.MBInventorySkip_Click);
             // 
-            // MBSelectAllSkip
-            // 
-            this.MBSelectAllSkip.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSelectAllSkip.Location = new System.Drawing.Point(21, 10);
-            this.MBSelectAllSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSelectAllSkip.Name = "MBSelectAllSkip";
-            this.MBSelectAllSkip.Size = new System.Drawing.Size(135, 34);
-            this.MBSelectAllSkip.TabIndex = 0;
-            this.MBSelectAllSkip.Text = "Select All";
-            this.MBSelectAllSkip.UseSelectable = true;
-            this.MBSelectAllSkip.Click += new System.EventHandler(this.MBSelectAllSkip_Click);
-            // 
-            // MBClearSelectionSkip
-            // 
-            this.MBClearSelectionSkip.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBClearSelectionSkip.Location = new System.Drawing.Point(21, 52);
-            this.MBClearSelectionSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBClearSelectionSkip.Name = "MBClearSelectionSkip";
-            this.MBClearSelectionSkip.Size = new System.Drawing.Size(135, 37);
-            this.MBClearSelectionSkip.TabIndex = 1;
-            this.MBClearSelectionSkip.Text = "Clear Selection";
-            this.MBClearSelectionSkip.UseSelectable = true;
-            this.MBClearSelectionSkip.Click += new System.EventHandler(this.MBClearSelectionSkip_Click);
-            // 
             // MBPickComplete
             // 
             this.MBPickComplete.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickComplete.Location = new System.Drawing.Point(477, 10);
+            this.MBPickComplete.Location = new System.Drawing.Point(347, 10);
             this.MBPickComplete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickComplete.Name = "MBPickComplete";
             this.MBPickComplete.Size = new System.Drawing.Size(135, 79);
@@ -4032,7 +4026,7 @@ namespace Neutron.Forms
             // 
             this.MBBackSkip.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBBackSkip.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBBackSkip.Location = new System.Drawing.Point(990, 10);
+            this.MBBackSkip.Location = new System.Drawing.Point(999, 10);
             this.MBBackSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBBackSkip.Name = "MBBackSkip";
             this.MBBackSkip.Size = new System.Drawing.Size(135, 79);
@@ -4173,37 +4167,37 @@ namespace Neutron.Forms
             this.DataGridViewSkipInventory.AllowUserToDeleteRows = false;
             this.DataGridViewSkipInventory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewSkipInventory.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle29;
-            this.DataGridViewSkipInventory.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewSkipInventory.DefaultCellStyle = dataGridViewCellStyle30;
-            this.DataGridViewSkipInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.DataGridViewSkipInventory.Location = new System.Drawing.Point(113, 219);
-            this.DataGridViewSkipInventory.MultiSelect = false;
-            this.DataGridViewSkipInventory.Name = "DataGridViewSkipInventory";
             dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle31.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkipInventory.RowHeadersDefaultCellStyle = dataGridViewCellStyle31;
-            dataGridViewCellStyle32.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewSkipInventory.RowsDefaultCellStyle = dataGridViewCellStyle32;
+            this.DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle31;
+            this.DataGridViewSkipInventory.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle32.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle32.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewSkipInventory.DefaultCellStyle = dataGridViewCellStyle32;
+            this.DataGridViewSkipInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.DataGridViewSkipInventory.Location = new System.Drawing.Point(113, 219);
+            this.DataGridViewSkipInventory.MultiSelect = false;
+            this.DataGridViewSkipInventory.Name = "DataGridViewSkipInventory";
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle33.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkipInventory.RowHeadersDefaultCellStyle = dataGridViewCellStyle33;
+            dataGridViewCellStyle34.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewSkipInventory.RowsDefaultCellStyle = dataGridViewCellStyle34;
             this.DataGridViewSkipInventory.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkipInventory.RowTemplate.Height = 28;
             this.DataGridViewSkipInventory.RowTemplate.ReadOnly = true;
@@ -4340,8 +4334,6 @@ namespace Neutron.Forms
         private System.Windows.Forms.TabPage OrderListing;
         private System.Windows.Forms.Label LabelFindDescription;
         private System.Windows.Forms.TextBox TextBoxFind;
-        private MetroFramework.Controls.MetroButton MBSelectAll;
-        private MetroFramework.Controls.MetroButton MButtonClearSelection;
         private System.Windows.Forms.Button ButtonClear;
         private MetroFramework.Controls.MetroButton MButtonClose;
         private MetroFramework.Controls.MetroButton MButtonSearch;
@@ -4451,8 +4443,6 @@ namespace Neutron.Forms
         private MetroFramework.Controls.MetroButton MBPrintOrderListing;
         private MetroFramework.Controls.MetroButton MBPrintPickList;
         private MetroFramework.Controls.MetroButton MBReturnToStockOrderDetail;
-        private MetroFramework.Controls.MetroButton MBSelectAllDetail;
-        private MetroFramework.Controls.MetroButton MBClearSelectionDetail;
         private MetroFramework.Controls.MetroButton MBHoldDetail;
         private MetroFramework.Controls.MetroButton MBReleaseDetail;
         private System.Windows.Forms.TextBox TextBoxReceivedDate;
@@ -4517,8 +4507,6 @@ namespace Neutron.Forms
         private MetroFramework.Controls.MetroButton MBAdjustQuantity;
         private MetroFramework.Controls.MetroButton MBPrintSkip;
         private MetroFramework.Controls.MetroButton MBPickZero;
-        private MetroFramework.Controls.MetroButton MBSelectAllSkip;
-        private MetroFramework.Controls.MetroButton MBClearSelectionSkip;
         private MetroFramework.Controls.MetroButton MBPickComplete;
         private MetroFramework.Controls.MetroButton MBBackSkip;
         private MetroFramework.Controls.MetroButton MBInventorySkip;
@@ -4628,5 +4616,9 @@ namespace Neutron.Forms
         private System.Windows.Forms.Button ButtonStopMoveFirst;
         private System.Windows.Forms.Button ButtonStopMovePrevious;
         private System.Windows.Forms.Label LabelLineOfLines;
+        private MetroFramework.Controls.MetroButton MBKillOrder;
+        private MetroFramework.Controls.MetroButton MBKillLine;
+        private MetroFramework.Controls.MetroButton MBKillOrderRack;
+        private MetroFramework.Controls.MetroButton MBKillLineSkip;
     }
 }

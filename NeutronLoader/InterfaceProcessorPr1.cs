@@ -110,11 +110,6 @@ namespace NeutronLoader
             }
         }
 
-        public void RunLoaderContinuously()
-        {
-            throw new NotImplementedException();
-        }
-
         public FileInfo[] GetFiles()
         {
             _logger.Log("Call to Get Files Function.");
@@ -134,7 +129,7 @@ namespace NeutronLoader
 
         private void StopBackgroundWorker()
         {
-            _backgroundWorker.CancelAsync();
+            _backgroundWorker?.CancelAsync();
         }
 
         private void InitBackgroundWorker()

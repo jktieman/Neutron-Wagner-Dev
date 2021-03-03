@@ -29,7 +29,7 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
-        private IFileProcessor _fileProcessor;
+        private VidirFileProcessor _fileProcessor;
         private const string FolderName = "Neutron Loader";
 
         public InterfaceProcessorVidir(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData)

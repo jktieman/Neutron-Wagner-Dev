@@ -1,6 +1,7 @@
 ﻿using NeutronData.Interfaces;
 using NeutronData.Models.Lookups;
 using System.ComponentModel.DataAnnotations.Schema;
+using NeutronCore.Enums;
 
 namespace NeutronData.Models
 {
@@ -23,8 +24,7 @@ namespace NeutronData.Models
         public string TypeCode { get; set; }
         public string OrderDetailInfo { get; set; }
         public int LineStatusId { get; set; }
-        [ForeignKey("LineStatusId")]
-        public virtual LineStatus LineStatus { get; set; }
+        //public LineStatus LineStatus { get; set; }
         public int StationNumber { get; set; }
         [ForeignKey("ReplenOrderId")]
         public virtual ReplenOrder ReplenOrder { get; set; }

@@ -383,9 +383,9 @@
     <Compile Include="Forms\FrmPick.Designer.cs">
       <DependentUpon>FrmPick.cs</DependentUpon>
     </Compile>
-    <Compile Include="Global\LineStatusManager.cs" />
     <Compile Include="Models\ActionIdString.cs" />
     <Compile Include="Models\Command.cs" />
+    <Compile Include="Models\CompressLastRunDate.cs" />
     <Compile Include="Models\Global.cs" />
     <Compile Include="Interfaces\INeutronRootDirectory.cs" />
     <Compile Include="Interfaces\IImageManager.cs" />

@@ -70,14 +70,7 @@ namespace NeutronLoader
             _logger.Log($"Pr1FileProcessor --- Done");
         }
 
-
-
-
-
-
-
-
-        private void ProcessNormalOrder(string[] allLines)
+        public void ProcessNormalOrder(string[] allLines)
         {
             _logger.Log($"In ProcessNormalOrder - Line Count: {allLines.Length} ");
             Order order = null;
@@ -238,7 +231,7 @@ namespace NeutronLoader
             }
         }
 
-        private void ProcessReplenOrder(string[] allLines)
+        public void ProcessReplenOrder(string[] allLines)
         {
             _logger.Log($"Process Replen Order Line Count: {allLines.Length} ");
             ReplenOrder order = null;

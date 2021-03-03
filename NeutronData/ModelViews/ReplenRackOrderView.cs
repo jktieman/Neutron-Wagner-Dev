@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
 using NeutronData.Models;
 
 namespace NeutronData.ModelViews
@@ -24,7 +26,13 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                return string.IsNullOrEmpty(_statusName) ? OrderDetails.FirstOrDefault()?.LineStatus.Name : _statusName;
+                if (!string.IsNullOrEmpty(_statusName)) return _statusName;
+                if (OrderDetails.FirstOrDefault() == null) return _statusName;
+                var id = OrderDetails.FirstOrDefault()?.LineStatusId;
+                if (id == null) return _statusName;
+                var lineStatus = (LineStatus)id;
+                _statusName = lineStatus.GetEnumDescription();
+                return _statusName;
             }
             set
             {

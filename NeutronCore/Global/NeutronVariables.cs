@@ -50,5 +50,7 @@
         public int DeviceFlashRate { get; set; }
         public int StationId { get; set; }
         public int DefaultStorageTypeId { get; set; }
+        public bool UseAutoCompress { get; set; }
+        public int CompressDays { get; set; }
     }
 }

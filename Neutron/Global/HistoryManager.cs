@@ -11,6 +11,7 @@ using NeutronData.ModelViews;
 using NeutronCore.Enums;
 using System.Data.SqlClient;
 using NeutronCore.Extensions;
+using NeutronData.PrintModels;
 
 namespace Neutron.Global
 {
@@ -20,19 +21,11 @@ namespace Neutron.Global
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
         private readonly InventoryRepository _repoInventory = new InventoryRepository();
 
-
-        private static bool _actionCodesInited;
-
-        public HistoryManager()
-        {
-            if (_actionCodesInited) return;
-            SaveActionCodesToDatabase();
-        }
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
+            new GenericRepository<ReplenOrderDetail>(new NeutronDb());
 
         public void SaveHistory(ActionCode actionCode, Order order, int stationId = 1)
         {
-            
-
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -102,6 +95,7 @@ namespace Neutron.Global
                         ActionCode = (int)actionCode,
                         ActionCodeName = actionCode.GetEnumDescription(),
                         ActionDateTime = pickLocation.PickDate,
+                        OrderId = pickView.OrderId,
                         Ord1 = pickView.Ord1,
                         Ord2 = pickView.Ord2,
                         Item = pickView.Item,
@@ -249,6 +243,36 @@ namespace Neutron.Global
             Save(history);
         }
 
+        public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, PickList pickList)
+        {
+            var orderId = _repoReplenOrderDetails.FindByKey(pickList.OrderDetailId.ParseInt()).ReplenOrderId;
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = pickList.Order,
+                Ord2 = pickList.Invoice,
+                OrderId = orderId,
+                Item = inventory.ItemDefinition.Item,
+                Description = inventory.ItemDefinition.Description,
+                IssuedQuantity = pickedQty,
+                RequestedQuantity = pickList.Ordered.ParseInt(),
+                StationId = inventory.Location.Station.Id,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty
+            };
+            Save(history);
+        }
+
         //Hot Pick Hot Store Action Without Cost Center
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty)
         {
@@ -279,7 +303,7 @@ namespace Neutron.Global
                 ActionDateTime = DateTime.Now,
                 Ord1 = orderText,
                 Ord2 = orderText,
-                OrderId = 0,
+                OrderId = null,
                 Item = inventory.ItemDefinition.Item,
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
@@ -311,7 +335,7 @@ namespace Neutron.Global
                 ActionDateTime = DateTime.Now,
                 Ord1 = orderText,
                 Ord2 = orderText,
-                OrderId = 0,
+                OrderId = null,
                 Item = inventory.ItemDefinition.Item,
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
@@ -644,42 +668,42 @@ namespace Neutron.Global
             Save(history);
         }
 
-        public void SaveActionCodesToDatabase()
-        {
-            //Run this one time at startup
-            //break down the ActionCode Enum into a List and save to the database.
-            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
-                .Select(r => new ActionCodeItem { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
-            try
-            {
-                using (var db = new NeutronDb())
-                {
-                    var exists = db.Database
-                                      .SqlQuery<int?>(@"
-                         SELECT 1 FROM sys.tables AS T
-                         INNER JOIN sys.schemas AS S ON T.schema_id = S.schema_id
-                         WHERE S.Name = 'dbo' AND T.Name = 'ActionCodeItems'")
-                                      .SingleOrDefault() != null;
+        //public void SaveActionCodesToDatabase()
+        //{
+        //    //Run this one time at startup
+        //    //break down the ActionCode Enum into a List and save to the database.
+        //    var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
+        //        .Select(r => new ActionCodeItem { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
+        //    try
+        //    {
+        //        using (var db = new NeutronDb())
+        //        {
+        //            var exists = db.Database
+        //                              .SqlQuery<int?>(@"
+        //                 SELECT 1 FROM sys.tables AS T
+        //                 INNER JOIN sys.schemas AS S ON T.schema_id = S.schema_id
+        //                 WHERE S.Name = 'dbo' AND T.Name = 'ActionCodeItems'")
+        //                              .SingleOrDefault() != null;
 
-                    db.Database.ExecuteSqlCommand(!exists
-                        ? "CREATE TABLE [dbo].[ActionCodeItems] ([Id] [int] NOT NULL, Name varchar(64) not null)"
-                        : "TRUNCATE TABLE ActionCodeItems");
+        //            db.Database.ExecuteSqlCommand(!exists
+        //                ? "CREATE TABLE [dbo].[ActionCodeItems] ([Id] [int] NOT NULL, Name varchar(64) not null)"
+        //                : "TRUNCATE TABLE ActionCodeItems");
 
-                    foreach (var actionCode in actionCodes)
-                    {
-                        db.ActionCodeItems.Add(actionCode);
-                    }
+        //            foreach (var actionCode in actionCodes)
+        //            {
+        //                db.ActionCodeItems.Add(actionCode);
+        //            }
 
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Save Action Codes to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
-                                $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
-            }
-            //set static variable to show the action codes have been created.
-            _actionCodesInited = true;
-        }
+        //            db.SaveChanges();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Save Action Codes to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
+        //                        $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
+        //    }
+        //    //set static variable to show the action codes have been created.
+        //    _actionCodesInited = true;
+        //}
     }
 }

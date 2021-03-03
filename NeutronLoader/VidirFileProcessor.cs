@@ -18,7 +18,7 @@ using System.Windows.Forms;
 
 namespace NeutronLoader
 {
-    internal class VidirFileProcessor : IFileProcessor
+    internal class VidirFileProcessor
     {
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());

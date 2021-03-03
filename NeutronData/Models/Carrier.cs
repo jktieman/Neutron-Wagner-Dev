@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NeutronData.Interfaces;
 
 namespace NeutronData.Models
 {

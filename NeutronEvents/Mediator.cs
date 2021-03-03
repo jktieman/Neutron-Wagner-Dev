@@ -87,6 +87,20 @@ namespace NeutronEvents
             StartStopLoader?.Invoke(this, new StartStopEventArgs {StartStop = startStop});
         }
 
+        public event EventHandler<EventArgs> RunLoaderOnce;
+
+        public void OnRunLoaderOnce(object sender)
+        {
+            RunLoaderOnce?.Invoke(sender, EventArgs.Empty);
+        }
+
+        public event EventHandler<EventArgs> RunUploadOnce;
+
+        public void OnRunUploadOnce(object sender)
+        {
+            RunUploadOnce?.Invoke(sender, EventArgs.Empty);
+        }
+
         public event EventHandler<EventArgs> InventoryFileCreated;
 
         public void OnInventoryFileCreated(object sender)

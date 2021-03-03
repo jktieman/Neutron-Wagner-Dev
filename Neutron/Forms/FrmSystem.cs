@@ -59,7 +59,7 @@ namespace Neutron.Forms
             }
             else
             {
-                MBStartLoader.Text = "Run Loader Continuously";
+                MBStartLoader.Text = "Start Loader";
             }
         }
 
@@ -71,7 +71,7 @@ namespace Neutron.Forms
             }
             else
             {
-                MBStartUpload.Text = "Run Upload Continuously";
+                MBStartUpload.Text = "Start Upload";
             }
         }
 
@@ -84,7 +84,7 @@ namespace Neutron.Forms
             }
             else
             {
-                MBStartLoader.Text = "Run Loader Continuously";
+                MBStartLoader.Text = "Start Loader";
                 GlobalVar.LoaderRunning = false;
             }
         }
@@ -98,7 +98,7 @@ namespace Neutron.Forms
             }
             else
             {
-                MBStartUpload.Text = "Run Upload Continuously";
+                MBStartUpload.Text = "Start Upload";
                 GlobalVar.LoaderRunning = false;
             }
         }
@@ -110,11 +110,14 @@ namespace Neutron.Forms
 
         private void MBRunLoaderOnce_Click(object sender, EventArgs e)
         {
+            MBRunLoaderOnce.Enabled = false;
             RunLoaderOnce();
+            MBRunLoaderOnce.Enabled = true;
         }
 
         private void RunLoaderOnce()
         {
+            Mediator.GetInstance().OnRunLoaderOnce(this);
             //var interfaceProcessor = new InterfaceProcessor(_neutronVariables, _neutronLicense, _jsonData);
             //interfaceProcessor.RunLoaderOnce();
         }
@@ -126,16 +129,16 @@ namespace Neutron.Forms
 
         private void MBRunUpload_Click(object sender, EventArgs e)
         {
-            RunUpload();
+            MBRunUpload.Enabled = false;
+            RunUploadOnce();
+            MBRunUpload.Enabled = true;
         }
 
-        private void RunUpload()
+        private void RunUploadOnce()
         {
-            var uploadProcessor = new UploadProcessorPr1(_neutronLicense, _neutronVariables, _logger);
+            var uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense,  _logger);
             uploadProcessor.CreateHostFile();
         }
-
-
 
         private void MBMainClose_Click(object sender, EventArgs e)
         {
@@ -471,7 +474,7 @@ namespace Neutron.Forms
 
         private void CheckBoxSqlServerAuthentication_CheckedChanged(object sender, EventArgs e)
         {
-            if (CheckBoxSqlServerAuthentication.Checked == true)
+            if (CheckBoxSqlServerAuthentication.Checked)
             {
                 groupBox1.Enabled = CheckBoxSqlServerAuthentication.Checked;
                 TextBoxUserId.Enabled = true;
@@ -545,11 +548,6 @@ namespace Neutron.Forms
                 string path = folderBrowserDialog1.SelectedPath;
                 RootDirectory.Text = string.Format("{0}", path);
             }
-        }
-
-        private void MBMainSpare2_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void ButtonMaintenanceFileDirectory_Click(object sender, EventArgs e)

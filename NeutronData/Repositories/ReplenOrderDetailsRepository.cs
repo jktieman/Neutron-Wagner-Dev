@@ -3,6 +3,8 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System.Collections.Generic;
 using System.Linq;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
 
 namespace NeutronData.Repositories
 {
@@ -28,7 +30,7 @@ namespace NeutronData.Repositories
                     Quantity = s.Quantity,
                     PickedQuantity = s.PickedQuantity,
                     LineStatusId = s.LineStatusId,
-                    LineStatusName = s.LineStatus.Name,
+                    LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
                     StationNumber = s.StationNumber
                 }).Where(s => statusToGet.Contains(s.LineStatusId))
             .OrderBy(o => o.Ord1);
@@ -81,7 +83,7 @@ namespace NeutronData.Repositories
                     Quantity = s.Quantity,
                     PickedQuantity = s.PickedQuantity,
                     LineStatusId = s.LineStatusId,
-                    LineStatusName = s.LineStatus.Name,
+                    LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
                     StationNumber = s.StationNumber
                 }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item);
 
@@ -91,6 +93,13 @@ namespace NeutronData.Repositories
         public List<ReplenOrderDetail> GetOrderDetailsByOrderAndStation(int orderId, int stationNumber)
         {
             var recs = repo.All().Where(r => r.ReplenOrderId == orderId && r.StationNumber == stationNumber).ToList();
+            return recs.ToList();
+        }
+
+        public List<ReplenOrderDetail> GetOrderDetailsByOrderAndStationNotCompleted(int orderId, int stationNumber)
+        {
+            var recs = repo.All().Where(r => r.ReplenOrderId == orderId && r.StationNumber == stationNumber
+                                                                        && r.LineStatusId != (int)LineStatus.Complete).ToList();
             return recs.ToList();
         }
     }

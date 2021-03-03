@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NeutronData.Models;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
 
 namespace NeutronData.ModelViews
 {
@@ -25,7 +27,13 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                return string.IsNullOrEmpty(_statusName) ? OrderDetails.FirstOrDefault()?.LineStatus.Name : _statusName;
+                if (!string.IsNullOrEmpty(_statusName)) return _statusName;
+                if (OrderDetails.FirstOrDefault() == null) return _statusName;
+                var id = OrderDetails.FirstOrDefault()?.LineStatusId;
+                if (id == null) return _statusName;
+                var lineStatus = (LineStatus)id;
+                _statusName = lineStatus.GetEnumDescription();
+                return _statusName;
             }
             set
             {
@@ -45,7 +53,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _lines = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).ToList().Count;
+               // _lines = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).ToList().Count;
                 return _lines;
             }
             set { _lines = value; }
@@ -55,7 +63,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _pieces = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).Sum(s => s.Quantity);
+               // _pieces = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).Sum(s => s.Quantity);
                 return _pieces;
             }
             set { _pieces = value; }

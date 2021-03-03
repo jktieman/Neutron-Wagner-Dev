@@ -9,9 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using AlliedLogger;
+using NeutronCore.Enums;
 using NeutronCore.Extensions;
 using NeutronData.Interfaces;
-using LineStatus = NeutronCore.Enums.LineStatus;
+
 
 namespace NeutronData.Repositories
 {
@@ -217,11 +218,11 @@ namespace NeutronData.Repositories
                             ,
                             Lines = r.OrderDetails.Count()
                             ,
-                            Available = r.OrderDetails.Count(c => c.LineStatusId == 1)
+                            Available = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Available)
                             ,
-                            Picked = r.OrderDetails.Count(c => c.LineStatusId == 6)
+                            Picked = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Complete)
                             ,
-                            Skipped = r.OrderDetails.Count(c => c.LineStatusId == 9)
+                            Skipped = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Skipped)
                             ,
                             Pieces = r.OrderDetails.Sum(d => d.Quantity)
                             ,
@@ -248,11 +249,11 @@ namespace NeutronData.Repositories
                                           ,
                                           Lines = r.OrderDetails.Count()
                                           ,
-                                          Available = r.OrderDetails.Count(c => c.LineStatusId == 1)
+                                          Available = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Available)
                                           ,
-                                          Picked = r.OrderDetails.Count(c => c.LineStatusId == 6)
+                                          Picked = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Complete)
                                           ,
-                                          Skipped = r.OrderDetails.Count(c => c.LineStatusId == 9)
+                                          Skipped = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Skipped)
                                           ,
                                           Pieces = r.OrderDetails.Where(c => availableSkip.Contains(c.LineStatusId)).Sum(d => d.Quantity)
                                           ,
@@ -571,10 +572,9 @@ namespace NeutronData.Repositories
         //    return recs;
         //}
 
-        public IEnumerable<OrderView> GetCompletedOrders(string search)
+        public IEnumerable<OrderView> GetCompletedOrders(string find = "")
         {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
-                .Where(r => r.OrderStatusId == (int)NeutronCore.Enums.OrderStatus.Complete).Select(s => new OrderView
+            IEnumerable<OrderView> recs = _repoOrders.All().Select(s => new OrderView
                 {
                     Id = s.Id,
                     Ord1 = s.Ord1,
@@ -592,9 +592,36 @@ namespace NeutronData.Repositories
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
-                }).OrderByDescending(o => o.Ord1).ToList();
-            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
+                }).Where(r => r.OrderStatusId == (int)OrderStatus.Complete)
+                .OrderByDescending(o => o.Priority).ToList();
+            var result = recs.Where(s => s.SearchField.Contains(find));
+            return result;
         }
+
+        //public IEnumerable<OrderView> GetCompletedOrders(string search)
+        //{
+        //    IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+        //        .Where(r => r.OrderStatusId == (int)NeutronCore.Enums.OrderStatus.Complete).Select(s => new OrderView
+        //        {
+        //            Id = s.Id,
+        //            Ord1 = s.Ord1,
+        //            Ord2 = s.Ord2,
+        //            OrderStatusName = s.OrderStatus.Name,
+        //            ShipMethodName = s.ShipMethod.Name,
+        //            Priority = s.Priority,
+        //            Order = s,
+        //            Station_1_HasPicks = HasPicks(_moveablePickStationIds, 1, s.OrderDetails),
+        //            Station_2_HasPicks = HasPicks(_moveablePickStationIds, 2, s.OrderDetails),
+        //            Station_3_HasPicks = HasPicks(_moveablePickStationIds, 3, s.OrderDetails),
+        //            Station_4_HasPicks = HasPicks(_moveablePickStationIds, 4, s.OrderDetails),
+        //            Station_5_HasPicks = HasPicks(_moveablePickStationIds, 5, s.OrderDetails),
+        //            Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
+        //            LoadDate = s.LoadDate,
+        //            OrderStatusId = s.OrderStatusId,
+        //            ShipMethodId = s.ShipMethodId
+        //        }).OrderByDescending(o => o.Ord1).ToList();
+        //    return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
+        //}
 
         public Order GetOrder()
         {
@@ -763,7 +790,7 @@ namespace NeutronData.Repositories
                     {
                         if (item.StationNumber == stationNumber)
                         {
-                            if (item.LineStatusId == 9)
+                            if (item.LineStatusId == (int)LineStatus.Skipped)
                             {
                                 result = @"S";
                                 return result;
@@ -1021,11 +1048,12 @@ namespace NeutronData.Repositories
                 skip.StationNumber = rec.StationNumber;
                 skip.Description = rec.PartDesc;
                 skip.Id = rec.Id;
+                skip.OrderDetailId = rec.Id;
                 skip.Ord1 = rec.Order.Ord1;
                 skip.Ord2 = rec.Order.Ord2;
                 skip.Item = rec.PartNum;
                 skip.Priority = rec.Order.Priority.ToString();
-                skip.OrderStatusName = $"{rec.LineStatus.Name}  {totalInventory}";
+                skip.OrderStatusName = $"{((LineStatus)rec.LineStatusId).GetEnumDescription()}  {totalInventory}";
                 skip.Picked = rec.PickedQuantity;
                 skip.Quantity = rec.Quantity;
                 skip.OrderId = rec.OrderId;
@@ -1080,7 +1108,7 @@ namespace NeutronData.Repositories
                     stationOrderDetail.OrderDetails = details;
                     stationOrderDetail.Lines = details.Count;
                     stationOrderDetail.Pieces = details.Sum(r => r.Quantity);
-                    stationOrderDetail.OrderStatus = details.First().LineStatus.Name;
+                    stationOrderDetail.OrderStatus = ((LineStatus)details.First().LineStatusId).GetEnumDescription();
                 }
                 stationOrderDetails.Add(stationOrderDetail);
             }

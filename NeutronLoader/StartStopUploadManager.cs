@@ -22,7 +22,46 @@ namespace NeutronLoader
             _logger = logger;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
+            InitInterfaceFile();
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopAction(e.StartStop);
+            Mediator.GetInstance().RunUploadOnce += (s, e) => RunUploadOnce();
+        }
+
+        private void InitInterfaceFile()
+        {
+            switch (_neutronLicense.CompanyCode)
+            {
+                case "SFH":
+                {
+                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger);
+                    break;
+                }
+                case "TOP":
+                    {
+                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+                        break;
+                    }
+                case "TMG":  // using Topura Upload Process
+                    {
+                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+                        break;
+                    }
+                case "PR1":
+                {
+                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger);
+                    break;
+                }
+                default:
+                {
+                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger);
+                    break;
+                }
+            }
+        }
+
+        private void RunUploadOnce()
+        {
+            _uploadProcessor.RunUploadOnce();
         }
 
         private void StartStopAction(string startStop)
@@ -41,47 +80,49 @@ namespace NeutronLoader
 
         private void StartProcessingUploadFiles()
         {
-            switch (_neutronLicense.CompanyCode)
-            {
-                case "SFH":
-                    {
-                        //_uploadProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData);
-                        //_uploadProcessor.StartProcessingInterfaceFiles();
+            _uploadProcessor.StartProcessingUploadFiles();
 
-                        //var startTimeSpan = TimeSpan.Zero;
-                        //var periodTimeSpan = TimeSpan.FromMinutes(5);
-                        //_upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
-                        break;
-                    }
-                case "TOP":
-                    {
-                        //_uploadProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
-                        //_uploadProcessor.StartProcessingInterfaceFiles();
-                        break;
-                    }
-                case "TMG":
-                    {
-                        //_uploadProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData);
-                        //_uploadProcessor.StartProcessingInterfaceFiles();
-                        break;
-                    }
-                case "PR1":
-                    {
-                        //var startTimeSpan = TimeSpan.Zero;
-                        //var periodTimeSpan = TimeSpan.FromMinutes(5);
-                        //_upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
-                        _uploadProcessor = new UploadProcessorPr1(_neutronLicense, _neutronVariables, _logger);
-                        _uploadProcessor.StartProcessingUploadFiles();
-                        //_uploadProcessor.CreateHostFile();
-                        break;
-                    }
-            }
+            //switch (_neutronLicense.CompanyCode)
+            //{
+            //    case "SFH":
+            //        {
+            //            //_uploadProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData);
+            //            //_uploadProcessor.StartProcessingInterfaceFiles();
+
+            //            //var startTimeSpan = TimeSpan.Zero;
+            //            //var periodTimeSpan = TimeSpan.FromMinutes(5);
+            //            //_upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
+            //            break;
+            //        }
+            //    case "TOP":
+            //        {
+            //            //_uploadProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
+            //            //_uploadProcessor.StartProcessingInterfaceFiles();
+            //            break;
+            //        }
+            //    case "TMG":
+            //        {
+            //            //_uploadProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData);
+            //            //_uploadProcessor.StartProcessingInterfaceFiles();
+            //            break;
+            //        }
+            //    case "PR1":
+            //        {
+            //            //var startTimeSpan = TimeSpan.Zero;
+            //            //var periodTimeSpan = TimeSpan.FromMinutes(5);
+            //            //_upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
+            //            _uploadProcessor = new UploadProcessorPr1(_neutronLicense, _neutronVariables, _logger);
+            //            _uploadProcessor.StartProcessingUploadFiles();
+            //            //_uploadProcessor.CreateHostFile();
+            //            break;
+            //        }
+            //}
 
         }
 
         private void StopProcessingUploadFiles()
         {
-            _uploadProcessor?.StopProcessingUploadFiles();
+            _uploadProcessor.StopProcessingUploadFiles();
         }
 
         //public void CreateHostUploadFile()

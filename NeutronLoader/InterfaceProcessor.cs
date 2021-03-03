@@ -129,7 +129,7 @@ namespace NeutronLoader
 
         private void StopBackgroundWorker()
         {
-            _backgroundWorker.CancelAsync();
+            _backgroundWorker?.CancelAsync();
         }
 
         private void InitBackgroundWorker()

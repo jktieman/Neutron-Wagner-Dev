@@ -207,7 +207,7 @@
             // MBRunUpload
             // 
             this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(396, 430);
+            this.MBRunUpload.Location = new System.Drawing.Point(396, 525);
             this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunUpload.Name = "MBRunUpload";
             this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
@@ -219,7 +219,7 @@
             // MBStartUpload
             // 
             this.MBStartUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartUpload.Location = new System.Drawing.Point(396, 525);
+            this.MBStartUpload.Location = new System.Drawing.Point(396, 430);
             this.MBStartUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartUpload.Name = "MBStartUpload";
             this.MBStartUpload.Size = new System.Drawing.Size(350, 70);
@@ -231,7 +231,7 @@
             // MBRunLoaderOnce
             // 
             this.MBRunLoaderOnce.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunLoaderOnce.Location = new System.Drawing.Point(396, 240);
+            this.MBRunLoaderOnce.Location = new System.Drawing.Point(396, 335);
             this.MBRunLoaderOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunLoaderOnce.Name = "MBRunLoaderOnce";
             this.MBRunLoaderOnce.Size = new System.Drawing.Size(350, 70);
@@ -255,7 +255,7 @@
             // MBStartLoader
             // 
             this.MBStartLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartLoader.Location = new System.Drawing.Point(396, 335);
+            this.MBStartLoader.Location = new System.Drawing.Point(396, 240);
             this.MBStartLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartLoader.Name = "MBStartLoader";
             this.MBStartLoader.Size = new System.Drawing.Size(350, 70);

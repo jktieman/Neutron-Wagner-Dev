@@ -6,27 +6,59 @@ using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Timer = System.Threading.Timer;
+using static System.Int32;
 using NeutronData.DataContexts;
 
 namespace NeutronLoader
 {
-    public class UploadProcessor
+    public class UploadProcessorTop : IUploadProcessor
     {
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly DynamicLogger _logger;
-        public UploadProcessor(NeutronLicense neutronLicense, NeutronVariables neutronVariables, DynamicLogger logger)
+        private Timer _timer;
+        private bool _uploadBusy;
+
+        public UploadProcessorTop(NeutronVariables neutronVariables, NeutronLicense neutronLicense,  DynamicLogger logger)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
-          //  Mediator.GetInstance().BatchComplete += (s, e) => CreateHostFile();
+        }
+
+
+        public void RunUploadOnce()
+        {
+            CreateHostFile();
+        }
+
+        public void StartProcessingUploadFiles()
+        {
+            var startTimeSpan = TimeSpan.Zero;
+            var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
+            _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
+        }
+
+        public void StopProcessingUploadFiles()
+        {
+            _timer.Dispose();
         }
 
         public void CreateHostFile()
         {
-            var actionCodes = new List<int>() { 1, 5, 46, 51 };
+            var counter = 0;
+            while (_uploadBusy)
+            {
+                Task.Delay(200);
+                ++counter;
+                if (counter >= 20) return;
+            }
+
+            _uploadBusy = true;
+            var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             try
             {
                 using (var db = new NeutronDb())
@@ -54,6 +86,8 @@ namespace NeutronLoader
                 MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
                 _logger.Log($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
+
+            _uploadBusy = false;
         }
 
         public void ReturnToStock(OrderDetail detail)
@@ -77,7 +111,7 @@ namespace NeutronLoader
 
         public void ReturnOrderToStock(Order order)
         {
-            foreach (OrderDetail detail in order.OrderDetails)
+            foreach (var detail in order.OrderDetails)
             {
                 var ord = new HostOrder()
                 {
@@ -99,7 +133,7 @@ namespace NeutronLoader
 
         public void ReturnOrderToStock(ReplenOrder order)
         {
-            foreach (ReplenOrderDetail detail in order.ReplenOrderDetails)
+            foreach (var detail in order.ReplenOrderDetails)
             {
                 var ord = new HostOrder()
                 {
@@ -123,14 +157,14 @@ namespace NeutronLoader
         {
             _logger.Log("CreateHostFile BindingSource bindingSourcePickStops");
 
-            DateTime date = DateTime.MinValue;
+            var date = DateTime.MinValue;
             var hostOrders = new List<HostOrder>();
             foreach (PickStop stop in bindingSourcePickStops)
             {
                 if (stop.Skipped) continue;
-                foreach (PickView pickView in stop.PickViews)
+                foreach (var pickView in stop.PickViews)
                 {
-                    PickLocation pickLocation = pickView.PickLocations.FirstOrDefault();
+                    var pickLocation = pickView.PickLocations.FirstOrDefault();
                     if (pickLocation != null)
                     {
                         date = pickLocation.PickDate;
@@ -164,11 +198,11 @@ namespace NeutronLoader
         {
             _logger.Log("CreateHostFile Rack orders");
 
-            DateTime date = DateTime.Now;
+            var date = DateTime.Now;
             var hostOrders = new List<HostOrder>();
-            foreach (Order order in orders)
+            foreach (var order in orders)
             {
-                foreach (OrderDetail orderDetail in order.OrderDetails)
+                foreach (var orderDetail in order.OrderDetails)
                 {
                     var ord = new HostOrder()
                     {
@@ -197,11 +231,11 @@ namespace NeutronLoader
 
         public void CreateHostFileRack(List<ReplenOrder> orders)
         {
-            DateTime date = DateTime.Now;
+            var date = DateTime.Now;
             var hostOrders = new List<ReplenHostOrder>();
-            foreach (ReplenOrder order in orders)
+            foreach (var order in orders)
             {
-                foreach (ReplenOrderDetail orderDetail in order.ReplenOrderDetails)
+                foreach (var orderDetail in order.ReplenOrderDetails)
                 {
                     var ord = new ReplenHostOrder()
                     {
@@ -293,13 +327,13 @@ namespace NeutronLoader
         {
 
 
-            DateTime date = DateTime.MinValue;
+            var date = DateTime.MinValue;
             var hostOrders = new List<ReplenHostOrder>();
             foreach (ReplenPickStop stop in bindingSourcePickStops)
             {
-                foreach (ReplenPickView pickView in stop.PickViews)
+                foreach (var pickView in stop.PickViews)
                 {
-                    foreach (PickLocation pickLocation in pickView.PickLocations)
+                    foreach (var pickLocation in pickView.PickLocations)
                     {
                         if (pickLocation != null)
                         {
@@ -331,5 +365,6 @@ namespace NeutronLoader
             var hostFile = new HostFile(_neutronLicense, _neutronVariables);
             hostFile.CreateHostFile(hostOrders);
         }
+
     }
 }

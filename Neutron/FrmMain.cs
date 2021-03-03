@@ -1,6 +1,8 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
 using System.Resources;
@@ -24,6 +26,12 @@ using NeutronEvents;
 using NeutronLoader;
 using SlotNameFactory;
 using System.Linq;
+using System.Text;
+using System.Timers;
+using Neutron.Models;
+using NeutronCore.Enums;
+using NeutronData.DataContexts;
+using Timer = System.Timers.Timer;
 
 #endregion
 
@@ -38,6 +46,7 @@ namespace Neutron
         private readonly IImageManager _imageManager;
         private readonly IOrdersRepository _ordersRepository;
         private readonly IReplenOrdersRepository _replenOrdersRepository;
+        private readonly IEnumManager _enumManager;
         private readonly IJsonData _jsonData;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
@@ -48,8 +57,11 @@ namespace Neutron
         private string _logFileDir = string.Empty;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
-        //private StartStopLoaderManager _startStopLoaderManager;
-        //private StartStopUploadManager _startStopUploadManager;
+        private readonly Timer _compressTimer;
+        private bool _compressRunning;
+
+        private StartStopLoaderManager _startStopLoaderManager;
+        private StartStopUploadManager _startStopUploadManager;
 
         /// <summary>
         /// Passed from NInject Kernel
@@ -62,10 +74,12 @@ namespace Neutron
         /// <param name="imageManager"></param>
         /// <param name="ordersRepository"></param>
         /// <param name="replenOrdersRepository"></param>
+        /// <param name="enumManager"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IStationRepository stationRepository
-            ,IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository)
+            , IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository
+            , IEnumManager enumManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -80,6 +94,7 @@ namespace Neutron
             _imageManager = imageManager;
             _ordersRepository = ordersRepository;
             _replenOrdersRepository = replenOrdersRepository;
+            _enumManager = enumManager;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
 
@@ -91,7 +106,6 @@ namespace Neutron
             Mediator.GetInstance().InventoryFileCreatedError += (s, e) => MessageBox.Show(e.Text, "Inventory File Error"
                 , MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-
             LogOnOff();
 
             if (!InitForm())
@@ -99,18 +113,137 @@ namespace Neutron
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
             }
+            if (_station.StationTypeId == (int)StationType.Supervisor)
+            {
+                if (_neutronVariables.UseAutoCompress)
+                {
+                    _compressTimer = new Timer();
+                    _compressTimer.Interval = 3600000; 
+                    _compressTimer.Elapsed += OnRunCompress;
+                    _compressTimer.AutoReset = true;
+                    _compressTimer.Enabled = true;
+                }
+            }
 
-            int id = Thread.CurrentThread.ManagedThreadId;
+            var id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
+        }
 
-            // LogOnOff();
+        private void OnRunCompress(object sender, ElapsedEventArgs e)
+        {
+            if (_compressRunning) return;
 
+            var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
+            int days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
+            //Run once each day
+            if (days > 0)
+            {
+                var daysToKeep = _neutronVariables.CompressDays * -1;
+                var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
+                CompressOrders(compressBefore);
+                CompressReplenOrders(compressBefore);
+
+                compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
+                _jsonData.SaveFile(compressLastRunDate);
+
+            }
+            _compressRunning = false;
+        }
+
+        private void CompressOrders(DateTime compressBefore)
+        {
+            _compressRunning = true;
+            // Compress Normal Orders
+
+            var completedOrders = _ordersRepository.GetCompletedOrders(string.Empty).ToList();
+            var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).ToList();
+
+            if (!ordersToCompress.Any()) return;
+            var orderType = "PICK";
+            var sb = new StringBuilder();
+            var firstTime = true;
+            foreach (var order in ordersToCompress)
+            {
+                if (firstTime)
+                {
+                    sb.Append(order.Id);
+                    firstTime = false;
+                }
+                else
+                {
+                    sb.Append(", " + order.Id);
+                }
+            }
+
+            var orderIds = sb.ToString();
+
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
+                    var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
+                    var parameters = new object[] { paramOrderIds, paramOrderType };
+                    context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
+                        paramOrderType);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Compressing Orders", "Compress Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private void CompressReplenOrders(DateTime compressBefore)
+        {
+            _compressRunning = true;
+            // Compress Replenishment Orders
+            var completedReplenOrders = _replenOrdersRepository.GetCompletedOrders(string.Empty).ToList();
+            var replenOrdersToCompress = completedReplenOrders.Where(r => r.LoadDate < compressBefore).ToList();
+
+            if (!replenOrdersToCompress.Any()) return;
+            var orderType = "REPLEN";
+            var sb = new StringBuilder();
+            var firstTime = true;
+            foreach (var order in replenOrdersToCompress)
+            {
+                if (firstTime)
+                {
+                    sb.Append(order.Id);
+                    firstTime = false;
+                }
+                else
+                {
+                    sb.Append(", " + order.Id);
+                }
+            }
+
+            var orderIds = sb.ToString();
+
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
+                    var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
+                    var parameters = new object[] { paramOrderIds, paramOrderType };
+                    context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
+                        paramOrderType);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error Compressing Replenishment Orders", "Compress Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         private bool InitForm()
         {
             var result = false;
-            LineStatusManager.SaveLineStatusToDatabase();
+            _enumManager.SaveActionCodesToDatabase();
+            _enumManager.SaveLineStatusToDatabase();
             try
             {
                 ButtonPark.Visible = _neutronLicense.CompanyCode == "TOP";
@@ -123,6 +256,8 @@ namespace Neutron
                         if (CreateLog("Main", _station.StationNumber))
                         {
                             _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
+                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
                             if (_station != null)
                             {
                                 if (SetupShuttle())
@@ -131,8 +266,6 @@ namespace Neutron
                                     {
                                         if (SetupSlotFactory())
                                         {
-                                            //_startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
-                                            //_startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
                                             if (StartLoader())
                                             {
                                                 if (StartUpload())
@@ -466,9 +599,9 @@ namespace Neutron
 
         private void LogOnOff()
         {
-            if (MtLogOff.Text == _resourceManager.GetString("LogOff")) 
+            if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
             {
-                MtLogOff.Text = _resourceManager.GetString("LogOn"); 
+                MtLogOff.Text = _resourceManager.GetString("LogOn");
                 GlobalVar.User = null;
                 _currentUser = null;
                 mlUserInfo.Text = "";
@@ -479,7 +612,7 @@ namespace Neutron
             {
                 try
                 {
-                    MtLogOff.Text = _resourceManager.GetString("LogOff"); 
+                    MtLogOff.Text = _resourceManager.GetString("LogOff");
                     if (_neutronVariables.PinLoginOnly)
                     {
                         using (var frm = new FrmPin())
@@ -597,7 +730,7 @@ namespace Neutron
 
         private void MtSystem_Click(object sender, EventArgs e)
         {
-            if (!_securityProcessor.SecurityProfile[(int) NeutronSecurity.ManageSystem]) return;
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
             Hide();
             using (MetroForm frm = new FrmSystem(_jsonData, _logger))
             {
@@ -737,6 +870,7 @@ namespace Neutron
 
         private void ButtonClose_Click(object sender, EventArgs e)
         {
+            _compressTimer?.Stop();
             Close();
         }
 
@@ -763,7 +897,7 @@ namespace Neutron
 
             if (e.KeyCode == Keys.F7 || e.KeyCode == Keys.F8)
             {
-                
+
                 using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables,
                     _securityProcessor, _lacProcessor, _imageManager, _stationRepository
                     , _ordersRepository, _neutronLicense))

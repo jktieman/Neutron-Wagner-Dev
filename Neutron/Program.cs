@@ -77,6 +77,7 @@ namespace Neutron
             var ordersRepository = kernel.Get<IOrdersRepository>();
             var stationRepository = kernel.Get<IStationRepository>();
             var replenOrdersRepository = kernel.Get<IReplenOrdersRepository>();
+            var enumManager = kernel.Get<IEnumManager>();
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
 

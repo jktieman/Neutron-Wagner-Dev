@@ -12,7 +12,7 @@ using NeutronCore.Global;
 
 namespace NeutronLoader
 {
-    public class TmgFileProcessor : IFileProcessor
+    public class TmgFileProcessor
     {
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
