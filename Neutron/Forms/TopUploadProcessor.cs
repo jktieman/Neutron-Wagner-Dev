@@ -10,13 +10,15 @@ namespace Neutron.Forms
 {
     public class TopUploadProcessor
     {
-        private readonly NeutronVariables neutronVariables;
-        private readonly NeutronLicense neutronLicense;
+        private readonly NeutronVariables _neutronVariables;
+        private readonly NeutronLicense _neutronLicense;
+        private readonly Station _rackStation;
 
-        public TopUploadProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense)
+        public TopUploadProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, Station rackStation)
         {
-            this.neutronVariables = neutronVariables;
-            this.neutronLicense = neutronLicense;
+            _neutronVariables = neutronVariables;
+            _neutronLicense = neutronLicense;
+            _rackStation = rackStation;
         }
 
         public void CreateHostFile(BindingSource bindingSourcePickStops)
@@ -67,7 +69,7 @@ namespace Neutron.Forms
                             DateTime = pickLocation.PickDate.ToString($"yyyyMMddHHmmss"),
                             EmpId = ($"EmpId:{empId} Note: Picked From Different Location")
                         };
-                        var hostFile = new HostFile(neutronLicense, neutronVariables);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                         hostFile.CreateHostFile(ord);
                     }
                 }
@@ -97,7 +99,7 @@ namespace Neutron.Forms
                         EmpId = ($"EmpId:{empId} Note: Picked Used")
                     };
 
-                    var hostFile = new HostFile(neutronLicense, neutronVariables);
+                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                     hostFile.CreateHostFile(ord);
                 }
             }
@@ -128,7 +130,7 @@ namespace Neutron.Forms
                             DateTime = pickLocation.PickDate.ToString($"yyyyMMddHHmmss"),
                             EmpId = ($"EmpId:{empId} Note: Stored in Different Location")
                         };
-                        var hostFile = new HostFile(neutronLicense, neutronVariables);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                         hostFile.CreateHostFile(ord);
                     }
                 }

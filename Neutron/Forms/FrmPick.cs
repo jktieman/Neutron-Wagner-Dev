@@ -380,7 +380,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Control not Found", "Control Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Control not Found {Environment.NewLine}{ex.Message}", "Control Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             bp.OrderComplete = true;
         }
@@ -3740,7 +3740,7 @@ namespace Neutron.Forms
             ClearAllShi();
             ClearAllBli();
             Console.WriteLine("Clear Active Device Indicator  PickBack");
-            ClearActiveDeviceIndicator();
+            ClearActiveDeviceIndicators();
 
         }
 
@@ -4243,18 +4243,19 @@ namespace Neutron.Forms
 
         private void UpdateCurrentDeviceIndicator()
         {
-            ClearActiveDeviceIndicator();
+            ClearActiveDeviceIndicators();
             var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
             _deviceIndicators[loc1].BlinkOn();
             _deviceIndicators[loc1].Active = true;
         }
 
-        private void ClearActiveDeviceIndicator()
+        private void ClearActiveDeviceIndicators()
         {
-            var device = _deviceIndicators.FirstOrDefault(x => x.Value.Active == true).Value;
-            if (device != null)
+            var devices = _deviceIndicators.Where(x => x.Value.Active == true).ToList();
+            foreach(KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
             {
-                device.BlinkOff();
+                deviceIndicator.Value.BlinkOff();
+                deviceIndicator.Value.Active = false;
             }
         }
 
@@ -5434,7 +5435,7 @@ namespace Neutron.Forms
 
         private void MBReturnToStock_Click(object sender, EventArgs e)
         {
-            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
             var orders = GetSelectedOrders(DataGridView1);
             if (orders.Any())
             {
@@ -5846,7 +5847,9 @@ namespace Neutron.Forms
         private void ButtonRemoveLine_Click(object sender, EventArgs e)
         {
             _bindingSourceNewItems.RemoveCurrent();
-            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0 
+                                       && ((NewItemView)_bindingSourceNewItems.Current).Item != null;
+            CreateJobButtonEnable();
         }
         //Ready
         private void TextBoxNewOrderFind_KeyDown(object sender, KeyEventArgs e)
@@ -5917,7 +5920,7 @@ namespace Neutron.Forms
             ClearNewOrderDetail();
             ButtonAddDetail.Enabled = false;
             TextBoxNewOrderFind.Focus();
-            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0 && ((NewItemView)_bindingSourceNewItems.Current).Item != null;
         }
         //Ready
         private void ClearNewOrderDetail()
@@ -6033,6 +6036,23 @@ namespace Neutron.Forms
                     .ToList();
             }
             return recs;
+        }
+
+        private void CreateJobButtonEnable()
+        {
+            if (
+                TextBoxNewOrderOrd1.Text.Length > 0
+                && TextBoxNewOrderOrd2.Text.Length > 0
+                && TextBoxNewOrderPriority.Text.Length > 0
+                && _bindingSourceNewItems.Count > 0 && ((NewItemView)_bindingSourceNewItems.Current).Item != null
+            )
+            {
+                MBNewOrderSave.Enabled = true;
+            }
+            else
+            {
+                MBNewOrderSave.Enabled = false;
+            }
         }
 
         private void MBPickNewItem_Click(object sender, EventArgs e)
@@ -6547,7 +6567,7 @@ namespace Neutron.Forms
         private void MBReturnToStockOrderDetail_Click(object sender, EventArgs e)
         {
             var orderId = 0;
-            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
             var orderDetails = GetSelectedOrderDetails(DataGridViewOrderDetails);
             if (orderDetails.Any())
             {
@@ -8156,6 +8176,26 @@ namespace Neutron.Forms
             GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _station.StationId);
             _repoOrders.Update(order);
             return true;
+        }
+
+        private void TextBoxNewOrderOrd1_TextChanged(object sender, EventArgs e)
+        {
+            CreateJobButtonEnable();
+        }
+
+        private void TextBoxNewOrderOrd2_TextChanged(object sender, EventArgs e)
+        {
+            CreateJobButtonEnable();
+        }
+
+        private void TextBoxNewOrderPriority_TextChanged(object sender, EventArgs e)
+        {
+            CreateJobButtonEnable();
+        }
+
+        private void DataGridViewNewItems_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            CreateJobButtonEnable();
         }
     }
 }

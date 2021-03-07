@@ -91,7 +91,7 @@ namespace Neutron.Forms
             User[] users = _context.Users.ToArray();
             //Station[] stations = _context.Stations.ToArray();
             _currentStationNumber = carriers.Min(c => c.StationNumber);
-            if (_currentStationNumber == null) return;
+
             ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
             ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
             ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());

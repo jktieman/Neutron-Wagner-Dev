@@ -59,7 +59,7 @@ namespace Neutron
         private readonly ILacProcessor _lacProcessor;
         private readonly Timer _compressTimer;
         private bool _compressRunning;
-
+        private Station _rackStation;
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
 
@@ -97,8 +97,10 @@ namespace Neutron
             _enumManager = enumManager;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
+            _rackStation = _stationRepository.GetRackStation();
 
             GlobalVar.HistoryManager = new HistoryManager();
+
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
                 , "Inventory File", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -118,7 +120,7 @@ namespace Neutron
                 if (_neutronVariables.UseAutoCompress)
                 {
                     _compressTimer = new Timer();
-                    _compressTimer.Interval = 3600000; 
+                    _compressTimer.Interval = _neutronVariables.RunCompressInterval * 60 * 60; 
                     _compressTimer.Elapsed += OnRunCompress;
                     _compressTimer.AutoReset = true;
                     _compressTimer.Enabled = true;
@@ -190,7 +192,7 @@ namespace Neutron
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Compressing Orders", "Compress Error", MessageBoxButtons.OK,
+                MessageBox.Show($"Error Compressing Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
@@ -234,7 +236,7 @@ namespace Neutron
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Compressing Replenishment Orders", "Compress Error", MessageBoxButtons.OK,
+                MessageBox.Show($"Error Compressing Replenishment Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
@@ -256,8 +258,9 @@ namespace Neutron
                         if (CreateLog("Main", _station.StationNumber))
                         {
                             _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
-                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
-                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense);
+                            var rackStation = _stationRepository.GetRackStation();
+                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
+                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
                             if (_station != null)
                             {
                                 if (SetupShuttle())
@@ -732,7 +735,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
             Hide();
-            using (MetroForm frm = new FrmSystem(_jsonData, _logger))
+            using (MetroForm frm = new FrmSystem(_jsonData, _logger, _rackStation))
             {
                 frm.ShowDialog();
                 Show();

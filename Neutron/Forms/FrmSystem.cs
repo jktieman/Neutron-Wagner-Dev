@@ -17,6 +17,7 @@ using System.Threading;
 using System.Windows.Forms;
 using AlliedLogger;
 using Neutron.Models;
+using NeutronData.Models;
 using NeutronEvents;
 
 namespace Neutron.Forms
@@ -31,8 +32,9 @@ namespace Neutron.Forms
         private readonly NeutronLicense _neutronLicense;
         private string _rootDirectory;
         private readonly DynamicLogger _logger;
+        private readonly Station _rackStation;
 
-        public FrmSystem(IJsonData jsonData, DynamicLogger logger)
+        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -41,6 +43,7 @@ namespace Neutron.Forms
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();
             _logger = logger;
+            _rackStation = rackStation;
             KeyPreview = true;
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
@@ -136,7 +139,7 @@ namespace Neutron.Forms
 
         private void RunUploadOnce()
         {
-            var uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense,  _logger);
+            var uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense,  _logger, _rackStation);
             uploadProcessor.CreateHostFile();
         }
 

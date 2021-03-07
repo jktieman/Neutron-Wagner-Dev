@@ -100,6 +100,8 @@
             this.CheckBoxShiEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxBliEnabled = new System.Windows.Forms.CheckBox();
             this.LabelUploadDelay = new System.Windows.Forms.Label();
+            this.LabelCompress2 = new System.Windows.Forms.Label();
+            this.LabelCompress1 = new System.Windows.Forms.Label();
             this.LabelFlashRate = new System.Windows.Forms.Label();
             this.LabelLoaderDelay = new System.Windows.Forms.Label();
             this.LabelActionCodes = new System.Windows.Forms.Label();
@@ -126,6 +128,7 @@
             this.ComboBoxDefaultStorageType = new System.Windows.Forms.ComboBox();
             this.ComboBoxDefaultLanguage = new System.Windows.Forms.ComboBox();
             this.ComboBoxDeviceDriver = new System.Windows.Forms.ComboBox();
+            this.TextBoxCompressDays = new System.Windows.Forms.TextBox();
             this.TextBoxUploadDelay = new System.Windows.Forms.TextBox();
             this.TextBoxDeviceFlashRate = new System.Windows.Forms.TextBox();
             this.LabelSettingsSlotFormat = new System.Windows.Forms.Label();
@@ -146,6 +149,7 @@
             this.CheckBoxCreateStoreOrderWithRts = new System.Windows.Forms.CheckBox();
             this.LabelLicenseCode = new System.Windows.Forms.Label();
             this.LabelSettingsStationNumber = new System.Windows.Forms.Label();
+            this.CheckBoxUseAutoCompress = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseImages = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseCostCenter = new System.Windows.Forms.CheckBox();
             this.CheckBoxPrintPackingListManual = new System.Windows.Forms.CheckBox();
@@ -388,10 +392,9 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxUseAutoCompress = new System.Windows.Forms.CheckBox();
-            this.TextBoxCompressDays = new System.Windows.Forms.TextBox();
-            this.LabelCompress1 = new System.Windows.Forms.Label();
-            this.LabelCompress2 = new System.Windows.Forms.Label();
+            this.TextBoxRunCompressInterval = new System.Windows.Forms.TextBox();
+            this.LabelCompressInterval = new System.Windows.Forms.Label();
+            this.LabelCompressHours = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -914,7 +917,9 @@
             this.Settings.Controls.Add(this.CheckBoxShiEnabled);
             this.Settings.Controls.Add(this.CheckBoxBliEnabled);
             this.Settings.Controls.Add(this.LabelUploadDelay);
+            this.Settings.Controls.Add(this.LabelCompressHours);
             this.Settings.Controls.Add(this.LabelCompress2);
+            this.Settings.Controls.Add(this.LabelCompressInterval);
             this.Settings.Controls.Add(this.LabelCompress1);
             this.Settings.Controls.Add(this.LabelFlashRate);
             this.Settings.Controls.Add(this.LabelLoaderDelay);
@@ -941,6 +946,7 @@
             this.Settings.Controls.Add(this.CheckBoxUseMenuSecurity);
             this.Settings.Controls.Add(this.ComboBoxDefaultStorageType);
             this.Settings.Controls.Add(this.ComboBoxDefaultLanguage);
+            this.Settings.Controls.Add(this.TextBoxRunCompressInterval);
             this.Settings.Controls.Add(this.ComboBoxDeviceDriver);
             this.Settings.Controls.Add(this.TextBoxCompressDays);
             this.Settings.Controls.Add(this.TextBoxUploadDelay);
@@ -1100,6 +1106,26 @@
             this.LabelUploadDelay.TabIndex = 19;
             this.LabelUploadDelay.Text = "Upload Delay (Seconds)";
             this.LabelUploadDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelCompress2
+            // 
+            this.LabelCompress2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompress2.Location = new System.Drawing.Point(1040, 482);
+            this.LabelCompress2.Name = "LabelCompress2";
+            this.LabelCompress2.Size = new System.Drawing.Size(49, 16);
+            this.LabelCompress2.TabIndex = 19;
+            this.LabelCompress2.Text = "Days";
+            this.LabelCompress2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelCompress1
+            // 
+            this.LabelCompress1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompress1.Location = new System.Drawing.Point(838, 482);
+            this.LabelCompress1.Name = "LabelCompress1";
+            this.LabelCompress1.Size = new System.Drawing.Size(150, 16);
+            this.LabelCompress1.TabIndex = 19;
+            this.LabelCompress1.Text = "Compress Older Than";
+            this.LabelCompress1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelFlashRate
             // 
@@ -1406,6 +1432,16 @@
             this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDeviceDriver.TabIndex = 3;
             // 
+            // TextBoxCompressDays
+            // 
+            this.TextBoxCompressDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxCompressDays.Location = new System.Drawing.Point(994, 479);
+            this.TextBoxCompressDays.Name = "TextBoxCompressDays";
+            this.TextBoxCompressDays.Size = new System.Drawing.Size(40, 22);
+            this.TextBoxCompressDays.TabIndex = 46;
+            this.TextBoxCompressDays.Text = "30";
+            this.TextBoxCompressDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // TextBoxUploadDelay
             // 
             this.TextBoxUploadDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1616,6 +1652,18 @@
             this.LabelSettingsStationNumber.TabIndex = 7;
             this.LabelSettingsStationNumber.Text = "This Station";
             this.LabelSettingsStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CheckBoxUseAutoCompress
+            // 
+            this.CheckBoxUseAutoCompress.AutoSize = true;
+            this.CheckBoxUseAutoCompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseAutoCompress.Location = new System.Drawing.Point(841, 448);
+            this.CheckBoxUseAutoCompress.Name = "CheckBoxUseAutoCompress";
+            this.CheckBoxUseAutoCompress.Size = new System.Drawing.Size(147, 20);
+            this.CheckBoxUseAutoCompress.TabIndex = 45;
+            this.CheckBoxUseAutoCompress.Text = "Use Auto Compress";
+            this.CheckBoxUseAutoCompress.UseVisualStyleBackColor = true;
+            this.CheckBoxUseAutoCompress.CheckedChanged += new System.EventHandler(this.CheckBoxUseAutoCompress_CheckedChanged);
             // 
             // CheckBoxUseImages
             // 
@@ -4578,47 +4626,35 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxUseAutoCompress
+            // TextBoxRunCompressInterval
             // 
-            this.CheckBoxUseAutoCompress.AutoSize = true;
-            this.CheckBoxUseAutoCompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseAutoCompress.Location = new System.Drawing.Point(841, 448);
-            this.CheckBoxUseAutoCompress.Name = "CheckBoxUseAutoCompress";
-            this.CheckBoxUseAutoCompress.Size = new System.Drawing.Size(147, 20);
-            this.CheckBoxUseAutoCompress.TabIndex = 45;
-            this.CheckBoxUseAutoCompress.Text = "Use Auto Compress";
-            this.CheckBoxUseAutoCompress.UseVisualStyleBackColor = true;
-            this.CheckBoxUseAutoCompress.CheckedChanged += new System.EventHandler(this.CheckBoxUseAutoCompress_CheckedChanged);
+            this.TextBoxRunCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxRunCompressInterval.Location = new System.Drawing.Point(994, 513);
+            this.TextBoxRunCompressInterval.Name = "TextBoxRunCompressInterval";
+            this.TextBoxRunCompressInterval.Size = new System.Drawing.Size(40, 22);
+            this.TextBoxRunCompressInterval.TabIndex = 46;
+            this.TextBoxRunCompressInterval.Text = "8";
+            this.TextBoxRunCompressInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxCompressDays
+            // LabelCompressInterval
             // 
-            this.TextBoxCompressDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxCompressDays.Location = new System.Drawing.Point(994, 479);
-            this.TextBoxCompressDays.Name = "TextBoxCompressDays";
-            this.TextBoxCompressDays.Size = new System.Drawing.Size(40, 22);
-            this.TextBoxCompressDays.TabIndex = 46;
-            this.TextBoxCompressDays.Text = "30";
-            this.TextBoxCompressDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompressInterval.Location = new System.Drawing.Point(838, 516);
+            this.LabelCompressInterval.Name = "LabelCompressInterval";
+            this.LabelCompressInterval.Size = new System.Drawing.Size(150, 16);
+            this.LabelCompressInterval.TabIndex = 19;
+            this.LabelCompressInterval.Text = "Run Compress Every";
+            this.LabelCompressInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelCompress1
+            // LabelCompressHours
             // 
-            this.LabelCompress1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCompress1.Location = new System.Drawing.Point(838, 482);
-            this.LabelCompress1.Name = "LabelCompress1";
-            this.LabelCompress1.Size = new System.Drawing.Size(150, 16);
-            this.LabelCompress1.TabIndex = 19;
-            this.LabelCompress1.Text = "Compress Older Than";
-            this.LabelCompress1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelCompress2
-            // 
-            this.LabelCompress2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCompress2.Location = new System.Drawing.Point(1040, 482);
-            this.LabelCompress2.Name = "LabelCompress2";
-            this.LabelCompress2.Size = new System.Drawing.Size(49, 16);
-            this.LabelCompress2.TabIndex = 19;
-            this.LabelCompress2.Text = "Days";
-            this.LabelCompress2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LabelCompressHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompressHours.Location = new System.Drawing.Point(1040, 516);
+            this.LabelCompressHours.Name = "LabelCompressHours";
+            this.LabelCompressHours.Size = new System.Drawing.Size(49, 16);
+            this.LabelCompressHours.TabIndex = 19;
+            this.LabelCompressHours.Text = "Hours";
+            this.LabelCompressHours.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmUtilities
             // 
@@ -5048,5 +5084,8 @@
         private System.Windows.Forms.Label LabelCompress1;
         private System.Windows.Forms.TextBox TextBoxCompressDays;
         private System.Windows.Forms.CheckBox CheckBoxUseAutoCompress;
+        private System.Windows.Forms.Label LabelCompressHours;
+        private System.Windows.Forms.Label LabelCompressInterval;
+        private System.Windows.Forms.TextBox TextBoxRunCompressInterval;
     }
 }

@@ -79,7 +79,7 @@ namespace Neutron.Forms
         private bool _formOpening = true;
         //public bool CloseForm = false;
         private readonly IJsonData _jsonData;
-        public HardwareDeviceView CurrentItem;
+        private HardwareDeviceView _currentHardwareDeviceView;
         public StationViewModel CurrentStation;
         public TcpConfiguration CurrentTcpConfiguration;
         public SerialConfiguration CurrentSerialConfiguration;
@@ -749,7 +749,7 @@ namespace Neutron.Forms
             _neutronVariables.DefaultStorageTypeId = ((StorageType)ComboBoxDefaultStorageType.SelectedItem).Id;
             _neutronVariables.UseAutoCompress = CheckBoxUseAutoCompress.Checked;
             _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
-
+            _neutronVariables.RunCompressInterval = TextBoxRunCompressInterval.Text.ParseInt();
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
@@ -815,6 +815,7 @@ namespace Neutron.Forms
             ComboBoxDefaultStorageType.SelectedValue = _neutronVariables.DefaultStorageTypeId;
             CheckBoxUseAutoCompress.Checked = _neutronVariables.UseAutoCompress;
             TextBoxCompressDays.Text = _neutronVariables.CompressDays.ToString();
+            TextBoxRunCompressInterval.Text = _neutronVariables.RunCompressInterval.ToString();
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -1252,7 +1253,9 @@ namespace Neutron.Forms
 
         private void LoadViewEditDeviceData()
         {
-            var id = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object.Id;
+            _currentHardwareDeviceView =
+                ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object;
+            var id = _currentHardwareDeviceView.Id;
             var hardwareDevice = _repoHardwareDevices.FindByKey(id);
 
             TextBoxViewEditDeviceName.Text = hardwareDevice.Name;
@@ -1643,8 +1646,6 @@ namespace Neutron.Forms
             var hardwareDevice = _repoHardwareDevices.FindByKey(hardwareDeviceView.Id);
             if (hardwareDevice != null)
             {
-
-
                 hardwareDevice.DeviceNumber = TextBoxViewEditDeviceNumber.Text.ParseInt();
                 hardwareDevice.DeviceTypeId = ((DeviceType)ComboBoxViewEditDeviceType.SelectedItem).Id;
                 hardwareDevice.Name = TextBoxViewEditDeviceName.Text;
@@ -1682,16 +1683,29 @@ namespace Neutron.Forms
             _repoHardwareDevices.Update(hardwareDevice);
             if (hardwareDevice != null) LoadHardwareDevices(hardwareDevice.Id);
 
-            if (hardwareDevice != null)
-                AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber,
-                    hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
-                    , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+            if (!TextBoxViewEditNumberOfCarriers.Modified  &&
+                !TextBoxViewEditCarrierLevel.Modified &&
+                !TextBoxViewEditCarrierWidth.Modified &&
+                !TextBoxViewEditCarrierDepth.Modified)
+                return;
+
+            if (hardwareDevice == null)
+                return;
+            Cursor.Current = Cursors.WaitCursor;
+
+            MessageBox.Show("Preparing to update Locations and Location Access Control Carriers", "Location Update",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber,
+                hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
+                , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
 
             if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
                 hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
             {
                 AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void MBViewEditDeviceDelete_Click(object sender, EventArgs e)
@@ -1759,7 +1773,7 @@ namespace Neutron.Forms
                     }
 
                     DataGridView1.Refresh();
-                    CurrentItem = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object;
+                    _currentHardwareDeviceView = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object;
                 }
             }
 

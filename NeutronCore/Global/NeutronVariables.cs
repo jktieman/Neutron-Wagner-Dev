@@ -52,5 +52,6 @@
         public int DefaultStorageTypeId { get; set; }
         public bool UseAutoCompress { get; set; }
         public int CompressDays { get; set; }
+        public int RunCompressInterval { get; set; }
     }
 }

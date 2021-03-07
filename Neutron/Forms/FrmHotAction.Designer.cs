@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.HotPick = new System.Windows.Forms.TabPage();
+            this.LabelStationName2 = new System.Windows.Forms.Label();
+            this.LabelStationName = new System.Windows.Forms.Label();
             this.CheckBoxAll = new System.Windows.Forms.CheckBox();
             this.MBHotStore = new MetroFramework.Controls.MetroButton();
             this.MBHotPick = new MetroFramework.Controls.MetroButton();
             this.LabelSearch = new System.Windows.Forms.Label();
+            this.TextBoxScanLocation = new System.Windows.Forms.TextBox();
             this.TextBoxFindItem = new System.Windows.Forms.TextBox();
             this.ButtonClearFindItem = new System.Windows.Forms.Button();
             this.MBHotActionClose = new MetroFramework.Controls.MetroButton();
@@ -48,7 +51,6 @@
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.HotAction = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.ComboBoxLocationCodeLocation = new System.Windows.Forms.ComboBox();
             this.LabelLocation = new System.Windows.Forms.Label();
@@ -190,9 +192,6 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.TextBoxScanLocation = new System.Windows.Forms.TextBox();
-            this.LabelStationName = new System.Windows.Forms.Label();
-            this.LabelStationName2 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
@@ -257,6 +256,26 @@
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
             // 
+            // LabelStationName2
+            // 
+            this.LabelStationName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStationName2.Location = new System.Drawing.Point(814, 113);
+            this.LabelStationName2.Name = "LabelStationName2";
+            this.LabelStationName2.Size = new System.Drawing.Size(315, 40);
+            this.LabelStationName2.TabIndex = 32;
+            this.LabelStationName2.Text = "Floor Supervisor";
+            this.LabelStationName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelStationName
+            // 
+            this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStationName.Location = new System.Drawing.Point(12, 113);
+            this.LabelStationName.Name = "LabelStationName";
+            this.LabelStationName.Size = new System.Drawing.Size(315, 40);
+            this.LabelStationName.TabIndex = 32;
+            this.LabelStationName.Text = "Floor Supervisor";
+            this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // CheckBoxAll
             // 
             this.CheckBoxAll.AutoSize = true;
@@ -308,6 +327,19 @@
             this.LabelSearch.TabIndex = 31;
             this.LabelSearch.Text = "Search for any part of Item or Description and hit Enter";
             this.LabelSearch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextBoxScanLocation
+            // 
+            this.TextBoxScanLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxScanLocation.Location = new System.Drawing.Point(405, 117);
+            this.TextBoxScanLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxScanLocation.Name = "TextBoxScanLocation";
+            this.TextBoxScanLocation.Size = new System.Drawing.Size(336, 29);
+            this.TextBoxScanLocation.TabIndex = 2;
+            this.TextBoxScanLocation.Text = "Scan Location";
+            this.TextBoxScanLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxScanLocation.Click += new System.EventHandler(this.TextBoxScanLocation_Click);
+            this.TextBoxScanLocation.Enter += new System.EventHandler(this.TextBoxScanLocation_Enter);
             // 
             // TextBoxFindItem
             // 
@@ -391,38 +423,38 @@
             this.DataGridViewHot.AllowUserToAddRows = false;
             this.DataGridViewHot.AllowUserToDeleteRows = false;
             this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle6;
             this.DataGridViewHot.Location = new System.Drawing.Point(12, 161);
             this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewHot.MultiSelect = false;
             this.DataGridViewHot.Name = "DataGridViewHot";
             this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewHot.RowTemplate.Height = 28;
             this.DataGridViewHot.RowTemplate.ReadOnly = true;
@@ -434,7 +466,6 @@
             // HotAction
             // 
             this.HotAction.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.HotAction.Controls.Add(this.panel6);
             this.HotAction.Controls.Add(this.GroupBoxHotPickLocation);
             this.HotAction.Controls.Add(this.ComboBoxLocationCodeItem);
             this.HotAction.Controls.Add(this.LabelMainLocation);
@@ -464,13 +495,6 @@
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
             this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
-            // 
-            // panel6
-            // 
-            this.panel6.Location = new System.Drawing.Point(140, 0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(860, 150);
-            this.panel6.TabIndex = 167;
             // 
             // GroupBoxHotPickLocation
             // 
@@ -2123,38 +2147,6 @@
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // TextBoxScanLocation
-            // 
-            this.TextBoxScanLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxScanLocation.Location = new System.Drawing.Point(405, 117);
-            this.TextBoxScanLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxScanLocation.Name = "TextBoxScanLocation";
-            this.TextBoxScanLocation.Size = new System.Drawing.Size(336, 29);
-            this.TextBoxScanLocation.TabIndex = 2;
-            this.TextBoxScanLocation.Text = "Scan Location";
-            this.TextBoxScanLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxScanLocation.Enter += new System.EventHandler(this.TextBoxScanLocation_Enter);
-            // 
-            // LabelStationName
-            // 
-            this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName.Location = new System.Drawing.Point(12, 113);
-            this.LabelStationName.Name = "LabelStationName";
-            this.LabelStationName.Size = new System.Drawing.Size(315, 40);
-            this.LabelStationName.TabIndex = 32;
-            this.LabelStationName.Text = "Floor Supervisor";
-            this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelStationName2
-            // 
-            this.LabelStationName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName2.Location = new System.Drawing.Point(814, 113);
-            this.LabelStationName2.Name = "LabelStationName2";
-            this.LabelStationName2.Size = new System.Drawing.Size(315, 40);
-            this.LabelStationName2.TabIndex = 32;
-            this.LabelStationName2.Text = "Floor Supervisor";
-            this.LabelStationName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // FrmHotAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2355,7 +2347,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label LabelItemNumber;
-        private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.TextBox TextBoxScanLocation;
         private System.Windows.Forms.Label LabelStationName;
         private System.Windows.Forms.Label LabelStationName2;

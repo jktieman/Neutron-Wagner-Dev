@@ -16,8 +16,6 @@ namespace NeutronData.Models
         public string Name { get; set; }
         [Required]
         public int StationTypeId { get; set; }
-        public int? TcpConfigurationId { get; set; }
-        public int? SerialConfigurationId { get; set; }
         public int Sequence { get; set; }
         [ForeignKey("StationTypeId")]
         public virtual StationType StationType { get; set; }

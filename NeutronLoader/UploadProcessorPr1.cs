@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronData.DataContexts;
+using NeutronData.Models;
 using static System.Int32;
 using Timer = System.Threading.Timer;
 
@@ -16,19 +17,22 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly DynamicLogger _logger;
+        private readonly Station _rackStation;
         private Timer _timer;
         private bool _uploadBusy;
 
-        public UploadProcessorPr1(NeutronVariables neutronVariables,NeutronLicense neutronLicense,  DynamicLogger logger)
+        public UploadProcessorPr1(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
+            DynamicLogger logger, Station rackStation)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
+            _rackStation = rackStation;
         }
 
         public void RunUploadOnce()
         {
-
+            CreateHostFile();
         }
 
         public void StartProcessingUploadFiles()

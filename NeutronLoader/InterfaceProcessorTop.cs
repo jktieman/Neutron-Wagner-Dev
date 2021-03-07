@@ -12,6 +12,7 @@ using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.Models;
 
 #endregion
 
@@ -29,14 +30,17 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
+        private readonly Station _rackStation;
         private TopFileProcessor _fileProcessor;
         private const string FolderName = "Neutron Loader";
 
-        public InterfaceProcessorTop(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData)
+        public InterfaceProcessorTop(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
+            IJsonData jsonData, Station rackStation)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
+            _rackStation = rackStation;
             Initialize();
         }
 
@@ -49,7 +53,7 @@ namespace NeutronLoader
             var logFileDir = LoaderSettings.GetLogFileDirectory();
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
-            _fileProcessor = new TopFileProcessor(_neutronVariables, _neutronLicense,_logger,_jsonData);
+            _fileProcessor = new TopFileProcessor(_neutronVariables, _neutronLicense,_logger,_jsonData, _rackStation);
         }
 
         public void StartProcessingInterfaceFiles()

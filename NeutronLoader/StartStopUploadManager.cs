@@ -2,6 +2,7 @@
 using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.Models;
 using NeutronEvents;
 
 namespace NeutronLoader
@@ -13,15 +14,19 @@ namespace NeutronLoader
         private IUploadProcessor _uploadProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-       // private static Timer _upTimer;
+
+        private readonly Station _rackStation;
+        // private static Timer _upTimer;
        // private static bool _processingUpload;
 
-        public StartStopUploadManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
+        public StartStopUploadManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables,
+            NeutronLicense neutronLicense, Station rackStation)
         {
             _jsonData = jsonData;
             _logger = logger;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
+            _rackStation = rackStation;
             InitInterfaceFile();
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopAction(e.StartStop);
             Mediator.GetInstance().RunUploadOnce += (s, e) => RunUploadOnce();
@@ -33,27 +38,27 @@ namespace NeutronLoader
             {
                 case "SFH":
                 {
-                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger);
+                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger, _rackStation);
                     break;
                 }
                 case "TOP":
                     {
-                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
                         break;
                     }
                 case "TMG":  // using Topura Upload Process
                     {
-                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
                         break;
                     }
                 case "PR1":
                 {
-                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger);
+                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger, _rackStation);
                     break;
                 }
                 default:
                 {
-                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger);
+                    _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger, _rackStation);
                     break;
                 }
             }

@@ -26,13 +26,15 @@ namespace NeutronLoader
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
+        private readonly Station _rackStation;
         private readonly DynamicLogger _logger;
         private string _neutronUpFileName;
 
-        public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables)
+        public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
+            _rackStation = rackStation;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
 
@@ -317,7 +319,7 @@ namespace NeutronLoader
         // Saint Francis Upload Format
         private string GetUploadDatRecord(History history)
         {
-            var station = history.StationId == 8 ? "9" : history.StationId.ToString();
+            var station = history.StationId == _rackStation.Id ? "9" : history.StationId.ToString();
             var order = history.Ord1.PadRight(10);
             var costCenter = history.CostCenter;
             var orderDetailInfo = string.Empty;

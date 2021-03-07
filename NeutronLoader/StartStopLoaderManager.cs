@@ -5,6 +5,7 @@ using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.DataContexts;
+using NeutronData.Models;
 using NeutronEvents;
 
 namespace NeutronLoader
@@ -16,15 +17,18 @@ namespace NeutronLoader
         private IInterfaceProcessor _interfaceProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
+        private readonly Station _rackStation;
         private static Timer _upTimer;
         private static bool _processingUpload;
 
-        public StartStopLoaderManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
+        public StartStopLoaderManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables,
+            NeutronLicense neutronLicense, Station rackStation)
         {
             _jsonData = jsonData;
             _logger = logger;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
+            _rackStation = rackStation;
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().RunLoaderOnce += (s, e) => RunLoaderOnce();
@@ -37,27 +41,27 @@ namespace NeutronLoader
             {
                 case "SFH":
                     {
-                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
                         break;
                     }
                 case "TOP":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
                         break;
                     }
                 case "TMG":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
                         break;
                     }
                 case "PR1":
                     {
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
                         break;
                     }
                 default:
                     {
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData);
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
                         break;
                     }
             }
@@ -110,7 +114,7 @@ namespace NeutronLoader
 
             if (_processingUpload) return;
             _processingUpload = true;
-            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense,  _logger);
+            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense,  _logger, _rackStation);
             uploadProcessor.CreateHostFile();
             _processingUpload = false;
         }

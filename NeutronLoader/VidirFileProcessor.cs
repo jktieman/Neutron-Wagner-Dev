@@ -32,13 +32,15 @@ namespace NeutronLoader
         readonly NeutronLicense _neutronLicense;
         DynamicLogger _logger;
         private readonly IJsonData _jsonData;
+        private readonly Station _rackStation;
 
-        public VidirFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
+        public VidirFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData, Station rackStation)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
+            _rackStation = rackStation;
         }
 
         public void LoadFile(FileInfo fileInfo)
@@ -200,7 +202,7 @@ namespace NeutronLoader
                         hostOrder.TroubleBit = "1";
                         hostOrder.EmpId = ($"EmpId:--- Note: Item Not Found At That Location");
                         
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                         hostFile.CreateHostFile(hostOrder);
                     }
                 }
@@ -309,7 +311,7 @@ namespace NeutronLoader
                                     _logger.Log($"{hostOrder.PrimeBin} is not set up in Locations. ");
                                     hostOrder.TroubleBit = "1";
                                     hostOrder.EmpId = ($"EmpId:--- Note: Location is not set up in Neutron");
-                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                                     hostFile.CreateHostFile(hostOrder);
                                 }
                             }
@@ -319,7 +321,7 @@ namespace NeutronLoader
                             _logger.Log($"{hostOrder.PartNum} is not set up in the System.");
                             hostOrder.TroubleBit = "1";
                             hostOrder.EmpId = ($"EmpId:--- Note: Item Not Defined in Shuttle");
-                            var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+                            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                             hostFile.CreateHostFile(hostOrder);
                         }
                     }
@@ -413,7 +415,7 @@ namespace NeutronLoader
         {
 
             var distinctOrders = hostOrderLines.Select(s => s.JobNum).Distinct();
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
 
             foreach (var item in distinctOrders)
             {

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using JsonManager;
+using NeutronCore.Enums;
 using NeutronCore.Global;
 
 namespace NeutronLoader
@@ -28,13 +29,16 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly DynamicLogger _logger;
         private readonly IJsonData _jsonData;
+        private readonly Station _rackStation;
 
-        public SfhFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
+        public SfhFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger,
+            IJsonData jsonData, Station rackStation)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
+            _rackStation = rackStation;
         }
 
         public void LoadFiles(List<FileInfo> files)
@@ -64,7 +68,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"Error Reading All Order Lines.  File Name: {file.FullName} \r\n {ex.Message} \r\n {ex.InnerException}");
+                    _logger.Log($"Error Reading All Order Lines.  File Name: {file.FullName} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             _logger.Log($"Pr1FileProcessor --- Done");
@@ -94,7 +98,7 @@ namespace NeutronLoader
                         }
                         catch (Exception ex)
                         {
-                            _logger.Log($"Error Inserting Order Line. \r\n  {ex.Message} \r\n {ex.InnerException}");
+                            _logger.Log($"Error Inserting Order Line. {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                         }
                     }
                 }
@@ -110,7 +114,7 @@ namespace NeutronLoader
                         order.Ord2 = line.Substring(19, 10).Trim();
                         order.Priority = line.Substring(31, 2).ParseInt();
                         order.LoadDate = DateTime.Now;
-                        order.OrderStatusId = 1;
+                        order.OrderStatusId = (int)OrderStatus.Available;
                         order.ShipMethodId = 1;
                         order.ShipperId = 1;
                         break;
@@ -124,7 +128,7 @@ namespace NeutronLoader
                             }
                             catch (Exception ex)
                             {
-                                _logger.Log($"Error Inserting Order Detail Line.  \r\n  {ex.Message} \r\n {ex.InnerException}");
+                                _logger.Log($"Error Inserting Order Detail Line.  {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                             }
                         }
 
@@ -153,8 +157,8 @@ namespace NeutronLoader
                                 PrimeBin = primeBin,
                                 PartDesc = description.Trim(),
                                 OrderDetailInfo = line.Substring(105, 100).Trim(),
-                                StationNumber = 8,
-                                LineStatusId = 1,
+                                StationNumber = _rackStation.StationNumber,
+                                LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0
                             };
                         }
@@ -180,7 +184,7 @@ namespace NeutronLoader
                                 PartDesc = description.Trim(),
                                 OrderDetailInfo = line.Substring(105).Trim(),
                                 StationNumber = stationNumber,
-                                LineStatusId = 1,
+                                LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0
                             };
                         }
@@ -225,7 +229,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.Log($"Error Saving Order Detail Line.  \r\n  {ex.Message} \r\n {ex.InnerException}");
+                        _logger.Log($"Error Saving Order Detail Line.  {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     }
                 }
             }
@@ -235,15 +239,15 @@ namespace NeutronLoader
         {
             _logger.Log($"Process Replen Order Line Count: {allLines.Length} ");
             ReplenOrder order = null;
-            int orderId = 0;
+            var orderId = 0;
             ReplenOrderDetail replenDetail = null;
-            string line = "";
+            var line = "";
 
-            for (int i = 0; i < allLines.Length; i++)
+            for (var i = 0; i < allLines.Length; i++)
             {
                 line = allLines[i];
 
-                string lineType = line.Substring(0, 1);
+                var lineType = line.Substring(0, 1);
                 if (lineType == "2")
                 {
                     if (order != null)
@@ -257,7 +261,7 @@ namespace NeutronLoader
                         }
                         catch (Exception ex)
                         {
-                            _logger.Log($"Error Inserting Order Line: {line} \r\n  {ex.Message} \r\n {ex.InnerException}");
+                            _logger.Log($"Error Inserting Order Line: {line} {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                         }
                     }
                     //string oc = line.Substring(48, 1);
@@ -290,7 +294,7 @@ namespace NeutronLoader
                             }
                             catch (Exception ex)
                             {
-                                _logger.Log($"Error Inserting Order replenDetail Line. {line} \r\n  {ex.Message} \r\n {ex.InnerException}");
+                                _logger.Log($"Error Inserting Order replenDetail Line. {line} {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                             }
                         }
                         if (line.Substring(48, 1) == "O")
@@ -301,8 +305,8 @@ namespace NeutronLoader
 
                         ItemDefinition itemDef = null;
 
-                        string partNum = line.Substring(2, 35);
-                        string description = line.Substring(74, 30);
+                        var partNum = line.Substring(2, 35);
+                        var description = line.Substring(74, 30);
 
                         itemDef = GetItemDefinition(partNum, description);
 
@@ -311,8 +315,8 @@ namespace NeutronLoader
                             itemDef = UpdateItemDefinitionDescription(itemDef, description);
                         }
 
-                        int stationNumber = GetStationNumber(itemDef.StationId);
-                        string primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
+                        var stationNumber = GetStationNumber(itemDef.StationId);
+                        var primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
                         replenDetail = new ReplenOrderDetail();
                         replenDetail.ReplenOrderId = orderId;
                         replenDetail.ItemDefinitionId = itemDef.Id;
@@ -322,7 +326,7 @@ namespace NeutronLoader
                         replenDetail.PartDesc = description;
                         replenDetail.OrderDetailInfo = line.Substring(105, 100);
                         replenDetail.StationNumber = stationNumber;
-                        replenDetail.LineStatusId = 1;
+                        replenDetail.LineStatusId = (int) LineStatus.Available;
                         replenDetail.PickedQuantity = 0;
                         break;
                     case "3":
@@ -360,7 +364,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.Log($"Error Saving Order replenDetail Line. {line} \r\n   {ex.Message} \r\n {ex.InnerException}");
+                        _logger.Log($"Error Saving Order replenDetail Line. {line} {Environment.NewLine}   {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     }
                 }
             }
@@ -374,20 +378,16 @@ namespace NeutronLoader
                 _logger.Log(msg: "GetItemDefinition oc = 0  ");
                 try
                 {
-                    int stationId = GetStationId(stationNumber: 8);
+                    var stationId = _rackStation.Id;
                     //try to find it anywhere first
                     item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault() ??
                            new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description, stationId);
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"Error Finding Item Definition 1. {ex.Message} \r\n {ex.InnerException}");
+                    _logger.Log($"Error Finding Item Definition 1. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
-
-
-
-
             else
             {
                 try
@@ -397,7 +397,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error Finding Item Definition 1. {ex.Message} \r\n {ex.InnerException}");
+                    MessageBox.Show($"Error Finding Item Definition 1. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
 
@@ -440,11 +440,11 @@ namespace NeutronLoader
 
         private int GetStationNumber(int stationId)
         {
-            int stationNum = 0;
+            var stationNum = 0;
 
             try
             {
-                Station station = _repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
+                var station = _repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
 
                 if (station != null)
                 {
@@ -454,7 +454,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Returning Station Number. {ex.Message} \r\n {ex.InnerException}");
+                MessageBox.Show($"Error Returning Station Number. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
             _logger.Log($"Get Station Number Return: {stationNum}  StationId: {stationId} ");
             return stationNum;
@@ -462,11 +462,11 @@ namespace NeutronLoader
 
         private int GetStationId(int stationNumber)
         {
-            int stationId = 0;
+            var stationId = 0;
 
             try
             {
-                Station station = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
+                var station = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
                 if (station != null)
                 {
                     stationId = station.Id;
@@ -474,7 +474,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Returning Station Id. {ex.Message} \r\n {ex.InnerException}");
+                MessageBox.Show($"Error Returning Station Id. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
             return stationId;
         }

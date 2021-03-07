@@ -3381,7 +3381,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.Log($"StoreAccept_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
             MBStoreAccept.Enabled = false;
-            //ClearActiveDeviceIndicator();
+            //ClearActiveDeviceIndicators();
             //ClearAllDeviceIndicators();
             _currentPickStop.UpdatePickViews(GlobalVar.User); //good
             _currentPickStop.PickedQty = GetPickedSoFar(_currentPickStop.PickViews);
@@ -3701,11 +3701,11 @@ namespace Neutron.Forms
                     //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
                 case "AES":
-                    var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger);
+                    var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
                     uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
                 case "TOP":
-                    var topUploadProcessor = new TopUploadProcessor(_neutronVariables, _neutronLicense);
+                    var topUploadProcessor = new TopUploadProcessor(_neutronVariables, _neutronLicense, _rackStation);
                     topUploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
 
@@ -3955,7 +3955,7 @@ namespace Neutron.Forms
 
         private void ButtonMove_Click(object sender, EventArgs e)
         {
-            //ClearActiveDeviceIndicator();
+            //ClearActiveDeviceIndicators();
             //ClearAllDeviceIndicators();
             _currentPickStop.CurrentInventoryLocation =
                 _currentPickStop.Inventory[_currentPickStop.GroupBoxLocationInventoryIndex];
@@ -5344,7 +5344,8 @@ namespace Neutron.Forms
         private void ButtonRemoveLine_Click(object sender, EventArgs e)
         {
             _bindingSourceNewItems.RemoveCurrent();
-            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0;
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0 && ((NewItemView)_bindingSourceNewItems.Current).Item != null; 
+            CreateJobButtonEnable();
         }
 
 
@@ -5854,26 +5855,20 @@ namespace Neutron.Forms
 
         private void UpdateCurrentDeviceIndicator()
         {
+            ClearActiveDeviceIndicators();
             var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-            if (ClearActiveDeviceIndicator(loc1))
-            {
-                _deviceIndicators[loc1].BlinkOn();
+           _deviceIndicators[loc1].BlinkOn();
                 _deviceIndicators[loc1].Active = true;
-            }
         }
 
-        private bool ClearActiveDeviceIndicator(int loc1)
+        private void ClearActiveDeviceIndicators()
         {
-            var device = _deviceIndicators.FirstOrDefault(x => x.Value.Active == true).Value;
-            if (device == null) return true;
-            if (device.DeviceNumber != loc1)
+            var devices = _deviceIndicators.Where(x => x.Value.Active == true).ToList();
+            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
             {
-                device.BlinkOff();
-                device.Active = false;
-                return true;
+                deviceIndicator.Value.BlinkOff();
+                deviceIndicator.Value.Active = false;
             }
-
-            return false;
         }
 
         private void ClearAllDeviceIndicators()
@@ -6003,6 +5998,43 @@ namespace Neutron.Forms
         private void AdjustRackStore(PickList pickList)
         {
             OpenHotActionForm(pickList);
+        }
+
+        private void CreateJobButtonEnable()
+        {
+            if (
+                TextBoxNewOrderOrd1.Text.Length > 0
+                && TextBoxNewOrderOrd2.Text.Length > 0
+                && TextBoxNewOrderPriority.Text.Length > 0
+                && _bindingSourceNewItems.Count > 0 && ((NewItemView)_bindingSourceNewItems.Current).Item != null
+            )
+            {
+                MBNewOrderSave.Enabled = true;
+            }
+            else
+            {
+                MBNewOrderSave.Enabled = false;
+            }
+        }
+
+        private void TextBoxNewOrderOrd1_TextChanged(object sender, EventArgs e)
+        {
+            CreateJobButtonEnable();
+        }
+
+        private void TextBoxNewOrderOrd2_TextChanged(object sender, EventArgs e)
+        {
+            CreateJobButtonEnable();
+        }
+
+        private void TextBoxNewOrderPriority_TextChanged(object sender, EventArgs e)
+        {
+            CreateJobButtonEnable();
+        }
+
+        private void DataGridViewNewItems_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            CreateJobButtonEnable();
         }
     }
 }

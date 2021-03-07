@@ -100,6 +100,10 @@
     <Compile Include="Migrations\202101281554096_Language and StationType.Designer.cs">
       <DependentUpon>202101281554096_Language and StationType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103041204412_station.cs" />
+    <Compile Include="Migrations\202103041204412_station.Designer.cs">
+      <DependentUpon>202103041204412_station.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ActionCodeItem.cs" />
     <Compile Include="Models\AkaType.cs" />
     <Compile Include="Models\Carrier.cs" />
@@ -258,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101281554096_Language and StationType.resx">
       <DependentUpon>202101281554096_Language and StationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103041204412_station.resx">
+      <DependentUpon>202103041204412_station.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

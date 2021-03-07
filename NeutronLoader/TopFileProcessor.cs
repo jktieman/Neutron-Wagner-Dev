@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using NeutronCore.Enums;
 
 namespace NeutronLoader
 {
@@ -32,13 +33,16 @@ namespace NeutronLoader
         readonly NeutronLicense _neutronLicense;
         DynamicLogger _logger;
         private readonly IJsonData _jsonData;
+        private readonly Station _rackStation;
 
-        public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger, IJsonData jsonData)
+        public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger,
+            IJsonData jsonData, Station rackStation)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
+            _rackStation = rackStation;
         }
 
         public void LoadFile(FileInfo fileInfo)
@@ -121,16 +125,16 @@ namespace NeutronLoader
                         {
                             var hostOrder = new HostOrder()
                             {
-                                TypeCode = fields[0].ToString(),
-                                PartNum = fields[1].ToString(),
-                                PartDesc = fields[2].ToString(),
-                                JobNum = fields[3].ToString(),
-                                PrimeBin = fields[4].ToString(),
-                                NewBin = fields[5].ToString(),
-                                Qty = fields[6].ToString(),
-                                TroubleBit = fields[7].ToString(),
-                                DateTime = fields[8].ToString(),
-                                EmpId = fields[9].ToString(),
+                                TypeCode = fields[0],
+                                PartNum = fields[1],
+                                PartDesc = fields[2],
+                                JobNum = fields[3],
+                                PrimeBin = fields[4],
+                                NewBin = fields[5],
+                                Qty = fields[6],
+                                TroubleBit = fields[7],
+                                DateTime = fields[8],
+                                EmpId = fields[9],
                             };
                             hostOrderList.Add(hostOrder);
                         }
@@ -200,7 +204,7 @@ namespace NeutronLoader
                         hostOrder.TroubleBit = "1";
                         hostOrder.EmpId = ($"EmpId:--- Note: Item Not Found At That Location");
                         
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                         hostFile.CreateHostFile(hostOrder);
                     }
                 }
@@ -253,7 +257,7 @@ namespace NeutronLoader
                                     Qty = hostOrder.Qty,
                                     TroubleBit = hostOrder.TroubleBit,
                                     TypeCode = hostOrder.TypeCode,
-                                    LineStatusId = 1,
+                                    LineStatusId = (int)LineStatus.Available,
                                     StationNumber = rec.Location.Station.StationNumber
                                 };
                                 try
@@ -279,7 +283,7 @@ namespace NeutronLoader
                                         {
                                             ReplenOrderId = orderId,
                                             ItemDefinitionId = storeItemDefinition.Id,
-                                            Quantity = (hostOrder.Qty).ParseInt(),
+                                            Quantity = hostOrder.Qty.ParseInt(),
                                             DateTime = hostOrder.DateTime,
                                             EmpId = hostOrder.EmpId,
                                             JobNum = hostOrder.JobNum,
@@ -290,7 +294,7 @@ namespace NeutronLoader
                                             Qty = hostOrder.Qty,
                                             TroubleBit = hostOrder.TroubleBit,
                                             TypeCode = hostOrder.TypeCode,
-                                            LineStatusId = 1,
+                                            LineStatusId = (int)LineStatus.Available,
                                             StationNumber = location.Station.StationNumber
                                         };
                                         try
@@ -309,7 +313,7 @@ namespace NeutronLoader
                                     _logger.Log($"{hostOrder.PrimeBin} is not set up in Locations. ");
                                     hostOrder.TroubleBit = "1";
                                     hostOrder.EmpId = ($"EmpId:--- Note: Location is not set up in Neutron");
-                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                                     hostFile.CreateHostFile(hostOrder);
                                 }
                             }
@@ -319,7 +323,7 @@ namespace NeutronLoader
                             _logger.Log($"{hostOrder.PartNum} is not set up in the System.");
                             hostOrder.TroubleBit = "1";
                             hostOrder.EmpId = ($"EmpId:--- Note: Item Not Defined in Shuttle");
-                            var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+                            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
                             hostFile.CreateHostFile(hostOrder);
                         }
                     }
@@ -372,7 +376,7 @@ namespace NeutronLoader
                     LoadDate = DateTime.Now,
                     ShipperId = 1,
                     ShipMethodId = 1,
-                    OrderStatusId = 1
+                    OrderStatusId = (int)OrderStatus.Available
                 };
                 try
                 {
@@ -413,7 +417,7 @@ namespace NeutronLoader
         {
 
             var distinctOrders = hostOrderLines.Select(s => s.JobNum).Distinct();
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
 
             foreach (var item in distinctOrders)
             {
@@ -487,7 +491,7 @@ namespace NeutronLoader
                                 sb.AppendLine($"Description: {hostOrder.PartDesc}");
                                 sb.AppendLine($"The Item is has not been defined in Neutron.");
                                 sb.AppendLine($"A Return To Stock request for this item has been sent to Epicor.");
-                                MessageBox.Show(sb.ToString(), "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(sb.ToString(), @"Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                     }
@@ -508,7 +512,6 @@ namespace NeutronLoader
             }
         }
 
-
         private bool PickNewItemWithAlternateLocation(ItemDefinition itemDef, int orderId, HostOrder hostOrder)
         {
             var result = false;
@@ -517,10 +520,10 @@ namespace NeutronLoader
             {
                 _logger.Log($"424 In Alternate Locations of New Items");
                 var qty = hostOrder.Qty.ParseInt();
-                var inv = altInventory.Where(s => s.Quantity > qty).FirstOrDefault();
+                var inv = altInventory.FirstOrDefault(s => s.Quantity > qty);
                 if (inv == null)
                 {
-                    inv = altInventory.Where(s => s.Quantity > qty).FirstOrDefault();
+                    inv = altInventory.FirstOrDefault(s => s.Quantity > qty);
                 }
                 if (inv != null)
                 {
@@ -539,7 +542,7 @@ namespace NeutronLoader
                         Qty = hostOrder.Qty,
                         TroubleBit = hostOrder.TroubleBit,
                         TypeCode = hostOrder.TypeCode,
-                        LineStatusId = 1,
+                        LineStatusId = (int)LineStatus.Available,
                         StationNumber = inv.Location.Station.StationNumber
                     };
                     try
@@ -579,7 +582,7 @@ namespace NeutronLoader
                 {
                     OrderId = orderId,
                     ItemDefinitionId = inv.ItemDefinitionId,
-                    Quantity = (hostOrder.Qty).ParseInt(),
+                    Quantity = hostOrder.Qty.ParseInt(),
                     DateTime = hostOrder.DateTime,
                     EmpId = hostOrder.EmpId,
                     JobNum = hostOrder.JobNum,
@@ -590,7 +593,7 @@ namespace NeutronLoader
                     Qty = hostOrder.Qty,
                     TroubleBit = hostOrder.TroubleBit,
                     TypeCode = hostOrder.TypeCode,
-                    LineStatusId = 1,
+                    LineStatusId = (int)LineStatus.Available,
                     StationNumber = inv.Location.Station.StationNumber
                 };
                 try
@@ -633,7 +636,7 @@ namespace NeutronLoader
                     Qty = hostOrder.Qty,
                     TroubleBit = hostOrder.TroubleBit,
                     TypeCode = hostOrder.TypeCode,
-                    LineStatusId = 1,
+                    LineStatusId = (int)LineStatus.Available,
                     StationNumber = inv.Location.Station.StationNumber
                 };
                 try
@@ -658,10 +661,10 @@ namespace NeutronLoader
             {
                 _logger.Log($"543 In Alternate Locations of Used Items");
                 var qty = hostOrder.Qty.ParseInt();
-                var inv = altInventory.Where(s => s.Quantity > qty).FirstOrDefault();
+                var inv = altInventory.FirstOrDefault(s => s.Quantity > qty);
                 if (inv == null)
                 {
-                    inv = altInventory.Where(s => s.Quantity > qty).FirstOrDefault();
+                    inv = altInventory.FirstOrDefault(s => s.Quantity > qty);
                 }
                 if (inv != null)
                 {
@@ -680,7 +683,7 @@ namespace NeutronLoader
                         Qty = hostOrder.Qty,
                         TroubleBit = hostOrder.TroubleBit,
                         TypeCode = hostOrder.TypeCode,
-                        LineStatusId = 1,
+                        LineStatusId = (int)LineStatus.Available,
                         StationNumber = inv.Location.Station.StationNumber
                     };
                     try
@@ -743,7 +746,7 @@ namespace NeutronLoader
                     LoadDate = DateTime.Now,
                     ShipperId = 1,
                     ShipMethodId = 1,
-                    OrderStatusId = 1
+                    OrderStatusId = (int)OrderStatus.Available
                 };
                 try
                 {
@@ -761,13 +764,12 @@ namespace NeutronLoader
         private Inventory CreatePrimeBinAndInventory(HostOrder hostOrder, ItemDefinition def)
         {
             Inventory inv = null;
-            Location loc = null;
             //is the location available
 
-            var location = _repoLocation.All().Where(l => l.Slot == hostOrder.PrimeBin).FirstOrDefault();
+            var location = _repoLocation.All().FirstOrDefault(l => l.Slot == hostOrder.PrimeBin);
             if (location == null)
             {
-                loc = new Location();
+                var loc = new Location();
                 loc.StationId = def.StationId;
                 loc.Loc1 = hostOrder.PrimeBin.Substring(1, 1).ParseInt();
                 loc.Loc2 = hostOrder.PrimeBin.Substring(2, 2).ParseInt();
@@ -785,11 +787,11 @@ namespace NeutronLoader
 
             }
 
-            location = _repoLocation.All().Where(l => l.Slot == hostOrder.PrimeBin).FirstOrDefault();
+            location = _repoLocation.All().FirstOrDefault(l => l.Slot == hostOrder.PrimeBin);
             if (location != null)
             {
                 //is there anything already in the location/Inventory
-                var inventory = _repoInventory.All().Where(l => l.LocationId == location.Id).FirstOrDefault();
+                var inventory = _repoInventory.All().FirstOrDefault(l => l.LocationId == location.Id);
                 if (inventory == null)
                 {
                     //create the inventory record with zero quantity
@@ -815,60 +817,7 @@ namespace NeutronLoader
                 }
             }
             return inv;
-
         }
-
-
-        //private ItemDefinition CreateNewItemDefinition(HostOrder hostOrder)
-        //{
-        //    var newDefinition = new ItemDefinition();
-        //    var def = new ItemDefinition();
-        //    try
-        //    {
-        //        def = repoItemDefinition.FindBy(r => r.Item == "Default").FirstOrDefault();
-        //        if (def != null)
-        //        {
-        //            newDefinition = new ItemDefinition
-        //            {
-        //                StationId = def.StationId
-        //                ,
-        //                Item = hostOrder.PartNum
-        //                ,
-        //                Description = hostOrder.PartDesc
-        //                ,
-        //                LocationMax = def.LocationMax
-        //                ,
-        //                LocationMin = def.LocationMin
-        //                ,
-        //                SystemMax = def.SystemMax
-        //                ,
-        //                SystemMin = def.SystemMin
-        //                ,
-        //                Weight = def.Weight
-        //                ,
-        //                Scale = def.Scale
-        //                ,
-        //                StorageTypeId = def.StorageTypeId
-        //                ,
-        //                UnitOfIssueId = def.UnitOfIssueId
-        //                ,
-        //                SizeCodeId = def.SizeCodeId
-        //                ,
-        //                VelocityCodeId = def.VelocityCodeId
-        //                ,
-        //                HeightCodeId = def.HeightCodeId
-        //                ,
-        //                LocationCodeId = def.LocationCodeId
-        //            };
-        //            repoItemDefinition.Insert(newDefinition);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.Log("Unable to create New Item Definition. " + ex.Message + ex.InnerException.Message);
-        //    }
-        //    return newDefinition;
-        //}
 
         private void ShowFileLockMessages(OperationResult fileLockFailure)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -24,6 +25,7 @@ using NeutronCore.Extensions;
 using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
+using NeutronData.Migrations;
 using NeutronData.ModelViews;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
@@ -81,7 +83,6 @@ namespace Neutron.Forms
         private bool _hotStoreButtonPressed = false;
         private bool _useCostCenter = false;
         private InventoryManager _inventoryManager;
-        private Stopwatch _stopwatch;
         private string _newLocationButtonText = "New Locations";
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private readonly int[] _moveableDeviceTypes;
@@ -154,7 +155,7 @@ namespace Neutron.Forms
             {
                 _item = _pickList.Item;
                 _initialQuantity = _pickList.Ordered.ParseInt();
-                _quantityToPick  = _pickList.Ordered.ParseInt();
+                _quantityToPick = _pickList.Ordered.ParseInt();
                 KeyPreview = true;
                 SetupLogger();
                 SetupGridItemDefinition();
@@ -372,6 +373,44 @@ namespace Neutron.Forms
             //    MBNewLocations.Enabled = false;
             //}
         }
+
+        private void LoadNewLocationsBySlot(string slot)
+        {
+            IEnumerable<LocationView> views = null;  // = new List<LocationView>();
+            var station = _repoStation.FindByKey(_station.StationId);
+            if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
+            {
+
+                if (_rackStation != null)
+                {
+                    station = _rackStation;
+                    CheckBoxAll.Checked = true;
+                    CheckBoxAll.Visible = false;
+                }
+            }
+            else
+            {
+                CheckBoxAll.Visible = true;
+            }
+            if (CheckBoxAll.Checked)
+            {
+                views = _locationsRepository.FindLocationViewsBySlot(slot);
+            }
+            else
+            {
+                views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot);
+            }
+            var locationViews = views.ToList();
+            var blvAll = new BindingListView<LocationView>(locationViews.ToList());
+            _bindingSourceNewLocations.DataSource = blvAll;
+            var recordCount = GetRecordCount(locationViews.ToList());
+
+            MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
+        }
+
+
+
+
         // Not Used
         public void UpdateDataGrid(BindingSource bindingSource)
         {
@@ -390,11 +429,11 @@ namespace Neutron.Forms
 
         private async Task LoadLocationData(string slot = @"")
         {
-            var stationId = _station.StationType.Id == (int)StationType.StationType.Supervisor 
-                ? _rackStation.Id 
+            var stationId = _station.StationType.Id == (int)StationType.StationType.Supervisor
+                ? _rackStation.Id
                 : _station.StationId;
 
-            var inventory = _repoInventory.FindBy(r => r.Location.Slot == slot && r.StationId == stationId).ToList();
+            var inventory = _repoInventory.FindBy(r => r.Location.Slot.Contains(slot) && r.StationId == stationId).ToList();
             if (inventory.Any())
             {
                 await LoadItemDefinitions(inventory.First().ItemDefinition.Item);
@@ -1386,8 +1425,8 @@ namespace Neutron.Forms
             }
             else
             {
-CloseButtonPressed = false;
-               
+                CloseButtonPressed = false;
+
                 LabelFormTitle.Text = _resourceManager.GetString("HotActions");
                 LabelFormTitle.BackColor = Color.Green;
                 tabControl1.SelectedTab = HotPick;
@@ -1672,7 +1711,9 @@ CloseButtonPressed = false;
                 else if (TextBoxScanLocation.Focused)
                 {
                     var slot = TextBoxScanLocation.Text;
-                   await LoadLocationData( slot);
+                    var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+                    TextBoxScanLocation.Text = searchSlot;
+                    LoadNewLocationsBySlot(searchSlot);
                 }
                 else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
                 {
@@ -1713,6 +1754,7 @@ CloseButtonPressed = false;
             DataGridViewHot.DataSource = _bindingSourceNewLocations;
             var recordCount = GetRecordCount(_bindingSourceNewLocations);
         }
+
         private async void LabelHotPickItem_Click(object sender, EventArgs e)
         {
             await EditItemDefinition(_currentInventoryView.ItemDefinitionId);
@@ -2135,6 +2177,12 @@ CloseButtonPressed = false;
         }
 
         private void TextBoxScanLocation_Enter(object sender, EventArgs e)
+        {
+            TextBoxScanLocation.Text = string.Empty;
+            TextBoxScanLocation.Focus();
+        }
+
+        private void TextBoxScanLocation_Click(object sender, EventArgs e)
         {
             TextBoxScanLocation.Text = string.Empty;
             TextBoxScanLocation.Focus();

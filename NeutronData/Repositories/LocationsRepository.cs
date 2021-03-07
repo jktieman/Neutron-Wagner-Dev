@@ -166,6 +166,62 @@ namespace NeutronData.Repositories
             return recs;
         }
 
+        public IEnumerable<LocationView> FindLocationViewsByStationAndSlot(Station station, string slot)
+        {
+            var recs = new List<LocationView>();
+            if (station != null)
+            {
+                Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+                try
+                {
+                    using (var context = new NeutronDb())
+                    {
+                        var paramStation = new SqlParameter("@StationId", station.Id);
+
+                        if (station.StationType.Id == (int)StationType.Rack)
+                        {
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllRackLocationViews @StationId", paramStation).ToList();
+                        }
+                        else
+                        {
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByStation @StationId", paramStation).ToList();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+                }
+
+                Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+            }
+
+            return recs.Where(r => r.Slot.Contains(slot));
+        }
+
+        public IEnumerable<LocationView> FindLocationViewsBySlot(string slot)
+        {
+            var recs = new List<LocationView>();
+
+                Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+                try
+                {
+                    using (var context = new NeutronDb())
+                    {
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViews").ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+                }
+
+                Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+            
+
+            return recs.Where(r => r.Slot.Contains(slot));
+        }
+
         public IEnumerable<LocationView> FindLocationViews(string find = "")
         {
             var recs = new List<LocationView>();

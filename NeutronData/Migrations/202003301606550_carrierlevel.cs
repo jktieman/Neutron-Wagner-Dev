@@ -18,7 +18,7 @@ namespace NeutronData.Migrations
             //AddPrimaryKey("dbo.ActionCodeItems", "Id");
             //AddPrimaryKey("dbo.CommunicationTypes", "Id");
             //AddForeignKey("dbo.Stations", "CommunicationTypeId", "dbo.CommunicationTypes", "Id");
-            AddForeignKey("dbo.HardwareDevices", "CommunicationTypeId", "dbo.CommunicationTypes", "Id");
+            //AddForeignKey("dbo.HardwareDevices", "CommunicationTypeId", "dbo.CommunicationTypes", "Id");
         }
         
         public override void Down()
