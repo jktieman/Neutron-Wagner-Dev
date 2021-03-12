@@ -328,10 +328,10 @@ namespace NeutronLoader
                         replenDetail = new ReplenOrderDetail();
                         replenDetail.ReplenOrderId = orderId;
                         replenDetail.ItemDefinitionId = itemDef.Id;
-                        replenDetail.PartNum = partNum;
+                        replenDetail.PartNum = itemDef.Item;
                         replenDetail.Quantity = line.Substring(38, 9).ParseInt();
                         replenDetail.PrimeBin = primeBin;
-                        replenDetail.PartDesc = description;
+                        replenDetail.PartDesc = itemDef.Description;
                         replenDetail.OrderDetailInfo =
                             line.Length >= 205 ? line.Substring(105, 100) : line.Substring(105);
                         replenDetail.StationNumber = stationNumber;
@@ -499,10 +499,10 @@ namespace NeutronLoader
             var replenDetail = new ReplenOrderDetail();
             //replenDetail.ReplenOrderId = order.Id;
             replenDetail.ItemDefinitionId = itemDef.Id;
-            replenDetail.PartNum = partNum;
+            replenDetail.PartNum = itemDef.Item;
             replenDetail.Quantity = line.Substring(38, 9).ParseInt();
             replenDetail.PrimeBin = primeBin;
-            replenDetail.PartDesc = description;
+            replenDetail.PartDesc = itemDef.Description;
             replenDetail.OrderDetailInfo =
                 line.Length >= 205 ? line.Substring(105, 100) : line.Substring(105);
             replenDetail.StationNumber = stationNumber;
