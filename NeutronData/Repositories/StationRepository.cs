@@ -50,8 +50,8 @@ namespace NeutronData.Repositories
                             int key;
                             switch (device.DeviceTypeId)
                             {
-                                case (int) DeviceType.Shuttle:
-                                {
+                                case (int)DeviceType.Shuttle:
+                                    {
                                         //key = _dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
                                         logger.Log($"This is a Shuttle Device");
                                         //if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
@@ -112,7 +112,7 @@ namespace NeutronData.Repositories
                                         }
                                         break;
                                     }
-                                case (int) DeviceType.Carousel:
+                                case (int)DeviceType.Carousel:
                                     {
                                         logger.Log(@"This is a Carousel Device");
                                         //if (device.CommunicationTypeId == (int) CommunicationType.TCP)
@@ -170,6 +170,14 @@ namespace NeutronData.Repositories
                                                 logger.Log("Configuration set to null");
                                                 device.SerialConfiguration = null;
                                             }
+                                            stationView.HardwareDevices.Add(device);
+                                        }
+                                        key = _dicCommunicationTypes.FirstOrDefault(d => d.Value == "None").Key;
+                                        if (device.CommunicationTypeId == key)
+                                        {
+                                            logger.Log($"This Device is not controlled.");
+                                            logger.Log("Configuration set to null");
+                                            device.SerialConfiguration = null;
                                             stationView.HardwareDevices.Add(device);
                                         }
                                         break;
@@ -267,13 +275,13 @@ namespace NeutronData.Repositories
 
         public List<Station> GetPickStations()
         {
-  
-        var result = new List<Station>();
-        var stations = _repoStation.All().Where(r => r.StationType.Name == NeutronCore.Enums.StationType.Carousel.ToString()
-                                                     || r.StationType.Name == NeutronCore.Enums.StationType.Rack.ToString()
-                                                     || r.StationType.Name == NeutronCore.Enums.StationType.Vertical.ToString())
-            .ToList();
-           
+
+            var result = new List<Station>();
+            var stations = _repoStation.All().Where(r => r.StationType.Name == NeutronCore.Enums.StationType.Carousel.ToString()
+                                                         || r.StationType.Name == NeutronCore.Enums.StationType.Rack.ToString()
+                                                         || r.StationType.Name == NeutronCore.Enums.StationType.Vertical.ToString())
+                .ToList();
+
             if (stations.Count > 0)
             {
                 result = stations;

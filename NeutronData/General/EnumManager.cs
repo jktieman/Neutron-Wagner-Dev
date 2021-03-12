@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,11 +37,19 @@ namespace NeutronData.General
                         db.Database.ExecuteSqlCommand("CREATE TABLE [dbo].[ActionCodeItems] ([Id] [int] NOT NULL, Name varchar(64) not null)");
                     }
 
-
-
                     foreach (var actionCode in actionCodes)
                     {
-                        db.ActionCodeItems.Add(actionCode);
+                        var code = db.ActionCodeItems.Find(actionCode.Id);
+                        if (code != null)
+                        {
+                            code.Name = actionCode.Name;
+                            db.ActionCodeItems.AddOrUpdate(code);
+                        }
+                        else
+                        {
+                            db.ActionCodeItems.AddOrUpdate(actionCode);
+                        }
+                         
                     }
 
                     db.SaveChanges();
@@ -77,10 +86,17 @@ namespace NeutronData.General
 
                     foreach (var rec in recs)
                     {
-                        var r = db.LineStatusLookup.Find(rec.Id);
-                        if (r == null) db.LineStatusLookup.Add(rec);
+                        var code = db.LineStatusLookup.Find(rec.Id);
+                        if (code == null)
+                        {
+                            db.LineStatusLookup.AddOrUpdate(rec);
+                        }
+                        else
+                        {
+                            code.Name = rec.Name;
+                            db.LineStatusLookup.AddOrUpdate(code);
+                        }
                     }
-
                     db.SaveChanges();
                 }
             }

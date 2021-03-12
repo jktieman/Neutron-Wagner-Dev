@@ -146,6 +146,10 @@ namespace NeutronLoader
                             {
                                 itemDef = UpdateItemDefinitionDescription(itemDef, description);
                             }
+                            else
+                            {
+                                description = itemDef.Description;
+                            }
 
                             var primeBin = "OC";
                             detail = new OrderDetail
@@ -169,6 +173,10 @@ namespace NeutronLoader
                             if (_neutronVariables.UpdateItemDefinitionDescription)
                             {
                                 itemDef = UpdateItemDefinitionDescription(itemDef, description);
+                            }
+                            else
+                            {
+                                description = itemDef.Description;
                             }
 
                             _logger.Log($"Station Id: {itemDef.StationId}");

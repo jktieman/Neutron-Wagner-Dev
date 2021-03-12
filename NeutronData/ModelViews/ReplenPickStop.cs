@@ -30,7 +30,7 @@ namespace NeutronData.ModelViews
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }
-        public int QuantityToBePicked => Quantity - PickedQty > 0 ? Quantity - PickedQty : 0;
+        public int QuantityToBePicked { get; set; }
         public int PickedQty { get; set; }
         public string Slot { get; set; }
         public int SlotQty { get; set; }
@@ -60,16 +60,14 @@ namespace NeutronData.ModelViews
                 var pickLocation = new PickLocation
                 {
                     Inventory = CurrentInventoryLocation
-                    , Quantity = pickView.QuantityThisPick
+                    , Quantity = pickView.QuantityToBePicked
                     , PickDate = DateTime.Now
-                    , RequestedQuantity = pickView.Quantity
+                    , RequestedQuantity = pickView.QuantityToBePicked
                     , User = user
                 };
                 pickView.PickLocations.Add(pickLocation);
                 pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
-                // save this for the close when  all it picked or all that's going to be picked
-                //pickView.OrderDetail.PickedQuantity = pickView.PickedQty;
-                //pickView.QuantityToBePicked = pickView.GetQuantityToBePicked();
+                pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty;
             }
         }
 
@@ -83,7 +81,7 @@ namespace NeutronData.ModelViews
             return total;
         }
 
-        private int GetPickedSoFar()
+        public int GetPickedSoFar()
         {
             int total = 0;
             foreach (var pickview in PickViews)

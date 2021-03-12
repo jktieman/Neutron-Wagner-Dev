@@ -558,11 +558,30 @@ namespace Neutron.Global
                 var parameters = new object[] { paramCodes, paramFromDate, paramToDate, paramFind };
                 try
                 {
-                    var hist = context.Database.SqlQuery<HistoryView>("usp_GetHistoryFind @Codes, @FromDate, @ToDate, @Find", parameters);
-                    if (hist != null)
+                    var recs = context.History.Where(r => r.EmpId == empId).Take(10).ToList();
+                    foreach (var rec in recs)
                     {
-                        history = hist.Where(h => h.EmpId == empId).OrderByDescending(o => o.ActionDateTime).ToList();
+                        var historyView = new HistoryView
+                        {
+                            ActionCode = rec.ActionCode,
+                            ActionCodeName = rec.ActionCodeName,
+                            ActionDateTime = rec.ActionDateTime.ToShortDateString(),
+                            CostCenter = rec.CostCenter,
+                            Description = rec.Description,
+                            EmpId = rec.EmpId,
+                            Item = rec.Item
+                        };
+                        history.Add(historyView);
                     }
+
+
+
+
+                    //var hist = context.Database.SqlQuery<HistoryView>("usp_GetHistory @Codes, @FromDate, @ToDate, @Find", parameters).ToList();
+                    //if (hist.Any())
+                    //{
+                    //    history = hist.Where(h => h.EmpId == empId).OrderByDescending(o => o.ActionDateTime).Take(10).ToList();
+                    //}
                 }
                 catch (Exception ex)
                 {

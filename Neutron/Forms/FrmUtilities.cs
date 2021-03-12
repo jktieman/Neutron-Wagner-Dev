@@ -749,7 +749,7 @@ namespace Neutron.Forms
             _neutronVariables.DefaultStorageTypeId = ((StorageType)ComboBoxDefaultStorageType.SelectedItem).Id;
             _neutronVariables.UseAutoCompress = CheckBoxUseAutoCompress.Checked;
             _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
-            _neutronVariables.RunCompressInterval = TextBoxRunCompressInterval.Text.ParseInt();
+            _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
@@ -815,7 +815,7 @@ namespace Neutron.Forms
             ComboBoxDefaultStorageType.SelectedValue = _neutronVariables.DefaultStorageTypeId;
             CheckBoxUseAutoCompress.Checked = _neutronVariables.UseAutoCompress;
             TextBoxCompressDays.Text = _neutronVariables.CompressDays.ToString();
-            TextBoxRunCompressInterval.Text = _neutronVariables.RunCompressInterval.ToString();
+            TextBoxRunCompressInterval.Text = _neutronVariables.RunCompressInterval.ToString(CultureInfo.InvariantCulture);
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -1466,11 +1466,11 @@ namespace Neutron.Forms
             AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
                 , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
 
-            if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
-                hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
-            {
-                AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
-            }
+            //if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
+            //    hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
+            //{
+            //    AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
+            //}
         }
 
         private void AddOrUpdateCarriers(int stationId, int device, int numberOfCarriers)
@@ -1691,20 +1691,20 @@ namespace Neutron.Forms
 
             if (hardwareDevice == null)
                 return;
-            Cursor.Current = Cursors.WaitCursor;
+            //Cursor.Current = Cursors.WaitCursor;
 
-            MessageBox.Show("Preparing to update Locations and Location Access Control Carriers", "Location Update",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show("Preparing to update Locations and Location Access Control Carriers", "Location Update",
+            //    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber,
-                hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
-                , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+            //AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber,
+            //    hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
+            //    , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
 
-            if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
-                hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
-            {
-                AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
-            }
+            //if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
+            //    hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
+            //{
+            //    AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
+            //}
             Cursor.Current = Cursors.Default;
         }
 

@@ -82,15 +82,16 @@ namespace Neutron
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
 
             var cultureInfo = neutronVariables.DefaultLanguage;
-            if (cultureInfo.Length == 5 && cultureInfo.Contains('-'))
-            {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
-            }
-            else
+
+            if (cultureInfo == null || cultureInfo.Length != 5 || !cultureInfo.Contains('-'))
             {
                 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            }
+            else
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
             }
 
             var frmMain = kernel.Get<FrmMain>();

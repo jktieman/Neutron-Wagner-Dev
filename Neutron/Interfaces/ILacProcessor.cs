@@ -7,6 +7,8 @@ namespace Neutron.Interfaces
     {
 
         List<Carrier> LacProfile { get; set; }
+        bool UseLacProcessor { get; set; }
+
         void ReprocessLacSet(int userId);
         bool MovePermitted(int station, int device, int carrier);
     }

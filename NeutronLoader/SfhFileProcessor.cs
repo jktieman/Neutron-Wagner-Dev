@@ -83,7 +83,7 @@ namespace NeutronLoader
 
             for (var i = 0; i < allLines.Count(); i++)
             {
-                var line = allLines[i];
+                var line = allLines[i].PadRight(1000, ' ');
                 var lineType = line.Substring(0, 1);
                 if (lineType == "2")
                 {
@@ -245,7 +245,7 @@ namespace NeutronLoader
 
             for (var i = 0; i < allLines.Length; i++)
             {
-                line = allLines[i];
+                line = allLines[i].PadRight(1000, ' ');
 
                 var lineType = line.Substring(0, 1);
                 if (lineType == "2")

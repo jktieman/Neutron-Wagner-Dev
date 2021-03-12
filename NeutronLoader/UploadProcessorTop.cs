@@ -61,6 +61,7 @@ namespace NeutronLoader
             }
 
             _uploadBusy = true;
+            if (_neutronVariables.ActionCodes == null) return;
             var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             try
             {

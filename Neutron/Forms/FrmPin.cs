@@ -56,7 +56,7 @@ namespace Neutron.Forms
                         EmpId = "9999",
                         Username = "admin",
                         Pin = "2277",
-                        LanguageId = 1
+                        LanguageId = 1,
                     };
                 }
                 catch (Exception ex)

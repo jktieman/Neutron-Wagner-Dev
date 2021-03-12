@@ -27,6 +27,7 @@ using NeutronLoader;
 using SlotNameFactory;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 using Neutron.Models;
 using NeutronCore.Enums;
@@ -57,7 +58,7 @@ namespace Neutron
         private string _logFileDir = string.Empty;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
-        private readonly Timer _compressTimer;
+        private static Timer _compressTimer;
         private bool _compressRunning;
         private Station _rackStation;
         private StartStopLoaderManager _startStopLoaderManager;
@@ -98,7 +99,7 @@ namespace Neutron
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _rackStation = _stationRepository.GetRackStation();
-
+            _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
             GlobalVar.HistoryManager = new HistoryManager();
 
 
@@ -119,11 +120,13 @@ namespace Neutron
             {
                 if (_neutronVariables.UseAutoCompress)
                 {
-                    _compressTimer = new Timer();
-                    _compressTimer.Interval = _neutronVariables.RunCompressInterval * 60 * 60; 
-                    _compressTimer.Elapsed += OnRunCompress;
-                    _compressTimer.AutoReset = true;
-                    _compressTimer.Enabled = true;
+                    var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
+                    var compressTimer = new Timer(interval);
+
+                    compressTimer.Elapsed += new ElapsedEventHandler(OnRunCompress);
+                    //_compressTimer.AutoReset = true;
+                    compressTimer.Enabled = true;
+                    _compressTimer = compressTimer;
                 }
             }
 
@@ -252,6 +255,7 @@ namespace Neutron
                 if (LoaderSettings.Init())
                 {
                     _stationId = _neutronVariables.StationId;
+                    if (_stationId == 0) _stationId = 1;
                     if (_stationId > 0)
                     {
                         _station = _stationRepository.GetStationView(_stationId);
@@ -651,18 +655,27 @@ namespace Neutron
             if (_currentUser != null)
             {
                 GlobalVar.User = _currentUser;
-                var cultureInfo = GlobalVar.User.Language.CultureInfo;
-                if (cultureInfo.Length == 5 && cultureInfo.Contains('-'))
-                {
-                    CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
-
-                }
-                else
+                if (_currentUser.Pin == "2277")
                 {
                     CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
                     Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
                 }
+                else
+                {
+                    var cultureInfo = GlobalVar.User.Language.CultureInfo;
+                    if (cultureInfo.Length == 5 && cultureInfo.Contains('-'))
+                    {
+                        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
+
+                    }
+                    else
+                    {
+                        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+                    }
+                }
+
                 _cultureInfo = Thread.CurrentThread.CurrentCulture;
                 SetCulture(_cultureInfo.Name);
 
@@ -719,6 +732,7 @@ namespace Neutron
 
         private void MtHotAction_Click(object sender, EventArgs e)
         {
+            Task.Run(() => _logger.Log("FrmMain HotAction button Pressed"));
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
             {
                 Hide();
@@ -729,6 +743,7 @@ namespace Neutron
                     Show();
                 }
             }
+            Task.Run(() => _logger.Log("FrmMain HotAction Exit"));
         }
 
         private void MtSystem_Click(object sender, EventArgs e)

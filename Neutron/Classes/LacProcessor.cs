@@ -11,16 +11,20 @@ namespace Neutron.Classes
 {
     public class LacProcessor : ILacProcessor
     {
-        public List<Carrier> LacProfile { get; set; }
+        public bool UseLacProcessor { get; set; } = false;
 
+        public List<Carrier> LacProfile { get; set; }
+        
         public LacProcessor()
         {
+            
             LacProfile = new List<Carrier>();
             ReprocessLacSet();
         }
 
         public void ReprocessLacSet(int userId = 0)
         {
+            if (!UseLacProcessor) return;
             LacProfile = new List<Carrier>();
             if (userId > 0)
             {
@@ -44,7 +48,9 @@ namespace Neutron.Classes
         }
 
         public bool MovePermitted(int station, int device, int carrier)
-        {
+       {
+           //if not using LacProcessor always return true to allow move
+            if (!UseLacProcessor) return true;
             var result = false;
             var x = LacProfile.Find(r =>
                 r.CarrierNumber == carrier && r.DeviceNumber == device && r.StationNumber == station);
