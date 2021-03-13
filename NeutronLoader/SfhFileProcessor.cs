@@ -152,10 +152,10 @@ namespace NeutronLoader
                             {
                                 OrderId = orderId,
                                 ItemDefinitionId = itemDef.Id,
-                                PartNum = partNum.Trim(),
+                                PartNum = itemDef.Item,
                                 Quantity = line.Substring(38, 9).ParseInt(),
                                 PrimeBin = primeBin,
-                                PartDesc = description.Trim(),
+                                PartDesc = itemDef.Description,
                                 OrderDetailInfo = line.Substring(105, 100).Trim(),
                                 StationNumber = _rackStation.StationNumber,
                                 LineStatusId = (int)LineStatus.Available,
@@ -178,10 +178,10 @@ namespace NeutronLoader
                             {
                                 OrderId = orderId,
                                 ItemDefinitionId = itemDef.Id,
-                                PartNum = partNum.Trim(),
+                                PartNum = itemDef.Item,
                                 Quantity = line.Substring(38, 9).ParseInt(),
                                 PrimeBin = primeBin,
-                                PartDesc = description.Trim(),
+                                PartDesc = itemDef.Description,
                                 OrderDetailInfo = line.Substring(105).Trim(),
                                 StationNumber = stationNumber,
                                 LineStatusId = (int)LineStatus.Available,
@@ -320,10 +320,10 @@ namespace NeutronLoader
                         replenDetail = new ReplenOrderDetail();
                         replenDetail.ReplenOrderId = orderId;
                         replenDetail.ItemDefinitionId = itemDef.Id;
-                        replenDetail.PartNum = partNum;
+                        replenDetail.PartNum = itemDef.Item;
                         replenDetail.Quantity = line.Substring(38, 9).ParseInt();
                         replenDetail.PrimeBin = primeBin;
-                        replenDetail.PartDesc = description;
+                        replenDetail.PartDesc = itemDef.Description;
                         replenDetail.OrderDetailInfo = line.Substring(105, 100);
                         replenDetail.StationNumber = stationNumber;
                         replenDetail.LineStatusId = (int) LineStatus.Available;
