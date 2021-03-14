@@ -71,7 +71,7 @@ namespace NeutronLoader
                     _logger.Log($"Error Reading All Order Lines.  File Name: {file.FullName} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
-            _logger.Log($"Pr1FileProcessor --- Done");
+            _logger.Log($"SFHFileProcessor --- Done");
         }
 
         public void ProcessNormalOrder(string[] allLines)

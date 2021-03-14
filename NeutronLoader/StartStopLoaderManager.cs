@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading;
-using AlliedLogger;
+﻿using AlliedLogger;
 using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronEvents;
 
@@ -18,8 +15,6 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly Station _rackStation;
-        private static Timer _upTimer;
-        private static bool _processingUpload;
 
         public StartStopLoaderManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables,
             NeutronLicense neutronLicense, Station rackStation)
@@ -89,49 +84,12 @@ namespace NeutronLoader
 
         private void StartProcessingInterfaceFiles()
         {
-            if (_neutronLicense.CompanyCode == "SFH")
-            {
-                var startTimeSpan = TimeSpan.Zero;
-                var periodTimeSpan = TimeSpan.FromMinutes(5);
-                _upTimer = new Timer(t => { CreateHostUploadFile(); }, null, startTimeSpan, periodTimeSpan);
-            }
             _interfaceProcessor.StartProcessingInterfaceFiles();
         }
 
         private void StopProcessingInterfaceFiles()
         {
             _interfaceProcessor?.StopProcessingInterfaceFiles();
-            _upTimer?.Dispose();
-        }
-
-        public void CreateHostUploadFile()
-        {
-            if (_neutronLicense.CompanyCode == "SFH")
-            {
-                //Remove duplicate History records before uploading
-                RemoveDuplicateRecordsFromHistory();
-            }
-
-            if (_processingUpload) return;
-            _processingUpload = true;
-            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense,  _logger, _rackStation);
-            uploadProcessor.CreateHostFile();
-            _processingUpload = false;
-        }
-
-        public void RemoveDuplicateRecordsFromHistory()
-        {
-            try
-            {
-                using (var db = new NeutronDb())
-                {
-                    var recs = db.Database.ExecuteSqlCommand("usp_RemoveDuplicateRecordsFromHistory");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Log($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
-            }
         }
     }
 }

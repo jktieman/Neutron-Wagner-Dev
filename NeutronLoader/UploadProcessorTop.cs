@@ -47,7 +47,7 @@ namespace NeutronLoader
 
         public void StopProcessingUploadFiles()
         {
-            _timer.Dispose();
+            _timer?.Dispose();
         }
 
         public void CreateHostFile()

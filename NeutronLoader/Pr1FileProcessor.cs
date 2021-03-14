@@ -137,7 +137,7 @@ namespace NeutronLoader
                         var partNum = line.Substring(2, 35).Trim();
                         var description = line.Substring(74, 30).Trim();
 
-                        if (line.Substring(48, 1) == "O")
+                        if (line.Substring(48, 1) == "O")  //Force to Off Carousel
                         {
 
                             itemDef = GetItemDefinition(partNum, description, "O");

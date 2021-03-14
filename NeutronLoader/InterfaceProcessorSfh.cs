@@ -21,15 +21,13 @@ namespace NeutronLoader
         private static BackgroundWorker _backgroundWorker;
         private DirectoryInfo _hostOrderDirectory;
         private string _inputFileFilter;
-
-        // private AlliedFileWatcher _interfaceWatcher;
         private DynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
         private readonly Station _rackStation;
         private string _neutronDownFileName;
-        private Timer _downTimer;
+        private Timer _timer;
         private bool _loadOrdersBusy;
         private int _loaderDelay;
         private const string FolderName = "Neutron Loader";
@@ -61,10 +59,9 @@ namespace NeutronLoader
 
         public void StartProcessingInterfaceFiles()
         {
-
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(_loaderDelay);
-            _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
+            var periodTimeSpan = TimeSpan.FromSeconds(_loaderDelay);
+            _timer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
         }
 
         private void LoadOrders()
@@ -106,9 +103,7 @@ namespace NeutronLoader
         {
             StopBackgroundWorker();
             _interfaceFileQueue.CompleteAdding();
-            // _upTimer?.Dispose();
-            //  _interfaceWatcher?.Stop();
-
+            _timer?.Dispose();
         }
 
         public void RunLoaderOnce()
@@ -122,20 +117,12 @@ namespace NeutronLoader
             var result = new FileInfo[] { };
             try
             {
-                if (_neutronLicense.CompanyCode != "SFH")
+                if (!SetNeutronBusy())
                 {
                     result = _hostOrderDirectory.GetFiles(_inputFileFilter);
                 }
-                else
-                {
-                    if (!SetNeutronBusy())
-                    {
-                        result = _hostOrderDirectory.GetFiles(_inputFileFilter);
-                    }
-                    _logger.Log("Clear Neutron Down Busy Get Files Function.");
-                    ClearNeutronBusy();
-                }
-
+                _logger.Log("Clear Neutron Down Busy Get Files Function.");
+                ClearNeutronBusy();
             }
             catch (Exception ex)
             {
@@ -195,18 +182,6 @@ namespace NeutronLoader
             {
                 object result = e.Result;
             }
-        }
-
-        internal void FileCreated(object sender, FileInfoArgs e)
-        {
-            _logger.Log("Call to FileCreated Function.");
-            if (!SetNeutronBusy())
-            {
-                _logger.Log($"File Created: {e.FileInfo.FullName} ");
-                _interfaceFileQueue.Add(e.FileInfo);
-            }
-            _logger.Log("Clear Neutron Down Busy FileCreated Function.");
-            ClearNeutronBusy();
         }
 
         private void ClearNeutronBusy()

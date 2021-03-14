@@ -6646,6 +6646,7 @@ namespace Neutron.Forms
                 var orderId = orderDetails.First().OrderId;
                 foreach (var item in orderDetails)
                 {
+
                     item.LineStatusId = (int)LineStatus.Hold;
                     _repoOrderDetails.Update(item);
                     GlobalVar.HistoryManager.SaveHistory(ActionCode.HoldLine, item);

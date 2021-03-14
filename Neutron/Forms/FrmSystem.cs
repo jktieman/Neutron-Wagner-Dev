@@ -121,8 +121,6 @@ namespace Neutron.Forms
         private void RunLoaderOnce()
         {
             Mediator.GetInstance().OnRunLoaderOnce(this);
-            //var interfaceProcessor = new InterfaceProcessor(_neutronVariables, _neutronLicense, _jsonData);
-            //interfaceProcessor.RunLoaderOnce();
         }
 
         private void MBStartUpload_Click(object sender, EventArgs e)
@@ -139,8 +137,7 @@ namespace Neutron.Forms
 
         private void RunUploadOnce()
         {
-            var uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense,  _logger, _rackStation);
-            uploadProcessor.CreateHostFile();
+            Mediator.GetInstance().OnRunUploadOnce(this);
         }
 
         private void MBMainClose_Click(object sender, EventArgs e)

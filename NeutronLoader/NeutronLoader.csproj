@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HostFilePr1.cs" />
+    <Compile Include="HostFileSfh.cs" />
     <Compile Include="InterfaceProcessor.cs" />
     <Compile Include="InterfaceProcessorPr1.cs" />
     <Compile Include="InterfaceProcessorTop.cs" />
@@ -101,6 +102,7 @@
     </Compile>
     <Compile Include="StartStopLoaderManager.cs" />
     <Compile Include="TopFileProcessor.cs" />
+    <Compile Include="UploadProcessorSfh.cs" />
     <Compile Include="UploadProcessorTop.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
     <Compile Include="VidirFileProcessor.cs" />
