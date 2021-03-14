@@ -3519,7 +3519,7 @@ namespace Neutron.Forms
             }
         }
 
-       private void RemoveItemFromBatch(int orderId)
+        private void RemoveItemFromBatch(int orderId)
         {
             var bp = _ordersToPick.Where(o => o.OrderId == orderId).FirstOrDefault();
             if (bp != null)
@@ -5415,8 +5415,8 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Job Manager Main Screen Start"));
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.RoyalBlue;
-            MBOffCarousel.Visible = _station.StationTypeId == (int) StationType.Supervisor ||
-                                    _station.StationTypeId == (int) StationType.Rack;
+            MBOffCarousel.Visible = _station.StationTypeId == (int)StationType.Supervisor ||
+                                    _station.StationTypeId == (int)StationType.Rack;
             ShowAllOrders();
             tabControl1.SelectedTab = OrderListing;
             Cursor.Current = Cursors.Default;
@@ -5689,7 +5689,7 @@ namespace Neutron.Forms
         private void ButtonRemoveLine_Click(object sender, EventArgs e)
         {
             _bindingSourceNewItems.RemoveCurrent();
-            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0 
+            ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0
                                        && ((NewItemView)_bindingSourceNewItems.Current).Item != null;
             CreateJobButtonEnable();
         }
@@ -6624,16 +6624,19 @@ namespace Neutron.Forms
             }
         }
 
-      private void MBReleaseDetail_Click(object sender, EventArgs e)
+        private void MBReleaseDetail_Click(object sender, EventArgs e)
         {
             var orderDetails = GetSelectedOrderDetails(DataGridViewOrderDetails);
             if (!orderDetails.Any()) return;
             var orderId = orderDetails.First().OrderId;
             foreach (var item in orderDetails)
             {
-                item.LineStatusId = (int)LineStatus.Available;
-                _repoOrderDetails.Update(item);
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.ReleaseLine, item);
+                if (item.LineStatusId == (int)LineStatus.Hold)
+                {
+                    item.LineStatusId = (int)LineStatus.Available;
+                    _repoOrderDetails.Update(item);
+                    GlobalVar.HistoryManager.SaveHistory(ActionCode.ReleaseLine, item);
+                }
             }
             ShowOrderDetails(orderId);
         }
@@ -6646,10 +6649,12 @@ namespace Neutron.Forms
                 var orderId = orderDetails.First().OrderId;
                 foreach (var item in orderDetails)
                 {
-
-                    item.LineStatusId = (int)LineStatus.Hold;
-                    _repoOrderDetails.Update(item);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.HoldLine, item);
+                    if (item.LineStatusId == (int)LineStatus.Available)
+                    {
+                        item.LineStatusId = (int)LineStatus.Hold;
+                        _repoOrderDetails.Update(item);
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.HoldLine, item);
+                    }
                 }
                 ShowOrderDetails(orderId);
             }
@@ -6759,7 +6764,7 @@ namespace Neutron.Forms
             }
         }
 
-  private int ShowCompleted(int recId = 0)
+        private int ShowCompleted(int recId = 0)
         {
             // var views = _ordersRepository.GetCompletedOrders();
             // var bindingListView = new BindingListView<OrderView>(views.ToList());
@@ -7918,12 +7923,7 @@ namespace Neutron.Forms
                 {
                     if (order != null)
                     {
-                        if (order.OrderStatusId == (int)OrderStatus.Picking ||
-                            order.OrderStatusId == (int)OrderStatus.Complete)
-                        {
-                            return;
-                        }
-                        else
+                        if (order.OrderStatusId == (int)OrderStatus.Available)
                         {
                             KillLine(order.OrderDetails);
                             GlobalVar.HistoryManager.SaveHistory(ActionCode.KillOrder, order, _station.StationId);
@@ -7945,18 +7945,16 @@ namespace Neutron.Forms
             {
                 foreach (var orderDetail in orderDetails)
                 {
-                    if (orderDetail.LineStatusId == (int)LineStatus.Picking ||
-                        orderDetail.LineStatusId == (int)LineStatus.Complete)
-                    {
-                        return;
-                    }
-                    else
+                    var order = _repoOrders.FindByKey(orderDetail.OrderId);
+                    if (orderDetail.LineStatusId == (int)LineStatus.Available 
+                        && order.OrderStatusId = (int)OrderStatus.Available)
                     {
                         var stationId = _stationRepository.GetStationId(orderDetail.StationNumber);
                         orderDetail.PickedQuantity = 0;
                         orderDetail.LineStatusId = (int)LineStatus.Complete;
                         _repoOrderDetails.Update(orderDetail);
                         GlobalVar.HistoryManager.SaveHistory(ActionCode.KillLine, orderDetail, stationId);
+                        CheckForOrderComplete(order);
                     }
                 }
             }
@@ -7971,9 +7969,6 @@ namespace Neutron.Forms
         {
             var orderDetails = GetSelectedOrderDetails(DataGridViewOrderDetails);
             if (orderDetails.Any()) KillLine(orderDetails);
-
-            var order = orderDetails[0].Order;
-            CheckForOrderComplete(order);
             ShowOrderDetailsByOrder(_currentJobDetailsOrderId);
         }
 
