@@ -31,6 +31,7 @@ using NeutronCore;
 using NeutronData.Interfaces;
 using NeutronCore.Enums;
 using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
+using StationType = NeutronCore.Enums.StationType;
 using StorageType = Neutron.Enums.StorageType;
 namespace Neutron.Forms
 {
@@ -654,7 +655,7 @@ namespace Neutron.Forms
             var bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString(""),
-                Visible = true,
+                Visible = _station.StationTypeId != (int)StationType.Rack && _station.StationTypeId != (int)StationType.Supervisor,
                 Name = "Position",
                 Text = position,
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -837,7 +838,7 @@ namespace Neutron.Forms
             bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString("Id"),
-                Visible = true,
+                Visible = _station.StationTypeId != (int)StationType.Rack && _station.StationTypeId != (int)StationType.Supervisor,
                 Name = "Position",
                 Text = position,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -1002,7 +1003,7 @@ namespace Neutron.Forms
             bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString("Id"),
-                Visible = true,
+                Visible = _station.StationTypeId != (int)StationType.Rack && _station.StationTypeId != (int)StationType.Supervisor,
                 Name = "Position",
                 Text = position,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,

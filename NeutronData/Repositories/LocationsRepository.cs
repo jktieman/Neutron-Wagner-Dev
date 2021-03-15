@@ -196,7 +196,7 @@ namespace NeutronData.Repositories
                 Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
             }
 
-            return recs.Where(r => r.Slot.Contains(slot));
+            return string.IsNullOrEmpty(slot) ? recs : recs.Where(r => r.Slot.Contains(slot));
         }
 
         public IEnumerable<LocationView> FindLocationViewsBySlot(string slot)

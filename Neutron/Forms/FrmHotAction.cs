@@ -402,11 +402,13 @@ namespace Neutron.Forms
             }
             if (CheckBoxAll.Checked)
             {
-                views = _locationsRepository.FindLocationViewsBySlot(slot);
+
+                views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot).ToList();
             }
             else
             {
-                views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot);
+                views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot).ToList();
+                views = views.Where(r => r.InUse == false);
             }
             var locationViews = views.ToList();
             var blvAll = new BindingListView<LocationView>(locationViews.ToList());

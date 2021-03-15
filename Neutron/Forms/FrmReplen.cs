@@ -5035,7 +5035,8 @@ namespace Neutron.Forms
             MBPriority.Visible = true;
             MBHold.Visible = true;
             MBRelease.Visible = true;
-            MBDeleteOrder.Visible = true;
+            MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
         }
 
         private void HideButtons()
@@ -5043,7 +5044,8 @@ namespace Neutron.Forms
             MBPriority.Visible = false;
             MBHold.Visible = false;
             MBRelease.Visible = false;
-            MBDeleteOrder.Visible = false;
+            MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
         }
 
         //Ready

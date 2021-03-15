@@ -195,15 +195,14 @@ namespace NeutronData.Repositories
         public List<AvailableOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
         {
             var recs = new List<AvailableOrdersView>();
-            var availableSkip = new[] { 1, 9 };
+            var availableSkip = new[] { 1, 3, 9 };
             try
             {
-
                 if (!string.IsNullOrWhiteSpace(search))
                 {
                     search = search.ToLower();
                     recs = _repoOrders.AllInclude(s => s.OrderDetails)
-                        .Where(o => o.OrderStatusId == 1 && (o.Ord1.ToLower().Contains(search) || o.Ord2.ToLower().Contains(search)))
+                        .Where(o => availableSkip.Contains(o.OrderStatusId) && (o.Ord1.ToLower().Contains(search) || o.Ord2.ToLower().Contains(search)))
                         .Where(s => s.OrderDetails.All(d => d.StationNumber == station.StationNumber))
                         .Select(r => new AvailableOrdersView
                         {

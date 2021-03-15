@@ -66,7 +66,7 @@ namespace NeutronLoader
                     var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode)).ToList();
                     if (recs.Count > 0)
                     {
-                        var hostFile = new HostFileSfh(_neutronLicense, _neutronVariables);
+                        var hostFile = new HostFileSfh(_neutronLicense, _neutronVariables, _rackStation);
                         var result = hostFile.CreateHostFile(recs);
                         if (result)
                         {

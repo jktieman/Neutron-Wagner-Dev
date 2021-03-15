@@ -756,7 +756,7 @@ namespace Neutron.Forms
             var bCol = new DataGridViewButtonColumn
             {
                 HeaderText = string.Empty,
-                Visible = true,
+                Visible = _station.StationTypeId != (int)NeutronCore.Enums.StationType.Rack && _station.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor,
                 Name = "Position",
                 Text = _gridResourceManager.GetString("Position"),
                 UseColumnTextForButtonValue = true,

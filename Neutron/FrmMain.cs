@@ -124,8 +124,9 @@ namespace Neutron
                     var compressTimer = new Timer(interval);
 
                     compressTimer.Elapsed += new ElapsedEventHandler(OnRunCompress);
-                    //_compressTimer.AutoReset = true;
+                    compressTimer.AutoReset = true;
                     compressTimer.Enabled = true;
+
                     _compressTimer = compressTimer;
                 }
             }

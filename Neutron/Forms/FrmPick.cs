@@ -3028,6 +3028,7 @@ namespace Neutron.Forms
 
         private void MBAvailableOrdersBack_Click(object sender, EventArgs e)
         {
+            // if there are any orders not complete change them back to Available
             AvailableOrdersBack();
         }
 
@@ -3044,6 +3045,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Go Batch START"));
             Cursor.Current = Cursors.WaitCursor;
             TextBoxFindAvailableOrders.Text = string.Empty;
+           // UpdateOrdersToPickingStatus(_ordersToPick);
             var numOrders = _ordersToPick.Where(o => o.OrderId != null).Count();
             if (numOrders > 0)
             {
@@ -3084,6 +3086,24 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Go Batch START"));
         }
 
+        //private void UpdateOrdersToPickingStatus(List<BatchPosition> ordersToPick)
+        //{
+        //    var orderIds = ordersToPick.Where(r => r.OrderId != null).ToList();
+
+        //    foreach (var batchPosition in orderIds)
+        //    {
+        //        var orderDetails = _repoOrderDetails.FindBy(r =>
+        //            r.OrderId == batchPosition.OrderId && r.StationNumber == _station.StationNumber &&
+        //            r.LineStatusId == (int) LineStatus.Available);
+        //        foreach (var orderDetail in orderDetails)
+        //        {
+        //            orderDetail.LineStatusId = (int) LineStatus.Picking;
+        //            _repoOrderDetails.Update(orderDetail);
+        //        }
+        //    }
+        //}
+
+
         private List<PickView> GetShortItems(List<PickView> pickableViews)
         {
             var shortItems = new List<PickView>();
@@ -3119,6 +3139,10 @@ namespace Neutron.Forms
             LoadInventory();
             foreach (var item in pickViews)
             {
+                var orderDetail = item.OrderDetail;
+                orderDetail.LineStatusId = (int) LineStatus.Picking;
+                _repoOrderDetails.Update(orderDetail);
+
                 List<Inventory> exactInventorySequence;
                 switch (_neutronVariables.PickMethod)
                 {
@@ -3717,11 +3741,36 @@ namespace Neutron.Forms
             ClearAllBli();
             Console.WriteLine("Clear Active Device Indicator  PickBack");
             ClearActiveDeviceIndicators();
+            UpdateOrdersToAvailableStatus(_ordersToPick);
 
+        }
+
+        private void UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
+        {
+            var orderIds = ordersToPick.Where(r => r.OrderId != null && r.OrderComplete == false).ToList();
+            foreach (var batchPosition in orderIds)
+            {
+                var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.StationNumber == _station.StationNumber && r.LineStatusId == (int)LineStatus.Picking);
+                foreach (var orderDetail in orderDetails)
+                {
+                    orderDetail.LineStatusId = (int)LineStatus.Available;
+                    _repoOrderDetails.Update(orderDetail);
+                }
+            }
         }
 
         private void MBStart_Click(object sender, EventArgs e)
         {
+            var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
+            if (pickViews == null) return;
+
+            foreach (var item in pickViews)
+            {
+                var orderDetail = item.OrderDetail;
+                orderDetail.LineStatusId = (int)LineStatus.Picking;
+                _repoOrderDetails.Update(orderDetail);
+
+            }
             Start();
         }
 
@@ -3745,7 +3794,8 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Start_Click Start: [{DateTime.Now.ToLongTimeString()}]"));
             var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
             if (pickViews == null) return;
-            pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.Loc1)
+
+           pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.Loc1)
                  .ThenBy(p => p.CurrentInventoryLocation.Location.Loc2)
                  .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
                  .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4).ToList();
@@ -5652,7 +5702,12 @@ namespace Neutron.Forms
             MBRelease.Visible = true;
             MBReturnToStock.Visible = _neutronVariables.UseReturnToStock;
             MBReturnToStockOrderDetail.Visible = _neutronVariables.UseReturnToStock;
-            MBDeleteOrder.Visible = true;
+            MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillLine.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillLineSkip.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
         }
 
         private void HideButtons()
@@ -5662,7 +5717,12 @@ namespace Neutron.Forms
             MBRelease.Visible = false;
             MBReturnToStock.Visible = false;
             MBReturnToStockOrderDetail.Visible = false;
-            MBDeleteOrder.Visible = false;
+            MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillLine.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillLineSkip.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
         }
 
         //Ready
@@ -7946,8 +8006,8 @@ namespace Neutron.Forms
                 foreach (var orderDetail in orderDetails)
                 {
                     var order = _repoOrders.FindByKey(orderDetail.OrderId);
-                    if (orderDetail.LineStatusId == (int)LineStatus.Available 
-                        && order.OrderStatusId = (int)OrderStatus.Available)
+                    if ((orderDetail.LineStatusId == (int)LineStatus.Available || orderDetail.LineStatusId == (int)LineStatus.Skipped)
+                        && order.OrderStatusId == (int)OrderStatus.Available)
                     {
                         var stationId = _stationRepository.GetStationId(orderDetail.StationNumber);
                         orderDetail.PickedQuantity = 0;
