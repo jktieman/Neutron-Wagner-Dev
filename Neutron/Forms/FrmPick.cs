@@ -4589,10 +4589,10 @@ namespace Neutron.Forms
             ClearBatchPositions();
             ClearAllDeviceIndicators();
 
-            if (_neutronLicense.CompanyCode == "SFH")
-            {
-                var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
-            }
+            //if (_neutronLicense.CompanyCode == "SFH")
+            //{
+            //    var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
+            //}
 
             ParkPositionAfterBatch();
 
@@ -4901,10 +4901,10 @@ namespace Neutron.Forms
                 }
             }
 
-            if (_neutronLicense.CompanyCode == "SFH")
-            {
-                var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
-            }
+            //if (_neutronLicense.CompanyCode == "SFH")
+            //{
+            //    var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
+            //}
 
             ParkPositionAfterBatch();
 
