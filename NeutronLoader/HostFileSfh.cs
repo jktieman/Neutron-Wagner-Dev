@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace NeutronLoader
 {
@@ -19,12 +20,14 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
+        private readonly StationRepository _stationRepository = new StationRepository();
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly Station _rackStation;
         private readonly DynamicLogger _logger;
+        private readonly int _rackStationId = 8;
 
-        public HostFileSfh(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation)
+        public HostFileSfh(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
@@ -35,6 +38,19 @@ namespace NeutronLoader
             var folderName = @"HostFile";
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+
+            var rackStationIsNull = true;
+            // SAP requires a 9 for the Off Carousel station number
+            if (_rackStation == null)
+            {
+                _rackStationId = 8;
+            }
+            else
+            {
+                rackStationIsNull = false;
+                _rackStationId = _rackStation.Id;
+            }
+            _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 
         public bool CreateHostFile(List<History> historyRecs)
@@ -45,8 +61,9 @@ namespace NeutronLoader
             return SaveUploadDatFile(historyRecs);
         }
 
-       private bool SaveUploadDatFile(List<History> historyRecs)
+        private bool SaveUploadDatFile(List<History> historyRecs)
         {
+            _logger.Log($"History Record Count: {historyRecs.Count}");
             var result = false;
             if (!Directory.Exists(_hostUploadDirectory.FullName))
             {
@@ -61,73 +78,122 @@ namespace NeutronLoader
                 {
                     using (var tw = new StreamWriter(fullName, append: true))
                     {
+                        _logger.Log($"Stream Writer: {tw.ToString()}");
                         foreach (var history in historyRecs)
                         {
-                            tw.WriteLine(GetUploadDatRecord(history));
+                            _logger.Log($"Stream Writer - Starting For Loop: {tw.ToString()}");
+                            var rec = GetUploadDatRecord(history);
+                            _logger.Log($"Rec = {rec}");
+                            if (rec != null) tw.WriteLine(rec);
                         }
                     }
                     result = true;
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    MessageBox.Show($"Save Upload Dat File Error: {ex.Message}{Environment.NewLine}" +
+                                    $"{ex.InnerException.Message}{Environment.NewLine}{ex.StackTrace}");
+                    _logger.Log($"Save Upload Dat File Error: {ex.Message}{Environment.NewLine}" +
+                                $"{ex.InnerException.Message}{Environment.NewLine}{ex.StackTrace}");
                 }
             }
             else
             {
-                _logger.Log($"Go to Options and enter an upload file name.");
+                _logger.Log($"File Name is Empty.  Go to Options and enter an upload file name.");
             }
 
             return result;
         }
 
         // Saint Francis Upload Format
-        private string GetUploadDatRecord(History history)
+        public string GetUploadDatRecord(History history)
         {
-            // SAP requires a 9 for the Off Carousel station number
-            var station = history.StationId == _rackStation.Id ? "9" : history.StationId.ToString();
-            var order = history.Ord1.PadRight(10);
-            var costCenter = history.CostCenter;
-            var orderDetailInfo = string.Empty;
-            // Rightmost 24 characters of the OrderDetailInfo field
-            var info = history.OrderDetailInfo;
-            if (!string.IsNullOrEmpty(info))
+            _logger.Log($"Get Upload Dat Record - START");
+            var result = string.Empty;
+            if (history == null)
             {
-                if (info.Length >= 24)
+                _logger.Log($"Get Upload Dat Error: History is NULL");
+                return result;
+            }
+            try
+            {
+                string invoice;
+                string order;
+                string costCenter;
+                string info;
+                string empName;
+
+                _logger.Log($"Get Upload Dat Record - Begin Try");
+                var stat = _stationRepository.GetStation(history.StationId);
+                _logger.Log($"Get Upload Dat Record - 1");
+                var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
+                _logger.Log($"Get Upload Dat Record - 2");
+                order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
+
+                _logger.Log($"Get Upload Dat Record Order: {order} - 3");
+                invoice = history.Ord2 == null ? string.Empty.PadRight(10) : history.Ord2.PadRight(10);
+                _logger.Log($"Get Upload Dat Record Invoice: {invoice} - 3");
+                costCenter = history.CostCenter ?? string.Empty;
+                _logger.Log($"Get Upload Dat Record CostCenter {costCenter} - 4");
+                var orderDetailInfo = string.Empty;
+                // Rightmost 24 characters of the OrderDetailInfo field
+                info = history.OrderDetailInfo ?? string.Empty;
+                _logger.Log($"Get Upload Dat Record Info {info} - 5");
+                if (!string.IsNullOrEmpty(info))
                 {
-                    orderDetailInfo = info.Substring(info.Length - 24);
+                    _logger.Log($"Get Upload Dat Record - 6");
+                    if (info.Length >= 24)
+                    {
+                        _logger.Log($"Get Upload Dat Record - 7");
+                        orderDetailInfo = info.Substring(info.Length - 24);
+                        _logger.Log($"Get Upload Dat Record - 8");
+                    }
+                    _logger.Log($"Get Upload Dat Record OrderDetailInfo {orderDetailInfo} - 9");
                 }
-            }
+                _logger.Log($"Get Upload Dat Record - 10");
+                empName = string.Empty;
+                if (history.EmpId != null)
+                {
+                    var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
+                    _logger.Log($"Get Upload Dat Record - 11");
+                    if (emp != null)
+                    {
+                        _logger.Log($"Get Upload Dat Record - 12");
+                        empName = emp.Firstname.PadRight(10);
+                    }
+                }
 
-            var empName = string.Empty;
-            var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
-            if (emp != null)
+                _logger.Log($"Get Upload Dat Record - 13");
+                var upCode = ($"02");
+                var time = DateTime.Now.ToString(format: "HH:mm");
+
+                _logger.Log($"Get Upload Dat Record - Begin StringBuilder 14");
+                var sb = new StringBuilder(new string(' ', 170));
+                sb.Insert(0, $"{station}O");
+                sb.Insert(2, order);
+                sb.Insert(13, invoice);
+                sb.Insert(24, history.ActionDateTime.ToString("yyyyMMdd"));
+                sb.Insert(33, history.ActionDateTime.ToString("yyyyMMdd"));
+                sb.Insert(42, history.Item.PadRight(35));
+                sb.Insert(78, history.RequestedQuantity.ToString().PadLeft(9, '0'));
+                sb.Insert(88, history.IssuedQuantity.ToString().PadLeft(9, '0'));
+                sb.Insert(98, time);
+                sb.Insert(104, upCode);
+                sb.Insert(107, empName);
+                sb.Insert(118, costCenter);
+                sb.Insert(129, station);
+                sb.Insert(130, orderDetailInfo);
+                sb.Length = 154;
+
+                result = sb.ToString();
+
+            }
+            catch (Exception ex)
             {
-                empName = emp.Firstname.PadRight(10);
+                _logger.Log($"Get Upload Dat Record Error: {ex.Message}{Environment.NewLine}" +
+                            $"{ex.InnerException.Message}{Environment.NewLine}{ex.StackTrace}");
             }
-            var upCode = ($"02");
-            var time = DateTime.Now.ToString(format: "HH:mm");
-            var invoice = history.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
-
-            var sb = new StringBuilder(new string(' ', 170));
-            sb.Insert(0, $"{station}O");
-            sb.Insert(2, order);
-            sb.Insert(13, invoice);
-            sb.Insert(24, history.ActionDateTime.ToString("yyyyMMdd"));
-            sb.Insert(33, history.ActionDateTime.ToString("yyyyMMdd"));
-            sb.Insert(42, history.Item.PadRight(35));
-            sb.Insert(78, history.RequestedQuantity.ToString().PadLeft(9, '0'));
-            sb.Insert(88, history.IssuedQuantity.ToString().PadLeft(9, '0'));
-            sb.Insert(98, time);
-            sb.Insert(104, upCode);
-            sb.Insert(107, empName);
-            sb.Insert(118, costCenter);
-            sb.Insert(129, station);
-            sb.Insert(130, orderDetailInfo);
-            sb.Length = 154;
-
-            var result = sb.ToString();
-            _logger.Log($"{result}");
+            _logger.Log($"Get Upload Dat Record - END  Result:{result}");
             return result;
         }
 

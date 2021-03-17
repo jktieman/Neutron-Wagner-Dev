@@ -162,7 +162,7 @@ namespace Neutron
             // Compress Normal Orders
 
             var completedOrders = _ordersRepository.GetCompletedOrders(string.Empty).ToList();
-            var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).ToList();
+            var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
 
             if (!ordersToCompress.Any()) return;
             var orderType = "PICK";

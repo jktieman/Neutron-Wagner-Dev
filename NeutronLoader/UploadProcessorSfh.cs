@@ -78,15 +78,16 @@ namespace NeutronLoader
                         }
                         else
                         {
-                            MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
+                            MessageBox.Show($"Upload Process Failed, see Log file in HostFile. Result value is: {result} ");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
-                _logger.Log($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                MessageBox.Show(@"Upload Process Exception, see Log file in HostFile.");
+                _logger.Log($"Create Host File Failed: {ex.Message} {Environment.NewLine} " +
+                            $"{ex.InnerException.Message} {Environment.NewLine}{ex.StackTrace}");
             }
 
             _uploadBusy = false;
