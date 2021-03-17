@@ -20,14 +20,18 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
+        private readonly StationRepository _stationRepository = new StationRepository();
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
+        private readonly Station _rackStation;
+        private readonly int _rackStationId;
         private readonly DynamicLogger _logger;
 
-        public HostFilePr1(NeutronLicense neutronLicense, NeutronVariables neutronVariables)
+        public HostFilePr1(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
+            _rackStation = rackStation;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
 
@@ -35,6 +39,19 @@ namespace NeutronLoader
             var folderName = @"HostFile";
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+
+            var rackStationIsNull = true;
+            // SAP requires a 9 for the Off Carousel station number
+            if (_rackStation == null)
+            {
+                _rackStationId = 8;
+            }
+            else
+            {
+                rackStationIsNull = false;
+                _rackStationId = _rackStation.Id;
+            }
+            _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 
         public bool CreateHostFile(List<History> historyRecs)
@@ -177,28 +194,72 @@ namespace NeutronLoader
             var result = string.Empty;
             try
             {
-                var station = history.StationId;
-                var order = history.Ord1.PadRight(10);
+                string invoice;
+                string order;
+                string costCenter;
+                string info;
+                string empName;
+
+                _logger.Log($"Get Upload Dat Record - Begin Try");
+                var stat = _stationRepository.GetStation(history.StationId);
+                _logger.Log($"Get Upload Dat Record - 1");
+                var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
+                _logger.Log($"Get Upload Dat Record - 2");
+                order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
+
+                _logger.Log($"Get Upload Dat Record Order: {order} - 3");
+                invoice = history.Ord2 == null ? string.Empty.PadRight(10) : history.Ord2.PadRight(10);
+                _logger.Log($"Get Upload Dat Record Invoice: {invoice} - 3");
+                costCenter = history.CostCenter ?? string.Empty;
+                _logger.Log($"Get Upload Dat Record CostCenter {costCenter} - 4");
                 var orderDetailInfo = string.Empty;
                 // Rightmost 24 characters of the OrderDetailInfo field
-                var info = history.OrderDetailInfo;
+                info = history.OrderDetailInfo ?? string.Empty;
+                _logger.Log($"Get Upload Dat Record Info {info} - 5");
                 if (!string.IsNullOrEmpty(info))
                 {
+                    _logger.Log($"Get Upload Dat Record - 6");
                     if (info.Length >= 24)
                     {
+                        _logger.Log($"Get Upload Dat Record - 7");
                         orderDetailInfo = info.Substring(info.Length - 24);
+                        _logger.Log($"Get Upload Dat Record - 8");
+                    }
+                    _logger.Log($"Get Upload Dat Record OrderDetailInfo {orderDetailInfo} - 9");
+                }
+                _logger.Log($"Get Upload Dat Record - 10");
+                empName = string.Empty;
+                if (history.EmpId != null)
+                {
+                    var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
+                    _logger.Log($"Get Upload Dat Record - 11");
+                    if (emp != null)
+                    {
+                        _logger.Log($"Get Upload Dat Record - 12");
+                        empName = emp.Firstname.PadRight(10);
                     }
                 }
+                //var station = history.StationId;
+                //var order = history.Ord1.PadRight(10);
+                //var orderDetailInfo = string.Empty;
+                //// Rightmost 24 characters of the OrderDetailInfo field
+                //var info = history.OrderDetailInfo;
+                //if (!string.IsNullOrEmpty(info))
+                //{
+                //    if (info.Length >= 24)
+                //    {
+                //        orderDetailInfo = info.Substring(info.Length - 24);
+                //    }
+                //}
 
-                var empName = string.Empty;
-                var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
-                if (emp != null)
-                {
-                    empName = emp.Firstname.PadRight(10);
-                }
+                //var empName = string.Empty;
+                //var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
+                //if (emp != null)
+                //{
+                //    empName = emp.Firstname.PadRight(10);
+                //}
                 var upCode = ($"02");
                 var time = DateTime.Now.ToString(format: "HH:mm");
-                var invoice = history.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
 
                 var sb = new StringBuilder(new string(' ', 170));
                 sb.Insert(0, $"{station}O");

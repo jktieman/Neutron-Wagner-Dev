@@ -352,15 +352,16 @@ namespace Neutron.Forms
 
         private void FillComboBoxStationNumber()
         {
-            var stationNumbers = _stationRepository.GetPickStationNumbers();
+            List<string> stationNumbers = new List<string>();
+            stationNumbers = _stationRepository.GetPickStationNumbers();
             if (stationNumbers.Count > 0)
             {
                 stationNumbers.Insert(0, _resourceManager.GetString($"ALL"));
             }
-            else
-            {
-                stationNumbers = new List<string> { "All", "1", "2", "3", "4", "5", "8" };
-            }
+            //else
+            //{
+            //    stationNumbers = new List<string> { "All", "1", "2", "3", "4", "5", "8" };
+            //}
             ComboBoxStationNumber.DataSource = stationNumbers;
             ComboBoxStationNumber.SelectedIndex = 0;
         }

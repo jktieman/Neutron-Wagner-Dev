@@ -1473,7 +1473,7 @@ namespace Neutron.Forms
             //}
         }
 
-        private void AddOrUpdateCarriers(int stationId, int device, int numberOfCarriers)
+        private void AddOrUpdateCarriers(int stationNumber, int device, int numberOfCarriers)
         {
             try
             {
@@ -1484,7 +1484,7 @@ namespace Neutron.Forms
                     {
                         var i1 = i;
 
-                        var carrier = context.Carriers.FirstOrDefault(r => r.StationNumber == stationId
+                        var carrier = context.Carriers.FirstOrDefault(r => r.StationNumber == stationNumber
                                                                            && r.DeviceNumber == device
                                                                            && r.CarrierNumber == i1);
                         if (carrier != null) continue;
@@ -1492,7 +1492,7 @@ namespace Neutron.Forms
                         {
                             DeviceNumber = device,
                             CarrierNumber = i1,
-                            StationNumber = stationId
+                            StationNumber = stationNumber
                         };
                         context.Carriers.Add(newCarrier);
                     }

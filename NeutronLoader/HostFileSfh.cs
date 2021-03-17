@@ -25,7 +25,7 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly Station _rackStation;
         private readonly DynamicLogger _logger;
-        private readonly int _rackStationId = 8;
+        private readonly int _rackStationId;
 
         public HostFileSfh(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
         {
