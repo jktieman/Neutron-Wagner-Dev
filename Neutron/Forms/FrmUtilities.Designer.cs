@@ -54,7 +54,9 @@
             this.LabelVersionLabel = new System.Windows.Forms.Label();
             this.LabelVersion = new System.Windows.Forms.Label();
             this.MBUtilitiesClose = new MetroFramework.Controls.MetroButton();
+            this.MBEmailServer = new MetroFramework.Controls.MetroButton();
             this.MBManageLookups = new MetroFramework.Controls.MetroButton();
+            this.MBEmailAddresses = new MetroFramework.Controls.MetroButton();
             this.MBPrinterSetup = new MetroFramework.Controls.MetroButton();
             this.MBCommunications = new MetroFramework.Controls.MetroButton();
             this.MBDevices = new MetroFramework.Controls.MetroButton();
@@ -100,7 +102,9 @@
             this.CheckBoxShiEnabled = new System.Windows.Forms.CheckBox();
             this.CheckBoxBliEnabled = new System.Windows.Forms.CheckBox();
             this.LabelUploadDelay = new System.Windows.Forms.Label();
+            this.LabelCompressHours = new System.Windows.Forms.Label();
             this.LabelCompress2 = new System.Windows.Forms.Label();
+            this.LabelCompressInterval = new System.Windows.Forms.Label();
             this.LabelCompress1 = new System.Windows.Forms.Label();
             this.LabelFlashRate = new System.Windows.Forms.Label();
             this.LabelLoaderDelay = new System.Windows.Forms.Label();
@@ -120,6 +124,7 @@
             this.NumericUpDownLogLevel = new System.Windows.Forms.NumericUpDown();
             this.CheckBoxPinLoginOnly = new System.Windows.Forms.CheckBox();
             this.CheckBoxUpdateItemDefinitionDescription = new System.Windows.Forms.CheckBox();
+            this.CheckBoxSpecialBackorder = new System.Windows.Forms.CheckBox();
             this.CheckBoxSerialPicking = new System.Windows.Forms.CheckBox();
             this.CheckBoxLoadRackOrders = new System.Windows.Forms.CheckBox();
             this.CheckBoxIptiDisplays = new System.Windows.Forms.CheckBox();
@@ -127,6 +132,7 @@
             this.CheckBoxUseMenuSecurity = new System.Windows.Forms.CheckBox();
             this.ComboBoxDefaultStorageType = new System.Windows.Forms.ComboBox();
             this.ComboBoxDefaultLanguage = new System.Windows.Forms.ComboBox();
+            this.TextBoxRunCompressInterval = new System.Windows.Forms.TextBox();
             this.ComboBoxDeviceDriver = new System.Windows.Forms.ComboBox();
             this.TextBoxCompressDays = new System.Windows.Forms.TextBox();
             this.TextBoxUploadDelay = new System.Windows.Forms.TextBox();
@@ -159,6 +165,7 @@
             this.CheckBoxPrintPackingListStart = new System.Windows.Forms.CheckBox();
             this.CheckBoxCheckForUsedItem = new System.Windows.Forms.CheckBox();
             this.CheckBoxAutoLogOff = new System.Windows.Forms.CheckBox();
+            this.CheckBoxEnableEmailNotification = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseReturnToStock = new System.Windows.Forms.CheckBox();
             this.MBSaveVariables = new MetroFramework.Controls.MetroButton();
             this.MBInterfaceFilesBack = new MetroFramework.Controls.MetroButton();
@@ -386,15 +393,43 @@
             this.LabelSerialViewNew = new System.Windows.Forms.Label();
             this.MBSerialNewBack = new MetroFramework.Controls.MetroButton();
             this.MBSerialNewSave = new MetroFramework.Controls.MetroButton();
+            this.EmailServer = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.TextBoxEmailFromAddress = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.ButtonSendTestEmail = new System.Windows.Forms.Button();
+            this.TextBoxSendToEmailAddress = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.ButtonCancelEmailServer = new System.Windows.Forms.Button();
+            this.ButtonSaveEmailServer = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.CheckBoxUseSsl = new System.Windows.Forms.CheckBox();
+            this.TextBoxPassword = new System.Windows.Forms.TextBox();
+            this.TextBoxUsername = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.TextBoxPort = new System.Windows.Forms.TextBox();
+            this.TextbBoxServerName = new System.Windows.Forms.TextBox();
+            this.TextBoxDescription = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.EmailAddresses = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.LabelEmailInfo = new System.Windows.Forms.Label();
+            this.DataGridViewEmailAddresses = new System.Windows.Forms.DataGridView();
+            this.ButtonRemoveEmail = new System.Windows.Forms.Button();
+            this.ButtonCancelEmailAddresses = new System.Windows.Forms.Button();
+            this.ButtonSaveEmailAddresses = new System.Windows.Forms.Button();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.TextBoxRunCompressInterval = new System.Windows.Forms.TextBox();
-            this.LabelCompressInterval = new System.Windows.Forms.Label();
-            this.LabelCompressHours = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -442,6 +477,14 @@
             this.panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownSerialNewPortNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownSerialNewLogLevel)).BeginInit();
+            this.EmailServer.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.EmailAddresses.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -463,6 +506,8 @@
             this.tabControl1.Controls.Add(this.ManageLookups);
             this.tabControl1.Controls.Add(this.Stations);
             this.tabControl1.Controls.Add(this.Communications);
+            this.tabControl1.Controls.Add(this.EmailServer);
+            this.tabControl1.Controls.Add(this.EmailAddresses);
             this.tabControl1.Location = new System.Drawing.Point(22, 173);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
@@ -476,7 +521,9 @@
             this.Main.Controls.Add(this.LabelVersionLabel);
             this.Main.Controls.Add(this.LabelVersion);
             this.Main.Controls.Add(this.MBUtilitiesClose);
+            this.Main.Controls.Add(this.MBEmailServer);
             this.Main.Controls.Add(this.MBManageLookups);
+            this.Main.Controls.Add(this.MBEmailAddresses);
             this.Main.Controls.Add(this.MBPrinterSetup);
             this.Main.Controls.Add(this.MBCommunications);
             this.Main.Controls.Add(this.MBDevices);
@@ -520,6 +567,18 @@
             this.MBUtilitiesClose.UseSelectable = true;
             this.MBUtilitiesClose.Click += new System.EventHandler(this.MBMainClose_Click);
             // 
+            // MBEmailServer
+            // 
+            this.MBEmailServer.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBEmailServer.Location = new System.Drawing.Point(212, 516);
+            this.MBEmailServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBEmailServer.Name = "MBEmailServer";
+            this.MBEmailServer.Size = new System.Drawing.Size(350, 100);
+            this.MBEmailServer.TabIndex = 4;
+            this.MBEmailServer.Text = "Email Server";
+            this.MBEmailServer.UseSelectable = true;
+            this.MBEmailServer.Click += new System.EventHandler(this.MBEmailServer_Click);
+            // 
             // MBManageLookups
             // 
             this.MBManageLookups.FontSize = MetroFramework.MetroButtonSize.Tall;
@@ -531,6 +590,18 @@
             this.MBManageLookups.Text = "Manage Lookups";
             this.MBManageLookups.UseSelectable = true;
             this.MBManageLookups.Click += new System.EventHandler(this.MBLookups_Click);
+            // 
+            // MBEmailAddresses
+            // 
+            this.MBEmailAddresses.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBEmailAddresses.Location = new System.Drawing.Point(584, 516);
+            this.MBEmailAddresses.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBEmailAddresses.Name = "MBEmailAddresses";
+            this.MBEmailAddresses.Size = new System.Drawing.Size(350, 100);
+            this.MBEmailAddresses.TabIndex = 5;
+            this.MBEmailAddresses.Text = "Email Addresses";
+            this.MBEmailAddresses.UseSelectable = true;
+            this.MBEmailAddresses.Click += new System.EventHandler(this.MBEmailAddresses_Click);
             // 
             // MBPrinterSetup
             // 
@@ -939,6 +1010,7 @@
             this.Settings.Controls.Add(this.NumericUpDownLogLevel);
             this.Settings.Controls.Add(this.CheckBoxPinLoginOnly);
             this.Settings.Controls.Add(this.CheckBoxUpdateItemDefinitionDescription);
+            this.Settings.Controls.Add(this.CheckBoxSpecialBackorder);
             this.Settings.Controls.Add(this.CheckBoxSerialPicking);
             this.Settings.Controls.Add(this.CheckBoxLoadRackOrders);
             this.Settings.Controls.Add(this.CheckBoxIptiDisplays);
@@ -979,6 +1051,7 @@
             this.Settings.Controls.Add(this.CheckBoxPrintPackingListStart);
             this.Settings.Controls.Add(this.CheckBoxCheckForUsedItem);
             this.Settings.Controls.Add(this.CheckBoxAutoLogOff);
+            this.Settings.Controls.Add(this.CheckBoxEnableEmailNotification);
             this.Settings.Controls.Add(this.CheckBoxUseReturnToStock);
             this.Settings.Controls.Add(this.MBSaveVariables);
             this.Settings.Controls.Add(this.MBInterfaceFilesBack);
@@ -1107,6 +1180,16 @@
             this.LabelUploadDelay.Text = "Upload Delay (Seconds)";
             this.LabelUploadDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // LabelCompressHours
+            // 
+            this.LabelCompressHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompressHours.Location = new System.Drawing.Point(1040, 516);
+            this.LabelCompressHours.Name = "LabelCompressHours";
+            this.LabelCompressHours.Size = new System.Drawing.Size(49, 16);
+            this.LabelCompressHours.TabIndex = 19;
+            this.LabelCompressHours.Text = "Hours";
+            this.LabelCompressHours.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // LabelCompress2
             // 
             this.LabelCompress2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1116,6 +1199,16 @@
             this.LabelCompress2.TabIndex = 19;
             this.LabelCompress2.Text = "Days";
             this.LabelCompress2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelCompressInterval
+            // 
+            this.LabelCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCompressInterval.Location = new System.Drawing.Point(838, 516);
+            this.LabelCompressInterval.Name = "LabelCompressInterval";
+            this.LabelCompressInterval.Size = new System.Drawing.Size(150, 16);
+            this.LabelCompressInterval.TabIndex = 19;
+            this.LabelCompressInterval.Text = "Run Compress Every";
+            this.LabelCompressInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelCompress1
             // 
@@ -1245,6 +1338,7 @@
             // CheckBoxEnableLabelPrinter
             // 
             this.CheckBoxEnableLabelPrinter.AutoSize = true;
+            this.CheckBoxEnableLabelPrinter.Enabled = false;
             this.CheckBoxEnableLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableLabelPrinter.Location = new System.Drawing.Point(349, 379);
             this.CheckBoxEnableLabelPrinter.Name = "CheckBoxEnableLabelPrinter";
@@ -1256,6 +1350,7 @@
             // CheckBoxEnableDocumentPrinter
             // 
             this.CheckBoxEnableDocumentPrinter.AutoSize = true;
+            this.CheckBoxEnableDocumentPrinter.Enabled = false;
             this.CheckBoxEnableDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableDocumentPrinter.Location = new System.Drawing.Point(349, 343);
             this.CheckBoxEnableDocumentPrinter.Name = "CheckBoxEnableDocumentPrinter";
@@ -1342,6 +1437,19 @@
             this.CheckBoxUpdateItemDefinitionDescription.Text = "Update Item Definition Description";
             this.CheckBoxUpdateItemDefinitionDescription.UseVisualStyleBackColor = true;
             // 
+            // CheckBoxSpecialBackorder
+            // 
+            this.CheckBoxSpecialBackorder.AutoSize = true;
+            this.CheckBoxSpecialBackorder.Checked = true;
+            this.CheckBoxSpecialBackorder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxSpecialBackorder.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxSpecialBackorder.Location = new System.Drawing.Point(841, 559);
+            this.CheckBoxSpecialBackorder.Name = "CheckBoxSpecialBackorder";
+            this.CheckBoxSpecialBackorder.Size = new System.Drawing.Size(139, 20);
+            this.CheckBoxSpecialBackorder.TabIndex = 35;
+            this.CheckBoxSpecialBackorder.Text = "Special Backorder";
+            this.CheckBoxSpecialBackorder.UseVisualStyleBackColor = true;
+            // 
             // CheckBoxSerialPicking
             // 
             this.CheckBoxSerialPicking.AutoSize = true;
@@ -1416,6 +1524,16 @@
             this.ComboBoxDefaultLanguage.Name = "ComboBoxDefaultLanguage";
             this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDefaultLanguage.TabIndex = 1;
+            // 
+            // TextBoxRunCompressInterval
+            // 
+            this.TextBoxRunCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxRunCompressInterval.Location = new System.Drawing.Point(994, 513);
+            this.TextBoxRunCompressInterval.Name = "TextBoxRunCompressInterval";
+            this.TextBoxRunCompressInterval.Size = new System.Drawing.Size(40, 22);
+            this.TextBoxRunCompressInterval.TabIndex = 46;
+            this.TextBoxRunCompressInterval.Text = "8";
+            this.TextBoxRunCompressInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ComboBoxDeviceDriver
             // 
@@ -1763,6 +1881,17 @@
             this.CheckBoxAutoLogOff.TabIndex = 24;
             this.CheckBoxAutoLogOff.Text = "Auto Log Off After Batch";
             this.CheckBoxAutoLogOff.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxEnableEmailNotification
+            // 
+            this.CheckBoxEnableEmailNotification.AutoSize = true;
+            this.CheckBoxEnableEmailNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxEnableEmailNotification.Location = new System.Drawing.Point(349, 94);
+            this.CheckBoxEnableEmailNotification.Name = "CheckBoxEnableEmailNotification";
+            this.CheckBoxEnableEmailNotification.Size = new System.Drawing.Size(176, 20);
+            this.CheckBoxEnableEmailNotification.TabIndex = 11;
+            this.CheckBoxEnableEmailNotification.Text = "Enable Email Notification";
+            this.CheckBoxEnableEmailNotification.UseVisualStyleBackColor = true;
             // 
             // CheckBoxUseReturnToStock
             // 
@@ -4582,6 +4711,351 @@
             this.MBSerialNewSave.UseSelectable = true;
             this.MBSerialNewSave.Click += new System.EventHandler(this.MBSerialNewSave_Click);
             // 
+            // EmailServer
+            // 
+            this.EmailServer.BackColor = System.Drawing.Color.RoyalBlue;
+            this.EmailServer.Controls.Add(this.groupBox4);
+            this.EmailServer.Controls.Add(this.groupBox3);
+            this.EmailServer.Controls.Add(this.ButtonCancelEmailServer);
+            this.EmailServer.Controls.Add(this.ButtonSaveEmailServer);
+            this.EmailServer.Controls.Add(this.groupBox2);
+            this.EmailServer.Controls.Add(this.groupBox1);
+            this.EmailServer.Location = new System.Drawing.Point(4, 22);
+            this.EmailServer.Name = "EmailServer";
+            this.EmailServer.Size = new System.Drawing.Size(1147, 644);
+            this.EmailServer.TabIndex = 13;
+            this.EmailServer.Text = "Email Server";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox4.Controls.Add(this.TextBoxEmailFromAddress);
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox4.Location = new System.Drawing.Point(268, 365);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(611, 84);
+            this.groupBox4.TabIndex = 16;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Other Settings";
+            // 
+            // TextBoxEmailFromAddress
+            // 
+            this.TextBoxEmailFromAddress.Location = new System.Drawing.Point(236, 39);
+            this.TextBoxEmailFromAddress.Name = "TextBoxEmailFromAddress";
+            this.TextBoxEmailFromAddress.Size = new System.Drawing.Size(359, 26);
+            this.TextBoxEmailFromAddress.TabIndex = 6;
+            this.TextBoxEmailFromAddress.Text = "jktieman@alliedinc.us";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(26, 42);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(170, 20);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "Email From Address";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox3.Controls.Add(this.ButtonSendTestEmail);
+            this.groupBox3.Controls.Add(this.TextBoxSendToEmailAddress);
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Location = new System.Drawing.Point(268, 455);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(611, 116);
+            this.groupBox3.TabIndex = 15;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Email Test";
+            // 
+            // ButtonSendTestEmail
+            // 
+            this.ButtonSendTestEmail.Location = new System.Drawing.Point(217, 81);
+            this.ButtonSendTestEmail.Name = "ButtonSendTestEmail";
+            this.ButtonSendTestEmail.Size = new System.Drawing.Size(152, 29);
+            this.ButtonSendTestEmail.TabIndex = 5;
+            this.ButtonSendTestEmail.Text = "Send Test Email";
+            this.ButtonSendTestEmail.UseVisualStyleBackColor = true;
+            this.ButtonSendTestEmail.Click += new System.EventHandler(this.ButtonSendTestEmail_Click);
+            // 
+            // TextBoxSendToEmailAddress
+            // 
+            this.TextBoxSendToEmailAddress.Location = new System.Drawing.Point(236, 37);
+            this.TextBoxSendToEmailAddress.Name = "TextBoxSendToEmailAddress";
+            this.TextBoxSendToEmailAddress.Size = new System.Drawing.Size(359, 26);
+            this.TextBoxSendToEmailAddress.TabIndex = 4;
+            this.TextBoxSendToEmailAddress.Text = "jktieman@gmail.com";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(26, 40);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(196, 20);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Send To Email Address";
+            // 
+            // ButtonCancelEmailServer
+            // 
+            this.ButtonCancelEmailServer.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.ButtonCancelEmailServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonCancelEmailServer.Location = new System.Drawing.Point(565, 587);
+            this.ButtonCancelEmailServer.Name = "ButtonCancelEmailServer";
+            this.ButtonCancelEmailServer.Size = new System.Drawing.Size(112, 29);
+            this.ButtonCancelEmailServer.TabIndex = 13;
+            this.ButtonCancelEmailServer.Text = "Cancel";
+            this.ButtonCancelEmailServer.UseVisualStyleBackColor = true;
+            this.ButtonCancelEmailServer.Click += new System.EventHandler(this.ButtonCancelEmailServer_Click);
+            // 
+            // ButtonSaveEmailServer
+            // 
+            this.ButtonSaveEmailServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSaveEmailServer.Location = new System.Drawing.Point(436, 587);
+            this.ButtonSaveEmailServer.Name = "ButtonSaveEmailServer";
+            this.ButtonSaveEmailServer.Size = new System.Drawing.Size(112, 29);
+            this.ButtonSaveEmailServer.TabIndex = 14;
+            this.ButtonSaveEmailServer.Text = "Save";
+            this.ButtonSaveEmailServer.UseVisualStyleBackColor = true;
+            this.ButtonSaveEmailServer.Click += new System.EventHandler(this.ButtonSaveEmailServer_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox2.Controls.Add(this.CheckBoxUseSsl);
+            this.groupBox2.Controls.Add(this.TextBoxPassword);
+            this.groupBox2.Controls.Add(this.TextBoxUsername);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.checkBox1);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(268, 198);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(611, 161);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Security and Authentication";
+            // 
+            // CheckBoxUseSsl
+            // 
+            this.CheckBoxUseSsl.AutoSize = true;
+            this.CheckBoxUseSsl.Location = new System.Drawing.Point(420, 36);
+            this.CheckBoxUseSsl.Name = "CheckBoxUseSsl";
+            this.CheckBoxUseSsl.Size = new System.Drawing.Size(99, 24);
+            this.CheckBoxUseSsl.TabIndex = 3;
+            this.CheckBoxUseSsl.Text = "Use SSL";
+            this.CheckBoxUseSsl.UseVisualStyleBackColor = true;
+            // 
+            // TextBoxPassword
+            // 
+            this.TextBoxPassword.Location = new System.Drawing.Point(236, 112);
+            this.TextBoxPassword.Name = "TextBoxPassword";
+            this.TextBoxPassword.Size = new System.Drawing.Size(359, 26);
+            this.TextBoxPassword.TabIndex = 2;
+            this.TextBoxPassword.Text = "Jmetmn$7";
+            // 
+            // TextBoxUsername
+            // 
+            this.TextBoxUsername.Location = new System.Drawing.Point(236, 75);
+            this.TextBoxUsername.Name = "TextBoxUsername";
+            this.TextBoxUsername.Size = new System.Drawing.Size(359, 26);
+            this.TextBoxUsername.TabIndex = 2;
+            this.TextBoxUsername.Text = "jktieman@alliedinc.us";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(24, 115);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(91, 20);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Password:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(24, 78);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(96, 20);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Username:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(24, 36);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(304, 24);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Requires Username and Password";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox1.Controls.Add(this.TextBoxPort);
+            this.groupBox1.Controls.Add(this.TextbBoxServerName);
+            this.groupBox1.Controls.Add(this.TextBoxDescription);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(268, 28);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(611, 162);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Server Settings";
+            // 
+            // TextBoxPort
+            // 
+            this.TextBoxPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TextBoxPort.Location = new System.Drawing.Point(236, 127);
+            this.TextBoxPort.Name = "TextBoxPort";
+            this.TextBoxPort.Size = new System.Drawing.Size(74, 26);
+            this.TextBoxPort.TabIndex = 1;
+            this.TextBoxPort.Text = "587";
+            // 
+            // TextbBoxServerName
+            // 
+            this.TextbBoxServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TextbBoxServerName.Location = new System.Drawing.Point(236, 88);
+            this.TextbBoxServerName.Name = "TextbBoxServerName";
+            this.TextbBoxServerName.Size = new System.Drawing.Size(359, 26);
+            this.TextbBoxServerName.TabIndex = 1;
+            this.TextbBoxServerName.Text = "mail.alliedinc.us";
+            // 
+            // TextBoxDescription
+            // 
+            this.TextBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TextBoxDescription.Location = new System.Drawing.Point(236, 49);
+            this.TextBoxDescription.Name = "TextBoxDescription";
+            this.TextBoxDescription.Size = new System.Drawing.Size(359, 26);
+            this.TextBoxDescription.TabIndex = 1;
+            this.TextBoxDescription.Text = "Milwaukee Tool Email Server";
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(20, 129);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(188, 20);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Port:";
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(20, 90);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(188, 20);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "SMTP Server Name:";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(20, 51);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(188, 20);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Description:";
+            // 
+            // EmailAddresses
+            // 
+            this.EmailAddresses.BackColor = System.Drawing.Color.RoyalBlue;
+            this.EmailAddresses.Controls.Add(this.groupBox5);
+            this.EmailAddresses.Controls.Add(this.ButtonRemoveEmail);
+            this.EmailAddresses.Controls.Add(this.ButtonCancelEmailAddresses);
+            this.EmailAddresses.Controls.Add(this.ButtonSaveEmailAddresses);
+            this.EmailAddresses.Location = new System.Drawing.Point(4, 22);
+            this.EmailAddresses.Name = "EmailAddresses";
+            this.EmailAddresses.Size = new System.Drawing.Size(1147, 644);
+            this.EmailAddresses.TabIndex = 14;
+            this.EmailAddresses.Text = "EmailAddresses";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox5.Controls.Add(this.LabelEmailInfo);
+            this.groupBox5.Controls.Add(this.DataGridViewEmailAddresses);
+            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox5.Location = new System.Drawing.Point(320, 122);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(506, 351);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            // 
+            // LabelEmailInfo
+            // 
+            this.LabelEmailInfo.AutoSize = true;
+            this.LabelEmailInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailInfo.Location = new System.Drawing.Point(148, 31);
+            this.LabelEmailInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelEmailInfo.Name = "LabelEmailInfo";
+            this.LabelEmailInfo.Size = new System.Drawing.Size(239, 20);
+            this.LabelEmailInfo.TabIndex = 9;
+            this.LabelEmailInfo.Text = "Notification Email Addresses";
+            // 
+            // DataGridViewEmailAddresses
+            // 
+            this.DataGridViewEmailAddresses.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.DataGridViewEmailAddresses.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridViewEmailAddresses.Location = new System.Drawing.Point(44, 64);
+            this.DataGridViewEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.DataGridViewEmailAddresses.MultiSelect = false;
+            this.DataGridViewEmailAddresses.Name = "DataGridViewEmailAddresses";
+            this.DataGridViewEmailAddresses.RowTemplate.Height = 24;
+            this.DataGridViewEmailAddresses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewEmailAddresses.Size = new System.Drawing.Size(419, 266);
+            this.DataGridViewEmailAddresses.TabIndex = 8;
+            // 
+            // ButtonRemoveEmail
+            // 
+            this.ButtonRemoveEmail.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.ButtonRemoveEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonRemoveEmail.Location = new System.Drawing.Point(336, 487);
+            this.ButtonRemoveEmail.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ButtonRemoveEmail.Name = "ButtonRemoveEmail";
+            this.ButtonRemoveEmail.Size = new System.Drawing.Size(147, 36);
+            this.ButtonRemoveEmail.TabIndex = 9;
+            this.ButtonRemoveEmail.Text = "Remove";
+            this.ButtonRemoveEmail.UseVisualStyleBackColor = true;
+            this.ButtonRemoveEmail.Click += new System.EventHandler(this.ButtonRemoveEmail_Click);
+            // 
+            // ButtonCancelEmailAddresses
+            // 
+            this.ButtonCancelEmailAddresses.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.ButtonCancelEmailAddresses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonCancelEmailAddresses.Location = new System.Drawing.Point(663, 487);
+            this.ButtonCancelEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ButtonCancelEmailAddresses.Name = "ButtonCancelEmailAddresses";
+            this.ButtonCancelEmailAddresses.Size = new System.Drawing.Size(147, 36);
+            this.ButtonCancelEmailAddresses.TabIndex = 10;
+            this.ButtonCancelEmailAddresses.Text = "Cancel";
+            this.ButtonCancelEmailAddresses.UseVisualStyleBackColor = true;
+            this.ButtonCancelEmailAddresses.Click += new System.EventHandler(this.ButtonCancelEmailAddresses_Click);
+            // 
+            // ButtonSaveEmailAddresses
+            // 
+            this.ButtonSaveEmailAddresses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonSaveEmailAddresses.Location = new System.Drawing.Point(504, 487);
+            this.ButtonSaveEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ButtonSaveEmailAddresses.Name = "ButtonSaveEmailAddresses";
+            this.ButtonSaveEmailAddresses.Size = new System.Drawing.Size(147, 36);
+            this.ButtonSaveEmailAddresses.TabIndex = 11;
+            this.ButtonSaveEmailAddresses.Text = "Save";
+            this.ButtonSaveEmailAddresses.UseVisualStyleBackColor = true;
+            this.ButtonSaveEmailAddresses.Click += new System.EventHandler(this.ButtonSaveEmailAddresses_Click);
+            // 
             // LabelFormTitle
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
@@ -4625,36 +5099,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // TextBoxRunCompressInterval
-            // 
-            this.TextBoxRunCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxRunCompressInterval.Location = new System.Drawing.Point(994, 513);
-            this.TextBoxRunCompressInterval.Name = "TextBoxRunCompressInterval";
-            this.TextBoxRunCompressInterval.Size = new System.Drawing.Size(40, 22);
-            this.TextBoxRunCompressInterval.TabIndex = 46;
-            this.TextBoxRunCompressInterval.Text = "8";
-            this.TextBoxRunCompressInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelCompressInterval
-            // 
-            this.LabelCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCompressInterval.Location = new System.Drawing.Point(838, 516);
-            this.LabelCompressInterval.Name = "LabelCompressInterval";
-            this.LabelCompressInterval.Size = new System.Drawing.Size(150, 16);
-            this.LabelCompressInterval.TabIndex = 19;
-            this.LabelCompressInterval.Text = "Run Compress Every";
-            this.LabelCompressInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelCompressHours
-            // 
-            this.LabelCompressHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCompressHours.Location = new System.Drawing.Point(1040, 516);
-            this.LabelCompressHours.Name = "LabelCompressHours";
-            this.LabelCompressHours.Size = new System.Drawing.Size(49, 16);
-            this.LabelCompressHours.TabIndex = 19;
-            this.LabelCompressHours.Text = "Hours";
-            this.LabelCompressHours.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmUtilities
             // 
@@ -4733,6 +5177,19 @@
             this.panel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownSerialNewPortNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownSerialNewLogLevel)).EndInit();
+            this.EmailServer.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.EmailAddresses.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
@@ -5087,5 +5544,40 @@
         private System.Windows.Forms.Label LabelCompressHours;
         private System.Windows.Forms.Label LabelCompressInterval;
         private System.Windows.Forms.TextBox TextBoxRunCompressInterval;
+        private System.Windows.Forms.CheckBox CheckBoxSpecialBackorder;
+        private System.Windows.Forms.CheckBox CheckBoxEnableEmailNotification;
+        private MetroFramework.Controls.MetroButton MBEmailServer;
+        private MetroFramework.Controls.MetroButton MBEmailAddresses;
+        private System.Windows.Forms.TabPage EmailServer;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TextBox TextBoxEmailFromAddress;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button ButtonSendTestEmail;
+        private System.Windows.Forms.TextBox TextBoxSendToEmailAddress;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button ButtonCancelEmailServer;
+        private System.Windows.Forms.Button ButtonSaveEmailServer;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox CheckBoxUseSsl;
+        private System.Windows.Forms.TextBox TextBoxPassword;
+        private System.Windows.Forms.TextBox TextBoxUsername;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox TextBoxPort;
+        private System.Windows.Forms.TextBox TextbBoxServerName;
+        private System.Windows.Forms.TextBox TextBoxDescription;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TabPage EmailAddresses;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label LabelEmailInfo;
+        private System.Windows.Forms.DataGridView DataGridViewEmailAddresses;
+        private System.Windows.Forms.Button ButtonRemoveEmail;
+        private System.Windows.Forms.Button ButtonCancelEmailAddresses;
+        private System.Windows.Forms.Button ButtonSaveEmailAddresses;
     }
 }

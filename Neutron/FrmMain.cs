@@ -29,9 +29,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using AlliedPostOffice;
+using AlliedPostOffice.Concrete;
 using Neutron.Models;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
+using Remotion.ServiceLocation;
 using Timer = System.Timers.Timer;
 
 #endregion
@@ -61,6 +64,7 @@ namespace Neutron
         private static Timer _compressTimer;
         private bool _compressRunning;
         private Station _rackStation;
+        private SendEmail _sendEmail;
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
 
@@ -101,7 +105,7 @@ namespace Neutron
             _rackStation = _stationRepository.GetRackStation();
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
             GlobalVar.HistoryManager = new HistoryManager();
-
+            
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
                 , "Inventory File", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -109,6 +113,8 @@ namespace Neutron
             Mediator.GetInstance().InventoryFileCreatedError += (s, e) => MessageBox.Show(e.Text, "Inventory File Error"
                 , MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
+            Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
+            Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
             LogOnOff();
 
             if (!InitForm())
@@ -120,6 +126,7 @@ namespace Neutron
             {
                 if (_neutronVariables.UseAutoCompress)
                 {
+                    // Run every RunCompressInterval time 1 hour (3600000)
                     var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
                     var compressTimer = new Timer(interval);
 
@@ -135,6 +142,16 @@ namespace Neutron
             Trace.WriteLine("FrmMain thread: " + id);
         }
 
+        private void LogGeneralError(string message)
+        {
+            Task.Run(() => _logger.Log($"Unknown Error: {message}"));
+        }
+
+        private void EmailLoaderError(string message)
+        {
+            _sendEmail.Message(message, _logger.LastLogLines());
+        }
+
         private void OnRunCompress(object sender, ElapsedEventArgs e)
         {
             if (_compressRunning) return;
@@ -146,8 +163,9 @@ namespace Neutron
             {
                 var daysToKeep = _neutronVariables.CompressDays * -1;
                 var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
-                CompressOrders(compressBefore);
-                CompressReplenOrders(compressBefore);
+                var finished = CompressOrders(compressBefore);
+                Thread.Sleep(2000);
+                if(finished) CompressReplenOrders(compressBefore);
 
                 compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
                 _jsonData.SaveFile(compressLastRunDate);
@@ -156,7 +174,7 @@ namespace Neutron
             _compressRunning = false;
         }
 
-        private void CompressOrders(DateTime compressBefore)
+        private bool CompressOrders(DateTime compressBefore)
         {
             _compressRunning = true;
             // Compress Normal Orders
@@ -164,7 +182,7 @@ namespace Neutron
             var completedOrders = _ordersRepository.GetCompletedOrders(string.Empty).ToList();
             var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
 
-            if (!ordersToCompress.Any()) return;
+            if (!ordersToCompress.Any()) return true;
             var orderType = "PICK";
             var sb = new StringBuilder();
             var firstTime = true;
@@ -199,6 +217,8 @@ namespace Neutron
                 MessageBox.Show($"Error Compressing Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+
+            return true;
         }
 
         private void CompressReplenOrders(DateTime compressBefore)
@@ -262,12 +282,14 @@ namespace Neutron
                         _station = _stationRepository.GetStationView(_stationId);
                         if (CreateLog("Main", _station.StationNumber))
                         {
+                            SetupEmail();
                             _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
                             var rackStation = _stationRepository.GetRackStation();
                             _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
                             _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
                             if (_station != null)
                             {
+
                                 if (SetupShuttle())
                                 {
                                     if (SetupDisplay())
@@ -333,6 +355,25 @@ namespace Neutron
             }
 
             return result;
+        }
+
+        private void SetupEmail()
+        {
+            if (_neutronVariables.EnableEmailNotification)
+            {
+                try
+                {
+                    var emailServerSettings = _jsonData.LoadFile<EmailSettings>();
+                    var emailListing = _jsonData.LoadFile<List<EmailAddressData>>();
+                    var emailProcessor = new EmailProcessor(emailServerSettings);
+
+                    _sendEmail = new SendEmail(emailProcessor, emailListing);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Unable to setup Email Notification. {Environment.NewLine}{ex.Message}");
+                }
+            }
         }
 
         private bool StartLoader()
@@ -411,6 +452,7 @@ namespace Neutron
 
         private bool SetupDisplay()
         {
+            if (_station.StationTypeId == (int)StationType.Supervisor) return true;
             bool result;
             try
             {
@@ -420,6 +462,7 @@ namespace Neutron
                     {
                         if (_neutronVariables.IptiDisplays)
                         {
+                            Task.Run(() => _logger.Log("IPTI Displays are being used."));
                             // ReSharper disable once UseObjectOrCollectionInitializer
                             GlobalVar.Displays = new IptiController(_jsonData, _station, _neutronVariables);
                             //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
@@ -427,9 +470,33 @@ namespace Neutron
                         }
                         else
                         {
-                            //Remstar Displays are the default
+                           
+                            Task.Run(() => _logger.Log("Remstar Displays are being used."));
                             GlobalVar.Displays = new DisplayController(_jsonData, _station);
                             result = GlobalVar.Displays != null;
+                            if (!GlobalVar.Displays.Ready)
+                            {
+                                MessageBox.Show($"Error creating Display Controller.");
+                                Task.Run(() => _logger.Log("Error creating Display Controller."));
+                            }
+                            //initialize the controller
+                            var counter = 1;
+                            while (GlobalVar.Displays.GetInitStatus() != 0)
+                            {
+                                var seconds = 250 * counter / 1000;
+                                Task.Run(() => _logger.Log($"Unable to initialize display controller for {seconds} seconds."));
+                                if (counter >= 20)
+                                {
+                                    MessageBox.Show($"Unable to initialize display controller after {seconds} seconds.");
+
+                                    Task.Run(() => _logger.Log($"Unable to initialize display controller after {seconds} seconds."));
+                                    break;
+                                }
+                                Thread.Sleep(250);
+                                counter += 1;
+                            }
+                            Task.Run(() => _logger.Log($"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
+
                         }
                     }
                     else
@@ -455,6 +522,7 @@ namespace Neutron
 
         private bool SetupShuttle()
         {
+            if (_station.StationTypeId == (int)StationType.Supervisor) return true;
             var result = false;
             try
             {
@@ -679,7 +747,7 @@ namespace Neutron
 
                 _cultureInfo = Thread.CurrentThread.CurrentCulture;
                 SetCulture(_cultureInfo.Name);
-
+                ButtonRemstar.Visible = true;  // GlobalVar.User.EmpId == "1111" || GlobalVar.User.EmpId == "8031";
                 _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
                 _lacProcessor.ReprocessLacSet(GlobalVar.User.Id);
             }
@@ -751,7 +819,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
             Hide();
-            using (MetroForm frm = new FrmSystem(_jsonData, _logger, _rackStation))
+            using (MetroForm frm = new FrmSystem(_jsonData, _logger, _rackStation, _sendEmail))
             {
                 frm.ShowDialog();
                 Show();
@@ -975,6 +1043,15 @@ namespace Neutron
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+        }
+
+        private void ButtonRemstar_Click(object sender, EventArgs e)
+        {
+            using (Form frm = new FrmRemstar())
+            {
+                frm.ShowDialog();
+                Show();
+            }
         }
     }
 }

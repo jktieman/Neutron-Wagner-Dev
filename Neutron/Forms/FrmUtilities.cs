@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
@@ -23,6 +24,8 @@ using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using AlliedPostOffice;
+using AlliedPostOffice.Concrete;
 using Equin.ApplicationFramework;
 using Neutron.Classes;
 using Neutron.Models;
@@ -47,7 +50,7 @@ namespace Neutron.Forms
 
         private readonly GenericRepository<HardwareDevice> _repoHardwareDevices =
             new GenericRepository<HardwareDevice>(new NeutronDb());
-
+        private readonly AkaRepository _repoAka = new AkaRepository();
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocations = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStations = new GenericRepository<Station>(new NeutronDb());
@@ -95,6 +98,8 @@ namespace Neutron.Forms
         private string _currentTableName = string.Empty;
         private List<LookupData> _currentRecs;
         private BindingSource _bindingSource;
+        private readonly Random _randomNumber = new Random();
+        private EmailSettings _settings;
 
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
         {
@@ -170,6 +175,9 @@ namespace Neutron.Forms
             ComboBoxNewSerialConfiguration.DisplayMember = "Name";
             ComboBoxNewSerialConfiguration.ValueMember = "Id";
 
+            CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
+            CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter() != null;
+            
         }
         public Version ApplicationVersion
         {
@@ -748,8 +756,10 @@ namespace Neutron.Forms
             _neutronVariables.DeviceFlashRate = TextBoxDeviceFlashRate.Text.ParseInt();
             _neutronVariables.DefaultStorageTypeId = ((StorageType)ComboBoxDefaultStorageType.SelectedItem).Id;
             _neutronVariables.UseAutoCompress = CheckBoxUseAutoCompress.Checked;
+            _neutronVariables.SpecialBackOrder = CheckBoxSpecialBackorder.Checked;
             _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
             _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
+            _neutronVariables.EnableEmailNotification = CheckBoxEnableEmailNotification.Checked;
 
             _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
@@ -809,13 +819,17 @@ namespace Neutron.Forms
             SetPickMethod(_neutronVariables.PickMethod);
             CheckBoxUseCostCenter.Checked = _neutronVariables.UseCostCenter;
             CheckBoxUseImages.Checked = _neutronVariables.UseImages;
-            ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage;
+            ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage == null ? "en-US" : _neutronVariables.DefaultLanguage;
             TextBoxDeviceFlashRate.Text = _neutronVariables.DeviceFlashRate.ToString();
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
             ComboBoxDefaultStorageType.SelectedValue = _neutronVariables.DefaultStorageTypeId;
             CheckBoxUseAutoCompress.Checked = _neutronVariables.UseAutoCompress;
+            CheckBoxSpecialBackorder.Checked = _neutronVariables.SpecialBackOrder;
             TextBoxCompressDays.Text = _neutronVariables.CompressDays.ToString();
             TextBoxRunCompressInterval.Text = _neutronVariables.RunCompressInterval.ToString(CultureInfo.InvariantCulture);
+            CheckBoxEnableEmailNotification.Checked = _neutronVariables.EnableEmailNotification;
+            CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
+            CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter() != null;
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -881,6 +895,21 @@ namespace Neutron.Forms
             TextBoxLabelPrinter.Text = LabelPrinter.PrinterName;
             TextBoxLabelHomeX.Text = LabelPrinter.HomeX.ToString();
             TextBoxLabelHomeY.Text = LabelPrinter.HomeY.ToString();
+        }
+        private LabelPrinterPreferences GetCurrentLabelPrinter()
+        {
+            LabelPrinterPreferences printer = null;
+            if (ValidPrinterName(TextBoxLabelPrinter.Text))
+            {
+                printer = new LabelPrinterPreferences
+                {
+                    PrinterName = TextBoxLabelPrinter.Text,
+                    HomeX = int.Parse(TextBoxLabelHomeX.Text),
+                    HomeY = int.Parse(TextBoxLabelHomeY.Text)
+                };
+            }
+
+            return printer;
         }
         private void MBPrinterSetup_Click(object sender, EventArgs e)
         {
@@ -966,7 +995,23 @@ namespace Neutron.Forms
                 var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
                 if (ord != null)
                 {
-                    ToteToPrint.Print(1, ord, LabelPrinter);
+                    var orderDetail = ord.OrderDetails.First();
+
+                    var labelDetail = new LabelDetail()
+                    {
+                        Item = orderDetail.ItemDefinition.Item,
+                        Description = orderDetail.ItemDefinition.Description,
+                        Quantity = orderDetail.Quantity,
+                        EmpId = GlobalVar.User.EmpId,
+                        Invoice = orderDetail.Order.Ord2,
+                        Order = orderDetail.Order.Ord1,
+                        LoadDate = orderDetail.Order.LoadDate,
+                        Origin = orderDetail.OrderDetailInfo.Trim()
+                    };
+
+                    var upc = _repoAka.GetUpc(orderDetail.PartNum);
+
+                    ToteToPrint.Print(1, 1, labelDetail, upc, LabelPrinter);
                 }
             }
             catch (Exception ex)
@@ -2469,6 +2514,221 @@ namespace Neutron.Forms
             }
             var compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now.AddDays(-1) };
             _jsonData.SaveFile(compressLastRunDate);
+        }
+
+        #region Email Addresses
+
+        private void ButtonSaveEmailAddresses_Click(object sender, EventArgs e)
+        {
+            SaveData();
+        }
+
+        private void SaveData()
+        {
+            List<EmailAddressData> emailAddressData = GetDataFromGrid();
+            _jsonData.SaveFile<List<EmailAddressData>>(emailAddressData);
+        }
+
+        private List<EmailAddressData> GetDataFromGrid()
+        {
+            var result = new List<EmailAddressData>();
+            foreach (DataGridViewRow item in DataGridViewEmailAddresses.Rows)
+            {
+
+                if (item.Cells["EmailAddress"].Value != null)
+                {
+                    var emailAddress = item.Cells["EmailAddress"].Value.ToString();
+                    if (new EmailAddressAttribute().IsValid(emailAddress))
+                    {
+                        var p = new EmailAddressData();
+                        if (item.Cells[0].Value == null || (int)item.Cells[0].Value == 0)
+                        {
+                            p.Id = _randomNumber.Next();
+                        }
+                        else
+                        {
+                            p.Id = int.Parse(item.Cells[0].Value.ToString());
+                        }
+
+                        p.EmailAddress = emailAddress;
+                        result.Add(p);
+                    }
+                }
+            }
+
+            DataGridViewEmailAddresses.Refresh();
+            return result;
+        }
+
+        private List<EmailAddressData> LoadJsonFile()
+        {
+            return _jsonData.LoadFile<List<EmailAddressData>>();
+            // return JsonData.LoadEmailData();
+        }
+
+        private void InitDataGrid()
+        {
+            DataGridViewEmailAddresses.AutoGenerateColumns = false;
+            DataGridViewEmailAddresses.AutoSize = false;
+            var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Id",
+                Name = "Id",
+                Width = 01,
+                HeaderText = "Id",
+                Visible = false
+            };
+            DataGridViewEmailAddresses.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "EmailAddress",
+                Name = "EmailAddress",
+                Width = 300,
+                HeaderText = "Email Address",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
+            };
+            DataGridViewEmailAddresses.Columns.Add(col);
+        }
+
+        private void ButtonCancelEmailAddresses_Click(object sender, EventArgs e)
+        {
+            BackToMain();
+        }
+
+        private void ButtonRemoveEmail_Click(object sender, EventArgs e)
+        {
+            RemoveEmail();
+        }
+
+        private void RemoveEmail()
+        {
+            var rows = DataGridViewEmailAddresses.SelectedRows;
+            try
+            {
+                foreach (DataGridViewRow item in rows)
+                {
+                    RemoveEmailDataRecord(int.Parse(item.Cells[0].Value.ToString()));
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            DataGridViewEmailAddresses.Refresh();
+        }
+
+
+        public void RemoveEmailDataRecord(int id)
+        {
+            try
+            {
+                var recs = _jsonData.LoadFile<List<EmailAddressData>>();
+                for (var i = recs.Count - 1; i >= 0; i--)
+                {
+                    if (recs[i].Id == id)
+                    {
+                        recs.Remove(recs[i]);
+                    }
+                }
+                _jsonData.SaveFile<List<EmailAddressData>>(recs);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+        #endregion
+
+        #region Email Server
+
+        private void ButtonSaveEmailServer_Click(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
+            _settings = new EmailSettings
+            {
+                WriteAsFile = false,
+                ServerName = TextbBoxServerName.Text,
+                Username = TextBoxUsername.Text,
+                Password = TextBoxPassword.Text,
+                MailToAddress = string.Empty,
+                MailFromAddress = TextBoxEmailFromAddress.Text,
+                MailCc = string.Empty,
+                UseSsl = CheckBoxUseSsl.Checked,
+                ServerPort = Int32.Parse(TextBoxPort.Text),
+                DefaultReplyToAddress = string.Empty,
+                FileLocation = string.Empty,
+                IsBodyHtml = true
+            };
+
+            _jsonData.SaveFile(_settings);
+        }
+
+        //private void FormEmailServer_Load(object sender, EventArgs e)
+        //{
+        //    _settings = _jsonData.LoadFile<EmailSettings>();
+        //    if (_settings != null)
+        //    {
+        //        TextbBoxServerName.Text = _settings.ServerName;
+        //        TextBoxUsername.Text = _settings.Username;
+        //        TextBoxPassword.Text = _settings.Password;
+        //        TextBoxEmailFromAddress.Text = _settings.MailFromAddress;
+        //        CheckBoxUseSsl.Checked = _settings.UseSsl;
+        //        TextBoxPort.Text = _settings.ServerPort.ToString();
+        //    }
+        //}
+
+        private void ButtonSendTestEmail_Click(object sender, EventArgs e)
+        {
+            var emailListing = new List<EmailAddressData>();
+            var email = new EmailAddressData { EmailAddress = TextBoxSendToEmailAddress.Text, Id = 0 };
+            emailListing.Add(email);
+            var emailProcessor = new EmailProcessor(_settings);
+
+            var sendEmail = new SendEmail(emailProcessor, emailListing);
+            sendEmail.Message("This is a test.", new List<string>());
+        }
+
+        private void ButtonCancelEmailServer_Click(object sender, EventArgs e)
+        {
+            BackToMain();
+        }
+        #endregion
+
+        private void MBEmailAddresses_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Email Addresses";
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            InitDataGrid();
+            List<EmailAddressData> recs = LoadJsonFile();
+            if (recs.Count > 0)
+            {
+                var boundRecs = new BindingListView<EmailAddressData>(recs);
+                DataGridViewEmailAddresses.DataSource = boundRecs;
+            }
+            tabControl1.SelectedTab = EmailAddresses;
+        }
+
+        private void MBEmailServer_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Email Server";
+            LabelFormTitle.BackColor = Color.RoyalBlue;
+            _settings = _jsonData.LoadFile<EmailSettings>();
+            if (_settings != null)
+            {
+                TextbBoxServerName.Text = _settings.ServerName;
+                TextBoxUsername.Text = _settings.Username;
+                TextBoxPassword.Text = _settings.Password;
+                TextBoxEmailFromAddress.Text = _settings.MailFromAddress;
+                CheckBoxUseSsl.Checked = _settings.UseSsl;
+                TextBoxPort.Text = _settings.ServerPort.ToString();
+            }
+            tabControl1.SelectedTab = EmailServer;
         }
     }
 }

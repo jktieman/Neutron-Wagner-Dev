@@ -54,18 +54,19 @@ namespace Neutron
             this.LabelWarehouseManagement = new System.Windows.Forms.Label();
             this.ButtonPark = new System.Windows.Forms.Button();
             this.ButtonClose = new System.Windows.Forms.Button();
-            this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
-            this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
-            this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
             this.GroupBoxLanguage = new System.Windows.Forms.GroupBox();
             this.RadioButtonFrenchCanadian = new System.Windows.Forms.RadioButton();
             this.RadioButtonEnglish = new System.Windows.Forms.RadioButton();
+            this.ButtonRemstar = new System.Windows.Forms.Button();
+            this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
+            this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
+            this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.metroPanelMain.SuspendLayout();
+            this.GroupBoxLanguage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).BeginInit();
-            this.GroupBoxLanguage.SuspendLayout();
             this.SuspendLayout();
             // 
             // htmlToolTip1
@@ -287,13 +288,6 @@ namespace Neutron
             this.ButtonClose.UseVisualStyleBackColor = true;
             this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
             // 
-            // PictureBoxLogo
-            // 
-            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
-            resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
-            this.PictureBoxLogo.Name = "PictureBoxLogo";
-            this.PictureBoxLogo.TabStop = false;
-            // 
             // GroupBoxLanguage
             // 
             this.GroupBoxLanguage.Controls.Add(this.RadioButtonFrenchCanadian);
@@ -319,6 +313,20 @@ namespace Neutron
             this.RadioButtonEnglish.UseVisualStyleBackColor = true;
             this.RadioButtonEnglish.CheckedChanged += new System.EventHandler(this.RadioButtonLanguage_CheckedChanged);
             // 
+            // ButtonRemstar
+            // 
+            resources.ApplyResources(this.ButtonRemstar, "ButtonRemstar");
+            this.ButtonRemstar.Name = "ButtonRemstar";
+            this.ButtonRemstar.UseVisualStyleBackColor = true;
+            this.ButtonRemstar.Click += new System.EventHandler(this.ButtonRemstar_Click);
+            // 
+            // PictureBoxLogo
+            // 
+            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
+            resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
+            this.PictureBoxLogo.Name = "PictureBoxLogo";
+            this.PictureBoxLogo.TabStop = false;
+            // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -326,6 +334,7 @@ namespace Neutron
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.GroupBoxLanguage);
             this.Controls.Add(this.ButtonClose);
+            this.Controls.Add(this.ButtonRemstar);
             this.Controls.Add(this.ButtonPark);
             this.Controls.Add(this.PictureBoxLogo);
             this.Controls.Add(this.metroPanelMain);
@@ -340,11 +349,11 @@ namespace Neutron
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmMain_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).EndInit();
             this.metroPanelMain.ResumeLayout(false);
+            this.GroupBoxLanguage.ResumeLayout(false);
+            this.GroupBoxLanguage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).EndInit();
-            this.GroupBoxLanguage.ResumeLayout(false);
-            this.GroupBoxLanguage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -379,6 +388,7 @@ namespace Neutron
         private System.Windows.Forms.GroupBox GroupBoxLanguage;
         private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;
         private System.Windows.Forms.RadioButton RadioButtonEnglish;
+        private System.Windows.Forms.Button ButtonRemstar;
     }
 }
 

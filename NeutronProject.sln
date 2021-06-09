@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronLoader", "NeutronLoa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageBuilder", "LanguageBuilder\LanguageBuilder.csproj", "{AE2BE042-B8DE-4A29-BB8D-87E65D4249CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighJump", "..\HighJump\HighJump\HighJump.csproj", "{B600904B-1B59-47BF-8884-5A4982D8B2FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlliedPostOffice", "AlliedPostOffice\AlliedPostOffice.csproj", "{6CE97D6F-A149-42FE-A858-2272DB64897E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +86,14 @@ Global
 		{AE2BE042-B8DE-4A29-BB8D-87E65D4249CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE2BE042-B8DE-4A29-BB8D-87E65D4249CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE2BE042-B8DE-4A29-BB8D-87E65D4249CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B600904B-1B59-47BF-8884-5A4982D8B2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B600904B-1B59-47BF-8884-5A4982D8B2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B600904B-1B59-47BF-8884-5A4982D8B2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B600904B-1B59-47BF-8884-5A4982D8B2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CE97D6F-A149-42FE-A858-2272DB64897E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CE97D6F-A149-42FE-A858-2272DB64897E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CE97D6F-A149-42FE-A858-2272DB64897E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CE97D6F-A149-42FE-A858-2272DB64897E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

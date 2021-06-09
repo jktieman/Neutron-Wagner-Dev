@@ -34,7 +34,7 @@ namespace NeutronData.ModelViews
                 var list = new List<int>();
                 foreach (var item in HardwareDevices)
                 {
-                    if (item.Enabled)
+                    if (item.Enabled && (item.DeviceTypeId == 1 || item.DeviceTypeId == 2))
                     {
                         list.Add(item.DeviceNumber);
                     }

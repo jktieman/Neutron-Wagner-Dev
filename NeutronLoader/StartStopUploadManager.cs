@@ -43,9 +43,9 @@ namespace NeutronLoader
                         _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
                         break;
                     }
-                case "TMG":  // using Topura Upload Process
+                case "MET":  // using Topura Upload Process
                     {
-                        _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
+                        _uploadProcessor = new UploadProcessorMet(_neutronVariables, _neutronLicense, _logger, _rackStation);
                         break;
                     }
                 case "PR1":
@@ -70,6 +70,7 @@ namespace NeutronLoader
         {
             if (startStop == "Start")
             {
+                
                 _logger.Log("Start Processing Upload Files");
                 StartProcessingUploadFiles();
             }

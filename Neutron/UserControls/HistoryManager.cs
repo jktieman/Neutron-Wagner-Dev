@@ -133,10 +133,14 @@ namespace Neutron.Global
                     orderDetailInfo = $"{info}";
                 }
 
-                if (info.Length == 36)
+                else if (info.Length == 36)
                 {
                     cCenter = info.Substring(0, 10);
                     orderDetailInfo = info;
+                }
+                else
+                {
+                    orderDetailInfo = info.Trim();
                 }
             }
 
@@ -208,10 +212,14 @@ namespace Neutron.Global
                     orderDetailInfo = $"{info}";
                 }
 
-                if (info.Length == 36)
+                else if (info.Length == 36)
                 {
                     cCenter = info.Substring(0, 10);
                     orderDetailInfo = info;
+                }
+                else
+                {
+                    orderDetailInfo = info.Trim();
                 }
             }
 
@@ -258,6 +266,37 @@ namespace Neutron.Global
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickList.Ordered.ParseInt(),
+                StationId = inventory.Location.Station.Id,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty
+            };
+            Save(history);
+        }
+
+        //Hot Pick Action With Cost Center
+        public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, OrderDetail orderDetail)
+        {
+            
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = orderDetail.Order.Ord1,
+                Ord2 = orderDetail.Order.Ord2,
+                OrderId = orderDetail.OrderId,
+                Item = orderDetail.PartNum,
+                Description = orderDetail.PartDesc,
+                IssuedQuantity = pickedQty,
+                RequestedQuantity = orderDetail.Quantity,
                 StationId = inventory.Location.Station.Id,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
@@ -662,7 +701,7 @@ namespace Neutron.Global
             return result;
         }
 
-        public void SaveHistory(ActionCode actionCode, SkipView skipView, int stationId = 1)
+        public void SaveHistory(ActionCode actionCode, SkipView skipView)
         {
             var history = new History
             {
@@ -678,7 +717,7 @@ namespace Neutron.Global
                 IssuedQuantity = skipView.Picked,
                 Slot = "Skip",
                 EmpId = GlobalVar.User.EmpId,
-                StationId = stationId,
+                StationId = skipView.StationNumber,
                 OrderDetailId = skipView.Id,
                 CostCenter =  skipView.OrderDetail.OrderDetailInfo.Length < 5 ? string.Empty : skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,

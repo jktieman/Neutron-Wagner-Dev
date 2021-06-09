@@ -76,10 +76,12 @@
     <Compile Include="HostFilePr1.cs" />
     <Compile Include="HostFileSfh.cs" />
     <Compile Include="InterfaceProcessor.cs" />
+    <Compile Include="InterfaceProcessorMET.cs" />
     <Compile Include="InterfaceProcessorPr1.cs" />
     <Compile Include="InterfaceProcessorTop.cs" />
     <Compile Include="InterfaceProcessorVidir.cs" />
     <Compile Include="IUploadProcessor.cs" />
+    <Compile Include="METFileProcessor.cs" />
     <Compile Include="SfhFileProcessor.cs" />
     <Compile Include="StartStopUploadManager.cs" />
     <Compile Include="TmgFileProcessor.cs" />
@@ -102,6 +104,7 @@
     </Compile>
     <Compile Include="StartStopLoaderManager.cs" />
     <Compile Include="TopFileProcessor.cs" />
+    <Compile Include="UploadProcessorMet.cs" />
     <Compile Include="UploadProcessorSfh.cs" />
     <Compile Include="UploadProcessorTop.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
@@ -118,9 +121,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
+      <Project>{B600904B-1B59-47BF-8884-5A4982D8B2FE}</Project>
+      <Name>HighJump</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AlliedFileSystemWatcher\AlliedFileSystemWatcher.csproj">
       <Project>{A8C533EF-F9B0-4B04-A1BA-53AAF5354A2B}</Project>
       <Name>AlliedFileSystemWatcher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
+      <Project>{6CE97D6F-A149-42FE-A858-2272DB64897E}</Project>
+      <Name>AlliedPostOffice</Name>
     </ProjectReference>
     <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>

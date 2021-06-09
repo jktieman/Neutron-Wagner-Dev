@@ -108,6 +108,7 @@
     <Compile Include="Models\AkaType.cs" />
     <Compile Include="Models\Carrier.cs" />
     <Compile Include="Models\GroupUser.cs" />
+    <Compile Include="Models\HostOrderLine.cs" />
     <Compile Include="Models\LocationDetail.cs" />
     <Compile Include="Models\GroupSecureItem.cs" />
     <Compile Include="Models\History.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Models\OperationStatus.cs" />
     <Compile Include="Models\PrintJob.cs" />
     <Compile Include="Models\ReplenHostOrder.cs" />
+    <Compile Include="Models\ReplenMilwaukeeTool.cs" />
     <Compile Include="Models\ReplenOrderDetail.cs" />
     <Compile Include="Models\ReplenOrder.cs" />
     <Compile Include="Models\Order.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Models\TcpConfiguration.cs" />
     <Compile Include="Models\UnitOfIssue.cs" />
     <Compile Include="Models\TowerLevelInfo.cs" />
+    <Compile Include="Models\Upload.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Lookups\VelocityCode.cs" />
     <Compile Include="Models\RoleUser.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="Repositories\ReplenOrdersRepository.cs" />
     <Compile Include="Repositories\OrdersRepository.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
+    <Compile Include="Repositories\SerialConfigurationsRepository.cs" />
     <Compile Include="Repositories\StationRepository.cs" />
     <Compile Include="SqlModelViews\SqlInventoryView.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using AlliedLogger;
+using HighJump;
 using NeutronCore;
 using NeutronCore.Enums;
 using NeutronCore.Global;
@@ -67,6 +68,66 @@ namespace NeutronLoader
 
             return false;
         }
+
+
+        public void CreateMetHostFile(List<History> recs)
+        {
+            SendUploadToHostSql(recs);
+        }
+
+        public void SendUploadToHostSql(List<History> history)
+        {
+            if (history.Count == 0) return ;
+
+            _logger.Log("Send Upload To Host Sql.");
+
+            try
+            {
+                using (var db = new HighJumpContext())
+                {
+                    using (var transaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            foreach (var line in history)
+                            {
+                                var inBound = new t_al_host_carousel_inbound();
+                                inBound.container_label = $"{line.Ord2}{line.Ord1}";
+                                inBound.employee_id = line.EmpId;
+                                inBound.item_number = line.Item;
+                                inBound.pick_quantity = Double.Parse(line.IssuedQuantity.ToString());
+                                inBound.status = "N";
+                                inBound.inserted_by = "CAROUSEL";
+                                inBound.inserted_date = DateTime.Now;
+                                inBound.updated_by = "CAROUSEL";
+                                inBound.updated_date = DateTime.Now;
+
+                                db.t_al_host_carousel_inbound.Add(inBound);
+                            }
+
+                            db.SaveChanges();
+                            transaction.Commit();
+                            _logger.Log("Sql Table Updated With " + history.Count() + "Records.");
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            var msg = $"Process Upload To Sql Table Transaction Error. Records: {history.Count} {Environment.NewLine}" +
+                                         $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
+                            _logger.Log(msg);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = $"Process Upload To Sql Table.  {Environment.NewLine}" +
+                             $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
+                _logger.Log(msg);
+            }
+            _logger.Log("Send Upload To Host Sql - Success.");
+        }
+
 
         private void SaveFile(List<History> historyRecs)
         {
@@ -149,34 +210,34 @@ namespace NeutronLoader
                     var fields = item.OrderDetailInfo.Split(separator: new char[] { '|' });
                     operation = fields.Length == 3 ? fields[2] : string.Empty;
                 }
-                sb.Append(item.Ord1 + "|");
-                sb.Append(operation + "|");
-                sb.Append(item.Item + "|");
-                sb.Append(item.IssuedQuantity + "|");
+                sb.Append(item.Ord1 + _neutronVariables.FieldDelimiter);
+                sb.Append(operation + _neutronVariables.FieldDelimiter);
+                sb.Append(item.Item + _neutronVariables.FieldDelimiter);
+                sb.Append(item.IssuedQuantity + _neutronVariables.FieldDelimiter);
             }
             else if (_neutronLicense.CompanyCode == "TOP")
             {
                 _logger.Log($"160 GetCsvString History TOP - NOT use PR1 Processor");
-                // sb.Append(item.TypeCode + "|");
-                sb.Append(item.Item + "|");
-                sb.Append(item.Description + "|");
-                sb.Append(item.Ord1 + "|");
-                //sb.Append(item.PrimeBin + "|");
-                // sb.Append(item.NewBin + "|");
-                sb.Append(item.IssuedQuantity + "|");
-                // sb.Append(item.TroubleBit + "|");
-                sb.Append(item.ActionDateTime + "|");
+                // sb.Append(item.TypeCode + _neutronVariables.FieldDelimiter);
+                sb.Append(item.Item + _neutronVariables.FieldDelimiter);
+                sb.Append(item.Description + _neutronVariables.FieldDelimiter);
+                sb.Append(item.Ord1 + _neutronVariables.FieldDelimiter);
+                //sb.Append(item.PrimeBin + _neutronVariables.FieldDelimiter);
+                // sb.Append(item.NewBin + _neutronVariables.FieldDelimiter);
+                sb.Append(item.IssuedQuantity + _neutronVariables.FieldDelimiter);
+                // sb.Append(item.TroubleBit + _neutronVariables.FieldDelimiter);
+                sb.Append(item.ActionDateTime + _neutronVariables.FieldDelimiter);
                 sb.Append(item.EmpId);
                 sb.AppendLine();
             }
             else if (_neutronLicense.CompanyCode == "VID")
             {
                 _logger.Log($"160 GetCsvString History VID - NOT use PR1 Processor");
-                sb.Append(item.Item + "|");
-                sb.Append(item.Description + "|");
-                sb.Append(item.Ord1 + "|");
-                sb.Append(item.IssuedQuantity + "|");
-                sb.Append(item.ActionDateTime + "|");
+                sb.Append(item.Item + _neutronVariables.FieldDelimiter);
+                sb.Append(item.Description + _neutronVariables.FieldDelimiter);
+                sb.Append(item.Ord1 + _neutronVariables.FieldDelimiter);
+                sb.Append(item.IssuedQuantity + _neutronVariables.FieldDelimiter);
+                sb.Append(item.ActionDateTime + _neutronVariables.FieldDelimiter);
                 sb.Append(item.EmpId);
                 sb.AppendLine();
             }
@@ -1011,36 +1072,36 @@ namespace NeutronLoader
                     string[] fields = hostOrder.NewBin.Split(separator: new char[] { '|' });
                     operation = fields.Length == 3 ? fields[2].ToString() : string.Empty;
                 }
-                sb.Append(hostOrder.JobNum + "|");
-                sb.Append(operation + "|");
-                sb.Append(hostOrder.PartNum + "|");
-                sb.Append(hostOrder.Qty + "|");
+                sb.Append(hostOrder.JobNum + _neutronVariables.FieldDelimiter);
+                sb.Append(operation + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PartNum + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.Qty + _neutronVariables.FieldDelimiter);
             }
             else if (_neutronLicense.CompanyCode == "TOP")
             {
-                sb.Append(hostOrder.TypeCode + "|");
-                sb.Append(hostOrder.PartNum + "|");
-                sb.Append(hostOrder.PartDesc + "|");
-                sb.Append(hostOrder.JobNum + "|");
-                sb.Append(hostOrder.PrimeBin + "|");
-                sb.Append(hostOrder.NewBin + "|");
-                sb.Append(hostOrder.Qty + "|");
-                sb.Append(hostOrder.TroubleBit + "|");
-                sb.Append(hostOrder.DateTime + "|");
+                sb.Append(hostOrder.TypeCode + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PartNum + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PartDesc + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.JobNum + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PrimeBin + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.NewBin + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.Qty + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.TroubleBit + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.DateTime + _neutronVariables.FieldDelimiter);
                 sb.Append(hostOrder.EmpId);
                 sb.AppendLine();
             }
             else if (_neutronLicense.CompanyCode == "VID")
             {
-                sb.Append(hostOrder.TypeCode + "|");
-                sb.Append(hostOrder.PartNum + "|");
-                sb.Append(hostOrder.PartDesc + "|");
-                sb.Append(hostOrder.JobNum + "|");
-                sb.Append(hostOrder.PrimeBin + "|");
-                sb.Append(hostOrder.NewBin + "|");
-                sb.Append(hostOrder.Qty + "|");
-                sb.Append(hostOrder.TroubleBit + "|");
-                sb.Append(hostOrder.DateTime + "|");
+                sb.Append(hostOrder.TypeCode + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PartNum + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PartDesc + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.JobNum + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.PrimeBin + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.NewBin + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.Qty + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.TroubleBit + _neutronVariables.FieldDelimiter);
+                sb.Append(hostOrder.DateTime + _neutronVariables.FieldDelimiter);
                 sb.Append(hostOrder.EmpId);
                 sb.AppendLine();
             }
@@ -1108,10 +1169,10 @@ namespace NeutronLoader
                     string[] fields = order.NewBin.Split(separator: new char[] { '|' });
                     operation = fields.Length == 3 ? fields[2].ToString() : string.Empty;
                 }
-                sb.Append(order.JobNum + "|");
-                sb.Append(operation + "|");
-                sb.Append(order.PartNum + "|");
-                sb.Append(order.Qty + "|");
+                sb.Append(order.JobNum + _neutronVariables.FieldDelimiter);
+                sb.Append(operation + _neutronVariables.FieldDelimiter);
+                sb.Append(order.PartNum + _neutronVariables.FieldDelimiter);
+                sb.Append(order.Qty + _neutronVariables.FieldDelimiter);
             }
             _logger.Log($"847 GetCsvString ReplenHostOrder result: {sb.ToString()}");
             return sb.ToString();
@@ -1168,5 +1229,6 @@ namespace NeutronLoader
                 MessageBox.Show(@"Go to Options and enter an upload file name.");
             }
         }
+
     }
 }

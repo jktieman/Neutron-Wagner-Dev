@@ -16,6 +16,8 @@ using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
 using AlliedLogger;
+using AlliedPostOffice;
+using AlliedPostOffice.Concrete;
 using Neutron.Models;
 using NeutronData.Models;
 using NeutronEvents;
@@ -33,8 +35,10 @@ namespace Neutron.Forms
         private string _rootDirectory;
         private readonly DynamicLogger _logger;
         private readonly Station _rackStation;
+        private readonly SendEmail _sendEmail;
+        private readonly bool _emailEnabled;
 
-        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation)
+        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation, SendEmail sendEmail)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -44,6 +48,8 @@ namespace Neutron.Forms
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();
             _logger = logger;
             _rackStation = rackStation;
+            _sendEmail = sendEmail;
+            _emailEnabled = _neutronVariables.EnableEmailNotification;
             KeyPreview = true;
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
@@ -108,6 +114,19 @@ namespace Neutron.Forms
 
         private void MBStartLoader_Click(object sender, EventArgs e)
         {
+            if (!GlobalVar.LoaderRunning)
+            {
+                GlobalVar.UploadRunning = true;
+                _sendEmail.StartUp();
+                MBRunLoaderOnce.Enabled = false;
+            }
+            else
+            {
+                GlobalVar.UploadRunning = false;
+                _sendEmail.ShutDown();
+                MBRunLoaderOnce.Enabled = true;
+            }
+
             Mediator.GetInstance().OnStartStopLoader(this, !GlobalVar.LoaderRunning ? "Start" : "Stop");
         }
 
@@ -120,12 +139,29 @@ namespace Neutron.Forms
 
         private void RunLoaderOnce()
         {
+            _sendEmail.StartUpSingleRun(new List<string>());
+
             Mediator.GetInstance().OnRunLoaderOnce(this);
         }
 
         private void MBStartUpload_Click(object sender, EventArgs e)
         {
-            Mediator.GetInstance().OnStartStopUpload(this, !GlobalVar.UploadRunning ? "Start" : "Stop");
+            if (!GlobalVar.UploadRunning)
+            {
+                GlobalVar.UploadRunning = true;
+                _sendEmail.StartUp();
+                MBRunUpload.Enabled = false;
+                Mediator.GetInstance().OnStartStopUpload(this, "Start");
+            }
+            else
+            {
+                GlobalVar.UploadRunning = false;
+                _sendEmail.ShutDown();
+                MBRunUpload.Enabled = true;
+                Mediator.GetInstance().OnStartStopUpload(this, "Stop");
+            }
+
+            // Mediator.GetInstance().OnStartStopUpload(this, !GlobalVar.UploadRunning ? "Start" : "Stop");
         }
 
         private void MBRunUpload_Click(object sender, EventArgs e)
@@ -137,6 +173,7 @@ namespace Neutron.Forms
 
         private void RunUploadOnce()
         {
+            _sendEmail.StartUpSingleRunUpload(new List<string>());
             Mediator.GetInstance().OnRunUploadOnce(this);
         }
 

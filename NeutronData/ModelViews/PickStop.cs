@@ -54,16 +54,37 @@ namespace NeutronData.ModelViews
         {
             foreach (var pickView in PickViews)
             {
-                var pickLocation = new PickLocation {
+                UpdatePickView(pickView, user);
+                //var pickLocation = new PickLocation {
+                //    Inventory = CurrentInventoryLocation
+                //    , Quantity = pickView.QuantityToBePicked
+                //    , PickDate = DateTime.Now
+                //    , RequestedQuantity = pickView.QuantityToBePicked
+                //    , User = user};
+                //pickView.PickLocations.Add(pickLocation);
+                //pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
+                //pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty;
+            }
+        }
+
+        public void UpdatePickView(PickView pickView, User user)
+        {
+                var pickLocation = new PickLocation
+                {
                     Inventory = CurrentInventoryLocation
-                    , Quantity = pickView.QuantityToBePicked
-                    , PickDate = DateTime.Now
-                    , RequestedQuantity = pickView.QuantityToBePicked
-                    , User = user};
+                    ,
+                    Quantity = pickView.QuantityToBePicked
+                    ,
+                    PickDate = DateTime.Now
+                    ,
+                    RequestedQuantity = pickView.QuantityToBePicked
+                    ,
+                    User = user
+                };
                 pickView.PickLocations.Add(pickLocation);
                 pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
                 pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty;
-            }
+            
         }
 
         public int GetTotalQuantityToBePicked()
@@ -91,7 +112,7 @@ namespace NeutronData.ModelViews
             return GetTotalQuantityToBePicked() - GetPickedSoFar();
         }
 
-        private int GetPickViewTotal(PickView pickview)
+        public int GetPickViewTotal(PickView pickview)
         {
             var total = 0;
             foreach (var pickLocation in pickview.PickLocations)

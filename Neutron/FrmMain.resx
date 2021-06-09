@@ -154,7 +154,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelFormHeaderText.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="mlUserInfo.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -184,7 +184,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mlUserInfo.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <metadata name="metroStyleManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1090, 17</value>
@@ -601,7 +601,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;metroPanelMain.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="LabelWarehouseManagement.Font" type="System.Drawing.Font, System.Drawing">
     <value>Comic Sans MS, 12pt, style=Bold</value>
@@ -631,7 +631,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelWarehouseManagement.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="ButtonPark.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -664,7 +664,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonPark.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="ButtonClose.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -696,36 +696,6 @@
   <data name="&gt;&gt;ButtonClose.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="PictureBoxLogo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="PictureBoxLogo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 20</value>
-  </data>
-  <data name="PictureBoxLogo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 132</value>
-  </data>
-  <data name="PictureBoxLogo.TabIndex" type="System.Int32, mscorlib">
-    <value>29</value>
-  </data>
-  <data name="&gt;&gt;PictureBoxLogo.Name" xml:space="preserve">
-    <value>PictureBoxLogo</value>
-  </data>
-  <data name="&gt;&gt;PictureBoxLogo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;PictureBoxLogo.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;PictureBoxLogo.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <metadata name="BindingSourceLocations.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 60</value>
-  </metadata>
-  <metadata name="BindingSourceItemDefinition.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>837, 17</value>
-  </metadata>
   <data name="RadioButtonFrenchCanadian.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -813,6 +783,66 @@
   <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="ButtonRemstar.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 9.75pt</value>
+  </data>
+  <data name="ButtonRemstar.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="ButtonRemstar.Location" type="System.Drawing.Point, System.Drawing">
+    <value>160, 134</value>
+  </data>
+  <data name="ButtonRemstar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>27, 33</value>
+  </data>
+  <data name="ButtonRemstar.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="ButtonRemstar.Text" xml:space="preserve">
+    <value>Remstar</value>
+  </data>
+  <data name="&gt;&gt;ButtonRemstar.Name" xml:space="preserve">
+    <value>ButtonRemstar</value>
+  </data>
+  <data name="&gt;&gt;ButtonRemstar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ButtonRemstar.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;ButtonRemstar.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="PictureBoxLogo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="PictureBoxLogo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 20</value>
+  </data>
+  <data name="PictureBoxLogo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 132</value>
+  </data>
+  <data name="PictureBoxLogo.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="&gt;&gt;PictureBoxLogo.Name" xml:space="preserve">
+    <value>PictureBoxLogo</value>
+  </data>
+  <data name="&gt;&gt;PictureBoxLogo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PictureBoxLogo.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;PictureBoxLogo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <metadata name="BindingSourceLocations.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 60</value>
+  </metadata>
+  <metadata name="BindingSourceItemDefinition.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>837, 17</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

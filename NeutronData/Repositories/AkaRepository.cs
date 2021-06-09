@@ -1,6 +1,7 @@
 ﻿using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NeutronData.Repositories
@@ -26,6 +27,28 @@ namespace NeutronData.Repositories
             }
 
             return item;
+        }
+
+        public string GetUpc(string item)
+        {
+            var upc = string.Empty;
+            try
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    var rec = _context.AkaTypes.FirstOrDefault(r => r.Item == item);
+                    if (rec != null)
+                    {
+                        upc = rec.Aka;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+            }
+
+            return upc;
         }
     }
 }

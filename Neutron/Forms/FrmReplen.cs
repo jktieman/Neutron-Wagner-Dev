@@ -156,6 +156,7 @@ namespace Neutron.Forms
         private SynchronizationContext _synchronizationContext;
 
 
+
         public FrmReplen(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
@@ -4271,12 +4272,12 @@ namespace Neutron.Forms
                     //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
                 case "AES":
-                    var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
-                    uploadProcessor.CreateHostFile(_bindingSourcePickStops);
+                    //var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
+                    //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
                 case "TOP":
-                    var topUploadProcessor = new TopUploadProcessor(_neutronVariables, _neutronLicense, _rackStation);
-                    topUploadProcessor.CreateHostFile(_bindingSourcePickStops);
+                    //var topUploadProcessor = new TopUploadProcessor(_neutronVariables, _neutronLicense, _rackStation);
+                    //topUploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
 
                 default:
@@ -5051,18 +5052,25 @@ namespace Neutron.Forms
         //Ready
         private void MBNewOrderSearch_Click(object sender, EventArgs e)
         {
-            FindItemRecord(TextBoxNewOrderFind.Text.Trim().ToLower());
+            var findWhat = TextBoxNewOrderFind.Text.Trim().ToLower();
+            Task.Run(() => _logger.Log($"MBNewOrderSearch_Click  {findWhat}"));
+            FindItemRecord(findWhat);
         }
 
         //Ready
         private void FindItemRecord(string s)
         {
+            Task.Run(() => _logger.Log($"FindItemRecord  {s}"));
             try
             {
                 _bindingSourceItems.DataSource = _itemDefinitionsRepository.GetNewItemViews(s.Trim()).ToList();
+                Task.Run(() => _logger.Log($"Return from Getting Datasource Count:  {_bindingSourceItems.Count}"));
                 DataGridViewNewOrder.DataSource = _bindingSourceItems;
+                Task.Run(() => _logger.Log($"Bind Datasource to Grid"));
                 DataGridViewNewOrder.ClearSelection();
+                Task.Run(() => _logger.Log($"Clear and Update Grid "));
                 DataGridViewNewOrder.Update();
+                Task.Run(() => _logger.Log($"FindItemRecord  Complete"));
             }
             catch (Exception ex)
             {
@@ -5073,6 +5081,7 @@ namespace Neutron.Forms
         //Ready
         private void TextBoxNewOrderFind_KeyDown(object sender, KeyEventArgs e)
         {
+            Task.Run(() => _logger.Log($"TextBoxNewOrderFind_KeyDown  {e.KeyCode}"));
             if (e.KeyCode == Keys.Return)
             {
                 FindItemRecord(TextBoxNewOrderFind.Text.Trim().ToLower());
@@ -5095,6 +5104,7 @@ namespace Neutron.Forms
         //Ready
         private void DataGridViewNewOrder_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            Task.Run(() => _logger.Log($"DataGridViewNewOrder_CellContentClick Row:  {e.RowIndex}"));
             if (e.RowIndex >= 0)
             {
                 var currentItem = (NewItemView)_bindingSourceItems.Current;
@@ -5900,7 +5910,9 @@ namespace Neutron.Forms
 
         private void MBPrint_Click(object sender, EventArgs e)
         {
-            using (FrmReprint form = new FrmReprint())
+            var position = _currentPickStop.PickViews.First().PickPosition;
+
+            using (FrmReprint form = new FrmReprint(_neutronVariables, position))
             {
                 DialogResult result = form.ShowDialog();
                 if (result == DialogResult.OK)

@@ -5,6 +5,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using NeutronCore.Global;
+
 //using Neutron.Global;
 //using Neutron.Forms;
 
@@ -15,10 +17,12 @@ namespace NeutronLoader
         private readonly DirectoryInfo _hostUploadDirectory;
         private readonly DirectoryInfo _logFileDirectory;
         private HostOrder _hostOrder;
+        private readonly NeutronVariables _neutronVariables;
 
-        public HostFileTop(HostOrder order)
+        public HostFileTop(HostOrder order, NeutronVariables neutronVariables)
         {
             _hostOrder = order;
+            _neutronVariables = neutronVariables;
             //string configFilePath = String.Format("{0}", Properties.Settings.Default.ConfigFilePath);
             LoaderSettings.Init();
 
@@ -139,15 +143,15 @@ namespace NeutronLoader
         private string GetCsvString()
         {
             var sb = new StringBuilder();
-            sb.Append(_hostOrder.TypeCode + "|");
-            sb.Append(_hostOrder.PartNum + "|");
-            sb.Append(_hostOrder.PartDesc + "|");
-            sb.Append(_hostOrder.JobNum + "|");
-            sb.Append(_hostOrder.PrimeBin + "|");
-            sb.Append(_hostOrder.NewBin + "|");
-            sb.Append(_hostOrder.Qty + "|");
-            sb.Append(_hostOrder.TroubleBit + "|");
-            sb.Append(_hostOrder.DateTime + "|");
+            sb.Append(_hostOrder.TypeCode + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.PartNum + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.PartDesc + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.JobNum + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.PrimeBin + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.NewBin + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.Qty + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.TroubleBit + _neutronVariables.FieldDelimiter);
+            sb.Append(_hostOrder.DateTime + _neutronVariables.FieldDelimiter);
             sb.Append(_hostOrder.EmpId);
             sb.AppendLine();
             return sb.ToString();

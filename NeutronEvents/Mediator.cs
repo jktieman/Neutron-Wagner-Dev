@@ -87,6 +87,20 @@ namespace NeutronEvents
             StartStopLoader?.Invoke(this, new StartStopEventArgs {StartStop = startStop});
         }
 
+        public event EventHandler<LoaderErrorEventArgs> LoaderError;
+
+        public void OnLoaderError(object sender, string message)
+        {
+            LoaderError?.Invoke(this, new LoaderErrorEventArgs() { Message = message });
+        }
+
+        public event EventHandler<LoaderErrorEventArgs> GeneralError;
+
+        public void OnGeneralError(object sender, string message)
+        {
+            GeneralError?.Invoke(this, new LoaderErrorEventArgs() { Message = message });
+        }
+
         public event EventHandler<EventArgs> RunLoaderOnce;
 
         public void OnRunLoaderOnce(object sender)

@@ -15,6 +15,6 @@ namespace NeutronCore.Enums
         [Description("IPTI Displays")]
         IptiDisplays = 4,
         [Description("Remstar Displays")]
-        RemstarDisplays = 5
+        RemstarDisplays = 6
     }
 }

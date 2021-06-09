@@ -1,4 +1,6 @@
-﻿using AlliedLogger;
+﻿using System.Collections.Generic;
+using AlliedLogger;
+using AlliedPostOffice.Concrete;
 using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
@@ -54,6 +56,11 @@ namespace NeutronLoader
                         _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
                         break;
                     }
+                case "MET":
+                {
+                   _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                    break;
+                }
                 default:
                     {
                         _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _rackStation);

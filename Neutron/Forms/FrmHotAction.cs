@@ -32,6 +32,7 @@ using NeutronData.Models.Lookups;
 using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
+using NeutronDllu;
 using DeviceType = NeutronCore.Enums.DeviceType;
 using StorageType = Neutron.Enums.StorageType;
 using StationType = NeutronCore.Enums;
@@ -45,6 +46,7 @@ namespace Neutron.Forms
         private ResourceManager _enumResourceManager;
         private ResourceManager _gridResourceManager;
 
+        private readonly AkaRepository _repoAka = new AkaRepository();
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
         private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
@@ -91,6 +93,7 @@ namespace Neutron.Forms
         private int _initialQuantity;
         private int _quantityToPick;
         private readonly PickList _pickList;
+        private LabelPrinterPreferences _labelPrinter;
 
         public enum GridDataType
         {
@@ -123,7 +126,7 @@ namespace Neutron.Forms
             _item = item;
             _initialQuantity = quantity;
             _quantityToPick = quantity;
-
+            _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
             InitForm();
             Task.Run(() => _logger.Log("HotAction Constructor Complete"));
         }
@@ -327,6 +330,26 @@ namespace Neutron.Forms
             //    MBCurrentLocations.Enabled = false;
             //}
             Task.Run(() => _logger.Log($"Load Current By Item: {item.Item}  END"));
+        }
+
+
+        private void PrintLabel()
+        {
+            var upc = _repoAka.GetUpc(LabelHotPickItem.Text);
+
+            var labelDetail = new LabelDetail()
+            {
+                Item = LabelHotPickItem.Text,
+                Description = LabelHotPickDescription.Text,
+                Quantity = Convert.ToInt32(TextBoxHotPickQuantity.Text),
+                EmpId = GlobalVar.User.EmpId,
+                Invoice = $"          ",
+                Order = $"          ",
+                LoadDate = DateTime.Now,
+                Origin = $"  "
+            };
+
+            ToteToPrint.Print(1, 1, labelDetail, upc, _labelPrinter);
         }
 
         private async Task LoadNewLocations(ItemDefinitionView item)
@@ -1446,6 +1469,11 @@ namespace Neutron.Forms
 
         private async void MBHotActionBack_Click(object sender, EventArgs e)
         {
+            Back();
+        }
+
+        private void Back()
+        {
             Task.Run(() => _logger.Log("Hot Action Back Button Pressed START"));
             if (_pickList == null)
             {
@@ -1465,8 +1493,10 @@ namespace Neutron.Forms
                 LabelFormTitle.BackColor = Color.Green;
                 tabControl1.SelectedTab = HotPick;
             }
+
             Task.Run(() => _logger.Log("Hot Action Back Button Pressed END"));
         }
+
         private async void MBHotAccept_Click(object sender, EventArgs e)
         {
             await Accept();
@@ -1743,41 +1773,99 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.Log($"Hot Action Key Down Key Pressed: {e.KeyCode} START"));
 
-            if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
+            switch (e.KeyCode)
             {
-                if (TextBoxFindItem.Focused)
-                {
-                    FindItem();
-                }
-                else if (TextBoxScanLocation.Focused)
-                {
-                    var slot = TextBoxScanLocation.Text;
-                    var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
-                    TextBoxScanLocation.Text = searchSlot;
-                    LoadNewLocationsBySlot(searchSlot);
-                }
-                else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
-                {
-                    await Accept();
-                }
-                else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && TextBoxHotPickQuantity.Focused)
-                {
-                    MBHotAccept.Focus();
-                }
+                case Keys.Enter:
+                    {
+                        if (TextBoxFindItem.Focused)
+                        {
+                            FindItem();
+                        }
+                        else if (TextBoxScanLocation.Focused)
+                        {
+                            var slot = TextBoxScanLocation.Text;
+                            var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+                            TextBoxScanLocation.Text = searchSlot;
+                            LoadNewLocationsBySlot(searchSlot);
+                        }
+                        else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
+                        {
+                            await Accept();
+                        }
+                        else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && TextBoxHotPickQuantity.Focused)
+                        {
+                            MBHotAccept.Focus();
+                        }
+                        break;
+                    }
+                case Keys.Escape:
+                    {
+                        TextBoxFindItem.Text = "";
+                        TextBoxFindItem.Focus();
+                        Back();
+                        break;
+                    }
+                case Keys.Space:
+                    {
+                        await Accept();
+                        break;
+                    }
+                case Keys.F2:
+                    {
+                        PrintLabel();
+                        break;
+                    }
+                case Keys.F12:
+                    {
+                        using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
+                        {
+                            var result = frm.ShowDialog();
+                            Show();
+                        }
+                        break;
+                    }
             }
-            if (e.KeyCode == Keys.Escape)
-            {
-                TextBoxFindItem.Text = "";
-                TextBoxFindItem.Focus();
-            }
-            if (e.KeyCode == Keys.F12)
-            {
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
-                {
-                    var result = frm.ShowDialog();
-                    Show();
-                }
-            }
+
+
+
+
+
+
+            //if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
+            //{
+            //    if (TextBoxFindItem.Focused)
+            //    {
+            //        FindItem();
+            //    }
+            //    else if (TextBoxScanLocation.Focused)
+            //    {
+            //        var slot = TextBoxScanLocation.Text;
+            //        var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+            //        TextBoxScanLocation.Text = searchSlot;
+            //        LoadNewLocationsBySlot(searchSlot);
+            //    }
+            //    else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
+            //    {
+            //        await Accept();
+            //    }
+            //    else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && TextBoxHotPickQuantity.Focused)
+            //    {
+            //        MBHotAccept.Focus();
+            //    }
+            //}
+            //if (e.KeyCode == Keys.Escape)
+            //{
+            //    TextBoxFindItem.Text = "";
+            //    TextBoxFindItem.Focus();
+            //}
+            //if (e.KeyCode == Keys.F12)
+            //{
+            //    using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
+            //    {
+            //        var result = frm.ShowDialog();
+            //        Show();
+            //    }
+            //}
             Task.Run(() => _logger.Log("Hot Action Key Down END"));
         }
 

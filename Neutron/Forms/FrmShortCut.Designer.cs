@@ -37,13 +37,14 @@
             this.Label_Q_Key = new System.Windows.Forms.Label();
             this.Label_K_Key = new System.Windows.Forms.Label();
             this.Label_H_Key = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ButtonClose
             // 
             this.ButtonClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClose.Location = new System.Drawing.Point(66, 308);
+            this.ButtonClose.Location = new System.Drawing.Point(63, 346);
             this.ButtonClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonClose.Name = "ButtonClose";
             this.ButtonClose.Size = new System.Drawing.Size(253, 48);
@@ -125,7 +126,7 @@
             this.Label_K_Key.Name = "Label_K_Key";
             this.Label_K_Key.Size = new System.Drawing.Size(306, 35);
             this.Label_K_Key.TabIndex = 14;
-            this.Label_K_Key.Text = "K Key - Skip Pick";
+            this.Label_K_Key.Text = "B Key - Backorder";
             this.Label_K_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Label_H_Key
@@ -136,8 +137,19 @@
             this.Label_H_Key.Name = "Label_H_Key";
             this.Label_H_Key.Size = new System.Drawing.Size(306, 35);
             this.Label_H_Key.TabIndex = 15;
-            this.Label_H_Key.Text = "H Key - Short Pick";
+            this.Label_H_Key.Text = "H Key - Highlight";
             this.Label_H_Key.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(40, 291);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(306, 35);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "F2 Key - Print Labels";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmShortCut
             // 
@@ -145,7 +157,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SlateGray;
             this.CancelButton = this.ButtonClose;
-            this.ClientSize = new System.Drawing.Size(386, 370);
+            this.ClientSize = new System.Drawing.Size(386, 426);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.Label_H_Key);
             this.Controls.Add(this.Label_K_Key);
             this.Controls.Add(this.Label_Q_Key);
@@ -176,5 +189,6 @@
         private System.Windows.Forms.Label Label_Q_Key;
         private System.Windows.Forms.Label Label_K_Key;
         private System.Windows.Forms.Label Label_H_Key;
+        private System.Windows.Forms.Label label1;
     }
 }

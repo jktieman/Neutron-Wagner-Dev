@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/Demo/</PublishUrl>
+    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/MilwaukeeTool/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -23,14 +23,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://www.nameit21.com/Programs/Neutron/Demo/</InstallUrl>
+    <InstallUrl>http://www.nameit21.com/Programs/Neutron/MilwaukeeTool/</InstallUrl>
     <SupportUrl>http://www.put2light.com</SupportUrl>
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>404</ApplicationRevision>
+    <ApplicationRevision>447</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -111,9 +111,9 @@
       <HintPath>..\packages\Equin.ApplicationFramework.BindingListView.1.4.5222.35545\lib\net40-Client\Equin.ApplicationFramework.BindingListView.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Hart_DC, Version=20.18.4.9, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Hart_DC, Version=20.19.3.28, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Hart For Production\Hart_DC.DLL</HintPath>
+      <HintPath>.\Hart_DC.dll</HintPath>
     </Reference>
     <Reference Include="LibraryUserControl">
       <HintPath>..\..\LibraryUserControl\LibraryUserControl\bin\Debug\LibraryUserControl.dll</HintPath>
@@ -209,6 +209,18 @@
     <Compile Include="Enums\DeviceResponse.cs" />
     <Compile Include="Enums\NeutronSecurity.cs" />
     <Compile Include="Enums\StorageType.cs" />
+    <Compile Include="Forms\FrmChangeLineStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeLineStatus.Designer.cs">
+      <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmChangeOrderStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeOrderStatus.Designer.cs">
+      <DependentUpon>FrmChangeOrderStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmChangePriority.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -311,6 +323,12 @@
     <Compile Include="Forms\FrmNewItemAuth.Designer.cs">
       <DependentUpon>FrmNewItemAuth.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmPickViewAdjustment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPickViewAdjustment.Designer.cs">
+      <DependentUpon>FrmPickViewAdjustment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmPin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -322,6 +340,12 @@
     </Compile>
     <Compile Include="Forms\FrmProductivity.Designer.cs">
       <DependentUpon>FrmProductivity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmRemstar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmRemstar.Designer.cs">
+      <DependentUpon>FrmRemstar.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmReplen.cs">
       <SubType>Form</SubType>
@@ -400,7 +424,7 @@
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Global\GlobalVar.cs" />
-    <Compile Include="Global\HistoryManager.cs" />
+    <Compile Include="UserControls\HistoryManager.cs" />
     <Compile Include="Global\Variables.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\ILacProcessor.cs" />
@@ -423,9 +447,33 @@
     <Compile Include="Models\UserIdString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <AdditionalFiles Include="Hart_Device_Controller.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AdditionalFiles>
+    <Content Include="PickLightTest.EXE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <AdditionalFiles Include="Hart_DC_LogLevel.Dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
+    <AdditionalFiles Include="Hart_LV_BPISHI_LogLevel.Dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
     <None Include="Resources\Pick_1.png" />
+    <EmbeddedResource Include="Forms\FrmChangeLineStatus.resx">
+      <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmChangeOrderStatus.resx">
+      <DependentUpon>FrmChangeOrderStatus.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeQuantityOnly.resx">
       <DependentUpon>FrmChangeQuantityOnly.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmPickViewAdjustment.resx">
+      <DependentUpon>FrmPickViewAdjustment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmRemstar.resx">
+      <DependentUpon>FrmRemstar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmShortCut.resx">
       <DependentUpon>FrmShortCut.cs</DependentUpon>
@@ -521,6 +569,9 @@
       <DependentUpon>FrmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Content Include="Hart_DC.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Language\FrmMain.fr-CA.resources">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -689,7 +740,6 @@
     <None Include="Icons\glyphicons-182-download-alt.png" />
     <None Include="Icons\glyphicons-224-chevron-right.png" />
     <None Include="Icons\glyphicons-225-chevron-left.png" />
-    <Content Include="Hart_DC.xml" />
     <Content Include="Hart_LV.DLL">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -707,6 +757,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
+      <Project>{b600904b-1b59-47bf-8884-5a4982d8b2fe}</Project>
+      <Name>HighJump</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
+      <Project>{6ce97d6f-a149-42fe-a858-2272db64897e}</Project>
+      <Name>AlliedPostOffice</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>
       <Name>JsonManager</Name>
@@ -748,9 +806,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

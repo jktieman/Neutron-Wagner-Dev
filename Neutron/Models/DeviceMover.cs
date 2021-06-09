@@ -19,15 +19,12 @@ namespace Neutron.Models
         public Location MoveNext()
         {
             Location result = null;
-            if (Locations.Count > 0)
+            if (Locations.Count > Position)
             {
-                if (Position + 1 < Locations.Count)
-                {
-                    Position += 1;
-                    result = Locations[Position];
-                }
+                result = Locations[Position];
+                Position += 1;
             }
             return result;
         }
-    }
+}
 }

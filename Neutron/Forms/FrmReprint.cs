@@ -5,28 +5,37 @@ using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
 using NeutronCore;
+using NeutronCore.Global;
 
 namespace Neutron.Forms
 {
     public partial class FrmReprint : Form
     {
+        private NeutronVariables _neutronVaribles;
+        private readonly int _position;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         public PrintData printData;
 
-        public FrmReprint()
+        public FrmReprint(NeutronVariables neutronVaribles, int position)
         {
+            _neutronVaribles = neutronVaribles;
+            _position = position;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
+            CheckBoxDocument.Visible = _neutronVaribles.EnableDocumentPrinter;
+            TextBoxReprintPosition.Text = position.ToString();
         }
 
         private void MBReprintPrint_Click(object sender, EventArgs e)
         {
-            printData = new PrintData();
-            printData.Position = TextBoxReprintPosition.Text.ParseInt();
-            printData.PrintDocument = CheckBoxDocument.Checked;
-            printData.PrintToteLabel = CheckBoxToteLabel.Checked;
+            printData = new PrintData
+            {
+                Position = TextBoxReprintPosition.Text.ParseInt(),
+                PrintDocument = CheckBoxDocument.Checked,
+                PrintToteLabel = CheckBoxToteLabel.Checked
+            };
             DialogResult = DialogResult.OK;
             Close();
         }

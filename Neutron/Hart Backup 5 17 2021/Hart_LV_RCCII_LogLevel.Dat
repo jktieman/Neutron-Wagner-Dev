@@ -1,0 +1,26 @@
+9
+
+This file is used to set the logging level of communications to the machine controller.
+
+Only the first line of this file is significant, the remaining lines are documentation only.
+
+Only the value in the first position of the first line is evaluated.
+
+
+If the value = 0, or if the value is non-numeric, or if this file does not exist, only critical failures will be logged. 
+
+If the value = 2, everything documented to be logged for lower levels will still be logged, plus,
+                  all warnings and performance related log events.
+
+If the value = 5, everything documented to be logged for lower levels will still be logged, plus,
+                  every call to an externally exposed function will be logged, but just the call and the parameters sent.
+
+If the value = 8, everything documented to be logged for lower levels will still be logged, plus,
+                  detailed logging of program flow and results will be logged.
+
+If the value = 9, everything documented to be logged for lower levels will still be logged, plus,
+                  extremely detailed logging of all data flow will be logged (reserved for internal use).
+
+Any other numeric value you provide, that is not described above, will default to the next lowest value that is described.
+
+A value of 2 in the first position of the first line of this file is recommended unless there are other requirements.

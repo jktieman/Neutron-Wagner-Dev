@@ -107,6 +107,10 @@ namespace NeutronCore.Enums
         [Description("Kill Line")]
         KillLine = 53,
         [Description("Kill Order")]
-        KillOrder = 54
+        KillOrder = 54,
+        [Description("Change Order Status")]
+        ChangeOrderStatus = 55,
+        [Description("Change Line Status")]
+        ChangeLineStatus = 56
     }
 }

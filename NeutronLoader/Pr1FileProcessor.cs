@@ -135,7 +135,7 @@ namespace NeutronLoader
                         ItemDefinition itemDef;
 
                         var partNum = line.Substring(2, 35).Trim();
-                        var description = line.Substring(74, 30).Trim();
+                        var description = line.Substring(74, 50).Trim();
 
                         if (line.Substring(48, 1) == "O")  //Force to Off Carousel
                         {
@@ -160,7 +160,7 @@ namespace NeutronLoader
                                 Quantity = line.Substring(38, 9).ParseInt(),
                                 PrimeBin = primeBin,
                                 PartDesc = description.Trim(),
-                                OrderDetailInfo = line.Substring(105, 100).Trim(),
+                                OrderDetailInfo = line.Substring(131).Trim(),
                                 StationNumber = _rackStation.StationNumber,
                                 LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0
@@ -190,7 +190,7 @@ namespace NeutronLoader
                                 Quantity = line.Substring(38, 9).ParseInt(),
                                 PrimeBin = primeBin,
                                 PartDesc = description.Trim(),
-                                OrderDetailInfo = line.Substring(105).Trim(),
+                                OrderDetailInfo = line.Substring(131).Trim(),
                                 StationNumber = stationNumber,
                                 LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0

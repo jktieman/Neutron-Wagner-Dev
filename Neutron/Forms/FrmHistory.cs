@@ -333,6 +333,7 @@ namespace Neutron.Forms
         private void SetupCheckListBoxActionCodes()
         {
             var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
+
             var codes = new Dictionary<int, string>();
             foreach (var code in actionCodes)
             {
@@ -351,6 +352,9 @@ namespace Neutron.Forms
             CheckedListBoxActionCodes.DisplayMember = "Value";
             CheckedListBoxActionCodes.ValueMember = "Key";
         }
+
+
+       
 
         private void ButtonCheckAll_Click(object sender, EventArgs e)
         {

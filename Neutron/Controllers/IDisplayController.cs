@@ -8,6 +8,7 @@ namespace Neutron.Controllers
         event EventHandler<IptiController.MySerialDataReceivedEventArgs> MySerialDataReceived;
         void CloseController();
         bool Ready { get; set; }
+
         void ClearAllBli();
         void ClearAllShi();
         void ShowBli(int address, int beacon, string text);

@@ -56,6 +56,8 @@
             // CheckBoxToteLabel
             // 
             this.CheckBoxToteLabel.AutoSize = true;
+            this.CheckBoxToteLabel.Checked = true;
+            this.CheckBoxToteLabel.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxToteLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxToteLabel.Location = new System.Drawing.Point(126, 212);
             this.CheckBoxToteLabel.Name = "CheckBoxToteLabel";
@@ -123,9 +125,11 @@
             // 
             // FrmReprint
             // 
+            this.AcceptButton = this.MBReprintPrint;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.RoyalBlue;
+            this.CancelButton = this.MBReprintCancel;
             this.ClientSize = new System.Drawing.Size(405, 402);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

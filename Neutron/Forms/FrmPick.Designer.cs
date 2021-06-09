@@ -85,6 +85,7 @@ namespace Neutron.Forms
             this.MBCompress = new MetroFramework.Controls.MetroButton();
             this.MBPrintOrderListing = new MetroFramework.Controls.MetroButton();
             this.MBJobDetails = new MetroFramework.Controls.MetroButton();
+            this.MBChangeOrderStatus = new MetroFramework.Controls.MetroButton();
             this.MBPriority = new MetroFramework.Controls.MetroButton();
             this.MBHold = new MetroFramework.Controls.MetroButton();
             this.MBRelease = new MetroFramework.Controls.MetroButton();
@@ -103,6 +104,7 @@ namespace Neutron.Forms
             this.MBDeleteOrder = new MetroFramework.Controls.MetroButton();
             this.MBReturnToStock = new MetroFramework.Controls.MetroButton();
             this.AvailableOrders = new System.Windows.Forms.TabPage();
+            this.TextBoxErrorProvider = new System.Windows.Forms.TextBox();
             this.MBGo2 = new MetroFramework.Controls.MetroButton();
             this.MBFillOptimized = new MetroFramework.Controls.MetroButton();
             this.MBFillStarters = new MetroFramework.Controls.MetroButton();
@@ -271,10 +273,11 @@ namespace Neutron.Forms
             this.MBPickAccept = new MetroFramework.Controls.MetroButton();
             this.MBPrint = new MetroFramework.Controls.MetroButton();
             this.MBPickNewItem = new MetroFramework.Controls.MetroButton();
-            this.PictureBoxItemImage = new System.Windows.Forms.PictureBox();
             this.MBPickBack = new MetroFramework.Controls.MetroButton();
+            this.PictureBoxItemImage = new System.Windows.Forms.PictureBox();
             this.OrderDetails = new System.Windows.Forms.TabPage();
             this.MBKillLine = new MetroFramework.Controls.MetroButton();
+            this.MBChangeLineStatus = new MetroFramework.Controls.MetroButton();
             this.MBHoldDetail = new MetroFramework.Controls.MetroButton();
             this.MBPrintOrderDetails = new MetroFramework.Controls.MetroButton();
             this.MBReleaseDetail = new MetroFramework.Controls.MetroButton();
@@ -356,6 +359,7 @@ namespace Neutron.Forms
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
+            this.ErrorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -389,6 +393,7 @@ namespace Neutron.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkip)).BeginInit();
             this.SkipInventory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkipInventory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -547,6 +552,7 @@ namespace Neutron.Forms
             this.OrderListing.Controls.Add(this.MBCompress);
             this.OrderListing.Controls.Add(this.MBPrintOrderListing);
             this.OrderListing.Controls.Add(this.MBJobDetails);
+            this.OrderListing.Controls.Add(this.MBChangeOrderStatus);
             this.OrderListing.Controls.Add(this.MBPriority);
             this.OrderListing.Controls.Add(this.MBHold);
             this.OrderListing.Controls.Add(this.MBRelease);
@@ -674,6 +680,18 @@ namespace Neutron.Forms
             this.ToolTipPickScreen.SetToolTip(this.MBJobDetails, "Shows all the details of the Job.");
             this.MBJobDetails.UseSelectable = true;
             this.MBJobDetails.Click += new System.EventHandler(this.MBJobDetails_Click);
+            // 
+            // MBChangeOrderStatus
+            // 
+            this.MBChangeOrderStatus.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBChangeOrderStatus.Location = new System.Drawing.Point(521, 692);
+            this.MBChangeOrderStatus.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBChangeOrderStatus.Name = "MBChangeOrderStatus";
+            this.MBChangeOrderStatus.Size = new System.Drawing.Size(115, 36);
+            this.MBChangeOrderStatus.TabIndex = 14;
+            this.MBChangeOrderStatus.Text = "Status";
+            this.MBChangeOrderStatus.UseSelectable = true;
+            this.MBChangeOrderStatus.Click += new System.EventHandler(this.MBChangeOrderStatus_Click);
             // 
             // MBPriority
             // 
@@ -913,6 +931,7 @@ namespace Neutron.Forms
             // AvailableOrders
             // 
             this.AvailableOrders.BackColor = System.Drawing.Color.RoyalBlue;
+            this.AvailableOrders.Controls.Add(this.TextBoxErrorProvider);
             this.AvailableOrders.Controls.Add(this.MBGo2);
             this.AvailableOrders.Controls.Add(this.MBFillOptimized);
             this.AvailableOrders.Controls.Add(this.MBFillStarters);
@@ -933,6 +952,16 @@ namespace Neutron.Forms
             this.AvailableOrders.Size = new System.Drawing.Size(1147, 734);
             this.AvailableOrders.TabIndex = 1;
             this.AvailableOrders.Text = "Available Orders";
+            this.AvailableOrders.Enter += new System.EventHandler(this.AvailableOrders_Enter);
+            // 
+            // TextBoxErrorProvider
+            // 
+            this.TextBoxErrorProvider.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxErrorProvider.Location = new System.Drawing.Point(534, 652);
+            this.TextBoxErrorProvider.Multiline = true;
+            this.TextBoxErrorProvider.Name = "TextBoxErrorProvider";
+            this.TextBoxErrorProvider.Size = new System.Drawing.Size(455, 75);
+            this.TextBoxErrorProvider.TabIndex = 114;
             // 
             // MBGo2
             // 
@@ -1051,7 +1080,6 @@ namespace Neutron.Forms
             this.TextBoxPos9.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos9.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos9.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos9.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // LabelPos16
             // 
@@ -1089,7 +1117,6 @@ namespace Neutron.Forms
             this.TextBoxPos16.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos16.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos16.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos16.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // TextBoxPos15
             // 
@@ -1103,7 +1130,6 @@ namespace Neutron.Forms
             this.TextBoxPos15.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos15.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos15.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos15.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // AvailablePos15Display
             // 
@@ -1208,7 +1234,6 @@ namespace Neutron.Forms
             this.TextBoxPos10.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos10.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos10.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos10.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // TextBoxPos11
             // 
@@ -1222,7 +1247,6 @@ namespace Neutron.Forms
             this.TextBoxPos11.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos11.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos11.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos11.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // TextBoxPos12
             // 
@@ -1236,7 +1260,6 @@ namespace Neutron.Forms
             this.TextBoxPos12.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos12.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos12.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos12.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // TextBoxPos13
             // 
@@ -1250,7 +1273,6 @@ namespace Neutron.Forms
             this.TextBoxPos13.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos13.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos13.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos13.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // TextBoxPos14
             // 
@@ -1264,7 +1286,6 @@ namespace Neutron.Forms
             this.TextBoxPos14.Click += new System.EventHandler(this.TextBoxPos_Click);
             this.TextBoxPos14.Enter += new System.EventHandler(this.TextBoxEnter);
             this.TextBoxPos14.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos14.Leave += new System.EventHandler(this.TextBoxPosLeave);
             // 
             // AvailablePos9Display
             // 
@@ -1584,9 +1605,9 @@ namespace Neutron.Forms
             // 
             // LabelAvailableOrdersSearchFor
             // 
-            this.LabelAvailableOrdersSearchFor.Location = new System.Drawing.Point(434, 61);
+            this.LabelAvailableOrdersSearchFor.Location = new System.Drawing.Point(464, 43);
             this.LabelAvailableOrdersSearchFor.Name = "LabelAvailableOrdersSearchFor";
-            this.LabelAvailableOrdersSearchFor.Size = new System.Drawing.Size(280, 25);
+            this.LabelAvailableOrdersSearchFor.Size = new System.Drawing.Size(207, 25);
             this.LabelAvailableOrdersSearchFor.TabIndex = 72;
             this.LabelAvailableOrdersSearchFor.Text = "Search For";
             this.LabelAvailableOrdersSearchFor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1835,8 +1856,8 @@ namespace Neutron.Forms
             this.PickScreen.Controls.Add(this.MBPickAccept);
             this.PickScreen.Controls.Add(this.MBPrint);
             this.PickScreen.Controls.Add(this.MBPickNewItem);
-            this.PickScreen.Controls.Add(this.PictureBoxItemImage);
             this.PickScreen.Controls.Add(this.MBPickBack);
+            this.PickScreen.Controls.Add(this.PictureBoxItemImage);
             this.PickScreen.Location = new System.Drawing.Point(4, 22);
             this.PickScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickScreen.Name = "PickScreen";
@@ -3063,6 +3084,20 @@ namespace Neutron.Forms
             this.MBPickNewItem.Visible = false;
             this.MBPickNewItem.Click += new System.EventHandler(this.MBPickNewItem_Click);
             // 
+            // MBPickBack
+            // 
+            this.MBPickBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.MBPickBack.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MBPickBack.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBPickBack.Location = new System.Drawing.Point(964, 2);
+            this.MBPickBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBPickBack.Name = "MBPickBack";
+            this.MBPickBack.Size = new System.Drawing.Size(180, 30);
+            this.MBPickBack.TabIndex = 11;
+            this.MBPickBack.Text = "&Back";
+            this.MBPickBack.UseSelectable = true;
+            this.MBPickBack.Click += new System.EventHandler(this.MBPickBack_Click);
+            // 
             // PictureBoxItemImage
             // 
             this.PictureBoxItemImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -3078,24 +3113,11 @@ namespace Neutron.Forms
             this.PictureBoxItemImage.MouseEnter += new System.EventHandler(this.PictureBoxItemImage_MouseEnter);
             this.PictureBoxItemImage.MouseLeave += new System.EventHandler(this.PictureBoxItemImage_MouseLeave);
             // 
-            // MBPickBack
-            // 
-            this.MBPickBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.MBPickBack.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBPickBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickBack.Location = new System.Drawing.Point(964, 2);
-            this.MBPickBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBPickBack.Name = "MBPickBack";
-            this.MBPickBack.Size = new System.Drawing.Size(180, 30);
-            this.MBPickBack.TabIndex = 11;
-            this.MBPickBack.Text = "&Back";
-            this.MBPickBack.UseSelectable = true;
-            this.MBPickBack.Click += new System.EventHandler(this.MBPickBack_Click);
-            // 
             // OrderDetails
             // 
             this.OrderDetails.BackColor = System.Drawing.Color.RoyalBlue;
             this.OrderDetails.Controls.Add(this.MBKillLine);
+            this.OrderDetails.Controls.Add(this.MBChangeLineStatus);
             this.OrderDetails.Controls.Add(this.MBHoldDetail);
             this.OrderDetails.Controls.Add(this.MBPrintOrderDetails);
             this.OrderDetails.Controls.Add(this.MBReleaseDetail);
@@ -3119,6 +3141,18 @@ namespace Neutron.Forms
             this.MBKillLine.Text = "Kill Line";
             this.MBKillLine.UseSelectable = true;
             this.MBKillLine.Click += new System.EventHandler(this.MBKillLine_Click);
+            // 
+            // MBChangeLineStatus
+            // 
+            this.MBChangeLineStatus.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBChangeLineStatus.Location = new System.Drawing.Point(221, 11);
+            this.MBChangeLineStatus.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBChangeLineStatus.Name = "MBChangeLineStatus";
+            this.MBChangeLineStatus.Size = new System.Drawing.Size(135, 79);
+            this.MBChangeLineStatus.TabIndex = 3;
+            this.MBChangeLineStatus.Text = "Status";
+            this.MBChangeLineStatus.UseSelectable = true;
+            this.MBChangeLineStatus.Click += new System.EventHandler(this.MBChangeLineStatus_Click);
             // 
             // MBHoldDetail
             // 
@@ -3159,10 +3193,10 @@ namespace Neutron.Forms
             // MBReturnToStockOrderDetail
             // 
             this.MBReturnToStockOrderDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStockOrderDetail.Location = new System.Drawing.Point(213, 10);
+            this.MBReturnToStockOrderDetail.Location = new System.Drawing.Point(160, 10);
             this.MBReturnToStockOrderDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReturnToStockOrderDetail.Name = "MBReturnToStockOrderDetail";
-            this.MBReturnToStockOrderDetail.Size = new System.Drawing.Size(135, 79);
+            this.MBReturnToStockOrderDetail.Size = new System.Drawing.Size(35, 79);
             this.MBReturnToStockOrderDetail.TabIndex = 2;
             this.MBReturnToStockOrderDetail.Text = "Return to Stock";
             this.MBReturnToStockOrderDetail.UseSelectable = true;
@@ -4264,6 +4298,10 @@ namespace Neutron.Forms
             // 
             this.ToolTipPickScreen.IsBalloon = true;
             // 
+            // ErrorProvider1
+            // 
+            this.ErrorProvider1.ContainerControl = this;
+            // 
             // FrmPick
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4329,6 +4367,7 @@ namespace Neutron.Forms
             this.SkipInventory.ResumeLayout(false);
             this.SkipInventory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkipInventory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4626,5 +4665,9 @@ namespace Neutron.Forms
         private MetroFramework.Controls.MetroButton MBKillLine;
         private MetroFramework.Controls.MetroButton MBKillOrderRack;
         private MetroFramework.Controls.MetroButton MBKillLineSkip;
+        private MetroFramework.Controls.MetroButton MBChangeOrderStatus;
+        private MetroFramework.Controls.MetroButton MBChangeLineStatus;
+        private System.Windows.Forms.ErrorProvider ErrorProvider1;
+        private System.Windows.Forms.TextBox TextBoxErrorProvider;
     }
 }

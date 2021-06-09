@@ -14,241 +14,408 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using NeutronCore.Models;
+using NeutronData.Models.Lookups;
 
 namespace Neutron.Controllers
 {
     public class DisplayController : IDisplayController
     {
         private readonly GenericRepository<SerialConfiguration> _repoSerial = new GenericRepository<SerialConfiguration>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevice = new GenericRepository<HardwareDevice>(new NeutronDb());
 
-        public Hart_DisplayController HartDisplayController;
+        private Hart_DisplayController _hartDisplayController;
 
-        private string cError = string.Empty;
+        private string _cError = string.Empty;
         private DynamicLogger _logger;
-        private string logFileDir = string.Empty;
+        private string _logFileDir = string.Empty;
         private readonly StationView _station;
-        private readonly List<Hart_BLI> bliList = new List<Hart_BLI>();
-        private readonly List<Hart_SHI> shiList = new List<Hart_SHI>();
-        private bool ready;
-        private int lBeacon = 0;
-        private int rBeacon = 0;
-        private readonly bool bliEnabled = true;
-        private readonly bool shiEnabled = true;
-        private readonly NeutronVariables neutronVariables;
-
-
+        private readonly List<Hart_BLI> _bliList = new List<Hart_BLI>();
+        private readonly List<Hart_SHI> _shiList = new List<Hart_SHI>();
+        private readonly List<Hart_SHI> _shiListClear = new List<Hart_SHI>();
+        private int _lBeacon = 0;
+        private int _rBeacon = 0;
+        private readonly bool _bliEnabled = true;
+        private readonly bool _shiEnabled = true;
+        private readonly NeutronVariables _neutronVariables;
+        private readonly NeutronLicense _neutronLicense;
+        private readonly Hart_SHI Global_Module;
         List<Hart_BLI> blisOn = new List<Hart_BLI>();
         List<Hart_SHI> shisOn = new List<Hart_SHI>();
-
+        public bool Ready { get; set; }
         public event EventHandler<IptiController.MySerialDataReceivedEventArgs> MySerialDataReceived;
 
         public DisplayController(IJsonData jsonData, StationView station)
         {
             _station = station;
-            neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            bliEnabled = neutronVariables.BliEnabled;
-            shiEnabled = neutronVariables.ShiEnabled;
-
+            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            _neutronLicense = jsonData.LoadFile<NeutronLicense>();
+            _bliEnabled = _neutronVariables.BliEnabled;
+            _shiEnabled = _neutronVariables.ShiEnabled;
+            Global_Module = new Hart_SHI(0, 0, 0, "", "");
             CreateLog();
 
-            //if (station.StationNumber == 4 || station.StationNumber == 5)
-            //{
-            //    if (bliEnabled)
-            //    {
-            //        FillBliListStations4_5();
-            //    }
-            //}
+            FillBliList();
+            FileShiList();
+            FileShiListClear();
 
-            //else
-            //{
-            if (bliEnabled)
-            {
-                FillBliList();
-            }
-            if (shiEnabled)
-            {
-                FileShiList();
-            }
-            // }
+            var hartLog = ($"{_logFileDir}Hart");
 
-            string hartLog = ($"{logFileDir}Hart");
-            HartDisplayController = new Hart_DisplayController(Hart_DisplayController.Controller_Type_Remstar_BPI_SHI(), hartLog);
+
+            _hartDisplayController = new Hart_DisplayController(Hart_DisplayController.Controller_Type_Remstar_BPI_SHI(), hartLog);
+
             Task.Run(() => _logger.Log(msg: @"HartDisplayController has been created: "));
             if (HartDisplayControllerInit())
             {
-                ready = true;
+                Ready = true;
             }
             else
             {
                 Task.Run(() => _logger.Log(@"HartDisplayController failed Initialization"));
-                ready = false;
+                Ready = false;
             }
+        }
+
+        private bool HartDisplayControllerInit()
+        {
+            var result = false;
+
+            var serialConfigurationId = _repoHardwareDevice.All().FirstOrDefault(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.RemstarDisplays && r.StationId == _station.StationId)?.SerialConfigurationId;
+
+            if (serialConfigurationId == null) return false;
+
+            var serialConfiguration = _repoSerial.FindByKey(serialConfigurationId);
+            if (serialConfiguration == null) return false;
+
+            Task.Run(() => _logger.Log($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));
+            Task.Run(() => _logger.Log($"Serial Port Number: {serialConfiguration.PortNumber.ToString()}"));
+
+
+            if (_hartDisplayController.Init_Controller(serialConfiguration.PortNumber, serialConfiguration.SimulationMode, serialConfiguration.LogLevel, ref _cError))
+            {
+                Task.Run(() => _logger.Log("Initialization Requested"));
+                result = true;
+            }
+            else
+            {
+                Task.Run(() => _logger.Log("Problem requesting initialization. " + _cError));
+                MessageBox.Show($"{_cError}", "Display Controller Initialization", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+
+            return result;
+        }
+
+        public int GetInitStatus()
+        {
+            var stat = InitStatus();
+            Task.Run(() => _logger.Log($"Get Init Status - Return: {stat}"));
+            return stat;
+        }
+
+        private int InitStatus()
+        {
+            // Note that the sequesnce of the following assignments is critical. Success must be first. Others follow in any sequence.
+            var success = _hartDisplayController.Init_Success;
+            var initCode = _hartDisplayController.LastStatus_Code;
+            var initMsg = _hartDisplayController.LastStatus_Message;
+
+            Task.Run(() => _logger.Log($"HartDisplayController InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
+            if (success)
+            {
+                // life is good, you can drive the device
+                Task.Run(() => _logger.Log($"HartDisplayController InitStatus: success is {success}"));
+                if (initCode == 0)
+                {
+                    // life is good, no warning messages
+                    Task.Run(() => _logger.Log($"HartDisplayController Initialization is complete and was successful initCode is {initCode}"));
+                }
+                else
+                {
+                    // You need to report the warning to the operator or to a log that is monitored frequently
+                    Task.Run(() => _logger.Log($"HartDisplayController Warning - Initialization was successful but there is a warning." + Environment.NewLine +
+                    "Please provide the following information to your IT support." + Environment.NewLine +
+                    "Code is: " + initCode.ToString() + Environment.NewLine +
+                    "Message is: " + initMsg));
+                }
+            }
+            else
+            {
+                // Darn, cannot drive the device at this time
+                if (_hartDisplayController.Init_PercentageComplete == 0)
+                {
+                    Task.Run(() => _logger.Log($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                }
+                else if (_hartDisplayController.Init_PercentageComplete < 100)
+                {
+                    Task.Run(() => _logger.Log($"Initialization is in progress.  Init {_hartDisplayController.Init_PercentageComplete.ToString()}% complete..."));
+                    Task.Run(() => _logger.Log($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                }
+                else
+                {
+                    Task.Run(() => _logger.Log($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                }
+            }
+            return initCode;
         }
 
         private void CreateLog()
         {
-
-            logFileDir = LoaderSettings.GetLogFileDirectory();
-            string folderName = string.Format(format: @"Display Controller_{0}", arg0: _station.StationNumber.ToString());
-            string logActivity = LoaderSettings.EnableLogging;
-            Task.Run(() => _logger = new DynamicLogger(logFileDir, folderName, logActivity));
+            _logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = string.Format(format: @"Display Controller_{0}", arg0: _station.StationNumber.ToString());
+            var logActivity = LoaderSettings.EnableLogging;
+            Task.Run(() => _logger = new DynamicLogger(_logFileDir, folderName, logActivity));
         }
 
         public void CloseController()
         {
             try
             {
-                if (HartDisplayController != null)
+                if (_hartDisplayController != null)
                 {
-                    HartDisplayController.Close_Controller(ref cError);
-                    Task.Run(() => _logger.Log($"Close Display Controller Closed {cError}"));
+                    _hartDisplayController.Close_Controller(ref _cError);
+                    Task.Run(() => _logger.Log($"Close Display Controller Closed {_cError}"));
                 }
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Close Display Controller Exception: {cError} {Environment.NewLine}{ex.Message} {Environment.NewLine} {ex.InnerException} "));
+                Task.Run(() => _logger.Log($"Close Display Controller Exception: {_cError} {Environment.NewLine}{ex.Message} {Environment.NewLine} {ex.InnerException} "));
             }
         }
 
-
-        public bool Ready
+        private int GetAddress(int device, int level)
         {
-            get { return ready; }
-            set { ready = value; }
-        }
+            var address = string.Empty;
 
-        private bool HartDisplayControllerInit()
-        {
-            bool result = false;
-            string serialConfigurationName = ($"Com4_Displays");
-            SerialConfiguration serialConfiguration = _repoSerial.FindBy(r => r.Name == serialConfigurationName).FirstOrDefault();
-
-            if (serialConfiguration != null)
+            switch (device)
             {
-                Task.Run(() => _logger.Log($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));
-                Task.Run(() => _logger.Log($"Serial Port Number: {serialConfiguration.PortNumber.ToString()}"));
-                if (HartDisplayController.Init_Controller(serialConfiguration.PortNumber, serialConfiguration.SimulationMode, serialConfiguration.LogLevel, ref cError))
-                {
-                    Task.Run(() => _logger.Log("Initialization Requested"));
-                    result = true;
-                }
-                else
-                {
-                    Task.Run(() => _logger.Log("Problem requesting initialization. " + cError));
-                }
+                case 1:
+                    _lBeacon = 2;
+                    _rBeacon = 0;
+                    address = $"10{level}";
+                    break;
+                case 2:
+                    _lBeacon = 0;
+                    _rBeacon = 2;
+                    address = $"10{level}";
+                    break;
+                case 3:
+                    _lBeacon = 0;
+                    _rBeacon = 2;
+                    address = $"20{level}";
+                    break;
+                case 4:
+                    _lBeacon = 2;
+                    _rBeacon = 0;
+                    address = $"20{level}";
+                    break;
             }
-            else
-            {
-                Task.Run(() => _logger.Log("SerialConfiguration is null "));
-            }
-            return result;
+
+
+            Task.Run(() => _logger.Log($"Get Address Returned: {address}"));
+
+            return int.Parse(address);
+
         }
-
-        //public void ShowAll()
-        //{
-        //    if (station.StationNumber == 4 || station.StationNumber == 5)
-        //    {
-        //        ShowAllBli();
-        //    }
-
-        //    else
-        //    {
-        //        ShowAllBli();
-        //        ShowAllShi();
-        //    }
-        //}
-
-        //public void ClearAll()
-        //{
-        //    if (station.StationNumber == 4 || station.StationNumber == 5)
-        //    {
-        //        ClearAllBli();
-        //    }
-
-        //    else
-        //    {
-        //        ClearAllBli();
-        //        ClearAllShi();
-        //    }
-        //}
-
-        //public void ShowAllBli()
-        //{
-
-        //    if (bliEnabled)
-        //    {
-        //        Task.Run(() => logger.Log("BLI Show All Displays."));
-        //        if (!HartDisplayController.Show(bliList, ref cError))
-        //        {
-        //            Task.Run(() => logger.Log("BLI Show All Display Error."));
-        //        }
-        //    }
-        //}
 
         public void ClearAllBli()
         {
-            if (bliEnabled)
+            Task.Run(() => _logger.Log($"BLI Clear All Displays."));
+
+            if (!_hartDisplayController.Clear(_bliList, ref _cError))
             {
-
-                var blisOnDelete = new List<Hart_BLI>();
-
-                foreach (var bli in blisOn)
-                {
-                    if (blisOn.Contains(bli))
-                    {
-                        Task.Run(() => _logger.Log($"BLI Clear All Displays.  {bli.BLI_Address}"));
-                        Thread.Sleep(10);
-                        if (!HartDisplayController.Clear(bli, ref cError))
-                        {
-                            Task.Run(() => _logger.Log($"BLI Clear All Display Error.  {bli.BLI_Address} \r\n  {cError}"));
-                        }
-                        blisOnDelete.Add(bli);
-                    }
-                }
-                foreach (var item in blisOnDelete)
-                {
-                    blisOn.Remove(item);
-                }
+                Task.Run(() => _logger.Log($"BLI Clear All Display Error. \r\n  {_cError}"));
             }
+
         }
 
-        //public void ShowAllShi()
-        //{
-        //    if (shiEnabled)
-        //    {
-        //        Task.Run(() => logger.Log("SHI Show All Displays."));
-        //        if (!HartDisplayController.Show(shiList, ref cError))
-        //        {
-        //            Task.Run(() => logger.Log("SHI Show All Display Error."));
-        //        }
-        //    }
-        //}
-
+        //this is the one Neutron uses
         public void ClearAllShi()
         {
-            if (shiEnabled)
+            if (!_hartDisplayController.Clear(Global_Module, ref _cError))
             {
-                Task.Run(() => _logger.Log("SHI Clear All Displays."));
-                var shisOnDelete = new List<Hart_SHI>();
-                foreach (var shi in shisOn)
+                Task.Run(() => _logger.Log($"SHI Clear All Display Error.  {Environment.NewLine}{_cError}"));
+            }
+        }
+
+        //this is the one Neutron uses
+        public void ShowShi(int device, int bin, int level, string part, string text)
+        {
+            Task.Run(() => _logger.Log($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
+            var address = GetAddress(device, level);
+
+            var shi = new Hart_SHI(address, _lBeacon, _rBeacon, part, text);
+
+            if (!_hartDisplayController.Show(shi, ref _cError))
+            {
+                Task.Run(() => _logger.Log($"SHI Show Single Display Error.  {shi.SHI_Address}\r\n {_cError}"));
+            }
+        }
+
+        public void ShowAllShi()
+        {
+            Task.Run(() => _logger.Log("SHI Show All Displays."));
+
+            if (!_hartDisplayController.Show(_shiList, ref _cError))
+            {
+                Task.Run(() => _logger.Log("SHI Show All Display Error."));
+            }
+        }
+
+        public void ShowBli(int address, int beacon, string text)
+        {
+            if (_bliEnabled)
+            {
+                Task.Run(() => _logger.Log($"BLI Address: {address}"));
+                var bli = new Hart_BLI(address, 2, text);
+                if (!blisOn.Contains(bli))
                 {
-                    if (shisOn.Contains(shi))
-                    {
-                        Task.Run(() => _logger.Log($"SHI Clear All Displays.  {shi.SHI_Address}"));
-                        Thread.Sleep(10);
-                        if (!HartDisplayController.Clear(shi, ref cError))
-                        {
-                            Task.Run(() => _logger.Log($"SHI Clear All Display Error.  {shi.SHI_Address} \r\n  {cError}"));
-                        }
-                        shisOnDelete.Add(shi);
-                    }
+                    blisOn.Add(bli);
                 }
-                foreach (var item in shisOnDelete)
+                Task.Run(() => _logger.Log($"BLI On: {bli.BLI_Address}"));
+                Thread.Sleep(10);
+                if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    shisOn.Remove(item);
+                    Task.Run(() => _logger.Log($"BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
                 }
             }
         }
+
+        public void ShowBli(Hart_BLI bli)
+        {
+            if (_bliEnabled)
+            {
+                if (!blisOn.Contains(bli))
+                {
+                    blisOn.Add(bli);
+                }
+                Task.Run(() => _logger.Log($"Hart BLI Address: {bli.BLI_Address}"));
+                Thread.Sleep(10);
+                if (!_hartDisplayController.Show(bli, ref _cError))
+                {
+                    Task.Run(() => _logger.Log($"Hart BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
+                }
+            }
+        }
+
+        public void ShowShi(Hart_SHI shi)
+        {
+            Task.Run(() => _logger.Log($"Hart SHI Show: {shi.SHI_Address}"));
+            Thread.Sleep(10);
+            if (!_hartDisplayController.Show(shi, ref _cError))
+            {
+                Task.Run(() => _logger.Log($"Hart SHI Show Single Display Error 2.  {shi.SHI_Address}\r\n {_cError}"));
+            }
+        }
+
+        public void ClearBli(Hart_BLI bli)
+        {
+            Task.Run(() => _logger.Log($"BLI Clear Single Display. {bli.BLI_Address}"));
+            if (!_hartDisplayController.Clear(bli, ref _cError))
+            {
+                Task.Run(() => _logger.Log($"BLI Clear Single Display Error.  {bli.BLI_Address}\r\n {_cError}"));
+            }
+        }
+
+        public void ClearShi(Hart_SHI shi)
+        {
+            Task.Run(() => _logger.Log($"SHI Clear Single Display.  {shi.SHI_Address}"));
+            if (!_hartDisplayController.Clear(shi, ref _cError))
+            {
+                Task.Run(() => _logger.Log($"SHI Clear Single Display Error.   {shi.SHI_Address} \r\n { _cError}"));
+            }
+        }
+
+        public void ShowOc(int address, int beacon, string text)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void ClearOc(int address)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void FileShiList()
+        {
+            var lBeacon = 2;
+            var rBeacon = 2;
+            for (var i = 1; i <= 7; i++)
+            {
+                var address = ($"10{i}").ParseInt();
+                var shi = new Hart_SHI(address, lBeacon, rBeacon, DisplayArea_2: @"--", DisplayArea_6: @"------");
+                _shiList.Add(shi);
+            }
+            for (var i = 1; i <= 7; i++)
+            {
+                var address = ($"20{i}").ParseInt();
+                var shi = new Hart_SHI(address, lBeacon, rBeacon, DisplayArea_2: @"--", DisplayArea_6: @"------");
+                _shiList.Add(shi);
+            }
+            var sb = new StringBuilder();
+            foreach (var item in _shiList)
+            {
+                sb.AppendLine($"SHI - {item.SHI_Address}");
+            }
+            Task.Run(() => _logger.Log($"SHI Listing\n\r {sb.ToString()}"));
+        }
+
+        private void FileShiListClear()
+        {
+            var lBeacon = 0;
+            var rBeacon = 0;
+            for (var i = 1; i <= 7; i++)
+            {
+                var address = ($"10{i}").ParseInt();
+                var shi = new Hart_SHI(address, lBeacon, rBeacon, DisplayArea_2: @"--", DisplayArea_6: @"------");
+                _shiListClear.Add(shi);
+            }
+            for (var i = 1; i <= 7; i++)
+            {
+                var address = ($"20{i}").ParseInt();
+                var shi = new Hart_SHI(address, lBeacon, rBeacon, DisplayArea_2: @"--", DisplayArea_6: @"------");
+                _shiListClear.Add(shi);
+            }
+            var sb = new StringBuilder();
+            foreach (var item in _shiListClear)
+            {
+                sb.AppendLine($"SHI - {item.SHI_Address}");
+            }
+            Task.Run(() => _logger.Log($"SHI Listing\n\r {sb.ToString()}"));
+        }
+
+        private void FillBliList()
+        {
+            for (var i = 1; i <= 16; i++)
+            {
+                var bli = new Hart_BLI(i, 2, @"------");
+                _bliList.Add(bli);
+            }
+            var sb = new StringBuilder();
+            foreach (var item in _bliList)
+            {
+                sb.AppendLine($"BLI - {item.BLI_Address}");
+            }
+            Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
+        }
+
+        //private void FillBliListStations4_5()
+        //{
+        //    for (int i = 1; i <= 4; i++)
+        //    {
+        //        var bli = new Hart_BLI(i, 2, @"------");
+        //        bliList.Add(bli);
+        //    }
+        //    var sb = new StringBuilder();
+        //    foreach (var item in bliList)
+        //    {
+        //        sb.AppendLine($"BLI - {item.BLI_Address}");
+        //    }
+        //    Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
+        //}
+
 
         //public void ShowListBli(List<Hart_BLI> blis)
         //{
@@ -298,329 +465,6 @@ namespace Neutron.Controllers
         //    }
         //}
 
-        public void ShowBli(int address, int beacon, string text)
-        {
-            if (bliEnabled)
-            {
-                Task.Run(() => _logger.Log($"BLI Address: {address}"));
-                var bli = new Hart_BLI(address, 2, text);
-                if (!blisOn.Contains(bli))
-                {
-                    blisOn.Add(bli);
-                }
-                Task.Run(() => _logger.Log($"BLI On: {bli.BLI_Address}"));
-                Thread.Sleep(10);
-                if (!HartDisplayController.Show(bli, ref cError))
-                {
-                    Task.Run(() => _logger.Log($"BLI Show Single Display Error.  { bli.BLI_Address}\r\n {cError}"));
-                }
-            }
-        }
-
-        public void ShowBli(Hart_BLI bli)
-        {
-            if (bliEnabled)
-            {
-                if (!blisOn.Contains(bli))
-                {
-                    blisOn.Add(bli);
-                }
-                Task.Run(() => _logger.Log($"Hart BLI Address: {bli.BLI_Address}"));
-                Thread.Sleep(10);
-                if (!HartDisplayController.Show(bli, ref cError))
-                {
-                    Task.Run(() => _logger.Log($"Hart BLI Show Single Display Error.  { bli.BLI_Address}\r\n {cError}"));
-                }
-            }
-        }
-
-        public void ShowShi(int device, int bin, int level, string part, string text)
-        {
-            if (shiEnabled)
-            {
-                Task.Run(() => _logger.Log($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
-                int address = GetAddress(device, level);
-                var shi = new Hart_SHI(address, lBeacon, rBeacon, part, text);
-                if (!shisOn.Contains(shi))
-                {
-                    shisOn.Add(shi);
-                }
-                Task.Run(() => _logger.Log($"SHI Show: {shi.SHI_Address}"));
-                Thread.Sleep(10);
-                if (!HartDisplayController.Show(shi, ref cError))
-                {
-                    Task.Run(() => _logger.Log($"SHI Show Single Display Error.  {shi.SHI_Address}\r\n {cError}"));
-                }
-
-            }
-        }
-
-        public void ShowShi(Hart_SHI shi)
-        {
-            if (shiEnabled)
-            {
-                if (!shisOn.Contains(shi))
-                {
-                    shisOn.Add(shi);
-                }
-
-                Task.Run(() => _logger.Log($"Hart SHI Show: {shi.SHI_Address}"));
-                Thread.Sleep(10);
-                if (!HartDisplayController.Show(shi, ref cError))
-                {
-                    Task.Run(() => _logger.Log($"Hart SHI Show Single Display Error 2.  {shi.SHI_Address}\r\n {cError}"));
-                }
-            }
-        }
-
-        public void ClearBli(Hart_BLI bli)
-        {
-            if (bliEnabled)
-            {
-                if (blisOn.Contains(bli))
-                {
-                    Task.Run(() => _logger.Log($"BLI Clear Single Display. {bli.BLI_Address}"));
-                    if (!HartDisplayController.Clear(bli, ref cError))
-                    {
-                        Task.Run(() => _logger.Log($"BLI Clear Single Display Error.  {bli.BLI_Address}\r\n {cError}"));
-                    }
-                    blisOn.Remove(bli);
-                }
-            }
-        }
-
-        public void ClearShi(Hart_SHI shi)
-        {
-            if (shiEnabled)
-            {
-                if (shisOn.Contains(shi))
-                {
-                    Task.Run(() => _logger.Log($"SHI Clear Single Display.  {shi.SHI_Address}"));
-                    Thread.Sleep(10);
-                    if (!HartDisplayController.Clear(shi, ref cError))
-                    {
-                        Task.Run(() => _logger.Log($"SHI Clear Single Display Error.   {shi.SHI_Address} \r\n { cError}"));
-                    }
-                    shisOn.Remove(shi);
-                }
-            }
-        }
-
-        public int GetInitStatus()
-        {
-            Task.Run(() => _logger.Log("Get Init Status"));
-            int stat = InitStatus();
-            Task.Run(() => _logger.Log($"Get Init Status - Return: {stat}"));
-            return stat;
-        }
-
-        public void ShowOc(int address, int beacon, string text)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void ClearOc(int address)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private int InitStatus()
-        {
-            // Note that the sequesnce of the following assignments is critical. Success must be first. Others follow in any sequence.
-            bool success = HartDisplayController.Init_Success;
-            int initCode = HartDisplayController.LastStatus_Code;
-            string initMsg = HartDisplayController.LastStatus_Message;
-
-            Task.Run(() => _logger.Log($"HartDisplayController InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
-            if (success)
-            {
-                // life is good, you can drive the device
-                Task.Run(() => _logger.Log($"HartDisplayController InitStatus: success is {success}"));
-                if (initCode == 0)
-                {
-                    // life is good, no warning messages
-                    Task.Run(() => _logger.Log($"HartDisplayController Initialization is complete and was successful initCode is {initCode}"));
-                }
-                else
-                {
-                    // You need to report the warning to the operator or to a log that is monitored frequently
-                    Task.Run(() => _logger.Log($"HartDisplayController Warning - Initialization was successful but there is a warning." + Environment.NewLine +
-                    "Please provide the following information to your IT support." + Environment.NewLine +
-                    "Code is: " + initCode.ToString() + Environment.NewLine +
-                    "Message is: " + initMsg));
-                }
-            }
-            else
-            {
-                // Darn, cannot drive the device at this time
-                if (HartDisplayController.Init_PercentageComplete == 0)
-                {
-                    Task.Run(() => _logger.Log($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
-                }
-                else if (HartDisplayController.Init_PercentageComplete < 100)
-                {
-                    Task.Run(() => _logger.Log($"Initialization is in progress.  Init {HartDisplayController.Init_PercentageComplete.ToString()}% complete..."));
-                    Task.Run(() => _logger.Log($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
-                }
-                else
-                {
-                    Task.Run(() => _logger.Log($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
-                }
-            }
-            return initCode;
-        }
-
-
-        private void FileShiList()
-        {
-            int lBeacon = 2;
-            int rBeacon = 2;
-            for (int i = 1; i <= 8; i++)
-            {
-                int address = ($"10{i}").ParseInt();
-                var shi = new Hart_SHI(address, lBeacon, rBeacon, DisplayArea_2: @"--", DisplayArea_6: @"------");
-                shiList.Add(shi);
-            }
-            for (int i = 1; i <= 8; i++)
-            {
-                int address = ($"20{i}").ParseInt();
-                var shi = new Hart_SHI(address, lBeacon, rBeacon, DisplayArea_2: @"--", DisplayArea_6: @"------");
-                shiList.Add(shi);
-            }
-            var sb = new StringBuilder();
-            foreach (var item in shiList)
-            {
-                sb.AppendLine($"SHI - {item.SHI_Address}");
-            }
-            Task.Run(() => _logger.Log($"SHI Listing\n\r {sb.ToString()}"));
-        }
-
-        private void FillBliList()
-        {
-            for (int i = 1; i <= 16; i++)
-            {
-                var bli = new Hart_BLI(i, 2, @"------");
-                bliList.Add(bli);
-            }
-            var sb = new StringBuilder();
-            foreach (var item in bliList)
-            {
-                sb.AppendLine($"BLI - {item.BLI_Address}");
-            }
-            Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
-        }
-
-        //private void FillBliListStations4_5()
-        //{
-        //    for (int i = 1; i <= 4; i++)
-        //    {
-        //        var bli = new Hart_BLI(i, 2, @"------");
-        //        bliList.Add(bli);
-        //    }
-        //    var sb = new StringBuilder();
-        //    foreach (var item in bliList)
-        //    {
-        //        sb.AppendLine($"BLI - {item.BLI_Address}");
-        //    }
-        //    Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
-        //}
-
-        private int GetAddress(int device, int level)
-        {
-            var address = string.Empty;
-
-            switch (_station.StationNumber)
-            {
-                case 1:
-                    {
-                        switch (device)
-                        {
-                            case 1:
-                                lBeacon = 2;
-                                rBeacon = 0;
-                                address = ($"2{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 2:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"2{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 3:
-                                lBeacon = 2;
-                                rBeacon = 0;
-                                address = ($"1{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 4:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"1{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                        }
-                        break;
-                    }
-                case 2:  //Standard Setup
-                    {
-                        switch (device)
-                        {
-                            case 1:
-                                lBeacon = 2;
-                                rBeacon = 0;
-                                address = ($"1{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 2:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"1{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 3:
-                                lBeacon = 2;
-                                rBeacon = 0;
-                                address = ($"2{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 4:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"2{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                        }
-
-                        break;
-                    }
-                case 3: //Unique Number 3
-                    {
-                        switch (device)
-                        {
-                            case 1:
-                                lBeacon = 2;
-                                rBeacon = 0;
-                                address = ($"1{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 2:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"1{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 3:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"2{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                            case 4:
-                                lBeacon = 0;
-                                rBeacon = 2;
-                                address = ($"2{level.ToString().PadLeft(2, paddingChar: '0')}");
-                                break;
-                        }
-                        break;
-                    }
-            }
-
-            Task.Run(() => _logger.Log($"Get Address Returned: {address}"));
-
-            return address.ParseInt();
-
-        }
-
         public void ShowBli(Ipti_BLI bli)
         {
             throw new NotImplementedException();
@@ -629,18 +473,6 @@ namespace Neutron.Controllers
         public void ClearBli(Ipti_BLI bli)
         {
             throw new NotImplementedException();
-        }
-
-        class BliOn
-        {
-            public int Id { get; set; }
-            public Hart_BLI Bli { get; set; }
-        }
-
-        class ShiOn
-        {
-            public int Id { get; set; }
-            public Hart_BLI Bli { get; set; }
         }
     }
 }

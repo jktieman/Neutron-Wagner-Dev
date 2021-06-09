@@ -114,7 +114,7 @@ namespace NeutronLoader
                 using (var parser = new TextFieldParser(fileInfo.FullName))
                 {
                     parser.TextFieldType = FieldType.Delimited;
-                    parser.SetDelimiters(delimiters: new string[] { "|" });
+                    parser.SetDelimiters(delimiters: new string[] { _neutronVariables.FieldDelimiter });
                     while (!parser.EndOfData)
                     {
                         var fields = parser.ReadFields();

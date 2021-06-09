@@ -53,5 +53,7 @@
         public bool UseAutoCompress { get; set; }
         public int CompressDays { get; set; }
         public double RunCompressInterval { get; set; }
+        public bool SpecialBackOrder { get; set; }
+        public bool EnableEmailNotification { get; set; }
     }
 }
