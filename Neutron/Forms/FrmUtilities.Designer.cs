@@ -1383,7 +1383,8 @@
             "Default",
             "T101-01-01",
             "V101",
-            "01--01--01--01"});
+            "01--01--01--01",
+            "0101010101"});
             this.ComboBoxSlotFormat.Location = new System.Drawing.Point(167, 234);
             this.ComboBoxSlotFormat.Name = "ComboBoxSlotFormat";
             this.ComboBoxSlotFormat.Size = new System.Drawing.Size(150, 24);
