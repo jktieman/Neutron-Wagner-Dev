@@ -91,9 +91,8 @@ namespace AlliedPostOffice.Concrete
                             smtpClient.Send(mailMessage);
                             System.Threading.Thread.Sleep(500);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-
                             throw;
                         }
                     }

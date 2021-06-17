@@ -855,12 +855,17 @@ namespace Neutron.Forms
                 Name = "Id"
             };
             DataGridView1.Columns.Add(col);
-            foreach (DataGridViewColumn column in DataGridView1.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
-                //column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+
+            DataGridView1.EnableHeadersVisualStyles = false;
+            DataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridView1.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold);
+            //    //column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
         }
         private void SetupTabControl()
         {

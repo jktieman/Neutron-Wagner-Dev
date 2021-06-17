@@ -56,7 +56,7 @@
             this.TextBoxInitialCatalog = new System.Windows.Forms.TextBox();
             this.LabelInitialCatalog = new System.Windows.Forms.Label();
             this.LabelServer = new System.Windows.Forms.Label();
-            this.ButtonCloseSql = new System.Windows.Forms.Button();
+            this.ButtonVerifySql = new System.Windows.Forms.Button();
             this.ButtonSaveConnectionString = new System.Windows.Forms.Button();
             this.TextBoxDataSource = new System.Windows.Forms.TextBox();
             this.LabelSqlServerInterface = new System.Windows.Forms.Label();
@@ -296,7 +296,7 @@
             this.PanelSql.Controls.Add(this.TextBoxInitialCatalog);
             this.PanelSql.Controls.Add(this.LabelInitialCatalog);
             this.PanelSql.Controls.Add(this.LabelServer);
-            this.PanelSql.Controls.Add(this.ButtonCloseSql);
+            this.PanelSql.Controls.Add(this.ButtonVerifySql);
             this.PanelSql.Controls.Add(this.ButtonSaveConnectionString);
             this.PanelSql.Controls.Add(this.TextBoxDataSource);
             this.PanelSql.Controls.Add(this.LabelSqlServerInterface);
@@ -384,12 +384,12 @@
             // ButtonTest
             // 
             this.ButtonTest.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonTest.Location = new System.Drawing.Point(123, 416);
+            this.ButtonTest.Location = new System.Drawing.Point(65, 416);
             this.ButtonTest.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonTest.Name = "ButtonTest";
-            this.ButtonTest.Size = new System.Drawing.Size(150, 50);
+            this.ButtonTest.Size = new System.Drawing.Size(212, 50);
             this.ButtonTest.TabIndex = 3;
-            this.ButtonTest.Text = "Test";
+            this.ButtonTest.Text = "Test Connection";
             this.ButtonTest.UseVisualStyleBackColor = true;
             this.ButtonTest.Click += new System.EventHandler(this.ButtonTest_Click);
             // 
@@ -422,26 +422,26 @@
             this.LabelServer.TabIndex = 20;
             this.LabelServer.Text = "Server";
             // 
-            // ButtonCloseSql
+            // ButtonVerifySql
             // 
-            this.ButtonCloseSql.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonCloseSql.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCloseSql.Location = new System.Drawing.Point(529, 416);
-            this.ButtonCloseSql.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.ButtonCloseSql.Name = "ButtonCloseSql";
-            this.ButtonCloseSql.Size = new System.Drawing.Size(150, 50);
-            this.ButtonCloseSql.TabIndex = 5;
-            this.ButtonCloseSql.Text = "Close";
-            this.ButtonCloseSql.UseVisualStyleBackColor = true;
-            this.ButtonCloseSql.Click += new System.EventHandler(this.MBSqlServerBack_Click);
+            this.ButtonVerifySql.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.ButtonVerifySql.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonVerifySql.Location = new System.Drawing.Point(527, 416);
+            this.ButtonVerifySql.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.ButtonVerifySql.Name = "ButtonVerifySql";
+            this.ButtonVerifySql.Size = new System.Drawing.Size(212, 50);
+            this.ButtonVerifySql.TabIndex = 5;
+            this.ButtonVerifySql.Text = "Verify Sql Server Schema";
+            this.ButtonVerifySql.UseVisualStyleBackColor = true;
+            this.ButtonVerifySql.Click += new System.EventHandler(this.ButtonVerifySql_Click);
             // 
             // ButtonSaveConnectionString
             // 
             this.ButtonSaveConnectionString.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSaveConnectionString.Location = new System.Drawing.Point(326, 416);
+            this.ButtonSaveConnectionString.Location = new System.Drawing.Point(296, 416);
             this.ButtonSaveConnectionString.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonSaveConnectionString.Name = "ButtonSaveConnectionString";
-            this.ButtonSaveConnectionString.Size = new System.Drawing.Size(150, 50);
+            this.ButtonSaveConnectionString.Size = new System.Drawing.Size(212, 50);
             this.ButtonSaveConnectionString.TabIndex = 4;
             this.ButtonSaveConnectionString.Text = "Save";
             this.ButtonSaveConnectionString.UseVisualStyleBackColor = true;
@@ -695,7 +695,6 @@
             this.RootDirectory.Size = new System.Drawing.Size(505, 26);
             this.RootDirectory.TabIndex = 0;
             this.RootDirectory.Visible = false;
-            this.RootDirectory.TextChanged += new System.EventHandler(this.RootDirectory_TextChanged);
             // 
             // TextBoxMaintenanceFileFilter
             // 
@@ -1096,7 +1095,7 @@
         private System.Windows.Forms.TextBox TextBoxInitialCatalog;
         private System.Windows.Forms.Label LabelInitialCatalog;
         private System.Windows.Forms.Label LabelServer;
-        private System.Windows.Forms.Button ButtonCloseSql;
+        private System.Windows.Forms.Button ButtonVerifySql;
         private System.Windows.Forms.Button ButtonSaveConnectionString;
         private System.Windows.Forms.TextBox TextBoxDataSource;
         private System.Windows.Forms.Label LabelSqlServerInterface;

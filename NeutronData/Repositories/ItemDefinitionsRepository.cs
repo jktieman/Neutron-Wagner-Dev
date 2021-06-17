@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using NeutronData.Interfaces;
 
 namespace NeutronData.Repositories
 {
-    public class ItemDefinitionsRepository
+    public class ItemDefinitionsRepository : IItemDefinitionsRepository
     {
         public IEnumerable<ItemDefinitionView> GetAllItemDefinitionViews(string find = "")
         {

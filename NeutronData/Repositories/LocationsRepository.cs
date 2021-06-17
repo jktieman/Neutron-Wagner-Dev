@@ -177,14 +177,18 @@ namespace NeutronData.Repositories
                     using (var context = new NeutronDb())
                     {
                         var paramStation = new SqlParameter("@StationId", station.Id);
-
+                        var paramSlot = new SqlParameter("@slot", slot);
                         if (station.StationType.Id == (int)StationType.Rack)
                         {
                             recs = context.Database.SqlQuery<LocationView>("usp_GetAllRackLocationViews @StationId", paramStation).ToList();
+                            if (!string.IsNullOrEmpty(slot))
+                            {
+                                recs = recs.Where(r => r.Slot.Contains(slot)).ToList();
+                            } 
                         }
                         else
                         {
-                            recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByStation @StationId", paramStation).ToList();
+                            recs = context.Database.SqlQuery<LocationView>("usp_GetLocationViewsByStationAndSlot @StationId, @Slot", paramStation, paramSlot).ToList();
                         }
                     }
                 }
@@ -196,7 +200,7 @@ namespace NeutronData.Repositories
                 Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
             }
 
-            return string.IsNullOrEmpty(slot) ? recs : recs.Where(r => r.Slot.Contains(slot));
+            return recs;
         }
 
         public IEnumerable<LocationView> FindLocationViewsBySlot(string slot)

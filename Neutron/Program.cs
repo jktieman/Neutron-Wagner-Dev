@@ -93,7 +93,6 @@ namespace Neutron
                 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
             }
-
             var frmMain = kernel.Get<FrmMain>();
             Application.Run(frmMain);
 

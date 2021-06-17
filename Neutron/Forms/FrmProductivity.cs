@@ -329,11 +329,16 @@ namespace Neutron.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
-            foreach (DataGridViewColumn column in DataGridView1.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+
+            DataGridView1.EnableHeadersVisualStyles = false;
+            DataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridView1.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
             //DataGridView2
             DataGridView2.AutoGenerateColumns = false;
             DataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -479,11 +484,16 @@ namespace Neutron.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView2.Columns.Add(col);
-            foreach (DataGridViewColumn column in DataGridView2.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+
+            DataGridView2.EnableHeadersVisualStyles = false;
+            DataGridView2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridView2.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
         }
         private void ButtonCheckAllUsers_Click(object sender, EventArgs e)
         {

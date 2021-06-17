@@ -35,6 +35,7 @@ using Neutron.Models;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
 using Remotion.ServiceLocation;
+using SqlSchemaManager;
 using Timer = System.Timers.Timer;
 
 #endregion
@@ -51,6 +52,8 @@ namespace Neutron
         private readonly IOrdersRepository _ordersRepository;
         private readonly IReplenOrdersRepository _replenOrdersRepository;
         private readonly IEnumManager _enumManager;
+        private readonly IItemDefinitionsRepository _itemDefinitionsRepository;
+        private readonly IStoredProcedureManager _storedProcedureManager;
         private readonly IJsonData _jsonData;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
@@ -64,7 +67,7 @@ namespace Neutron
         private static Timer _compressTimer;
         private bool _compressRunning;
         private Station _rackStation;
-        private SendEmail _sendEmail;
+        private SendEmail _sendEmail = null;
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
 
@@ -80,11 +83,13 @@ namespace Neutron
         /// <param name="ordersRepository"></param>
         /// <param name="replenOrdersRepository"></param>
         /// <param name="enumManager"></param>
+        /// <param name="itemDefinitionsRepository"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IStationRepository stationRepository
             , IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository
-            , IEnumManager enumManager)
+            , IEnumManager enumManager, IItemDefinitionsRepository itemDefinitionsRepository,
+            IStoredProcedureManager storedProcedureManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -100,12 +105,14 @@ namespace Neutron
             _ordersRepository = ordersRepository;
             _replenOrdersRepository = replenOrdersRepository;
             _enumManager = enumManager;
+            _itemDefinitionsRepository = itemDefinitionsRepository;
+            _storedProcedureManager = storedProcedureManager;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _rackStation = _stationRepository.GetRackStation();
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
             GlobalVar.HistoryManager = new HistoryManager();
-            
+
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
                 , "Inventory File", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -149,7 +156,10 @@ namespace Neutron
 
         private void EmailLoaderError(string message)
         {
-            _sendEmail.Message(message, _logger.LastLogLines());
+            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            {
+                _sendEmail.Message(message, _logger.LastLogLines());
+            }
         }
 
         private void OnRunCompress(object sender, ElapsedEventArgs e)
@@ -165,7 +175,7 @@ namespace Neutron
                 var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
                 var finished = CompressOrders(compressBefore);
                 Thread.Sleep(2000);
-                if(finished) CompressReplenOrders(compressBefore);
+                if (finished) CompressReplenOrders(compressBefore);
 
                 compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
                 _jsonData.SaveFile(compressLastRunDate);
@@ -359,6 +369,7 @@ namespace Neutron
 
         private void SetupEmail()
         {
+            _sendEmail = null;
             if (_neutronVariables.EnableEmailNotification)
             {
                 try
@@ -470,7 +481,7 @@ namespace Neutron
                         }
                         else
                         {
-                           
+
                             Task.Run(() => _logger.Log("Remstar Displays are being used."));
                             GlobalVar.Displays = new DisplayController(_jsonData, _station);
                             result = GlobalVar.Displays != null;
@@ -751,8 +762,7 @@ namespace Neutron
 
                 _cultureInfo = Thread.CurrentThread.CurrentCulture;
                 SetCulture(_cultureInfo.Name);
-                ButtonRemstar.Visible = true;  // GlobalVar.User.EmpId == "1111" || GlobalVar.User.EmpId == "8031";
-                _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
+               _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
                 _lacProcessor.ReprocessLacSet(GlobalVar.User.Id);
             }
         }
@@ -809,8 +819,9 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
             {
                 Hide();
+
                 using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository
-                    , _neutronVariables, _lacProcessor, _imageManager))
+                    , _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository))
                 {
                     frm.ShowDialog();
                     Show();
@@ -823,7 +834,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
             Hide();
-            using (MetroForm frm = new FrmSystem(_jsonData, _logger, _rackStation, _sendEmail))
+            using (MetroForm frm = new FrmSystem(_jsonData, _logger, _rackStation, _sendEmail, _storedProcedureManager))
             {
                 frm.ShowDialog();
                 Show();
@@ -836,7 +847,8 @@ namespace Neutron
             Hide();
             using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables
                                                 , _securityProcessor, _lacProcessor, _imageManager
-                                                , _stationRepository, _ordersRepository, _neutronLicense))
+                                                , _stationRepository, _ordersRepository, _neutronLicense
+                                                , _itemDefinitionsRepository))
             {
                 frm.ShowDialog();
 
@@ -979,7 +991,7 @@ namespace Neutron
             if (e.KeyCode == Keys.F5 || e.KeyCode == Keys.F6)
             {
                 using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository
-                    , _neutronVariables, _lacProcessor, _imageManager))
+                    , _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository))
                 {
                     frm.ShowDialog();
                     Show();
@@ -991,7 +1003,7 @@ namespace Neutron
 
                 using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables,
                     _securityProcessor, _lacProcessor, _imageManager, _stationRepository
-                    , _ordersRepository, _neutronLicense))
+                    , _ordersRepository, _neutronLicense, _itemDefinitionsRepository))
                 {
                     frm.ShowDialog();
                     Show();

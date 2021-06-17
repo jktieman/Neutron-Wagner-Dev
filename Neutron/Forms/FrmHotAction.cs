@@ -41,6 +41,7 @@ namespace Neutron.Forms
 {
     public partial class FrmHotAction : MetroForm
     {
+        public IItemDefinitionsRepository ItemDefinitionsRepository { get; }
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private ResourceManager _enumResourceManager;
@@ -61,7 +62,7 @@ namespace Neutron.Forms
         private readonly StationRepository _stationRepository = new StationRepository();
         private LocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
-        private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
+        //private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
         private readonly BindingSource _bindingSourceCurrent = new BindingSource();
         private BindingSource _bindingSourceItemDefinitions = new BindingSource();
         private readonly BindingSource _bindingSourceNewLocations = new BindingSource();
@@ -71,6 +72,7 @@ namespace Neutron.Forms
         readonly NeutronVariables _neutronVariables;
         private readonly ILacProcessor _lacProcessor;
         private readonly IImageManager _imageManager;
+        private readonly IItemDefinitionsRepository _itemDefinitionsRepository;
 
         private DynamicLogger _logger;
         readonly StationView _station;
@@ -106,8 +108,11 @@ namespace Neutron.Forms
 
         public FrmHotAction(StationView station, IJsonData jsonData
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
-            , ILacProcessor lacProcessor, IImageManager imageManager, string item = @"", int quantity = 1, PickList pickList = null)
+            , ILacProcessor lacProcessor, IImageManager imageManager
+            , IItemDefinitionsRepository itemDefinitionsRepository
+            , string item = @"", int quantity = 1, PickList pickList = null)
         {
+
             InitializeComponent();
 
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -117,6 +122,7 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
             _imageManager = imageManager;
+            _itemDefinitionsRepository = itemDefinitionsRepository;
             _akaRepository = akaRepository;
             SetupLogger();
             Task.Run(() => _logger.Log("HotAction Constructor Start"));
@@ -436,6 +442,8 @@ namespace Neutron.Forms
             var locationViews = views.ToList();
             var blvAll = new BindingListView<LocationView>(locationViews.ToList());
             _bindingSourceNewLocations.DataSource = blvAll;
+            SetupGridNew();
+            DataGridViewHot.DataSource = _bindingSourceNewLocations;
             var recordCount = GetRecordCount(locationViews.ToList());
 
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
@@ -479,50 +487,74 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Load Item Definitions Find: {find}  START"));
             BindingListView<ItemDefinitionView> blv = null;
             Cursor.Current = Cursors.WaitCursor;
+            _logger.Log($"Load Item Definitions SetupGridItemDefinition Start ");
             SetupGridItemDefinition();
+            _logger.Log($"Load Item Definitions SetupGridItemDefinition End");
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
             var idx = 0;
             var findWhat = string.IsNullOrEmpty(find) ? TextBoxFindItem.Text.ToLower().Trim() : find;
 
             IEnumerable<ItemDefinitionView> views;
+            _logger.Log($"Load Item Definitions Check Station Type ");
             // if its a Supervisor station, load the Rack items
             if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
             {
+                _logger.Log($"Load Item Definitions Station Type Is Supervisor ");
                 if (_rackStation != null)
                 {
+                    _logger.Log($"Load Item Definitions Rack Station is NOT null ");
+                    _logger.Log($"Load Item Definitions Call FindItemDefinitionViewsByStation  ");
+                    _logger.Log($"Load Item Definitions Passing in findWhat: {findWhat}  and Rack Station: {_rackStation.Id} ");
                     views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _rackStation.Id);
+                    _logger.Log($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
                     blv = new BindingListView<ItemDefinitionView>(views.ToList());
+                    _logger.Log($"Load Item Definitions BLV created ");
                 }
             }
             else
             {
+                _logger.Log($"Load Item Definitions NOT a Supervisor Station ");
+                _logger.Log($"Load Item Definitions Call FindItemDefinitionViewsByStation  ");
+                _logger.Log($"Load Item Definitions Passing in findWhat: {findWhat}  and Station: {_station.StationId} ");
                 views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _station.StationId);
+                _logger.Log($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
                 blv = new BindingListView<ItemDefinitionView>(views.ToList());
+                _logger.Log($"Load Item Definitions BLV created ");
             }
-
+            _logger.Log($"Load Item Definitions Create a new BindingSource using BLV as DataSource ");
+            _logger.Log($"Load Item Definitions called _bindingSourceItemDefinitions");
             _bindingSourceItemDefinitions = new BindingSource { DataSource = blv };
-
-
+            _logger.Log($"Load Item Definitions New BindingSource has been created");
+            _logger.Log($"Load Item Definitions Now set the DataGridViewHot.DataSource = to the new Bindingsource, _bindingSourceItemDefinitions ");
             DataGridViewHot.DataSource = _bindingSourceItemDefinitions;
             DataGridViewHot.Update();
+            _logger.Log($"Load Item Definitions Update the Grid ");
             //UpdateDataGrid(_bindingSourceItemDefinitions);
+            _logger.Log($"Load Item Definitions Get the Record Count");
             var recordCount = GetRecordCount(_bindingSourceItemDefinitions);
             if (recordCount > 0)
             {
+                _logger.Log($"Load Item Definitions Record count is greater that zero ");
                 if (recId != 0)
                 {
+                    _logger.Log($"Load Item Definitions if passed in recId is not zero ");
+                    _logger.Log($"Load Item Definitions Set the bindingSource to the recId ");
                     idx = IndexOf(_bindingSourceItemDefinitions, recId);
                 }
                 try
                 {
+                    _logger.Log($"Load Item Definitions Set the row index to {idx} ");
                     DataGridViewHot.FirstDisplayedScrollingRowIndex = idx;
                     DataGridViewHot.Update();
                     DataGridViewHot.CurrentCell = DataGridViewHot.Rows[idx].Cells[1];
                     DataGridViewHot.Rows[idx].Selected = true;
-
+                    _logger.Log($"Load Item Definitions Row set and highlight complete ");
+                    _logger.Log($"Load Item Definitions Set the Current Item Definition ");
                     _currentItemDefinition =
                          ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
+                    _logger.Log($"Load Item Definitions Current Item: {_currentItemDefinition.Item} ");
+                    _logger.Log($"Load Item Definitions If record count = 1 then call LoadCurrentAndNew ");
                     if (recordCount == 1) await LoadCurrentAndNew();
                 }
                 catch (Exception ex)
@@ -585,12 +617,14 @@ namespace Neutron.Forms
         }
         private void SetupGridItemDefinition()
         {
+            _logger.Log($"SetupGridItemDefinition 1");
             //if (_currentGridDataType == GridDataType.Item) return;
             DataGridViewHot.Columns.Clear();
             _currentGridDataType = GridDataType.Item;
             DataGridViewHot.AutoGenerateColumns = false;
             DataGridViewHot.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+            _logger.Log($"SetupGridItemDefinition 2");
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationName",
@@ -600,6 +634,8 @@ namespace Neutron.Forms
                 Name = "StationName"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 3");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
@@ -609,6 +645,8 @@ namespace Neutron.Forms
                 Name = "Item"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 4");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
@@ -618,6 +656,8 @@ namespace Neutron.Forms
                 Name = "Description"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 5");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UnitOfIssueName",
@@ -627,6 +667,8 @@ namespace Neutron.Forms
                 Name = "UnitOfIssueName"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 6");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMax",
@@ -636,6 +678,8 @@ namespace Neutron.Forms
                 Name = "LocationMax"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 7");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
@@ -645,6 +689,8 @@ namespace Neutron.Forms
                 Name = "SizeCodeName"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 8");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
@@ -654,6 +700,8 @@ namespace Neutron.Forms
                 Name = "VelocityCodeName"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 9");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
@@ -663,6 +711,8 @@ namespace Neutron.Forms
                 Name = "HeightCodeName"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 10");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMin",
@@ -672,6 +722,8 @@ namespace Neutron.Forms
                 Name = "LocationMin"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 11");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMax",
@@ -681,6 +733,8 @@ namespace Neutron.Forms
                 Name = "SystemMax"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 12");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMin",
@@ -691,6 +745,8 @@ namespace Neutron.Forms
                 Name = "SystemMin"
             };
             DataGridViewHot.Columns.Add(col);
+
+            _logger.Log($"SetupGridItemDefinition 13");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
@@ -699,11 +755,18 @@ namespace Neutron.Forms
                 Name = "Id"
             };
             DataGridViewHot.Columns.Add(col);
-            foreach (DataGridViewColumn column in DataGridViewHot.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+
+            _logger.Log($"SetupGridItemDefinition Start Column Formatting");
+
+            DataGridViewHot.EnableHeadersVisualStyles = false;
+            DataGridViewHot.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewHot.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //foreach (DataGridViewColumn column in DataGridViewHot.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
+            _logger.Log($"SetupGridItemDefinition End Column Formatting");
         }
         private void SetupGridNew()
         {
@@ -817,11 +880,16 @@ namespace Neutron.Forms
                 Name = "Id"
             };
             DataGridViewHot.Columns.Add(col);
-            foreach (DataGridViewColumn column in DataGridViewHot.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+
+            DataGridViewHot.EnableHeadersVisualStyles = false;
+            DataGridViewHot.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewHot.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewHot.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
         }
         private void SetupGridCurrent()
         {
@@ -904,11 +972,15 @@ namespace Neutron.Forms
                 Name = "Id"
             };
             DataGridViewHot.Columns.Add(col);
-            foreach (DataGridViewColumn column in DataGridViewHot.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+
+            DataGridViewHot.EnableHeadersVisualStyles = false;
+            DataGridViewHot.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewHot.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //foreach (DataGridViewColumn column in DataGridViewHot.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
         }
         private void FrmHotAction_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -2276,6 +2348,11 @@ namespace Neutron.Forms
         {
             TextBoxScanLocation.Text = string.Empty;
             TextBoxScanLocation.Focus();
+        }
+
+        private void TextBoxScanLocation_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

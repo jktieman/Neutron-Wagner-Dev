@@ -76,6 +76,7 @@
     <Compile Include="Interfaces\IEnumManager.cs" />
     <Compile Include="Interfaces\IAkaRepository.cs" />
     <Compile Include="Interfaces\IReplenOrdersRepository.cs" />
+    <Compile Include="Interfaces\ISqlServer.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.Designer.cs">
       <DependentUpon>201902271513321_PickLocationSkip.cs</DependentUpon>
@@ -214,6 +215,7 @@
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Interfaces\ILocationsRepository.cs" />
     <Compile Include="Repositories\IGenericRepository.cs" />
+    <Compile Include="Interfaces\IItemDefinitionsRepository.cs" />
     <Compile Include="Repositories\InventoryRepository.cs" />
     <Compile Include="Interfaces\IStationRepository.cs" />
     <Compile Include="Interfaces\IOrdersRepository.cs" />

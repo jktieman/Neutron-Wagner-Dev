@@ -7,6 +7,7 @@ using Neutron.Models;
 using NeutronData.General;
 using NeutronData.Interfaces;
 using NeutronData.Repositories;
+using SqlSchemaManager;
 
 namespace Neutron
 {
@@ -26,6 +27,8 @@ namespace Neutron
             Bind<IInventoryManager>().To<InventoryManager>();
             Bind<FrmMain>().To<FrmMain>().InSingletonScope();
             Bind<IEnumManager>().To<EnumManager>().InSingletonScope();
+            Bind<IItemDefinitionsRepository>().To<ItemDefinitionsRepository>();
+            Bind<IStoredProcedureManager>().To<StoredProcedureManager>();
         }
     }
 }

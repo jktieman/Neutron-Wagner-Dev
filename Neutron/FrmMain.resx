@@ -154,7 +154,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelFormHeaderText.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="mlUserInfo.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -184,13 +184,190 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;mlUserInfo.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <metadata name="metroStyleManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>1090, 17</value>
   </metadata>
   <data name="metroPanelMain.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.Name" xml:space="preserve">
+    <value>MtProductivity</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtProductivity.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;MtHotAction.Name" xml:space="preserve">
+    <value>MtHotAction</value>
+  </data>
+  <data name="&gt;&gt;MtHotAction.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtHotAction.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtHotAction.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;MtLogOff.Name" xml:space="preserve">
+    <value>MtLogOff</value>
+  </data>
+  <data name="&gt;&gt;MtLogOff.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtLogOff.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtLogOff.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;MtStore.Name" xml:space="preserve">
+    <value>MtStore</value>
+  </data>
+  <data name="&gt;&gt;MtStore.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtStore.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtStore.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;MtHistory.Name" xml:space="preserve">
+    <value>MtHistory</value>
+  </data>
+  <data name="&gt;&gt;MtHistory.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtHistory.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtHistory.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;MtPick.Name" xml:space="preserve">
+    <value>MtPick</value>
+  </data>
+  <data name="&gt;&gt;MtPick.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtPick.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtPick.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;MtUtilities.Name" xml:space="preserve">
+    <value>MtUtilities</value>
+  </data>
+  <data name="&gt;&gt;MtUtilities.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtUtilities.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtUtilities.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;MtSystem.Name" xml:space="preserve">
+    <value>MtSystem</value>
+  </data>
+  <data name="&gt;&gt;MtSystem.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtSystem.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtSystem.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;MtLac.Name" xml:space="preserve">
+    <value>MtLac</value>
+  </data>
+  <data name="&gt;&gt;MtLac.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtLac.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtLac.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;MtUsers.Name" xml:space="preserve">
+    <value>MtUsers</value>
+  </data>
+  <data name="&gt;&gt;MtUsers.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtUsers.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtUsers.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;MtItemDefinitions.Name" xml:space="preserve">
+    <value>MtItemDefinitions</value>
+  </data>
+  <data name="&gt;&gt;MtItemDefinitions.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtItemDefinitions.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtItemDefinitions.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;MtLocations.Name" xml:space="preserve">
+    <value>MtLocations</value>
+  </data>
+  <data name="&gt;&gt;MtLocations.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtLocations.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtLocations.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;MtInventory.Name" xml:space="preserve">
+    <value>MtInventory</value>
+  </data>
+  <data name="&gt;&gt;MtInventory.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroTile, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;MtInventory.Parent" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;MtInventory.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="metroPanelMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>22, 173</value>
+  </data>
+  <data name="metroPanelMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1156, 665</value>
+  </data>
+  <data name="metroPanelMain.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="&gt;&gt;metroPanelMain.Name" xml:space="preserve">
+    <value>metroPanelMain</value>
+  </data>
+  <data name="&gt;&gt;metroPanelMain.Type" xml:space="preserve">
+    <value>MetroFramework.Controls.MetroPanel, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
+  </data>
+  <data name="&gt;&gt;metroPanelMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;metroPanelMain.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="MtProductivity.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 585</value>
@@ -582,27 +759,6 @@
   <data name="&gt;&gt;MtInventory.ZOrder" xml:space="preserve">
     <value>14</value>
   </data>
-  <data name="metroPanelMain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 173</value>
-  </data>
-  <data name="metroPanelMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1156, 665</value>
-  </data>
-  <data name="metroPanelMain.TabIndex" type="System.Int32, mscorlib">
-    <value>28</value>
-  </data>
-  <data name="&gt;&gt;metroPanelMain.Name" xml:space="preserve">
-    <value>metroPanelMain</value>
-  </data>
-  <data name="&gt;&gt;metroPanelMain.Type" xml:space="preserve">
-    <value>MetroFramework.Controls.MetroPanel, MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a</value>
-  </data>
-  <data name="&gt;&gt;metroPanelMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;metroPanelMain.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
   <data name="LabelWarehouseManagement.Font" type="System.Drawing.Font, System.Drawing">
     <value>Comic Sans MS, 12pt, style=Bold</value>
   </data>
@@ -631,7 +787,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;LabelWarehouseManagement.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="ButtonPark.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -664,7 +820,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ButtonPark.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="ButtonClose.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -695,6 +851,57 @@
   </data>
   <data name="&gt;&gt;ButtonClose.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.Name" xml:space="preserve">
+    <value>RadioButtonFrenchCanadian</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.Parent" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.Name" xml:space="preserve">
+    <value>RadioButtonEnglish</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.Parent" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="GroupBoxLanguage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>533, 20</value>
+  </data>
+  <data name="GroupBoxLanguage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 82</value>
+  </data>
+  <data name="GroupBoxLanguage.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="GroupBoxLanguage.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="RadioButtonFrenchCanadian.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -756,63 +963,6 @@
   <data name="&gt;&gt;RadioButtonEnglish.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="GroupBoxLanguage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>533, 20</value>
-  </data>
-  <data name="GroupBoxLanguage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 82</value>
-  </data>
-  <data name="GroupBoxLanguage.TabIndex" type="System.Int32, mscorlib">
-    <value>32</value>
-  </data>
-  <data name="GroupBoxLanguage.Text" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
-    <value>GroupBoxLanguage</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="ButtonRemstar.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt</value>
-  </data>
-  <data name="ButtonRemstar.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ButtonRemstar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>160, 134</value>
-  </data>
-  <data name="ButtonRemstar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>27, 33</value>
-  </data>
-  <data name="ButtonRemstar.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="ButtonRemstar.Text" xml:space="preserve">
-    <value>Remstar</value>
-  </data>
-  <data name="&gt;&gt;ButtonRemstar.Name" xml:space="preserve">
-    <value>ButtonRemstar</value>
-  </data>
-  <data name="&gt;&gt;ButtonRemstar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ButtonRemstar.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;ButtonRemstar.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="PictureBoxLogo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -835,7 +985,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;PictureBoxLogo.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <metadata name="BindingSourceLocations.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 60</value>

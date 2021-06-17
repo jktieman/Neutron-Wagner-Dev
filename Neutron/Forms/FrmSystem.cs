@@ -8,10 +8,13 @@ using NeutronLoader;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
@@ -21,6 +24,7 @@ using AlliedPostOffice.Concrete;
 using Neutron.Models;
 using NeutronData.Models;
 using NeutronEvents;
+using SqlSchemaManager;
 
 namespace Neutron.Forms
 {
@@ -36,9 +40,10 @@ namespace Neutron.Forms
         private readonly DynamicLogger _logger;
         private readonly Station _rackStation;
         private readonly SendEmail _sendEmail;
+        private readonly IStoredProcedureManager _storedProcedureManager;
         private readonly bool _emailEnabled;
 
-        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation, SendEmail sendEmail)
+        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation, SendEmail sendEmail, IStoredProcedureManager storedProcedureManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -49,6 +54,7 @@ namespace Neutron.Forms
             _logger = logger;
             _rackStation = rackStation;
             _sendEmail = sendEmail;
+            _storedProcedureManager = storedProcedureManager;
             _emailEnabled = _neutronVariables.EnableEmailNotification;
             KeyPreview = true;
             HideTabControlTabs();
@@ -117,13 +123,21 @@ namespace Neutron.Forms
             if (!GlobalVar.LoaderRunning)
             {
                 GlobalVar.UploadRunning = true;
-                _sendEmail.StartUp();
+                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+                {
+                    _sendEmail.StartUp();
+                }
+
                 MBRunLoaderOnce.Enabled = false;
             }
             else
             {
                 GlobalVar.UploadRunning = false;
-                _sendEmail.ShutDown();
+                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+                {
+                    _sendEmail.ShutDown();
+                }
+
                 MBRunLoaderOnce.Enabled = true;
             }
 
@@ -139,7 +153,10 @@ namespace Neutron.Forms
 
         private void RunLoaderOnce()
         {
-            _sendEmail.StartUpSingleRun(new List<string>());
+            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            {
+                _sendEmail.StartUpSingleRun(new List<string>());
+            }
 
             Mediator.GetInstance().OnRunLoaderOnce(this);
         }
@@ -149,14 +166,22 @@ namespace Neutron.Forms
             if (!GlobalVar.UploadRunning)
             {
                 GlobalVar.UploadRunning = true;
-                _sendEmail.StartUp();
+                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+                {
+                    _sendEmail.StartUp();
+                }
+
                 MBRunUpload.Enabled = false;
                 Mediator.GetInstance().OnStartStopUpload(this, "Start");
             }
             else
             {
                 GlobalVar.UploadRunning = false;
-                _sendEmail.ShutDown();
+                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+                {
+                    _sendEmail.ShutDown();
+                }
+
                 MBRunUpload.Enabled = true;
                 Mediator.GetInstance().OnStartStopUpload(this, "Stop");
             }
@@ -173,7 +198,11 @@ namespace Neutron.Forms
 
         private void RunUploadOnce()
         {
-            _sendEmail.StartUpSingleRunUpload(new List<string>());
+            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            {
+                _sendEmail.StartUpSingleRunUpload(new List<string>());
+            }
+
             Mediator.GetInstance().OnRunUploadOnce(this);
         }
 
@@ -302,11 +331,9 @@ namespace Neutron.Forms
                 builder.IntegratedSecurity = true;
             }
 
-            //var config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             var connSection = (ConnectionStringsSection)config.GetSection(sectionName: "connectionStrings");
             connSection.ConnectionStrings["Neutron"].ConnectionString = builder.ConnectionString;
-            //config.Save(ConfigurationSaveMode.Modified);
             config.Save(ConfigurationSaveMode.Modified, true);
             ConfigurationManager.RefreshSection("connectionStrings");
             LabelConnectionString.Text = builder.ConnectionString;
@@ -473,7 +500,7 @@ namespace Neutron.Forms
 
         private void ButtonFindHostOrderFile_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog1.ShowDialog();
+            var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
                 HostOrderFile.Text = openFileDialog1.SafeFileName;
@@ -482,27 +509,27 @@ namespace Neutron.Forms
 
         private void ButtonFindHostOrderDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                HostOrderDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                HostOrderDirectory.Text = $"{path}";
             }
         }
 
         private void ButtonFindHostUploadDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                HostUploadDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                HostUploadDirectory.Text = $"{path}";
             }
         }
 
         private void ButtonFindHostUploadFile_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog1.ShowDialog();
+            var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
                 HostUploadFile.Text = openFileDialog1.SafeFileName;
@@ -525,75 +552,53 @@ namespace Neutron.Forms
             }
         }
 
-
-
-
-
         private void ButtonLogFileDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                LogFileDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                LogFileDirectory.Text = $"{path}";
             }
         }
 
-        //private void CheckBoxIntegratedSecurity_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    if (CheckBoxIntegratedSecurity.Checked == true)
-        //    {
-        //        groupBox1.Enabled = false;
-        //        CheckBoxSqlServerAuthentication.Enabled = false;
-        //        TextBoxUserId.Enabled = false;
-        //        TextBoxPassword.Enabled = false;
-        //    }
-        //    else
-        //    {
-        //        groupBox1.Enabled = CheckBoxSqlServerAuthentication.Checked;
-        //        CheckBoxIntegratedSecurity.Enabled = true;
-        //        TextBoxUserId.Enabled = false;
-        //        TextBoxPassword.Enabled = false;
-        //    }
-        //}
-
-        private void ButtonFindImagesDirectory_Click(object sender, EventArgs e)
+       private void ButtonFindImagesDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                ImagesDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                ImagesDirectory.Text = $"{path}";
             }
         }
 
         private void ButtonDocumentsDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                DocumentsDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                DocumentsDirectory.Text = $"{path}";
             }
         }
 
         private void ButtonRootDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                RootDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                RootDirectory.Text = $"{path}";
             }
         }
 
         private void ButtonMaintenanceFileDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
-                MaintenanceFileDirectory.Text = string.Format("{0}", path);
+                var path = folderBrowserDialog1.SelectedPath;
+                MaintenanceFileDirectory.Text = $"{path}";
             }
         }
 
@@ -605,7 +610,7 @@ namespace Neutron.Forms
 
         private void ButtonFindCostCenterFile_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog1.ShowDialog();
+            var result = openFileDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
                 CostCenterFileName.Text = openFileDialog1.SafeFileName;
@@ -614,28 +619,28 @@ namespace Neutron.Forms
 
         private void ButtonCostCenterDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
+                var path = folderBrowserDialog1.SelectedPath;
                 CostCenterDirectory.Text = $"{path}";
             }
         }
 
-
         private void ButtonLanguageDirectory_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog();
+            var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string path = folderBrowserDialog1.SelectedPath;
+                var path = folderBrowserDialog1.SelectedPath;
                 LanguageDirectory.Text = $"{path}";
             }
         }
 
-        private void RootDirectory_TextChanged(object sender, EventArgs e)
+        private void ButtonVerifySql_Click(object sender, EventArgs e)
         {
-
+            _storedProcedureManager.Connection = new SqlConnection(GetConnectionString().ConnectionString);
+            _storedProcedureManager.Execute();
         }
     }
 }

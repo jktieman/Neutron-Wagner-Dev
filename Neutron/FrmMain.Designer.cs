@@ -57,7 +57,6 @@ namespace Neutron
             this.GroupBoxLanguage = new System.Windows.Forms.GroupBox();
             this.RadioButtonFrenchCanadian = new System.Windows.Forms.RadioButton();
             this.RadioButtonEnglish = new System.Windows.Forms.RadioButton();
-            this.ButtonRemstar = new System.Windows.Forms.Button();
             this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
@@ -313,13 +312,6 @@ namespace Neutron
             this.RadioButtonEnglish.UseVisualStyleBackColor = true;
             this.RadioButtonEnglish.CheckedChanged += new System.EventHandler(this.RadioButtonLanguage_CheckedChanged);
             // 
-            // ButtonRemstar
-            // 
-            resources.ApplyResources(this.ButtonRemstar, "ButtonRemstar");
-            this.ButtonRemstar.Name = "ButtonRemstar";
-            this.ButtonRemstar.UseVisualStyleBackColor = true;
-            this.ButtonRemstar.Click += new System.EventHandler(this.ButtonRemstar_Click);
-            // 
             // PictureBoxLogo
             // 
             this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
@@ -334,7 +326,6 @@ namespace Neutron
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.GroupBoxLanguage);
             this.Controls.Add(this.ButtonClose);
-            this.Controls.Add(this.ButtonRemstar);
             this.Controls.Add(this.ButtonPark);
             this.Controls.Add(this.PictureBoxLogo);
             this.Controls.Add(this.metroPanelMain);
@@ -388,7 +379,6 @@ namespace Neutron
         private System.Windows.Forms.GroupBox GroupBoxLanguage;
         private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;
         private System.Windows.Forms.RadioButton RadioButtonEnglish;
-        private System.Windows.Forms.Button ButtonRemstar;
     }
 }
 

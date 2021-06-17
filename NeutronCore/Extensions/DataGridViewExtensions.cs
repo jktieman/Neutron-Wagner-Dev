@@ -36,8 +36,8 @@ namespace NeutronCore.Extensions
                         var colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
 
                     var headerText = targetGrid.Columns[i].HeaderText;
-                    var font = targetGrid.Columns[i].HeaderCell.Style.Font;
-
+                    //var font = targetGrid.Columns[i].HeaderCell.Style.Font;
+                    var font = targetGrid.ColumnHeadersDefaultCellStyle.Font;
                     //     targetGrid.Columns[i].HeaderCell.Style.Font
                     var headerWidth = gfx.MeasureString(headerText, font);
 

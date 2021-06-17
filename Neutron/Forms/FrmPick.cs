@@ -92,6 +92,7 @@ namespace Neutron.Forms
 
         readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
+        private readonly IItemDefinitionsRepository _itemDefinitionsRepository;
 
         private string _imagesDirectory;
         private PickDeviceManager _deviceManager;
@@ -135,7 +136,8 @@ namespace Neutron.Forms
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor,
             IImageManager imageManager, IStationRepository stationRepository
-            , IOrdersRepository ordersRepository, NeutronLicense neutronLicense)
+            , IOrdersRepository ordersRepository, NeutronLicense neutronLicense
+            , IItemDefinitionsRepository itemDefinitionsRepository)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -151,6 +153,7 @@ namespace Neutron.Forms
             _stationRepository = stationRepository;
             _ordersRepository = ordersRepository;
             _neutronLicense = neutronLicense;
+            _itemDefinitionsRepository = itemDefinitionsRepository;
 
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
@@ -1770,11 +1773,15 @@ namespace Neutron.Forms
             };
             DataGridView1.Columns.Add(col);
 
-            foreach (DataGridViewColumn column in DataGridView1.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+            DataGridView1.EnableHeadersVisualStyles = false;
+            DataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridView1.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
 
             _orderGridReady = true;
         }
@@ -1929,12 +1936,15 @@ namespace Neutron.Forms
             };
             DataGridViewSkip.Columns.Add(col);
 
+            DataGridViewSkip.EnableHeadersVisualStyles = false;
+            DataGridViewSkip.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewSkip.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
 
-            foreach (DataGridViewColumn column in DataGridViewSkip.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+            //foreach (DataGridViewColumn column in DataGridViewSkip.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
 
             _skipGridReady = true;
         }
@@ -2058,11 +2068,15 @@ namespace Neutron.Forms
             };
             DataGridPickView.Columns.Add(col);
 
-            foreach (DataGridViewColumn column in DataGridPickView.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            DataGridPickView.EnableHeadersVisualStyles = false;
+            DataGridPickView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridPickView.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridPickView.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _pickViewGridReady = true;
         }
@@ -2230,12 +2244,15 @@ namespace Neutron.Forms
             };
             DataGridViewAvailableOrders.Columns.Add(col);
 
+            DataGridViewAvailableOrders.EnableHeadersVisualStyles = false;
+            DataGridViewAvailableOrders.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewAvailableOrders.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
 
-            foreach (DataGridViewColumn column in DataGridViewAvailableOrders.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            //foreach (DataGridViewColumn column in DataGridViewAvailableOrders.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _availableOrdersGridReady = true;
 
@@ -2355,11 +2372,15 @@ namespace Neutron.Forms
             };
             DataGridViewAvailableOrdersRack.Columns.Add(col);
 
-            foreach (DataGridViewColumn column in DataGridViewAvailableOrdersRack.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            DataGridViewAvailableOrdersRack.EnableHeadersVisualStyles = false;
+            DataGridViewAvailableOrdersRack.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewAvailableOrdersRack.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewAvailableOrdersRack.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _availableOrdersRackGridReady = true;
         }
@@ -2422,11 +2443,15 @@ namespace Neutron.Forms
             };
             DataGridViewNewOrder.Columns.Add(col);
 
-            foreach (DataGridViewColumn column in DataGridViewNewOrder.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            DataGridViewNewOrder.EnableHeadersVisualStyles = false;
+            DataGridViewNewOrder.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewNewOrder.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewNewOrder.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _newOrderGridReady = true;
         }
@@ -2551,12 +2576,15 @@ namespace Neutron.Forms
             };
             DataGridViewOrderDetails.Columns.Add(col);
 
+            DataGridViewOrderDetails.EnableHeadersVisualStyles = false;
+            DataGridViewOrderDetails.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewOrderDetails.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
 
-            foreach (DataGridViewColumn column in DataGridViewOrderDetails.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            //foreach (DataGridViewColumn column in DataGridViewOrderDetails.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _orderDetailsGridReady = true;
         }
@@ -2672,11 +2700,15 @@ namespace Neutron.Forms
 
             DataGridViewAdjust.Columns[5].DefaultCellStyle.Padding = new Padding(0, 0, 20, 0);
 
-            foreach (DataGridViewColumn column in DataGridViewAdjust.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            DataGridViewAdjust.EnableHeadersVisualStyles = false;
+            DataGridViewAdjust.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewAdjust.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewAdjust.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _adjustGridReady = true;
         }
@@ -2740,11 +2772,15 @@ namespace Neutron.Forms
             };
             DataGridViewNewItems.Columns.Add(col);
 
-            foreach (DataGridViewColumn column in DataGridViewNewItems.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            DataGridViewNewItems.EnableHeadersVisualStyles = false;
+            DataGridViewNewItems.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewNewItems.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewNewItems.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _newItemsGridReady = true;
         }
@@ -2853,11 +2889,15 @@ namespace Neutron.Forms
             };
             DataGridViewSkipInventory.Columns.Add(col);
 
-            foreach (DataGridViewColumn column in DataGridViewSkipInventory.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
-            }
+            DataGridViewSkipInventory.EnableHeadersVisualStyles = false;
+            DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewSkipInventory.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            //}
 
             _skipInventoryGridReady = true;
         }
@@ -7204,7 +7244,7 @@ namespace Neutron.Forms
             {
                 var item = LabelPickItemNumber.Text;
                 Hide();
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor, _imageManager, item))
+                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository, item))
                 {
                     var result = frm.ShowDialog();
                     Show();
@@ -8038,7 +8078,7 @@ namespace Neutron.Forms
             var station = _stationRepository.GetStationView(8);
             Hide();
             using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository
-                , _neutronVariables, _lacProcessor, _imageManager))
+                , _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository))
             {
                 var result = frm.ShowDialog();
                 Show();

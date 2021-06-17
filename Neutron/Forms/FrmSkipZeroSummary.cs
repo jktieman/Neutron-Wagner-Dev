@@ -152,11 +152,15 @@ namespace Neutron.Forms
             };
             DataGridViewSkipZeroSummary.Columns.Add(col);
 
-           foreach (DataGridViewColumn column in DataGridViewSkipZeroSummary.Columns)
-            {
-                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            }
+            DataGridViewSkipZeroSummary.EnableHeadersVisualStyles = false;
+            DataGridViewSkipZeroSummary.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewSkipZeroSummary.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            //foreach (DataGridViewColumn column in DataGridViewSkipZeroSummary.Columns)
+            //{
+            //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            //}
 
             _skipZeroGridReady = true;
         }
