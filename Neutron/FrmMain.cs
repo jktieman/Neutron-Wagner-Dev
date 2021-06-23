@@ -613,11 +613,11 @@ namespace Neutron
                     GlobalVar.SlotNameFactory = Type3SlotNameFactory.GetInstance();
                     result = GlobalVar.SlotNameFactory != null;
                     break;
-                case "01010101":
+                case "0101010101":
                     GlobalVar.SlotNameFactory = Type4SlotNameFactory.GetInstance();
                     result = GlobalVar.SlotNameFactory != null;
                     break;
-                default:
+               default:
                     GlobalVar.SlotNameFactory = DefaultSlotNameFactory.GetInstance();
                     result = GlobalVar.SlotNameFactory != null;
                     break;

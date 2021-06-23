@@ -12,7 +12,7 @@ namespace Neutron.Models
     {
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly LocationsRepository _locationsRepository;
-        private readonly NeutronDb _db = new NeutronDb();  
+        private readonly NeutronDb _db = new NeutronDb();
 
         public InventoryManager(GenericRepository<Inventory> repoInventory, LocationsRepository locationsRepository)
         {
@@ -22,7 +22,7 @@ namespace Neutron.Models
 
         public void DeleteInventoryRecord(int invId, bool releaseOnly = false)
         {
-            var inventory = _db.Inventory.Find(invId);
+            var inventory = _repoInventory.FindByKey(invId);
             if (inventory == null) return;
             if (releaseOnly)
             {

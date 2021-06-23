@@ -19,8 +19,7 @@ dbo.Stations ON dbo.Locations.StationId = dbo.Stations.Id INNER JOIN
 dbo.VelocityCodes ON dbo.Locations.VelocityCodeId = dbo.VelocityCodes.Id INNER JOIN
 dbo.LocationCodes ON dbo.Locations.LocationCodeId = dbo.LocationCodes.Id
 WHERE ((LOWER(dbo.Locations.Slot) LIKE '%' + @Slot + '%') 
-AND dbo.Locations.StationId = @StationId 
-AND dbo.Locations.InUse = 0)
+AND dbo.Locations.StationId = @StationId )
 
 ORDER BY dbo.Locations.Slot
 END

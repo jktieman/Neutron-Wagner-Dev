@@ -13,7 +13,6 @@ using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
-//using LineStatusLookup = NeutronData.Models.Lookups.LineStatusLookup;
 
 namespace Neutron.Forms
 {
@@ -48,7 +47,7 @@ namespace Neutron.Forms
         {
             _orderDetail.LineStatusId = ((LineStatusLookup)ComboBoxStatus.SelectedItem).Id;
             _repoOrderDetails.Update(_orderDetail);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.ChangeLineStatus, _orderDetail);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.ChangeLineStatus, _orderDetail, _orderDetail.StationNumber);
             if (_orderDetail.LineStatusId == (int) LineStatus.Complete)
             {
                 var inv = _repoInventory

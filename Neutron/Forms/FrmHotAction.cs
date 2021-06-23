@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -437,7 +438,7 @@ namespace Neutron.Forms
             else
             {
                 views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot).ToList();
-                views = views.Where(r => r.InUse == false);
+                //views = views.Where(r => r.InUse == false);
             }
             var locationViews = views.ToList();
             var blvAll = new BindingListView<LocationView>(locationViews.ToList());
@@ -1328,9 +1329,9 @@ namespace Neutron.Forms
                 using (var db = new NeutronDb())
                 {
                     _initialQuantity = _quantityToPick;
-                    var itemDefinition = await db.ItemDefinitions.FindAsync(invItem.ItemDefinitionId);
+                    var itemDefinition = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == invItem.ItemDefinitionId);
                     if (itemDefinition == null) throw new ArgumentNullException(nameof(itemDefinition));
-                    var location = await db.Locations.FindAsync(invItem.LocationId);
+                    var location = await db.Locations.FirstOrDefaultAsync(r => r.Id == invItem.LocationId);
                     if (location == null) throw new ArgumentNullException(nameof(location));
                     LabelHotPickDescription.Text = itemDefinition.Description;
                     LabelHotPickItem.Text = itemDefinition.Item;
@@ -1374,9 +1375,9 @@ namespace Neutron.Forms
             {
                 using (var db = new NeutronDb())
                 {
-                    var itemDefinition = await db.ItemDefinitions.FindAsync(invItem.ItemDefinitionId);
+                    var itemDefinition = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == invItem.ItemDefinitionId);
                     if (itemDefinition == null) throw new ArgumentNullException(nameof(itemDefinition));
-                    var location = await db.Locations.FindAsync(invItem.LocationId);
+                    var location = await db.Locations.FirstOrDefaultAsync(r => r.Id == invItem.LocationId);
                     if (location == null) throw new ArgumentNullException(nameof(location));
                     LabelHotPickDescriptionTray.Text = itemDefinition.Description;
                     LabelHotPickItemTray.Text = itemDefinition.Item;
@@ -1999,7 +2000,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.ItemDefinitions.FindAsync(_currentInventoryView.ItemDefinitionId);
+                var rec = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.ItemDefinitionId);
                 if (rec == null) return;
                 rec.SizeCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2012,7 +2013,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.ItemDefinitions.FindAsync(_currentInventoryView.ItemDefinitionId);
+                var rec = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.ItemDefinitionId);
                 if (rec == null) return;
                 rec.VelocityCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2025,7 +2026,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.ItemDefinitions.FindAsync(_currentInventoryView.ItemDefinitionId);
+                var rec = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.ItemDefinitionId);
                 if (rec == null) return;
                 rec.HeightCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2038,7 +2039,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.ItemDefinitions.FindAsync(_currentInventoryView.ItemDefinitionId);
+                var rec = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.ItemDefinitionId);
                 if (rec == null) return;
                 rec.LocationCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2051,7 +2052,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.Locations.FindAsync(_currentInventoryView.LocationId);
+                var rec = await db.Locations.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.LocationId);
                 if (rec == null) return;
                 rec.SizeCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2064,7 +2065,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.Locations.FindAsync(_currentInventoryView.LocationId);
+                var rec = await db.Locations.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.LocationId);
                 if (rec == null) return;
                 rec.VelocityCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2077,7 +2078,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.Locations.FindAsync(_currentInventoryView.LocationId);
+                var rec = await db.Locations.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.LocationId);
                 if (rec == null) return;
                 rec.HeightCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();
@@ -2090,7 +2091,7 @@ namespace Neutron.Forms
             var box = (ComboBox)sender;
             using (var db = new NeutronDb())
             {
-                var rec = await db.Locations.FindAsync(_currentInventoryView.LocationId);
+                var rec = await db.Locations.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.LocationId);
                 if (rec == null) return;
                 rec.LocationCodeId = (int)box.SelectedValue;
                 await db.SaveChangesAsync();

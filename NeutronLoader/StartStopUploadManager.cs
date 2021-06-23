@@ -43,7 +43,7 @@ namespace NeutronLoader
                         _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
                         break;
                     }
-                case "MET":  // using Topura Upload Process
+                case "MET":  
                     {
                         _uploadProcessor = new UploadProcessorMet(_neutronVariables, _neutronLicense, _logger, _rackStation);
                         break;

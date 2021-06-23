@@ -552,7 +552,7 @@
             this.LabelVersion.Name = "LabelVersion";
             this.LabelVersion.Size = new System.Drawing.Size(66, 16);
             this.LabelVersion.TabIndex = 31;
-            this.LabelVersion.Text = "1.1.21.222";
+            this.LabelVersion.Text = "1.1.21.447";
             // 
             // MBUtilitiesClose
             // 

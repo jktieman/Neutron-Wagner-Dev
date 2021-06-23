@@ -133,10 +133,19 @@ namespace Neutron.Forms
             }
             if (station != null)
             {
+                if (CheckBoxAllStations.Checked)
+                {
+                    views = _locationRepository.FindLocationViewsBySlot(find);
+                }
+                else
+                {
+                    views = _locationRepository.FindLocationViewsByStationAndSlot(station, find);
+                }
 
-                views = CheckBoxAllStations.Checked
-                    ? _locationRepository.FindLocationViews(find)
-                    : _locationRepository.FindLocationViewsByStation(station);
+
+                //views = CheckBoxAllStations.Checked
+                //    ? _locationRepository.FindLocationViews(find)
+                //    : _locationRepository.FindLocationViewsByStation(station);
 
                 if (MButtonAllLocations.Text == _resourceManager.GetString("Available"))
                 {

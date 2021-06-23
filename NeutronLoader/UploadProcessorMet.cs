@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Timer = System.Threading.Timer;
 using static System.Int32;
 using NeutronData.DataContexts;
+using System.Data.Entity;
 
 namespace NeutronLoader
 {
@@ -162,7 +163,7 @@ namespace NeutronLoader
                             var sb = new StringBuilder();
                             sb.Append($"{rec.StationId}|");
                             sb.Append($"{rec.Item}|");
-                            sb.Append($"{Convert.ToInt32(rec.RequestedQuantity)}|");
+                            sb.Append($"{rec.RequestedQuantity}|");
                             sb.Append($"{rec.Size}");
                             sw.WriteLine(sb.ToString());
                         }

@@ -5889,7 +5889,7 @@ namespace Neutron.Forms
                         orderDetail.LineStatusId = (int)LineStatus.Complete;
                         orderDetail.PickedQuantity = orderDetail.Quantity;
                         orderDetail.EmpId = GlobalVar.User.EmpId;
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickRack, value: orderDetail);
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickRack, orderDetail);
                         _repoReplenOrderDetails.Update(orderDetail);
                     }
                 }

@@ -3309,7 +3309,7 @@ namespace Neutron.Forms
                                 item.OrderDetail.LineStatusId = (int)LineStatus.Skipped;
                                 skipPickableViews.Add(item);
                                 _repoOrderDetails.Update(item.OrderDetail);
-                                GlobalVar.HistoryManager.SaveHistory(ActionCode.Skip, item.OrderDetail);
+                                GlobalVar.HistoryManager.SaveHistory(ActionCode.Skip, item.OrderDetail, item.OrderDetail.StationNumber);
                             }
                             else if (pushed == "Pick Zero")
                             {
@@ -3318,7 +3318,7 @@ namespace Neutron.Forms
                                 item.OrderDetail.PickedQuantity = 0;
                                 _repoOrderDetails.Update(item.OrderDetail);
 
-                                GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail);
+                                GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail, item.OrderDetail.StationNumber);
                             }
                         }
                     }
@@ -5859,7 +5859,7 @@ namespace Neutron.Forms
             {
                 detail.LineStatusId = lineStatusId;
                 _repoOrderDetails.Update(detail);
-                GlobalVar.HistoryManager.SaveHistory(actionCode, detail);
+                GlobalVar.HistoryManager.SaveHistory(actionCode, detail, detail.StationNumber);
             }
             catch (Exception ex)
             {
@@ -7756,7 +7756,7 @@ namespace Neutron.Forms
                     order = detail.Order;
                     detail.LineStatusId = (int)LineStatus.Complete;
                     detail.EmpId = GlobalVar.User.EmpId;
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.StoreRack, value: detail);
+                    GlobalVar.HistoryManager.SaveHistory(ActionCode.StoreRack, detail);
                     _repoOrderDetails.Update(detail);
                 }
                 //Mediator.GetInstance().OnBatchComplete(this);
