@@ -5,16 +5,16 @@ using Neutron.Enums;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
 using Neutron.Interfaces;
+using NeutronData.Interfaces;
 
 namespace Neutron.Models
 {
     public class InventoryManager : IInventoryManager
     {
         private readonly GenericRepository<Inventory> _repoInventory;
-        private readonly LocationsRepository _locationsRepository;
-        private readonly NeutronDb _db = new NeutronDb();
-
-        public InventoryManager(GenericRepository<Inventory> repoInventory, LocationsRepository locationsRepository)
+        private readonly ILocationsRepository _locationsRepository;
+       
+        public InventoryManager(GenericRepository<Inventory> repoInventory, ILocationsRepository locationsRepository)
         {
             _repoInventory = repoInventory;
             _locationsRepository = locationsRepository;
@@ -30,16 +30,14 @@ namespace Neutron.Models
                 {
                     GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                     _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-                    _db.Inventory.Remove(inventory);
-                    _db.SaveChanges();
+                    _repoInventory.Delete(invId);
                 }
             }
             else
             {
                 GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                 _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-                _db.Inventory.Remove(inventory);
-                _db.SaveChanges();
+                _repoInventory.Delete(invId);
             }
         }
 

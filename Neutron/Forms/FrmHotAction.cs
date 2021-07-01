@@ -64,9 +64,9 @@ namespace Neutron.Forms
         private LocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         //private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
-        private readonly BindingSource _bindingSourceCurrent = new BindingSource();
+        private BindingSource _bindingSourceCurrent = new BindingSource();
         private BindingSource _bindingSourceItemDefinitions = new BindingSource();
-        private readonly BindingSource _bindingSourceNewLocations = new BindingSource();
+        private BindingSource _bindingSourceNewLocations = new BindingSource();
         public bool CloseButtonPressed { get; set; }
 
         private SqlInventoryView _currentInventoryView = new SqlInventoryView();
@@ -158,11 +158,17 @@ namespace Neutron.Forms
                 InitialSearch(_item);
                 LabelStationName.Text = _station.Name;
                 LabelStationName2.Text = _station.Name;
-                if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
-                    || _station.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
-
-                _newLocationButtonText = _resourceManager.GetString("AllLocations");
+                if (_station.StationType.Id == (int) NeutronCore.Enums.StationType.Carousel
+                    || _station.StationType.Id == (int) NeutronCore.Enums.StationType.Vertical)
+                {
+                    TextBoxScanLocation.Visible = true;
+                }
+                else
+                {
+                    TextBoxScanLocation.Visible = false;
+                    _newLocationButtonText = _resourceManager.GetString("AllLocations");
                 MBNewLocations.Text = _newLocationButtonText;
+                }
             }
             else
             {
@@ -315,28 +321,22 @@ namespace Neutron.Forms
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
-        private void LoadCurrent(ItemDefinitionView item)
+
+        /// <summary>
+        /// Gets all the Inventory Locations for the current Item Definition
+        /// and puts them into the _bindingSourceCurrent
+        /// Uses the Form level variable, _currentItemDefinition
+        /// </summary>
+        private void LoadCurrent()
         {
-            Task.Run(() => _logger.Log($"Load Current By Item: {item.Item}  START"));
-            _currentItemDefinition = item;
-            var recs = _repoInv.GetAllInventoryViewsByItemDefinitionId(item.Id).ToList();
+            Task.Run(() => _logger.Log($"Load Current By Item: {_currentItemDefinition.Item}  START"));
+            var recs = _repoInv.GetAllInventoryViewsByItemDefinitionId(_currentItemDefinition.Id).ToList();
             var blv = new BindingListView<SqlInventoryView>(recs);
             _bindingSourceCurrent.DataSource = blv;
             var recordCount = GetRecordCount(recs);
             MBCurrentLocations.Text = $"{_resourceManager.GetString("CurrentLocations")} ({_bindingSourceCurrent.Count})";
-            //if (_bindingSourceCurrent.Count > 0)
-            //{
-            //    MBHotPick.Enabled = true;
-            //    MBHotStore.Enabled = true;
-            //    MBCurrentLocations.Enabled = true;
-            //}
-            //else
-            //{
-            //    MBHotPick.Enabled = false;
-            //    MBHotStore.Enabled = false;
-            //    MBCurrentLocations.Enabled = false;
-            //}
-            Task.Run(() => _logger.Log($"Load Current By Item: {item.Item}  END"));
+
+            Task.Run(() => _logger.Log($"Load Current By Item: {_currentItemDefinition.Item}  END"));
         }
 
 
@@ -359,13 +359,12 @@ namespace Neutron.Forms
             ToteToPrint.Print(1, 1, labelDetail, upc, _labelPrinter);
         }
 
-        private async Task LoadNewLocations(ItemDefinitionView item)
+        private async Task LoadNewLocations()
         {
-            Task.Run(() => _logger.Log($"Load New Locations By Item: {item.Item}  START"));
+            Task.Run(() => _logger.Log($"Load New Locations By Item: {_currentItemDefinition.Item}  START"));
             var station = _repoStation.FindByKey(_station.StationId);
             if (_station.StationType.Id == (int)StationType.StationType.Supervisor)
             {
-
                 if (_rackStation != null)
                 {
                     station = _rackStation;
@@ -388,7 +387,7 @@ namespace Neutron.Forms
             else
             {
                 var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(station,
-                     item.SizeCodeId, item.VelocityCodeId, item.HeightCodeId, item.LocationCodeId, inUse: false));
+                     _currentItemDefinition.SizeCodeId, _currentItemDefinition.VelocityCodeId, _currentItemDefinition.HeightCodeId, _currentItemDefinition.LocationCodeId, inUse: false));
                 var locationViews = views.ToList();
                 var blv = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blv;
@@ -397,18 +396,7 @@ namespace Neutron.Forms
             //var blv = new BindingListView<LocationView>(views.ToList());
             //_bindingSourceNewLocations.DataSource = blv;
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
-            //if (_bindingSourceNewLocations.Count > 0)
-            //{
-            //    MBHotStore.Enabled = true;
-            //    MBNewLocations.Enabled = true;
-            //}
-            //else
-            //{
-            //    MBHotPick.Enabled = false;
-            //    MBHotStore.Enabled = false;
-            //    MBNewLocations.Enabled = false;
-            //}
-            Task.Run(() => _logger.Log($"Load New Locations By Item: {item.Item}  END"));
+            Task.Run(() => _logger.Log($"Load New Locations By Item: {_currentItemDefinition.Item}  END"));
         }
 
         private void LoadNewLocationsBySlot(string slot)
@@ -1482,16 +1470,20 @@ namespace Neutron.Forms
             {
                 if (_bindingSourceItemDefinitions.Count > 0)
                 {
-                    var s = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
-                    TextBoxFindItem.Text = s.Item;
-                    LoadCurrent(s);
-                    await LoadNewLocations(s);
+                    _currentItemDefinition = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
+                    TextBoxFindItem.Text = _currentItemDefinition.Item;
+
+                    LoadCurrent();
+                    await LoadNewLocations();
                     if (_bindingSourceCurrent.Count > 0)
                     {
                         SetupGridCurrent();
                         DataGridViewHot.DataSource = _bindingSourceCurrent;
                         var recordCount = GetRecordCount(_bindingSourceCurrent);
-                        DataGridViewHot.SelectedRows[0].Selected = true;
+                        //if(DataGridViewHot.RowCount > 0)
+                        //{
+                        //    var selected = DataGridViewHot.SelectedRows[0].Selected; // = true;
+                        //}
                         //DataGridViewHot.ClearSelection();
                     }
                     else if (_bindingSourceNewLocations.Count > 0)
@@ -1499,7 +1491,10 @@ namespace Neutron.Forms
                         SetupGridNew();
                         DataGridViewHot.DataSource = _bindingSourceNewLocations;
                         var recordCount = GetRecordCount(_bindingSourceNewLocations);
-                        DataGridViewHot.SelectedRows[0].Selected = true;
+                        //if (DataGridViewHot.RowCount > 0)
+                        //{
+                        //    var selected = DataGridViewHot.SelectedRows[0].Selected; // = true;
+                        //}
                         //DataGridViewHot.ClearSelection();
                     }
 

@@ -18,11 +18,18 @@ namespace Neutron.Global
 
     public class HistoryManager
     {
+        private readonly StationView _station;
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
         private readonly InventoryRepository _repoInventory = new InventoryRepository();
 
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
             new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+
+        public HistoryManager(StationView station)
+        {
+            _station = station;
+        }
+
 
         public void SaveHistory(ActionCode actionCode, Order order)
         {
@@ -38,7 +45,8 @@ namespace Neutron.Global
                 LoadDate = order.LoadDate,
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = order.OrderInfo,
-                OrderDetailInfo = string.Empty
+                OrderDetailInfo = string.Empty,
+                StationId = _station.StationNumber
             };
             Save(history);
 
@@ -58,7 +66,8 @@ namespace Neutron.Global
                 LoadDate = order.LoadDate,
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = order.OrderInfo,
-                OrderDetailInfo = string.Empty
+                OrderDetailInfo = string.Empty,
+                StationId = _station.StationNumber
             };
             Save(history);
 
@@ -134,7 +143,7 @@ namespace Neutron.Global
                         Description = pickView.Description,
                         RequestedQuantity = pickView.Quantity,
                         IssuedQuantity = pickLocation.Quantity,
-                        StationId = pickLocation.Inventory.Location.Station.Id,
+                        StationId = pickLocation.Inventory.Station.Id,
                         Loc1 = pickLocation.Inventory.Location.Loc1,
                         Loc2 = pickLocation.Inventory.Location.Loc2,
                         Loc3 = pickLocation.Inventory.Location.Loc3,
@@ -169,7 +178,7 @@ namespace Neutron.Global
                         Description = pickView.Description,
                         RequestedQuantity = pickView.Quantity,
                         IssuedQuantity = pickLocation.Quantity,
-                        StationId = pickLocation.Inventory.Location.StationId,
+                        StationId = pickLocation.Inventory.StationId,
                         Loc1 = pickLocation.Inventory.Location.Loc1,
                         Loc2 = pickLocation.Inventory.Location.Loc2,
                         Loc3 = pickLocation.Inventory.Location.Loc3,
@@ -298,7 +307,7 @@ namespace Neutron.Global
                 Description = inv.ItemDefinition.Description,
                 IssuedQuantity = inv.Quantity,
                 RequestedQuantity = 0,
-                StationId = inv.Location.StationId,
+                StationId = inv.StationId,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,

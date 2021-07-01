@@ -74,8 +74,8 @@ namespace Neutron
             var securityProcessor = kernel.Get<ISecurityProcessor>();
             var lacProcessor = kernel.Get<ILacProcessor>();
             var imageManager = kernel.Get<IImageManager>();
-            var ordersRepository = kernel.Get<IOrdersRepository>();
             var stationRepository = kernel.Get<IStationRepository>();
+            var ordersRepository = kernel.Get<IOrdersRepository>();
             var replenOrdersRepository = kernel.Get<IReplenOrdersRepository>();
             var enumManager = kernel.Get<IEnumManager>();
 

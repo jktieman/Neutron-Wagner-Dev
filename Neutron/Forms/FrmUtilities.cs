@@ -117,7 +117,8 @@ namespace Neutron.Forms
             SetupGrids();
             _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
-                $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}.{ApplicationVersion.MajorRevision}.{ApplicationVersion.MinorRevision}";
+                $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}"; 
+            //.{ApplicationVersion.MajorRevision}.{ApplicationVersion.MinorRevision}";
             ComboBoxDefaultLanguage.DataSource = _repoLanguages.All();
             ComboBoxDefaultLanguage.DisplayMember = "Name";
             ComboBoxDefaultLanguage.ValueMember = "CultureInfo";

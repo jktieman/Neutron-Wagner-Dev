@@ -111,7 +111,7 @@ namespace Neutron
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _rackStation = _stationRepository.GetRackStation();
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
-            GlobalVar.HistoryManager = new HistoryManager();
+            
 
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -144,7 +144,7 @@ namespace Neutron
                     _compressTimer = compressTimer;
                 }
             }
-
+            GlobalVar.HistoryManager = new HistoryManager(_station);
             var id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
         }

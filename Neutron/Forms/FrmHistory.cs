@@ -526,17 +526,20 @@ namespace Neutron.Forms
         private void RadioButtonToday_CheckedChanged(object sender, EventArgs e)
         {
             if (!((RadioButton)sender).Checked) return;
+            Cursor.Current = Cursors.WaitCursor;
             var date = DateTime.Now;
             DateTimePickerFrom.Value = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
+            Cursor.Current = Cursors.Default;
         }
 
         private void RadioButtonWeek_CheckedChanged(object sender, EventArgs e)
         {
             if (!((RadioButton)sender).Checked) return;
+            Cursor.Current = Cursors.WaitCursor;
             var date = DateTime.Now;
             var firstDay = date.FirstDayOfWeek();
             DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
@@ -544,11 +547,13 @@ namespace Neutron.Forms
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
+            Cursor.Current = Cursors.Default;
         }
 
         private void RadioButtonMonth_CheckedChanged(object sender, EventArgs e)
         {
             if (!((RadioButton)sender).Checked) return;
+            Cursor.Current = Cursors.WaitCursor;
             var date = DateTime.Now;
             var firstDay = date.FirstDayOfMonth();
             DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
@@ -556,11 +561,13 @@ namespace Neutron.Forms
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
+            Cursor.Current = Cursors.Default;
         }
 
         private void RadioButtonDateRange_CheckedChanged(object sender, EventArgs e)
         {
             if (!((RadioButton)sender).Checked) return;
+            Cursor.Current = Cursors.WaitCursor;
             var date = DateTime.Now;
             var firstDay = date.FirstDayOfMonth();
             DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
@@ -568,6 +575,7 @@ namespace Neutron.Forms
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
+            Cursor.Current = Cursors.Default;
         }
 
         private void DateTimePickerFrom_Enter(object sender, EventArgs e)
