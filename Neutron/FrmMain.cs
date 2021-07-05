@@ -290,62 +290,71 @@ namespace Neutron
                     if (_stationId > 0)
                     {
                         _station = _stationRepository.GetStationView(_stationId);
-                        if (CreateLog("Main", _station.StationNumber))
+                        if (_station != null)
                         {
-                            SetupEmail();
-                            _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
-                            var rackStation = _stationRepository.GetRackStation();
-                            _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
-                            _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
-                            if (_station != null)
+                            if (CreateLog("Main", _station.StationNumber))
                             {
-
-                                if (SetupShuttle())
+                                SetupEmail();
+                                _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+                                var rackStation = _stationRepository.GetRackStation();
+                                _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
+                                _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
+                                if (_station != null)
                                 {
-                                    if (SetupDisplay())
+
+                                    if (SetupShuttle())
                                     {
-                                        if (SetupSlotFactory())
+                                        if (SetupDisplay())
                                         {
-                                            if (StartLoader())
+                                            if (SetupSlotFactory())
                                             {
-                                                if (StartUpload())
+                                                if (StartLoader())
                                                 {
-                                                    result = true;
+                                                    if (StartUpload())
+                                                    {
+                                                        result = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        MessageBox.Show("Main Form: Auto Upload Initialization Error.");
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    MessageBox.Show("Main Form: Auto Upload Initialization Error.");
+                                                    MessageBox.Show("Main Form: Auto Loader Initialization Error.");
                                                 }
                                             }
                                             else
                                             {
-                                                MessageBox.Show("Main Form: Auto Loader Initialization Error.");
+                                                MessageBox.Show("Main Form: Slot Factory Initialization Error.");
                                             }
                                         }
                                         else
                                         {
-                                            MessageBox.Show("Main Form: Slot Factory Initialization Error.");
+                                            MessageBox.Show("Main Form: Display Initialization Error.");
                                         }
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Main Form: Display Initialization Error.");
+                                        MessageBox.Show("Main Form: Device Initialization Error.");
                                     }
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Main Form: Device Initialization Error.");
+                                    MessageBox.Show("Main Form: Station Initialization Error.");
                                 }
-                            }
+                            }  //-----
+
                             else
                             {
-                                MessageBox.Show("Main Form: Station Initialization Error.");
-                            }
+                                MessageBox.Show("Unable to create the log file.   Neutron Exiting.",
+                                    caption: "File Error", buttons: MessageBoxButtons.OK);
+                            } 
                         }
-                        else
+                        else  // _station is null
                         {
-                            MessageBox.Show("Unable to create the log file.   Neutron Exiting.",
-                                caption: "File Error", buttons: MessageBoxButtons.OK);
+                            MessageBox.Show("Station has not been configured.   Neutron Exiting.",
+                                caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
                         }
                     }
                     else

@@ -30,7 +30,7 @@ namespace NeutronData.Repositories
             var logFileDirectory = LoaderSettings.GetLogFileDirectory();
             var folderName = $"StationView_{stationId.ToString()}";
             var logger = new AlliedLogger.DynamicLogger(logFileDirectory, folderName, @"true");
-            var stationView = new StationView();
+            StationView stationView = null;
             Station station;
             try
             {
@@ -40,6 +40,7 @@ namespace NeutronData.Repositories
                 {
                     logger.Log($"Station Name: {station.Name}");
                     //get all the hardware devices on this station carousel, lights scale, etc
+                    stationView = new StationView();
                     try
                     {
                         var hardwareDevices = _repoHardwareDevices.All().Where(r => r.StationId == station.Id).ToList();
