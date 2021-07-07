@@ -1552,6 +1552,7 @@ namespace Neutron.Forms
                 LabelFormTitle.Text = _resourceManager.GetString("HotActions");
                 LabelFormTitle.BackColor = Color.Red;
                 tabControl1.SelectedTab = HotPick;
+                TextBoxFindCostCenter.Text = string.Empty;
             }
             else
             {
@@ -1704,6 +1705,7 @@ namespace Neutron.Forms
                 LabelFormTitle.BackColor = Color.Red;
                 Cursor.Current = Cursors.Default;
                 tabControl1.SelectedTab = HotPick;
+                TextBoxFindCostCenter.Text = string.Empty;
             }
             else
             {
@@ -1727,6 +1729,7 @@ namespace Neutron.Forms
                     await LoadCurrentAndNew();
                     LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
                     LabelFormTitle.BackColor = Color.Green;
+                    TextBoxFindCostCenter.Text = string.Empty;
                     Cursor.Current = Cursors.Default;
                     tabControl1.SelectedTab = HotPick;
                 }
@@ -2173,10 +2176,12 @@ namespace Neutron.Forms
             if (!_useCostCenter) return;
             var search = TextBoxFindCostCenter.Text;
             var costCenterList = _costCenterManager.GetCostCenterList(search.ToLower());
+            MBHotAccept.Enabled = costCenterList.Count > 0;
+
             ComboBoxCostCenter.DataSource = costCenterList;
             ComboBoxCostCenter.DisplayMember = "Name";
             ComboBoxCostCenter.ValueMember = "Code";
-            ComboBoxCostCenter.DroppedDown = true;
+            //ComboBoxCostCenter.DroppedDown = true;
         }
         private void ComboBoxCostCenter_TextChanged(object sender, EventArgs e)
         {
@@ -2193,6 +2198,10 @@ namespace Neutron.Forms
                     {
                         MBHotAccept.Enabled = true;
                     }
+                }
+                else
+                {
+                    MBHotAccept.Enabled = false;
                 }
             }
             catch (Exception ex)
@@ -2212,6 +2221,7 @@ namespace Neutron.Forms
                 //file CostCenter Combo Box
                 var search = TextBoxFindCostCenter.Text;
                 var costCenterList = _costCenterManager.GetCostCenterList(search.ToLower());
+                MBHotAccept.Enabled = costCenterList.Count > 0;
                 ComboBoxCostCenter.DataSource = costCenterList;
                 ComboBoxCostCenter.DisplayMember = "Name";
                 ComboBoxCostCenter.ValueMember = "Code";

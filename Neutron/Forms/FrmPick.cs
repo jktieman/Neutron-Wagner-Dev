@@ -196,6 +196,7 @@ namespace Neutron.Forms
             }
             _documentToPrint = new DocumentToPrint();
             MBPrint.Visible = _neutronVariables.PrintPackingListManual;
+           // MBFillStarters.Visible = _neutronVariables.SerialPicking;
             InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
@@ -2124,8 +2125,8 @@ namespace Neutron.Forms
             DataGridViewAvailableOrders.Columns.Add(col);
 
 
-            // if (_neutronVariables.SerialPicking) //Show the Starter column
-            // {
+            if (_neutronVariables.SerialPicking) //Show the Starter column
+            {
             colx = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "Starter",
@@ -2139,7 +2140,7 @@ namespace Neutron.Forms
             };
             DataGridViewAvailableOrders.Columns.Add(colx);
 
-            // }
+            }
 
             col = new DataGridViewTextBoxColumn
             {
@@ -3706,7 +3707,7 @@ namespace Neutron.Forms
             // If false, set the batch position to the next empty position to the right
             // Both functions have the posibility of returning a -1
             // meaning they could not find or set a current batch position
-                var idx = ManualOverrideCurrentTextBoxPos ? SetBatchPositionToManualOverride() : SetBatchPositionToFirstEmpty();
+            var idx = ManualOverrideCurrentTextBoxPos ? SetBatchPositionToManualOverride() : SetBatchPositionToFirstEmpty();
 
             _logger.Log($"TextBox Position Index: {idx}");
             // Now we have to check for a valid position number
@@ -5941,7 +5942,10 @@ namespace Neutron.Forms
             MBOffCarousel.Visible = _station.StationTypeId == (int)StationType.Supervisor ||
                                     _station.StationTypeId == (int)StationType.Rack;
             ShowAllOrders();
+            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBCompress.Visible = false;
             tabControl1.SelectedTab = OrderListing;
+            MBShowAvailable.Focus();
             Cursor.Current = Cursors.Default;
         }
 
@@ -5966,7 +5970,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log("Available Orders Screen START"));
             Cursor.Current = Cursors.WaitCursor;
             InitOrdersToPick(_neutronVariables.PickBatchSize);
-            MBCompress.Enabled = false;
+            MBCompress.Visible = false;
             LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             ClearBatchPositions();
@@ -6137,6 +6141,9 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.WaitCursor;
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
+            MBCompress.Visible = false;
+            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
             Cursor.Current = Cursors.Default;
         }
 
@@ -6148,15 +6155,20 @@ namespace Neutron.Forms
             var sb = new StringBuilder();
             foreach (var order in orders)
             {
-                if (firstTime)
+                // Make sure the order is Complete before Compress
+                if (order.OrderStatusId == (int)OrderStatus.Complete)
                 {
-                    sb.Append(order.Id);
-                    firstTime = false;
+                    if (firstTime)
+                    {
+                        sb.Append(order.Id);
+                        firstTime = false;
+                    }
+                    else
+                    {
+                        sb.Append("," + order.Id);
+                    }
                 }
-                else
-                {
-                    sb.Append("," + order.Id);
-                }
+
             }
             var orderIds = sb.ToString();
 
@@ -6169,7 +6181,7 @@ namespace Neutron.Forms
                 context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds, paramOrderType);
             }
 
-            ShowAllOrders();
+            ShowCompletedOrders();
         }
 
         private void ShowButtons()
@@ -6187,20 +6199,20 @@ namespace Neutron.Forms
             MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
         }
 
-        private void HideButtons()
-        {
-            MBPriority.Visible = false;
-            MBHold.Visible = false;
-            MBRelease.Visible = false;
-            MBReturnToStock.Visible = false;
-            MBReturnToStockOrderDetail.Visible = false;
-            MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillLine.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillLineSkip.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-        }
+        //private void HideButtons()
+        //{
+        //    MBPriority.Visible = false;
+        //    MBHold.Visible = false;
+        //    MBRelease.Visible = false;
+        //    MBReturnToStock.Visible = false;
+        //    MBReturnToStockOrderDetail.Visible = false;
+        //    MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //    MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillLine.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillLineSkip.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //}
 
         //Ready
         private void MBNewOrderSearch_Click(object sender, EventArgs e)
@@ -7624,10 +7636,20 @@ namespace Neutron.Forms
         private void MBCompleted_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            ShowCompletedOrders();
+            Cursor.Current = Cursors.Default;
+            MBCompleted.Focus();
+        }
+
+        private void ShowCompletedOrders()
+        {
+
             _currentDataSet = CurrentDataSet.Complete;
             ShowCompleted();
-            MBCompress.Enabled = true;
-            Cursor.Current = Cursors.Default;
+            MBDeleteOrder.Visible = false;
+            MBKillOrder.Visible = false;
+            MBCompress.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+
         }
 
         private void MBDeleteOrder_Click(object sender, EventArgs e)
@@ -7829,6 +7851,9 @@ namespace Neutron.Forms
         private void MBSkipped_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            MBCompress.Visible = false;
+            MBDeleteOrder.Visible = false;
+            MBKillOrder.Visible = false;
             ShowSkipped();
             Cursor.Current = Cursors.Default;
         }
@@ -7850,9 +7875,18 @@ namespace Neutron.Forms
         private void MBBackSkip_Click(object sender, EventArgs e)
         {
             DataGridViewAvailableOrders.Refresh();
+            Cursor.Current = Cursors.WaitCursor;
+            _currentDataSet = CurrentDataSet.Available;
+            ShowAllOrders();
+            MBCompress.Visible = false;
+            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+
+
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = OrderListing;
+            Cursor.Current = Cursors.Default;
+            MBShowAvailable.Focus();
         }
 
         //private void MBSelectAllSkip_Click(object sender, EventArgs e)
@@ -7867,6 +7901,12 @@ namespace Neutron.Forms
 
         private void MBInventorySkip_Click(object sender, EventArgs e)
         {
+            if (_bindingSourceSkipView.Current == null)
+            {
+                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                return;
+            }
+
             if (_bindingSourceSkipView.Current != null)
             {
                 var cur = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
@@ -7919,6 +7959,12 @@ namespace Neutron.Forms
 
         private void MBPickComplete_Click(object sender, EventArgs e)
         {
+            if (_bindingSourceSkipView.Current == null)
+            {
+                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                return;
+            }
+
             var currentSkip = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
             currentSkip.Picked = currentSkip.Quantity;
             GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
@@ -7947,7 +7993,11 @@ namespace Neutron.Forms
 
         private void MBPickZero_Click(object sender, EventArgs e)
         {
-
+            if (_bindingSourceSkipView.Current == null)
+            {
+                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                return;
+            }
             var currentSkip = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
             currentSkip.Picked = 0;
             GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
@@ -7975,6 +8025,13 @@ namespace Neutron.Forms
 
         private void MBAdjustQuantity_Click(object sender, EventArgs e)
         {
+            if (_bindingSourceSkipView.Current == null)
+            {
+                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                return;
+            }
+
+
             var currentSkip = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
             using (var form = new FrmChangeQuantityOnly())
             {
@@ -8023,6 +8080,9 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.WaitCursor;
             _currentDataSet = CurrentDataSet.Rack;
             ShowRackOrders();
+            MBCompress.Visible = false;
+            MBKillOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
             Cursor.Current = Cursors.Default;
         }
 
@@ -8451,7 +8511,11 @@ namespace Neutron.Forms
 
         private void MBPrintSkip_Click(object sender, EventArgs e)
         {
-
+            if (_bindingSourceSkipView.Current == null)
+            {
+                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                return;
+            }
         }
 
         private void MBFillOptimized_Click(object sender, EventArgs e)

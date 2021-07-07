@@ -433,6 +433,7 @@
             this.ButtonVerifySql.TabIndex = 5;
             this.ButtonVerifySql.Text = "Verify Sql Server Schema";
             this.ButtonVerifySql.UseVisualStyleBackColor = true;
+            this.ButtonVerifySql.Visible = false;
             this.ButtonVerifySql.Click += new System.EventHandler(this.ButtonVerifySql_Click);
             // 
             // ButtonSaveConnectionString

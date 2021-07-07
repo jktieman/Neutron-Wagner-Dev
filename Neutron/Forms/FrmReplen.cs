@@ -4681,6 +4681,8 @@ namespace Neutron.Forms
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.Green;
             ShowAllOrders();
+            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBCompress.Visible = false;
             tabControl1.SelectedTab = OrderListing;
             Cursor.Current = Cursors.Default;
         }
@@ -4689,7 +4691,8 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             _activeGrid = "Available";
-            MBDeleteOrder.Enabled = true;
+            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBCompress.Visible = false;
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
             Cursor.Current = Cursors.Default;
@@ -4951,12 +4954,17 @@ namespace Neutron.Forms
         private void MBCompleted_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
+            ShowCompletedOrders();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void ShowCompletedOrders()
+        {
             _activeGrid = "Complete";
-            MBDeleteOrder.Enabled = false;
+            MBDeleteOrder.Visible = false;
             _currentDataSet = CurrentDataSet.Complete;
             ShowCompleted();
-            MBCompress.Enabled = true;
-            Cursor.Current = Cursors.Default;
+            MBCompress.Visible = _station.StationType.Id == (int)StationType.Supervisor;
         }
 
         private void CompressOrders()
@@ -4967,14 +4975,18 @@ namespace Neutron.Forms
             var sb = new StringBuilder();
             foreach (var order in orders)
             {
-                if (firstTime)
+                // Make sure the order is Complete before Compress
+                if (order.OrderStatusId == (int)OrderStatus.Complete)
                 {
-                    sb.Append(order.Id);
-                    firstTime = false;
-                }
-                else
-                {
-                    sb.Append("," + order.Id);
+                    if (firstTime)
+                    {
+                        sb.Append(order.Id);
+                        firstTime = false;
+                    }
+                    else
+                    {
+                        sb.Append("," + order.Id);
+                    }
                 }
             }
             var orderIds = sb.ToString();
@@ -4987,9 +4999,7 @@ namespace Neutron.Forms
 
                 context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds, paramOrderType);
             }
-            ShowAllOrders();
-
-            //ShowCompleted();
+            ShowCompletedOrders();
         }
 
         private void SelectAll()

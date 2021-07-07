@@ -4746,7 +4746,6 @@
             this.TextBoxEmailFromAddress.Name = "TextBoxEmailFromAddress";
             this.TextBoxEmailFromAddress.Size = new System.Drawing.Size(359, 26);
             this.TextBoxEmailFromAddress.TabIndex = 6;
-            this.TextBoxEmailFromAddress.Text = "jktieman@alliedinc.us";
             // 
             // label7
             // 
@@ -4787,7 +4786,6 @@
             this.TextBoxSendToEmailAddress.Name = "TextBoxSendToEmailAddress";
             this.TextBoxSendToEmailAddress.Size = new System.Drawing.Size(359, 26);
             this.TextBoxSendToEmailAddress.TabIndex = 4;
-            this.TextBoxSendToEmailAddress.Text = "jktieman@gmail.com";
             // 
             // label6
             // 
@@ -4854,7 +4852,6 @@
             this.TextBoxPassword.Name = "TextBoxPassword";
             this.TextBoxPassword.Size = new System.Drawing.Size(359, 26);
             this.TextBoxPassword.TabIndex = 2;
-            this.TextBoxPassword.Text = "Jmetmn$7";
             // 
             // TextBoxUsername
             // 
@@ -4862,7 +4859,6 @@
             this.TextBoxUsername.Name = "TextBoxUsername";
             this.TextBoxUsername.Size = new System.Drawing.Size(359, 26);
             this.TextBoxUsername.TabIndex = 2;
-            this.TextBoxUsername.Text = "jktieman@alliedinc.us";
             // 
             // label5
             // 
@@ -4929,7 +4925,6 @@
             this.TextbBoxServerName.Name = "TextbBoxServerName";
             this.TextbBoxServerName.Size = new System.Drawing.Size(359, 26);
             this.TextbBoxServerName.TabIndex = 1;
-            this.TextbBoxServerName.Text = "mail.alliedinc.us";
             // 
             // TextBoxDescription
             // 
@@ -4938,7 +4933,7 @@
             this.TextBoxDescription.Name = "TextBoxDescription";
             this.TextBoxDescription.Size = new System.Drawing.Size(359, 26);
             this.TextBoxDescription.TabIndex = 1;
-            this.TextBoxDescription.Text = "Milwaukee Tool Email Server";
+            this.TextBoxDescription.Text = "Email Server";
             // 
             // label3
             // 

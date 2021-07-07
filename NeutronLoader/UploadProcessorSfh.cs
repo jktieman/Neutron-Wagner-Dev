@@ -58,6 +58,13 @@ namespace NeutronLoader
             }
 
             _uploadBusy = true;
+
+            if (string.IsNullOrWhiteSpace(_neutronVariables.ActionCodes))
+            {
+                MessageBox.Show(@"No Action Codes are defined.", @"Action Code Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             try
             {

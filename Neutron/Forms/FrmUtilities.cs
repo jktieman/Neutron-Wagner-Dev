@@ -762,9 +762,17 @@ namespace Neutron.Forms
             _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
             _neutronVariables.EnableEmailNotification = CheckBoxEnableEmailNotification.Checked;
 
-            _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
+            if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
+            {
+                _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
-            _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
+                _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text }); 
+            }
+            else
+            {
+                MessageBox.Show("The License Code is required. ", "License Code Missing", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
         }
         private void MBOptions_Click(object sender, EventArgs e)
         {

@@ -1949,7 +1949,6 @@
             // PictureBoxItemImage
             // 
             this.PictureBoxItemImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.PictureBoxItemImage.Image = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.Image")));
             this.PictureBoxItemImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.InitialImage")));
             this.PictureBoxItemImage.Location = new System.Drawing.Point(395, 464);
             this.PictureBoxItemImage.Name = "PictureBoxItemImage";
@@ -2583,7 +2582,6 @@
             // 
             // MBCompress
             // 
-            this.MBCompress.Enabled = false;
             this.MBCompress.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.MBCompress.Location = new System.Drawing.Point(746, 646);
             this.MBCompress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
