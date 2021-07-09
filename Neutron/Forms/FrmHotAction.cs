@@ -212,7 +212,8 @@ namespace Neutron.Forms
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new Dictionary<int, DeviceIndicator>();
 
-            var hardwareDevices = _station.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            //var hardwareDevices = _station.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            var hardwareDevices = _station.HardwareDevices.ToList();
             var numDevices = hardwareDevices.Count;
             var panel = new Panel();
             panel.Location = new Point(140, 0);
@@ -1183,6 +1184,7 @@ namespace Neutron.Forms
                 LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
                 MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
                 await UpdateHotPickScreen(_currentInventoryView);
+                UpdateCurrentDeviceIndicator();
                 tabControl1.SelectedTab = HotAction;
             }
             Task.Run(() => _logger.Log("Hot Pick Button Press END"));
@@ -1197,22 +1199,9 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             //Cost Center
             GroupBoxHotActions.Visible = false;
-            //if (_useCostCenter)
-            //{
-            //    RadioButtonPick.Checked = true;
-            //    ComboBoxCostCenter.Visible = false;
-            //    TextBoxFindCostCenter.Visible = false;
-            //    RadioButtonCostCenter.Visible = false;
-            //}
-
+           
             RadioButtonPick.Text = $"{_resourceManager.GetString("Store")}";
             RadioButtonPick.Tag = "Store";
-
-            HotAction.BackColor = Color.Green;
-            LabelFormTitle.BackColor = Color.Green;
-            LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-            MBHotAccept.Text = _resourceManager.GetString("Accept");
-            MBHotAccept.Enabled = true;
 
             if (_currentGridDataType == GridDataType.Current)
             {
@@ -1222,29 +1211,92 @@ namespace Neutron.Forms
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
 
-                if (_moveableDeviceTypes.Contains(_station.StationType.Id))
+                //if (_moveableDeviceTypes.Contains(_station.StationType.Id))
+                //{
+                //    if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
+                //    {
+                //        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                //        UpdateCurrentDeviceIndicator();
+
+                //        ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                //            , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                //        await UpdateHotPickScreen(_currentInventoryView);
+                //        tabControl1.SelectedTab = HotAction;
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show($"Location Access Denied");
+                //        tabControl1.SelectedTab = HotPick;
+                //    }
+                //}
+                //else
+                //{
+                //    await UpdateHotPickScreen(_currentInventoryView);
+                //    tabControl1.SelectedTab = HotAction;
+                //}
+                //---------------------------------------------------------------------
+                var device = _station.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
+
+
+                HotAction.BackColor = Color.Green;
+                LabelFormTitle.BackColor = Color.Green;
+                LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
+                MBHotAccept.Text = _resourceManager.GetString("Accept");
+                MBHotAccept.Enabled = true;
+
+
+                if (device == null) //No Hardware devices
+                {
+                   await UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotAction;
+                }
+                else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
                 {
                     if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
                     {
+                        HotActionTray.BackColor = Color.LightGray;
+                        LabelFormTitle.BackColor = Color.Red;
+                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
                         PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                        //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                        //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                        await UpdateHotPickScreenTray(_currentInventoryView);
+                        tabControl1.SelectedTab = HotActionTray;
+                    }
+                    else
+                    {
+                        //Access Denied
+                        MessageBox.Show($"Location Access Denied");
+                    }
+                }
+                else if (device.DeviceTypeId == (int)DeviceType.Carousel)
+                {
+                    if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
+                    {
                         UpdateCurrentDeviceIndicator();
-
-                        ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                            , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                        ShowShi(loc1, loc2, loc3, loc4.ToString(), 1.ToString());
                         await UpdateHotPickScreen(_currentInventoryView);
                         tabControl1.SelectedTab = HotAction;
                     }
                     else
                     {
+                        // Access Denied
                         MessageBox.Show($"Location Access Denied");
-                        tabControl1.SelectedTab = HotPick;
                     }
                 }
-                else
+                else  // Rack or Supervisor
                 {
                     await UpdateHotPickScreen(_currentInventoryView);
+                    UpdateCurrentDeviceIndicator();
                     tabControl1.SelectedTab = HotAction;
                 }
+                Task.Run(() => _logger.Log("Hot Pick Button Press END"));
+
+                //---------------------------------------------------------------------
+
+
             }
             else
             {
@@ -1284,27 +1336,87 @@ namespace Neutron.Forms
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
 
-                if (_moveableDeviceTypes.Contains(_station.StationType.Id))
+                //if (_moveableDeviceTypes.Contains(_station.StationType.Id))
+                //{
+                //    if (_lacProcessor.MovePermitted(_station.StationNumber, location.Loc1, location.Loc2))
+                //    {
+                //        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                //        ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                //            , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                //        await UpdateHotPickScreen(_currentInventoryView);
+                //        tabControl1.SelectedTab = HotAction;
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show($"Location Access Denied");
+                //        tabControl1.SelectedTab = HotPick;
+                //    }
+                //}
+                //else
+                //{
+                //    await UpdateHotPickScreen(_currentInventoryView);
+                //    tabControl1.SelectedTab = HotAction;
+                //}
+
+                var device = _station.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
+
+
+                HotAction.BackColor = Color.Green;
+                LabelFormTitle.BackColor = Color.Green;
+                LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
+                MBHotAccept.Text = _resourceManager.GetString("Accept");
+                MBHotAccept.Enabled = true;
+
+
+                if (device == null) //No Hardware devices
                 {
-                    if (_lacProcessor.MovePermitted(_station.StationNumber, location.Loc1, location.Loc2))
+                    await UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotAction;
+                }
+                else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
+                {
+                    if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
                     {
+                        HotActionTray.BackColor = Color.LightGray;
+                        LabelFormTitle.BackColor = Color.Red;
+                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
                         PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-                        ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                            , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                        //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                        //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                        await UpdateHotPickScreenTray(_currentInventoryView);
+                        tabControl1.SelectedTab = HotActionTray;
+                    }
+                    else
+                    {
+                        //Access Denied
+                        MessageBox.Show($"Location Access Denied");
+                    }
+                }
+                else if (device.DeviceTypeId == (int)DeviceType.Carousel)
+                {
+                    if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
+                    {
+                        UpdateCurrentDeviceIndicator();
+                        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                        ShowShi(loc1, loc2, loc3, loc4.ToString(), 1.ToString());
                         await UpdateHotPickScreen(_currentInventoryView);
                         tabControl1.SelectedTab = HotAction;
                     }
                     else
                     {
+                        // Access Denied
                         MessageBox.Show($"Location Access Denied");
-                        tabControl1.SelectedTab = HotPick;
                     }
                 }
-                else
+                else  // Rack or Supervisor
                 {
                     await UpdateHotPickScreen(_currentInventoryView);
+                    UpdateCurrentDeviceIndicator();
                     tabControl1.SelectedTab = HotAction;
                 }
+                Task.Run(() => _logger.Log("Hot Pick Button Press END"));
+
             }
             Task.Run(() => _logger.Log("Hot Store Button Press END"));
         }

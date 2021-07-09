@@ -111,7 +111,7 @@ namespace Neutron
             _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _rackStation = _stationRepository.GetRackStation();
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
-            
+
 
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -122,13 +122,14 @@ namespace Neutron
 
             Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
-            LogOnOff();
+            LogOn();
 
             if (!InitForm())
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
             }
+
             if (_station.StationTypeId == (int)StationType.Supervisor)
             {
                 if (_neutronVariables.UseAutoCompress)
@@ -147,6 +148,7 @@ namespace Neutron
             GlobalVar.HistoryManager = new HistoryManager(_station);
             var id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
+
         }
 
         private void LogGeneralError(string message)
@@ -349,7 +351,7 @@ namespace Neutron
                             {
                                 MessageBox.Show("Unable to create the log file.   Neutron Exiting.",
                                     caption: "File Error", buttons: MessageBoxButtons.OK);
-                            } 
+                            }
                         }
                         else  // _station is null
                         {
@@ -626,7 +628,7 @@ namespace Neutron
                     GlobalVar.SlotNameFactory = Type4SlotNameFactory.GetInstance();
                     result = GlobalVar.SlotNameFactory != null;
                     break;
-               default:
+                default:
                     GlobalVar.SlotNameFactory = DefaultSlotNameFactory.GetInstance();
                     result = GlobalVar.SlotNameFactory != null;
                     break;
@@ -646,16 +648,18 @@ namespace Neutron
 
         private void MtLogOff_Click(object sender, EventArgs e)
         {
-            LogOnOff();
-            //if (MtLogOff.Text == "Log Off")
-            //{
-            //    MtLogOff.Text = "Log On";
-            //    GlobalVar.User = null;
-            //    currentUser = null;
-            //    mlUserInfo.Text = "";
-            //    securityProcessor.ReprocessSecuritySet("");
-            //}
-            //else
+            //LogOnOff();
+            if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
+            {
+                SetMtLogOffText();
+            }
+
+            else if (MtLogOff.Text == _resourceManager.GetString("LogOn"))
+            {
+                LogOn();
+            }
+        }
+        //else
             //{
             //    try
             //    {
@@ -695,55 +699,125 @@ namespace Neutron
             //    GlobalVar.User = currentUser;
             //    securityProcessor.ReprocessSecuritySet(currentUser.Pin);
             //}
+       // }
+
+        private void LogOff()
+        {
+            //if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
+            //{
+            // MtLogOff.Text = _resourceManager.GetString("LogOn");
+            GlobalVar.User = null;
+            _currentUser = null;
+            mlUserInfo.Text = "";
+            _securityProcessor.ReprocessSecuritySet("");
+            _lacProcessor.ReprocessLacSet(0);
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        MtLogOff.Text = _resourceManager.GetString("LogOff");
+            //        if (_neutronVariables.PinLoginOnly)
+            //        {
+            //            using (var frm = new FrmPin())
+            //            {
+            //                DialogResult result = frm.ShowDialog();
+            //                if (result == DialogResult.OK)
+            //                {
+            //                    _currentUser = frm.CurrentUser;
+
+            //                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            using (var frm = new FrmLogin())
+            //            {
+            //                DialogResult result = frm.ShowDialog();
+            //                if (result == DialogResult.OK)
+            //                {
+            //                    _currentUser = frm.CurrentUser;
+            //                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+            //                }
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show(@"Login Error " + ex.Message);
+            //    }
+            //}
+
+            //if (_currentUser != null)
+            //{
+            //    GlobalVar.User = _currentUser;
+            //    if (_currentUser.Pin == "2277")
+            //    {
+            //        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            //        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            //    }
+            //    else
+            //    {
+            //        var cultureInfo = GlobalVar.User.Language.CultureInfo;
+            //        if (cultureInfo.Length == 5 && cultureInfo.Contains('-'))
+            //        {
+            //            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
+            //            Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
+
+            //        }
+            //        else
+            //        {
+            //            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            //            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            //        }
+            //    }
+
+            //    _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            //    SetCulture(_cultureInfo.Name);
+            //   _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
+            //    _lacProcessor.ReprocessLacSet(GlobalVar.User.Id);
+            //}
         }
 
-        private void LogOnOff()
+        private void LogOn()
         {
-            if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
+            try
             {
-                MtLogOff.Text = _resourceManager.GetString("LogOn");
-                GlobalVar.User = null;
-                _currentUser = null;
-                mlUserInfo.Text = "";
-                _securityProcessor.ReprocessSecuritySet("");
-                _lacProcessor.ReprocessLacSet(0);
-            }
-            else
-            {
-                try
-                {
-                    MtLogOff.Text = _resourceManager.GetString("LogOff");
-                    if (_neutronVariables.PinLoginOnly)
-                    {
-                        using (var frm = new FrmPin())
-                        {
-                            DialogResult result = frm.ShowDialog();
-                            if (result == DialogResult.OK)
-                            {
-                                _currentUser = frm.CurrentUser;
+                MtLogOff.Text = _resourceManager.GetString("LogOff");
+                MtLogOff.Refresh();
 
-                                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
-                            }
-                        }
-                    }
-                    else
+                if (_neutronVariables.PinLoginOnly)
+                {
+                    using (var frm = new FrmPin())
                     {
-                        using (var frm = new FrmLogin())
+                        DialogResult result = frm.ShowDialog();
+                        if (result == DialogResult.OK)
                         {
-                            DialogResult result = frm.ShowDialog();
-                            if (result == DialogResult.OK)
-                            {
-                                _currentUser = frm.CurrentUser;
-                                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
-                            }
+                            _currentUser = frm.CurrentUser;
+
+                            mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
                         }
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(@"Login Error " + ex.Message);
+                    using (var frm = new FrmLogin())
+                    {
+                        DialogResult result = frm.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
+                            _currentUser = frm.CurrentUser;
+                            mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(@"Login Error " + ex.Message);
+            }
+
 
             if (_currentUser != null)
             {
@@ -771,7 +845,7 @@ namespace Neutron
 
                 _cultureInfo = Thread.CurrentThread.CurrentCulture;
                 SetCulture(_cultureInfo.Name);
-               _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
+                _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
                 _lacProcessor.ReprocessLacSet(GlobalVar.User.Id);
             }
         }
@@ -864,7 +938,6 @@ namespace Neutron
                 if (_neutronVariables.AutoLogOff)
                 {
                     SetMtLogOffText();
-                    LogOnOff();
                 }
 
                 Show();
@@ -1039,7 +1112,7 @@ namespace Neutron
                 MtPick.Text = _resourceManager.GetString("Pick");
                 MtStore.Text = _resourceManager.GetString("Store");
                 MtUsers.Text = _resourceManager.GetString("Users");
-                MtLogOff.Text = _resourceManager.GetString("LogOn");
+                MtLogOff.Text = _resourceManager.GetString("LogOff");
                 MtUtilities.Text = _resourceManager.GetString("Utilities");
                 MtSystem.Text = _resourceManager.GetString("System");
                 MtLac.Text = _resourceManager.GetString("LocationAccessControl");

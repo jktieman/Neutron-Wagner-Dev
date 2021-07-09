@@ -49,6 +49,7 @@ namespace NeutronLoader
 
         public void CreateHostFile()
         {
+            _logger.Log($"Upload Processor - Creating Host File.");
             var counter = 0;
             while (_uploadBusy)
             {

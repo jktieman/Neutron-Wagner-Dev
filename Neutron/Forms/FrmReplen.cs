@@ -3353,7 +3353,6 @@ namespace Neutron.Forms
                     .ToList();
                 newCarList.Add(carList);
             }
-
             var seq = 1;
             var totalPickStops = pickStops.Count;
 
@@ -3369,64 +3368,30 @@ namespace Neutron.Forms
                     }
                 }
             }
-
             Task.Run(() => _logger.Log($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
             _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
-            for (var k = 0; k < _station.HardwareDevices.Count; k++)
+            for (var i = 1; i <= _station.HardwareDevices.Count; i++)
             {
-                var z = k;
-                Task.Run(() => _deviceManager.MoveNext(z));
+                _deviceManager.MoveNext(i);
             }
-
             Task.Run(() => _logger.Log($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
             Task.Run(() => _logger.Log($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
             return newList;
         }
 
-        private void SetOrderStatusToPartial(IList<ReplenPickView> recs)
-        {
-            List<int> ids = recs.Select(r => r.OrderId).Distinct().ToList();
-            foreach (var item in ids)
-            {
-                try
-                {
-                    ReplenOrder ord = _repoReplenOrder.FindByKey(item);
-                    ord.OrderStatusId = (int)OrderStatus.Partial;
-                    _repoReplenOrder.Update(ord);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.PartialOrder, ord);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error Saving ReplenOrder Status to Partial. " + ex.Message);
-                }
-            }
-        }
-
         private void PositionDevice(int loc1, int loc2, int loc3, int loc4, bool moveDevice)
         {
-            if (_lacProcessor.MovePermitted(_station.StationNumber, loc1, loc2))
+            Task.Run(() => _logger.Log($"3384 PositionDevice"));
+            if (_neutronVariables.ShuttleEnabled)
             {
-                if (_neutronVariables.ShuttleEnabled)
+                Task.Run(() => _logger.Log($"4056 PositionDevice"));
+                if (GlobalVar.Shuttle != null)
                 {
-                    if (GlobalVar.Shuttle != null)
-                    {
-                        if (moveDevice)
-                        {
-                            Task<DeviceResponse> response = Task.Run(() =>
-                                GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4));
-                            if (response.Result != DeviceResponse.Success)
-                            {
-                                MessageBox.Show(response.Result.AsString(EnumFormat.Description),
-                                    caption: "Device Information"
-                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
-                            }
-                        }
-                    }
+                    _logger.Log($"4061 Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}");
+
+                    Task.Run(() => _logger.Log($"4063 PositionDevice"));
+                    GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4);
                 }
-            }
-            else
-            {
-                MessageBox.Show($"Location Access Denied");
             }
         }
 
@@ -3477,10 +3442,9 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-
+                _logger.Log($"3445 GetNextStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
 
-                _logger.Log($"3012 GetNextStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
             }
             Task.Run(() => _logger.Log($"GetNextStop Return: [{DateTime.Now.ToLongTimeString()}]"));
         }
@@ -3503,7 +3467,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-
+                _logger.Log($"3470 GetPreviousStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
             Task.Run(() => _logger.Log($"Get Prev Stop END "));
@@ -3511,7 +3475,7 @@ namespace Neutron.Forms
 
         private void GetLastStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"GetLastStop"));
+            Task.Run(() => _logger.Log($"GetLastStop: [{DateTime.Now.ToLongTimeString()}]"));
             var numberOfStops = _bindingSourcePickStops.Count;
             if (numberOfStops > 0)
             {
@@ -3527,6 +3491,7 @@ namespace Neutron.Forms
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                 UpdateTowerDisplay();
+                _logger.Log($"3494 GetLastStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
             Task.Run(() => _logger.Log($"GetLastStop Return"));
@@ -3556,11 +3521,7 @@ namespace Neutron.Forms
         private void UpdatePickScreen()
         {
             Task.Run(() => _logger.Log($"UpdatePickScreen Start: [{DateTime.Now.ToLongTimeString()}]"));
-            //UpdateTowerDisplay();
 
-            //UpdateCurrentDeviceIndicator();
-            //UpdatePickPosition();
-            //UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
 
             if (_neutronVariables.UseImages) PictureBoxItemImage.LoadAsync(_imageManager.GetImageFile(_currentPickStop.Item));
             LabelFormTitle.Text = _resourceManager.GetString($"Selection");
@@ -3572,13 +3533,21 @@ namespace Neutron.Forms
             TextBoxRequestedQty.Text = _currentPickStop.Quantity.ToString();
 
             var pickedSoFar = GetPickedSoFar(_currentPickStop.PickViews);
-
             TextBoxPickedSoFar.Text = pickedSoFar.ToString();
 
             LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
             Task.Run(() => _logger.Log($"UpdatePickScreen End: [{DateTime.Now.ToLongTimeString()}]"));
             MBStoreAccept.Enabled = _currentPickStop.Quantity != pickedSoFar;
             MBPickChangeQuantity.Enabled = _currentPickStop.Quantity != pickedSoFar;
+        }
+
+        private void UpdatePickScreenAfterChangeQuantity()
+        {
+            Task.Run(() => _logger.Log($"UpdatePickScreen AfterChangeQuantity Start: [{DateTime.Now.ToLongTimeString()}]"));
+            UpdateTowerDisplay();
+            UpdatePickPosition();
+            LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
+            Task.Run(() => _logger.Log($"UpdatePickScreen AfterChangeQuantity End: [{DateTime.Now.ToLongTimeString()}]"));
         }
 
         private void UpdateTowerDisplay()
@@ -4550,14 +4519,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void UpdatePickScreenAfterChangeQuantity()
-        {
-            Task.Run(() => _logger.Log($"UpdatePickScreen AfterChangeQuantity Start: [{DateTime.Now.ToLongTimeString()}]"));
-            UpdateTowerDisplay();
-            UpdatePickPosition();
-            LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
-            Task.Run(() => _logger.Log($"UpdatePickScreen AfterChangeQuantity End: [{DateTime.Now.ToLongTimeString()}]"));
-        }
+ 
 
         private void ButtonMove_Click(object sender, EventArgs e)
         {

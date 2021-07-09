@@ -113,12 +113,16 @@ namespace Neutron.Controllers
 
         public void ClearAllBli()
         {
+            _logger.Log($"IPTI Controller - Clear All BLI - START");
             if (!_bliEnabled) return;
+            _logger.Log($"IPTI Controller - Clear All BLI - BLI Enabled");
             foreach (var bli in _bliList)
             {
-                Task.Run(() => _logger.Log($"BLI Clear All Displays.  {bli.BLI_Address}"));
+                _logger.Log($"IPTI Controller - Clear All BLI - SendData Turn Off:  {bli.BLI_Address}");
                 SendData(bli.TurnOff);
+                _logger.Log($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
             }
+            _logger.Log($"IPTI Controller - Clear All BLI - END");
         }
 
         public void ClearAllShi()
@@ -256,6 +260,7 @@ namespace Neutron.Controllers
 
         private void StartTransmission()
         {
+            _logger.Log($"IPTI Controller - StartTransmission - Start");
             while (Transmit)
             {
                 try
@@ -270,7 +275,7 @@ namespace Neutron.Controllers
                                 return;
                             }
 
-                            _logger.Log($"Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
+                            _logger.Log($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
 
                             //for (var i = 1; i <= 100; i++)
                             //{
@@ -280,7 +285,7 @@ namespace Neutron.Controllers
                             var trans = _responseManager.Transmitting;
 
                             Mediator.GetInstance().OnSerialPortWrite(this, $"Write Command:  {trans.ToString()} - {request.ByteArrayToStringX2()}");
-
+                            _logger.Log($"IPTI Controller - StartTransmission - SerialPort Write {request}");
                             _serialPort.Write(request, 0, request.Length);
                             _responseManager.Transmitting = true;
                             Thread.Sleep(50);
@@ -539,26 +544,37 @@ namespace Neutron.Controllers
 
         public void SendData(string baseCommand)
         {
+            _logger.Log($"IPTI Controller - SendData - Start");
             try
             {
                 var portOpen = false;
                 // Thread.Sleep(100);
                 if (!_serialPort.IsOpen)
                 {
+                    _logger.Log($"IPTI Controller - SendData - Serial Port Is Not Open");
                     if (ConnectToComPort())
+                    {
+                        _logger.Log($"IPTI Controller - SendData - Connect to ComPort is TRUE");
                         portOpen = true;
+                    }
                     else
+                    {
+                        _logger.Log($"IPTI Controller - SendData - Com Port Error");
                         MessageBox.Show("Com Port Error");
+                    }
                 }
                 else
                 {
                     portOpen = true;
                 }
-
+                _logger.Log($"IPTI Controller - SendData - portOpen is {portOpen}");
                 if (portOpen)
                 {
+                    _logger.Log($"IPTI Controller - SendData - portOpen is Open/true");
                     var command = Models.Global.SOH + baseCommand + ToHex(baseCommand) + Models.Global.ETX;
+                    _logger.Log($"IPTI Controller - SendData - Command: {command}");
                     var bytes = command.StringToByteArray();
+                    _logger.Log($"IPTI Controller - SendData - Add Command to RequestBlockingCollection");
                     RequestBlockingCollection.TryAdd(bytes);
                     Mediator.GetInstance().OnSerialPortWrite(this, "Command to Queue - " + command);
                     //_serialPort.Write(command);

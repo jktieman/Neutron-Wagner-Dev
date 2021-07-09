@@ -59,6 +59,7 @@
             this.MBChangeQuantityCancel.TabIndex = 2;
             this.MBChangeQuantityCancel.Text = "Cancel";
             this.MBChangeQuantityCancel.UseSelectable = true;
+            this.MBChangeQuantityCancel.Click += new System.EventHandler(this.MBChangeQuantityCancel_Click);
             // 
             // MBChangeQuantitySave
             // 
@@ -71,6 +72,7 @@
             this.MBChangeQuantitySave.TabIndex = 1;
             this.MBChangeQuantitySave.Text = "Save";
             this.MBChangeQuantitySave.UseSelectable = true;
+            this.MBChangeQuantitySave.Click += new System.EventHandler(this.MBChangeQuantitySave_Click);
             // 
             // LabelNewQuantity
             // 

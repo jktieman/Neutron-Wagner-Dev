@@ -68,7 +68,7 @@ namespace NeutronLoader
         {
             if (_loadOrdersBusy) return;
             _loadOrdersBusy = true;
-            _logger.Log("Load Orders");
+            _logger.Log("Order Processor - Load Orders");
 
             try
             {
