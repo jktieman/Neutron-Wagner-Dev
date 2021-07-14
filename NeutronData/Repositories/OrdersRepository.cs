@@ -192,93 +192,207 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-
-
+        //----------------
         public List<AvailableOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
         {
             var recs = new List<AvailableOrdersView>();
-            var availableSkip = new[] { 1, 3, 9 };
             try
             {
-                if (!string.IsNullOrWhiteSpace(search))
+                using (var context = new NeutronDb())
                 {
-                    search = search.ToLower();
-                    recs = _repoOrders.AllInclude(s => s.OrderDetails)
-                        .Where(o => availableSkip.Contains(o.OrderStatusId) && (o.Ord1.ToLower().Contains(search) || o.Ord2.ToLower().Contains(search)))
-                        .Where(s => s.OrderDetails.All(d => d.StationNumber == station.StationNumber))
-                        .Select(r => new AvailableOrdersView
+                    List<OrderDetail> records;
+                    //if (showSkips)
+                    //{
+                    //    records = context.OrderDetails.Where(o => o.StationNumber == station.StationNumber
+                    //                                              && (o.LineStatusId == 1 || o.LineStatusId == 9))
+                    //        .ToList();
+                    //}
+                    //else
+                    //{
+                    //    records = context.OrderDetails.Where(o => o.StationNumber == station.StationNumber && o.LineStatusId == 1)
+                    //        .ToList();
+                    //}
+
+
+                    if (showSkips)
+                    {
+                        records = context.OrderDetails.Include("Order").Where(o => o.StationNumber == station.StationNumber && (o.Order.OrderStatusId == 1))
+                            .Where(p => p.LineStatusId == 1 || p.LineStatusId == 9).ToList();
+                    }
+                    else
+                    {
+                        records = context.OrderDetails.Include("Order").Where(o => o.StationNumber == station.StationNumber && (o.Order.OrderStatusId == 1))
+                            .Where(p => p.LineStatusId == 1).ToList();
+                    }
+
+
+                    var ords = records.GroupBy(r => new { r.OrderId, r.Order.Ord1, r.Order.Ord2, r.Order.Priority, r.Order.LoadDate })
+                         .Select(r => new AvailableOrdersView
+                         {
+                             Id = r.Key.OrderId
+                             ,
+                             Ord1 = r.Key.Ord1
+                             ,
+                             Ord2 = r.Key.Ord2
+                             ,
+                             Priority = r.Key.Priority
+                             ,
+                             Lines = r.Count()
+                             ,
+                             Pieces = r.Sum(s => s.Quantity)
+                             ,
+                             LoadDate = r.Key.LoadDate
+
+
+                         }).ToList();
+
+                    //var ords = records
+                    //    .Select(r => new AvailableOrdersView
+                    //    {
+                    //        Id = r.Id
+                    //        ,
+                    //        Ord1 = r.Order.Ord1
+                    //        ,
+                    //        Ord2 = r.Order.Ord2
+                    //        ,
+                    //        Priority = r.Order.Priority
+                    //        ,
+                    //        Lines = r.Order.OrderDetails.Count()
+                    //        ,
+                    //        Pieces = r.Order.OrderDetails.Sum(s => s.Quantity)
+                    //        ,
+                    //        LoadDate = r.Order.LoadDate)
+                    //        , Order = r.Order
+
+                    //    }).Where(s => s.Ord1.Contains(search) || s.Ord2.Contains(search)) .ToList();
+
+                    foreach (var ord in ords)
+                    {
+                        ord.Order = context.Orders.Find(ord.Id);
+                    }
+
+                    foreach (var ord in ords)
+                    {
+                        foreach (var detail in ord.Order.OrderDetails)
                         {
-                            Id = r.Id
-                            ,
-                            Ord1 = r.Ord1
-                            ,
-                            Ord2 = r.Ord2
-                            ,
-                            Priority = r.Priority
-                            //, Starter = r.OrderDetails.Min(o => o.StationNumber).ToString()
-                            ,
-                            Lines = r.OrderDetails.Count()
-                            ,
-                            Available = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Available)
-                            ,
-                            Picked = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Complete)
-                            ,
-                            Skipped = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Skipped)
-                            ,
-                            Pieces = r.OrderDetails.Sum(d => d.Quantity)
-                            ,
-                            LoadDate = r.LoadDate
-                            ,
-                            Order = r
-                        }).ToList();
-                }
-                else
-                {
-                    recs = _repoOrders.AllInclude(s => s.OrderDetails)
-                                      .Where(o => o.OrderStatusId == 1)
-                                      .Where(s => s.OrderDetails.All(d => d.StationNumber == station.StationNumber))
-                                      .Select(r => new AvailableOrdersView
-                                      {
-                                          Id = r.Id
-                                          ,
-                                          Ord1 = r.Ord1
-                                          ,
-                                          Ord2 = r.Ord2
-                                          ,
-                                          Priority = r.Priority
-                                          //, Starter = r.OrderDetails.Min(o => o.StationNumber).ToString()
-                                          ,
-                                          Lines = r.OrderDetails.Count()
-                                          ,
-                                          Available = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Available)
-                                          ,
-                                          Picked = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Complete)
-                                          ,
-                                          Skipped = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Skipped)
-                                          ,
-                                          Pieces = r.OrderDetails.Where(c => availableSkip.Contains(c.LineStatusId)).Sum(d => d.Quantity)
-                                          ,
-                                          LoadDate = r.LoadDate
-                                          ,
-                                          Order = r
+                            detail.ItemDefinition = context.ItemDefinitions
+                                .Include("UnitOfIssue")
+                                .Include("SizeCode")
+                                .Include("HeightCode")
+                                .Include("VelocityCode")
+                                .Include("Station")
+                                .FirstOrDefault(d => d.Id == detail.ItemDefinitionId);
+                        }
+                    }
 
-                                      }).ToList();
+                    recs = !string.IsNullOrEmpty(search) ? ords.Where(o => o.Ord1.ToLower().Contains(search) || o.Ord2.ToLower().Contains(search)).ToList() : ords;
                 }
-
-                //int i = 0;
-                //foreach (var rec in recs)
-                //{
-                //        i++;
-                //        Console.WriteLine($"{i.ToString().PadLeft(3)}   Order: {rec.Ord1.PadLeft(20)}    Lines:{rec.Lines.ToString().PadLeft(3)}       Available:{rec.Available.ToString().PadLeft(3)}    Picked:{rec.Picked.ToString().PadLeft(3)}    Skipped:{rec.Skipped.ToString().PadLeft(3)}    Pieces: {rec.Pieces.ToString().PadLeft(7)}");
-                //}
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Available Orders View Error. " + ex.Message + " " + ex.InnerException);
+                Logger.Log("Get AvailableOrders View Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
         }
+
+
+
+        //------------------------
+
+        //public List<AvailableOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
+        //{
+        //    var temprecs = new List<Order>();
+        //    var recs = new List<AvailableOrdersView>();
+        //    var availableSkip = new[] { 1, 3, 9 };
+        //    try
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(search))
+        //        {
+        //            search = search.ToLower();
+        //            recs = _repoOrders.AllInclude(s => s.OrderDetails)
+        //                .Where(o => availableSkip.Contains(o.OrderStatusId) && (o.Ord1.ToLower().Contains(search) || o.Ord2.ToLower().Contains(search)))
+        //                .Where(s => s.OrderDetails.All(d => d.StationNumber == station.StationNumber))
+        //                .Select(r => new AvailableOrdersView
+        //                {
+        //                    Id = r.Id
+        //                    ,
+        //                    Ord1 = r.Ord1
+        //                    ,
+        //                    Ord2 = r.Ord2
+        //                    ,
+        //                    Priority = r.Priority
+        //                    //, Starter = r.OrderDetails.Min(o => o.StationNumber).ToString()
+        //                    ,
+        //                    Lines = r.OrderDetails.Count()
+        //                    ,
+        //                    Available = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Available)
+        //                    ,
+        //                    Picked = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Complete)
+        //                    ,
+        //                    Skipped = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Skipped)
+        //                    ,
+        //                    Pieces = r.OrderDetails.Sum(d => d.Quantity)
+        //                    ,
+        //                    LoadDate = r.LoadDate
+        //                    ,
+        //                    Order = r
+        //                }).ToList();
+        //        }
+        //        else
+        //        {
+        //            temprecs = _repoOrders.AllInclude(s => s.OrderDetails).Where(r => r.Ord2 == "2408782")
+        //                .Where(o => o.OrderStatusId == 1)
+        //                .Where(s => s.OrderDetails.All(d => d.StationNumber == station.StationNumber)).ToList();
+        //            //.Select(r => new AvailableOrdersView
+        //            //{
+        //            //    Id = r.Id
+        //            //    ,
+        //            //    Ord1 = r.Ord1
+        //            //    ,
+        //            //    Ord2 = r.Ord2
+        //            //    ,
+        //            //    Priority = r.Priority
+        //            //    ,
+        //            //    Starter = 0  //r.OrderDetails.Min(o => o.StationNumber).ToString()
+        //            //    ,
+        //            //    Lines = r.OrderDetails.Count()
+        //            //    ,
+        //            //    Available = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Available)
+        //            //    ,
+        //            //    Picked = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Complete)
+        //            //    ,
+        //            //    Skipped = r.OrderDetails.Count(c => c.LineStatusId == (int)LineStatus.Skipped)
+        //            //    ,
+        //            //    Pieces = r.OrderDetails.Where(c => availableSkip.Contains(c.LineStatusId)).Sum(d => d.Quantity)
+        //            //    ,
+        //            //    LoadDate = r.LoadDate
+        //            //    ,
+        //            //    Order = r
+
+        //            //}).ToList();
+        //        }
+
+
+        //        int i = 0;
+        //        foreach (var rec in temprecs)
+        //        {
+        //            i++;
+        //            if (rec.Ord2 == "2408782")
+        //            {
+        //                Console.WriteLine(
+        //                    $"{i.ToString().PadLeft(3)}   Order: {rec.Ord1.PadLeft(20)}  RES: {rec.Ord2.PadLeft(20)} ");
+        //            }
+        //            //Console.WriteLine($"{i.ToString().PadLeft(3)}   Order: {rec.Ord1.PadLeft(20)}  RES: {rec.Ord2.PadLeft(20)}    Lines:{rec.Lines.ToString().PadLeft(3)}       Available:{rec.Available.ToString().PadLeft(3)}    Picked:{rec.Picked.ToString().PadLeft(3)}    Skipped:{rec.Skipped.ToString().PadLeft(3)}    Pieces: {rec.Pieces.ToString().PadLeft(7)}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Log("Get Available Orders View Error. " + ex.Message + " " + ex.InnerException);
+        //    }
+        //    var re = recs.Where(r => r.Ord2.Trim() == "2408782").FirstOrDefault();
+        //    return recs;
+        //}
 
 
         //public IEnumerable<OrderView> GetAvailableOrders__OLD

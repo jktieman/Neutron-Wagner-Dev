@@ -1990,7 +1990,7 @@ namespace Neutron.Forms
                     }
                 case Keys.Space:
                     {
-                        await Accept();
+                        //await Accept();
                         break;
                     }
                 case Keys.F2:

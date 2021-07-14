@@ -1384,10 +1384,11 @@ namespace Neutron.Forms
 
             try
             {
+                var views = _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking);
                 // var views = _ordersRepository.GetAvailableOrders(_station);
-                var views = !string.IsNullOrEmpty(findWhat)
-                    ? _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking)
-                    : _ordersRepository.GetAvailableOrders(_station);
+                //var views = !string.IsNullOrEmpty(findWhat)
+                //    ? _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking)
+                //    : _ordersRepository.GetAvailableOrders(_station);
 
                 _bindingListViewAvailableOrdersViews = new BindingListView<AvailableOrdersView>(views.ToList());
                 _bindingSourceAvailableOrders.DataSource = _bindingListViewAvailableOrdersViews;
@@ -3320,6 +3321,7 @@ namespace Neutron.Forms
                                 _repoOrderDetails.Update(item.OrderDetail);
 
                                 GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail, item.OrderDetail.StationNumber);
+                                CheckForOrderComplete(item.OrderDetail.Order);
                             }
                         }
                     }
