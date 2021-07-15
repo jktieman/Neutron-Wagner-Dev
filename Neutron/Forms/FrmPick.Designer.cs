@@ -690,6 +690,7 @@ namespace Neutron.Forms
             this.MBChangeOrderStatus.TabIndex = 14;
             this.MBChangeOrderStatus.Text = "Status";
             this.MBChangeOrderStatus.UseSelectable = true;
+            this.MBChangeOrderStatus.Visible = false;
             this.MBChangeOrderStatus.Click += new System.EventHandler(this.MBChangeOrderStatus_Click);
             // 
             // MBPriority

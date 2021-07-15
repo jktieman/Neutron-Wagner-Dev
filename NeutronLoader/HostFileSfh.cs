@@ -127,12 +127,19 @@ namespace NeutronLoader
                 var stat = _stationRepository.GetStation(history.StationId);
                 _logger.Log($"Get Upload Dat Record - 1");
                 var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
-                _logger.Log($"Get Upload Dat Record - 2");
-                order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
+                _logger.Log($"Get Upload Dat Record - Station Number: {station}");
 
+                order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
+                _logger.Log($"Get Upload Dat Record - Order - Check For Hot Pick");
+                order = CheckForHot(order);
                 _logger.Log($"Get Upload Dat Record Order: {order} - 3");
+
                 invoice = history.Ord2 == null ? string.Empty.PadRight(10) : history.Ord2.PadRight(10);
+                _logger.Log($"Get Upload Dat Record - Invoice - Check For Hot Pick");
+                invoice = CheckForHot(invoice);
                 _logger.Log($"Get Upload Dat Record Invoice: {invoice} - 3");
+
+
                 costCenter = history.CostCenter ?? string.Empty;
                 _logger.Log($"Get Upload Dat Record CostCenter {costCenter} - 4");
                 var orderDetailInfo = string.Empty;
@@ -195,6 +202,19 @@ namespace NeutronLoader
             }
             _logger.Log($"Get Upload Dat Record - END  Result:{result}");
             return result;
+        }
+
+        private string CheckForHot(string order)
+        {
+            switch (order)
+            {
+                case "  HOT PICK":
+                    return @"HOTPICK   ";
+                case " HOT STORE":
+                    return @"HOTSTORE  ";
+                default:
+                    return order;
+            }
         }
 
         private DirectoryInfo GetDirectory(string dir)
