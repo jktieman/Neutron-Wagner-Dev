@@ -648,7 +648,14 @@ namespace Neutron.Global
         {
             try
             {
-                if (!CheckForExistingHistory(history))
+                if (history.ActionCode == 1 || history.ActionCode == 5)
+                {
+                    if (!CheckForExistingHistory(history))
+                    {
+                        _repoHistory.Insert(history);
+                    }
+                }
+                else
                 {
                     _repoHistory.Insert(history);
                 }
