@@ -408,7 +408,7 @@ namespace Neutron.Global
         //Hot Pick Action With Cost Center
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, OrderDetail orderDetail)
         {
-            
+
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -648,12 +648,41 @@ namespace Neutron.Global
         {
             try
             {
-                _repoHistory.Insert(history);
+                if (!CheckForExistingHistory(history))
+                {
+                    _repoHistory.Insert(history);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error, unable to save history record. " + ex.Message);
             }
+        }
+
+        private bool CheckForExistingHistory(History history)
+        {
+            var his = _repoHistory.All().FirstOrDefault(r => r.ActionCode == history.ActionCode
+                                                             && r.OrderId == history.OrderId
+                                                             && r.Ord1 == history.Ord1
+                                                             && r.Ord2 == history.Ord2
+                                                             && r.OrderDetailId == history.OrderDetailId
+                                                             && r.Item == history.Item
+                                                             && r.RequestedQuantity == history.RequestedQuantity
+                                                             && r.IssuedQuantity == history.IssuedQuantity
+                                                             && r.Loc1 == history.Loc1
+                                                             && r.Loc2 == history.Loc2
+                                                             && r.Loc3 == history.Loc3
+                                                             && r.Loc4 == history.Loc4
+                                                             && r.OrderDetailInfo == history.OrderDetailInfo);
+            if (his != null)
+            {
+                MessageBox.Show(
+                    $"This message indicates that Neutron tried to write a duplicate record to the History table." +
+                    $"This is not normal and the supervisor should be notified of what was happening or what may have caused this message. {Environment.NewLine} {Environment.NewLine}Click OK to continue picking normally.",
+                    "Duplicate History Record", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return true;
+            }
+            return false;
         }
 
         public void SaveHistory(ActionCode actionCode, ReplenOrderDetail value, int stationId)
@@ -837,7 +866,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 StationId = skipView.StationNumber,
                 OrderDetailId = skipView.Id,
-                CostCenter =  skipView.OrderDetail.OrderDetailInfo.Length < 5 ? string.Empty : skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
+                CostCenter = skipView.OrderDetail.OrderDetailInfo.Length < 5 ? string.Empty : skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,
                 OrderDetailInfo = skipView.OrderDetail.OrderDetailInfo
             };

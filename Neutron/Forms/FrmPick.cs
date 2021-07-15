@@ -5938,6 +5938,10 @@ namespace Neutron.Forms
                 {
                     ShowRackOrders();
                 }
+                if (_currentDataSet == CurrentDataSet.Complete)
+                {
+                    ShowCompletedOrders();
+                }
                 LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
                 LabelFormTitle.BackColor = Color.RoyalBlue;
             }
