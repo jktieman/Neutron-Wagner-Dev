@@ -131,6 +131,7 @@ namespace Neutron.Forms
 
         private SynchronizationContext _synchronizationContext;
         private List<Inventory> _currentInventory;
+        private bool _multiLocationStop;
 
         public FrmPick(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
@@ -380,13 +381,16 @@ namespace Neutron.Forms
             string pos = bp.PositionNumber.ToString();
             try
             {
-                Control c = Controls.Find("Pos" + pos + "Display", true).First();
-                if (c != null)
+                if (Controls.Count > 0)
                 {
-                    var panel = ((Panel)c);
-                    panel.BackColor = Color.Green;
-                    panel.Visible = true;
-                    panel.Refresh();
+                    Control c = Controls.Find("Pos" + pos + "Display", true).First();
+                    if (c != null)
+                    {
+                        var panel = ((Panel) c);
+                        panel.BackColor = Color.Green;
+                        panel.Visible = true;
+                        panel.Refresh();
+                    }
                 }
             }
             catch (Exception ex)
@@ -4778,6 +4782,8 @@ namespace Neutron.Forms
 
                 if (stopComplete)
                 {
+                    
+
                     //Getting next location on the current device/ the one that was just picked from.
                     Task.Run(() =>
                         _logger.Log($"PickAccept 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
@@ -4812,6 +4818,17 @@ namespace Neutron.Forms
                         //Use the first carousel location for the movenext in case multiple picks are required for stop
                         _deviceManager.MoveNext(_currentPickStop.Inventory[0].Location.Loc1);
 
+                        // if multiple locations were required to complete this stop
+                        // the devices will not be where they're supposed to be for the
+                        // normal picking process
+                        // The device manager knows, based on the stop, where each device should be
+                        // The Reset command of the DeviceManager will send a command to each
+                        // device to put it in the correct position/location
+                        if (_multiLocationStop)
+                        {
+                            _deviceManager.Reset();
+                            _multiLocationStop = false;
+                        }
                         _bindingSourcePickStops.MoveNext();
                         _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                         PrintLabels(_currentPickStop);
@@ -4820,6 +4837,7 @@ namespace Neutron.Forms
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         UpdateTowerDisplay();
+                        
                     }
                     else
                     {
@@ -4829,12 +4847,14 @@ namespace Neutron.Forms
                 }
                 else //PickStop is NOT complete, why?
                 {
+                    _multiLocationStop = true;
+                    _logger.Log($"Pick Stop NOT Complete.  Next Location");
                     var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                     var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                     var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                     var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                     var text = _currentPickStop.QuantityToBePicked.ToString();
-                    Task.Run(() => _logger.Log($"4734 PositionDevice"));
+                    Task.Run(() => _logger.Log($"Position Device: {loc1} - {loc2} - {loc3} - {loc4} - {text}     "));
                     PositionDevice(loc1, loc2, loc3, loc4, true);
 
                     UpdatePickScreen();
@@ -5615,7 +5635,7 @@ namespace Neutron.Forms
             UpdatePickPosition();
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
             UpdateTowerDisplay();
-            Task.Run(() => _logger.Log($"5331 PositionDevice"));
+            Task.Run(() => _logger.Log($"5331 PositionDevice Button MOVE"));
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
         }
 
