@@ -648,20 +648,21 @@ namespace Neutron.Global
         {
             try
             {
-                if (history.ActionCode == 1 || history.ActionCode == 5)
-                {
-                    if (!CheckForExistingHistory(history))
-                    {
-                        _repoHistory.Insert(history);
-                    }
-                }
-                else
-                {
+                //if (history.ActionCode == 1 || history.ActionCode == 5)
+                //{
+                //    if (!CheckForExistingHistory(history))
+                //    {
+                //        _repoHistory.Insert(history);
+                //    }
+                //}
+                //else
+                //{
                     _repoHistory.Insert(history);
-                }
+                //}
             }
             catch (Exception ex)
             {
+                
                 MessageBox.Show("Error, unable to save history record. " + ex.Message);
             }
         }

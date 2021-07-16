@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/SaintFrancis/TST/</PublishUrl>
+    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/SaintFrancis/PRD/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -23,14 +23,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://www.nameit21.com/Programs/Neutron/SaintFrancis/TST/</InstallUrl>
+    <InstallUrl>http://www.nameit21.com/Programs/Neutron/SaintFrancis/PRD/</InstallUrl>
     <SupportUrl>http://www.put2light.com</SupportUrl>
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>467</ApplicationRevision>
+    <ApplicationRevision>468</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
