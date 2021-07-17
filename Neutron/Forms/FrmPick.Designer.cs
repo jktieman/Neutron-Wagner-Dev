@@ -902,6 +902,7 @@ namespace Neutron.Forms
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1131, 544);
             this.DataGridView1.TabIndex = 7;
+           
             // 
             // MBDeleteOrder
             // 
@@ -3246,6 +3247,7 @@ namespace Neutron.Forms
             this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1106, 631);
             this.DataGridViewOrderDetails.TabIndex = 6;
+            this.DataGridViewOrderDetails.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellContentClick);
             // 
             // MBOrderDetailsBack
             // 

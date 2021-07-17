@@ -5781,6 +5781,8 @@ namespace Neutron.Forms
             GetRecordCount(_bindingSourceOrderDetailsView);
             LabelFormTitle.Text = _resourceManager.GetString($"JobDetails");
             tabControl1.SelectedTab = OrderDetails;
+            MBKillLine.Enabled = ((OrderDetailsView)_bindingSourceOrderDetailsView.Current).LineStatusId !=
+                                 (int)LineStatus.Complete;
         }
 
         private void ShowOrderDetailsByOrderAndStation(Order order, int stationNumber)
@@ -8856,5 +8858,10 @@ namespace Neutron.Forms
         //}
         #endregion
 
+        private void DataGridViewOrderDetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            MBKillLine.Enabled = ((OrderDetailsView)_bindingSourceOrderDetailsView.Current).LineStatusId !=
+                                 (int)LineStatus.Complete;
+        }
     }
 }
