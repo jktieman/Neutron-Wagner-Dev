@@ -5107,29 +5107,6 @@ namespace Neutron.Forms
             foreach (var pickView in pickStop.PickViews)
             {
                 UpdatePickViewInventoryQuantity(pickView);
-
-                //sb.AppendLine($"PickView: {pickView.Ord1}  {pickView.Ord2}");
-                //foreach (var pickLocation in pickView.PickLocations)
-                //{
-                //    sb.AppendLine($"Pick Location: {pickLocation.Inventory.Location.Slot}");
-                //    //  pickLocation.Inventory.Quantity -= pickLocation.Quantity;
-
-                //    var inventory = _repoInventory.FindByKey(pickLocation.Inventory.Id);
-                //    if (inventory != null)
-                //    {
-                //        sb.AppendLine($"Inventory Qty: {inventory.Quantity}  Pick Location Qty: {pickLocation.Quantity}");
-                //        inventory.Quantity -= pickLocation.Quantity;
-
-                //        _repoInventory.Update(inventory);
-                //        sb.AppendLine("Update Inventory");
-                //        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inventory, pickLocation.Quantity, pickView);
-                //        sb.AppendLine("Write Pick Order to History");
-                //    }
-                //    else
-                //    {
-                //        sb.AppendLine($"Inventory is NULL.");
-                //    }
-                //}
             }
             _logger.Log($"{sb.ToString()}");
         }

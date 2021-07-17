@@ -405,7 +405,6 @@ namespace Neutron.Global
             Save(history);
         }
 
-        //Hot Pick Action With Cost Center
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, OrderDetail orderDetail)
         {
 
@@ -430,8 +429,8 @@ namespace Neutron.Global
                 Slot = inventory.Location.Slot,
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = string.Empty,
-                OrderInfo = string.Empty,
-                OrderDetailInfo = string.Empty
+                OrderInfo = orderDetail.Order.OrderInfo,
+                OrderDetailInfo = orderDetail.OrderDetailInfo
             };
             Save(history);
         }
