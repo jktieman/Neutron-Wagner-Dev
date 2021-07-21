@@ -168,7 +168,7 @@ namespace Neutron.Forms
         {
             KeyPreview = true;
             SetupLogger();
-            _logger.Log($"Form Pick Company Code: {_neutronLicense.CompanyCode}");
+            Task.Run(() => _logger.Log($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
             if (_station.StationType.Id == (int)StationType.Supervisor)
             {
                 MBMainLoadOrders.Visible = true;
@@ -189,7 +189,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
             _currentTextBoxPos = TextBoxPos1;
-            ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
+            //ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
             if (_neutronVariables.DisplaysEnabled && _neutronVariables.IptiDisplays)
             {
                 GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
@@ -386,7 +386,7 @@ namespace Neutron.Forms
                     Control c = Controls.Find("Pos" + pos + "Display", true).First();
                     if (c != null)
                     {
-                        var panel = ((Panel) c);
+                        var panel = ((Panel)c);
                         panel.BackColor = Color.Green;
                         panel.Visible = true;
                         panel.Refresh();
@@ -1141,7 +1141,7 @@ namespace Neutron.Forms
 
         public void IptiButtonPickAccept(ResponseInfo responseInfo)
         {
-            _logger.Log($"IptiButtonPickAccept Display Number:  {responseInfo.DisplayNumber}");
+            Task.Run(() => _logger.Log($"IptiButtonPickAccept Display Number:  {responseInfo.DisplayNumber}"));
             PickAccept();
         }
 
@@ -3114,7 +3114,9 @@ namespace Neutron.Forms
 
         private void MBGo_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             Go();
+            Cursor.Current = Cursors.Default;
         }
 
         private void Go()
@@ -3124,7 +3126,7 @@ namespace Neutron.Forms
             FinalCheckOfOrdersToPick();
 
             Task.Run(() => _logger.Log($"Go Batch START after FinalCheckOfOrdersToPick"));
-            Cursor.Current = Cursors.WaitCursor;
+
             TextBoxFindAvailableOrders.Text = string.Empty;
             // UpdateOrdersToPickingStatus(_ordersToPick);
             var numOrders = _ordersToPick.Where(o => o.OrderId != null).Count();
@@ -3158,14 +3160,25 @@ namespace Neutron.Forms
                 {
                     MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
                     ClearAllSelectOrdersToPick();
+                    ClearBatchPositions();
                     LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
                     LabelFormTitle.BackColor = Color.RoyalBlue;
                     AvailableOrdersScreen();
                 }
             }
+            else
+            {
+                Task.Run(() => _logger.Log($"No Orders Selected"));
+                MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+                ClearAllSelectOrdersToPick();
+                ClearBatchPositions();
+                LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+                LabelFormTitle.BackColor = Color.RoyalBlue;
+                AvailableOrdersScreen();
+            }
 
-            Cursor.Current = Cursors.Default;
-            Task.Run(() => _logger.Log($"Go Batch START"));
+
+            Task.Run(() => _logger.Log($"Go Batch START Complete"));
         }
 
         private void FinalCheckOfOrdersToPick()
@@ -3173,7 +3186,7 @@ namespace Neutron.Forms
             // loop over all TextBoxPosx
             // and check for TextBoxPosx.Text that doesn't match OrdersToPick.Order
             // Clear invalid OrdersToPick
-            _logger.Log($" Start FinalCheckOfOrdersToPick");
+            Task.Run(() => _logger.Log($" Start FinalCheckOfOrdersToPick"));
             foreach (var bp in _ordersToPick)
             {
                 string pos = bp.PositionNumber.ToString();
@@ -3184,7 +3197,7 @@ namespace Neutron.Forms
                     var order = textBox.Text.Trim();
                     if (string.IsNullOrEmpty(order))
                     {
-                        _logger.Log($"TextBox must be Null or Empty: {order}");
+                        Task.Run(() => _logger.Log($"TextBox must be Null or Empty: {order}"));
                         // clear the Batch Position
                         ClearItemFromBatchByPosition(bp.PositionNumber);
                     }
@@ -3202,7 +3215,7 @@ namespace Neutron.Forms
 
         private void AddItemToBatchByPosition(Order order, string pos)
         {
-            _logger.Log($"AddItemToBatchByPosition: {pos} Order: {order.Ord1}");
+            Task.Run(() => _logger.Log($"AddItemToBatchByPosition: {pos} Order: {order.Ord1}"));
             var position = int.Parse(pos);
             _ordersToPick[position].OrderId = order.Id;
             _ordersToPick[position].Ord1 = order.Ord1;
@@ -3323,7 +3336,8 @@ namespace Neutron.Forms
                                 item.OrderDetail.LineStatusId = (int)LineStatus.Complete;
                                 item.OrderDetail.PickedQuantity = 0;
                                 _repoOrderDetails.Update(item.OrderDetail);
-
+                                Task.Run(() => _logger.Log($"PickListLoad Pick Zero Option Ord:{item.Ord1}   Res:{item.Ord2}   Item:{item.Item}"));
+                                Task.Run(() => _logger.Log($"PickListLoad SaveHistory Ord:{item.Ord1}   Res:{item.Ord2}   Item:{item.Item}"));
                                 GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail, item.OrderDetail.StationNumber);
                                 CheckForOrderComplete(item.OrderDetail.Order);
                             }
@@ -3333,37 +3347,6 @@ namespace Neutron.Forms
             }
 
             CreateSkipZeroSummary(skipPickableViews, zeroPickableViews);
-
-            //if (pickableViews.Count > 0)
-            //{
-            //    _bindingSourcePickViews.DataSource = pickableViews;
-            //    DataGridPickView.DataSource = _bindingSourcePickViews;
-            //    Task.Run(() => _logger.Log($"bindingSourcePickViews [{DateTime.Now.ToLongTimeString()}] {Environment.NewLine}Count:{_bindingSourcePickViews.Count.ToString()}"));
-            //    GetRecordCount(_bindingSourcePickViews);
-
-            //    // DataGridPickView_FormatRows();
-
-            //    //DataGridPickView.ClearSelection();
-            //    //DataGridPickView.Update();
-            //    //DataGridPickView.ScrollBars = ScrollBars.Both;
-            //}
-            //else
-            //{
-            //    MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
-            //    ClearAllSelectOrdersToPick();
-            //    LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
-            //    LabelFormTitle.BackColor = Color.RoyalBlue;
-            //    ShowAvailableOrders();
-            //    tabControl1.SelectedTab = AvailableOrders;
-            //}
-            //foreach (var item in pickableViews)
-            //{
-            //    if (item.QuantityToBePicked > item.TotalQuantityInInventory)
-            //    {
-            //        itemShort = true;
-            //        break;
-            //    }
-            //}
             Task.Run(() => _logger.Log($"PickListLoad End: [{DateTime.Now.ToLongTimeString()}]"));
 
             return pickableViews;
@@ -3651,7 +3634,7 @@ namespace Neutron.Forms
         //select Available orders to Batch Positions
         private void DataGridViewAvailableOrders_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            _logger.Log($"Grid Click Start Row Index: {e.RowIndex}");
+            Task.Run(() => _logger.Log($"Grid Click Start Row Index: {e.RowIndex}"));
             if (e.RowIndex < 0) return;
             var chk = (DataGridViewCheckBoxCell)DataGridViewAvailableOrders.Rows[e.RowIndex].Cells[0];
 
@@ -3659,7 +3642,7 @@ namespace Neutron.Forms
             {
                 DataGridViewAvailableOrders.Rows[e.RowIndex].Cells[0].Value = chk.FalseValue;
                 var id = Convert.ToInt32(DataGridViewAvailableOrders.Rows[e.RowIndex].Cells["Id"].Value);
-                _logger.Log($"RemoveItemFromBatch ID: {id}");
+                Task.Run(() => _logger.Log($"RemoveItemFromBatch ID: {id}"));
                 RemoveItemFromBatch(id);
             }
             else
@@ -3669,9 +3652,24 @@ namespace Neutron.Forms
                 if (id <= 0) return;
                 var ord1 = DataGridViewAvailableOrders.Rows[e.RowIndex].Cells["Ord1"].Value.ToString();
                 var ord2 = DataGridViewAvailableOrders.Rows[e.RowIndex].Cells["Ord2"].Value.ToString();
-                _logger.Log($"AddItemToBatch ID: {id} Ord1: {ord1}  Ord2: {ord2}");
+                Task.Run(() => _logger.Log($"AddItemToBatch ID: {id} Ord1: {ord1}  Ord2: {ord2}"));
                 var idx = AddItemToBatch(id, ord1, ord2);
-                _logger.Log($"AddItemToBatch RETURN");
+                Task.Run(() => _logger.Log($"AddItemToBatch RETURN"));
+            }
+        }
+
+        private void NextButtonEnabled()
+        {
+            var enabled = _ordersToPick.Where(r => r.OrderId != null).FirstOrDefault();
+            if (enabled == null)
+            {
+                MBGo.Enabled = false;
+                MBGo2.Enabled = false;
+            }
+            else
+            {
+                MBGo.Enabled = true;
+                MBGo2.Enabled = true;
             }
         }
 
@@ -3686,6 +3684,7 @@ namespace Neutron.Forms
                 bp.OrderComplete = false;
                 UpdateTextBoxPosition(bp);
             }
+            NextButtonEnabled();
         }
 
         /// <summary>
@@ -3706,7 +3705,7 @@ namespace Neutron.Forms
         /// <returns>Pick Position</returns>
         private int AddItemToBatch(int orderId, string ord1, string ord2)
         {
-            _logger.Log($"START   AddItemToBatch ID: {orderId} Ord1: {ord1}  Ord2: {ord2}");
+            Task.Run(() => _logger.Log($"START   AddItemToBatch ID: {orderId} Ord1: {ord1}  Ord2: {ord2}"));
             // If ManualOverrideCurrentTextBoxPos is true.  That means the TextBox
             // was directly clicked into.
             // If true then run function to set the current batch position
@@ -3715,7 +3714,7 @@ namespace Neutron.Forms
             // meaning they could not find or set a current batch position
             var idx = ManualOverrideCurrentTextBoxPos ? SetBatchPositionToManualOverride() : SetBatchPositionToFirstEmpty();
 
-            _logger.Log($"TextBox Position Index: {idx}");
+            Task.Run(() => _logger.Log($"TextBox Position Index: {idx}"));
             // Now we have to check for a valid position number
             // and -1 is not one of them
             // Also, the idx must be a valid position in the Order to Pick List
@@ -3724,20 +3723,22 @@ namespace Neutron.Forms
             // This is the check to see if it falls in that range
             if (idx >= 0 && idx < _neutronVariables.PickBatchSize)
             {
-                _logger.Log($"Index in Range: {idx}");
+                Task.Run(() => _logger.Log($"Index in Range: {idx}"));
                 // Set the initial Orders to Pick item values
                 _ordersToPick[idx].OrderId = orderId;
                 _ordersToPick[idx].Ord1 = ord1;
                 _ordersToPick[idx].Ord2 = ord2;
                 _ordersToPick[idx].OrderComplete = false;
-                _logger.Log($" Set the Current TextBox Posx Text to the Order Number");
+                Task.Run(() => _logger.Log($" Set the Current TextBox Posx Text to the Order Number"));
                 _currentTextBoxPos.Text = ord1;
             }
             // Now we can turn off the Manual override
             ManualOverrideCurrentTextBoxPos = false;
-            _logger.Log($"  Clear the TextBox Posx BackColor");
+            Task.Run(() => _logger.Log($"  Clear the TextBox Posx BackColor"));
             ClearTextBoxPosBackColor();
-            _logger.Log($" Back with the idx:{idx} it could be -1");
+            Task.Run(() => _logger.Log($" Back with the idx:{idx} it could be -1"));
+
+            NextButtonEnabled();
             return idx;
         }
 
@@ -3750,17 +3751,7 @@ namespace Neutron.Forms
 
         private void ClearAllSelectOrdersToPick()
         {
-            foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
-            {
-                var checkedBox = Convert.ToBoolean(row.Cells[0].Value);
-
-                if (checkedBox)
-                {
-                    var orderId = Convert.ToInt32(row.Cells["Id"].Value);
-                    row.Cells[0].Value = false;
-                    RemoveItemFromBatch(orderId);
-                }
-            }
+            DataGridViewAvailableOrders.ClearSelection();
         }
 
         private void ClearBatchPositions()
@@ -4093,15 +4084,13 @@ namespace Neutron.Forms
 
         private void PositionDevice(int loc1, int loc2, int loc3, int loc4, bool moveDevice)
         {
-            Task.Run(() => _logger.Log($"4051 PositionDevice"));
+            Task.Run(() => _logger.Log($"PositionDevice"));
             if (_neutronVariables.ShuttleEnabled)
             {
-                Task.Run(() => _logger.Log($"4056 PositionDevice"));
+                Task.Run(() => _logger.Log($"PositionDevice - Shuttle Enabled"));
                 if (GlobalVar.Shuttle != null)
                 {
-                    _logger.Log($"4061 Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}");
-
-                    Task.Run(() => _logger.Log($"4063 PositionDevice"));
+                    Task.Run(() => _logger.Log($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}"));
                     GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4);
                 }
             }
@@ -4109,39 +4098,33 @@ namespace Neutron.Forms
 
         private void GetFirstStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"GetFirstStop: [{DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetFirstStop"));
             var numberOfStops = _bindingSourcePickStops.Count;
             if (numberOfStops > 0)
             {
-                Console.WriteLine("Clear Device Indicator - Get First Stop");
-
                 _bindingSourcePickStops.MoveFirst();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
-
                 UpdatePickScreen();
                 UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
-
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                _logger.Log($"4110 GetFirstStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
-                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                Task.Run(() => _logger.Log($"GetFirstStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
+
+                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
-            Task.Run(() => _logger.Log($"GetFirstStop End: [{DateTime.Now.ToLongTimeString()}]"));
         }
 
         private void GetNextStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"GetNextStop: [{DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetNextStop"));
             var numberOfStops = _bindingSourcePickStops.Count;
             if (_currentPickStop.Sequence < numberOfStops)
             {
-                Console.WriteLine("Clear Device Indicator - Get Next Stop");
-
                 _bindingSourcePickStops.MoveNext();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
@@ -4149,21 +4132,19 @@ namespace Neutron.Forms
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
-
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                _logger.Log($"4136 GetNextStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
-                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                Task.Run(() => _logger.Log($"GetNextStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
+                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
-            Task.Run(() => _logger.Log($"GetNextStop Return: [{DateTime.Now.ToLongTimeString()}]"));
         }
 
         private void GetPreviousStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"Get Prev Stop START"));
+            Task.Run(() => _logger.Log($"GetPreviousStop"));
 
             if (_currentPickStop.Sequence > 0)
             {
@@ -4174,20 +4155,19 @@ namespace Neutron.Forms
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
-
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                _logger.Log($"4161 GetPreviousStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
-                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                Task.Run(() => _logger.Log($"GetPreviousStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
+
+                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
-            Task.Run(() => _logger.Log($"Get Prev Stop END "));
         }
 
         private void GetLastStop(bool moveDevice = true)
         {
-            Task.Run(() => _logger.Log($"GetLastStop: [{DateTime.Now.ToLongTimeString()}]"));
+            Task.Run(() => _logger.Log($"GetLastStop"));
             var numberOfStops = _bindingSourcePickStops.Count;
             if (numberOfStops > 0)
             {
@@ -4202,13 +4182,13 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                UpdateTowerDisplay();
-                _logger.Log($"4187 GetLastStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
-                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                // UpdateTowerDisplay();
+                Task.Run(() => _logger.Log($"GetLastStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
+
+                // PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
-            Task.Run(() => _logger.Log($"GetLastStop Return: [{DateTime.Now.ToLongTimeString()}]"));
         }
-        
+
         private void ButtonStopMoveFirst_Click(object sender, EventArgs e)
         {
             GetFirstStop(moveDevice: true);
@@ -4246,10 +4226,15 @@ namespace Neutron.Forms
             var pickedSoFar = GetPickedSoFar(_currentPickStop.PickViews);
             TextBoxPickedSoFar.Text = pickedSoFar.ToString();
 
-            LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
+            //LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
+            var quantityToBePicked = _currentPickStop.QuantityToBePicked;
+            LabelPickQty.Text = quantityToBePicked.ToString();
             Task.Run(() => _logger.Log($"UpdatePickScreen End: [{DateTime.Now.ToLongTimeString()}]"));
 
-
+            MBPickAccept.Enabled = quantityToBePicked > 0;
+            MBPickChangeQuantity.Enabled = quantityToBePicked > 0;
+            MBSkipPick.Enabled = quantityToBePicked > 0;
+            MBShortPick.Enabled = quantityToBePicked > 0;
         }
 
         private void UpdatePickScreenAfterChangeQuantity()
@@ -4405,7 +4390,7 @@ namespace Neutron.Forms
                 if (_neutronVariables.ShiEnabled)
                 {
                     if (GlobalVar.Displays == null) return;
-                    _logger.Log($"ClearAllShi Function");
+                    Task.Run(() => _logger.Log($"ClearAllShi Function"));
                     GlobalVar.Displays.ClearAllShi();
                 }
             }
@@ -4413,24 +4398,19 @@ namespace Neutron.Forms
 
         private void ClearAllBli()
         {
-            _logger.Log($"Pick Form - Clear All BLI - START");
+            Task.Run(() => _logger.Log($"Pick Form - Clear All BLI - START"));
             if (_neutronVariables.DisplaysEnabled)
             {
-                _logger.Log($"Pick Form - Clear All BLI - Displays Enabled");
                 if (_neutronVariables.BliEnabled)
                 {
-                    _logger.Log($"Pick Form - Clear All BLI - BLI Enabled");
                     if (GlobalVar.Displays == null) return;
-                    _logger.Log($"Pick Form - Clear All BLI - GlobalVar.Displays NOT NULL");
-                    _logger.Log($"Pick Form - Clear All BLI - ClearAllBli Function Call");
+                    Task.Run(() => _logger.Log($"Pick Form - Clear All BLI - ClearAllBli Function Call"));
                     GlobalVar.Displays.ClearAllBli();
-                    _logger.Log($"Pick Form - Clear All BLI - ClearAllBli Function Return");
-                    _logger.Log($"Pick Form - Clear All BLI - Clear Order Control Function Call");
-                    GlobalVar.Displays.ClearOc(1);
-                    _logger.Log($"Pick Form - Clear All BLI - Clear Order Control Function Return");
+                   GlobalVar.Displays.ClearOc(1);
+                    Task.Run(() => _logger.Log($"Pick Form - Clear All BLI - Clear Order Control Function Return"));
                 }
             }
-            _logger.Log($"Pick Form - Clear All BLI - END");
+            Task.Run(() => _logger.Log($"Pick Form - Clear All BLI - END"));
         }
 
         //private void ClearAllBli() //373
@@ -4730,7 +4710,7 @@ namespace Neutron.Forms
         private void PickAccept()
         {
 
-            _logger.Log($"Pick Accept Run");
+            Task.Run(() => _logger.Log($"Pick Accept Button Pressed"));
             if (InvokeRequired)
             {
                 var method = new MethodInvoker(PickAccept);
@@ -4782,11 +4762,10 @@ namespace Neutron.Forms
 
                 if (stopComplete)
                 {
-                    
+
 
                     //Getting next location on the current device/ the one that was just picked from.
-                    Task.Run(() =>
-                        _logger.Log($"PickAccept 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
+                    Task.Run(() => _logger.Log($"PickAccept 2 Stop Complete Start "));
 
                     UpdateInventoryQuantity(_currentPickStop);
 
@@ -4807,8 +4786,7 @@ namespace Neutron.Forms
                         }
                     }
 
-                    Task.Run(() =>
-                        _logger.Log($"PickAccept Stop Complete End : [{DateTime.Now.ToLongTimeString()}]"));
+                    Task.Run(() => _logger.Log($"PickAccept Stop Complete End "));
 
                     var numberOfStops = _bindingSourcePickStops.Count;
                     var position = _bindingSourcePickStops.Position;
@@ -4837,7 +4815,7 @@ namespace Neutron.Forms
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         UpdateTowerDisplay();
-                        
+
                     }
                     else
                     {
@@ -4848,7 +4826,7 @@ namespace Neutron.Forms
                 else //PickStop is NOT complete, why?
                 {
                     _multiLocationStop = true;
-                    _logger.Log($"Pick Stop NOT Complete.  Next Location");
+                    Task.Run(() => _logger.Log($"Pick Stop NOT Complete.  Next Location"));
                     var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                     var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                     var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
@@ -4911,6 +4889,7 @@ namespace Neutron.Forms
                             }
                         case "Backorder":
                             {
+                                Task.Run(() => _logger.Log($"PickStopAdjustmentForm  Backorder Option"));
                                 UpdatePickViewInventoryQuantity(pickView);
                                 success = true;
                                 break;
@@ -4919,6 +4898,7 @@ namespace Neutron.Forms
                             {
                                 success = true;
                                 _currentPickStop.UpdatePickView(pickView, GlobalVar.User);
+                                Task.Run(() => _logger.Log($"PickStopAdjustmentForm  Accept Option"));
                                 UpdatePickViewInventoryQuantity(pickView);
                                 break;
                             }
@@ -4931,7 +4911,7 @@ namespace Neutron.Forms
 
         private void SpecialPickAccept()
         {
-            _logger.Log($"Special Pick Accept Run");
+            Task.Run(() => _logger.Log($"Special Pick Accept Run"));
             if (InvokeRequired)
             {
                 var method = new MethodInvoker(SpecialPickAccept);
@@ -5102,13 +5082,13 @@ namespace Neutron.Forms
             var sb = new StringBuilder();
             //currentPickStop.CurrentInventoryLocation.Quantity -= currentPickStop.PickedQty;
             // repoInventory.Update(currentPickStop.CurrentInventoryLocation);
-            sb.AppendLine($"Update Inventory Quantity for PickStop Item: {pickStop.Item} - Start");
+            sb.AppendLine($"Update Inventory Quantity for PICKSTOP Item: {pickStop.Item} - Start");
 
             foreach (var pickView in pickStop.PickViews)
             {
                 UpdatePickViewInventoryQuantity(pickView);
             }
-            _logger.Log($"{sb.ToString()}");
+            Task.Run(() => _logger.Log($"{sb.ToString()}"));
         }
 
         private void UpdatePickViewInventoryQuantity(PickView pickView)
@@ -5116,7 +5096,7 @@ namespace Neutron.Forms
             var sb = new StringBuilder();
             //currentPickStop.CurrentInventoryLocation.Quantity -= currentPickStop.PickedQty;
             // repoInventory.Update(currentPickStop.CurrentInventoryLocation);
-            sb.AppendLine($"Update Inventory Quantity for PickView Item: {pickView.Item} - Start");
+            sb.AppendLine($"Update Inventory Quantity for PICKVIEW Item: {pickView.Item} - Start");
 
             sb.AppendLine($"PickView: {pickView.Ord1}  {pickView.Ord2}");
 
@@ -5153,7 +5133,7 @@ namespace Neutron.Forms
                 sb.AppendLine("Write Pick Order of zero quantity to History");
             }
 
-            _logger.Log($"{sb.ToString()}");
+            Task.Run(() => _logger.Log($"{sb.ToString()}"));
         }
 
         private void CloseBatch()
@@ -5544,7 +5524,7 @@ namespace Neutron.Forms
                         _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[i];
                         var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                         var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-                        _logger.Log($"Get Next Picking Location: {loc1}-{loc2}");
+                        Task.Run(() => _logger.Log($"Get Next Picking Location: {loc1}-{loc2}"));
                         result = true;
                         break;
                     }
@@ -5559,7 +5539,7 @@ namespace Neutron.Forms
                 _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[idx];
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-                _logger.Log($"Get Next Picking Location: {loc1}-{loc2}");
+                Task.Run(() => _logger.Log($"Get Next Picking Location: {loc1}-{loc2}"));
                 result = true;
             }
             return result;
@@ -5744,20 +5724,6 @@ namespace Neutron.Forms
                 MessageBox.Show($"{_resourceManager.GetString($"ErrorSettingOrderDetailStatusCode")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
         }
-
-        //private void SetOrderDetailPickedQuantity(OrderDetail detail, int qty)
-        //{
-        //    try
-        //    {
-        //        detail.PickedQuantity = qty;
-        //        repoOrderDetails.Update(detail);
-        //        GlobalVar.HistoryManager .SaveHistory((int)ActionCode.PickOrder, detail);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error setting Order Detail Status Code. " + ex.Message);
-        //    }
-        //}
 
         private void MBJobDetails_Click(object sender, EventArgs e)
         {
@@ -6609,7 +6575,7 @@ namespace Neutron.Forms
             var textBox = (TextBox)sender;
             _currentTextBoxPos = textBox;
             //_gridClickedAvailableOrders = false;
-            //textBox.SelectAll();
+            textBox.SelectAll();
             textBox.Focus();
         }
 
@@ -6622,9 +6588,20 @@ namespace Neutron.Forms
         /// <param name="e">KeyEventArgs</param>
         private void TextBoxPosKeyDown(object sender, KeyEventArgs e)
         {
+            var textBox = (TextBox)sender;
+            var pos = Convert.ToInt32(textBox.Tag) + 1;
+            var batchPosition = _ordersToPick.Where(r => r.PositionNumber == pos).FirstOrDefault();
+
             if (e.KeyCode == Keys.Enter)
             {
                 SendKeys.Send("{Tab}");
+            }
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (batchPosition != null)
+                {
+                    RemoveItemFromBatch(batchPosition.OrderId.GetValueOrDefault());
+                }
             }
         }
 
@@ -7263,8 +7240,9 @@ namespace Neutron.Forms
             // Clear the backcolor of the TextBox
             ClearTextBoxPosBackColor();
 
-            _logger.Log($"Set _currentTextBoxPos.BackColor: the BackColor of the Current TextBox to Yellow");
+            Task.Run(() => _logger.Log($"Set _currentTextBoxPos.BackColor: the BackColor of the Current TextBox to Yellow"));
             _currentTextBoxPos.BackColor = Color.Yellow;
+            _currentTextBoxPos.SelectAll();
             // Let the world know that the TextBox was directly clicked in focus
             ManualOverrideCurrentTextBoxPos = true;
         }
@@ -7274,16 +7252,16 @@ namespace Neutron.Forms
         /// </summary>
         private void ClearTextBoxPosBackColor()
         {
-            _logger.Log($"START ClearTextBoxPosBackColor ");
+            Task.Run(() => _logger.Log($"START ClearTextBoxPosBackColor "));
             foreach (var bp in _ordersToPick)
             {
 
                 string pos = bp.PositionNumber.ToString();
-                _logger.Log($"Each Position: {pos}");
+                Task.Run(() => _logger.Log($"Each Position: {pos}"));
                 Control c = Controls.Find($"TextBoxPos{pos}", true).First();
                 if (c != null) c.BackColor = Color.White;
             }
-            _logger.Log($"END ClearTextBoxPosBackColor ");
+            Task.Run(() => _logger.Log($"END ClearTextBoxPosBackColor "));
         }
 
         private void MBFillStarters_Click(object sender, EventArgs e)
@@ -7292,10 +7270,10 @@ namespace Neutron.Forms
             {
                 foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
                 {
-                    var checkBoxCell = (DataGridViewCheckBoxCell)row.Cells[0];
                     var starterValue = row.Cells["Starter"].Value.ToString();
-                    if (starterValue == @"S" && Convert.ToBoolean(checkBoxCell.Value) == false)
+                    if (starterValue == @"S" && row.Selected == false)
                     {
+                        row.Selected = true;
                         var id = Convert.ToInt32(row.Cells["Id"].Value);
                         var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
                         var ord2 = Convert.ToString(row.Cells["Ord2"].Value);
@@ -7304,10 +7282,6 @@ namespace Neutron.Forms
                         {
                             //no more locations
                             break;
-                        }
-                        else
-                        {
-                            row.Cells[0].Value = checkBoxCell.TrueValue;
                         }
                     }
                 }
@@ -7319,9 +7293,9 @@ namespace Neutron.Forms
             if (DataGridViewAvailableOrders.Rows.Count <= 0) return;
             foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
             {
-                var checkBoxCell = (DataGridViewCheckBoxCell)row.Cells[0];
 
-                if (Convert.ToBoolean(checkBoxCell.Value) != false) continue;
+
+                if (row.Selected) continue;
                 var id = Convert.ToInt32(row.Cells["Id"].Value);
                 var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
                 var ord2 = Convert.ToString(row.Cells["Ord2"].Value);
@@ -7330,10 +7304,6 @@ namespace Neutron.Forms
                 {
                     //no more locations
                     break;
-                }
-                else
-                {
-                    row.Cells[0].Value = checkBoxCell.TrueValue;
                 }
             }
         }
@@ -7562,7 +7532,7 @@ namespace Neutron.Forms
 
         public void ProcessDataReceived(object sender, IptiController.MySerialDataReceivedEventArgs args)
         {
-            _logger.Log($"ProcessDataReceived:  {args.FormText}");
+            Task.Run(() => _logger.Log($"ProcessDataReceived:  {args.FormText}"));
             var t = args.FormText;
             var response = new IptiButtonResponse();
             if (t.Length > 14)
@@ -7576,8 +7546,8 @@ namespace Neutron.Forms
                     Quantity = cmd.Substring(6, 4),
                     Text = cmd.Substring(10, 4)
                 };
-                _logger.Log($"Pick Accept in Data Received: {t}");
-                _logger.Log("Hitting the PickAccept button from ProcessDataReceived.");
+                Task.Run(() => _logger.Log($"Pick Accept in Data Received: {t}"));
+                Task.Run(() => _logger.Log("Hitting the PickAccept button from ProcessDataReceived."));
                 PickAccept();
             }
 
@@ -8232,69 +8202,69 @@ namespace Neutron.Forms
                         {
                             case Keys.Enter:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: ENTER Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: ENTER Key"));
                                     e.Handled = true;
                                     //PickAccept();
                                     break;
                                 }
                             case Keys.Space:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: SPACE Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: SPACE Key"));
                                     PickAccept();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.L:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: L  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: L  Key"));
                                     LocationCount();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.A:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: A  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: A  Key"));
                                     HotAction();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.S:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: S  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: S  Key"));
                                     ShowOrderOrQuantityToggle();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.Q:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: Q  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: Q  Key"));
                                     ChangeQuantity();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.B:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: B  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: B  Key"));
                                     ShortPick();
                                     //e.Handled = true;
                                     break;
                                 }
                             case Keys.H:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: H  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: H  Key"));
                                     SkipPick();
                                     //e.Handled = true;
                                     break;
                                 }
                             case Keys.F2:
                                 {
-                                    _logger.Log($"FrmPick_KeyDown: F2  Key");
+                                    Task.Run(() => _logger.Log($"FrmPick_KeyDown: F2  Key"));
                                     PrintLabels(_currentPickStop, 2);
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.OemQuestion:
-                                _logger.Log($"FrmPick_KeyDown: OEM QUESTION Key");
+                                Task.Run(() => _logger.Log($"FrmPick_KeyDown: OEM QUESTION Key"));
                                 ShowShortCutForm();
                                 e.Handled = true;
                                 break;
@@ -8405,23 +8375,15 @@ namespace Neutron.Forms
         private void MBFillOptimized_Click(object sender, EventArgs e)
         {
             if (DataGridViewAvailableOrders.Rows.Count <= 0) return;
-            foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
+            var orders = GetSelectedOrders(DataGridViewAvailableOrders);
+            if (!orders.Any()) return;
+            foreach (var order in orders)
             {
-                var checkBoxCell = (DataGridViewCheckBoxCell)row.Cells[0];
-
-                if (Convert.ToBoolean(checkBoxCell.Value) != false) continue;
-                var id = Convert.ToInt32(row.Cells["Id"].Value);
-                var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
-                var ord2 = Convert.ToString(row.Cells["Ord2"].Value);
-                var idx = AddItemToBatch(id, ord1, ord2);
+                var idx = AddItemToBatch(order.Id, order.Ord1, order.Ord2);
                 if (idx == -1)
                 {
                     //no more locations
                     break;
-                }
-                else
-                {
-                    row.Cells[0].Value = checkBoxCell.TrueValue;
                 }
             }
         }
@@ -8538,10 +8500,12 @@ namespace Neutron.Forms
 
         private bool CheckForOrderComplete(Order order)
         {
+            Task.Run(() => _logger.Log($"CheckForOrderComplete   Ord:{order.Ord1}   Res:{order.Ord2} "));
+
             var linesNotComplete = _repoOrderDetails.FindBy(r => r.OrderId == order.Id).Where(r => r.LineStatusId != (int)LineStatus.Complete)
                 .ToList();
             if (linesNotComplete.Any()) return false;
-
+            Task.Run(() => _logger.Log($"CheckForOrderComplete Order is Complete.  Ord:{order.Ord1}   Res:{order.Ord2} "));
             order.OrderStatusId = (int)OrderStatus.Complete;
             GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _station.StationId);
             _repoOrders.Update(order);
@@ -8575,7 +8539,7 @@ namespace Neutron.Forms
 
         private void ClearItemFromBatchByPosition(int position)
         {
-            _logger.Log($" Start ClearItemFromBatchByPosition: {position}");
+            Task.Run(() => _logger.Log($" Start ClearItemFromBatchByPosition: {position}"));
             var bp = _ordersToPick.Where(o => o.PositionNumber == position).FirstOrDefault();
             if (bp != null)
             {
@@ -8584,7 +8548,7 @@ namespace Neutron.Forms
                 bp.Ord2 = string.Empty;
                 bp.OrderComplete = false;
                 UpdateTextBoxPosition(bp);
-                _logger.Log($" Start ClearItemFromBatchByPosition: {position} After UpdateTextBoxPosition");
+                Task.Run(() => _logger.Log($" Start ClearItemFromBatchByPosition: {position} After UpdateTextBoxPosition"));
             }
         }
 
@@ -8599,8 +8563,8 @@ namespace Neutron.Forms
 
             if (string.IsNullOrEmpty(orderNumber)) return;
             if (ValidateOrderAndPosition(position, orderNumber)) return;
-            textBox.SelectAll();
-            textBox.Focus();
+            // textBox.SelectAll();
+            // textBox.Focus();
         }
 
         private bool ValidateOrderAndPosition(int position, string orderNumber)

@@ -60,6 +60,12 @@ namespace NeutronLoader
 
             _uploadBusy = true;
 
+            if (_neutronLicense.CompanyCode == "SFH")
+            {
+                //Remove duplicate History records before uploading
+                RemoveDuplicateRecordsFromHistory();
+            }
+
             if (string.IsNullOrWhiteSpace(_neutronVariables.ActionCodes))
             {
                 MessageBox.Show(@"No Action Codes are defined.", @"Action Code Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -99,6 +105,27 @@ namespace NeutronLoader
             }
 
             _uploadBusy = false;
+        }
+
+        private void RemoveDuplicateRecordsFromHistory()
+        {
+            try
+            {
+                using (var db = new NeutronDb())
+                {
+                    var recs = db.Database.ExecuteSqlCommand("usp_RemoveDuplicateRecordsFromHistory");
+                    //if (! string.IsNullOrEmpty(recs))
+                    //{
+                    //     _logger.Log($"Remove Duplicate History Files Count: {recs} ");
+                    //}
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+            }
         }
     }
 }

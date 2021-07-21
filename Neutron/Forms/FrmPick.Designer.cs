@@ -902,7 +902,6 @@ namespace Neutron.Forms
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1131, 544);
             this.DataGridView1.TabIndex = 7;
-           
             // 
             // MBDeleteOrder
             // 
@@ -1892,7 +1891,8 @@ namespace Neutron.Forms
             this.ButtonStopMoveNext.Name = "ButtonStopMoveNext";
             this.ButtonStopMoveNext.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveNext.TabIndex = 123;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveNext, "Next Stop");
+            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveNext, "Next Stop\r\nUse the Position Device Button if you need to move to the current loca" +
+        "tion\r\n");
             this.ButtonStopMoveNext.UseVisualStyleBackColor = true;
             this.ButtonStopMoveNext.Click += new System.EventHandler(this.ButtonStopMoveNext_Click);
             // 
@@ -1905,7 +1905,8 @@ namespace Neutron.Forms
             this.ButtonStopMoveLast.Name = "ButtonStopMoveLast";
             this.ButtonStopMoveLast.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveLast.TabIndex = 122;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveLast, "Last Stop");
+            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveLast, "Last Stop\r\nUse the Position Device Button if you need to move to the current loca" +
+        "tion\r\n");
             this.ButtonStopMoveLast.UseVisualStyleBackColor = true;
             this.ButtonStopMoveLast.Click += new System.EventHandler(this.ButtonStopMoveLast_Click);
             // 
@@ -1918,7 +1919,8 @@ namespace Neutron.Forms
             this.ButtonStopMoveFirst.Name = "ButtonStopMoveFirst";
             this.ButtonStopMoveFirst.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMoveFirst.TabIndex = 121;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveFirst, "First Stop");
+            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMoveFirst, "First Stop\r\nUse the Position Device Button if you need to move to the current loc" +
+        "ation");
             this.ButtonStopMoveFirst.UseVisualStyleBackColor = true;
             this.ButtonStopMoveFirst.Click += new System.EventHandler(this.ButtonStopMoveFirst_Click);
             // 
@@ -1931,7 +1933,8 @@ namespace Neutron.Forms
             this.ButtonStopMovePrevious.Name = "ButtonStopMovePrevious";
             this.ButtonStopMovePrevious.Size = new System.Drawing.Size(16, 16);
             this.ButtonStopMovePrevious.TabIndex = 120;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMovePrevious, "Prev Stop");
+            this.ToolTipPickScreen.SetToolTip(this.ButtonStopMovePrevious, "Prev Stop\r\nUse the Position Device Button if you need to move to the current loca" +
+        "tion");
             this.ButtonStopMovePrevious.UseVisualStyleBackColor = true;
             this.ButtonStopMovePrevious.Click += new System.EventHandler(this.ButtonStopMovePrevious_Click);
             // 
@@ -2832,7 +2835,7 @@ namespace Neutron.Forms
             this.ButtonMove.Name = "ButtonMove";
             this.ButtonMove.Size = new System.Drawing.Size(78, 51);
             this.ButtonMove.TabIndex = 0;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonMove, "Get Tray");
+            this.ToolTipPickScreen.SetToolTip(this.ButtonMove, "Position Device");
             this.ButtonMove.UseVisualStyleBackColor = true;
             this.ButtonMove.Click += new System.EventHandler(this.ButtonMove_Click);
             // 
