@@ -1,14 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace NeutronCore.Extensions
 {
     public static class EnumExtensions
     {
+        private static CultureInfo _cultureInfo;
+        private static ResourceManager _enumResourceManager;
+
+        static EnumExtensions()
+        {
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
+        }
+
         public static string GetEnumDescription<TEnum>(this TEnum value)
-                 where TEnum : struct
+            where TEnum : struct
         {
             var type = value.GetType();
             if (!type.IsEnum)
@@ -42,9 +55,41 @@ namespace NeutronCore.Extensions
         {
             foreach (object item in Enum.GetValues(typeof(T)))
             {
-                yield return (T)item;
+                yield return (T) item;
             }
         }
 
+        //public static Dictionary<int, string> ToDictionary(this Enum value)
+        //{
+        //    return Enum.GetValues(typeof(value))
+        //        .Cast<value>()
+        //        .ToDictionary( t => (int)t, t => Enum.GetName(typeof(value), t));
+
+        //}
+
+        public static Dictionary<int, string> EnumToDictionary<T>() where T : struct
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException("T is not an Enum type");
+
+            return Enum.GetValues(typeof(T))
+                .Cast<object>()
+                .ToDictionary(k => (int) k, v => _enumResourceManager.GetString(v.ToString()));
+        }
+
+        private static void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _enumResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "EnumDescriptions",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading Enum language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
     }
 }

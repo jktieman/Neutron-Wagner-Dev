@@ -4235,6 +4235,29 @@ namespace Neutron.Forms
             MBPickChangeQuantity.Enabled = quantityToBePicked > 0;
             MBSkipPick.Enabled = quantityToBePicked > 0;
             MBShortPick.Enabled = quantityToBePicked > 0;
+
+            MultipleLocationsManager(_currentPickStop);
+            
+        }
+
+        //TODO
+        private void MultipleLocationsManager(PickStop currentPickStop)
+        {
+           // GroupBoxMultipleLocations.Visible = false;
+            var pickLocations = new List<PickLocation>();
+            if (currentPickStop == null) return;
+            var pickViews = _currentPickStop.PickViews.Where(r => r.PickLocations.Count > 0).ToList();
+            if (!pickViews.Any()) return;
+            foreach (var pickView in pickViews)
+            {
+                foreach (var pickLocation in pickView.PickLocations)
+                {
+                    pickLocations.Add(pickLocation);
+                }
+            }
+
+            var distinctLocations = pickLocations.Distinct().ToList();
+            //GroupBoxMultipleLocations.Visible = distinctLocations.Count != 1;
         }
 
         private void UpdatePickScreenAfterChangeQuantity()

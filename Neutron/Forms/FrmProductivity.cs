@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
@@ -45,6 +46,9 @@ namespace Neutron.Forms
         private DateTime _currentFromDateTime;
         private DateTime _currentToDateTime;
         private DocumentToPrint _documentToPrint;
+        private List<ActionCode> _actionCodes;
+        private string _currentIDs;
+
 
         private bool _checkAllActions = false;
         private bool _clearAllActions = false;
@@ -167,29 +171,42 @@ namespace Neutron.Forms
                 CheckedListBoxUsers.SetItemChecked(i, true);
             }
         }
+
         private void SetupCheckedListBoxActionCodes()
         {
-            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
-            var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
             var codes = new Dictionary<int, string>();
-            foreach (var code in actionCodes)
-            {
-                if (!string.IsNullOrEmpty(currentIds))
-                {
-                    var nums = currentIds.Split(',').Select(int.Parse).ToArray();
-                    if (nums.Length > 0)
-                    {
-                        if (nums.Contains((int)code))
-                        {
-                            codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
-                        }
-                    }
-                }
-            }
-            CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
+
+            _actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
+            var actionCodeDictionary = NeutronCore.Extensions.EnumExtensions.EnumToDictionary<ActionCode>();
+            _currentIDs = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+            CheckedListBoxActionCodes.DataSource = new BindingSource(actionCodeDictionary, null);
             CheckedListBoxActionCodes.DisplayMember = "Value";
             CheckedListBoxActionCodes.ValueMember = "Key";
+
+            if (!string.IsNullOrEmpty(_currentIDs))
+            {
+                var nums = _currentIDs.Split(',').Select(int.Parse).ToList();
+
+                foreach (var num in nums)
+                {
+                    foreach (var item in actionCodeDictionary)
+                    {
+                        if (!item.Key.Equals(num)) continue;
+                        if (!codes.ContainsKey(item.Key)) codes.Add(item.Key, item.Value);
+                        break;
+                    }
+                }
+
+
+                CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
+                for (var i = 0; i < CheckedListBoxActionCodes.Items.Count; i++)
+                {
+                    CheckedListBoxActionCodes.SetItemCheckState(i, CheckState.Checked);
+                }
+            }
         }
+
+
         //private void SetupCheckedListBoxActionCodes()
         //{
         //    var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
@@ -858,7 +875,7 @@ namespace Neutron.Forms
         }
         private void ButtonConfigureActions_Click(object sender, EventArgs e)
         {
-            using (var frm = new FrmDefineActionGroup(_jsonData))
+            using (var frm = new FrmDefineActionGroup(_jsonData, _actionCodes, _currentIDs))
             {
                 frm.ShowDialog();
                 Show();
@@ -867,6 +884,8 @@ namespace Neutron.Forms
         }
         private void CheckedListBoxActionCodes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            if (!_formInitialized) return;
+
             var checkedItems = new List<string>();
             foreach (KeyValuePair<int, string> item in CheckedListBoxActionCodes.CheckedItems)
                 checkedItems.Add(item.Key.ToString());
@@ -877,8 +896,8 @@ namespace Neutron.Forms
             if (_checkAllActions || _clearAllActions) return;
             var userIds = GetUserIds();
             GetData(userIds, checkedItems);
-
         }
+
         private void ButtonPrintSummary_Click(object sender, EventArgs e)
         {
             var totalLines = TextBoxTotalLinesSummary.Text.ParseInt();
@@ -956,7 +975,7 @@ namespace Neutron.Forms
             {
                 _currentGroup = null;
                 UpdateCheckedListBoxUsers();
-                GetData(new List<string>(), GetCodes() );
+                GetData(new List<string>(), GetCodes());
                 _groupItemCheckEnabled = true;
                 return;
             }

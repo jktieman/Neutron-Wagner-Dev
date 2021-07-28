@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
@@ -18,57 +19,134 @@ namespace Neutron.Forms
         private ResourceManager _resourceManager;
         private ResourceManager _enumResourceManager;
         private readonly IJsonData _jsonData;
+        private readonly List<ActionCode> _actionCodes;
+        private readonly string _currentIds;
         public List<ActionIdString> ActionIds;
+        private bool _checkAllActions;
 
-        public FrmDefineActionGroup(IJsonData jsonData)
+        public FrmDefineActionGroup(IJsonData jsonData, List<ActionCode> actionCodes, string currentIds)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
+            _actionCodes = actionCodes;
+            _currentIds = currentIds;
 
             InitForm();
         }
 
         private void InitForm()
         {
-            SetupCheckListBox();
-            //var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
-             //   .Select(r => new EnumModel { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
+            SetupCheckedListBox();
+            ////var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
+            ////   .Select(r => new EnumModel { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
 
-            //CheckedListBox.DataSource = new BindingSource(actionCodes, null);
-            //CheckedListBox.DisplayMember = "Name";
-            //CheckedListBox.ValueMember = "Id";
+            ////CheckedListBox.DataSource = new BindingSource(_actionCodes, null);
+            ////CheckedListBox.DisplayMember = "Name";
+            ////CheckedListBox.ValueMember = "Id";
 
-            //var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
-            //if (string.IsNullOrEmpty(currentIds)) return;
-            //var nums = currentIds.Split(',').Select(int.Parse).ToArray();
-            //if (nums.Length <= 0) return;
-            //for (var i = 0; i < CheckedListBox.Items.Count; i++)
+            ////var currentIds = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+            //if (string.IsNullOrEmpty(_currentIds)) return;
+            //var nums = _currentIds.Split(',').Select(int.Parse).ToList();
+            //if (!nums.Any()) return;
+
+            //for (var i = 0; i < nums.Count; i++)
             //{
+            //    var idx = CheckedListBox.Items.IndexOf(   nums[i]);
+            //    CheckedListBox.SetItemCheckState(idx, true ? CheckState.Checked : CheckState.Unchecked);
+            //}
+
+
+
+            //for (var i = 1; i <= CheckedListBox.Items.Count; i++)
+            //{
+            //    //  var drv = CheckedListBox[i] as Dictionary<int, string>;
             //    foreach (var num in nums)
             //    {
-            //        if (((EnumModel)CheckedListBox.Items[i]).Id == num)
+            //        if ((int)CheckedListBox.Items.Key == num)
             //        {
             //            CheckedListBox.SetItemChecked(i, true);
+            //            continue;
             //        }
             //    }
             //}
+            //for (var i = 0; i < CheckedListBox.Items.Count; i++)
+            //{
+
+            //}
         }
 
-        private void SetupCheckListBox()
+        private void SetupCheckedListBox()
         {
-            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
-            var codes = new Dictionary<int, string>();
-            foreach (var code in actionCodes)
+           
+            var actionCodeDictionary = NeutronCore.Extensions.EnumExtensions.EnumToDictionary<ActionCode>();
+            var currentIDs = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+            if (!string.IsNullOrEmpty(currentIDs))
             {
-                //codes.Add((int)code, code.GetEnumDescription());
-                codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+               var nums = currentIDs.Split(',').Select(int.Parse).ToList();
+
+
+                CheckedListBox.DataSource = new BindingSource(actionCodeDictionary, null);
+                CheckedListBox.DisplayMember = "Value";
+                CheckedListBox.ValueMember = "Key";
+
+                var indexes = new List<int>();
+
+                foreach (var num in nums)
+                {
+                    foreach (var item in CheckedListBox.Items)
+                    {
+                        var key = ((KeyValuePair<int,string>) item).Key;
+                        if (key.Equals(num))
+                        {
+                            indexes.Add(CheckedListBox.Items.IndexOf(item));
+                        }
+                    }
+                }
+
+                foreach (var index in indexes)
+                {
+                    CheckedListBox.SetItemCheckState(index, CheckState.Checked);
+                }
             }
-            CheckedListBox.DataSource = new BindingSource(codes, null);
-            CheckedListBox.DisplayMember = "Value";
-            CheckedListBox.ValueMember = "Key";
+
+
+            //// _actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
+            //// _currentIDs = _jsonData.LoadFile<ActionIdString>().CsvIdString;
+            //var codes = new Dictionary<int, string>();
+            //foreach (var code in _actionCodes)
+            //{
+            //    //if (!string.IsNullOrEmpty(_currentIds))
+            //    // {
+            //    //var nums = _currentIds.Split(',').Select(int.Parse).ToArray();
+            //    //if (nums.Length > 0)
+            //    //{
+            //    //    if (nums.Contains((int)code))
+            //    //    {
+            //    codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+            //    //    }
+            //    // }
+            //    // }
+            //}
+            //CheckedListBox.DataSource = new BindingSource(codes, null);
+            //CheckedListBox.DisplayMember = "Value";
+            //CheckedListBox.ValueMember = "Key";
         }
+
+        //private void SetupCheckListBox()
+        //{
+        //    var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
+        //    var codes = new Dictionary<int, string>();
+        //    foreach (var code in actionCodes)
+        //    {
+        //        //codes.Add((int)code, code.GetEnumDescription());
+        //        codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
+        //    }
+        //    CheckedListBox.DataSource = new BindingSource(codes, null);
+        //    CheckedListBox.DisplayMember = "Value";
+        //    CheckedListBox.ValueMember = "Key";
+        //}
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
@@ -124,6 +202,38 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+            }
+        }
+
+        private void ButtonCheckAllActions_Click(object sender, EventArgs e)
+        {
+            //_checkAllActions = true;
+            SelectAllActionCheckBoxes(checkThem: true);
+            //var userIds = GetUserIds();
+            //var codes = GetCodes();
+            //GetData(userIds, codes);
+            // _checkAllActions = false;
+        }
+        private void ButtonClearAllActions_Click(object sender, EventArgs e)
+        {
+            // _clearAllActions = true;
+            SelectAllActionCheckBoxes(checkThem: false);
+            // ClearAll();
+            // _clearAllActions = false;
+        }
+        private void SelectAllActionCheckBoxes(bool checkThem)
+        {
+            for (var i = 0; i < (CheckedListBox.Items.Count); i++)
+            {
+                CheckedListBox.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
+            }
+        }
+
+        private void SelectActionCheckBoxes(bool checkThem)
+        {
+            for (var i = 0; i < (CheckedListBox.Items.Count); i++)
+            {
+                CheckedListBox.SetItemCheckState(i, checkThem ? CheckState.Checked : CheckState.Unchecked);
             }
         }
 
