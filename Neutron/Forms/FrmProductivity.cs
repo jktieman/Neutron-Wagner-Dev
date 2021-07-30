@@ -80,7 +80,7 @@ namespace Neutron.Forms
             DateTimePickerFrom.Value = date.FirstDayOfMonth();
             DateTimePickerTo.Value = date;
             _currentFromDateTime = date.FirstDayOfMonth();
-            _currentToDateTime = date;
+            _currentToDateTime = date.LastDayOfMonth();
         }
 
         private void EnableEvents()
@@ -95,7 +95,9 @@ namespace Neutron.Forms
         {
             var today = DateTime.Today;
             DateTimePickerFrom.Value = today.FirstDayOfMonth();
-            DateTimePickerTo.Value = today;
+            DateTimePickerTo.Value = today.LastDayOfMonth();
+            _currentFromDateTime = today.FirstDayOfMonth();
+            _currentToDateTime = today.LastDayOfMonth();
         }
         private void HideTabControlTabs()
         {
@@ -665,7 +667,8 @@ namespace Neutron.Forms
             var userIds = GetUserIds();
             var codes = GetCodes();
             _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
+            var date = DateTimePickerTo.Value;
+            _currentToDateTime = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
             GetData(userIds, codes);
         }
         private void GetData()
@@ -948,11 +951,16 @@ namespace Neutron.Forms
         }
         private void DateTimePickerFrom_ValueChanged(object sender, EventArgs e)
         {
-            //if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
-            //{
-            //    DateTimePickerTo.Value = DateTimePickerFrom.Value;
-            //}
-            //GetData();
+            if (!_formInitialized) return;
+            var date = DateTimePickerFrom.Value;
+            if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
+            {
+                DateTimePickerTo.Value = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            }
+            DateTimePickerFrom.Value = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
+            GetData();
         }
         private void RadioButtonDate(object sender, EventArgs e)
         {
@@ -960,11 +968,18 @@ namespace Neutron.Forms
         }
         private void DateTimePickerTo_ValueChanged(object sender, EventArgs e)
         {
-            //if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
-            //{
-            //    DateTimePickerTo.Value = DateTimePickerFrom.Value;
-            //}
-            //GetData();
+            if (!_formInitialized) return;
+
+            var date = DateTimePickerTo.Value;
+
+            if (DateTimePickerTo.Value < DateTimePickerFrom.Value)
+            {
+                DateTimePickerFrom.Value = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            }
+            DateTimePickerTo.Value = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            _currentFromDateTime = DateTimePickerFrom.Value;
+            _currentToDateTime = DateTimePickerTo.Value;
+            GetData();
         }
         private void CheckedListBoxGroups_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -1036,7 +1051,7 @@ namespace Neutron.Forms
             if (!((RadioButton)sender).Checked) return;
             var date = DateTime.Now;
             DateTimePickerFrom.Value = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
+            DateTimePickerTo.Value = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetData();
@@ -1046,9 +1061,10 @@ namespace Neutron.Forms
         {
             if (!((RadioButton)sender).Checked) return;
             var date = DateTime.Now;
-            var firstDay = date.FirstDayOfWeek();
-            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
+            //var firstDay = date.FirstDayOfWeek();
+            //var lastDay = date.LastDayOfWeek();
+            DateTimePickerFrom.Value = date.FirstDayOfWeek(); // new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
+            DateTimePickerTo.Value = date.LastDayOfWeek();  // new DateTime(lastDay.Year, lastDay.Month, lastDay.Day, 23, 59, 59);
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetData();
@@ -1058,9 +1074,10 @@ namespace Neutron.Forms
         {
             if (!((RadioButton)sender).Checked) return;
             var date = DateTime.Now;
-            var firstDay = date.FirstDayOfMonth();
-            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
+            // var firstDay = date.FirstDayOfMonth();
+            // var lastDay = date.LastDayOfMonth();
+            DateTimePickerFrom.Value = date.FirstDayOfMonth(); // new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
+            DateTimePickerTo.Value = date.LastDayOfMonth(); // new DateTime(lastDay.Year, lastDay.Month, lastDay.Day, 23, 59, 59);
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetData();
@@ -1069,10 +1086,10 @@ namespace Neutron.Forms
         private void RadioButtonDateRange_CheckedChanged(object sender, EventArgs e)
         {
             if (!((RadioButton)sender).Checked) return;
-            var date = DateTime.Now;
-            var firstDay = date.FirstDayOfMonth();
-            DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
-            DateTimePickerTo.Value = date;
+            //var date = DateTime.Now;
+            //var firstDay = date.FirstDayOfMonth();
+            //DateTimePickerFrom.Value = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day, 0, 0, 0);
+            //DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
             GetData();

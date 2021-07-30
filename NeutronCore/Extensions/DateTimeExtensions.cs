@@ -10,22 +10,25 @@ namespace NeutronCore.Extensions
             var diff = dt.DayOfWeek - culture.DateTimeFormat.FirstDayOfWeek;
             if (diff < 0)
                 diff += 7;
-            return dt.AddDays(-diff).Date;
+            var date = dt.AddDays(-diff).Date;
+            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
         }
 
         public static DateTime LastDayOfWeek(this DateTime dt)
         {
-            return dt.FirstDayOfWeek().AddDays(6);
+            var date = dt.FirstDayOfWeek().AddDays(6);
+            return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
         }
 
         public static DateTime FirstDayOfMonth(this DateTime dt)
         {
-            return new DateTime(dt.Year, dt.Month, 1);
+            return new DateTime(dt.Year, dt.Month, 1, 0, 0, 0);
         }
 
         public static DateTime LastDayOfMonth(this DateTime dt)
         {
-            return dt.FirstDayOfMonth().AddMonths(1).AddDays(-1);
+            var date = dt.FirstDayOfMonth().AddMonths(1).AddDays(-1);
+            return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
         }
 
         public static DateTime FirstDayOfNextMonth(this DateTime dt)
