@@ -38,6 +38,7 @@ using NeutronCore.Extensions;
 using NeutronEvents;
 using NeutronDllu;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
+using Timer = System.Threading.Timer;
 
 namespace Neutron.Forms
 {
@@ -132,6 +133,8 @@ namespace Neutron.Forms
         private SynchronizationContext _synchronizationContext;
         private List<Inventory> _currentInventory;
         private bool _multiLocationStop;
+        private bool _spaceBarDisabled;
+        private Timer _spaceBarDelayTimer;
 
         public FrmPick(IJsonData jsonData, StationView station
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
@@ -3090,6 +3093,7 @@ namespace Neutron.Forms
         {
             LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
             LabelFormTitle.BackColor = Color.RoyalBlue;
+            NextButtonEnabled();
             tabControl1.SelectedTab = AvailableOrders;
         }
 
@@ -3114,9 +3118,24 @@ namespace Neutron.Forms
 
         private void MBGo_Click(object sender, EventArgs e)
         {
+            this.KeyDown -= new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);
+            _spaceBarDisabled = true;
+            DisableNextButtons();
             Cursor.Current = Cursors.WaitCursor;
             Go();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void DisableNextButtons()
+        {
+            MBGo.Enabled = false;
+            MBGo2.Enabled = false;
+        }
+
+        private void EnableNextButtons()
+        {
+            MBGo.Enabled = true;
+            MBGo2.Enabled = true;
         }
 
         private void Go()
@@ -3149,6 +3168,7 @@ namespace Neutron.Forms
                     if (shortItems.Count > 0)
                     {
                         tabControl1.SelectedTab = PickList;
+                        MBStart.Focus();
                         Task.Run(() => _logger.Log($"Opening Pick List  Short Item Report"));
                     }
                     else
@@ -3907,6 +3927,7 @@ namespace Neutron.Forms
             ClearAllBli();
             Console.WriteLine("Clear Active Device Indicator  PickBack");
             ClearActiveDeviceIndicators();
+            NextButtonEnabled();
             //TODO  commented out because I'm not handling something correctly
             // and items are getting stuck in Pick status
             //UpdateOrdersToAvailableStatus(_ordersToPick);
@@ -3948,6 +3969,7 @@ namespace Neutron.Forms
 
         private void Start()
         {
+            _spaceBarDisabled = true;
             Console.WriteLine("Init Device Indicators  Start");
             InitDeviceIndicators();
             //-------------------------------------
@@ -4040,6 +4062,7 @@ namespace Neutron.Forms
 
             //feels good to here
             Task.Run(() => _logger.Log($"Start_Click End: [{DateTime.Now.ToLongTimeString()}]"));
+            StartSpaceBarEnableTimer();
         }
 
         private List<PickStop> FinalPickSequence(List<PickStop> pickStops)
@@ -4237,13 +4260,13 @@ namespace Neutron.Forms
             MBShortPick.Enabled = quantityToBePicked > 0;
 
             MultipleLocationsManager(_currentPickStop);
-            
+
         }
 
         //TODO
         private void MultipleLocationsManager(PickStop currentPickStop)
         {
-           // GroupBoxMultipleLocations.Visible = false;
+            // GroupBoxMultipleLocations.Visible = false;
             var pickLocations = new List<PickLocation>();
             if (currentPickStop == null) return;
             var pickViews = _currentPickStop.PickViews.Where(r => r.PickLocations.Count > 0).ToList();
@@ -4256,7 +4279,7 @@ namespace Neutron.Forms
                 }
             }
 
-            var distinctLocations = pickLocations.Distinct().ToList();
+               var distinctLocations = pickLocations.Distinct().ToList();
             //GroupBoxMultipleLocations.Visible = distinctLocations.Count != 1;
         }
 
@@ -4429,7 +4452,7 @@ namespace Neutron.Forms
                     if (GlobalVar.Displays == null) return;
                     Task.Run(() => _logger.Log($"Pick Form - Clear All BLI - ClearAllBli Function Call"));
                     GlobalVar.Displays.ClearAllBli();
-                   GlobalVar.Displays.ClearOc(1);
+                    GlobalVar.Displays.ClearOc(1);
                     Task.Run(() => _logger.Log($"Pick Form - Clear All BLI - Clear Order Control Function Return"));
                 }
             }
@@ -4725,6 +4748,7 @@ namespace Neutron.Forms
 
         private void MBPickAccept_Click(object sender, EventArgs e)
         {
+
             Task.Run(() => _logger.Log($"PickAccept_Click Start BUTTON"));
             PickAccept();
             MBPickAccept.Focus();
@@ -4732,8 +4756,15 @@ namespace Neutron.Forms
 
         private void PickAccept()
         {
+            _spaceBarDisabled = true;
+
+            MBPickAccept.Enabled = false;
+            //TEST
+            Thread.Sleep(3000);
+
 
             Task.Run(() => _logger.Log($"Pick Accept Button Pressed"));
+
             if (InvokeRequired)
             {
                 var method = new MethodInvoker(PickAccept);
@@ -4743,7 +4774,7 @@ namespace Neutron.Forms
 
             Console.WriteLine("Clear Active Device Indicator - Pick Accept");
             ClearAllDeviceIndicators();
-            MBPickAccept.Enabled = false;
+
             Cursor.Current = Cursors.WaitCursor;
 
             //var thisPick = IntegerExtensions.ParseInt(LabelPickQty.Text);
@@ -4848,7 +4879,7 @@ namespace Neutron.Forms
                 }
                 else //PickStop is NOT complete, why?
                 {
-                    _multiLocationStop = true;
+                     _multiLocationStop = true;
                     Task.Run(() => _logger.Log($"Pick Stop NOT Complete.  Next Location"));
                     var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                     var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
@@ -4876,6 +4907,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             MBPickAccept.Enabled = true;
             MBPickAccept.Focus();
+            StartSpaceBarEnableTimer();
 
         }
 
@@ -5846,6 +5878,7 @@ namespace Neutron.Forms
             _showSkipped = false;
             ShowAvailableOrders();
             tabControl1.SelectedTab = AvailableOrders;
+            NextButtonEnabled();
             Cursor.Current = Cursors.Default;
             Task.Run(() => _logger.Log("Available Orders Screen END"));
         }
@@ -8215,12 +8248,30 @@ namespace Neutron.Forms
 
         }
 
+        public void StartSpaceBarEnableTimer()
+        {
+            var startTimeSpan = TimeSpan.FromSeconds(2);
+            var periodTimeSpan = TimeSpan.FromSeconds(2);
+            _spaceBarDelayTimer = new Timer(t => { SetSpaceBarDisabledFalse(); }, null, startTimeSpan, periodTimeSpan);
+        }
+
+        private void SetSpaceBarDisabledFalse()
+        {
+            _spaceBarDisabled = false;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);
+            _spaceBarDelayTimer.Dispose();
+            Task.Run(() => _logger.Log("*********  You can press the space bar now.  ***********"));
+        }
+
         private void FrmPick_KeyDown(object sender, KeyEventArgs e)
         {
+            Task.Run(() => _logger.Log($"FrmPick_KeyDown"));
+
             switch (tabControl1.SelectedTab.Name)
             {
                 case "PickScreen":
                     {
+                        Task.Run(() => _logger.Log($"FrmPick_KeyDown: TabControl Name: PickScreen"));
                         switch (e.KeyCode)
                         {
                             case Keys.Enter:
@@ -8233,8 +8284,18 @@ namespace Neutron.Forms
                             case Keys.Space:
                                 {
                                     Task.Run(() => _logger.Log($"FrmPick_KeyDown: SPACE Key"));
-                                    PickAccept();
                                     e.Handled = true;
+                                    if (!_spaceBarDisabled)
+                                    {
+                                        Task.Run(() =>
+                                            _logger.Log($"FrmPick_KeyDown: SPACE Key MBPickAccept is Enabled"));
+                                        PickAccept();
+                                    }
+                                    else
+                                    {
+                                        Task.Run(() => _logger.Log($"FrmPick_KeyDown: SPACE Key PickAccept Disabled"));
+                                    }
+
                                     break;
                                 }
                             case Keys.L:
@@ -8297,6 +8358,7 @@ namespace Neutron.Forms
                     }
                 case "AvailableOrders":
                     {
+                        Task.Run(() => _logger.Log($"FrmPick_KeyDown: TabControl Name: AvailableOrders"));
                         switch (e.KeyCode)
                         {
                             case Keys.Enter:
