@@ -29,6 +29,7 @@ using AlliedPostOffice.Concrete;
 using Equin.ApplicationFramework;
 using Neutron.Classes;
 using Neutron.Models;
+using NeutronCore.Enums;
 using NeutronCore.Extensions;
 using NeutronCore.Models;
 using NeutronData.BaseClasses;
@@ -37,6 +38,8 @@ using NeutronData.PrintModels;
 using NeutronDllu;
 //using CommunicationType = NeutronCore.Enums.CommunicationType;
 using DeviceType = NeutronData.Models.Lookups.DeviceType;
+using StationType = NeutronData.Models.Lookups.StationType;
+using StorageType = NeutronData.Models.Lookups.StorageType;
 
 //using CommunicationType = NeutronCore.Enums.CommunicationType;
 //using DeviceType = NeutronCore.Enums.DeviceType;
@@ -180,6 +183,18 @@ namespace Neutron.Forms
             CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter() != null;
             
         }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var parms = base.CreateParams;
+                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
+                return parms;
+            }
+        }
+
         public Version ApplicationVersion
         {
             get
@@ -2738,6 +2753,18 @@ namespace Neutron.Forms
                 TextBoxPort.Text = _settings.ServerPort.ToString();
             }
             tabControl1.SelectedTab = EmailServer;
+        }
+
+        private void ButtonUploadActionCodes_Click(object sender, EventArgs e)
+        {
+            var currentIDs = TextBoxActionCodes.Text;
+            var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
+            using (var frm = new FrmDefineUploadActions(_jsonData, actionCodes, currentIDs))
+            {
+                frm.ShowDialog();
+                Show();
+                TextBoxActionCodes.Text = frm.CurrentIds;
+            }
         }
     }
 }

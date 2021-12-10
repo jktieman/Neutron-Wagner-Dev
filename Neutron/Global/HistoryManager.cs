@@ -73,6 +73,48 @@ namespace Neutron.Global
 
         }
 
+        public void SaveHistory(ActionCode actionCode, OrderView order)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = order.Ord1,
+                Ord2 = order.Ord2,
+                OrderId = order.Id,
+                Priority = order.Priority,
+                LoadDate = order.LoadDate,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = string.Empty,   //order.Order.OrderInfo,
+                OrderDetailInfo = string.Empty,
+                StationId = _station.StationNumber
+            };
+            Save(history);
+
+        }
+
+        public void SaveHistory(ActionCode actionCode, ReplenOrderView order)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = order.Ord1,
+                Ord2 = order.Ord2,
+                OrderId = order.Id,
+                Priority = order.Priority,
+                LoadDate = order.LoadDate,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = string.Empty,   //.ReplenOrder.OrderInfo,
+                OrderDetailInfo = string.Empty,
+                StationId = _station.StationNumber
+            };
+             Save(history);
+
+        }
+
         public void SaveHistory(ActionCode actionCode, OrderDetail orderDetail)
         {
             var history = new History
@@ -635,7 +677,7 @@ namespace Neutron.Global
         {
             try
             {
-                await Task.Run(() => _repoHistory.Insert(history));
+                await _repoHistory.InsertAsync(history);
             }
             catch (Exception ex)
             {

@@ -33,11 +33,15 @@ namespace Neutron.Forms
 
         }
 
-        public FrmChangeQuantityOnly()
+        public FrmChangeQuantityOnly(SkipView currentSkip)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
+            TextBoxOrder.Text = currentSkip.Ord1;
+            TextBoxReservation.Text = currentSkip.Ord2;
+            TextBoxItem.Text = currentSkip.Item;
+            TextBoxQuantity.Text = currentSkip.Quantity.ToString();
             TextBoxNewQuantity.Text = "0";
         }
 

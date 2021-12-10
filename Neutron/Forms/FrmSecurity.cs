@@ -68,6 +68,17 @@ namespace Neutron.Forms
             ComboBoxEditPreferredLanguage.ValueMember = "Id";
         }
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var parms = base.CreateParams;
+                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
+                return parms;
+            }
+        }
+
         private void FrmSecurity_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !CloseButtonPressed;

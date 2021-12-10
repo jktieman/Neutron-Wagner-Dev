@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/SaintFrancis/TST/</PublishUrl>
+    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/SaintFrancis/PRD/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -23,14 +23,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://www.nameit21.com/Programs/Neutron/SaintFrancis/TST/</InstallUrl>
+    <InstallUrl>http://www.nameit21.com/Programs/Neutron/SaintFrancis/PRD/</InstallUrl>
     <SupportUrl>http://www.put2light.com</SupportUrl>
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>471</ApplicationRevision>
+    <ApplicationRevision>474</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -59,10 +59,10 @@
     <StartupObject>Neutron.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>D16606353E07966D96219F6F214048EFC65C085F</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>80E3DB095DB074827578E3B1772A571F84343304</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Neutron_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Neutron_3_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -74,10 +74,10 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>iStock-509981271-Atom.ico</ApplicationIcon>
+    <ApplicationIcon>NeutronAtomLogo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Neutron_1_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>NeutronKeyFile.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
@@ -244,6 +244,12 @@
     </Compile>
     <Compile Include="Forms\FrmCommunication.Designer.cs">
       <DependentUpon>FrmCommunication.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDefineUploadActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDefineUploadActions.Designer.cs">
+      <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmDefineActionGroup.cs">
       <SubType>Form</SubType>
@@ -444,12 +450,21 @@
     <Compile Include="Models\RuleResult.cs" />
     <Compile Include="Models\ReplenDeviceManager.cs" />
     <Compile Include="Models\StationOrderDetail.cs" />
+    <Compile Include="Models\UploadActionIdString.cs" />
     <Compile Include="Models\UserIdString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AdditionalFiles Include="Hart_Device_Controller.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>
+    <Compile Include="UserControls\InductionPosition.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\InductionPosition.Designer.cs">
+      <DependentUpon>InductionPosition.cs</DependentUpon>
+    </Compile>
+    <Content Include="NeutronAtomLogo.ico" />
+    <Content Include="Neutron_Logo32.ico" />
     <Content Include="PickLightTest.EXE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -459,6 +474,15 @@
     <AdditionalFiles Include="Hart_LV_BPISHI_LogLevel.Dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
+    <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
+      <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\InductionPosition.resx">
+      <DependentUpon>InductionPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Allied Inc.txt.pfx" />
+    <None Include="NeutronKeyFile.pfx" />
+    <None Include="Neutron_3_TemporaryKey.pfx" />
     <None Include="Resources\Pick_1.png" />
     <EmbeddedResource Include="Forms\FrmChangeLineStatus.resx">
       <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
@@ -729,7 +753,6 @@
     </Content>
     <None Include="Resources\Neutron_Logo32.png" />
     <None Include="Images\Neutron_Logo.png" />
-    <Content Include="iStock-509981271-Atom.ico" />
     <None Include="Icons\glyphicons-171-step-backward.png" />
     <None Include="Icons\glyphicons-172-fast-backward.png" />
     <None Include="Icons\glyphicons-173-rewind.png" />
@@ -810,9 +833,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

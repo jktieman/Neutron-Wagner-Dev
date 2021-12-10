@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NeutronData.Repositories
@@ -73,6 +74,26 @@ namespace NeutronData.Repositories
 
                 _dbSet.Add(entity);
                 _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Insert Error.  {ex.Message} \r\n {ex.InnerException}");
+            }
+        }
+
+        public async Task InsertAsync(TEntity entity)
+        {
+
+            try
+            {
+                var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                if (local != null)
+                {
+                    _context.Entry(local).State = EntityState.Detached;
+                }
+
+                _dbSet.Add(entity);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

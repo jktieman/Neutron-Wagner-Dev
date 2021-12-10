@@ -1618,7 +1618,7 @@ namespace Neutron.Forms
             // 
             // LabelAvailableOrdersSearchFor
             // 
-            this.LabelAvailableOrdersSearchFor.Location = new System.Drawing.Point(464, 43);
+            this.LabelAvailableOrdersSearchFor.Location = new System.Drawing.Point(464, 56);
             this.LabelAvailableOrdersSearchFor.Name = "LabelAvailableOrdersSearchFor";
             this.LabelAvailableOrdersSearchFor.Size = new System.Drawing.Size(207, 25);
             this.LabelAvailableOrdersSearchFor.TabIndex = 72;

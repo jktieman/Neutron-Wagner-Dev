@@ -108,7 +108,6 @@
             this.LabelCompress1 = new System.Windows.Forms.Label();
             this.LabelFlashRate = new System.Windows.Forms.Label();
             this.LabelLoaderDelay = new System.Windows.Forms.Label();
-            this.LabelActionCodes = new System.Windows.Forms.Label();
             this.LabelFieldDelimiter = new System.Windows.Forms.Label();
             this.LabelSettingsStoreBatchSize = new System.Windows.Forms.Label();
             this.LabelSettingsPickBatchSize = new System.Windows.Forms.Label();
@@ -430,6 +429,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.ButtonUploadActionCodes = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -982,6 +982,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Settings.Controls.Add(this.ButtonUploadActionCodes);
             this.Settings.Controls.Add(this.ComboBoxStoreBatchSize);
             this.Settings.Controls.Add(this.ComboBoxPickBatchSize);
             this.Settings.Controls.Add(this.GroupBoxPickMethod);
@@ -994,7 +995,6 @@
             this.Settings.Controls.Add(this.LabelCompress1);
             this.Settings.Controls.Add(this.LabelFlashRate);
             this.Settings.Controls.Add(this.LabelLoaderDelay);
-            this.Settings.Controls.Add(this.LabelActionCodes);
             this.Settings.Controls.Add(this.LabelFieldDelimiter);
             this.Settings.Controls.Add(this.LabelSettingsStoreBatchSize);
             this.Settings.Controls.Add(this.LabelSettingsPickBatchSize);
@@ -1239,16 +1239,6 @@
             this.LabelLoaderDelay.TabIndex = 40;
             this.LabelLoaderDelay.Text = "Loader Delay (Seconds)";
             this.LabelLoaderDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelActionCodes
-            // 
-            this.LabelActionCodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelActionCodes.Location = new System.Drawing.Point(838, 308);
-            this.LabelActionCodes.Name = "LabelActionCodes";
-            this.LabelActionCodes.Size = new System.Drawing.Size(166, 16);
-            this.LabelActionCodes.TabIndex = 19;
-            this.LabelActionCodes.Text = "Upload Action Codes";
-            this.LabelActionCodes.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelFieldDelimiter
             // 
@@ -5096,6 +5086,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // ButtonUploadActionCodes
+            // 
+            this.ButtonUploadActionCodes.Location = new System.Drawing.Point(847, 305);
+            this.ButtonUploadActionCodes.Name = "ButtonUploadActionCodes";
+            this.ButtonUploadActionCodes.Size = new System.Drawing.Size(153, 23);
+            this.ButtonUploadActionCodes.TabIndex = 49;
+            this.ButtonUploadActionCodes.Text = "Upload Action Codes";
+            this.ButtonUploadActionCodes.UseVisualStyleBackColor = true;
+            this.ButtonUploadActionCodes.Click += new System.EventHandler(this.ButtonUploadActionCodes_Click);
+            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -5298,7 +5298,6 @@
         private System.Windows.Forms.ListBox ListBoxCodeNames;
         private System.Windows.Forms.DataGridView DataGridViewLookups;
         private MetroFramework.Controls.MetroButton MBPrintSetUpSave;
-        private System.Windows.Forms.Label LabelActionCodes;
         private System.Windows.Forms.TextBox TextBoxActionCodes;
         private System.Windows.Forms.Label LabelUploadDelay;
         private System.Windows.Forms.Label LabelLoaderDelay;
@@ -5575,5 +5574,6 @@
         private System.Windows.Forms.Button ButtonRemoveEmail;
         private System.Windows.Forms.Button ButtonCancelEmailAddresses;
         private System.Windows.Forms.Button ButtonSaveEmailAddresses;
+        private System.Windows.Forms.Button ButtonUploadActionCodes;
     }
 }

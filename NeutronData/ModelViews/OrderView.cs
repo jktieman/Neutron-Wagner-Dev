@@ -22,9 +22,9 @@ namespace NeutronData.ModelViews
         public string Station_4_HasPicks { get; set; }
         public string Station_5_HasPicks { get; set; }
         public string Station_8_HasPicks { get; set; }
-        private int _lines;
-        private int _pieces;
-        private string _searchField;
+        public int Lines { get; set; } = 0;
+        public int Pieces { get; set; } = 0;
+        public string _searchField;
         public DateTime LoadDate { get; set; }
         public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
@@ -42,24 +42,24 @@ namespace NeutronData.ModelViews
             set { _searchField = value; }
         }
 
-        public int Lines
-        {
-            get
-            {
-                _lines = Order.OrderDetails.Count;
-                return _lines;
-            }
-            set { _lines = value; }
-        }
+        //public int Lines
+        //{
+        //    get
+        //    {
+        //        _lines = Order.OrderDetails.Count;
+        //        return _lines;
+        //    }
+        //    set { _lines = value; }
+        //}
 
-        public int Pieces
-        {
-            get
-            {
-                _pieces = Order.OrderDetails.Sum(s => s.Quantity);
-                return _pieces;
-            }
-            set { _pieces = value; }
-        }
+        //public int Pieces
+        //{
+        //    get
+        //    {
+        //        _pieces = Order.OrderDetails.Sum(s => s.Quantity);
+        //        return _pieces;
+        //    }
+        //    set { _pieces = value; }
+        //}
     }
 }

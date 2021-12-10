@@ -129,26 +129,34 @@ namespace Neutron
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
             }
-
-            if (_station.StationTypeId == (int)StationType.Supervisor)
-            {
-                if (_neutronVariables.UseAutoCompress)
-                {
-                    // Run every RunCompressInterval time 1 hour (3600000)
-                    var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
-                    var compressTimer = new Timer(interval);
-
-                    compressTimer.Elapsed += new ElapsedEventHandler(OnRunCompress);
-                    compressTimer.AutoReset = true;
-                    compressTimer.Enabled = true;
-
-                    _compressTimer = compressTimer;
-                }
-            }
             GlobalVar.HistoryManager = new HistoryManager(_station);
             var id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
 
+            if (_station.StationTypeId != (int) StationType.Supervisor) return;
+            if (!_neutronVariables.UseAutoCompress) return;
+            // Run every RunCompressInterval time 1 hour (3600000)
+            var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
+            var compressTimer = new Timer(interval);
+
+            compressTimer.Elapsed += new ElapsedEventHandler(OnRunCompress);
+            compressTimer.AutoReset = true;
+            compressTimer.Enabled = true;
+
+            _compressTimer = compressTimer;
+
+
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var parms = base.CreateParams;
+                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
+                return parms;
+            }
         }
 
         private void LogGeneralError(string message)
@@ -166,18 +174,20 @@ namespace Neutron
 
         private void OnRunCompress(object sender, ElapsedEventArgs e)
         {
-            if (_compressRunning) return;
+           if (_compressRunning) return;
 
             var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
-            int days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
+            var days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
             //Run once each day
-            if (days > 0)
+            if (days >= 0)
             {
                 var daysToKeep = _neutronVariables.CompressDays * -1;
                 var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
-                var finished = CompressOrders(compressBefore);
+
+                CompressOrders(compressBefore);
+
                 Thread.Sleep(2000);
-                if (finished) CompressReplenOrders(compressBefore);
+                CompressReplenOrders(compressBefore);
 
                 compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
                 _jsonData.SaveFile(compressLastRunDate);
@@ -186,15 +196,15 @@ namespace Neutron
             _compressRunning = false;
         }
 
-        private bool CompressOrders(DateTime compressBefore)
+        private void CompressOrders(DateTime compressBefore)
         {
             _compressRunning = true;
             // Compress Normal Orders
 
-            var completedOrders = _ordersRepository.GetCompletedOrders(string.Empty).ToList();
+            var completedOrders = _ordersRepository.GetOrderViews("6", "").ToList();
             var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
 
-            if (!ordersToCompress.Any()) return true;
+            if (!ordersToCompress.Any()) return;
             var orderType = "PICK";
             var sb = new StringBuilder();
             var firstTime = true;
@@ -223,21 +233,30 @@ namespace Neutron
                     context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
                         paramOrderType);
                 }
+
+                ArchiveOrders(ordersToCompress);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error Compressing Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
 
-            return true;
+        private void ArchiveOrders(IEnumerable<OrderView> orders)
+        {
+            foreach (var order in orders)
+            {
+                GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderArchived, order);
+            }
         }
 
         private void CompressReplenOrders(DateTime compressBefore)
         {
             _compressRunning = true;
             // Compress Replenishment Orders
-            var completedReplenOrders = _replenOrdersRepository.GetCompletedOrders(string.Empty).ToList();
+
+            var completedReplenOrders = _replenOrdersRepository.GetReplenOrderViews("6", "").ToList();
             var replenOrdersToCompress = completedReplenOrders.Where(r => r.LoadDate < compressBefore).ToList();
 
             if (!replenOrdersToCompress.Any()) return;
@@ -261,6 +280,9 @@ namespace Neutron
 
             try
             {
+
+                ArchiveReplenOrders(replenOrdersToCompress);
+
                 using (var context = new NeutronDb())
                 {
                     var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
@@ -269,11 +291,21 @@ namespace Neutron
                     context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
                         paramOrderType);
                 }
+
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error Compressing Replenishment Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+        }
+
+        private void ArchiveReplenOrders(IEnumerable<ReplenOrderView> orders)
+        {
+            foreach (var order in orders)
+            {
+                GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderArchived, order);
             }
         }
 
@@ -660,46 +692,46 @@ namespace Neutron
             }
         }
         //else
-            //{
-            //    try
-            //    {
-            //        MtLogOff.Text = "Log Off";
-            //        if (neutronVariables.PinLoginOnly)
-            //        {
-            //            using (var frm = new FrmPin())
-            //            {
-            //                DialogResult result = frm.ShowDialog();
-            //                if (result == DialogResult.OK)
-            //                {
-            //                    currentUser = frm.CurrentUser;
-            //                    mlUserInfo.Text = currentUser.UserInfo;
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            using (var frm = new FrmLogin())
-            //            {
-            //                DialogResult result = frm.ShowDialog();
-            //                if (result == DialogResult.OK)
-            //                {
-            //                    currentUser = frm.CurrentUser;
-            //                    mlUserInfo.Text = currentUser.UserInfo;
-            //                }
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show("Login Error " + ex.Message);
-            //    }
-            //}
-            //if (currentUser != null)
-            //{
-            //    GlobalVar.User = currentUser;
-            //    securityProcessor.ReprocessSecuritySet(currentUser.Pin);
-            //}
-       // }
+        //{
+        //    try
+        //    {
+        //        MtLogOff.Text = "Log Off";
+        //        if (neutronVariables.PinLoginOnly)
+        //        {
+        //            using (var frm = new FrmPin())
+        //            {
+        //                DialogResult result = frm.ShowDialog();
+        //                if (result == DialogResult.OK)
+        //                {
+        //                    currentUser = frm.CurrentUser;
+        //                    mlUserInfo.Text = currentUser.UserInfo;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            using (var frm = new FrmLogin())
+        //            {
+        //                DialogResult result = frm.ShowDialog();
+        //                if (result == DialogResult.OK)
+        //                {
+        //                    currentUser = frm.CurrentUser;
+        //                    mlUserInfo.Text = currentUser.UserInfo;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Login Error " + ex.Message);
+        //    }
+        //}
+        //if (currentUser != null)
+        //{
+        //    GlobalVar.User = currentUser;
+        //    securityProcessor.ReprocessSecuritySet(currentUser.Pin);
+        //}
+        // }
 
         private void LogOff()
         {

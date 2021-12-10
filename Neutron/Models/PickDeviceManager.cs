@@ -24,7 +24,7 @@ namespace Neutron.Models
             SetupLogger();
             for (var i = 0; i < carList.Count; i++)
             {
-                var mover = CreateDeviceMover(i +1, carList[i]);
+                var mover = CreateDeviceMover(i + 1, carList[i]);
                 _currentLocations[i] = null;
                 _deviceMovers.Add(mover);
             }
@@ -99,13 +99,13 @@ namespace Neutron.Models
             {
                 if (kvp.Value != null)
                 {
+                    var loc1 = kvp.Value.Loc1;
+                    var loc2 = kvp.Value.Loc2;
+                    _logger.Log($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
                         {
-                            var loc1 = kvp.Value.Loc1;
-                            var loc2 = kvp.Value.Loc2;
-                            _logger.Log($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                             GlobalVar.Shuttle.PositionDevice(loc1, loc2);
                             //Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
                             //if (response.Result != DeviceResponse.Success)
@@ -116,6 +116,39 @@ namespace Neutron.Models
                         }
                     }
                 }
+            }
+        }
+
+        public void ResetMoveNext(int moveNext = default(int))
+        {
+            _logger.Log($"Reset MoveNext: {moveNext}");
+            foreach (var kvp in _currentLocations)
+            {
+                if (kvp.Value != null)
+                {
+                    var loc1 = kvp.Value.Loc1;
+                    var loc2 = kvp.Value.Loc2;
+                    if (loc1 == moveNext)
+                    {
+                        _logger.Log($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
+                        continue;
+                    }
+
+                    _logger.Log($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                    if (_shuttleEnabled)
+                    {
+                        if (GlobalVar.Shuttle != null)
+                        {
+                            GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                        }
+                    }
+                }
+            }
+
+            if (moveNext != default(int))
+            {
+                _logger.Log($"Reset MoveNext Device: {moveNext}");
+                MoveNext(moveNext);
             }
         }
     }

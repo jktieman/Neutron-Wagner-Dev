@@ -8,7 +8,8 @@ namespace NeutronData.Interfaces
     public interface IOrdersRepository
     {
         Order GetOrder(int id);
-        IEnumerable<OrderView> GetOrderViewNotCompleted(string search);
+        List<AvailableOrdersView> GetAvailableOrdersForInductionScreen(StationView station, string searchField);
+        IEnumerable<OrderView> GetOrderViews(string orderStatus, string searchField);
         IEnumerable<OrderView> GetOrderView();
         List<AvailableOrdersView> GetAvailableOrders(StationView station);
         List<AvailableOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false);

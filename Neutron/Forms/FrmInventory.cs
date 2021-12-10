@@ -111,6 +111,18 @@ namespace Neutron.Forms
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var parms = base.CreateParams;
+                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
+                return parms;
+            }
+        }
+
         private void FrmInventory_Load(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;

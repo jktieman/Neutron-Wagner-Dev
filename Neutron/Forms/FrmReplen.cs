@@ -36,6 +36,7 @@ using NeutronCore.Models;
 using NeutronCore.Enums;
 using NeutronDllu;
 using Neutron.Controllers;
+using Neutron.UserControls;
 using NeutronEvents;
 using Remotion.FunctionalProgramming;
 using StorageType = NeutronData.Models.Lookups.StorageType;
@@ -257,6 +258,17 @@ namespace Neutron.Forms
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
         }
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams parms = base.CreateParams;
+                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
+                return parms;
+            }
+        }
+
         private void ShowOrderComplete(Order order)
         {
             Task.Run(() => _logger.Log($"Show Order Complete Event: Order Number _ {order.Ord1} -- {order.Ord2}"));
@@ -283,11 +295,14 @@ namespace Neutron.Forms
 
         private void SetupPickPositions(int pickBatchSize)
         {
-            return;
             switch (pickBatchSize)
             {
                 case 6:
-                    {
+                {
+                    InductionPosition inductionPosition = new InductionPosition(1);
+                    inductionPosition.Location = new Point(292, 10);
+                    AvailableOrders.Controls.Add(inductionPosition);
+
                         // 
                         // LabelPickPos1
                         // 
@@ -296,7 +311,7 @@ namespace Neutron.Forms
                         LabelPickPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
                         LabelPickPos1.ForeColor = SystemColors.ControlText;
-                        LabelPickPos1.Location = new Point(77, 77);
+                        LabelPickPos1.Location = new Point(77, 12);
                         LabelPickPos1.Name = "LabelPickPos1";
                         LabelPickPos1.Size = new Size(36, 26);
                         LabelPickPos1.TabIndex = 120;
@@ -308,7 +323,7 @@ namespace Neutron.Forms
                         LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPickPos2.Location = new Point(267, 77);
+                        LabelPickPos2.Location = new Point(267,12);
                         LabelPickPos2.Name = "LabelPickPos2";
                         LabelPickPos2.Size = new Size(36, 26);
                         LabelPickPos2.TabIndex = 122;
@@ -321,7 +336,7 @@ namespace Neutron.Forms
                         LabelPickPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos3.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPickPos3.Location = new Point(457, 77);
+                        LabelPickPos3.Location = new Point(457, 12);
                         LabelPickPos3.Name = "LabelPickPos3";
                         LabelPickPos3.Size = new Size(36, 26);
                         LabelPickPos3.TabIndex = 124;
@@ -335,7 +350,7 @@ namespace Neutron.Forms
                         LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPickPos4.Location = new Point(647, 77);
+                        LabelPickPos4.Location = new Point(647, 12);
                         LabelPickPos4.Name = "LabelPickPos4";
                         LabelPickPos4.Size = new Size(36, 26);
                         LabelPickPos4.TabIndex = 126;
@@ -348,7 +363,7 @@ namespace Neutron.Forms
                         LabelPickPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos5.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPickPos5.Location = new Point(837, 77);
+                        LabelPickPos5.Location = new Point(837, 12);
                         LabelPickPos5.Name = "LabelPickPos5";
                         LabelPickPos5.Size = new Size(36, 26);
                         LabelPickPos5.TabIndex = 128;
@@ -361,7 +376,7 @@ namespace Neutron.Forms
                         LabelPickPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos6.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPickPos6.Location = new Point(1027, 77);
+                        LabelPickPos6.Location = new Point(1027, 12);
                         LabelPickPos6.Name = "LabelPickPos6";
                         LabelPickPos6.Size = new Size(36, 26);
                         LabelPickPos6.TabIndex = 130;
@@ -399,7 +414,7 @@ namespace Neutron.Forms
                         TextBoxPickPos1.BackColor = SystemColors.ButtonHighlight;
                         TextBoxPickPos1.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPickPos1.Location = new Point(28, 109);
+                        TextBoxPickPos1.Location = new Point(8, 0);
                         TextBoxPickPos1.Multiline = true;
                         TextBoxPickPos1.Name = "TextBoxPickPos1";
                         TextBoxPickPos1.ReadOnly = true;
@@ -414,7 +429,7 @@ namespace Neutron.Forms
                         TextBoxPickPos2.BackColor = SystemColors.ButtonHighlight;
                         TextBoxPickPos2.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPickPos2.Location = new Point(218, 109);
+                        TextBoxPickPos2.Location = new Point(8, 0);
                         TextBoxPickPos2.Multiline = true;
                         TextBoxPickPos2.Name = "TextBoxPickPos2";
                         TextBoxPickPos2.ReadOnly = true;
@@ -429,7 +444,7 @@ namespace Neutron.Forms
                         TextBoxPickPos3.BackColor = SystemColors.ButtonHighlight;
                         TextBoxPickPos3.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPickPos3.Location = new Point(408, 109);
+                        TextBoxPickPos3.Location = new Point(8, 0);
                         TextBoxPickPos3.Multiline = true;
                         TextBoxPickPos3.Name = "TextBoxPickPos3";
                         TextBoxPickPos3.ReadOnly = true;
@@ -444,7 +459,7 @@ namespace Neutron.Forms
                         TextBoxPickPos4.BackColor = SystemColors.ButtonHighlight;
                         TextBoxPickPos4.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPickPos4.Location = new Point(598, 109);
+                        TextBoxPickPos4.Location = new Point(8, 0);
                         TextBoxPickPos4.Multiline = true;
                         TextBoxPickPos4.Name = "TextBoxPickPos4";
                         TextBoxPickPos4.ReadOnly = true;
@@ -459,7 +474,7 @@ namespace Neutron.Forms
                         TextBoxPickPos5.BackColor = SystemColors.ButtonHighlight;
                         TextBoxPickPos5.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPickPos5.Location = new Point(788, 109);
+                        TextBoxPickPos5.Location = new Point(8, 0);
                         TextBoxPickPos5.Multiline = true;
                         TextBoxPickPos5.Name = "TextBoxPickPos5";
                         TextBoxPickPos5.ReadOnly = true;
@@ -474,7 +489,7 @@ namespace Neutron.Forms
                         TextBoxPickPos6.BackColor = SystemColors.ButtonHighlight;
                         TextBoxPickPos6.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPickPos6.Location = new Point(978, 109);
+                        TextBoxPickPos6.Location = new Point(8, 0);
                         TextBoxPickPos6.Multiline = true;
                         TextBoxPickPos6.Name = "TextBoxPickPos6";
                         TextBoxPickPos6.ReadOnly = true;
@@ -516,7 +531,7 @@ namespace Neutron.Forms
                         // Pos1Display
                         // 
                         Pos1Display.BackColor = Color.Transparent;
-                        Pos1Display.Location = new Point(20, 109);
+                        Pos1Display.Location = new Point(13, 44);
                         Pos1Display.Name = "Pos1Display";
                         Pos1Display.Size = new Size(150, 53);
                         Pos1Display.TabIndex = 153;
@@ -524,7 +539,7 @@ namespace Neutron.Forms
                         // Pos2Display
                         // 
                         Pos2Display.BackColor = Color.Transparent;
-                        Pos2Display.Location = new Point(210, 109);
+                        Pos2Display.Location = new Point(210, 44);
                         Pos2Display.Name = "Pos2Display";
                         Pos2Display.Size = new Size(150, 53);
                         Pos2Display.TabIndex = 154;
@@ -533,7 +548,7 @@ namespace Neutron.Forms
                         // Pos3Display
                         // 
                         Pos3Display.BackColor = Color.Transparent;
-                        Pos3Display.Location = new Point(400, 109);
+                        Pos3Display.Location = new Point(400, 44);
                         Pos3Display.Name = "Pos3Display";
                         Pos3Display.Size = new Size(150, 53);
                         Pos3Display.TabIndex = 155;
@@ -542,7 +557,7 @@ namespace Neutron.Forms
                         // Pos4Display
                         // 
                         Pos4Display.BackColor = Color.Transparent;
-                        Pos4Display.Location = new Point(590, 109);
+                        Pos4Display.Location = new Point(590, 44);
                         Pos4Display.Name = "Pos4Display";
                         Pos4Display.Size = new Size(150, 53);
                         Pos4Display.TabIndex = 156;
@@ -551,7 +566,7 @@ namespace Neutron.Forms
                         // Pos5Display
                         // 
                         Pos5Display.BackColor = Color.Transparent;
-                        Pos5Display.Location = new Point(780, 109);
+                        Pos5Display.Location = new Point(780, 44);
                         Pos5Display.Name = "Pos5Display";
                         Pos5Display.Size = new Size(150, 53);
                         Pos5Display.TabIndex = 157;
@@ -560,7 +575,7 @@ namespace Neutron.Forms
                         // Pos6Display
                         // 
                         Pos6Display.BackColor = Color.Transparent;
-                        Pos6Display.Location = new Point(970, 109);
+                        Pos6Display.Location = new Point(970, 44);
                         Pos6Display.Name = "Pos6Display";
                         Pos6Display.Size = new Size(150, 53);
                         Pos6Display.TabIndex = 158;
@@ -594,7 +609,7 @@ namespace Neutron.Forms
                         LabelPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
                         LabelPos1.ForeColor = SystemColors.ControlText;
-                        LabelPos1.Location = new Point(77, 77);
+                        LabelPos1.Location = new Point(77, 7);
                         LabelPos1.Name = "LabelPos1";
                         LabelPos1.Size = new Size(36, 26);
                         LabelPos1.TabIndex = 151;
@@ -606,7 +621,7 @@ namespace Neutron.Forms
                         LabelPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPos2.Location = new Point(267, 77);
+                        LabelPos2.Location = new Point(267, 7);
                         LabelPos2.Name = "LabelPos2";
                         LabelPos2.Size = new Size(36, 26);
                         LabelPos2.TabIndex = 152;
@@ -619,7 +634,7 @@ namespace Neutron.Forms
                         LabelPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos3.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPos3.Location = new Point(457, 77);
+                        LabelPos3.Location = new Point(457, 7);
                         LabelPos3.Name = "LabelPos3";
                         LabelPos3.Size = new Size(36, 26);
                         LabelPos3.TabIndex = 153;
@@ -633,7 +648,7 @@ namespace Neutron.Forms
                         LabelPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPos4.Location = new Point(647, 77);
+                        LabelPos4.Location = new Point(647, 7);
                         LabelPos4.Name = "LabelPos4";
                         LabelPos4.Size = new Size(36, 26);
                         LabelPos4.TabIndex = 154;
@@ -646,7 +661,7 @@ namespace Neutron.Forms
                         LabelPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos5.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPos5.Location = new Point(837, 77);
+                        LabelPos5.Location = new Point(837, 7);
                         LabelPos5.Name = "LabelPos5";
                         LabelPos5.Size = new Size(36, 26);
                         LabelPos5.TabIndex = 155;
@@ -659,7 +674,7 @@ namespace Neutron.Forms
                         LabelPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos6.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPos6.Location = new Point(1027, 77);
+                        LabelPos6.Location = new Point(1027, 7);
                         LabelPos6.Name = "LabelPos6";
                         LabelPos6.Size = new Size(36, 26);
                         LabelPos6.TabIndex = 156;
@@ -695,7 +710,7 @@ namespace Neutron.Forms
                         // 
                         TextBoxPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPos1.Location = new Point(28, 109);
+                        TextBoxPos1.Location = new Point(28, 44);
                         TextBoxPos1.Name = "TextBoxPos1";
                         TextBoxPos1.Size = new Size(134, 44);
                         TextBoxPos1.TabIndex = 0;
@@ -711,7 +726,7 @@ namespace Neutron.Forms
                         TextBoxPos2.BackColor = SystemColors.Control;
                         TextBoxPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPos2.Location = new Point(218, 109);
+                        TextBoxPos2.Location = new Point(218, 44);
                         TextBoxPos2.Name = "TextBoxPos2";
                         TextBoxPos2.Size = new Size(134, 44);
                         TextBoxPos2.TabIndex = 1;
@@ -727,7 +742,7 @@ namespace Neutron.Forms
                         // 
                         TextBoxPos3.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPos3.Location = new Point(408, 109);
+                        TextBoxPos3.Location = new Point(408, 44);
                         TextBoxPos3.Name = "TextBoxPos3";
                         TextBoxPos3.Size = new Size(134, 44);
                         TextBoxPos3.TabIndex = 2;
@@ -743,7 +758,7 @@ namespace Neutron.Forms
                         // 
                         TextBoxPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPos4.Location = new Point(598, 109);
+                        TextBoxPos4.Location = new Point(598, 44);
                         TextBoxPos4.Name = "TextBoxPos4";
                         TextBoxPos4.Size = new Size(134, 44);
                         TextBoxPos4.TabIndex = 3;
@@ -759,7 +774,7 @@ namespace Neutron.Forms
                         // 
                         TextBoxPos5.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPos5.Location = new Point(788, 109);
+                        TextBoxPos5.Location = new Point(788, 44);
                         TextBoxPos5.Name = "TextBoxPos5";
                         TextBoxPos5.Size = new Size(134, 44);
                         TextBoxPos5.TabIndex = 4;
@@ -775,7 +790,7 @@ namespace Neutron.Forms
                         // 
                         TextBoxPos6.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
-                        TextBoxPos6.Location = new Point(978, 109);
+                        TextBoxPos6.Location = new Point(978, 44);
                         TextBoxPos6.Name = "TextBoxPos6";
                         TextBoxPos6.Size = new Size(134, 44);
                         TextBoxPos6.TabIndex = 5;
@@ -813,7 +828,7 @@ namespace Neutron.Forms
                         // AvailablePos1Display
                         // 
                         // this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos1Display.Location = new Point(20, 109);
+                        AvailablePos1Display.Location = new Point(20, 44);
                         //  this.AvailablePos1Display.Name = "Pos1Display";
                         AvailablePos1Display.Size = new Size(150, 53);
                         //  this.AvailablePos1Display.TabIndex = 161;
@@ -822,7 +837,7 @@ namespace Neutron.Forms
                         // AvailablePos2Display
                         // 
                         // this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos2Display.Location = new Point(210, 109);
+                        AvailablePos2Display.Location = new Point(210, 44);
                         // this.AvailablePos2Display.Name = "Pos2Display";
                         AvailablePos2Display.Size = new Size(150, 53);
                         // this.AvailablePos2Display.TabIndex = 162;
@@ -831,7 +846,7 @@ namespace Neutron.Forms
                         // AvailablePos3Display
                         // 
                         //  this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos3Display.Location = new Point(400, 109);
+                        AvailablePos3Display.Location = new Point(400, 44);
                         //   this.AvailablePos3Display.Name = "Pos3Display";
                         AvailablePos3Display.Size = new Size(150, 53);
                         //  this.AvailablePos3Display.TabIndex = 163;
@@ -840,7 +855,7 @@ namespace Neutron.Forms
                         // AvailablePos4Display
                         // 
                         //  this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos4Display.Location = new Point(590, 109);
+                        AvailablePos4Display.Location = new Point(590, 44);
                         //  this.AvailablePos4Display.Name = "Pos4Display";
                         AvailablePos4Display.Size = new Size(150, 53);
                         //  this.AvailablePos4Display.TabIndex = 164;
@@ -849,7 +864,7 @@ namespace Neutron.Forms
                         // AvailablePos5Display
                         // 
                         // this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos5Display.Location = new Point(780, 109);
+                        AvailablePos5Display.Location = new Point(780, 44);
                         //  this.AvailablePos5Display.Name = "Pos5Display";
                         AvailablePos5Display.Size = new Size(150, 53);
                         // this.AvailablePos5Display.TabIndex = 165;
@@ -858,7 +873,7 @@ namespace Neutron.Forms
                         // AvailablePos6Display
                         // 
                         // this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos6Display.Location = new Point(970, 109);
+                        AvailablePos6Display.Location = new Point(970, 44);
                         // this.AvailablePos6Display.Name = "Pos6Display";
                         AvailablePos6Display.Size = new Size(150, 53);
                         //  this.AvailablePos6Display.TabIndex = 166;
@@ -2084,11 +2099,9 @@ namespace Neutron.Forms
             Task.Run(() =>
                 _logger.Log($"ShowAllOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
             var idx = 0;
-            var findWhat = TextBoxFind.Text.Trim().ToLower();
-            // string find = _akaRepository.Get(findWhat);
-            // TextBoxFind.Text = find;
-
-            var views = _replenOrdersRepository.GetOrderViewNotCompleted(findWhat);
+            var searchField = TextBoxFind.Text.Trim().ToLower();
+            var orderStatus = "1,2,3,4,5,6,7,8,9";
+            var views = _replenOrdersRepository.GetReplenOrderViews(orderStatus, searchField);
             var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
             _bindingSourceOrderView.DataSource = bindingListView;
             DataGridView1.DataSource = _bindingSourceOrderView;
@@ -2128,20 +2141,21 @@ namespace Neutron.Forms
             }
         }
 
-        private int ShowAvailableOrders(int recId = 0, string findWhat = "")
+        private int ShowAvailableOrders(int recId = 0, string searchField = "")
         {
             Task.Run(() => _logger.Log("Show Available Orders START"));
             var idx = 0;
-            if (string.IsNullOrEmpty(findWhat))
+            if (string.IsNullOrEmpty(searchField))
             {
-                findWhat = TextBoxFindAvailableOrders.Text.Trim().ToLower();
+                searchField = TextBoxFindAvailableOrders.Text.Trim().ToLower();
             }
 
             try
             {
-                var views = !string.IsNullOrEmpty(findWhat)
-                    ? _replenOrdersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking)
-                    : _replenOrdersRepository.GetAvailableOrders(_station);
+                var views = _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreen(_station, searchField);
+                //var views = !string.IsNullOrEmpty(findWhat)
+                //    ? _replenOrdersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking)
+                //    : _replenOrdersRepository.GetAvailableOrders(_station);
 
                 _bindingListViewAvailableOrdersViews = new BindingListView<AvailableReplenOrdersView>(views.ToList());
                 _bindingSourceAvailableOrders.DataSource = _bindingListViewAvailableOrdersViews;
@@ -3803,26 +3817,50 @@ namespace Neutron.Forms
 
         private void ClearPickPositions()
         {
-            TextBoxPickPos1.Text = string.Empty;
-            TextBoxPickPos2.Text = string.Empty;
-            TextBoxPickPos3.Text = string.Empty;
-            TextBoxPickPos4.Text = string.Empty;
-            TextBoxPickPos5.Text = string.Empty;
-            TextBoxPickPos6.Text = string.Empty;
-            TextBoxPickPos7.Text = string.Empty;
-            TextBoxPickPos8.Text = string.Empty;
+            var font = new Font("Microsoft San Serif", 24);
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"TextBoxPickPos{pos}", true).First();
+                if (c != null)
+                {
+                    var textBox = ((TextBox)c);
+                    textBox.Font = font;
+                    textBox.Text = bp.OrderComplete ? "END" : string.Empty;
+                }
+            }
+
+            //TextBoxPickPos1.Text = string.Empty;
+            //TextBoxPickPos2.Text = string.Empty;
+            //TextBoxPickPos3.Text = string.Empty;
+            //TextBoxPickPos4.Text = string.Empty;
+            //TextBoxPickPos5.Text = string.Empty;
+            //TextBoxPickPos6.Text = string.Empty;
+            //TextBoxPickPos7.Text = string.Empty;
+            //TextBoxPickPos8.Text = string.Empty;
         }
 
         private void ClearPickDisplays()
         {
-            Pos1Display.BackColor = Color.Transparent;
-            Pos2Display.BackColor = Color.Transparent;
-            Pos3Display.BackColor = Color.Transparent;
-            Pos4Display.BackColor = Color.Transparent;
-            Pos5Display.BackColor = Color.Transparent;
-            Pos6Display.BackColor = Color.Transparent;
-            Pos7Display.BackColor = Color.Transparent;
-            Pos8Display.BackColor = Color.Transparent;
+            foreach (var bp in _ordersToPick)
+            {
+                string pos = bp.PositionNumber.ToString();
+                Control c = Controls.Find($"Pos{pos}Display", true).First();
+                if (c != null)
+                {
+                    var panel = ((Panel)c);
+                    panel.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+                }
+            }
+
+            //Pos1Display.BackColor = Color.Transparent;
+            //Pos2Display.BackColor = Color.Transparent;
+            //Pos3Display.BackColor = Color.Transparent;
+            //Pos4Display.BackColor = Color.Transparent;
+            //Pos5Display.BackColor = Color.Transparent;
+            //Pos6Display.BackColor = Color.Transparent;
+            //Pos7Display.BackColor = Color.Transparent;
+            //Pos8Display.BackColor = Color.Transparent;
         }
 
         private int GetTotalRequiredThisStop(ReplenPickStop currentPickStop)
@@ -4994,13 +5032,12 @@ namespace Neutron.Forms
                     $"ShowCompletedOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
             var idx = 0;
 
-            var findWhat = string.IsNullOrEmpty(TextBoxFind.Text.Trim().ToLower())
-                ? string.Empty
-                : TextBoxFind.Text.Trim().ToLower();
-            // string find = _akaRepository.Get(findWhat);
-            // TextBoxFind.Text = find;
+            var searchField = TextBoxFind.Text.Trim().ToLower();
+            var orderStatus = "6";
 
-            var views = _replenOrdersRepository.GetCompletedOrders(findWhat);
+            var views = _replenOrdersRepository.GetReplenOrderViews(orderStatus, searchField);
+
+            //var views = _replenOrdersRepository.GetCompletedOrders(findWhat);
             var bindingListView = new BindingListView<ReplenOrderView>(views.ToList());
             _bindingSourceCompleted.DataSource = bindingListView;
 

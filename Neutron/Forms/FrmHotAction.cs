@@ -158,8 +158,8 @@ namespace Neutron.Forms
                 InitialSearch(_item);
                 LabelStationName.Text = _station.Name;
                 LabelStationName2.Text = _station.Name;
-                if (_station.StationType.Id == (int) NeutronCore.Enums.StationType.Carousel
-                    || _station.StationType.Id == (int) NeutronCore.Enums.StationType.Vertical)
+                if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
+                    || _station.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical)
                 {
                     TextBoxScanLocation.Visible = true;
                 }
@@ -167,7 +167,7 @@ namespace Neutron.Forms
                 {
                     TextBoxScanLocation.Visible = false;
                     _newLocationButtonText = _resourceManager.GetString("AllLocations");
-                MBNewLocations.Text = _newLocationButtonText;
+                    MBNewLocations.Text = _newLocationButtonText;
                 }
             }
             else
@@ -202,6 +202,17 @@ namespace Neutron.Forms
                 ButtonClearFindItem.Visible = false;
                 MBFindItem.Visible = false;
                 MBHotActionCount.Visible = false;
+            }
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var parms = base.CreateParams;
+                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
+                return parms;
             }
         }
 
@@ -507,11 +518,24 @@ namespace Neutron.Forms
                 _logger.Log($"Load Item Definitions NOT a Supervisor Station ");
                 _logger.Log($"Load Item Definitions Call FindItemDefinitionViewsByStation  ");
                 _logger.Log($"Load Item Definitions Passing in findWhat: {findWhat}  and Station: {_station.StationId} ");
-                views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _station.StationId);
+                views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _station.StationId).ToList();
                 _logger.Log($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
+
+                if (!views.Any() && !string.IsNullOrEmpty(findWhat))
+                {
+                    var akaFind = _akaRepository.Get(findWhat);
+                    TextBoxFindItem.Text = akaFind;
+                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(akaFind, _station.StationId).ToList();
+                    _logger.Log($"Load Item Definitions Back with Views Using AKA Find.  Setting them to BindingListView ");
+                }
+
                 blv = new BindingListView<ItemDefinitionView>(views.ToList());
                 _logger.Log($"Load Item Definitions BLV created ");
             }
+
+
+
+
             _logger.Log($"Load Item Definitions Create a new BindingSource using BLV as DataSource ");
             _logger.Log($"Load Item Definitions called _bindingSourceItemDefinitions");
             _bindingSourceItemDefinitions = new BindingSource { DataSource = blv };
@@ -1070,15 +1094,15 @@ namespace Neutron.Forms
             Task.Run(() => _logger.Log($"Find Hot Record: {findWhat} START"));
             try
             {
-                if (!string.IsNullOrEmpty(findWhat))
-                {
-                    var akaFind = _akaRepository.Get(findWhat);
-                    TextBoxFindItem.Text = akaFind;
-                }
-                else
-                {
-                    TextBoxFindItem.Text = findWhat;
-                }
+                //if (!string.IsNullOrEmpty(findWhat))
+                //{
+                //    var akaFind = _akaRepository.Get(findWhat);
+                //    TextBoxFindItem.Text = akaFind;
+                //}
+                //else
+                //{
+                //    TextBoxFindItem.Text = findWhat;
+                //}
                 LoadItemDefinitions();
             }
             catch (Exception ex)
@@ -1199,7 +1223,7 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             //Cost Center
             GroupBoxHotActions.Visible = false;
-           
+
             RadioButtonPick.Text = $"{_resourceManager.GetString("Store")}";
             RadioButtonPick.Tag = "Store";
 
@@ -1247,7 +1271,7 @@ namespace Neutron.Forms
 
                 if (device == null) //No Hardware devices
                 {
-                   await UpdateHotPickScreen(_currentInventoryView);
+                    await UpdateHotPickScreen(_currentInventoryView);
                     tabControl1.SelectedTab = HotAction;
                 }
                 else if (device.DeviceTypeId == (int)DeviceType.Shuttle)

@@ -47,37 +47,7 @@ namespace NeutronData.Repositories
             _runningOrderDetailCount = 0;
         }
 
-        //public IEnumerable<ReplenOrderView> GetOrderViewNotCompleted()
-        //{
-        //    // var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking,(int)LineStatus.Partial };
-        //    IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails)
-        //        // .Where(r => statusToGet.Contains(r.OrderStatusId))
-        //        .Where(r => r.OrderStatusId != 6)
-        //        .Select(s => new ReplenOrderView
-        //        {
-        //            Id = s.Id,
-        //            Ord1 = s.Ord1,
-        //            Ord2 = s.Ord2,
-        //            OrderStatusName = s.OrderStatus.Name,
-        //            ShipMethodName = s.ShipMethod.Name,
-        //            Priority = s.Priority,
-        //            ReplenOrder = s,
-        //            Station_1_HasPicks = CheckForPicks3(1, s.ReplenOrderDetails),
-        //            Station_2_HasPicks = CheckForPicks3(2, s.ReplenOrderDetails),
-        //            Station_3_HasPicks = CheckForPicks3(3, s.ReplenOrderDetails),
-        //            Station_4_HasPicks = CheckForPicks3(4, s.ReplenOrderDetails),
-        //            Station_5_HasPicks = CheckForPicks3(5, s.ReplenOrderDetails),
-        //            Station_8_HasPicks = CheckForPicks3(8, s.ReplenOrderDetails),
-        //            LoadDate = s.LoadDate,
-        //            OrderStatusId = s.OrderStatusId,
-        //            ShipMethodId = s.ShipMethodId
-        //        })
-        //        .OrderBy(o => o.Id).ToList();
-
-        //    return recs;
-        //}
-
-        public ReplenOrder GetOrder(int id)
+       public ReplenOrder GetOrder(int id)
         {
             ReplenOrder order;
             using (var db = new NeutronDb())
@@ -87,32 +57,29 @@ namespace NeutronData.Repositories
             return order;
         }
 
-        public IEnumerable<ReplenOrderView> GetOrderViewNotCompleted(string search = "")
+        public IEnumerable<ReplenOrderView> GetReplenOrderViews(string orderStatus = "1,2,3,4,5,7,8", string searchField = "")
         {
-            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails)
-                .Where(r => r.OrderStatusId != (int)OrderStatus.Complete)
-                .Select(s => new ReplenOrderView
+            var recs = new List<ReplenOrderView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
                 {
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
-                    Priority = s.Priority,
-                    ReplenOrder = s,
-                    Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                    Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                    Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                    Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                    Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
-                    LoadDate = s.LoadDate,
-                    OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
-                })
-                .OrderBy(o => o.Ord1).ToList();
-            var result = recs.Where(s => s.SearchField.Contains(search));
-            return result;
+                    var param = new SqlParameter(parameterName: "@OrderStatus", value: orderStatus);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SearchField", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<ReplenOrderView>("usp_GetReplenOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+            return recs;
         }
 
         private string HasPicks(int[] moveableStationIds, int hasPickNum, ICollection<ReplenOrderDetail> orderDetails)
@@ -976,6 +943,31 @@ namespace NeutronData.Repositories
                 .OrderBy(o => o.Ord1).ToList();
             IEnumerable<ReplenOrderView> result = recs.Where(s => s.SearchField.Contains(search));
             return result;
+        }
+
+        public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(StationView station, string searchField)
+        {
+            var recs = new List<AvailableReplenOrdersView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@STATIONNUMBER", value: station.StationId);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SEARCHFIELD", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersForInductionScreen @STATIONNUMBER, @SEARCHFIELD", parameters.ToArray()).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+            return recs;
         }
     }
 }

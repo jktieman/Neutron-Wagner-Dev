@@ -58,60 +58,32 @@ namespace NeutronData.Repositories
             return ord;
         }
 
-        public IEnumerable<OrderView> GetOrderViewNotCompleted(string search = "")
+        public IEnumerable<OrderView> GetOrderViews(string orderStatus = "1,2,3,4,5,7,8", string searchField = "")
         {
-            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
-                .Where(r => r.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete)
-                .Select(s => new OrderView
-                {
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
-                    Priority = s.Priority,
-                    Order = s,
-                    Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.OrderDetails),
-                    Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.OrderDetails),
-                    Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.OrderDetails),
-                    Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.OrderDetails),
-                    Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.OrderDetails),
-                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
-                    LoadDate = s.LoadDate,
-                    OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
-                })
-                .OrderByDescending(o => o.Priority).ToList();
-            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
-        }
+            var recs = new List<OrderView>();
 
-        //public IEnumerable<OrderView> GetOrderViewNotCompleted()
-        //{
-        //    IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
-        //        .Where(r => r.OrderStatusId != 6)
-        //        .Select(s => new OrderView
-        //        {
-        //            Id = s.Id,
-        //            Ord1 = s.Ord1,
-        //            Ord2 = s.Ord2,
-        //            OrderStatusName = s.OrderStatus.Name,
-        //            ShipMethodName = s.ShipMethod.Name,
-        //            Priority = s.Priority,
-        //            Order = s,
-        //            Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.OrderDetails),
-        //            Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.OrderDetails),
-        //            Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.OrderDetails),
-        //            Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.OrderDetails),
-        //            Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.OrderDetails),
-        //            Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
-        //            LoadDate = s.LoadDate,
-        //            OrderStatusId = s.OrderStatusId,
-        //            ShipMethodId = s.ShipMethodId
-        //        })
-        //        .OrderBy(o => o.Ord1).ToList();
-        //    IEnumerable<OrderView> result = recs.Where(s => s.SearchField.Contains(search));
-        //    return result;
-        //}
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@OrderStatus", value: orderStatus);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SearchField", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<OrderView>("usp_GetOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList();
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+
+            return recs;
+        }
 
         public IEnumerable<OrderView> GetOrderView()
         {
@@ -703,7 +675,7 @@ namespace NeutronData.Repositories
                     Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.OrderDetails),
                     Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.OrderDetails),
                     Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.OrderDetails),
-                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
+             Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.OrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
@@ -1407,6 +1379,32 @@ namespace NeutronData.Repositories
                 //}
             }
             return ord;
+        }
+
+        public List<AvailableOrdersView> GetAvailableOrdersForInductionScreen(StationView station, string searchField)
+        {
+            var recs = new List<AvailableOrdersView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@STATIONNUMBER", value: station.StationId);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SEARCHFIELD", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreen @STATIONNUMBER, @SEARCHFIELD", parameters.ToArray()).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+
+            return recs;
         }
     }
 }

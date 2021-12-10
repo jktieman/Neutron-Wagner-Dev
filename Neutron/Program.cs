@@ -14,6 +14,7 @@ using System.IO;
 using NeutronCore;
 using NeutronCore.Global;
 using Newtonsoft.Json;
+using SqlSchemaManager;
 
 namespace Neutron
 {
@@ -78,6 +79,7 @@ namespace Neutron
             var ordersRepository = kernel.Get<IOrdersRepository>();
             var replenOrdersRepository = kernel.Get<IReplenOrdersRepository>();
             var enumManager = kernel.Get<IEnumManager>();
+            var storedProcedureManager = kernel.Get<IStoredProcedureManager>();
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
 
