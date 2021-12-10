@@ -39,7 +39,7 @@ namespace NeutronMaintenance
             neutronVariables = jsonData.LoadFile<NeutronVariables>();
             neutronLicense = jsonData.LoadFile<NeutronLicense>();
             usePr1Processor = neutronVariables.UsePr1Processor;
-            LoaderSettings.Init(this.configFilePath);
+            LoaderSettings.Init();
 
             string logFileDir = LoaderSettings.GetLogFileDirectory();
             string folderName = @"Neutron Maintenance";
