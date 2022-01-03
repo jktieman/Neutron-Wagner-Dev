@@ -48,7 +48,7 @@ namespace NeutronLoader
         public bool CreateHostFile(List<History> historyRecs)
         {
             _logger.Log($"49 CreateHostFile with HistoryRecs");
-            _usePr1Processor = _neutronVariables.UsePr1Processor;
+            _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
 
             if (_hostUploadDirectory == null) return false;
             if (_usePr1Processor)
@@ -174,7 +174,7 @@ namespace NeutronLoader
             string operation = string.Empty;
             var sb = new StringBuilder();
 
-            if (_neutronVariables.UsePr1Processor)
+            if (_neutronVariables.UsePr1StyleOutputProcessor)
             {
                 _logger.Log($"119 NOVA/SFH - UsePr1Processor: true");
                 //Saint Francis Hospital
@@ -428,7 +428,7 @@ namespace NeutronLoader
 
         public void CreateHostFile(HostOrder order)
         {
-            _usePr1Processor = _neutronVariables.UsePr1Processor;
+            _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
             if (_hostUploadDirectory != null)
             {
@@ -446,7 +446,7 @@ namespace NeutronLoader
         public void CreateHostFile(ReplenHostOrder order)
         {
 
-            _usePr1Processor = _neutronVariables.UsePr1Processor;
+            _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
 
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
             if (_hostUploadDirectory != null)
@@ -471,7 +471,7 @@ namespace NeutronLoader
         public void CreateHostFile(List<HostOrder> hostOrders)
         {
             _logger.Log($"105 Folder Name: HostFile");
-            _usePr1Processor = _neutronVariables.UsePr1Processor;
+            _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
             hostOrders = hostOrders.OrderBy(o => o.JobNum).ThenBy(o => o.PartNum).ToList();
 
             List<IGrouping<string, HostOrder>> groups = hostOrders.GroupBy(g => g.JobNum).ToList();
@@ -498,7 +498,7 @@ namespace NeutronLoader
 
             List<IGrouping<string, ReplenHostOrder>> groups = orders.GroupBy(g => g.JobNum).ToList();
 
-            _usePr1Processor = _neutronVariables.UsePr1Processor;
+            _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
 
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
             if (_hostUploadDirectory != null)
@@ -1036,7 +1036,7 @@ namespace NeutronLoader
             var sb = new StringBuilder();
 
 
-            if (_neutronVariables.UsePr1Processor)
+            if (_neutronVariables.UsePr1StyleOutputProcessor)
             {
                 _logger.Log($"725 NOVA/SFH - UsePr1Processor: true");
                 //Saint Francis Hospital

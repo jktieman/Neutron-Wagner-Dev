@@ -4,6 +4,7 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using NeutronCore;
 using NeutronData.Models.Lookups;
@@ -13,15 +14,17 @@ namespace NeutronData.Repositories
 {
     public class StationRepository : IStationRepository
     {
-        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices;
+
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
         private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
         private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
-        private Dictionary<int, string> _dicCommunicationTypes;
+        private readonly Dictionary<int, string> _dicCommunicationTypes;
 
-        public StationRepository()
+        public StationRepository(DbContext context)
         {
+            _repoHardwareDevices = new GenericRepository<HardwareDevice>(context);
             _dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
         }
 

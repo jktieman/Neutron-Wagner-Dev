@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using NeutronData.General;
 
 namespace Neutron.Classes
 {
@@ -62,6 +63,7 @@ namespace Neutron.Classes
                     {
                         using (var db = new SecureDb())
                         {
+                            if (!db.CheckConnection()) return;
                             try
                             {
                                 var secureItems = new List<SecureItem>();
@@ -83,7 +85,7 @@ namespace Neutron.Classes
                                 {
                                     foreach (var item in secureItems)
                                     {
-                                        SecurityProfile[(int) item.SecureItemId] = true;
+                                        SecurityProfile[(int)item.SecureItemId] = true;
                                     }
                                 }
                             }
@@ -91,7 +93,6 @@ namespace Neutron.Classes
                             {
                                 MessageBox.Show("Error finding user.  " + ex.Message);
                             }
-
                         }
                     }
                 }

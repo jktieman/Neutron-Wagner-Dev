@@ -20,7 +20,7 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
-        private readonly StationRepository _stationRepository = new StationRepository();
+        private readonly StationRepository _stationRepository = new StationRepository(new NeutronDb());
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly Station _rackStation;
@@ -57,7 +57,7 @@ namespace NeutronLoader
         public bool CreateHostFile(List<History> historyRecs)
         {
             _logger.Log($"49 CreateHostFile with HistoryRecs");
-            _usePr1Processor = _neutronVariables.UsePr1Processor;
+            _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
 
             if (_hostUploadDirectory == null) return false;
             if (_usePr1Processor)
@@ -114,43 +114,100 @@ namespace NeutronLoader
 
         }
 
+
         private string GetCsvString(History item)
         {
             _logger.Log($"111 GetCsvString history: {item.Ord1}");
             _logger.Log($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
-
+            var costcenter = "";
             var sb = new StringBuilder();
 
-            if (_neutronVariables.UsePr1Processor)
+            var loc = @"        ";
+            if (item.OrderDetailInfo.Length >= 8)
             {
-                _logger.Log($"119  UsePr1Processor: true");
-
-                var loc = @"        ";
-                if (item.OrderDetailInfo.Length >= 8)
-                {
-                    loc = item.OrderDetailInfo.Substring(startIndex: 0, length: 9);
-                }
-                string reqQty = item.RequestedQuantity.ToString().PadLeft(totalWidth: 9, paddingChar: '0');
-
-
-                sb.Length = 127;
-                sb.Insert(index: 0, value: "3O");
-                sb.Insert(index: 2, value: item.Ord1.PadRight(10));
-                sb.Insert(index: 13, value: item.Ord2.PadRight(totalWidth: 10, paddingChar: ' '));
-                sb.Insert(index: 24, value: item.ActionDateTime);
-                sb.Insert(index: 33, value: item.LoadDate);
-                sb.Insert(index: 42, value: item.Item.PadRight(totalWidth: 35));
-                sb.Insert(index: 78, value: reqQty);
-                sb.Insert(index: 88, value: item.IssuedQuantity.ToString().PadLeft(9, paddingChar: '0'));
-                sb.Insert(index: 98, value: "07:14");
-                sb.Insert(index: 104, value: "02");
-                sb.Insert(index: 107, value: item.EmpId.PadRight(totalWidth: 10, paddingChar: ' '));
-                sb.Insert(index: 118, value: loc);
+                loc = item.OrderDetailInfo.Substring(startIndex: 0, length: 9);
             }
+            string reqQty = item.RequestedQuantity.ToString().PadLeft(totalWidth: 9, paddingChar: '0');
+
+            if (string.IsNullOrWhiteSpace(item.OrderDetailInfo))
+            {
+                if (string.IsNullOrWhiteSpace(item.CostCenter))
+                {
+                    costcenter = item.Ord1;
+                }
+                else
+                {
+                    costcenter = item.CostCenter;
+                }
+            }
+            else
+            {
+                costcenter = item.OrderDetailInfo;
+            }
+
+
+
+            var sku = item.Item;
+            var issuedQty = item.IssuedQuantity;
+
+            sb.Append($" ,{costcenter},{sku}, ,{issuedQty}, , , , ,0");
+
+            //sb.Length = 127;
+            //sb.Insert(index: 0, value: "3O");
+            //sb.Insert(index: 2, value: item.Ord1.PadRight(10));
+            //sb.Insert(index: 13, value: item.Ord2.PadRight(totalWidth: 10, paddingChar: ' '));
+            //sb.Insert(index: 24, value: item.ActionDateTime);
+            //sb.Insert(index: 33, value: item.LoadDate);
+            //sb.Insert(index: 42, value: item.Item.PadRight(totalWidth: 35));
+            //sb.Insert(index: 78, value: reqQty);
+            //sb.Insert(index: 88, value: item.IssuedQuantity.ToString().PadLeft(9, paddingChar: '0'));
+            //sb.Insert(index: 98, value: "07:14");
+            //sb.Insert(index: 104, value: "02");
+            //sb.Insert(index: 107, value: item.EmpId.PadRight(totalWidth: 10, paddingChar: ' '));
+            //sb.Insert(index: 118, value: loc);
+
 
             _logger.Log($"173 GetCsvString History result: {sb.ToString()}");
             return sb.ToString();
         }
+
+        //private string GetCsvString(History item)
+        //{
+        //    _logger.Log($"111 GetCsvString history: {item.Ord1}");
+        //    _logger.Log($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
+
+        //    var sb = new StringBuilder();
+
+        //    if (_neutronVariables.UsePr1StyleOutputProcessor)
+        //    {
+        //        _logger.Log($"119  UsePr1Processor: true");
+
+        //        var loc = @"        ";
+        //        if (item.OrderDetailInfo.Length >= 8)
+        //        {
+        //            loc = item.OrderDetailInfo.Substring(startIndex: 0, length: 9);
+        //        }
+        //        string reqQty = item.RequestedQuantity.ToString().PadLeft(totalWidth: 9, paddingChar: '0');
+
+
+        //        sb.Length = 127;
+        //        sb.Insert(index: 0, value: "3O");
+        //        sb.Insert(index: 2, value: item.Ord1.PadRight(10));
+        //        sb.Insert(index: 13, value: item.Ord2.PadRight(totalWidth: 10, paddingChar: ' '));
+        //        sb.Insert(index: 24, value: item.ActionDateTime);
+        //        sb.Insert(index: 33, value: item.LoadDate);
+        //        sb.Insert(index: 42, value: item.Item.PadRight(totalWidth: 35));
+        //        sb.Insert(index: 78, value: reqQty);
+        //        sb.Insert(index: 88, value: item.IssuedQuantity.ToString().PadLeft(9, paddingChar: '0'));
+        //        sb.Insert(index: 98, value: "07:14");
+        //        sb.Insert(index: 104, value: "02");
+        //        sb.Insert(index: 107, value: item.EmpId.PadRight(totalWidth: 10, paddingChar: ' '));
+        //        sb.Insert(index: 118, value: loc);
+        //    }
+
+        //    _logger.Log($"173 GetCsvString History result: {sb.ToString()}");
+        //    return sb.ToString();
+        //}
 
         private bool SaveUploadDatFile(List<History> historyRecs)
         {
@@ -166,14 +223,14 @@ namespace NeutronLoader
                 _logger.Log($"187 FullName: {fullName}");
                 try
                 {
-                        using (var tw = new StreamWriter(fullName, append: true))
+                    using (var tw = new StreamWriter(fullName, append: true))
+                    {
+                        foreach (var history in historyRecs)
                         {
-                            foreach (var history in historyRecs)
-                            {
-                                tw.WriteLine(GetUploadDatRecord(history));
-                            }
+                            tw.WriteLine(GetUploadDatRecord(history));
                         }
-                        result = true;
+                    }
+                    result = true;
                 }
                 catch (Exception ex)
                 {
@@ -242,7 +299,7 @@ namespace NeutronLoader
                         empName = emp.Firstname.PadRight(10);
                     }
                 }
-              
+
                 var upCode = ($"02");
                 var time = DateTime.Now.ToString(format: "HH:mm");
 
@@ -271,7 +328,7 @@ namespace NeutronLoader
 
             return result;
         }
-        
+
         private DirectoryInfo GetDirectory(string dir)
         {
             DirectoryInfo result = null;
@@ -282,7 +339,7 @@ namespace NeutronLoader
             }
             return result;
         }
-        
+
         //TMG
         private string GetFileName(string hostOrderTypeCode)
         {

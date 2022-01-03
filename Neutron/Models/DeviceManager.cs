@@ -114,15 +114,15 @@ namespace Neutron.Models
             return new DeviceMover(deviceNumber, locs);
         }
 
-        public async Task FirstMoveAsync()
-        {
-            _firstMove = true;
-            await MoveNext(1);
-            await MoveNext(2);
-            await MoveNext(3);
-            await MoveNext(4);
-            _firstMove = false;
-        }
+        //public async Task FirstMoveAsync()
+        //{
+        //    _firstMove = true;
+        //    await MoveNext(1);
+        //    await MoveNext(2);
+        //    await MoveNext(3);
+        //    await MoveNext(4);
+        //    _firstMove = false;
+        //}
 
         public async Task MoveNext(int deviceNumber)
         {

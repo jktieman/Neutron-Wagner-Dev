@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Windows.Forms;
 using Ninject;
@@ -11,8 +12,14 @@ using NeutronData.Interfaces;
 using Neutron.Models;
 using System.Globalization;
 using System.IO;
+using AlliedLogger;
+using AlliedPostOffice;
+using Neutron.Forms;
 using NeutronCore;
 using NeutronCore.Global;
+using NeutronData.DataContexts;
+using NeutronData.General;
+using NeutronData.Models;
 using Newtonsoft.Json;
 using SqlSchemaManager;
 
@@ -71,15 +78,21 @@ namespace Neutron
             //jsonData.RootDirectory = $"{Properties.Settings.Default.RootDirectory}";
             //LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
 
+            var context = new NeutronDb().CheckConnection();
+
+            if (context)
+            {
+                var stationRepository = kernel.Get<IStationRepository>();
+                var ordersRepository = kernel.Get<IOrdersRepository>();
+                var replenOrdersRepository = kernel.Get<IReplenOrdersRepository>();
+            }
             var akaRepository = kernel.Get<IAkaRepository>();
             var securityProcessor = kernel.Get<ISecurityProcessor>();
             var lacProcessor = kernel.Get<ILacProcessor>();
             var imageManager = kernel.Get<IImageManager>();
-            var stationRepository = kernel.Get<IStationRepository>();
-            var ordersRepository = kernel.Get<IOrdersRepository>();
-            var replenOrdersRepository = kernel.Get<IReplenOrdersRepository>();
             var enumManager = kernel.Get<IEnumManager>();
             var storedProcedureManager = kernel.Get<IStoredProcedureManager>();
+            var logger = new DynamicLogger(@"C:\Neutron\Logs\", "Startup.log", "true");
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
 
@@ -95,13 +108,26 @@ namespace Neutron
                 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
             }
-            var frmMain = kernel.Get<FrmMain>();
-            Application.Run(frmMain);
+
+            if (context)
+            {
+                var frmMain = kernel.Get<FrmMain>();
+                Application.Run(frmMain);
+            }
+            else
+            {
+                var frmSystem = new FrmSystem(jsonData, logger, null, null, storedProcedureManager, true);
+                Application.Run(frmSystem);
+            }
+
+
 
             //Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor
             //    , lacProcessor, imageManager, stationRepository
             //    , ordersRepository, replenOrdersRepository));
 
         }
+
+
     }
 }

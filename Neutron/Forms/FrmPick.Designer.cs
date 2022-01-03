@@ -367,6 +367,8 @@ namespace Neutron.Forms
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
             this.ErrorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.TextBoxNewOrderCostCenter = new System.Windows.Forms.TextBox();
+            this.LabelCostCenter = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -3555,6 +3557,8 @@ namespace Neutron.Forms
             // 
             // GroupBoxDetailInformation
             // 
+            this.GroupBoxDetailInformation.Controls.Add(this.TextBoxNewOrderCostCenter);
+            this.GroupBoxDetailInformation.Controls.Add(this.LabelCostCenter);
             this.GroupBoxDetailInformation.Controls.Add(this.TextBoxNewOrderDescription);
             this.GroupBoxDetailInformation.Controls.Add(this.TextBoxNewOrderItem);
             this.GroupBoxDetailInformation.Controls.Add(this.ButtonAddDetail);
@@ -3565,7 +3569,7 @@ namespace Neutron.Forms
             this.GroupBoxDetailInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GroupBoxDetailInformation.Location = new System.Drawing.Point(19, 163);
             this.GroupBoxDetailInformation.Name = "GroupBoxDetailInformation";
-            this.GroupBoxDetailInformation.Size = new System.Drawing.Size(462, 218);
+            this.GroupBoxDetailInformation.Size = new System.Drawing.Size(462, 231);
             this.GroupBoxDetailInformation.TabIndex = 2;
             this.GroupBoxDetailInformation.TabStop = false;
             this.GroupBoxDetailInformation.Text = "Detail Information";
@@ -3589,9 +3593,9 @@ namespace Neutron.Forms
             // 
             this.ButtonAddDetail.Enabled = false;
             this.ButtonAddDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonAddDetail.Location = new System.Drawing.Point(10, 154);
+            this.ButtonAddDetail.Location = new System.Drawing.Point(10, 177);
             this.ButtonAddDetail.Name = "ButtonAddDetail";
-            this.ButtonAddDetail.Size = new System.Drawing.Size(442, 54);
+            this.ButtonAddDetail.Size = new System.Drawing.Size(442, 42);
             this.ButtonAddDetail.TabIndex = 1;
             this.ButtonAddDetail.Text = "Add Detail";
             this.ButtonAddDetail.UseVisualStyleBackColor = true;
@@ -4414,6 +4418,25 @@ namespace Neutron.Forms
             // 
             this.ErrorProvider1.ContainerControl = this;
             // 
+            // TextBoxNewOrderCostCenter
+            // 
+            this.TextBoxNewOrderCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewOrderCostCenter.Location = new System.Drawing.Point(150, 141);
+            this.TextBoxNewOrderCostCenter.Name = "TextBoxNewOrderCostCenter";
+            this.TextBoxNewOrderCostCenter.Size = new System.Drawing.Size(144, 26);
+            this.TextBoxNewOrderCostCenter.TabIndex = 67;
+            this.TextBoxNewOrderCostCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelCostCenter
+            // 
+            this.LabelCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCostCenter.Location = new System.Drawing.Point(13, 141);
+            this.LabelCostCenter.Name = "LabelCostCenter";
+            this.LabelCostCenter.Size = new System.Drawing.Size(131, 26);
+            this.LabelCostCenter.TabIndex = 68;
+            this.LabelCostCenter.Text = "Cost Center";
+            this.LabelCostCenter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // FrmPick
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4790,5 +4813,7 @@ namespace Neutron.Forms
         private System.Windows.Forms.Button ButtonLocationMovePrevious;
         private System.Windows.Forms.Label LabelLocationLineOfLines;
         private System.Windows.Forms.Label LabelNotify;
+        private System.Windows.Forms.TextBox TextBoxNewOrderCostCenter;
+        private System.Windows.Forms.Label LabelCostCenter;
     }
 }

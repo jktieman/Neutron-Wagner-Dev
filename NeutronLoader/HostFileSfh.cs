@@ -20,7 +20,7 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
-        private readonly StationRepository _stationRepository = new StationRepository();
+        private readonly StationRepository _stationRepository = new StationRepository(new NeutronDb());
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly Station _rackStation;

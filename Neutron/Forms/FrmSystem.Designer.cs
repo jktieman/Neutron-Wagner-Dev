@@ -114,6 +114,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.CheckBoxAppendFile = new System.Windows.Forms.CheckBox();
+            this.LabelAppendFile = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -498,6 +500,8 @@
             // 
             // PanelFile
             // 
+            this.PanelFile.Controls.Add(this.LabelAppendFile);
+            this.PanelFile.Controls.Add(this.CheckBoxAppendFile);
             this.PanelFile.Controls.Add(this.ButtonLanguageDirectory);
             this.PanelFile.Controls.Add(this.label15);
             this.PanelFile.Controls.Add(this.LanguageDirectory);
@@ -1040,6 +1044,26 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // CheckBoxAppendFile
+            // 
+            this.CheckBoxAppendFile.AutoSize = true;
+            this.CheckBoxAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxAppendFile.Location = new System.Drawing.Point(822, 229);
+            this.CheckBoxAppendFile.Name = "CheckBoxAppendFile";
+            this.CheckBoxAppendFile.Size = new System.Drawing.Size(15, 14);
+            this.CheckBoxAppendFile.TabIndex = 104;
+            this.CheckBoxAppendFile.UseVisualStyleBackColor = true;
+            // 
+            // LabelAppendFile
+            // 
+            this.LabelAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAppendFile.Location = new System.Drawing.Point(678, 222);
+            this.LabelAppendFile.Name = "LabelAppendFile";
+            this.LabelAppendFile.Size = new System.Drawing.Size(138, 26);
+            this.LabelAppendFile.TabIndex = 105;
+            this.LabelAppendFile.Text = "Append File";
+            this.LabelAppendFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // FrmSystem
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1160,5 +1184,7 @@
         private System.Windows.Forms.TextBox LanguageDirectory;
         private MetroFramework.Controls.MetroButton MBRunUpload;
         private MetroFramework.Controls.MetroButton MBRunLoaderOnce;
+        private System.Windows.Forms.Label LabelAppendFile;
+        private System.Windows.Forms.CheckBox CheckBoxAppendFile;
     }
 }

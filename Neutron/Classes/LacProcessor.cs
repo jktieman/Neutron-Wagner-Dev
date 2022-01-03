@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
+using NeutronData.General;
 
 namespace Neutron.Classes
 {
@@ -32,6 +33,8 @@ namespace Neutron.Classes
                 {
                     using (var context = new SecureDb())
                     {
+                        if (!context.CheckConnection()) return;
+
                         var param = new SqlParameter("@UserId", userId);
                          var carriers = context.Database.SqlQuery<Carrier>("usp_GetLacSet @UserId", param).ToList();
                         foreach (var carrier in carriers)

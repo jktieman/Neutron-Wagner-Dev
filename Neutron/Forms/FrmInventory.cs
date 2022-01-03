@@ -59,7 +59,7 @@ namespace Neutron.Forms
             new GenericRepository<NeutronData.Models.Lookups.StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue =
             new GenericRepository<UnitOfIssue>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository();
+        private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
         private readonly LocationsRepository _locationsRepository;
         private readonly InventoryRepository _inventoryRepository = new InventoryRepository();
         private readonly IJsonData _jsonData;

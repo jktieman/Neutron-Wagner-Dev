@@ -2,9 +2,11 @@
 using NeutronCore.Global;
 using NeutronCore.Models;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using static System.Int32;
@@ -20,6 +22,7 @@ namespace NeutronLoader
         private readonly Station _rackStation;
         private Timer _timer;
         private bool _uploadBusy;
+        private DirectoryInfo _hostUploadDirectory;
 
         public UploadProcessorPr1(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             DynamicLogger logger, Station rackStation)
@@ -47,8 +50,35 @@ namespace NeutronLoader
             _timer.Dispose();
         }
 
+        private DirectoryInfo GetDirectory(string dir)
+        {
+            DirectoryInfo result = null;
+
+            if (!string.IsNullOrEmpty(dir))
+            {
+                result = new DirectoryInfo(dir);
+            }
+            return result;
+        }
+
         public void CreateHostFile()
         {
+            var appendFile = Convert.ToBoolean(LoaderSettings.AppendFile);
+            _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
+            if (!Directory.Exists(_hostUploadDirectory.FullName))
+            {
+                Directory.CreateDirectory(_hostUploadDirectory.FullName);
+            }
+            var fileName = LoaderSettings.GetHostUploadFile();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
+                if (File.Exists(fullName))
+                {
+                    if(!appendFile) return;
+                }
+            }
+
             var counter = 0;
             while (_uploadBusy)
             {

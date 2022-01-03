@@ -39,7 +39,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
         private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
         private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository();
+        private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<StorageType> _repoStorageType = new GenericRepository<StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());

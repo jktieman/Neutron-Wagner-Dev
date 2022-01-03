@@ -41,6 +41,8 @@ namespace NeutronCore
 
         public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
 
+        public static string AppendFile { get; set; }
+
         public static string GetImagesDirectory()
         {
             return PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory;

@@ -50,7 +50,7 @@ namespace Neutron.Forms
 
         private ResourceManager _gridResourceManager;
         //private GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-        //private StationRepository _repoStation = new StationRepository();
+        //private StationRepository _repoStation = new StationRepository(new NeutronDb());
         //private GenericRepository<History> repoHistory = new GenericRepository<History>(new NeutronDb());
         // private InventoryRepository repoInv = new InventoryRepository();
         // private GenericRepository<Order> repoOrders = new GenericRepository<Order>(new NeutronDb());

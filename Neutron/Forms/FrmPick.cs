@@ -6294,6 +6294,8 @@ namespace Neutron.Forms
                 Description = TextBoxNewOrderDescription.Text
                 ,
                 Quantity = TextBoxNewOrderQuantity.Text.ParseInt()
+                ,
+                CostCenter = TextBoxNewOrderCostCenter.Text
             };
             _bindingSourceNewItems.Add(rec);
             ClearNewOrderDetail();
@@ -6369,7 +6371,7 @@ namespace Neutron.Forms
                         PartNum = itemDefinition.Item,
                         PartDesc = itemDefinition.Description,
                         Qty = view.Quantity.ToString(),
-                        OrderDetailInfo = string.Empty,
+                        OrderDetailInfo = view.CostCenter,
                         TroubleBit = "0"
                     };
 

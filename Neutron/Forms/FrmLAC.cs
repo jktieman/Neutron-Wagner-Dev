@@ -18,7 +18,7 @@ namespace Neutron.Forms
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private readonly SecureDb _context = new SecureDb();
-        private readonly StationRepository _repoStationRepository = new StationRepository();
+        private readonly StationRepository _repoStationRepository; // = new StationRepository(context);
         private List<Station> _stations;
 
         private bool checkAllUsers;
@@ -38,7 +38,7 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-
+            _repoStationRepository = new StationRepository(_context);
             InitLac();
             // SetCulture(_cultureInfo.Name);
         }

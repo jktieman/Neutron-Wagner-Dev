@@ -41,9 +41,10 @@ namespace Neutron.Forms
         private readonly Station _rackStation;
         private readonly SendEmail _sendEmail;
         private readonly IStoredProcedureManager _storedProcedureManager;
+        private readonly bool _standAlone;
         private readonly bool _emailEnabled;
 
-        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation, SendEmail sendEmail, IStoredProcedureManager storedProcedureManager)
+        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation, SendEmail sendEmail, IStoredProcedureManager storedProcedureManager, bool standAlone = false)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -55,6 +56,7 @@ namespace Neutron.Forms
             _rackStation = rackStation;
             _sendEmail = sendEmail;
             _storedProcedureManager = storedProcedureManager;
+            _standAlone = standAlone;
             _emailEnabled = _neutronVariables.EnableEmailNotification;
             KeyPreview = true;
             HideTabControlTabs();
@@ -220,6 +222,7 @@ namespace Neutron.Forms
         private void MBMainClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
+            if(_standAlone) Close();
         }
 
         private void HideTabControlTabs()
@@ -305,6 +308,7 @@ namespace Neutron.Forms
             HostUploadDirectory.Text = LoaderSettings.GetHostUploadDirectory();
             HostUploadFile.Text = LoaderSettings.GetHostUploadFile();
             EnableLogging.Checked = Convert.ToBoolean(LoaderSettings.EnableLogging);
+            CheckBoxAppendFile.Checked = Convert.ToBoolean(LoaderSettings.AppendFile);
             LogFileDirectory.Text = LoaderSettings.GetLogFileDirectory();
             TextBoxHostOrderFileFilter.Text = LoaderSettings.GetHostOrderFileFilter();
             TextBoxMaintenanceFileFilter.Text = LoaderSettings.GetMaintenanceFileFilter();
@@ -497,6 +501,7 @@ namespace Neutron.Forms
             LoaderSettings.SetHostOrderFile(HostOrderFile.Text);
             LoaderSettings.SetHostUploadDirectory(HostUploadDirectory.Text);
             LoaderSettings.SetHostUploadFile(HostUploadFile.Text);
+            LoaderSettings.AppendFile = CheckBoxAppendFile.Checked.ToString().ToLower();
             LoaderSettings.EnableLogging = EnableLogging.Checked.ToString().ToLower();
             LoaderSettings.SetLogFileDirectory(LogFileDirectory.Text);
             LoaderSettings.SetHostOrderFileFilter(TextBoxHostOrderFileFilter.Text);

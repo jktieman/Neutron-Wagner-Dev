@@ -51,7 +51,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<LocationCode> _repoLocationCode =
             new GenericRepository<LocationCode>(new NeutronDb());
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository();
+        private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
         private readonly GenericRepository<VelocityCode> _repoVelocityCode =
             new GenericRepository<VelocityCode>(new NeutronDb());
         private ISlot _slotName;

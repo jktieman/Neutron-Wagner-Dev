@@ -1,8 +1,10 @@
-﻿using Ninject.Modules;
+﻿using System.Data.Entity;
+using Ninject.Modules;
 using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
 using Neutron.Models;
+using NeutronData.DataContexts;
 using NeutronData.General;
 using NeutronData.Interfaces;
 using NeutronData.Repositories;
@@ -14,6 +16,7 @@ namespace Neutron
     {
         public override void Load()
         {
+            Bind<DbContext>().To<NeutronDb>().InSingletonScope();
             Bind<IJsonData>().To<JsonData>();
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();

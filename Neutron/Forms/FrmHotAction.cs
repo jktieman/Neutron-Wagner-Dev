@@ -60,7 +60,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
-        private readonly StationRepository _stationRepository = new StationRepository();
+        private readonly StationRepository _stationRepository = new StationRepository(new NeutronDb());
         private LocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         //private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
