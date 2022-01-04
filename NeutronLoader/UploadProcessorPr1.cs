@@ -75,7 +75,12 @@ namespace NeutronLoader
                 var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
                 if (File.Exists(fullName))
                 {
-                    if(!appendFile) return;
+                    if(!appendFile)
+                    {
+                        MessageBox.Show("Upload file exists.", "File Exists", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                        return;
+                    }
                 }
             }
 

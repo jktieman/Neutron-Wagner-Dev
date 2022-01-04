@@ -161,7 +161,7 @@ namespace Neutron
 
         private void LogGeneralError(string message)
         {
-            Task.Run(() => _logger.Log($"Unknown Error: {message}"));
+            Task.Run(() => _logger.LogAsync($"Unknown Error: {message}"));
         }
 
         private void EmailLoaderError(string message)
@@ -329,7 +329,7 @@ namespace Neutron
                             if (CreateLog("Main", _station.StationNumber))
                             {
                                 SetupEmail();
-                                _logger.Log($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+                                Task.Run(() => _logger.LogAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}"));
                                 var rackStation = _stationRepository.GetRackStation();
                                 _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
                                 _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
@@ -516,7 +516,7 @@ namespace Neutron
                     {
                         if (_neutronVariables.IptiDisplays)
                         {
-                            Task.Run(() => _logger.Log("IPTI Displays are being used."));
+                            Task.Run(() => _logger.LogAsync("IPTI Displays are being used."));
                             // ReSharper disable once UseObjectOrCollectionInitializer
                             GlobalVar.Displays = new IptiController(_jsonData, _station, _neutronVariables);
                             //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
@@ -525,31 +525,31 @@ namespace Neutron
                         else
                         {
 
-                            Task.Run(() => _logger.Log("Remstar Displays are being used."));
+                            Task.Run(() => _logger.LogAsync("Remstar Displays are being used."));
                             GlobalVar.Displays = new DisplayController(_jsonData, _station);
                             result = GlobalVar.Displays != null;
                             if (!GlobalVar.Displays.Ready)
                             {
                                 MessageBox.Show($"Error creating Display Controller.");
-                                Task.Run(() => _logger.Log("Error creating Display Controller."));
+                                Task.Run(() => _logger.LogAsync("Error creating Display Controller."));
                             }
                             //initialize the controller
                             var counter = 1;
                             while (GlobalVar.Displays.GetInitStatus() != 0)
                             {
                                 var seconds = 250 * counter / 1000;
-                                Task.Run(() => _logger.Log($"Unable to initialize display controller for {seconds} seconds."));
+                                Task.Run(() => _logger.LogAsync($"Unable to initialize display controller for {seconds} seconds."));
                                 if (counter >= 20)
                                 {
                                     MessageBox.Show($"Unable to initialize display controller after {seconds} seconds.");
 
-                                    Task.Run(() => _logger.Log($"Unable to initialize display controller after {seconds} seconds."));
+                                    Task.Run(() => _logger.LogAsync($"Unable to initialize display controller after {seconds} seconds."));
                                     break;
                                 }
                                 Thread.Sleep(250);
                                 counter += 1;
                             }
-                            Task.Run(() => _logger.Log($"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
+                            Task.Run(() => _logger.LogAsync($"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
 
                         }
                     }
@@ -582,12 +582,12 @@ namespace Neutron
             {
                 if (_neutronVariables.ShuttleEnabled)
                 {
-                    _logger.Log("Shuttle Enabled - Setup.");
+                    Task.Run(() =>_logger.LogAsync("Shuttle Enabled - Setup."));
                     if (_station.HardwareDevices.Count > 0)
                     {
                         if (_neutronVariables.DeviceDriver == DeviceDriverName.C3000() && GlobalVar.Shuttle == null)
                         {
-                            _logger.Log("C3000 Controller.");
+                            Task.Run(() =>_logger.LogAsync("C3000 Controller."));
                             GlobalVar.Shuttle = new C3000(this, _station);
                             GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
@@ -595,7 +595,7 @@ namespace Neutron
 
                         if (_neutronVariables.DeviceDriver == DeviceDriverName.C2000() && GlobalVar.Shuttle == null)
                         {
-                            _logger.Log("C2000 Controller.");
+                            Task.Run(() =>_logger.LogAsync("C2000 Controller."));
                             GlobalVar.Shuttle = new C2000(this, _station);
                             GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
@@ -603,7 +603,7 @@ namespace Neutron
 
                         if (_neutronVariables.DeviceDriver == DeviceDriverName.RCC2() && GlobalVar.Shuttle == null)
                         {
-                            _logger.Log("RCC2 Controller.");
+                            Task.Run(() =>_logger.LogAsync("RCC2 Controller."));
                             GlobalVar.Shuttle = new RCC2(this, _station);
                             GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
@@ -930,7 +930,7 @@ namespace Neutron
 
         private void MtHotAction_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _logger.Log("FrmMain HotAction button Pressed"));
+            Task.Run(() => _logger.LogAsync("FrmMain HotAction button Pressed"));
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
             {
                 Hide();
@@ -942,7 +942,7 @@ namespace Neutron
                     Show();
                 }
             }
-            Task.Run(() => _logger.Log("FrmMain HotAction Exit"));
+            Task.Run(() => _logger.LogAsync("FrmMain HotAction Exit"));
         }
 
         private void MtSystem_Click(object sender, EventArgs e)

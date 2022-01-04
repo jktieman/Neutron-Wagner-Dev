@@ -135,6 +135,7 @@ namespace Neutron.Forms
         private bool _multiLocationStop;
         private bool _spaceBarDisabled;
         private Timer _spaceBarDelayTimer;
+        private bool _useCostCenter = false;
 
         public delegate void UpdatePickAcceptDelegate(bool b);
 
@@ -174,17 +175,17 @@ namespace Neutron.Forms
             KeyPreview = true;
             SetupLogger();
             Task.Run(() => _logger.Log($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
-            if (_station.StationType.Id == (int)StationType.Supervisor)
-            {
+            //if (_station.StationType.Id == (int)StationType.Supervisor)
+           // {
                 MBMainLoadOrders.Visible = true;
                 MBMainUpload.Visible = true;
                 MBRunLoader.Visible = true;
                 MBRunUpload.Visible = true;
-            }
+           // }
             SetupPrinters();
 
             InitGrids();
-
+            _useCostCenter = _neutronVariables.UseCostCenter;
             SetupPickPositions(_neutronVariables.PickBatchSize);
             InitOrdersToPick(_neutronVariables.PickBatchSize);
             HideTabControlTabs();
@@ -6295,7 +6296,8 @@ namespace Neutron.Forms
                 ,
                 Quantity = TextBoxNewOrderQuantity.Text.ParseInt()
                 ,
-                CostCenter = TextBoxNewOrderCostCenter.Text
+                CostCenter = ComboBoxCostCenter.SelectedValue.ToString()
+                //CostCenter = TextBoxNewOrderCostCenter.Text
             };
             _bindingSourceNewItems.Add(rec);
             ClearNewOrderDetail();
@@ -6326,9 +6328,25 @@ namespace Neutron.Forms
             TextBoxNewOrderDescription.Text = "";
             TextBoxNewOrderQuantity.Text = "";
             TextBoxNewOrderOrd1.Focus();
+            ComboBoxCostCenter.Visible = _useCostCenter;
+            LabelCostCenter.Visible = _useCostCenter;
+
+            FillCostCenterComboBox();
+           
         }
-        //Ready
-        private void InitDataGridViewNewItems()
+        private async Task FillCostCenterComboBox()
+        {
+            if (!_useCostCenter) return;
+            var costCenterPath = LoaderSettings.GetCostCenterPath();
+            var costCenterManager = new CostCenterManager(costCenterPath);
+            var costCenterList = await costCenterManager.GetCostCenterListAsync();
+            ComboBoxCostCenter.DataSource = costCenterList;
+            ComboBoxCostCenter.DisplayMember = "Name";
+            ComboBoxCostCenter.ValueMember = "Code";
+        }
+
+//Ready
+private void InitDataGridViewNewItems()
         {
             DataGridViewNewItems.DataSource = _bindingSourceNewItems;
         }

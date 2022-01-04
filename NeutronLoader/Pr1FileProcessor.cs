@@ -190,7 +190,7 @@ namespace NeutronLoader
                                 Quantity = line.Substring(38, 9).ParseInt(),
                                 PrimeBin = primeBin,
                                 PartDesc = description.Trim(),
-                                OrderDetailInfo = line.Substring(131).Trim(),
+                                OrderDetailInfo = line.Substring(125).Trim(),
                                 StationNumber = stationNumber,
                                 LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0

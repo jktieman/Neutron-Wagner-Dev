@@ -618,12 +618,6 @@ namespace Neutron.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //var maintProcessor = new MasterMaintenanceProcessor();
-            //maintProcessor.ProcessMasterMaintenanceFiles();
-        }
-
         private void ButtonFindCostCenterFile_Click(object sender, EventArgs e)
         {
             var result = openFileDialog1.ShowDialog();

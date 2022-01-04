@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AlliedLogger
 {
@@ -57,26 +58,47 @@ namespace AlliedLogger
         {
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
-
+            if (!_validLocation) return;
             lock (_myLock)
             {
                 if (msg.Length > 0)
                 {
-                    if (_validLocation)
+
+                    try
                     {
-                        try
+                        using (var sw = File.AppendText(FilePath))
                         {
-                            using (var sw = File.AppendText(FilePath))
-                            {
-                                sw.WriteLine("{0} {1}: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToString("hh:mm:ss.FFF", ci), msg);
-                                sw.Flush();
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            //silent fail
+                            sw.WriteLine("{0} {1}: {2}", DateTime.Now.ToShortDateString(),
+                                DateTime.Now.ToString("hh:mm:ss.FFF", ci), msg);
+                            sw.Flush();
                         }
                     }
+                    catch (Exception)
+                    {
+                        //silent fail
+                    }
+                }
+            }
+        }
+
+        public async Task LogAsync(string msg)
+        {
+            var time = DateTime.Now.ToString("HH:mm:ss.fff");
+            var ci = CultureInfo.InvariantCulture;
+            if (!_validLocation) return;
+            if (msg.Length > 0)
+            {
+                try
+                {
+                    using (var sw = File.AppendText(FilePath))
+                    {
+                        await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg}");
+                        await sw.FlushAsync();
+                    }
+                }
+                catch (Exception)
+                {
+                    //silent fail
                 }
             }
         }

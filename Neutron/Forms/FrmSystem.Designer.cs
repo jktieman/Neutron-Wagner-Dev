@@ -33,9 +33,6 @@
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.TextBoxStationToPrint = new System.Windows.Forms.TextBox();
-            this.TextBoxOrderToPrint = new System.Windows.Forms.TextBox();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
             this.MBRunUpload = new MetroFramework.Controls.MetroButton();
             this.MBStartUpload = new MetroFramework.Controls.MetroButton();
@@ -63,6 +60,8 @@
             this.MBSqlServerBack = new MetroFramework.Controls.MetroButton();
             this.InterfaceFiles = new System.Windows.Forms.TabPage();
             this.PanelFile = new System.Windows.Forms.Panel();
+            this.LabelAppendFile = new System.Windows.Forms.Label();
+            this.CheckBoxAppendFile = new System.Windows.Forms.CheckBox();
             this.ButtonLanguageDirectory = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.LanguageDirectory = new System.Windows.Forms.TextBox();
@@ -114,8 +113,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxAppendFile = new System.Windows.Forms.CheckBox();
-            this.LabelAppendFile = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -150,9 +147,6 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.RoyalBlue;
-            this.Main.Controls.Add(this.button1);
-            this.Main.Controls.Add(this.TextBoxStationToPrint);
-            this.Main.Controls.Add(this.TextBoxOrderToPrint);
             this.Main.Controls.Add(this.MBMainClose);
             this.Main.Controls.Add(this.MBRunUpload);
             this.Main.Controls.Add(this.MBStartUpload);
@@ -165,33 +159,6 @@
             this.Main.Size = new System.Drawing.Size(1147, 644);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(116, 230);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 30;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // TextBoxStationToPrint
-            // 
-            this.TextBoxStationToPrint.Location = new System.Drawing.Point(900, 282);
-            this.TextBoxStationToPrint.Name = "TextBoxStationToPrint";
-            this.TextBoxStationToPrint.Size = new System.Drawing.Size(59, 20);
-            this.TextBoxStationToPrint.TabIndex = 29;
-            this.TextBoxStationToPrint.Visible = false;
-            // 
-            // TextBoxOrderToPrint
-            // 
-            this.TextBoxOrderToPrint.Location = new System.Drawing.Point(900, 244);
-            this.TextBoxOrderToPrint.Name = "TextBoxOrderToPrint";
-            this.TextBoxOrderToPrint.Size = new System.Drawing.Size(159, 20);
-            this.TextBoxOrderToPrint.TabIndex = 29;
-            this.TextBoxOrderToPrint.Visible = false;
             // 
             // MBMainClose
             // 
@@ -548,6 +515,26 @@
             this.PanelFile.Name = "PanelFile";
             this.PanelFile.Size = new System.Drawing.Size(1076, 532);
             this.PanelFile.TabIndex = 32;
+            // 
+            // LabelAppendFile
+            // 
+            this.LabelAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAppendFile.Location = new System.Drawing.Point(678, 222);
+            this.LabelAppendFile.Name = "LabelAppendFile";
+            this.LabelAppendFile.Size = new System.Drawing.Size(138, 26);
+            this.LabelAppendFile.TabIndex = 105;
+            this.LabelAppendFile.Text = "Append File";
+            this.LabelAppendFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CheckBoxAppendFile
+            // 
+            this.CheckBoxAppendFile.AutoSize = true;
+            this.CheckBoxAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxAppendFile.Location = new System.Drawing.Point(822, 229);
+            this.CheckBoxAppendFile.Name = "CheckBoxAppendFile";
+            this.CheckBoxAppendFile.Size = new System.Drawing.Size(15, 14);
+            this.CheckBoxAppendFile.TabIndex = 104;
+            this.CheckBoxAppendFile.UseVisualStyleBackColor = true;
             // 
             // ButtonLanguageDirectory
             // 
@@ -1044,26 +1031,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxAppendFile
-            // 
-            this.CheckBoxAppendFile.AutoSize = true;
-            this.CheckBoxAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAppendFile.Location = new System.Drawing.Point(822, 229);
-            this.CheckBoxAppendFile.Name = "CheckBoxAppendFile";
-            this.CheckBoxAppendFile.Size = new System.Drawing.Size(15, 14);
-            this.CheckBoxAppendFile.TabIndex = 104;
-            this.CheckBoxAppendFile.UseVisualStyleBackColor = true;
-            // 
-            // LabelAppendFile
-            // 
-            this.LabelAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAppendFile.Location = new System.Drawing.Point(678, 222);
-            this.LabelAppendFile.Name = "LabelAppendFile";
-            this.LabelAppendFile.Size = new System.Drawing.Size(138, 26);
-            this.LabelAppendFile.TabIndex = 105;
-            this.LabelAppendFile.Text = "Append File";
-            this.LabelAppendFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // FrmSystem
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1083,7 +1050,6 @@
             this.Load += new System.EventHandler(this.FrmSystem_Load);
             this.tabControl1.ResumeLayout(false);
             this.Main.ResumeLayout(false);
-            this.Main.PerformLayout();
             this.SqlServer.ResumeLayout(false);
             this.PanelSql.ResumeLayout(false);
             this.PanelSql.PerformLayout();
@@ -1157,8 +1123,6 @@
         private System.Windows.Forms.Button ButtonFindImagesDirectory;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox ImagesDirectory;
-        private System.Windows.Forms.TextBox TextBoxStationToPrint;
-        private System.Windows.Forms.TextBox TextBoxOrderToPrint;
         private System.Windows.Forms.TextBox TextBoxMaintenanceFileFilter;
         private System.Windows.Forms.TextBox TextBoxHostOrderFileFilter;
         private System.Windows.Forms.Label label5;
@@ -1172,7 +1136,6 @@
         private System.Windows.Forms.Button ButtonMaintenanceFileDirectory;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox MaintenanceFileDirectory;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button ButtonFindCostCenterFile;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox CostCenterDirectory;

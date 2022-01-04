@@ -25,6 +25,8 @@ namespace NeutronCore
         private static string _languageDirectory;
         public static bool Initialized { get; set; }
         public static string EnableLogging { get; set; }
+        public static string AppendFile { get; set; }
+
 
         static LoaderSettings()
         {
@@ -41,7 +43,7 @@ namespace NeutronCore
 
         public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
 
-        public static string AppendFile { get; set; }
+        
 
         public static string GetImagesDirectory()
         {
@@ -241,6 +243,7 @@ namespace NeutronCore
                     sw.Write($"{_hostOrderFile}{'|'}");
                     sw.Write($"{_hostUploadDirectory}{'|'}");
                     sw.Write($"{_hostUploadFile}{'|'}");
+                    sw.Write($"{AppendFile}{'|'}");
                     sw.Write($"{EnableLogging}{'|'}");
                     sw.Write($"{_logFileDirectory}{'|'}");
                     sw.Write($"{_hostOrderFileFilter}{'|'}");
@@ -271,6 +274,7 @@ namespace NeutronCore
                         SetHostOrderFile(string.Empty);
                         SetHostUploadDirectory(string.Empty);
                         SetHostUploadFile(string.Empty);
+                        AppendFile = "false";
                         EnableLogging = "false";
                         SetLogFileDirectory(string.Empty);
                         SetHostOrderFileFilter(string.Empty);
@@ -294,15 +298,16 @@ namespace NeutronCore
                             SetHostOrderFile(tokens[2]);
                             SetHostUploadDirectory(tokens[3]);
                             SetHostUploadFile(tokens[4]);
-                            EnableLogging = tokens[5];
-                            SetLogFileDirectory(tokens[6]);
-                            SetHostOrderFileFilter(tokens[7]);
-                            SetMaintenanceFileFilter(tokens[8]);
-                            SetDocumentsDirectory(tokens[9]);
-                            SetMaintenanceFileDirectory(tokens[10]);
-                            SetCostCenterDirectory(tokens[11]);
-                            SetCostCenterFile(tokens[12]);
-                            SetLanguageDirectory(tokens[13]);
+                            AppendFile = tokens[5];
+                            EnableLogging = tokens[6];
+                            SetLogFileDirectory(tokens[7]);
+                            SetHostOrderFileFilter(tokens[8]);
+                            SetMaintenanceFileFilter(tokens[9]);
+                            SetDocumentsDirectory(tokens[10]);
+                            SetMaintenanceFileDirectory(tokens[11]);
+                            SetCostCenterDirectory(tokens[12]);
+                            SetCostCenterFile(tokens[13]);
+                            SetLanguageDirectory(tokens[14]);
                         }
                     }
 
