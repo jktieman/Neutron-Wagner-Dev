@@ -1035,7 +1035,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1200, 850);
             this.ControlBox = false;
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);

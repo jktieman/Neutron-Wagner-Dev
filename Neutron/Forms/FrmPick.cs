@@ -6296,8 +6296,8 @@ namespace Neutron.Forms
                 ,
                 Quantity = TextBoxNewOrderQuantity.Text.ParseInt()
                 ,
-                CostCenter = ComboBoxCostCenter.SelectedValue.ToString()
-                //CostCenter = TextBoxNewOrderCostCenter.Text
+                CostCenter = GetCostCenter() 
+
             };
             _bindingSourceNewItems.Add(rec);
             ClearNewOrderDetail();
@@ -6305,6 +6305,13 @@ namespace Neutron.Forms
             TextBoxNewOrderFind.Focus();
             ButtonRemoveLine.Enabled = _bindingSourceNewItems.Count > 0 && ((NewItemView)_bindingSourceNewItems.Current).Item != null;
         }
+
+        private string GetCostCenter()
+        {
+            if (_useCostCenter) return ComboBoxCostCenter.SelectedValue.ToString();
+            return string.Empty;
+        }
+
         //Ready
         private void ClearNewOrderDetail()
         {
@@ -8301,6 +8308,7 @@ private void InitDataGridViewNewItems()
                 LabelNewOrderItem.Text = _resourceManager.GetString($"LabelNewOrderItem");
                 LabelNewOrderDescription.Text = _resourceManager.GetString($"LabelNewOrderDescription");
                 LabelNewOrderQuantity.Text = _resourceManager.GetString($"LabelNewOrderQuantity");
+                LabelCostCenter.Text = _resourceManager.GetString($"LabelCostCenter");
                 ButtonAddDetail.Text = _resourceManager.GetString($"ButtonAddDetail");
                 LabelSearchForItem.Text = _resourceManager.GetString($"LabelSearchForItem");
                 MBNewOrderSearch.Text = _resourceManager.GetString($"MBNewOrderSearch");
