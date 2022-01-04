@@ -301,6 +301,7 @@ namespace Neutron.Forms
             LoaderSettings.SetRootDirectory(_rootDirectory);
 
             LoaderSettings.Init();
+            CommonDirectory.Text = LoaderSettings.GetCommonDirectory();
             RootDirectory.Text = LoaderSettings.GetRootDirectory();
             ImagesDirectory.Text = LoaderSettings.GetImagesDirectory();
             HostOrderDirectory.Text = LoaderSettings.GetHostOrderDirectory();
@@ -494,7 +495,7 @@ namespace Neutron.Forms
         {
             var root = new NeutronRootDirectory { RootDirectory = RootDirectory.Text };
             _jsonData.SaveFile(root);
-
+            LoaderSettings.SetCommonDirectory(CommonDirectory.Text);
             LoaderSettings.SetRootDirectory(RootDirectory.Text);
             LoaderSettings.SetImagesDirectory(ImagesDirectory.Text);
             LoaderSettings.SetHostOrderDirectory(HostOrderDirectory.Text);
@@ -595,6 +596,16 @@ namespace Neutron.Forms
             {
                 var path = folderBrowserDialog1.SelectedPath;
                 DocumentsDirectory.Text = $"{path}";
+            }
+        }
+
+        private void ButtonCommonDirectory_Click(object sender, EventArgs e)
+        {
+            var result = folderBrowserDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                var path = folderBrowserDialog1.SelectedPath;
+                CommonDirectory.Text = $"{path}";
             }
         }
 

@@ -113,6 +113,9 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.CommonDirectory = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -247,7 +250,7 @@
             // 
             // SqlServer
             // 
-            this.SqlServer.BackColor = System.Drawing.Color.Turquoise;
+            this.SqlServer.BackColor = System.Drawing.Color.RoyalBlue;
             this.SqlServer.Controls.Add(this.PanelSql);
             this.SqlServer.Controls.Add(this.MBSqlServerBack);
             this.SqlServer.Location = new System.Drawing.Point(4, 22);
@@ -452,7 +455,7 @@
             // 
             // InterfaceFiles
             // 
-            this.InterfaceFiles.BackColor = System.Drawing.Color.Turquoise;
+            this.InterfaceFiles.BackColor = System.Drawing.Color.RoyalBlue;
             this.InterfaceFiles.Controls.Add(this.PanelFile);
             this.InterfaceFiles.Controls.Add(this.MBInterfaceFilesBack);
             this.InterfaceFiles.Controls.Add(this.LabelInterfaceFiles);
@@ -481,8 +484,11 @@
             this.PanelFile.Controls.Add(this.CostCenterFileName);
             this.PanelFile.Controls.Add(this.CostCenterDirectory);
             this.PanelFile.Controls.Add(this.MaintenanceFileDirectory);
+            this.PanelFile.Controls.Add(this.button1);
             this.PanelFile.Controls.Add(this.ButtonRootDirectory);
+            this.PanelFile.Controls.Add(this.label16);
             this.PanelFile.Controls.Add(this.label10);
+            this.PanelFile.Controls.Add(this.CommonDirectory);
             this.PanelFile.Controls.Add(this.RootDirectory);
             this.PanelFile.Controls.Add(this.TextBoxMaintenanceFileFilter);
             this.PanelFile.Controls.Add(this.TextBoxHostOrderFileFilter);
@@ -511,15 +517,15 @@
             this.PanelFile.Controls.Add(this.ButtonFindHostOrderFile);
             this.PanelFile.Controls.Add(this.label3);
             this.PanelFile.Controls.Add(this.HostOrderFile);
-            this.PanelFile.Location = new System.Drawing.Point(27, 105);
+            this.PanelFile.Location = new System.Drawing.Point(27, 93);
             this.PanelFile.Name = "PanelFile";
-            this.PanelFile.Size = new System.Drawing.Size(1076, 532);
+            this.PanelFile.Size = new System.Drawing.Size(1076, 544);
             this.PanelFile.TabIndex = 32;
             // 
             // LabelAppendFile
             // 
             this.LabelAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAppendFile.Location = new System.Drawing.Point(678, 222);
+            this.LabelAppendFile.Location = new System.Drawing.Point(678, 252);
             this.LabelAppendFile.Name = "LabelAppendFile";
             this.LabelAppendFile.Size = new System.Drawing.Size(138, 26);
             this.LabelAppendFile.TabIndex = 105;
@@ -530,7 +536,7 @@
             // 
             this.CheckBoxAppendFile.AutoSize = true;
             this.CheckBoxAppendFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAppendFile.Location = new System.Drawing.Point(822, 229);
+            this.CheckBoxAppendFile.Location = new System.Drawing.Point(822, 259);
             this.CheckBoxAppendFile.Name = "CheckBoxAppendFile";
             this.CheckBoxAppendFile.Size = new System.Drawing.Size(15, 14);
             this.CheckBoxAppendFile.TabIndex = 104;
@@ -539,7 +545,7 @@
             // ButtonLanguageDirectory
             // 
             this.ButtonLanguageDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonLanguageDirectory.Location = new System.Drawing.Point(862, 466);
+            this.ButtonLanguageDirectory.Location = new System.Drawing.Point(862, 493);
             this.ButtonLanguageDirectory.Name = "ButtonLanguageDirectory";
             this.ButtonLanguageDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonLanguageDirectory.TabIndex = 27;
@@ -550,7 +556,7 @@
             // label15
             // 
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(18, 465);
+            this.label15.Location = new System.Drawing.Point(18, 492);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(320, 26);
             this.label15.TabIndex = 103;
@@ -560,7 +566,7 @@
             // LanguageDirectory
             // 
             this.LanguageDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LanguageDirectory.Location = new System.Drawing.Point(351, 465);
+            this.LanguageDirectory.Location = new System.Drawing.Point(351, 492);
             this.LanguageDirectory.Name = "LanguageDirectory";
             this.LanguageDirectory.Size = new System.Drawing.Size(505, 26);
             this.LanguageDirectory.TabIndex = 26;
@@ -569,7 +575,7 @@
             // ButtonFindCostCenterFile
             // 
             this.ButtonFindCostCenterFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonFindCostCenterFile.Location = new System.Drawing.Point(862, 425);
+            this.ButtonFindCostCenterFile.Location = new System.Drawing.Point(862, 453);
             this.ButtonFindCostCenterFile.Name = "ButtonFindCostCenterFile";
             this.ButtonFindCostCenterFile.Size = new System.Drawing.Size(100, 26);
             this.ButtonFindCostCenterFile.TabIndex = 25;
@@ -580,7 +586,7 @@
             // ButtonCostCenterDirectory
             // 
             this.ButtonCostCenterDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCostCenterDirectory.Location = new System.Drawing.Point(862, 386);
+            this.ButtonCostCenterDirectory.Location = new System.Drawing.Point(862, 412);
             this.ButtonCostCenterDirectory.Name = "ButtonCostCenterDirectory";
             this.ButtonCostCenterDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonCostCenterDirectory.TabIndex = 23;
@@ -591,7 +597,7 @@
             // ButtonMaintenanceFileDirectory
             // 
             this.ButtonMaintenanceFileDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonMaintenanceFileDirectory.Location = new System.Drawing.Point(686, 346);
+            this.ButtonMaintenanceFileDirectory.Location = new System.Drawing.Point(686, 372);
             this.ButtonMaintenanceFileDirectory.Name = "ButtonMaintenanceFileDirectory";
             this.ButtonMaintenanceFileDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonMaintenanceFileDirectory.TabIndex = 20;
@@ -602,7 +608,7 @@
             // label14
             // 
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(18, 424);
+            this.label14.Location = new System.Drawing.Point(18, 452);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(320, 26);
             this.label14.TabIndex = 99;
@@ -612,7 +618,7 @@
             // label9
             // 
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(18, 388);
+            this.label9.Location = new System.Drawing.Point(18, 412);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(320, 26);
             this.label9.TabIndex = 99;
@@ -622,7 +628,7 @@
             // label13
             // 
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(138, 348);
+            this.label13.Location = new System.Drawing.Point(138, 372);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(200, 26);
             this.label13.TabIndex = 99;
@@ -632,7 +638,7 @@
             // CostCenterFileName
             // 
             this.CostCenterFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CostCenterFileName.Location = new System.Drawing.Point(351, 424);
+            this.CostCenterFileName.Location = new System.Drawing.Point(351, 452);
             this.CostCenterFileName.Name = "CostCenterFileName";
             this.CostCenterFileName.Size = new System.Drawing.Size(505, 26);
             this.CostCenterFileName.TabIndex = 24;
@@ -641,7 +647,7 @@
             // CostCenterDirectory
             // 
             this.CostCenterDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CostCenterDirectory.Location = new System.Drawing.Point(351, 386);
+            this.CostCenterDirectory.Location = new System.Drawing.Point(351, 412);
             this.CostCenterDirectory.Name = "CostCenterDirectory";
             this.CostCenterDirectory.Size = new System.Drawing.Size(505, 26);
             this.CostCenterDirectory.TabIndex = 22;
@@ -650,7 +656,7 @@
             // MaintenanceFileDirectory
             // 
             this.MaintenanceFileDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MaintenanceFileDirectory.Location = new System.Drawing.Point(351, 346);
+            this.MaintenanceFileDirectory.Location = new System.Drawing.Point(351, 372);
             this.MaintenanceFileDirectory.Name = "MaintenanceFileDirectory";
             this.MaintenanceFileDirectory.Size = new System.Drawing.Size(325, 26);
             this.MaintenanceFileDirectory.TabIndex = 19;
@@ -659,39 +665,36 @@
             // ButtonRootDirectory
             // 
             this.ButtonRootDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonRootDirectory.Location = new System.Drawing.Point(862, 17);
+            this.ButtonRootDirectory.Location = new System.Drawing.Point(862, 52);
             this.ButtonRootDirectory.Name = "ButtonRootDirectory";
             this.ButtonRootDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonRootDirectory.TabIndex = 1;
             this.ButtonRootDirectory.Text = "&Browse";
             this.ButtonRootDirectory.UseVisualStyleBackColor = true;
-            this.ButtonRootDirectory.Visible = false;
             this.ButtonRootDirectory.Click += new System.EventHandler(this.ButtonRootDirectory_Click);
             // 
             // label10
             // 
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(138, 19);
+            this.label10.Location = new System.Drawing.Point(138, 52);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(200, 26);
             this.label10.TabIndex = 96;
             this.label10.Text = "Root Directory";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label10.Visible = false;
             // 
             // RootDirectory
             // 
             this.RootDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RootDirectory.Location = new System.Drawing.Point(351, 17);
+            this.RootDirectory.Location = new System.Drawing.Point(351, 52);
             this.RootDirectory.Name = "RootDirectory";
             this.RootDirectory.Size = new System.Drawing.Size(505, 26);
             this.RootDirectory.TabIndex = 0;
-            this.RootDirectory.Visible = false;
             // 
             // TextBoxMaintenanceFileFilter
             // 
             this.TextBoxMaintenanceFileFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxMaintenanceFileFilter.Location = new System.Drawing.Point(862, 345);
+            this.TextBoxMaintenanceFileFilter.Location = new System.Drawing.Point(862, 371);
             this.TextBoxMaintenanceFileFilter.Name = "TextBoxMaintenanceFileFilter";
             this.TextBoxMaintenanceFileFilter.Size = new System.Drawing.Size(100, 26);
             this.TextBoxMaintenanceFileFilter.TabIndex = 21;
@@ -701,7 +704,7 @@
             // TextBoxHostOrderFileFilter
             // 
             this.TextBoxHostOrderFileFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHostOrderFileFilter.Location = new System.Drawing.Point(756, 138);
+            this.TextBoxHostOrderFileFilter.Location = new System.Drawing.Point(756, 173);
             this.TextBoxHostOrderFileFilter.Name = "TextBoxHostOrderFileFilter";
             this.TextBoxHostOrderFileFilter.Size = new System.Drawing.Size(100, 26);
             this.TextBoxHostOrderFileFilter.TabIndex = 8;
@@ -711,7 +714,7 @@
             // label6
             // 
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(805, 346);
+            this.label6.Location = new System.Drawing.Point(805, 372);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(55, 26);
             this.label6.TabIndex = 91;
@@ -721,7 +724,7 @@
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(682, 138);
+            this.label5.Location = new System.Drawing.Point(682, 173);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 26);
             this.label5.TabIndex = 91;
@@ -731,7 +734,7 @@
             // ButtonFindImagesDirectory
             // 
             this.ButtonFindImagesDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonFindImagesDirectory.Location = new System.Drawing.Point(862, 59);
+            this.ButtonFindImagesDirectory.Location = new System.Drawing.Point(862, 92);
             this.ButtonFindImagesDirectory.Name = "ButtonFindImagesDirectory";
             this.ButtonFindImagesDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonFindImagesDirectory.TabIndex = 3;
@@ -742,7 +745,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(138, 61);
+            this.label2.Location = new System.Drawing.Point(138, 92);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(200, 26);
             this.label2.TabIndex = 89;
@@ -752,7 +755,7 @@
             // ImagesDirectory
             // 
             this.ImagesDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ImagesDirectory.Location = new System.Drawing.Point(351, 59);
+            this.ImagesDirectory.Location = new System.Drawing.Point(351, 92);
             this.ImagesDirectory.Name = "ImagesDirectory";
             this.ImagesDirectory.Size = new System.Drawing.Size(505, 26);
             this.ImagesDirectory.TabIndex = 2;
@@ -760,7 +763,7 @@
             // ButtonDocumentsDirectory
             // 
             this.ButtonDocumentsDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonDocumentsDirectory.Location = new System.Drawing.Point(862, 264);
+            this.ButtonDocumentsDirectory.Location = new System.Drawing.Point(862, 292);
             this.ButtonDocumentsDirectory.Name = "ButtonDocumentsDirectory";
             this.ButtonDocumentsDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonDocumentsDirectory.TabIndex = 14;
@@ -771,7 +774,7 @@
             // ButtonLogFileDirectory
             // 
             this.ButtonLogFileDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonLogFileDirectory.Location = new System.Drawing.Point(686, 305);
+            this.ButtonLogFileDirectory.Location = new System.Drawing.Point(686, 332);
             this.ButtonLogFileDirectory.Name = "ButtonLogFileDirectory";
             this.ButtonLogFileDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonLogFileDirectory.TabIndex = 16;
@@ -782,7 +785,7 @@
             // label8
             // 
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(138, 264);
+            this.label8.Location = new System.Drawing.Point(138, 292);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(200, 26);
             this.label8.TabIndex = 86;
@@ -792,7 +795,7 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(138, 305);
+            this.label1.Location = new System.Drawing.Point(138, 332);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(200, 26);
             this.label1.TabIndex = 86;
@@ -802,7 +805,7 @@
             // DocumentsDirectory
             // 
             this.DocumentsDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DocumentsDirectory.Location = new System.Drawing.Point(351, 264);
+            this.DocumentsDirectory.Location = new System.Drawing.Point(351, 292);
             this.DocumentsDirectory.Name = "DocumentsDirectory";
             this.DocumentsDirectory.Size = new System.Drawing.Size(505, 26);
             this.DocumentsDirectory.TabIndex = 13;
@@ -810,7 +813,7 @@
             // LogFileDirectory
             // 
             this.LogFileDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LogFileDirectory.Location = new System.Drawing.Point(351, 305);
+            this.LogFileDirectory.Location = new System.Drawing.Point(351, 332);
             this.LogFileDirectory.Name = "LogFileDirectory";
             this.LogFileDirectory.Size = new System.Drawing.Size(325, 26);
             this.LogFileDirectory.TabIndex = 15;
@@ -818,7 +821,7 @@
             // label7
             // 
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(792, 305);
+            this.label7.Location = new System.Drawing.Point(792, 332);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(138, 26);
             this.label7.TabIndex = 17;
@@ -829,7 +832,7 @@
             // 
             this.EnableLogging.AutoSize = true;
             this.EnableLogging.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EnableLogging.Location = new System.Drawing.Point(936, 311);
+            this.EnableLogging.Location = new System.Drawing.Point(936, 338);
             this.EnableLogging.Name = "EnableLogging";
             this.EnableLogging.Size = new System.Drawing.Size(15, 14);
             this.EnableLogging.TabIndex = 18;
@@ -838,7 +841,7 @@
             // ButtonFindHostUploadDirectory
             // 
             this.ButtonFindHostUploadDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonFindHostUploadDirectory.Location = new System.Drawing.Point(862, 178);
+            this.ButtonFindHostUploadDirectory.Location = new System.Drawing.Point(862, 212);
             this.ButtonFindHostUploadDirectory.Name = "ButtonFindHostUploadDirectory";
             this.ButtonFindHostUploadDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonFindHostUploadDirectory.TabIndex = 10;
@@ -849,7 +852,7 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(138, 178);
+            this.label11.Location = new System.Drawing.Point(138, 212);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(200, 26);
             this.label11.TabIndex = 74;
@@ -859,7 +862,7 @@
             // HostUploadDirectory
             // 
             this.HostUploadDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HostUploadDirectory.Location = new System.Drawing.Point(351, 178);
+            this.HostUploadDirectory.Location = new System.Drawing.Point(351, 212);
             this.HostUploadDirectory.Name = "HostUploadDirectory";
             this.HostUploadDirectory.Size = new System.Drawing.Size(505, 26);
             this.HostUploadDirectory.TabIndex = 9;
@@ -867,7 +870,7 @@
             // ButtonFindHostUploadFile
             // 
             this.ButtonFindHostUploadFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonFindHostUploadFile.Location = new System.Drawing.Point(558, 221);
+            this.ButtonFindHostUploadFile.Location = new System.Drawing.Point(558, 251);
             this.ButtonFindHostUploadFile.Name = "ButtonFindHostUploadFile";
             this.ButtonFindHostUploadFile.Size = new System.Drawing.Size(100, 26);
             this.ButtonFindHostUploadFile.TabIndex = 12;
@@ -878,7 +881,7 @@
             // label12
             // 
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(114, 221);
+            this.label12.Location = new System.Drawing.Point(114, 252);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(224, 26);
             this.label12.TabIndex = 71;
@@ -888,7 +891,7 @@
             // HostUploadFile
             // 
             this.HostUploadFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HostUploadFile.Location = new System.Drawing.Point(351, 222);
+            this.HostUploadFile.Location = new System.Drawing.Point(351, 252);
             this.HostUploadFile.Name = "HostUploadFile";
             this.HostUploadFile.Size = new System.Drawing.Size(192, 26);
             this.HostUploadFile.TabIndex = 11;
@@ -897,7 +900,7 @@
             // ButtonFindHostOrderDirectory
             // 
             this.ButtonFindHostOrderDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonFindHostOrderDirectory.Location = new System.Drawing.Point(862, 97);
+            this.ButtonFindHostOrderDirectory.Location = new System.Drawing.Point(862, 132);
             this.ButtonFindHostOrderDirectory.Name = "ButtonFindHostOrderDirectory";
             this.ButtonFindHostOrderDirectory.Size = new System.Drawing.Size(100, 26);
             this.ButtonFindHostOrderDirectory.TabIndex = 5;
@@ -908,7 +911,7 @@
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(138, 99);
+            this.label4.Location = new System.Drawing.Point(138, 132);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(200, 26);
             this.label4.TabIndex = 55;
@@ -918,7 +921,7 @@
             // HostOrderDirectory
             // 
             this.HostOrderDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HostOrderDirectory.Location = new System.Drawing.Point(351, 97);
+            this.HostOrderDirectory.Location = new System.Drawing.Point(351, 132);
             this.HostOrderDirectory.Name = "HostOrderDirectory";
             this.HostOrderDirectory.Size = new System.Drawing.Size(505, 26);
             this.HostOrderDirectory.TabIndex = 4;
@@ -926,7 +929,7 @@
             // ButtonFindHostOrderFile
             // 
             this.ButtonFindHostOrderFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonFindHostOrderFile.Location = new System.Drawing.Point(558, 138);
+            this.ButtonFindHostOrderFile.Location = new System.Drawing.Point(558, 173);
             this.ButtonFindHostOrderFile.Name = "ButtonFindHostOrderFile";
             this.ButtonFindHostOrderFile.Size = new System.Drawing.Size(100, 26);
             this.ButtonFindHostOrderFile.TabIndex = 7;
@@ -937,7 +940,7 @@
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(138, 136);
+            this.label3.Location = new System.Drawing.Point(138, 172);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(200, 26);
             this.label3.TabIndex = 52;
@@ -947,7 +950,7 @@
             // HostOrderFile
             // 
             this.HostOrderFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HostOrderFile.Location = new System.Drawing.Point(351, 137);
+            this.HostOrderFile.Location = new System.Drawing.Point(351, 172);
             this.HostOrderFile.Name = "HostOrderFile";
             this.HostOrderFile.Size = new System.Drawing.Size(192, 26);
             this.HostOrderFile.TabIndex = 6;
@@ -968,11 +971,11 @@
             // LabelInterfaceFiles
             // 
             this.LabelInterfaceFiles.AutoSize = true;
-            this.LabelInterfaceFiles.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelInterfaceFiles.Location = new System.Drawing.Point(455, 64);
+            this.LabelInterfaceFiles.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelInterfaceFiles.Location = new System.Drawing.Point(316, 28);
             this.LabelInterfaceFiles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelInterfaceFiles.Name = "LabelInterfaceFiles";
-            this.LabelInterfaceFiles.Size = new System.Drawing.Size(168, 25);
+            this.LabelInterfaceFiles.Size = new System.Drawing.Size(283, 45);
             this.LabelInterfaceFiles.TabIndex = 82;
             this.LabelInterfaceFiles.Text = "Interface Settings";
             // 
@@ -1014,7 +1017,7 @@
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.Turquoise;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 16);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
@@ -1030,6 +1033,35 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // CommonDirectory
+            // 
+            this.CommonDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommonDirectory.Location = new System.Drawing.Point(351, 12);
+            this.CommonDirectory.Name = "CommonDirectory";
+            this.CommonDirectory.Size = new System.Drawing.Size(505, 26);
+            this.CommonDirectory.TabIndex = 0;
+            // 
+            // label16
+            // 
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(138, 12);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(200, 26);
+            this.label16.TabIndex = 96;
+            this.label16.Text = "Common Directory";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(862, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(100, 26);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "&Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.ButtonCommonDirectory_Click);
             // 
             // FrmSystem
             // 
@@ -1149,5 +1181,8 @@
         private MetroFramework.Controls.MetroButton MBRunLoaderOnce;
         private System.Windows.Forms.Label LabelAppendFile;
         private System.Windows.Forms.CheckBox CheckBoxAppendFile;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox CommonDirectory;
     }
 }

@@ -6,6 +6,7 @@ namespace NeutronCore
 {
     public static class LoaderSettings
     {
+        private static string _commonDirectory;
         private static string _rootDirectory;
         private const string SubDirectory = @"Configuration\";
         private const string FileName = @"ConfigFile.Csv";
@@ -70,6 +71,20 @@ namespace NeutronCore
             if (value.Length > 0 && !value.EndsWith(backSlash))
             {
                 _hostOrderDirectory = string.Concat(_hostOrderDirectory, backSlash);
+            }
+        }
+
+        public static string GetCommonDirectory()
+        {
+            return PathExists(_commonDirectory) ? _commonDirectory : _rootDirectory;
+        }
+
+        public static void SetCommonDirectory(string value)
+        {
+            _commonDirectory = value;
+            if (value.Length > 0 && !value.EndsWith(backSlash))
+            {
+                _commonDirectory = string.Concat(_commonDirectory, backSlash);
             }
         }
 
@@ -252,7 +267,8 @@ namespace NeutronCore
                     sw.Write($"{_maintenanceFileDirectory}{'|'}");
                     sw.Write($"{_costCenterDirectory}{'|'}");
                     sw.Write($"{_costCenterFile}{'|'}");
-                    sw.Write($"{_languageDirectory}");
+                    sw.Write($"{_languageDirectory}{'|'}");
+                    sw.Write($"{_commonDirectory}");
                     sw.WriteLine();
                 }
             }
@@ -284,6 +300,8 @@ namespace NeutronCore
                         SetCostCenterDirectory(string.Empty);
                         SetCostCenterFile(string.Empty);
                         SetLanguageDirectory(string.Empty);
+                        SetCommonDirectory(string.Empty);
+                        SetRootDirectory(string.Empty);
                         Save();
                     }
 
@@ -308,6 +326,8 @@ namespace NeutronCore
                             SetCostCenterDirectory(tokens[12]);
                             SetCostCenterFile(tokens[13]);
                             SetLanguageDirectory(tokens[14]);
+                            SetCommonDirectory(tokens[15]);
+                            SetRootDirectory(tokens[16]);
                         }
                     }
 
