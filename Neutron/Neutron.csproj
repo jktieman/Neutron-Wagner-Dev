@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Neutron</RootNamespace>
     <AssemblyName>Neutron</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>true</IsWebBootstrapper>
@@ -38,6 +38,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -90,6 +91,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\AlliedFileSystemWatcher\bin\Release\AlliedFileSystemWatcher.dll</HintPath>
     </Reference>
+    <Reference Include="AlliedLicenseGenerator.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\AlliedLicenseGenerator\AlliedLicenseGenerator\bin\Debug\AlliedLicenseGenerator.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AlliedLicenseVerifier, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\AlliedLicenseGenerator\AlliedLicenseGenerator\bin\Debug\AlliedLicenseVerifier.dll</HintPath>
+    </Reference>
     <Reference Include="CommonServiceLocator, Version=2.0.6.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.6\lib\net46\CommonServiceLocator.dll</HintPath>
       <Private>True</Private>
@@ -112,6 +121,10 @@
     </Reference>
     <Reference Include="Equin.ApplicationFramework.BindingListView, Version=1.4.5222.35545, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Equin.ApplicationFramework.BindingListView.1.4.5222.35545\lib\net40-Client\Equin.ApplicationFramework.BindingListView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FontAwesome.Sharp, Version=5.15.4.0, Culture=neutral, PublicKeyToken=d16d1e4e568ec10f, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.Sharp.5.15.4\lib\net472\FontAwesome.Sharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Hart_DC, Version=20.19.3.28, Culture=neutral, processorArchitecture=MSIL">
@@ -150,6 +163,8 @@
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Remotion, Version=1.18.0.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
       <Private>True</Private>
@@ -166,6 +181,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -175,6 +191,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bindings.cs" />
@@ -216,6 +233,12 @@
     <Compile Include="Enums\DeviceResponse.cs" />
     <Compile Include="Enums\NeutronSecurity.cs" />
     <Compile Include="Enums\StorageType.cs" />
+    <Compile Include="Forms\FrmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmAbout.Designer.cs">
+      <DependentUpon>FrmAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmChangeLineStatus.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -481,6 +504,12 @@
     <AdditionalFiles Include="Hart_LV_BPISHI_LogLevel.Dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
+    <Content Include="PublicKey.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Forms\FrmAbout.resx">
+      <DependentUpon>FrmAbout.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
       <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
     </EmbeddedResource>
@@ -488,6 +517,9 @@
       <DependentUpon>InductionPosition.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Allied Inc.txt.pfx" />
+    <Content Include="License.lic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="NeutronKeyFile.pfx" />
     <None Include="Neutron_3_TemporaryKey.pfx" />
     <None Include="Resources\Pick_1.png" />

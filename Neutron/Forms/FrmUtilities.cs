@@ -2766,5 +2766,13 @@ namespace Neutron.Forms
                 TextBoxActionCodes.Text = frm.CurrentIds;
             }
         }
+
+        private void MBAbout_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FrmAbout())
+            {
+                frm.ShowDialog();
+            }
+        }
     }
 }

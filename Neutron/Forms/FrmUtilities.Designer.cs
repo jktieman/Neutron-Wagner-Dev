@@ -92,6 +92,7 @@
             this.LabelCheckPrinter = new System.Windows.Forms.Label();
             this.MBPrintSetUpBack = new MetroFramework.Controls.MetroButton();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.ButtonUploadActionCodes = new System.Windows.Forms.Button();
             this.ComboBoxStoreBatchSize = new System.Windows.Forms.ComboBox();
             this.ComboBoxPickBatchSize = new System.Windows.Forms.ComboBox();
             this.GroupBoxPickMethod = new System.Windows.Forms.GroupBox();
@@ -429,7 +430,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ButtonUploadActionCodes = new System.Windows.Forms.Button();
+            this.MBAbout = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -523,6 +524,7 @@
             this.Main.Controls.Add(this.MBUtilitiesClose);
             this.Main.Controls.Add(this.MBEmailServer);
             this.Main.Controls.Add(this.MBManageLookups);
+            this.Main.Controls.Add(this.MBAbout);
             this.Main.Controls.Add(this.MBEmailAddresses);
             this.Main.Controls.Add(this.MBPrinterSetup);
             this.Main.Controls.Add(this.MBCommunications);
@@ -570,10 +572,10 @@
             // MBEmailServer
             // 
             this.MBEmailServer.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBEmailServer.Location = new System.Drawing.Point(212, 516);
+            this.MBEmailServer.Location = new System.Drawing.Point(217, 413);
             this.MBEmailServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBEmailServer.Name = "MBEmailServer";
-            this.MBEmailServer.Size = new System.Drawing.Size(350, 100);
+            this.MBEmailServer.Size = new System.Drawing.Size(350, 84);
             this.MBEmailServer.TabIndex = 4;
             this.MBEmailServer.Text = "Email Server";
             this.MBEmailServer.UseSelectable = true;
@@ -582,10 +584,10 @@
             // MBManageLookups
             // 
             this.MBManageLookups.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBManageLookups.Location = new System.Drawing.Point(212, 393);
+            this.MBManageLookups.Location = new System.Drawing.Point(217, 306);
             this.MBManageLookups.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBManageLookups.Name = "MBManageLookups";
-            this.MBManageLookups.Size = new System.Drawing.Size(350, 100);
+            this.MBManageLookups.Size = new System.Drawing.Size(350, 84);
             this.MBManageLookups.TabIndex = 4;
             this.MBManageLookups.Text = "Manage Lookups";
             this.MBManageLookups.UseSelectable = true;
@@ -594,10 +596,10 @@
             // MBEmailAddresses
             // 
             this.MBEmailAddresses.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBEmailAddresses.Location = new System.Drawing.Point(584, 516);
+            this.MBEmailAddresses.Location = new System.Drawing.Point(588, 413);
             this.MBEmailAddresses.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBEmailAddresses.Name = "MBEmailAddresses";
-            this.MBEmailAddresses.Size = new System.Drawing.Size(350, 100);
+            this.MBEmailAddresses.Size = new System.Drawing.Size(350, 84);
             this.MBEmailAddresses.TabIndex = 5;
             this.MBEmailAddresses.Text = "Email Addresses";
             this.MBEmailAddresses.UseSelectable = true;
@@ -606,10 +608,10 @@
             // MBPrinterSetup
             // 
             this.MBPrinterSetup.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrinterSetup.Location = new System.Drawing.Point(584, 393);
+            this.MBPrinterSetup.Location = new System.Drawing.Point(588, 306);
             this.MBPrinterSetup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrinterSetup.Name = "MBPrinterSetup";
-            this.MBPrinterSetup.Size = new System.Drawing.Size(350, 100);
+            this.MBPrinterSetup.Size = new System.Drawing.Size(350, 84);
             this.MBPrinterSetup.TabIndex = 5;
             this.MBPrinterSetup.Text = "Printer Setup";
             this.MBPrinterSetup.UseSelectable = true;
@@ -618,10 +620,10 @@
             // MBCommunications
             // 
             this.MBCommunications.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCommunications.Location = new System.Drawing.Point(212, 151);
+            this.MBCommunications.Location = new System.Drawing.Point(217, 96);
             this.MBCommunications.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunications.Name = "MBCommunications";
-            this.MBCommunications.Size = new System.Drawing.Size(350, 100);
+            this.MBCommunications.Size = new System.Drawing.Size(350, 84);
             this.MBCommunications.TabIndex = 0;
             this.MBCommunications.Text = "Communications";
             this.MBCommunications.UseSelectable = true;
@@ -630,10 +632,10 @@
             // MBDevices
             // 
             this.MBDevices.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDevices.Location = new System.Drawing.Point(584, 151);
+            this.MBDevices.Location = new System.Drawing.Point(588, 96);
             this.MBDevices.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDevices.Name = "MBDevices";
-            this.MBDevices.Size = new System.Drawing.Size(350, 100);
+            this.MBDevices.Size = new System.Drawing.Size(350, 84);
             this.MBDevices.TabIndex = 1;
             this.MBDevices.Text = "Device Setup";
             this.MBDevices.UseSelectable = true;
@@ -642,10 +644,10 @@
             // MBStations
             // 
             this.MBStations.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStations.Location = new System.Drawing.Point(212, 272);
+            this.MBStations.Location = new System.Drawing.Point(217, 201);
             this.MBStations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStations.Name = "MBStations";
-            this.MBStations.Size = new System.Drawing.Size(350, 100);
+            this.MBStations.Size = new System.Drawing.Size(350, 84);
             this.MBStations.TabIndex = 2;
             this.MBStations.Text = "Stations";
             this.MBStations.UseSelectable = true;
@@ -654,10 +656,10 @@
             // MBOptions
             // 
             this.MBOptions.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOptions.Location = new System.Drawing.Point(584, 272);
+            this.MBOptions.Location = new System.Drawing.Point(588, 201);
             this.MBOptions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOptions.Name = "MBOptions";
-            this.MBOptions.Size = new System.Drawing.Size(350, 100);
+            this.MBOptions.Size = new System.Drawing.Size(350, 84);
             this.MBOptions.TabIndex = 3;
             this.MBOptions.Text = "Options";
             this.MBOptions.UseSelectable = true;
@@ -1062,6 +1064,16 @@
             this.Settings.Size = new System.Drawing.Size(1147, 644);
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
+            // 
+            // ButtonUploadActionCodes
+            // 
+            this.ButtonUploadActionCodes.Location = new System.Drawing.Point(847, 305);
+            this.ButtonUploadActionCodes.Name = "ButtonUploadActionCodes";
+            this.ButtonUploadActionCodes.Size = new System.Drawing.Size(153, 23);
+            this.ButtonUploadActionCodes.TabIndex = 49;
+            this.ButtonUploadActionCodes.Text = "Upload Action Codes";
+            this.ButtonUploadActionCodes.UseVisualStyleBackColor = true;
+            this.ButtonUploadActionCodes.Click += new System.EventHandler(this.ButtonUploadActionCodes_Click);
             // 
             // ComboBoxStoreBatchSize
             // 
@@ -5086,15 +5098,17 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // ButtonUploadActionCodes
+            // MBAbout
             // 
-            this.ButtonUploadActionCodes.Location = new System.Drawing.Point(847, 305);
-            this.ButtonUploadActionCodes.Name = "ButtonUploadActionCodes";
-            this.ButtonUploadActionCodes.Size = new System.Drawing.Size(153, 23);
-            this.ButtonUploadActionCodes.TabIndex = 49;
-            this.ButtonUploadActionCodes.Text = "Upload Action Codes";
-            this.ButtonUploadActionCodes.UseVisualStyleBackColor = true;
-            this.ButtonUploadActionCodes.Click += new System.EventHandler(this.ButtonUploadActionCodes_Click);
+            this.MBAbout.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBAbout.Location = new System.Drawing.Point(588, 522);
+            this.MBAbout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBAbout.Name = "MBAbout";
+            this.MBAbout.Size = new System.Drawing.Size(350, 84);
+            this.MBAbout.TabIndex = 5;
+            this.MBAbout.Text = "About";
+            this.MBAbout.UseSelectable = true;
+            this.MBAbout.Click += new System.EventHandler(this.MBAbout_Click);
             // 
             // FrmUtilities
             // 
@@ -5575,5 +5589,6 @@
         private System.Windows.Forms.Button ButtonCancelEmailAddresses;
         private System.Windows.Forms.Button ButtonSaveEmailAddresses;
         private System.Windows.Forms.Button ButtonUploadActionCodes;
+        private MetroFramework.Controls.MetroButton MBAbout;
     }
 }

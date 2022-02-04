@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<License>
+  <Product>Neutron</Product>
+  <Licensee>Demo License</Licensee>
+  <Code>DEMO</Code>
+  <LicenseDate>1/21/2022</LicenseDate>
+  <ExpireDate>12/31/2999</ExpireDate>
+  <CoveredVersion>*.*.*.*</CoveredVersion>
+  <SerialNumber>123456</SerialNumber>
+  <SupervisorStations>6</SupervisorStations>
+  <WorkStations>6</WorkStations>
+  <RackStations>1</RackStations>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <DigestValue>yAjeSZ2qr0yReQLKtQkN34+NIXU=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>xjvGPzadUpQmkrhP1pjbHgli4e/eG/elOD/Q4279gb+HwUOTct9DkTIHsbmY6YV5ngur5Twa4DGCPjm5vOArEu8Ap3IufFgJgVxkKzPxo3u2Dn3uNlOVWBEeiERGzs6u8bU+npiIiK0fSKMzzC+gI1UcZqcVVDwR4gHFqBdspvY=</SignatureValue>
+  </Signature>
+</License>

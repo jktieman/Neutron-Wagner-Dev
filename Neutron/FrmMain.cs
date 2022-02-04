@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.Resources;
 using System.Threading;
@@ -31,6 +32,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
+using FontAwesome.Sharp;
 using Neutron.Models;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
@@ -311,6 +313,8 @@ namespace Neutron
 
         private bool InitForm()
         {
+           // var icon = FontAwesome.Sharp.IconChar.BatteryEmpty.ToBitmap( Color.Black);
+
             var result = false;
             _enumManager.SaveActionCodesToDatabase();
             _enumManager.SaveLineStatusToDatabase();
