@@ -211,6 +211,7 @@
     <Compile Include="ModelViews\UserView.cs" />
     <Compile Include="PrintModels\AnticipatedOut.cs" />
     <Compile Include="PrintModels\DocumentPrinterPreferences.cs" />
+    <Compile Include="PrintModels\LabelDetail.cs" />
     <Compile Include="PrintModels\LabelPrinterPreferences.cs" />
     <Compile Include="PrintModels\PackingList.cs" />
     <Compile Include="PrintModels\PickList.cs" />

@@ -365,7 +365,8 @@ namespace Neutron.Forms
                 Invoice = $"          ",
                 Order = $"          ",
                 LoadDate = DateTime.Now,
-                Origin = $"  "
+                Origin = $"  ",
+                UnitOfIssue = LabelHotPickUOI.Text
             };
 
             ToteToPrint.Print(1, 1, labelDetail, upc, _labelPrinter);

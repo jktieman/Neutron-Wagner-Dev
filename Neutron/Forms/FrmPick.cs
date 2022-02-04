@@ -5136,8 +5136,8 @@ namespace Neutron.Forms
                 Invoice = orderDetail.Order.Ord2,
                 Order = orderDetail.Order.Ord1,
                 LoadDate = orderDetail.Order.LoadDate,
-                Origin = orderDetail.OrderDetailInfo.Trim()
-
+                Origin = orderDetail.OrderDetailInfo.Trim(),
+                UnitOfIssue = orderDetail.ItemDefinition.UnitOfIssue.Name
             };
         }
 

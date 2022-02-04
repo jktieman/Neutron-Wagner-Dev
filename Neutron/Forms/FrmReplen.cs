@@ -61,6 +61,8 @@ namespace Neutron.Forms
         //private SqlInventoryView currentInventoryView = new SqlInventoryView();
         //private string textToFind = string.Empty;
 
+        private readonly AkaRepository _repoAka = new AkaRepository();
+
         private readonly GenericRepository<Inventory>
             _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
 
@@ -5848,9 +5850,47 @@ namespace Neutron.Forms
                     DialogResult result = frm.ShowDialog();
                     Show();
                 }
-
-
             }
+
+            if (e.KeyCode == Keys.F2)
+            {
+                Task.Run(() => _logger.Log($"FrmReplen_KeyDown: F2 Key"));
+                PrintLabels(_currentPickStop, 2);
+                e.Handled = true;
+            }
+        }
+
+        private void PrintLabels(ReplenPickStop currentPickStop, int reqFunc = 1, int pos = 0)
+        {
+            foreach (var pickView in currentPickStop.PickViews)
+            {
+                var upc = _repoAka.GetUpc(pickView.Item);
+                var labelDetail = GetLabelDetail(pickView.OrderDetail);
+                ToteToPrint.Print(reqFunc, pickView.PickPosition, labelDetail, upc, _labelPrinter);
+            }
+        }
+
+        private void PrintLabel(int reqFunc, int pos, ReplenPickView pickview)
+        {
+            var upc = _repoAka.GetUpc(pickview.Item);
+            var labelDetail = GetLabelDetail(pickview.OrderDetail);
+            ToteToPrint.Print(reqFunc, pos, labelDetail, upc, _labelPrinter);
+        }
+
+        private LabelDetail GetLabelDetail(ReplenOrderDetail orderDetail)
+        {
+            return new LabelDetail
+            {
+                Item = orderDetail.ItemDefinition.Item,
+                Description = orderDetail.ItemDefinition.Description,
+                Quantity = orderDetail.Quantity,
+                EmpId = GlobalVar.User.EmpId,
+                Invoice = orderDetail.ReplenOrder.Ord2,
+                Order = orderDetail.ReplenOrder.Ord1,
+                LoadDate = orderDetail.ReplenOrder.LoadDate,
+                Origin = orderDetail.OrderDetailInfo.Trim(),
+                UnitOfIssue = orderDetail.ItemDefinition.UnitOfIssue.Name
+            };
         }
 
         private void MBRackBack_Click(object sender, EventArgs e)
