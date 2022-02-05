@@ -14,5 +14,6 @@
         public string Description { get; set; }
         public string Ordered { get; set; }
         public string Shipped { get; set; }
+        public string UnitOfIssue { get; set; }
     }
 }
