@@ -864,7 +864,8 @@ namespace Neutron.Forms
                 LeftMargin = int.Parse(TextBoxDocumentLeftMargin.Text),
                 TopMargin = int.Parse(TextBoxDocumentTopMargin.Text),
                 RightMargin = int.Parse(TextBoxDocumentRightMargin.Text),
-                BottomMargin = int.Parse(TextBoxDocumentBottomMargin.Text)
+                BottomMargin = int.Parse(TextBoxDocumentBottomMargin.Text),
+                Landscape = CheckBoxLandscape.Checked
             };
             try
             {
@@ -912,6 +913,7 @@ namespace Neutron.Forms
             TextBoxDocumentTopMargin.Text = DocumentPrinter.TopMargin.ToString();
             TextBoxDocumentRightMargin.Text = DocumentPrinter.RightMargin.ToString();
             TextBoxDocumentBottomMargin.Text = DocumentPrinter.BottomMargin.ToString();
+            CheckBoxLandscape.Checked = DocumentPrinter.Landscape;
         }
         public void LoadLabelPrinterPreferences()
         {
@@ -1000,7 +1002,8 @@ namespace Neutron.Forms
                     LeftMargin = int.Parse(TextBoxDocumentLeftMargin.Text),
                     TopMargin = int.Parse(TextBoxDocumentTopMargin.Text),
                     RightMargin = int.Parse(TextBoxDocumentRightMargin.Text),
-                    BottomMargin = int.Parse(TextBoxDocumentBottomMargin.Text)
+                    BottomMargin = int.Parse(TextBoxDocumentBottomMargin.Text),
+                    Landscape = CheckBoxLandscape.Checked
                 };
             }
 

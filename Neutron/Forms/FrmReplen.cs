@@ -300,15 +300,15 @@ namespace Neutron.Forms
             switch (pickBatchSize)
             {
                 case 6:
-                {
-                    InductionPosition inductionPosition = new InductionPosition(1);
-                    inductionPosition.Location = new Point(292, 10);
-                    AvailableOrders.Controls.Add(inductionPosition);
+                    {
+                        InductionPosition inductionPosition = new InductionPosition(1);
+                        inductionPosition.Location = new Point(292, 10);
+                        AvailableOrders.Controls.Add(inductionPosition);
 
                         // 
                         // LabelPickPos1
                         // 
-                        LabelPickPos1.BackColor = Color.RoyalBlue;
+                        //LabelPickPos1.BackColor = Color.RoyalBlue;
                         LabelPickPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
@@ -325,7 +325,7 @@ namespace Neutron.Forms
                         LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
-                        LabelPickPos2.Location = new Point(267,12);
+                        LabelPickPos2.Location = new Point(267, 12);
                         LabelPickPos2.Name = "LabelPickPos2";
                         LabelPickPos2.Size = new Size(36, 26);
                         LabelPickPos2.TabIndex = 122;
@@ -348,7 +348,7 @@ namespace Neutron.Forms
                         // 
                         // LabelPickPos4
                         // 
-                        LabelPickPos4.BackColor = Color.RoyalBlue;
+                        //LabelPickPos4.BackColor = Color.RoyalBlue;
                         LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPickPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
@@ -606,7 +606,7 @@ namespace Neutron.Forms
                         // 
                         // LabelPos1
                         // 
-                        LabelPos1.BackColor = Color.RoyalBlue;
+                        //LabelPos1.BackColor = Color.RoyalBlue;
                         LabelPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point,
                             ((byte)(0)));
@@ -646,7 +646,7 @@ namespace Neutron.Forms
                         // 
                         // LabelPos4
                         // 
-                        LabelPos4.BackColor = Color.RoyalBlue;
+                        //LabelPos4.BackColor = Color.RoyalBlue;
                         LabelPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                         LabelPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point,
                             ((byte)(0)));
@@ -4550,16 +4550,13 @@ namespace Neutron.Forms
         {
             var pickView = _currentPickStop.PickViews.FirstOrDefault(p => p.PickPosition == pos);
             if (pickView == null) return;
-            if (newQty <= pickView.GetQuantityToBePicked())
-            {
-                pickView.QuantityToBePicked = newQty;
-                _currentPickStop.QuantityToBePicked = _currentPickStop.GetTotalQuantityToBePicked();
-                LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
-                UpdatePickScreenAfterChangeQuantity();
-            }
+            pickView.QuantityToBePicked = newQty;
+            _currentPickStop.QuantityToBePicked = _currentPickStop.GetTotalQuantityToBePicked();
+            LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
+            UpdatePickScreenAfterChangeQuantity();
         }
 
- 
+
 
         private void ButtonMove_Click(object sender, EventArgs e)
         {

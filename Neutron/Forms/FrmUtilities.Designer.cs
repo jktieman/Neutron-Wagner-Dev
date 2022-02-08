@@ -56,6 +56,7 @@
             this.MBUtilitiesClose = new MetroFramework.Controls.MetroButton();
             this.MBEmailServer = new MetroFramework.Controls.MetroButton();
             this.MBManageLookups = new MetroFramework.Controls.MetroButton();
+            this.MBAbout = new MetroFramework.Controls.MetroButton();
             this.MBEmailAddresses = new MetroFramework.Controls.MetroButton();
             this.MBPrinterSetup = new MetroFramework.Controls.MetroButton();
             this.MBCommunications = new MetroFramework.Controls.MetroButton();
@@ -430,7 +431,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.MBAbout = new MetroFramework.Controls.MetroButton();
+            this.CheckBoxLandscape = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -593,6 +595,18 @@
             this.MBManageLookups.UseSelectable = true;
             this.MBManageLookups.Click += new System.EventHandler(this.MBLookups_Click);
             // 
+            // MBAbout
+            // 
+            this.MBAbout.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBAbout.Location = new System.Drawing.Point(588, 522);
+            this.MBAbout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBAbout.Name = "MBAbout";
+            this.MBAbout.Size = new System.Drawing.Size(350, 84);
+            this.MBAbout.TabIndex = 5;
+            this.MBAbout.Text = "About";
+            this.MBAbout.UseSelectable = true;
+            this.MBAbout.Click += new System.EventHandler(this.MBAbout_Click);
+            // 
             // MBEmailAddresses
             // 
             this.MBEmailAddresses.FontSize = MetroFramework.MetroButtonSize.Tall;
@@ -668,6 +682,7 @@
             // PrintSettings
             // 
             this.PrintSettings.BackColor = System.Drawing.Color.RoyalBlue;
+            this.PrintSettings.Controls.Add(this.CheckBoxLandscape);
             this.PrintSettings.Controls.Add(this.MBPrintSetUpSave);
             this.PrintSettings.Controls.Add(this.LabelPrintSettingsUsesTestOrderNumbe);
             this.PrintSettings.Controls.Add(this.TextBoxTestOrderNumber);
@@ -682,6 +697,7 @@
             this.PrintSettings.Controls.Add(this.GroupBoxDocumentMargins);
             this.PrintSettings.Controls.Add(this.ButtonDocumentPrinter);
             this.PrintSettings.Controls.Add(this.TextBoxDocumentPrinter);
+            this.PrintSettings.Controls.Add(this.label8);
             this.PrintSettings.Controls.Add(this.LabelCheckPrinter);
             this.PrintSettings.Controls.Add(this.MBPrintSetUpBack);
             this.PrintSettings.Location = new System.Drawing.Point(4, 22);
@@ -940,7 +956,7 @@
             // ButtonDocumentPrinter
             // 
             this.ButtonDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonDocumentPrinter.Location = new System.Drawing.Point(798, 145);
+            this.ButtonDocumentPrinter.Location = new System.Drawing.Point(798, 116);
             this.ButtonDocumentPrinter.Name = "ButtonDocumentPrinter";
             this.ButtonDocumentPrinter.Size = new System.Drawing.Size(127, 25);
             this.ButtonDocumentPrinter.TabIndex = 1;
@@ -951,7 +967,7 @@
             // TextBoxDocumentPrinter
             // 
             this.TextBoxDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxDocumentPrinter.Location = new System.Drawing.Point(352, 147);
+            this.TextBoxDocumentPrinter.Location = new System.Drawing.Point(352, 118);
             this.TextBoxDocumentPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxDocumentPrinter.Name = "TextBoxDocumentPrinter";
             this.TextBoxDocumentPrinter.Size = new System.Drawing.Size(438, 22);
@@ -960,7 +976,7 @@
             // LabelCheckPrinter
             // 
             this.LabelCheckPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCheckPrinter.Location = new System.Drawing.Point(222, 147);
+            this.LabelCheckPrinter.Location = new System.Drawing.Point(215, 118);
             this.LabelCheckPrinter.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelCheckPrinter.Name = "LabelCheckPrinter";
             this.LabelCheckPrinter.Size = new System.Drawing.Size(129, 20);
@@ -5098,17 +5114,25 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // MBAbout
+            // CheckBoxLandscape
             // 
-            this.MBAbout.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAbout.Location = new System.Drawing.Point(588, 522);
-            this.MBAbout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBAbout.Name = "MBAbout";
-            this.MBAbout.Size = new System.Drawing.Size(350, 84);
-            this.MBAbout.TabIndex = 5;
-            this.MBAbout.Text = "About";
-            this.MBAbout.UseSelectable = true;
-            this.MBAbout.Click += new System.EventHandler(this.MBAbout_Click);
+            this.CheckBoxLandscape.AutoSize = true;
+            this.CheckBoxLandscape.Location = new System.Drawing.Point(352, 153);
+            this.CheckBoxLandscape.Name = "CheckBoxLandscape";
+            this.CheckBoxLandscape.Size = new System.Drawing.Size(15, 14);
+            this.CheckBoxLandscape.TabIndex = 54;
+            this.CheckBoxLandscape.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(215, 149);
+            this.label8.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(129, 20);
+            this.label8.TabIndex = 41;
+            this.label8.Text = "Landscape";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FrmUtilities
             // 
@@ -5590,5 +5614,7 @@
         private System.Windows.Forms.Button ButtonSaveEmailAddresses;
         private System.Windows.Forms.Button ButtonUploadActionCodes;
         private MetroFramework.Controls.MetroButton MBAbout;
+        private System.Windows.Forms.CheckBox CheckBoxLandscape;
+        private System.Windows.Forms.Label label8;
     }
 }

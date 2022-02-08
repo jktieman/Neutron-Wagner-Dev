@@ -7,5 +7,6 @@
         public int TopMargin { get; set; }
         public int RightMargin { get; set; }
         public int BottomMargin { get; set; }
+        public bool Landscape { get; set; }
     }
 }
