@@ -6,6 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
 using EnumsNET;
@@ -44,21 +45,30 @@ namespace Neutron.Forms
         private readonly BindingSource _bindingSource = new BindingSource();
         private LocationsRepository _locationRepository;
         private DynamicLogger _logger;
+
         private readonly GenericRepository<HeightCode> _repoHeightCode =
             new GenericRepository<HeightCode>(new NeutronDb());
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+
+        private readonly GenericRepository<Inventory>
+            _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
+
         private readonly GenericRepository<LocationCode> _repoLocationCode =
             new GenericRepository<LocationCode>(new NeutronDb());
+
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
         private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
+
         private readonly GenericRepository<VelocityCode> _repoVelocityCode =
             new GenericRepository<VelocityCode>(new NeutronDb());
+
         private ISlot _slotName;
         private DocumentToPrint _documentToPrint;
         private readonly Station _rackStation;
 
-        public FrmLocations(IJsonData jsonData, StationView station, NeutronVariables neutronVariables, ILacProcessor lacProcessor)
+        public FrmLocations(IJsonData jsonData, StationView station, NeutronVariables neutronVariables,
+            ILacProcessor lacProcessor)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -70,6 +80,7 @@ namespace Neutron.Forms
             _rackStation = _repoStation.GetRackStation();
             InitForm();
         }
+
         private void InitForm()
         {
             _logger = CreateLog();
@@ -93,11 +104,14 @@ namespace Neutron.Forms
             {
                 CheckBoxAllStations.Checked = true;
             }
+
             SetupViewEditBindings();
             _documentToPrint = new DocumentToPrint();
             RefreshData();
         }
+
         public bool CloseButtonPressed { get; set; }
+
         private DynamicLogger CreateLog()
         {
             var logFileDir = LoaderSettings.GetLogFileDirectory();
@@ -106,6 +120,7 @@ namespace Neutron.Forms
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             return _logger;
         }
+
         private void SetupPrinters()
         {
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
@@ -117,7 +132,7 @@ namespace Neutron.Forms
             get
             {
                 var parms = base.CreateParams;
-                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                parms.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
                 //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
                 return parms;
             }
@@ -126,6 +141,7 @@ namespace Neutron.Forms
         private void FrmLocations_Load(object sender, EventArgs e)
         {
         }
+
         // Set the focus to the passed in recId if it's passed in
         private void RefreshData(int recId = 0)
         {
@@ -143,6 +159,7 @@ namespace Neutron.Forms
                     station = _rackStation;
                 }
             }
+
             if (station != null)
             {
                 if (CheckBoxAllStations.Checked)
@@ -186,6 +203,7 @@ namespace Neutron.Forms
                 Cursor.Current = Cursors.Default;
             }
         }
+
         public int IndexOf(int value)
         {
             var count = _bindingSource.Count;
@@ -199,8 +217,10 @@ namespace Neutron.Forms
                     break;
                 }
             }
+
             return itemIndex;
         }
+
         private void SetupViewEditBindings()
         {
             //TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
@@ -217,35 +237,40 @@ namespace Neutron.Forms
             //ComboBoxViewEditLocationCode.DataBindings.Add("SelectedValue", _bindingSource, "LocationCodeId");
             //CheckBoxInUse.DataBindings.Add("Checked", _bindingSource, "InUse");
         }
+
         private int GetRecordCount()
         {
             var count = _bindingSource.Count;
             LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count}";
             return count;
         }
+
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             var grid = (DataGridView)sender;
-            if (e.RowIndex >= 0)
-                if (grid.CurrentCell.ColumnIndex == grid.Columns["Position"].Index)
-                {
-                    var deviceNumber = grid["Loc1", e.RowIndex].Value.ToString().ParseInt();
-                    var trayNumber = grid["Loc2", e.RowIndex].Value.ToString().ParseInt();
-                    var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
-                    var partition = grid["Loc4", e.RowIndex].Value.ToString();
-                    var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
-                    _logger.LogDetailAsync($"Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
-                    _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
-                    MoveDevice(deviceNumber, trayNumber, level, part, 0, "");
-                    TurnOnShi(deviceNumber, trayNumber, level, partition);
-                }
+            if (e.RowIndex < 0) return;
+            if (!grid.Columns.Contains("Position")) return;
+            if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
+
+            var deviceNumber = grid["Loc1", e.RowIndex].Value.ToString().ParseInt();
+            var trayNumber = grid["Loc2", e.RowIndex].Value.ToString().ParseInt();
+            var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
+            var partition = grid["Loc4", e.RowIndex].Value.ToString();
+            var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
+            _logger.LogDetailAsync(
+                $"Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
+            _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
+            MoveDevice(deviceNumber, trayNumber, level, part);
+            TurnOnShi(deviceNumber, trayNumber, level, partition);
         }
+
         private void ClearAllShi()
         {
             if (_neutronVariables.DisplaysEnabled)
                 if (GlobalVar.Displays != null)
                     GlobalVar.Displays.ClearAllShi();
         }
+
         private void TurnOnShi(int deviceNumber, int trayNumber, int level, string partition)
         {
             string lArrow;
@@ -264,16 +289,20 @@ namespace Neutron.Forms
                         lArrow = "<";
                         rArrow = "";
                     }
+
                     if (deviceNumber == 3 && _station.StationNumber == 3)
                     {
                         lArrow = "";
                         rArrow = ">";
                     }
+
                     var text = $"{lArrow}-----{rArrow}";
                     GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
                 }
         }
-        private void MoveDevice(int deviceNumber, int trayNumber, int level = 0, int partition = 0, int quantity = 0, string display = "")
+
+        private void MoveDevice(int deviceNumber, int trayNumber, int level = 0, int partition = 0, int quantity = 0,
+            string display = "")
         {
             if (_lacProcessor.MovePermitted(_station.StationNumber, deviceNumber, trayNumber))
             {
@@ -286,9 +315,11 @@ namespace Neutron.Forms
                         {
                             if (GlobalVar.Shuttle != null)
                             {
-                                var response = GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, partition, quantity, display);
+                                var response = GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level,
+                                    partition, quantity, display);
                                 if (response != DeviceResponse.Success)
-                                    MessageBox.Show(response.AsString(EnumFormat.Description), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show(response.AsString(EnumFormat.Description), string.Empty,
+                                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                             else
                             {
@@ -333,11 +364,13 @@ namespace Neutron.Forms
                         if (IntegerValidator(TextBoxNewLoc5.Text.ParseInt()))
                         {
                             var loc5 = TextBoxNewLoc5.Text.ParseInt();
-                            var rec = _repoLocation.All().FirstOrDefault(r => r.StationId == stationId && r.Loc1 == deviceNumber && r.Loc2 == loc2
-                                                                              && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5);
+                            var rec = _repoLocation.All().FirstOrDefault(r =>
+                                r.StationId == stationId && r.Loc1 == deviceNumber && r.Loc2 == loc2
+                                && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5);
                             if (rec == null)
                             {
-                               var slotName = GlobalVar.SlotNameFactory.CreateSlotName(stationId, deviceNumber, loc2, loc3, loc4, loc5).SlotName;
+                                var slotName = GlobalVar.SlotNameFactory
+                                    .CreateSlotName(stationId, deviceNumber, loc2, loc3, loc4, loc5).SlotName;
                                 var loc = new Location
                                 {
                                     StationId = stationId,
@@ -363,12 +396,14 @@ namespace Neutron.Forms
                                     MessageBox.Show(_resourceManager.GetString("Message3") + ex.Message + "\n\r" +
                                                     ex.InnerException);
                                 }
+
                                 RefreshData();
                                 tabControl1.SelectedTab = tabPage1;
                             }
                             else
                             {
-                                MessageBox.Show(_resourceManager.GetString("Message4"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show(_resourceManager.GetString("Message4"), string.Empty,
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                         else
@@ -391,6 +426,7 @@ namespace Neutron.Forms
                 MessageBox.Show(_resourceManager.GetString("Message8"));
             }
         }
+
         private void UpdateViewEdit()
         {
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
@@ -415,7 +451,8 @@ namespace Neutron.Forms
                         {
                             var loc5 = TextBoxViewEditLoc5.Text.ParseInt();
 
-                            _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4, loc5);
+                            _slotName = GlobalVar.SlotNameFactory.CreateSlotName(stId, deviceNumber, loc2, loc3, loc4,
+                                loc5);
                             var slotName = _slotName.SlotName;
 
                             var rec = new Location
@@ -444,6 +481,7 @@ namespace Neutron.Forms
                                 MessageBox.Show($"{_resourceManager.GetString("Message9")}{Environment.NewLine}" +
                                                 $"{ex.Message}{Environment.NewLine} {ex.InnerException}");
                             }
+
                             RefreshData();
                             tabControl1.SelectedTab = tabPage1;
                         }
@@ -467,6 +505,7 @@ namespace Neutron.Forms
                 MessageBox.Show(_resourceManager.GetString("Message13"));
             }
         }
+
         private bool ValidateFields(Location rec)
         {
             if (!IntegerValidator(rec.Loc1)) return false;
@@ -476,6 +515,7 @@ namespace Neutron.Forms
             if (!IntegerValidator(rec.Loc5)) return false;
             return true;
         }
+
         private bool StringValidator(string input)
         {
             var pattern = "[^a-zA-Z]";
@@ -483,6 +523,7 @@ namespace Neutron.Forms
                 return true;
             return false;
         }
+
         //validate integer 
         private bool IntegerValidator(int input)
         {
@@ -494,18 +535,22 @@ namespace Neutron.Forms
                     MessageBox.Show(_resourceManager.GetString("Message14"));
                     return false;
                 }
+
                 return true;
             }
+
             return false;
         }
+
         private bool IsDuplicate(Location loc)
         {
             var result = false;
             Location rec;
             try
             {
-                rec = _repoLocation.All().FirstOrDefault(r => r.StationId == loc.StationId && r.Loc1 == loc.Loc1 && r.Loc2 == loc.Loc2
-                                                              && r.Loc3 == loc.Loc3 && r.Loc4 == loc.Loc4 && r.Loc5 == loc.Loc5);
+                rec = _repoLocation.All().FirstOrDefault(r =>
+                    r.StationId == loc.StationId && r.Loc1 == loc.Loc1 && r.Loc2 == loc.Loc2
+                    && r.Loc3 == loc.Loc3 && r.Loc4 == loc.Loc4 && r.Loc5 == loc.Loc5);
                 if (rec != null)
                 {
                     MessageBox.Show(_resourceManager.GetString("Message15"), string.Empty, MessageBoxButtons.OK,
@@ -518,8 +563,10 @@ namespace Neutron.Forms
                 MessageBox.Show($"{_resourceManager.GetString("Message16")}{Environment.NewLine}" +
                                 $"{ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
+
             return result;
         }
+
         private void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
@@ -537,6 +584,7 @@ namespace Neutron.Forms
                 MessageBox.Show(_resourceManager.GetString("Message18"));
             }
         }
+
         private bool HasInventory(int id)
         {
             var result = false;
@@ -544,6 +592,7 @@ namespace Neutron.Forms
             if (rec != null) result = true;
             return result;
         }
+
         private void MButtonAllLocations_Click(object sender, EventArgs e)
         {
             if (MButtonAllLocations.Text == _resourceManager.GetString("Available"))
@@ -557,16 +606,20 @@ namespace Neutron.Forms
                 MButtonAllLocations.Text = _resourceManager.GetString("Available");
                 LabelFormTitle.Text = _resourceManager.GetString("AllLocations");
             }
+
             RefreshData();
         }
+
         private void FrmLocations_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !CloseButtonPressed;
         }
+
         private void MBPrintLocations_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView1);
         }
+
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
             var station = ((Station)ComboBoxNewStation.SelectedItem);
@@ -601,6 +654,7 @@ namespace Neutron.Forms
                                 $"{ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
         }
+
         private void MbLoadDefault_Click(object sender, EventArgs e)
         {
             var item = _jsonData.LoadFile<Location>();
@@ -617,20 +671,24 @@ namespace Neutron.Forms
             ComboBoxNewLocationCode.SelectedValue = item.LocationCodeId;
             CheckBoxInUseNew.Checked = item.InUse;
         }
+
         private void CheckBoxAllStations_CheckedChanged(object sender, EventArgs e)
         {
             RefreshData();
         }
+
         private void ButtonAvailableLocations_Click(object sender, EventArgs e)
         {
             PrintAvailableLocations();
         }
+
         private void PrintAvailableLocations()
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var locations = GetAvailableLocations();
             _documentToPrint.PrintAvailableLocations(locations, _documentPrinter, _neutronVariables.PrintPreview);
         }
+
         private List<Location> GetAvailableLocations()
         {
             var stationId = ((Station)ComboBoxStationNumber.SelectedItem).Id;
@@ -644,8 +702,10 @@ namespace Neutron.Forms
                     .Include("LocationCode")
                     .Where(l => l.InUse == false && l.StationId == stationId).ToList();
             }
+
             return outs;
         }
+
         private void ComboBoxNewStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var station = ((Station)ComboBoxNewStation.SelectedItem);
@@ -660,14 +720,15 @@ namespace Neutron.Forms
             ComboBoxNewDevice.ValueMember = "Id";
             ComboBoxNewDevice.Refresh();
         }
+
         private void ComboBoxViewEditStation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var station = ((Station)ComboBoxViewEditStation.SelectedItem);
             if (station != null)
             {
                 var stationView = _repoStation.GetStationView(station.Id);
-                TextBoxViewEditSlot.ReadOnly = true;  
-                LabelSlotInformation.Visible = true;  
+                TextBoxViewEditSlot.ReadOnly = true;
+                LabelSlotInformation.Visible = true;
 
                 ComboBoxViewEditDevice.DataSource = stationView.HardwareDevices
                     .Select(s => new HardwareDeviceLookup { Id = s.DeviceNumber, Name = s.Name }).ToList();
@@ -676,32 +737,41 @@ namespace Neutron.Forms
                 ComboBoxViewEditDevice.Refresh();
             }
         }
+
         #region Find Functions
+
         private void MButtonFind_Click(object sender, EventArgs e)
         {
             RefreshData();
         }
+
         private void FindRecord(string s)
         {
             RefreshData();
         }
+
         private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) RefreshData();
         }
+
         #endregion
+
         #region Button Clicks
+
         private void ButtonClear_Click(object sender, EventArgs e)
         {
             TextBoxFind.Text = string.Empty;
             RefreshData();
             TextBoxFind.Focus();
         }
+
         private void MButtonClose_Click(object sender, EventArgs e)
         {
             ClearAllShi();
             CloseButtonPressed = true;
         }
+
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
             if (DataGridView1.RowCount <= 0) return;
@@ -713,6 +783,7 @@ namespace Neutron.Forms
             //}
             tabControl1.SelectedTab = tabPage2;
         }
+
         private void LoadViewEditData()
         {
             var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
@@ -731,45 +802,57 @@ namespace Neutron.Forms
             ComboBoxViewEditLocationCode.SelectedValue = location.LocationCodeId;
             CheckBoxInUse.Checked = location.InUse;
         }
+
         private void MButtonNew_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = tabPage3;
         }
+
         private void MbViewEditListing_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = tabPage1;
         }
+
         private void MbViewEditNew_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = tabPage3;
         }
+
         private void MbViewEditClose_Click(object sender, EventArgs e)
         {
             RefreshData();
             tabControl1.SelectedTab = tabPage1;
         }
+
         private void MbViewEditSave_Click(object sender, EventArgs e)
         {
             UpdateViewEdit();
         }
+
         private void MbNewListing_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = tabPage1;
         }
+
         private void MbNewViewEdit_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = tabPage2;
         }
+
         private void MbNewSave_Click(object sender, EventArgs e)
         {
             SaveNew();
         }
+
         private void MbNewClose_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = tabPage1;
         }
+
         #endregion
+
         #region Form Setup
+
         private void SetupGrid()
         {
             DataGridView1.AutoGenerateColumns = false;
@@ -777,7 +860,8 @@ namespace Neutron.Forms
             var bCol = new DataGridViewButtonColumn
             {
                 HeaderText = string.Empty,
-                Visible = _station.StationTypeId != (int)NeutronCore.Enums.StationType.Rack && _station.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor,
+                Visible = _station.StationTypeId != (int)NeutronCore.Enums.StationType.Rack &&
+                          _station.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor,
                 Name = "Position",
                 Text = _gridResourceManager.GetString("Position"),
                 UseColumnTextForButtonValue = true,
@@ -888,6 +972,7 @@ namespace Neutron.Forms
             //    //column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             //}
         }
+
         private void SetupTabControl()
         {
             tabControl1.Appearance = TabAppearance.FlatButtons;
@@ -916,8 +1001,10 @@ namespace Neutron.Forms
         {
             var controls = control.Controls.Cast<Control>();
             var enumerable = controls.ToList();
-            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable)
+                .Where(c => c.GetType() == type);
         }
+
         private void SetupNewForm()
         {
             //LabelFindDescription.Text = "Search any part of Slot field";
@@ -942,6 +1029,7 @@ namespace Neutron.Forms
             ComboBoxNewDevice.DisplayMember = "Name";
             ComboBoxNewDevice.ValueMember = "Id";
         }
+
         private void SetupViewEditForm()
         {
             //LabelFindDescription.Text = "Search any part of Slot field";
@@ -966,86 +1054,109 @@ namespace Neutron.Forms
             ComboBoxViewEditDevice.DisplayMember = "Name";
             ComboBoxViewEditDevice.ValueMember = "Id";
         }
+
         #endregion
+
         #region Return Key Functions
+
         private void ComboBoxNewDevice_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxNewLoc2.Focus();
         }
+
         private void TextBoxNewLoc2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxNewLoc3.Focus();
         }
+
         private void TextBoxNewLoc3_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxNewLoc4.Focus();
         }
+
         private void TextBoxNewLoc4_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxNewLoc5.Focus();
         }
+
         private void TextBoxNewLoc5_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxNewSizeCode.Focus();
         }
+
         private void ComboBoxNewSizeCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxNewVelocityCode.Focus();
         }
+
         private void ComboBoxNewVelocityCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxNewHeightCode.Focus();
         }
+
         private void ComboBoxNewHeightCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxNewLocationCode.Focus();
         }
+
         private void ComboBoxNewLocationCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxNewLoc2.Focus();
         }
+
         private void ComboBoxViewEditDevice_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxViewEditLoc2.Focus();
         }
+
         private void TextBoxViewEditLoc2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxViewEditLoc3.Focus();
         }
+
         private void TextBoxViewEditLoc3_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxViewEditLoc4.Focus();
         }
+
         private void TextBoxViewEditLoc4_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) TextBoxViewEditLoc5.Focus();
         }
+
         private void TextBoxViewEditLoc5_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxViewEditSizeCode.Focus();
         }
+
         private void ComboBoxViewEditSizeCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxViewEditVelocityCode.Focus();
         }
+
         private void ComboBoxViewEditVelocityCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxViewEditHeightCode.Focus();
         }
+
         private void ComboBoxViewEditHeightCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxViewEditLocationCode.Focus();
         }
+
         private void ComboBoxViewEditLocationCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return) ComboBoxViewEditDevice.Focus();
         }
+
         private void tabControl1_Enter(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex == 1) ComboBoxViewEditDevice.Focus();
             if (tabControl1.SelectedIndex == 2) ComboBoxNewDevice.Focus();
         }
+
         #endregion
+
         private void SetCulture(string lang)
         {
             try
@@ -1053,7 +1164,7 @@ namespace Neutron.Forms
                 var languageDirectory = LoaderSettings.GetLanguageDirectory();
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmLocations",
-               resourceDir: languageDirectory, usingResourceSet: null);
+                    resourceDir: languageDirectory, usingResourceSet: null);
                 _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders",
                     resourceDir: languageDirectory, usingResourceSet: null);
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
@@ -1107,7 +1218,32 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+                MessageBox.Show(
+                    $"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
+            }
+        }
+
+        private void ButtonPositionDevice_Click(object sender, EventArgs e)
+        {
+            var station = ((Station)ComboBoxViewEditStation.SelectedItem);
+            if (station == null) return;
+            var stId = station.Id;
+            var device = ((HardwareDeviceLookup)ComboBoxViewEditDevice.SelectedItem);
+            if (device == null) return;
+            var deviceNumber = device.Id;
+            if (IntegerValidator(TextBoxViewEditLoc2.Text.ParseInt()))
+            {
+                var trayNumber = TextBoxViewEditLoc2.Text.ParseInt();
+                if (IntegerValidator(TextBoxViewEditLoc3.Text.ParseInt()))
+                {
+                    var level = TextBoxViewEditLoc3.Text.ParseInt();
+                    if (IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt()))
+                    {
+                        var part = TextBoxViewEditLoc4.Text.ParseInt();
+
+                        MoveDevice(deviceNumber, trayNumber, level, part);
+                    }
+                }
             }
         }
     }

@@ -115,6 +115,7 @@
             this.LabelNewDevice = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
+            this.ButtonPositionDevice = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -433,6 +434,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.panel1.Controls.Add(this.ButtonPositionDevice);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.TextBoxViewEditId);
             this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1146,6 +1148,16 @@
             this.LabelStationName.TabIndex = 20;
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // ButtonPositionDevice
+            // 
+            this.ButtonPositionDevice.Location = new System.Drawing.Point(396, 395);
+            this.ButtonPositionDevice.Name = "ButtonPositionDevice";
+            this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 32);
+            this.ButtonPositionDevice.TabIndex = 105;
+            this.ButtonPositionDevice.Text = "Position Device";
+            this.ButtonPositionDevice.UseVisualStyleBackColor = true;
+            this.ButtonPositionDevice.Click += new System.EventHandler(this.ButtonPositionDevice_Click);
+            // 
             // FrmLocations
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1269,5 +1281,6 @@
         private System.Windows.Forms.Label LabelNewStation;
         private System.Windows.Forms.Label LabelViewEditSlotInformation;
         private System.Windows.Forms.Label LabelStationName;
+        private System.Windows.Forms.Button ButtonPositionDevice;
     }
 }

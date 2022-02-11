@@ -1795,76 +1795,90 @@ namespace Neutron.Forms
 
         private void DataGridViewPosition(DataGridView grid, int rowIndex)
         {
-            var text = "----";
-            if (rowIndex >= 0)
+            var qty = 0;
+            var display = string.Empty;
+
+            try
             {
-                if (grid.CurrentCell.ColumnIndex == grid.Columns["Position"].Index)
+                if (rowIndex < 0) return;
+                if (!grid.Columns.Contains("Position")) return;
+                if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
+                if (!grid.Columns.Contains(columnName: "Loc1")) return;
+                var deviceNumber = grid["Loc1", rowIndex].Value.ToString().ParseInt();
+                if (!grid.Columns.Contains(columnName: "Loc2")) return;
+                var trayNumber = grid["Loc2", rowIndex].Value.ToString().ParseInt();
+                if (!grid.Columns.Contains(columnName: "Loc3")) return;
+                var level = grid["Loc3", rowIndex].Value.ToString().ParseInt();
+                if (!grid.Columns.Contains(columnName: "Loc4")) return;
+                var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
+                if (grid.Columns.Contains(columnName: "Quantity"))
                 {
-                    var deviceNumber = IntegerExtensions.ParseInt(grid["Loc1", rowIndex].Value.ToString());
-                    var trayNumber = IntegerExtensions.ParseInt(grid["Loc2", rowIndex].Value.ToString());
-                    var level = IntegerExtensions.ParseInt(grid["Loc3", rowIndex].Value.ToString());
-                    var partition = grid["Loc4", rowIndex].Value.ToString();
-                    var part = IntegerExtensions.ParseInt(grid["Loc4", rowIndex].Value.ToString());
-                    var display = string.Empty;
-                    if (_lacProcessor.MovePermitted(_station.StationNumber, deviceNumber, trayNumber))
+                    qty = grid["Quantity", rowIndex].Value.ToString().ParseInt();
+                }
+                MoveDevice(deviceNumber, trayNumber, level, part, qty, display);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to move device. {Environment.NewLine} {ex.Message}");
+            }
+        }
+
+        private void MoveDevice(int deviceNumber, int trayNumber, int level, int part, int quantity = 0, string display = "")
+        {
+            if (_lacProcessor.MovePermitted(_station.StationNumber, deviceNumber, trayNumber))
+            {
+                if (_neutronVariables.ShuttleEnabled)
+                {
+                    var hardwareDevice =
+                        _station.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                    if (hardwareDevice != null)
                     {
-                        if (_neutronVariables.ShuttleEnabled)
+                        if (hardwareDevice.Enabled)
                         {
-                            var hardwareDevice =
-                                _station.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
-                            if (hardwareDevice != null)
+                            if (GlobalVar.Shuttle != null)
                             {
-                                if (hardwareDevice.Enabled == true)
+                                var response = Task.Run(() =>
+                                    GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
+                                        display));
+                                if (response.Result != DeviceResponse.Success)
                                 {
-                                    if (GlobalVar.Shuttle != null)
-                                    {
-                                        var response = Task.Run(() =>
-                                            GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, 0,
-                                                display));
-                                        if (response.Result != DeviceResponse.Success)
-                                        {
-                                            MessageBox.Show(response.Result.AsString(EnumFormat.Description),
-                                                caption: string.Empty, buttons: MessageBoxButtons.OK,
-                                                icon: MessageBoxIcon.Error);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show(_resourceManager.GetString("Message11"));
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show(
-                                        $"{_resourceManager.GetString("Message12")} - {hardwareDevice.Name}");
+                                    MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                                        caption: string.Empty, buttons: MessageBoxButtons.OK,
+                                        icon: MessageBoxIcon.Error);
                                 }
                             }
                             else
                             {
-                                MessageBox.Show(_resourceManager.GetString("Message13"));
+                                MessageBox.Show(_resourceManager.GetString("Message11"));
                             }
                         }
-
-                        if (_neutronVariables.DisplaysEnabled)
+                        else
                         {
-                            if (GlobalVar.Displays != null)
-                            {
-                                ClearAllShi();
-                                if (grid.Columns.Contains(columnName: "Quantity"))
-                                {
-                                    var qty = grid["Quantity", rowIndex].Value.ToString();
-                                    text = ($"{qty.PadLeft(6, paddingChar: ' ')}");
-                                    GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
-                                }
-                            }
+                            MessageBox.Show(
+                                $"{_resourceManager.GetString("Message12")} - {hardwareDevice.Name}");
                         }
-
                     }
                     else
                     {
-                        MessageBox.Show($"Location Access Denied");
+                        MessageBox.Show(_resourceManager.GetString("Message13"));
                     }
                 }
+
+                if (_neutronVariables.DisplaysEnabled)
+                {
+                    if (GlobalVar.Displays != null)
+                    {
+                        ClearAllShi();
+
+                        var text = ($"{quantity.ToString().PadLeft(6, paddingChar: ' ')}");
+                        GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, part.ToString(), text);
+                    }
+                }
+
+            }
+            else
+            {
+                MessageBox.Show($"Location Access Denied");
             }
         }
 
@@ -2018,6 +2032,16 @@ namespace Neutron.Forms
             {
                 MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
+        }
+
+        private void ButtonPositionDevice_Click(object sender, EventArgs e)
+        {
+           var deviceNumber = TextBoxAddDetailLoc1.Text.ParseInt();
+           var trayNumber = TextBoxAddDetailLoc2.Text.ParseInt();
+           var level = TextBoxAddDetailLoc3.Text.ParseInt();
+           var part = TextBoxAddDetailLoc4.Text.ParseInt();
+           var qty = TextBoxAddDetailQuantity.Text.ParseInt();
+           MoveDevice(deviceNumber,trayNumber,level,part, qty);
         }
     }
 }

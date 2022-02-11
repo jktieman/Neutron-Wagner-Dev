@@ -168,6 +168,7 @@
             this.TextBoxAddDetailLocationId = new System.Windows.Forms.TextBox();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
+            this.ButtonPositionDevice = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.GroupBoxInventoryFile.SuspendLayout();
@@ -1337,6 +1338,7 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.panel3.Controls.Add(this.ButtonPositionDevice);
             this.panel3.Controls.Add(this.panel6);
             this.panel3.Controls.Add(this.GroupBoxAddDetailLocation);
             this.panel3.Controls.Add(this.TextBoxAddDetailInventoryId);
@@ -1506,7 +1508,7 @@
             this.GroupBoxAddDetailLocation.Enabled = false;
             this.GroupBoxAddDetailLocation.Location = new System.Drawing.Point(86, 159);
             this.GroupBoxAddDetailLocation.Name = "GroupBoxAddDetailLocation";
-            this.GroupBoxAddDetailLocation.Size = new System.Drawing.Size(968, 335);
+            this.GroupBoxAddDetailLocation.Size = new System.Drawing.Size(968, 305);
             this.GroupBoxAddDetailLocation.TabIndex = 62;
             this.GroupBoxAddDetailLocation.TabStop = false;
             this.GroupBoxAddDetailLocation.Text = "Location";
@@ -1825,6 +1827,16 @@
             this.LabelStationName.TabIndex = 21;
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // ButtonPositionDevice
+            // 
+            this.ButtonPositionDevice.Location = new System.Drawing.Point(427, 480);
+            this.ButtonPositionDevice.Name = "ButtonPositionDevice";
+            this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 32);
+            this.ButtonPositionDevice.TabIndex = 104;
+            this.ButtonPositionDevice.Text = "Position Device";
+            this.ButtonPositionDevice.UseVisualStyleBackColor = true;
+            this.ButtonPositionDevice.Click += new System.EventHandler(this.ButtonPositionDevice_Click);
+            // 
             // FrmInventory
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2015,5 +2027,6 @@
         private MetroFramework.Controls.MetroButton MBCreateInventoryFile;
         private System.Windows.Forms.Label LabelSlotInformation;
         private System.Windows.Forms.Label LabelStationName;
+        private System.Windows.Forms.Button ButtonPositionDevice;
     }
 }
