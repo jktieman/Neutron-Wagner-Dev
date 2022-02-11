@@ -65,14 +65,14 @@ namespace Neutron.Controllers
 
             _hartDisplayController = new Hart_DisplayController(Hart_DisplayController.Controller_Type_Remstar_BPI_SHI(), hartLog);
 
-            Task.Run(() => _logger.Log(msg: @"HartDisplayController has been created: "));
+            Task.Run(() => _logger.LogDetailAsync(msg: @"HartDisplayController has been created: "));
             if (HartDisplayControllerInit())
             {
                 Ready = true;
             }
             else
             {
-                Task.Run(() => _logger.Log(@"HartDisplayController failed Initialization"));
+                Task.Run(() => _logger.LogDetailAsync(@"HartDisplayController failed Initialization"));
                 Ready = false;
             }
         }
@@ -88,18 +88,18 @@ namespace Neutron.Controllers
             var serialConfiguration = _repoSerial.FindByKey(serialConfigurationId);
             if (serialConfiguration == null) return false;
 
-            Task.Run(() => _logger.Log($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));
-            Task.Run(() => _logger.Log($"Serial Port Number: {serialConfiguration.PortNumber.ToString()}"));
+            Task.Run(() => _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));
+            Task.Run(() => _logger.LogDetailAsync($"Serial Port Number: {serialConfiguration.PortNumber.ToString()}"));
 
 
             if (_hartDisplayController.Init_Controller(serialConfiguration.PortNumber, serialConfiguration.SimulationMode, serialConfiguration.LogLevel, ref _cError))
             {
-                Task.Run(() => _logger.Log("Initialization Requested"));
+                Task.Run(() => _logger.LogDetailAsync("Initialization Requested"));
                 result = true;
             }
             else
             {
-                Task.Run(() => _logger.Log("Problem requesting initialization. " + _cError));
+                Task.Run(() => _logger.LogDetailAsync("Problem requesting initialization. " + _cError));
                 MessageBox.Show($"{_cError}", "Display Controller Initialization", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -111,7 +111,7 @@ namespace Neutron.Controllers
         public int GetInitStatus()
         {
             var stat = InitStatus();
-            Task.Run(() => _logger.Log($"Get Init Status - Return: {stat}"));
+            Task.Run(() => _logger.LogDetailAsync($"Get Init Status - Return: {stat}"));
             return stat;
         }
 
@@ -122,20 +122,20 @@ namespace Neutron.Controllers
             var initCode = _hartDisplayController.LastStatus_Code;
             var initMsg = _hartDisplayController.LastStatus_Message;
 
-            Task.Run(() => _logger.Log($"HartDisplayController InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
+            Task.Run(() => _logger.LogDetailAsync($"HartDisplayController InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
             if (success)
             {
                 // life is good, you can drive the device
-                Task.Run(() => _logger.Log($"HartDisplayController InitStatus: success is {success}"));
+                Task.Run(() => _logger.LogDetailAsync($"HartDisplayController InitStatus: success is {success}"));
                 if (initCode == 0)
                 {
                     // life is good, no warning messages
-                    Task.Run(() => _logger.Log($"HartDisplayController Initialization is complete and was successful initCode is {initCode}"));
+                    Task.Run(() => _logger.LogDetailAsync($"HartDisplayController Initialization is complete and was successful initCode is {initCode}"));
                 }
                 else
                 {
                     // You need to report the warning to the operator or to a log that is monitored frequently
-                    Task.Run(() => _logger.Log($"HartDisplayController Warning - Initialization was successful but there is a warning." + Environment.NewLine +
+                    Task.Run(() => _logger.LogDetailAsync($"HartDisplayController Warning - Initialization was successful but there is a warning." + Environment.NewLine +
                     "Please provide the following information to your IT support." + Environment.NewLine +
                     "Code is: " + initCode.ToString() + Environment.NewLine +
                     "Message is: " + initMsg));
@@ -146,16 +146,16 @@ namespace Neutron.Controllers
                 // Darn, cannot drive the device at this time
                 if (_hartDisplayController.Init_PercentageComplete == 0)
                 {
-                    Task.Run(() => _logger.Log($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
                 }
                 else if (_hartDisplayController.Init_PercentageComplete < 100)
                 {
-                    Task.Run(() => _logger.Log($"Initialization is in progress.  Init {_hartDisplayController.Init_PercentageComplete.ToString()}% complete..."));
-                    Task.Run(() => _logger.Log($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Initialization is in progress.  Init {_hartDisplayController.Init_PercentageComplete.ToString()}% complete..."));
+                    Task.Run(() => _logger.LogDetailAsync($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
                 }
                 else
                 {
-                    Task.Run(() => _logger.Log($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
                 }
             }
             return initCode;
@@ -176,12 +176,12 @@ namespace Neutron.Controllers
                 if (_hartDisplayController != null)
                 {
                     _hartDisplayController.Close_Controller(ref _cError);
-                    Task.Run(() => _logger.Log($"Close Display Controller Closed {_cError}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Close Display Controller Closed {_cError}"));
                 }
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Close Display Controller Exception: {_cError} {Environment.NewLine}{ex.Message} {Environment.NewLine} {ex.InnerException} "));
+                Task.Run(() => _logger.LogDetailAsync($"Close Display Controller Exception: {_cError} {Environment.NewLine}{ex.Message} {Environment.NewLine} {ex.InnerException} "));
             }
         }
 
@@ -214,7 +214,7 @@ namespace Neutron.Controllers
             }
 
 
-            Task.Run(() => _logger.Log($"Get Address Returned: {address}"));
+            Task.Run(() => _logger.LogDetailAsync($"Get Address Returned: {address}"));
 
             return int.Parse(address);
 
@@ -222,11 +222,11 @@ namespace Neutron.Controllers
 
         public void ClearAllBli()
         {
-            Task.Run(() => _logger.Log($"BLI Clear All Displays."));
+            Task.Run(() => _logger.LogDetailAsync($"BLI Clear All Displays."));
 
             if (!_hartDisplayController.Clear(_bliList, ref _cError))
             {
-                Task.Run(() => _logger.Log($"BLI Clear All Display Error. \r\n  {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"BLI Clear All Display Error. \r\n  {_cError}"));
             }
 
         }
@@ -236,31 +236,31 @@ namespace Neutron.Controllers
         {
             if (!_hartDisplayController.Clear(Global_Module, ref _cError))
             {
-                Task.Run(() => _logger.Log($"SHI Clear All Display Error.  {Environment.NewLine}{_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"SHI Clear All Display Error.  {Environment.NewLine}{_cError}"));
             }
         }
 
         //this is the one Neutron uses
         public void ShowShi(int device, int bin, int level, string part, string text)
         {
-            Task.Run(() => _logger.Log($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
+            Task.Run(() => _logger.LogDetailAsync($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
             var address = GetAddress(device, level);
 
             var shi = new Hart_SHI(address, _lBeacon, _rBeacon, part, text);
 
             if (!_hartDisplayController.Show(shi, ref _cError))
             {
-                Task.Run(() => _logger.Log($"SHI Show Single Display Error.  {shi.SHI_Address}\r\n {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"SHI Show Single Display Error.  {shi.SHI_Address}\r\n {_cError}"));
             }
         }
 
         public void ShowAllShi()
         {
-            Task.Run(() => _logger.Log("SHI Show All Displays."));
+            Task.Run(() => _logger.LogDetailAsync("SHI Show All Displays."));
 
             if (!_hartDisplayController.Show(_shiList, ref _cError))
             {
-                Task.Run(() => _logger.Log("SHI Show All Display Error."));
+                Task.Run(() => _logger.LogDetailAsync("SHI Show All Display Error."));
             }
         }
 
@@ -268,17 +268,17 @@ namespace Neutron.Controllers
         {
             if (_bliEnabled)
             {
-                Task.Run(() => _logger.Log($"BLI Address: {address}"));
+                Task.Run(() => _logger.LogDetailAsync($"BLI Address: {address}"));
                 var bli = new Hart_BLI(address, 2, text);
                 if (!blisOn.Contains(bli))
                 {
                     blisOn.Add(bli);
                 }
-                Task.Run(() => _logger.Log($"BLI On: {bli.BLI_Address}"));
+                Task.Run(() => _logger.LogDetailAsync($"BLI On: {bli.BLI_Address}"));
                 Thread.Sleep(10);
                 if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    Task.Run(() => _logger.Log($"BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
+                    Task.Run(() => _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
                 }
             }
         }
@@ -291,40 +291,40 @@ namespace Neutron.Controllers
                 {
                     blisOn.Add(bli);
                 }
-                Task.Run(() => _logger.Log($"Hart BLI Address: {bli.BLI_Address}"));
+                Task.Run(() => _logger.LogDetailAsync($"Hart BLI Address: {bli.BLI_Address}"));
                 Thread.Sleep(10);
                 if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    Task.Run(() => _logger.Log($"Hart BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Hart BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
                 }
             }
         }
 
         public void ShowShi(Hart_SHI shi)
         {
-            Task.Run(() => _logger.Log($"Hart SHI Show: {shi.SHI_Address}"));
+            Task.Run(() => _logger.LogDetailAsync($"Hart SHI Show: {shi.SHI_Address}"));
             Thread.Sleep(10);
             if (!_hartDisplayController.Show(shi, ref _cError))
             {
-                Task.Run(() => _logger.Log($"Hart SHI Show Single Display Error 2.  {shi.SHI_Address}\r\n {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"Hart SHI Show Single Display Error 2.  {shi.SHI_Address}\r\n {_cError}"));
             }
         }
 
         public void ClearBli(Hart_BLI bli)
         {
-            Task.Run(() => _logger.Log($"BLI Clear Single Display. {bli.BLI_Address}"));
+            Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display. {bli.BLI_Address}"));
             if (!_hartDisplayController.Clear(bli, ref _cError))
             {
-                Task.Run(() => _logger.Log($"BLI Clear Single Display Error.  {bli.BLI_Address}\r\n {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display Error.  {bli.BLI_Address}\r\n {_cError}"));
             }
         }
 
         public void ClearShi(Hart_SHI shi)
         {
-            Task.Run(() => _logger.Log($"SHI Clear Single Display.  {shi.SHI_Address}"));
+            Task.Run(() => _logger.LogDetailAsync($"SHI Clear Single Display.  {shi.SHI_Address}"));
             if (!_hartDisplayController.Clear(shi, ref _cError))
             {
-                Task.Run(() => _logger.Log($"SHI Clear Single Display Error.   {shi.SHI_Address} \r\n { _cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"SHI Clear Single Display Error.   {shi.SHI_Address} \r\n { _cError}"));
             }
         }
 
@@ -359,7 +359,7 @@ namespace Neutron.Controllers
             {
                 sb.AppendLine($"SHI - {item.SHI_Address}");
             }
-            Task.Run(() => _logger.Log($"SHI Listing\n\r {sb.ToString()}"));
+            Task.Run(() => _logger.LogDetailAsync($"SHI Listing\n\r {sb.ToString()}"));
         }
 
         private void FileShiListClear()
@@ -383,7 +383,7 @@ namespace Neutron.Controllers
             {
                 sb.AppendLine($"SHI - {item.SHI_Address}");
             }
-            Task.Run(() => _logger.Log($"SHI Listing\n\r {sb.ToString()}"));
+            Task.Run(() => _logger.LogDetailAsync($"SHI Listing\n\r {sb.ToString()}"));
         }
 
         private void FillBliList()
@@ -398,7 +398,7 @@ namespace Neutron.Controllers
             {
                 sb.AppendLine($"BLI - {item.BLI_Address}");
             }
-            Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
+            Task.Run(() => _logger.LogDetailAsync($"BLI Listing\n\r {sb.ToString()}"));
         }
 
         //private void FillBliListStations4_5()
@@ -413,7 +413,7 @@ namespace Neutron.Controllers
         //    {
         //        sb.AppendLine($"BLI - {item.BLI_Address}");
         //    }
-        //    Task.Run(() => _logger.Log($"BLI Listing\n\r {sb.ToString()}"));
+        //    Task.Run(() => _logger.LogDetailAsync($"BLI Listing\n\r {sb.ToString()}"));
         //}
 
 

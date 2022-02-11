@@ -330,7 +330,7 @@ namespace Neutron
                             if (CreateLog("Main", _station.StationNumber))
                             {
                                 SetupEmail();
-                                Task.Run(() => _logger.LogAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}"));
+                                Task.Run(() => _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}"));
                                 var rackStation = _stationRepository.GetRackStation();
                                 _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
                                 _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
@@ -517,7 +517,7 @@ namespace Neutron
                     {
                         if (_neutronVariables.IptiDisplays)
                         {
-                            Task.Run(() => _logger.LogAsync("IPTI Displays are being used."));
+                            Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
                             // ReSharper disable once UseObjectOrCollectionInitializer
                             GlobalVar.Displays = new IptiController(_jsonData, _station, _neutronVariables);
                             //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
@@ -526,31 +526,31 @@ namespace Neutron
                         else
                         {
 
-                            Task.Run(() => _logger.LogAsync("Remstar Displays are being used."));
+                            Task.Run(() => _logger.LogDetailAsync("Remstar Displays are being used."));
                             GlobalVar.Displays = new DisplayController(_jsonData, _station);
                             result = GlobalVar.Displays != null;
                             if (!GlobalVar.Displays.Ready)
                             {
                                 MessageBox.Show($"Error creating Display Controller.");
-                                Task.Run(() => _logger.LogAsync("Error creating Display Controller."));
+                                Task.Run(() => _logger.LogDetailAsync("Error creating Display Controller."));
                             }
                             //initialize the controller
                             var counter = 1;
                             while (GlobalVar.Displays.GetInitStatus() != 0)
                             {
                                 var seconds = 250 * counter / 1000;
-                                Task.Run(() => _logger.LogAsync($"Unable to initialize display controller for {seconds} seconds."));
+                                Task.Run(() => _logger.LogDetailAsync($"Unable to initialize display controller for {seconds} seconds."));
                                 if (counter >= 20)
                                 {
                                     MessageBox.Show($"Unable to initialize display controller after {seconds} seconds.");
 
-                                    Task.Run(() => _logger.LogAsync($"Unable to initialize display controller after {seconds} seconds."));
+                                    Task.Run(() => _logger.LogDetailAsync($"Unable to initialize display controller after {seconds} seconds."));
                                     break;
                                 }
                                 Thread.Sleep(250);
                                 counter += 1;
                             }
-                            Task.Run(() => _logger.LogAsync($"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
+                            Task.Run(() => _logger.LogDetailAsync($"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
 
                         }
                     }

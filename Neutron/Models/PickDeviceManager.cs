@@ -42,7 +42,7 @@ namespace Neutron.Models
 
         private DeviceMover CreateDeviceMover(int deviceNumber, IEnumerable<PickStop> carList)
         {
-            _logger.Log($"CreateDeviceMover device Number {deviceNumber}");
+            _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
             var firstLocation = true;
             var locs = new List<Location>();
             foreach (var pickStop in carList)
@@ -57,12 +57,12 @@ namespace Neutron.Models
 
         public void MoveNext(int deviceNumber)
         {
-            _logger.Log($"MoveNext device Number {deviceNumber}");
+            _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}");
             var deviceMover = _deviceMovers.FirstOrDefault(r => r.MoverNumber == deviceNumber);
             if (deviceMover != null)
             {
                 var location = deviceMover.MoveNext();
-                _logger.Log($"Location {location?.Loc1}--{location?.Loc2}");
+                _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}");
                 _currentLocations[deviceNumber] = location;
                 if (location != null)
                 {
@@ -72,7 +72,7 @@ namespace Neutron.Models
                     {
                         if (GlobalVar.Shuttle != null)
                         {
-                            _logger.Log($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}");
+                            _logger.LogDetailAsync($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}");
                             GlobalVar.Shuttle.PositionDevice(loc1, loc2);
                         }
                     }
@@ -94,14 +94,14 @@ namespace Neutron.Models
 
         public void Reset()
         {
-            _logger.Log($"Reset:");
+            _logger.LogDetailAsync($"Reset:");
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
                 {
                     var loc1 = kvp.Value.Loc1;
                     var loc2 = kvp.Value.Loc2;
-                    _logger.Log($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                    _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
@@ -121,7 +121,7 @@ namespace Neutron.Models
 
         public void ResetMoveNext(int moveNext = default(int))
         {
-            _logger.Log($"Reset MoveNext: {moveNext}");
+            _logger.LogDetailAsync($"Reset MoveNext: {moveNext}");
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
@@ -130,11 +130,11 @@ namespace Neutron.Models
                     var loc2 = kvp.Value.Loc2;
                     if (loc1 == moveNext)
                     {
-                        _logger.Log($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
+                        _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
                         continue;
                     }
 
-                    _logger.Log($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                    _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
@@ -147,7 +147,7 @@ namespace Neutron.Models
 
             if (moveNext != default(int))
             {
-                _logger.Log($"Reset MoveNext Device: {moveNext}");
+                _logger.LogDetailAsync($"Reset MoveNext Device: {moveNext}");
                 MoveNext(moveNext);
             }
         }

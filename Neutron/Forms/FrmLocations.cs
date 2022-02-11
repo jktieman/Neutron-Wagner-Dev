@@ -234,8 +234,8 @@ namespace Neutron.Forms
                     var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
                     var partition = grid["Loc4", e.RowIndex].Value.ToString();
                     var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
-                    _logger.Log($"Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
-                    _logger.Log($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
+                    _logger.LogDetailAsync($"Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
+                    _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
                     MoveDevice(deviceNumber, trayNumber, level, part, 0, "");
                     TurnOnShi(deviceNumber, trayNumber, level, partition);
                 }

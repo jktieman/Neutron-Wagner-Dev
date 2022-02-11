@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace AlliedLogger
@@ -13,6 +14,7 @@ namespace AlliedLogger
         private static bool _validLocation;
         private readonly string _baseFolder;
         private readonly string _folderName;
+        private static readonly object MyLock = new object();
 
         public bool LogActivity { get; set; }
         public string FileName { get; set; }
@@ -100,6 +102,31 @@ namespace AlliedLogger
                 {
                     //silent fail
                 }
+            }
+        }
+
+        public async void LogDetailAsync(string msg = ""
+            , [CallerMemberName] string origin = ""
+            , [CallerFilePath] string filePath = ""
+            , [CallerLineNumber] int lineNumber = 0)
+        {
+            var ci = CultureInfo.InvariantCulture;
+
+            if (msg.Length <= 0) return;
+            try
+            {
+                using (var sw = File.AppendText(FilePath))
+                {
+                    var message =
+                        $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+
+                    await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {message} {Environment.NewLine}");
+                    await sw.FlushAsync();
+                }
+            }
+            catch (Exception)
+            {
+                //silent fail
             }
         }
 

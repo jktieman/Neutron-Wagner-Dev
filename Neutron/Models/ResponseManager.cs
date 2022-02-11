@@ -37,20 +37,20 @@ namespace Neutron.Models
 
         public void Start()
         {
-            _logger.Log("ResponseManager: Start");
+            _logger.LogDetailAsync("ResponseManager: Start");
 
             try
             {
                 foreach (var item in _receivedBlockingCollection.GetConsumingEnumerable())
                 {
-                    _logger.Log($"Start Process - Received Item:  {item.ByteArrayToStringX2()}");
+                    _logger.LogDetailAsync($"Start Process - Received Item:  {item.ByteArrayToStringX2()}");
                     // _frm.UpdateTextBox($"Response:  {string.Join(string.Empty, Array.ConvertAll(item, x => x.ToString("X2")))}");
                     ProcessReceived(item);
                 }
             }
             catch (OperationCanceledException)
             {
-                _logger.Log("ResponseManager: Cancelled");
+                _logger.LogDetailAsync("ResponseManager: Cancelled");
                 return;
             }
         }
@@ -58,10 +58,10 @@ namespace Neutron.Models
         private void ProcessReceived(byte[] input)
         {
             var cmd = new byte[0];
-            _logger.Log($"Process Received - input:  {input.ByteArrayToStringX2()}");
+            _logger.LogDetailAsync($"Process Received - input:  {input.ByteArrayToStringX2()}");
             if (input.Length == 0)
             {
-                _logger.Log($"Process Received - input: null or zero length");
+                _logger.LogDetailAsync($"Process Received - input: null or zero length");
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace Neutron.Models
             {
                 var inp = input.Last();
                 var last = inp.ToString("X2");
-                _logger.Log($"Process Received - input: last char is a Terminating Char.  [{last}] ");
+                _logger.LogDetailAsync($"Process Received - input: last char is a Terminating Char.  [{last}] ");
                 _bytes.AddRange(input);
                 var bList = new List<byte>();
                 var buildingArray = false;
@@ -84,7 +84,7 @@ namespace Neutron.Models
                         }
                         else
                         {
-                            _logger.Log("Process Received - Checking b = 1 and buildingArray is true... wrong.");
+                            _logger.LogDetailAsync("Process Received - Checking b = 1 and buildingArray is true... wrong.");
                         }
                     }
                     else if (b == 3)
@@ -94,11 +94,11 @@ namespace Neutron.Models
                             bList.Add(b);
                             var bArray = bList.ToArray();
                             var message = Encoding.UTF8.GetString(bArray);
-                            _logger.Log($"Add [ {message} ] to ResponseBlockingCollection.");
+                            _logger.LogDetailAsync($"Add [ {message} ] to ResponseBlockingCollection.");
                             _responseBlockingCollection.TryAdd(bArray, 50);
                             Mediator.GetInstance().OnBatchComplete($"Process Received - {message}");
                             buildingArray = false;
-                            _logger.Log($"Process Received - byte array added: {message}");
+                            _logger.LogDetailAsync($"Process Received - byte array added: {message}");
                         }
                     }
                     else
@@ -112,23 +112,23 @@ namespace Neutron.Models
                             //If you get here without an array being created
                             //It means you're starting in the middle of a command
                             //so LOG it and ignore it.
-                            _logger.Log($"Process Received - Char's in Error: {b}");
+                            _logger.LogDetailAsync($"Process Received - Char's in Error: {b}");
                         }
                     }
                 }
-                _logger.Log("Process Received - Clear the Byte Array.");
+                _logger.LogDetailAsync("Process Received - Clear the Byte Array.");
                 _bytes.Clear();
             }
             else
             {
-                _logger.Log($"Process Received - ELSE: {input.ByteArrayToStringX2()}");
+                _logger.LogDetailAsync($"Process Received - ELSE: {input.ByteArrayToStringX2()}");
                 _bytes.AddRange(input);
             }
         }
 
         public void StartResponseProcessor()
         {
-            _logger.Log($"Start Response Processor: Transmit - {Transmit}  Token: {Token.Token.IsCancellationRequested} ");
+            _logger.LogDetailAsync($"Start Response Processor: Transmit - {Transmit}  Token: {Token.Token.IsCancellationRequested} ");
 
             while (Transmit)
             {
@@ -142,7 +142,7 @@ namespace Neutron.Models
                         }
 
                         if (response == null) continue;
-                        _logger.Log(
+                        _logger.LogDetailAsync(
                             $"Start Response Processor - ResponseBlockingCollection Loop: {response.ByteArrayToStringX2()}");
                         var responseInfo = new ResponseInfo();
                         new ResponseBuilder().BuildInfo(response.ByteArrayToString(), responseInfo);
@@ -170,7 +170,7 @@ namespace Neutron.Models
                 Mediator.GetInstance().OnSerialPortWrite(this, "Response Created - {responseInfo.RespondCommand}");
                 _requestBlockingCollection.TryAdd(responseInfo.RespondCommand.StringToByteArray(), 50);
             }
-            _logger.Log($"Create Request: {Environment.NewLine} {responseInfo.Information}");
+            _logger.LogDetailAsync($"Create Request: {Environment.NewLine} {responseInfo.Information}");
 
             if (responseInfo.DisplayNumber != null)
             {
