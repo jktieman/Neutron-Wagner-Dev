@@ -268,7 +268,8 @@ namespace NeutronCore
                     sw.Write($"{_costCenterDirectory}{'|'}");
                     sw.Write($"{_costCenterFile}{'|'}");
                     sw.Write($"{_languageDirectory}{'|'}");
-                    sw.Write($"{_commonDirectory}");
+                    sw.Write($"{_commonDirectory}{'|'}");
+                    sw.Write($"{_rootDirectory}");
                     sw.WriteLine();
                 }
             }

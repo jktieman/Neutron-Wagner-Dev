@@ -91,6 +91,7 @@ namespace Neutron
             var lacProcessor = kernel.Get<ILacProcessor>();
             var imageManager = kernel.Get<IImageManager>();
             var enumManager = kernel.Get<IEnumManager>();
+            
             var storedProcedureManager = kernel.Get<IStoredProcedureManager>();
             var logger = new DynamicLogger(@"C:\Neutron\Logs\", "Startup.log", "true");
 

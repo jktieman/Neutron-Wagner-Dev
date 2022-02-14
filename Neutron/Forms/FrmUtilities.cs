@@ -36,6 +36,8 @@ using NeutronData.BaseClasses;
 using NeutronData.Models.Lookups;
 using NeutronData.PrintModels;
 using NeutronDllu;
+using NeutronMaintenance;
+using Ninject;
 //using CommunicationType = NeutronCore.Enums.CommunicationType;
 using DeviceType = NeutronData.Models.Lookups.DeviceType;
 using StationType = NeutronData.Models.Lookups.StationType;
@@ -2777,6 +2779,13 @@ namespace Neutron.Forms
             {
                 frm.ShowDialog();
             }
+        }
+
+        private void MBMaintenance_Click(object sender, EventArgs e)
+        {
+            var locationManager = new RandomLocationManager(new VelocityCodeManager());
+            var maintenance = new MasterMaintenanceProcessor(locationManager);
+            maintenance.ProcessFiles();
         }
     }
 }

@@ -41,6 +41,10 @@
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Remotion">
       <HintPath>..\..\Neutron-Loaders\TMG\NeutronLoader\bin\Debug\Remotion.dll</HintPath>
     </Reference>
@@ -57,24 +61,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AkaDefinitionUpdate.cs" />
+    <Compile Include="ILocationManager.cs" />
+    <Compile Include="IMasterMaintenanceProcessor.cs" />
     <Compile Include="ItemDefinitionUpdate.cs" />
+    <Compile Include="IVelocityCodeManager.cs" />
     <Compile Include="MaintenanceProcessor.cs" />
     <Compile Include="MasterMaintenanceProcessor.cs" />
     <Compile Include="Models\AkaLoad.cs" />
     <Compile Include="Models\InventoryLoad.cs" />
     <Compile Include="Models\ItemDefinitionLoad.cs" />
     <Compile Include="Models\LocationLoad.cs" />
+    <Compile Include="Models\NovaRandomLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomLocationManager.cs" />
+    <Compile Include="VelocityCodeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Neutron-Loaders\TMG\NeutronLoader\NeutronLoader.csproj">
-      <Project>{CF98A081-AE8A-49D0-B879-DBC68D94BD18}</Project>
-      <Name>NeutronLoader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AlliedFileSystemWatcher\AlliedFileSystemWatcher.csproj">
       <Project>{A8C533EF-F9B0-4B04-A1BA-53AAF5354A2B}</Project>
       <Name>AlliedFileSystemWatcher</Name>
@@ -96,6 +102,7 @@
       <Name>NeutronData</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

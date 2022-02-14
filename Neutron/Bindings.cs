@@ -8,6 +8,7 @@ using NeutronData.DataContexts;
 using NeutronData.General;
 using NeutronData.Interfaces;
 using NeutronData.Repositories;
+using NeutronMaintenance;
 using SqlSchemaManager;
 
 namespace Neutron
@@ -31,6 +32,10 @@ namespace Neutron
             Bind<IEnumManager>().To<EnumManager>().InSingletonScope();
             Bind<IItemDefinitionsRepository>().To<ItemDefinitionsRepository>();
             Bind<IStoredProcedureManager>().To<StoredProcedureManager>();
+
+            Bind<ILocationManager>().To<RandomLocationManager>().InSingletonScope();
+            Bind<IVelocityCodeManager>().To<VelocityCodeManager>().InSingletonScope();
+            Bind<IMasterMaintenanceProcessor>().To<MasterMaintenanceProcessor>().InSingletonScope();
         }
     }
 }

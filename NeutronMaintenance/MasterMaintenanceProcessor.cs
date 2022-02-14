@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using AlliedFileSystemWatcher;
 using AlliedLogger;
 using NeutronCore;
@@ -16,19 +17,23 @@ using NeutronData.Repositories;
 using JsonManager;
 using NeutronCore.Models;
 using System.Windows.Forms;
+using NeutronData.Interfaces;
 using NeutronMaintenance.Models;
 
 namespace NeutronMaintenance
 {
 
-    public class MasterMaintenanceProcessor
+    public class MasterMaintenanceProcessor : IMasterMaintenanceProcessor
     {
-        readonly string masterFileFilter; 
-        readonly DirectoryInfo masterPath; 
+        private readonly ILocationManager _locationManager;
+
+        readonly string masterFileFilter;
+        readonly DirectoryInfo masterPath;
         readonly DynamicLogger logger;
 
-        public MasterMaintenanceProcessor()
+        public MasterMaintenanceProcessor(ILocationManager locationManager )
         {
+            _locationManager = locationManager;
             try
             {
                 masterPath = new DirectoryInfo(LoaderSettings.GetMaintenanceFileDirectory());
@@ -45,7 +50,7 @@ namespace NeutronMaintenance
             }
         }
 
-        public void ProcessMasterMaintenanceFiles()
+        public void ProcessFiles()
         {
             FileInfo[] files = GetFiles();
             if (files.Count() > 0)
@@ -72,51 +77,55 @@ namespace NeutronMaintenance
         {
             foreach (var file in files)
             {
-                var allLines = new string[] { };
-                string line = "";
                 try
                 {
                     logger.Log($"File Name: {file.FullName}");
-                    allLines = File.ReadAllLines(file.FullName);
-                    line = allLines[0];
-                    //What kind of MNT file is it>
-
-                    if (line.Contains("RANDOMLOCATION"))
+                    var allLines = File.ReadAllLines(file.FullName);
+                    foreach (var line in allLines)
                     {
-                        logger.Log($"RANDOMLOCATION");
-                        ProcessLocation(file);
-                    }
-                    else if (line.Contains("RANDOMSKU"))
-                    {
-                        logger.Log($"RANDOMSKU");
-                        ProcessRandomSku(file);
-                    }
-                    else if (line.Contains("OFFCARDEFSKU"))
-                    {
-                        logger.Log($"OFFCARDEFSKU");
-                        ProcessOffCarSku(file);
-                    }
-                    else if (line.Contains("OFFCARDEFSLOT"))
-                    {
-                        logger.Log($"OFFCARDEFSLOT");
-                        ProcessOffCarLocation(file);
-                    }
-                    else if (line.Contains("OFFCARRESERVE"))
-                    {
-                        logger.Log($"OFFCARRESERVE");
-                        ProcessOffCarInventory(file);
-                    }
-                    else if (line.Contains("AKADEFINITION"))
-                    {
-                        logger.Log($"AKADEFINITION");
-                        ProcessAka(file);
-                    }
-                    else
-                    {
-                        logger.Log($"Last Else");
-                        //if the line doesn't have any of these, it's Inventory
-                        // Sku and Location with quantity
-                        //ProcessInventory(file);
+                        if(string.IsNullOrEmpty(line)) continue;
+                        //What kind of line is it>
+                        if (line.Contains("RANDOMLOCATION"))
+                        {
+                            Task.Run(() => logger.LogDetailAsync($"RANDOMLOCATION: {line}"));
+                            var randomLocation = CreateRandomLocation(line);
+                            if (randomLocation != null)
+                            {
+                                _locationManager.Process(randomLocation);
+                            }
+                        }
+                        else if (line.Contains("RANDOMSKU"))
+                        {
+                            logger.Log($"RANDOMSKU");
+                            ProcessRandomSku(line);
+                        }
+                        else if (line.Contains("OFFCARDEFSKU"))
+                        {
+                            logger.Log($"OFFCARDEFSKU");
+                            ProcessOffCarSku(line);
+                        }
+                        else if (line.Contains("OFFCARDEFSLOT"))
+                        {
+                            logger.Log($"OFFCARDEFSLOT");
+                            ProcessOffCarLocation(line);
+                        }
+                        else if (line.Contains("OFFCARRESERVE"))
+                        {
+                            logger.Log($"OFFCARRESERVE");
+                            ProcessOffCarInventory(line);
+                        }
+                        else if (line.Contains("AKADEFINITION"))
+                        {
+                            logger.Log($"AKADEFINITION");
+                            ProcessAka(line);
+                        }
+                        else
+                        {
+                            logger.Log($"Last Else");
+                            //if the line doesn't have any of these, it's Inventory
+                            // Sku and Location with quantity
+                            ProcessInventory(line);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -126,157 +135,123 @@ namespace NeutronMaintenance
             }
         }
 
-        private void ProcessInventory(FileInfo file)
+        private void ProcessInventory(string line)
         {
-            //var inventoryMaintenanceRecords = new List<InventoryLoad>();
-            //bool firstLine = true;
-            //var allLines = new string[] { };
-            //string line = "";
-            //try
-            //{
-            //    allLines = File.ReadAllLines(file.FullName);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Error Reading All Order Lines. {ex.Message} \r\n {ex.InnerException}");
-            //}
+            var inventoryMaintenanceRecords = new List<InventoryLoad>();
 
-            //for (int i = 0; i < allLines.Count(); i++)
-            //{
-            //    line = allLines[i];
+            var rec = new InventoryLoad();
+            rec.Station = line.Substring(127, 1);
+            //rec.StorageType = line.Substring();
+            //rec.Item = line.Substring();
+            //rec.Description = line.Substring();
+            //rec.Quantity = line.Substring();
+            //rec.Slot = line.Substring();
+            //rec.PrimeBin = line.Substring();
+            //rec.Carousel = line.Substring();
+            //rec.Bin = line.Substring();
+            //rec.Level = line.Substring();
+            //rec.Partition = line.Substring();
+            //rec.Tag = line.Substring();
+            //rec.SizeCode = line.Substring();
+            //rec.VelocityCode = line.Substring();
+            //rec.HeightCode = line.Substring();
+            //rec.UserCode = line.Substring();
+            //rec.ReceivedDate = line.Substring();
+            //rec.Id = line.Substring();
 
-            //    var rec = new InventoryLoad();
-            //    rec.Station = line.Substring(127,1);
-            //    rec.StorageType = line.Substring();
-            //    rec.Item = line.Substring();
-            //    rec.Description = line.Substring();
-            //    rec.Quantity = line.Substring();
-            //    rec.Slot = line.Substring();
-            //    rec.PrimeBin = line.Substring();
-            //    rec.Carousel = line.Substring();
-            //    rec.Bin = line.Substring();
-            //    rec.Level = line.Substring();
-            //    rec.Partition = line.Substring();
-            //    rec.Tag = line.Substring();
-            //    rec.SizeCode = line.Substring();
-            //    rec.VelocityCode = line.Substring();
-            //    rec.HeightCode = line.Substring();
-            //    rec.UserCode = line.Substring();
-            //    rec.ReceivedDate = line.Substring();
-            //    rec.Id = line.Substring();
+            inventoryMaintenanceRecords.Add(rec);
 
-            //    inventoryMaintenanceRecords.Add(rec);
-
-            //}
-
-            ArchiveFile(file);
         }
 
-        private void ProcessAka(FileInfo file)
+        private void ProcessAka(string line)
         {
             var akaRecords = new List<AkaLoad>();
             var akaDefinitionUpdate = new AkaDefinitionUpdate();
 
-            var allLines = new string[] { };
-            string line = "";
-            try
+            logger.Log($"AKA: {line}");
+            logger.Log($"Line Length: {line.Length}");
+            if (line.Length > 49)
             {
-                allLines = File.ReadAllLines(file.FullName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Process Aka Error Reading All Order Lines. {ex.Message} \r\n {ex.InnerException}");
-            }
-
-            for (int i = 0; i < allLines.Count(); i++)
-            {
-                line = allLines[i];
-                logger.Log($"AKA: {line}");
-                logger.Log($"Line Length: {line.Length}");
-                if (line.Length > 49)
+                string akaSku = line.Substring(50).Trim();
+                logger.Log($"AKA: {akaSku} Length: {akaSku.Length}");
+                string sku = line.Substring(0, 35).Trim();
+                logger.Log($"AKA: {sku} Length: {sku.Length}");
+                if (akaSku.Length > 0 && sku.Length > 0)
                 {
-                    string akaSku = line.Substring(50).Trim();
-                    logger.Log($"AKA: {akaSku} Length: {akaSku.Length}");
-                    string sku = line.Substring(0, 35).Trim();
-                    logger.Log($"AKA: {sku} Length: {sku.Length}");
-                    if (akaSku.Length > 0 && sku.Length > 0)
-                    {
-                        var rec = new AkaLoad();
-                        rec.AkaSku = akaSku;
-                        rec.Item = sku;
+                    var rec = new AkaLoad();
+                    rec.AkaSku = akaSku;
+                    rec.Item = sku;
 
-                        akaRecords.Add(rec);
-                    } 
+                    akaRecords.Add(rec);
                 }
             }
 
             akaDefinitionUpdate.ProcessAkaDefinitions(akaRecords, logger);
 
-            ArchiveFile(file);
         }
 
-        private void ProcessOffCarInventory(FileInfo file)
+        private void ProcessOffCarInventory(string line)
         {
-            ArchiveFile(file);
+
         }
 
-        private void ProcessOffCarLocation(FileInfo file)
+        private void ProcessOffCarLocation(string line)
         {
-            ArchiveFile(file);
+
         }
 
-        private void ProcessOffCarSku(FileInfo file)
+        private void ProcessOffCarSku(string line)
         {
-            ArchiveFile(file);
+
         }
 
-        private void ProcessLocation(FileInfo file)
+        private NovaRandomLocation CreateRandomLocation(string line)
         {
-            ArchiveFile(file);
+            if (string.IsNullOrEmpty(line)) return null;
+            if (line.Length < 110) return null;
+
+            var rec = new NovaRandomLocation
+            {
+                Car = line.Substring(22, 2),
+                Bin = line.Substring(26, 2),
+                Lvl = line.Substring(30, 2),
+                Prt = line.Substring(34, 2),
+                Velocity = line.Substring(36, 3),
+                Size = line.Substring(39, 3),
+                Height = line.Substring(42, 3),
+                Operation = line.Substring(45, 1),
+                SystemNumber = line.Substring(105, 1)
+            };
+            return rec;
         }
 
-        private void ProcessRandomSku(FileInfo file)
+        private void ProcessRandomSku(string line)
         {
             var itemMaintenanceRecords = new List<ItemDefinitionLoad>();
             var itemDefinitionUpdate = new ItemDefinitionUpdate();
 
-            var allLines = new string[] { };
-            string line = "";
             try
             {
-                allLines = File.ReadAllLines(file.FullName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Process Sku Error Reading All Order Lines. {ex.Message} \r\n {ex.InnerException}");
-            }
-            try
-            {
+                logger.Log($"RandomSku: {line}");
 
-                for (int i = 0; i < allLines.Count(); i++)
-                {
-                    line = allLines[i];
-                    logger.Log($"RandomSku: {line}");
-
-                    var rec = new ItemDefinitionLoad();
-                    rec.Station = line.Substring(126, 1);
-                    rec.Item = line.Substring(0, 35);
-                    rec.Description = line.Substring(84, 30);
-                    rec.LocationMax = line.Substring(62, 9);
-                    rec.LocationMin = line.Substring(73, 9);
-                    rec.SystemMax = line.Substring(52, 9);
-                    rec.SystemMin = line.Substring(166, 9);
-                    rec.SizeCode = line.Substring(186, 3);
-                    rec.VelocityCode = line.Substring(159, 3);
-                    rec.HeightCode = string.Empty;   // line.Substring(189,3);
-                    rec.LocationCode = string.Empty;
-                    rec.StorageType = GetStorageType(line.Substring(158, 1));
-                    rec.UnitOfIssue = line.Substring(128, 6);
-                    rec.Weight = line.Substring(137, 6);
-                    rec.Scale = GetScale(line.Substring(135, 1));
-                    rec.Id = string.Empty;
-                    itemMaintenanceRecords.Add(rec);
-                }
+                var rec = new ItemDefinitionLoad();
+                rec.Station = line.Substring(126, 1);
+                rec.Item = line.Substring(0, 35);
+                rec.Description = line.Substring(84, 30);
+                rec.LocationMax = line.Substring(62, 9);
+                rec.LocationMin = line.Substring(73, 9);
+                rec.SystemMax = line.Substring(52, 9);
+                rec.SystemMin = line.Substring(166, 9);
+                rec.SizeCode = line.Substring(186, 3);
+                rec.VelocityCode = line.Substring(159, 3);
+                rec.HeightCode = string.Empty;   // line.Substring(189,3);
+                rec.LocationCode = string.Empty;
+                rec.StorageType = GetStorageType(line.Substring(158, 1));
+                rec.UnitOfIssue = line.Substring(128, 6);
+                rec.Weight = line.Substring(137, 6);
+                rec.Scale = GetScale(line.Substring(135, 1));
+                rec.Id = string.Empty;
+                itemMaintenanceRecords.Add(rec);
             }
             catch (Exception ex)
             {
@@ -286,7 +261,6 @@ namespace NeutronMaintenance
 
             itemDefinitionUpdate.ProcessItemDefinitions(itemMaintenanceRecords, logger);
 
-            ArchiveFile(file);
         }
 
         private string GetScale(string v)

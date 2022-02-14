@@ -64,6 +64,7 @@
             this.MBStations = new MetroFramework.Controls.MetroButton();
             this.MBOptions = new MetroFramework.Controls.MetroButton();
             this.PrintSettings = new System.Windows.Forms.TabPage();
+            this.CheckBoxLandscape = new System.Windows.Forms.CheckBox();
             this.MBPrintSetUpSave = new MetroFramework.Controls.MetroButton();
             this.LabelPrintSettingsUsesTestOrderNumbe = new System.Windows.Forms.Label();
             this.TextBoxTestOrderNumber = new System.Windows.Forms.TextBox();
@@ -90,6 +91,7 @@
             this.LabelPrintSettingsTop = new System.Windows.Forms.Label();
             this.ButtonDocumentPrinter = new System.Windows.Forms.Button();
             this.TextBoxDocumentPrinter = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.LabelCheckPrinter = new System.Windows.Forms.Label();
             this.MBPrintSetUpBack = new MetroFramework.Controls.MetroButton();
             this.Settings = new System.Windows.Forms.TabPage();
@@ -431,8 +433,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxLandscape = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.MBMaintenance = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -526,6 +527,7 @@
             this.Main.Controls.Add(this.MBUtilitiesClose);
             this.Main.Controls.Add(this.MBEmailServer);
             this.Main.Controls.Add(this.MBManageLookups);
+            this.Main.Controls.Add(this.MBMaintenance);
             this.Main.Controls.Add(this.MBAbout);
             this.Main.Controls.Add(this.MBEmailAddresses);
             this.Main.Controls.Add(this.MBPrinterSetup);
@@ -705,6 +707,15 @@
             this.PrintSettings.Size = new System.Drawing.Size(1147, 644);
             this.PrintSettings.TabIndex = 5;
             this.PrintSettings.Text = "Print Settings";
+            // 
+            // CheckBoxLandscape
+            // 
+            this.CheckBoxLandscape.AutoSize = true;
+            this.CheckBoxLandscape.Location = new System.Drawing.Point(352, 153);
+            this.CheckBoxLandscape.Name = "CheckBoxLandscape";
+            this.CheckBoxLandscape.Size = new System.Drawing.Size(15, 14);
+            this.CheckBoxLandscape.TabIndex = 54;
+            this.CheckBoxLandscape.UseVisualStyleBackColor = true;
             // 
             // MBPrintSetUpSave
             // 
@@ -972,6 +983,17 @@
             this.TextBoxDocumentPrinter.Name = "TextBoxDocumentPrinter";
             this.TextBoxDocumentPrinter.Size = new System.Drawing.Size(438, 22);
             this.TextBoxDocumentPrinter.TabIndex = 0;
+            // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(215, 149);
+            this.label8.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(129, 20);
+            this.label8.TabIndex = 41;
+            this.label8.Text = "Landscape";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelCheckPrinter
             // 
@@ -5114,25 +5136,17 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxLandscape
+            // MBMaintenance
             // 
-            this.CheckBoxLandscape.AutoSize = true;
-            this.CheckBoxLandscape.Location = new System.Drawing.Point(352, 153);
-            this.CheckBoxLandscape.Name = "CheckBoxLandscape";
-            this.CheckBoxLandscape.Size = new System.Drawing.Size(15, 14);
-            this.CheckBoxLandscape.TabIndex = 54;
-            this.CheckBoxLandscape.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(215, 149);
-            this.label8.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(129, 20);
-            this.label8.TabIndex = 41;
-            this.label8.Text = "Landscape";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.MBMaintenance.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBMaintenance.Location = new System.Drawing.Point(217, 522);
+            this.MBMaintenance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBMaintenance.Name = "MBMaintenance";
+            this.MBMaintenance.Size = new System.Drawing.Size(350, 84);
+            this.MBMaintenance.TabIndex = 5;
+            this.MBMaintenance.Text = "Maintenance";
+            this.MBMaintenance.UseSelectable = true;
+            this.MBMaintenance.Click += new System.EventHandler(this.MBMaintenance_Click);
             // 
             // FrmUtilities
             // 
@@ -5616,5 +5630,6 @@
         private MetroFramework.Controls.MetroButton MBAbout;
         private System.Windows.Forms.CheckBox CheckBoxLandscape;
         private System.Windows.Forms.Label label8;
+        private MetroFramework.Controls.MetroButton MBMaintenance;
     }
 }

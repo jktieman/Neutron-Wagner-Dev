@@ -116,6 +116,7 @@
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
             this.ButtonPositionDevice = new System.Windows.Forms.Button();
+            this.ButtonPositionDeviceNew = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -838,6 +839,7 @@
             // PanelNew
             // 
             this.PanelNew.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.PanelNew.Controls.Add(this.ButtonPositionDeviceNew);
             this.PanelNew.Controls.Add(this.panel3);
             this.PanelNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PanelNew.Location = new System.Drawing.Point(3, 97);
@@ -1150,13 +1152,23 @@
             // 
             // ButtonPositionDevice
             // 
-            this.ButtonPositionDevice.Location = new System.Drawing.Point(396, 395);
+            this.ButtonPositionDevice.Location = new System.Drawing.Point(427, 395);
             this.ButtonPositionDevice.Name = "ButtonPositionDevice";
             this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 32);
             this.ButtonPositionDevice.TabIndex = 105;
             this.ButtonPositionDevice.Text = "Position Device";
             this.ButtonPositionDevice.UseVisualStyleBackColor = true;
             this.ButtonPositionDevice.Click += new System.EventHandler(this.ButtonPositionDevice_Click);
+            // 
+            // ButtonPositionDeviceNew
+            // 
+            this.ButtonPositionDeviceNew.Location = new System.Drawing.Point(427, 395);
+            this.ButtonPositionDeviceNew.Name = "ButtonPositionDeviceNew";
+            this.ButtonPositionDeviceNew.Size = new System.Drawing.Size(286, 32);
+            this.ButtonPositionDeviceNew.TabIndex = 106;
+            this.ButtonPositionDeviceNew.Text = "Position Device";
+            this.ButtonPositionDeviceNew.UseVisualStyleBackColor = true;
+            this.ButtonPositionDeviceNew.Click += new System.EventHandler(this.ButtonPositionDeviceNew_Click);
             // 
             // FrmLocations
             // 
@@ -1282,5 +1294,6 @@
         private System.Windows.Forms.Label LabelViewEditSlotInformation;
         private System.Windows.Forms.Label LabelStationName;
         private System.Windows.Forms.Button ButtonPositionDevice;
+        private System.Windows.Forms.Button ButtonPositionDeviceNew;
     }
 }

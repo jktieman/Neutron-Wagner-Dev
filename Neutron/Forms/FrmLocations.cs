@@ -1215,6 +1215,8 @@ namespace Neutron.Forms
                 LabelNewOver.Text = _resourceManager.GetString("Over");
                 LabelNewTray.Text = _resourceManager.GetString("Tray");
                 LabelNewDevice.Text = _resourceManager.GetString("Device");
+                ButtonPositionDevice.Text = _resourceManager.GetString("PositionDevice");
+                ButtonPositionDeviceNew.Text = _resourceManager.GetString("PositionDevice");
             }
             catch (Exception ex)
             {
@@ -1225,26 +1227,39 @@ namespace Neutron.Forms
 
         private void ButtonPositionDevice_Click(object sender, EventArgs e)
         {
-            var station = ((Station)ComboBoxViewEditStation.SelectedItem);
-            if (station == null) return;
-            var stId = station.Id;
             var device = ((HardwareDeviceLookup)ComboBoxViewEditDevice.SelectedItem);
             if (device == null) return;
             var deviceNumber = device.Id;
-            if (IntegerValidator(TextBoxViewEditLoc2.Text.ParseInt()))
-            {
-                var trayNumber = TextBoxViewEditLoc2.Text.ParseInt();
-                if (IntegerValidator(TextBoxViewEditLoc3.Text.ParseInt()))
-                {
-                    var level = TextBoxViewEditLoc3.Text.ParseInt();
-                    if (IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt()))
-                    {
-                        var part = TextBoxViewEditLoc4.Text.ParseInt();
+            if (!IntegerValidator(TextBoxViewEditLoc2.Text.ParseInt())) return;
+            var trayNumber = TextBoxViewEditLoc2.Text.ParseInt();
+            if (!IntegerValidator(TextBoxViewEditLoc3.Text.ParseInt())) return;
+            var level = TextBoxViewEditLoc3.Text.ParseInt();
+            if (!IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt())) return;
+            var part = TextBoxViewEditLoc4.Text.ParseInt();
+            Task.Run(() =>
+                _logger.LogDetailAsync(
+                    $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+            MoveDevice(deviceNumber, trayNumber, level, part);
+        }
 
-                        MoveDevice(deviceNumber, trayNumber, level, part);
-                    }
-                }
-            }
+        private void ButtonPositionDeviceNew_Click(object sender, EventArgs e)
+        {
+            var device = ((HardwareDeviceLookup)ComboBoxNewDevice.SelectedItem);
+            if (device == null) return;
+            var deviceNumber = device.Id;
+            if (string.IsNullOrEmpty(TextBoxNewLoc2.Text) || TextBoxNewLoc2.Text == "0") return;
+            if (!IntegerValidator(TextBoxNewLoc2.Text.ParseInt())) return;
+            var trayNumber = TextBoxNewLoc2.Text.ParseInt();
+            if (string.IsNullOrEmpty(TextBoxNewLoc3.Text) || TextBoxNewLoc3.Text == "0") return;
+            if (!IntegerValidator(TextBoxNewLoc3.Text.ParseInt())) return;
+            var level = TextBoxNewLoc3.Text.ParseInt();
+            if (string.IsNullOrEmpty(TextBoxNewLoc4.Text) || TextBoxNewLoc4.Text == "0") return;
+            if (!IntegerValidator(TextBoxNewLoc4.Text.ParseInt())) return;
+            var part = TextBoxNewLoc4.Text.ParseInt();
+            Task.Run(() =>
+                _logger.LogDetailAsync(
+                    $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+            MoveDevice(deviceNumber, trayNumber, level, part);
         }
     }
 }

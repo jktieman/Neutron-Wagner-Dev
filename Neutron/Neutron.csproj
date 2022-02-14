@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>480</ApplicationRevision>
+    <ApplicationRevision>481</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -842,6 +842,10 @@
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronMaintenance\NeutronMaintenance.csproj">
+      <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
+      <Name>NeutronMaintenance</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

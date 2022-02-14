@@ -11,7 +11,6 @@ using NeutronData.Models;
 using NeutronData.Repositories;
 using JsonManager;
 using NeutronCore.Models;
-using NeutronLoader;
 
 
 namespace NeutronMaintenance
@@ -23,7 +22,7 @@ namespace NeutronMaintenance
         private readonly GenericRepository<Inventory> repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<Location> repoLocation = new GenericRepository<Location>(new NeutronDb());
-        private readonly HistoryManager historyManager = new HistoryManager();
+        //private readonly HistoryManager historyManager = new HistoryManager();
         private readonly AlliedFileWatcher interfaceWatcher;
         readonly DynamicLogger logger;
         string configFilePath;

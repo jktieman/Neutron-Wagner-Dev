@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AlliedLogger;
 using JsonManager;
 using MetroFramework.Forms;
 using Neutron.Enums;
@@ -74,6 +75,7 @@ namespace Neutron.Forms
         public bool CloseButtonPressed { get; set; }
         private bool _firstTime = true;
         private readonly Station _rackStation;
+        private DynamicLogger _logger;
 
         public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
             ILacProcessor lacProcessor)
@@ -96,8 +98,8 @@ namespace Neutron.Forms
             SetupViewEditForm();
             SetupAddDetailForm();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
-            var logFilePath = LoaderSettings.GetLogFileDirectory() + "Inventory.log";
-            _locationsRepository = new LocationsRepository();
+            _logger = CreateLog();
+           _locationsRepository = new LocationsRepository();
 
             if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
@@ -110,6 +112,15 @@ namespace Neutron.Forms
             _firstTime = false;
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+        }
+
+        private DynamicLogger CreateLog()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = $"Inventory_{_station.StationNumber.ToString()}";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+            return _logger;
         }
 
         protected override CreateParams CreateParams
@@ -2026,7 +2037,8 @@ namespace Neutron.Forms
                 LabelAddDetailTray.Text = _resourceManager.GetString("Tray");
                 LabelAddDetailDevice.Text = _resourceManager.GetString("Device");
                 LabelAddDetailStation.Text = _resourceManager.GetString("Station");
-                LabelSlotInformation.Text = _resourceManager.GetString("EnterSlotDescriptio");
+                LabelSlotInformation.Text = _resourceManager.GetString("EnterSlotDescription");
+                ButtonPositionDevice.Text = _resourceManager.GetString("PositionDevice");
             }
             catch (Exception ex)
             {
@@ -2041,7 +2053,10 @@ namespace Neutron.Forms
            var level = TextBoxAddDetailLoc3.Text.ParseInt();
            var part = TextBoxAddDetailLoc4.Text.ParseInt();
            var qty = TextBoxAddDetailQuantity.Text.ParseInt();
-           MoveDevice(deviceNumber,trayNumber,level,part, qty);
+           Task.Run(() =>
+               _logger.LogDetailAsync(
+                   $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+            MoveDevice(deviceNumber,trayNumber,level,part, qty);
         }
     }
 }
