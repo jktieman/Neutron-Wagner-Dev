@@ -1202,6 +1202,21 @@ namespace Neutron.Forms
                     MessageBox.Show($"Location Access Denied");
                 }
             }
+            else if (device.DeviceTypeId == (int)DeviceType.Rack)
+            {
+                
+                    //HotAction.BackColor = Color.Red;
+                    LabelFormTitle.BackColor = Color.Red;
+                    LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString("HotPick")}";
+                    MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                    //UpdateCurrentDeviceIndicator();
+                    //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                    //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                    //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                    //await UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotRackTray;
+               
+            }
             else  // Rack or Supervisor
             {
                 HotAction.BackColor = Color.Red;
@@ -1310,6 +1325,21 @@ namespace Neutron.Forms
                         // Access Denied
                         MessageBox.Show($"Location Access Denied");
                     }
+                }
+                else if (device.DeviceTypeId == (int)DeviceType.Rack)
+                {
+
+                    //HotAction.BackColor = Color.Red;
+                    LabelFormTitle.BackColor = Color.Red;
+                    LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString("HotPick")}";
+                    MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                    //UpdateCurrentDeviceIndicator();
+                    //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                    //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                    //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                    //await UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotRackTray;
+
                 }
                 else  // Rack or Supervisor
                 {
@@ -2496,6 +2526,11 @@ namespace Neutron.Forms
         private void TextBoxScanLocation_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void metroButton1_Click(object sender, EventArgs e)
+        {
+            Back();
         }
     }
 }

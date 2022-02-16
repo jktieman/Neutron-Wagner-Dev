@@ -14,6 +14,8 @@ namespace NeutronCore.Enums
         [Description("Release")]
         Release = 2,
         [Description("Non-Pickable")]
-        NonPickable = 3
+        NonPickable = 3,
+        [Description("Kit")]
+        Kit = 4
     }
 }
