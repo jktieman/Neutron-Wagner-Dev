@@ -30,41 +30,41 @@ namespace Neutron.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle103 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle104 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle105 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle106 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle107 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle108 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle109 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle110 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle111 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle112 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle113 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle114 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPick));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle115 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle116 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle117 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle118 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle119 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle120 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle121 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle122 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle123 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle124 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle125 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle126 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle127 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle128 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle129 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle130 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle131 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle132 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle133 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle134 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle135 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle136 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle55 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle56 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle57 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle58 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle59 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle60 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle61 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle62 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle63 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle64 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle65 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle66 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle67 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle68 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -109,55 +109,7 @@ namespace Neutron.Forms
             this.MBFillOptimized = new MetroFramework.Controls.MetroButton();
             this.MBFillStarters = new MetroFramework.Controls.MetroButton();
             this.MBFill = new MetroFramework.Controls.MetroButton();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.TextBoxPos9 = new System.Windows.Forms.TextBox();
-            this.LabelPos16 = new System.Windows.Forms.Label();
-            this.LabelPos15 = new System.Windows.Forms.Label();
-            this.TextBoxPos16 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos15 = new System.Windows.Forms.TextBox();
-            this.AvailablePos15Display = new System.Windows.Forms.Panel();
-            this.AvailablePos16Display = new System.Windows.Forms.Panel();
-            this.LabelPos10 = new System.Windows.Forms.Label();
-            this.LabelPos11 = new System.Windows.Forms.Label();
-            this.LabelPos12 = new System.Windows.Forms.Label();
-            this.LabelPos13 = new System.Windows.Forms.Label();
-            this.LabelPos14 = new System.Windows.Forms.Label();
-            this.LabelPos9 = new System.Windows.Forms.Label();
-            this.TextBoxPos10 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos11 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos12 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos13 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos14 = new System.Windows.Forms.TextBox();
-            this.AvailablePos9Display = new System.Windows.Forms.Panel();
-            this.AvailablePos10Display = new System.Windows.Forms.Panel();
-            this.AvailablePos11Display = new System.Windows.Forms.Panel();
-            this.AvailablePos12Display = new System.Windows.Forms.Panel();
-            this.AvailablePos13Display = new System.Windows.Forms.Panel();
-            this.AvailablePos14Display = new System.Windows.Forms.Panel();
-            this.TextBoxPos1 = new System.Windows.Forms.TextBox();
-            this.LabelPos8 = new System.Windows.Forms.Label();
-            this.LabelPos7 = new System.Windows.Forms.Label();
-            this.TextBoxPos8 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos7 = new System.Windows.Forms.TextBox();
-            this.AvailablePos7Display = new System.Windows.Forms.Panel();
-            this.AvailablePos8Display = new System.Windows.Forms.Panel();
-            this.LabelPos2 = new System.Windows.Forms.Label();
-            this.LabelPos3 = new System.Windows.Forms.Label();
-            this.LabelPos4 = new System.Windows.Forms.Label();
-            this.LabelPos5 = new System.Windows.Forms.Label();
-            this.LabelPos6 = new System.Windows.Forms.Label();
-            this.LabelPos1 = new System.Windows.Forms.Label();
-            this.TextBoxPos2 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos3 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos4 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos5 = new System.Windows.Forms.TextBox();
-            this.TextBoxPos6 = new System.Windows.Forms.TextBox();
-            this.AvailablePos1Display = new System.Windows.Forms.Panel();
-            this.AvailablePos2Display = new System.Windows.Forms.Panel();
-            this.AvailablePos3Display = new System.Windows.Forms.Panel();
-            this.AvailablePos4Display = new System.Windows.Forms.Panel();
-            this.AvailablePos5Display = new System.Windows.Forms.Panel();
-            this.AvailablePos6Display = new System.Windows.Forms.Panel();
+            this.PanelOrderInduction = new System.Windows.Forms.Panel();
             this.LabelAvailableOrdersSearchFor = new System.Windows.Forms.Label();
             this.TextBoxFindAvailableOrders = new System.Windows.Forms.TextBox();
             this.ButtonClearFindAvailableOrders = new System.Windows.Forms.Button();
@@ -172,6 +124,8 @@ namespace Neutron.Forms
             this.MBStart = new MetroFramework.Controls.MetroButton();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
+            this.LabelPickMessages = new System.Windows.Forms.Label();
+            this.MBShortCut = new MetroFramework.Controls.MetroButton();
             this.LabelNotify = new System.Windows.Forms.Label();
             this.GroupBoxMultipleLocations = new System.Windows.Forms.GroupBox();
             this.PanelMultipleLocations = new System.Windows.Forms.Panel();
@@ -187,56 +141,6 @@ namespace Neutron.Forms
             this.ButtonStopMovePrevious = new System.Windows.Forms.Button();
             this.LabelLineOfLines = new System.Windows.Forms.Label();
             this.PanelOrderPositions = new System.Windows.Forms.Panel();
-            this.LabelPickMessages = new System.Windows.Forms.Label();
-            this.TextBoxPickPos9 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos9 = new System.Windows.Forms.Label();
-            this.LabelPickPos10 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos10 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos11 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos11 = new System.Windows.Forms.TextBox();
-            this.MBShortCut = new MetroFramework.Controls.MetroButton();
-            this.LabelPickPos12 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos12 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos13 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos13 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos14 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos14 = new System.Windows.Forms.TextBox();
-            this.TextBoxPickPos15 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos15 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos16 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos16 = new System.Windows.Forms.Label();
-            this.Pos9Display = new System.Windows.Forms.Panel();
-            this.Pos10Display = new System.Windows.Forms.Panel();
-            this.Pos11Display = new System.Windows.Forms.Panel();
-            this.Pos12Display = new System.Windows.Forms.Panel();
-            this.Pos13Display = new System.Windows.Forms.Panel();
-            this.Pos14Display = new System.Windows.Forms.Panel();
-            this.Pos15Display = new System.Windows.Forms.Panel();
-            this.Pos16Display = new System.Windows.Forms.Panel();
-            this.TextBoxPickPos1 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos1 = new System.Windows.Forms.Label();
-            this.LabelPickPos2 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos2 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos3 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos3 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos4 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos4 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos5 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos5 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos6 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos6 = new System.Windows.Forms.TextBox();
-            this.TextBoxPickPos7 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos7 = new System.Windows.Forms.Label();
-            this.TextBoxPickPos8 = new System.Windows.Forms.TextBox();
-            this.LabelPickPos8 = new System.Windows.Forms.Label();
-            this.Pos1Display = new System.Windows.Forms.Panel();
-            this.Pos2Display = new System.Windows.Forms.Panel();
-            this.Pos3Display = new System.Windows.Forms.Panel();
-            this.Pos4Display = new System.Windows.Forms.Panel();
-            this.Pos5Display = new System.Windows.Forms.Panel();
-            this.Pos6Display = new System.Windows.Forms.Panel();
-            this.Pos7Display = new System.Windows.Forms.Panel();
-            this.Pos8Display = new System.Windows.Forms.Panel();
             this.TextBoxPickedSoFar = new System.Windows.Forms.TextBox();
             this.LabelPickedSoFar = new System.Windows.Forms.Label();
             this.TextBoxRequestedQty = new System.Windows.Forms.TextBox();
@@ -304,6 +208,7 @@ namespace Neutron.Forms
             this.LabelNewOrderStationNumber = new System.Windows.Forms.Label();
             this.LabelNewOrderItemId = new System.Windows.Forms.Label();
             this.GroupBoxDetailInformation = new System.Windows.Forms.GroupBox();
+            this.ComboBoxCostCenter = new System.Windows.Forms.ComboBox();
             this.LabelCostCenter = new System.Windows.Forms.Label();
             this.TextBoxNewOrderDescription = new System.Windows.Forms.TextBox();
             this.TextBoxNewOrderItem = new System.Windows.Forms.TextBox();
@@ -368,14 +273,12 @@ namespace Neutron.Forms
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
             this.ErrorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.ComboBoxCostCenter = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
             this.panel12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
             this.AvailableOrders.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrders)).BeginInit();
             this.PickList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridPickView)).BeginInit();
@@ -383,7 +286,6 @@ namespace Neutron.Forms
             this.GroupBoxMultipleLocations.SuspendLayout();
             this.PanelMultipleLocations.SuspendLayout();
             this.panel13.SuspendLayout();
-            this.PanelOrderPositions.SuspendLayout();
             this.GroupBoxLocation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemImage)).BeginInit();
             this.OrderDetails.SuspendLayout();
@@ -876,37 +778,37 @@ namespace Neutron.Forms
             this.DataGridView1.AllowUserToAddRows = false;
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle103.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle103.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle103.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle103.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle103.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle103.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle103.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle103;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle35.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle35;
             this.DataGridView1.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle104.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle104.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle104.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle104.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle104.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle104.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle104.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle104;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle36.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle36;
             this.DataGridView1.Location = new System.Drawing.Point(7, 97);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
-            dataGridViewCellStyle105.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle105.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle105.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle105.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle105.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle105.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle105.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle105;
-            dataGridViewCellStyle106.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle106;
+            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle37.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle38.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle38;
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
@@ -947,7 +849,7 @@ namespace Neutron.Forms
             this.AvailableOrders.Controls.Add(this.MBFillOptimized);
             this.AvailableOrders.Controls.Add(this.MBFillStarters);
             this.AvailableOrders.Controls.Add(this.MBFill);
-            this.AvailableOrders.Controls.Add(this.panel2);
+            this.AvailableOrders.Controls.Add(this.PanelOrderInduction);
             this.AvailableOrders.Controls.Add(this.LabelAvailableOrdersSearchFor);
             this.AvailableOrders.Controls.Add(this.TextBoxFindAvailableOrders);
             this.AvailableOrders.Controls.Add(this.ButtonClearFindAvailableOrders);
@@ -1028,595 +930,12 @@ namespace Neutron.Forms
             this.MBFill.UseSelectable = true;
             this.MBFill.Click += new System.EventHandler(this.MBFill_Click);
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.TextBoxPos9);
-            this.panel2.Controls.Add(this.LabelPos16);
-            this.panel2.Controls.Add(this.LabelPos15);
-            this.panel2.Controls.Add(this.TextBoxPos16);
-            this.panel2.Controls.Add(this.TextBoxPos15);
-            this.panel2.Controls.Add(this.AvailablePos15Display);
-            this.panel2.Controls.Add(this.AvailablePos16Display);
-            this.panel2.Controls.Add(this.LabelPos10);
-            this.panel2.Controls.Add(this.LabelPos11);
-            this.panel2.Controls.Add(this.LabelPos12);
-            this.panel2.Controls.Add(this.LabelPos13);
-            this.panel2.Controls.Add(this.LabelPos14);
-            this.panel2.Controls.Add(this.LabelPos9);
-            this.panel2.Controls.Add(this.TextBoxPos10);
-            this.panel2.Controls.Add(this.TextBoxPos11);
-            this.panel2.Controls.Add(this.TextBoxPos12);
-            this.panel2.Controls.Add(this.TextBoxPos13);
-            this.panel2.Controls.Add(this.TextBoxPos14);
-            this.panel2.Controls.Add(this.AvailablePos9Display);
-            this.panel2.Controls.Add(this.AvailablePos10Display);
-            this.panel2.Controls.Add(this.AvailablePos11Display);
-            this.panel2.Controls.Add(this.AvailablePos12Display);
-            this.panel2.Controls.Add(this.AvailablePos13Display);
-            this.panel2.Controls.Add(this.AvailablePos14Display);
-            this.panel2.Controls.Add(this.TextBoxPos1);
-            this.panel2.Controls.Add(this.LabelPos8);
-            this.panel2.Controls.Add(this.LabelPos7);
-            this.panel2.Controls.Add(this.TextBoxPos8);
-            this.panel2.Controls.Add(this.TextBoxPos7);
-            this.panel2.Controls.Add(this.AvailablePos7Display);
-            this.panel2.Controls.Add(this.AvailablePos8Display);
-            this.panel2.Controls.Add(this.LabelPos2);
-            this.panel2.Controls.Add(this.LabelPos3);
-            this.panel2.Controls.Add(this.LabelPos4);
-            this.panel2.Controls.Add(this.LabelPos5);
-            this.panel2.Controls.Add(this.LabelPos6);
-            this.panel2.Controls.Add(this.LabelPos1);
-            this.panel2.Controls.Add(this.TextBoxPos2);
-            this.panel2.Controls.Add(this.TextBoxPos3);
-            this.panel2.Controls.Add(this.TextBoxPos4);
-            this.panel2.Controls.Add(this.TextBoxPos5);
-            this.panel2.Controls.Add(this.TextBoxPos6);
-            this.panel2.Controls.Add(this.AvailablePos1Display);
-            this.panel2.Controls.Add(this.AvailablePos2Display);
-            this.panel2.Controls.Add(this.AvailablePos3Display);
-            this.panel2.Controls.Add(this.AvailablePos4Display);
-            this.panel2.Controls.Add(this.AvailablePos5Display);
-            this.panel2.Controls.Add(this.AvailablePos6Display);
-            this.panel2.Location = new System.Drawing.Point(5, 94);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1137, 202);
-            this.panel2.TabIndex = 113;
-            // 
-            // TextBoxPos9
-            // 
-            this.TextBoxPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos9.Location = new System.Drawing.Point(18, 39);
-            this.TextBoxPos9.Name = "TextBoxPos9";
-            this.TextBoxPos9.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos9.TabIndex = 8;
-            this.TextBoxPos9.Tag = "8";
-            this.TextBoxPos9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos9.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos9.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos9.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // LabelPos16
-            // 
-            this.LabelPos16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos16.Location = new System.Drawing.Point(1043, 7);
-            this.LabelPos16.Name = "LabelPos16";
-            this.LabelPos16.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos16.TabIndex = 203;
-            this.LabelPos16.Text = "16";
-            this.LabelPos16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos16.Click += new System.EventHandler(this.LabelPos16_Click);
-            // 
-            // LabelPos15
-            // 
-            this.LabelPos15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos15.Location = new System.Drawing.Point(902, 7);
-            this.LabelPos15.Name = "LabelPos15";
-            this.LabelPos15.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos15.TabIndex = 202;
-            this.LabelPos15.Text = "15";
-            this.LabelPos15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos15.Click += new System.EventHandler(this.LabelPos15_Click);
-            // 
-            // TextBoxPos16
-            // 
-            this.TextBoxPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos16.Location = new System.Drawing.Point(1005, 39);
-            this.TextBoxPos16.Name = "TextBoxPos16";
-            this.TextBoxPos16.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos16.TabIndex = 15;
-            this.TextBoxPos16.Tag = "15";
-            this.TextBoxPos16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos16.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos16.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos16.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // TextBoxPos15
-            // 
-            this.TextBoxPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos15.Location = new System.Drawing.Point(864, 39);
-            this.TextBoxPos15.Name = "TextBoxPos15";
-            this.TextBoxPos15.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos15.TabIndex = 14;
-            this.TextBoxPos15.Tag = "14";
-            this.TextBoxPos15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos15.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos15.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos15.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // AvailablePos15Display
-            // 
-            this.AvailablePos15Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos15Display.Location = new System.Drawing.Point(856, 39);
-            this.AvailablePos15Display.Name = "AvailablePos15Display";
-            this.AvailablePos15Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos15Display.TabIndex = 204;
-            // 
-            // AvailablePos16Display
-            // 
-            this.AvailablePos16Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos16Display.Location = new System.Drawing.Point(997, 39);
-            this.AvailablePos16Display.Name = "AvailablePos16Display";
-            this.AvailablePos16Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos16Display.TabIndex = 205;
-            // 
-            // LabelPos10
-            // 
-            this.LabelPos10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos10.Location = new System.Drawing.Point(197, 7);
-            this.LabelPos10.Name = "LabelPos10";
-            this.LabelPos10.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos10.TabIndex = 189;
-            this.LabelPos10.Text = "10";
-            this.LabelPos10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos10.Click += new System.EventHandler(this.LabelPos10_Click);
-            // 
-            // LabelPos11
-            // 
-            this.LabelPos11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos11.Location = new System.Drawing.Point(338, 7);
-            this.LabelPos11.Name = "LabelPos11";
-            this.LabelPos11.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos11.TabIndex = 190;
-            this.LabelPos11.Text = "11";
-            this.LabelPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos11.Click += new System.EventHandler(this.LabelPos11_Click);
-            // 
-            // LabelPos12
-            // 
-            this.LabelPos12.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPos12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos12.Location = new System.Drawing.Point(479, 7);
-            this.LabelPos12.Name = "LabelPos12";
-            this.LabelPos12.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos12.TabIndex = 191;
-            this.LabelPos12.Text = "12";
-            this.LabelPos12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos12.Click += new System.EventHandler(this.LabelPos12_Click);
-            // 
-            // LabelPos13
-            // 
-            this.LabelPos13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos13.Location = new System.Drawing.Point(620, 7);
-            this.LabelPos13.Name = "LabelPos13";
-            this.LabelPos13.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos13.TabIndex = 192;
-            this.LabelPos13.Text = "13";
-            this.LabelPos13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos13.Click += new System.EventHandler(this.LabelPos13_Click);
-            // 
-            // LabelPos14
-            // 
-            this.LabelPos14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos14.Location = new System.Drawing.Point(761, 7);
-            this.LabelPos14.Name = "LabelPos14";
-            this.LabelPos14.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos14.TabIndex = 193;
-            this.LabelPos14.Text = "14";
-            this.LabelPos14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelPos14.Click += new System.EventHandler(this.LabelPos14_Click);
-            // 
-            // LabelPos9
-            // 
-            this.LabelPos9.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPos9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPos9.Location = new System.Drawing.Point(56, 7);
-            this.LabelPos9.Name = "LabelPos9";
-            this.LabelPos9.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos9.TabIndex = 188;
-            this.LabelPos9.Text = "9";
-            this.LabelPos9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPos10
-            // 
-            this.TextBoxPos10.BackColor = System.Drawing.SystemColors.Control;
-            this.TextBoxPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos10.Location = new System.Drawing.Point(159, 39);
-            this.TextBoxPos10.Name = "TextBoxPos10";
-            this.TextBoxPos10.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos10.TabIndex = 9;
-            this.TextBoxPos10.Tag = "9";
-            this.TextBoxPos10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos10.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos10.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos10.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // TextBoxPos11
-            // 
-            this.TextBoxPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos11.Location = new System.Drawing.Point(300, 39);
-            this.TextBoxPos11.Name = "TextBoxPos11";
-            this.TextBoxPos11.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos11.TabIndex = 10;
-            this.TextBoxPos11.Tag = "10";
-            this.TextBoxPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos11.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos11.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos11.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // TextBoxPos12
-            // 
-            this.TextBoxPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos12.Location = new System.Drawing.Point(441, 39);
-            this.TextBoxPos12.Name = "TextBoxPos12";
-            this.TextBoxPos12.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos12.TabIndex = 11;
-            this.TextBoxPos12.Tag = "11";
-            this.TextBoxPos12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos12.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos12.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos12.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // TextBoxPos13
-            // 
-            this.TextBoxPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos13.Location = new System.Drawing.Point(582, 39);
-            this.TextBoxPos13.Name = "TextBoxPos13";
-            this.TextBoxPos13.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos13.TabIndex = 12;
-            this.TextBoxPos13.Tag = "12";
-            this.TextBoxPos13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos13.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos13.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos13.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // TextBoxPos14
-            // 
-            this.TextBoxPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos14.Location = new System.Drawing.Point(723, 39);
-            this.TextBoxPos14.Name = "TextBoxPos14";
-            this.TextBoxPos14.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos14.TabIndex = 13;
-            this.TextBoxPos14.Tag = "13";
-            this.TextBoxPos14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos14.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos14.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos14.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            // 
-            // AvailablePos9Display
-            // 
-            this.AvailablePos9Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos9Display.Location = new System.Drawing.Point(10, 39);
-            this.AvailablePos9Display.Name = "AvailablePos9Display";
-            this.AvailablePos9Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos9Display.TabIndex = 194;
-            // 
-            // AvailablePos10Display
-            // 
-            this.AvailablePos10Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos10Display.Location = new System.Drawing.Point(151, 39);
-            this.AvailablePos10Display.Name = "AvailablePos10Display";
-            this.AvailablePos10Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos10Display.TabIndex = 195;
-            // 
-            // AvailablePos11Display
-            // 
-            this.AvailablePos11Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos11Display.Location = new System.Drawing.Point(292, 39);
-            this.AvailablePos11Display.Name = "AvailablePos11Display";
-            this.AvailablePos11Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos11Display.TabIndex = 196;
-            // 
-            // AvailablePos12Display
-            // 
-            this.AvailablePos12Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos12Display.Location = new System.Drawing.Point(433, 39);
-            this.AvailablePos12Display.Name = "AvailablePos12Display";
-            this.AvailablePos12Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos12Display.TabIndex = 197;
-            // 
-            // AvailablePos13Display
-            // 
-            this.AvailablePos13Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos13Display.Location = new System.Drawing.Point(574, 39);
-            this.AvailablePos13Display.Name = "AvailablePos13Display";
-            this.AvailablePos13Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos13Display.TabIndex = 198;
-            // 
-            // AvailablePos14Display
-            // 
-            this.AvailablePos14Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos14Display.Location = new System.Drawing.Point(715, 39);
-            this.AvailablePos14Display.Name = "AvailablePos14Display";
-            this.AvailablePos14Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos14Display.TabIndex = 199;
-            // 
-            // TextBoxPos1
-            // 
-            this.TextBoxPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos1.Location = new System.Drawing.Point(18, 139);
-            this.TextBoxPos1.Name = "TextBoxPos1";
-            this.TextBoxPos1.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos1.TabIndex = 0;
-            this.TextBoxPos1.Tag = "0";
-            this.TextBoxPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos1.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos1.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos1.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // LabelPos8
-            // 
-            this.LabelPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos8.Location = new System.Drawing.Point(1043, 107);
-            this.LabelPos8.Name = "LabelPos8";
-            this.LabelPos8.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos8.TabIndex = 178;
-            this.LabelPos8.Text = "8";
-            this.LabelPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPos7
-            // 
-            this.LabelPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos7.Location = new System.Drawing.Point(902, 107);
-            this.LabelPos7.Name = "LabelPos7";
-            this.LabelPos7.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos7.TabIndex = 177;
-            this.LabelPos7.Text = "7";
-            this.LabelPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPos8
-            // 
-            this.TextBoxPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos8.Location = new System.Drawing.Point(1005, 139);
-            this.TextBoxPos8.Name = "TextBoxPos8";
-            this.TextBoxPos8.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos8.TabIndex = 7;
-            this.TextBoxPos8.Tag = "7";
-            this.TextBoxPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos8.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos8.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos8.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos8.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos7
-            // 
-            this.TextBoxPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos7.Location = new System.Drawing.Point(864, 139);
-            this.TextBoxPos7.Name = "TextBoxPos7";
-            this.TextBoxPos7.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos7.TabIndex = 6;
-            this.TextBoxPos7.Tag = "6";
-            this.TextBoxPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos7.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos7.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos7.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos7.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // AvailablePos7Display
-            // 
-            this.AvailablePos7Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos7Display.Location = new System.Drawing.Point(856, 139);
-            this.AvailablePos7Display.Name = "AvailablePos7Display";
-            this.AvailablePos7Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos7Display.TabIndex = 179;
-            // 
-            // AvailablePos8Display
-            // 
-            this.AvailablePos8Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos8Display.Location = new System.Drawing.Point(997, 139);
-            this.AvailablePos8Display.Name = "AvailablePos8Display";
-            this.AvailablePos8Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos8Display.TabIndex = 180;
-            // 
-            // LabelPos2
-            // 
-            this.LabelPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos2.Location = new System.Drawing.Point(197, 107);
-            this.LabelPos2.Name = "LabelPos2";
-            this.LabelPos2.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos2.TabIndex = 152;
-            this.LabelPos2.Text = "2";
-            this.LabelPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPos3
-            // 
-            this.LabelPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos3.Location = new System.Drawing.Point(338, 107);
-            this.LabelPos3.Name = "LabelPos3";
-            this.LabelPos3.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos3.TabIndex = 153;
-            this.LabelPos3.Text = "3";
-            this.LabelPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPos4
-            // 
-            this.LabelPos4.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos4.Location = new System.Drawing.Point(479, 107);
-            this.LabelPos4.Name = "LabelPos4";
-            this.LabelPos4.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos4.TabIndex = 154;
-            this.LabelPos4.Text = "4";
-            this.LabelPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPos5
-            // 
-            this.LabelPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos5.Location = new System.Drawing.Point(620, 107);
-            this.LabelPos5.Name = "LabelPos5";
-            this.LabelPos5.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos5.TabIndex = 155;
-            this.LabelPos5.Text = "5";
-            this.LabelPos5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPos6
-            // 
-            this.LabelPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos6.Location = new System.Drawing.Point(761, 107);
-            this.LabelPos6.Name = "LabelPos6";
-            this.LabelPos6.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos6.TabIndex = 156;
-            this.LabelPos6.Text = "6";
-            this.LabelPos6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPos1
-            // 
-            this.LabelPos1.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPos1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPos1.Location = new System.Drawing.Point(56, 107);
-            this.LabelPos1.Name = "LabelPos1";
-            this.LabelPos1.Size = new System.Drawing.Size(36, 26);
-            this.LabelPos1.TabIndex = 151;
-            this.LabelPos1.Text = "1";
-            this.LabelPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPos2
-            // 
-            this.TextBoxPos2.BackColor = System.Drawing.SystemColors.Control;
-            this.TextBoxPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos2.Location = new System.Drawing.Point(159, 139);
-            this.TextBoxPos2.Name = "TextBoxPos2";
-            this.TextBoxPos2.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos2.TabIndex = 1;
-            this.TextBoxPos2.Tag = "1";
-            this.TextBoxPos2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos2.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos2.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos2.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos3
-            // 
-            this.TextBoxPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos3.Location = new System.Drawing.Point(300, 139);
-            this.TextBoxPos3.Name = "TextBoxPos3";
-            this.TextBoxPos3.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos3.TabIndex = 2;
-            this.TextBoxPos3.Tag = "2";
-            this.TextBoxPos3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos3.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos3.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos3.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos4
-            // 
-            this.TextBoxPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos4.Location = new System.Drawing.Point(441, 139);
-            this.TextBoxPos4.Name = "TextBoxPos4";
-            this.TextBoxPos4.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos4.TabIndex = 3;
-            this.TextBoxPos4.Tag = "3";
-            this.TextBoxPos4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos4.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos4.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos4.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos5
-            // 
-            this.TextBoxPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos5.Location = new System.Drawing.Point(582, 139);
-            this.TextBoxPos5.Name = "TextBoxPos5";
-            this.TextBoxPos5.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos5.TabIndex = 4;
-            this.TextBoxPos5.Tag = "4";
-            this.TextBoxPos5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos5.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos5.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos5.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // TextBoxPos6
-            // 
-            this.TextBoxPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPos6.Location = new System.Drawing.Point(723, 139);
-            this.TextBoxPos6.Name = "TextBoxPos6";
-            this.TextBoxPos6.Size = new System.Drawing.Size(112, 22);
-            this.TextBoxPos6.TabIndex = 5;
-            this.TextBoxPos6.Tag = "5";
-            this.TextBoxPos6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxPos6.Click += new System.EventHandler(this.TextBoxPos_Click);
-            this.TextBoxPos6.Enter += new System.EventHandler(this.TextBoxEnter);
-            this.TextBoxPos6.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPosKeyDown);
-            this.TextBoxPos6.Leave += new System.EventHandler(this.TextBoxPosLeave);
-            // 
-            // AvailablePos1Display
-            // 
-            this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos1Display.Location = new System.Drawing.Point(10, 139);
-            this.AvailablePos1Display.Name = "AvailablePos1Display";
-            this.AvailablePos1Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos1Display.TabIndex = 161;
-            // 
-            // AvailablePos2Display
-            // 
-            this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos2Display.Location = new System.Drawing.Point(151, 139);
-            this.AvailablePos2Display.Name = "AvailablePos2Display";
-            this.AvailablePos2Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos2Display.TabIndex = 162;
-            // 
-            // AvailablePos3Display
-            // 
-            this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos3Display.Location = new System.Drawing.Point(292, 139);
-            this.AvailablePos3Display.Name = "AvailablePos3Display";
-            this.AvailablePos3Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos3Display.TabIndex = 163;
-            // 
-            // AvailablePos4Display
-            // 
-            this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos4Display.Location = new System.Drawing.Point(433, 139);
-            this.AvailablePos4Display.Name = "AvailablePos4Display";
-            this.AvailablePos4Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos4Display.TabIndex = 3;
-            // 
-            // AvailablePos5Display
-            // 
-            this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos5Display.Location = new System.Drawing.Point(574, 139);
-            this.AvailablePos5Display.Name = "AvailablePos5Display";
-            this.AvailablePos5Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos5Display.TabIndex = 165;
-            // 
-            // AvailablePos6Display
-            // 
-            this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
-            this.AvailablePos6Display.Location = new System.Drawing.Point(715, 139);
-            this.AvailablePos6Display.Name = "AvailablePos6Display";
-            this.AvailablePos6Display.Size = new System.Drawing.Size(128, 53);
-            this.AvailablePos6Display.TabIndex = 166;
+            // PanelOrderInduction
+            // 
+            this.PanelOrderInduction.Location = new System.Drawing.Point(4, 94);
+            this.PanelOrderInduction.Name = "PanelOrderInduction";
+            this.PanelOrderInduction.Size = new System.Drawing.Size(1140, 186);
+            this.PanelOrderInduction.TabIndex = 113;
             // 
             // LabelAvailableOrdersSearchFor
             // 
@@ -1681,42 +1000,42 @@ namespace Neutron.Forms
             this.DataGridViewAvailableOrders.AllowUserToDeleteRows = false;
             this.DataGridViewAvailableOrders.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewAvailableOrders.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle107.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle107.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle107.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle107.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle107.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle107.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle107.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle107;
+            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle39.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle39;
             this.DataGridViewAvailableOrders.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle108.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle108.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle108.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle108.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle108.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle108.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle108.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewAvailableOrders.DefaultCellStyle = dataGridViewCellStyle108;
-            this.DataGridViewAvailableOrders.Location = new System.Drawing.Point(6, 302);
+            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle40.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAvailableOrders.DefaultCellStyle = dataGridViewCellStyle40;
+            this.DataGridViewAvailableOrders.Location = new System.Drawing.Point(6, 286);
             this.DataGridViewAvailableOrders.MultiSelect = false;
             this.DataGridViewAvailableOrders.Name = "DataGridViewAvailableOrders";
             this.DataGridViewAvailableOrders.ReadOnly = true;
-            dataGridViewCellStyle109.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle109.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle109.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle109.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle109.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle109.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle109.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrders.RowHeadersDefaultCellStyle = dataGridViewCellStyle109;
-            dataGridViewCellStyle110.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewAvailableOrders.RowsDefaultCellStyle = dataGridViewCellStyle110;
+            dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle41.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrders.RowHeadersDefaultCellStyle = dataGridViewCellStyle41;
+            dataGridViewCellStyle42.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewAvailableOrders.RowsDefaultCellStyle = dataGridViewCellStyle42;
             this.DataGridViewAvailableOrders.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrders.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrders.RowTemplate.ReadOnly = true;
             this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1136, 340);
+            this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1136, 360);
             this.DataGridViewAvailableOrders.TabIndex = 5;
             this.DataGridViewAvailableOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrders_CellClick);
             // 
@@ -1768,37 +1087,37 @@ namespace Neutron.Forms
             this.DataGridPickView.AllowUserToDeleteRows = false;
             this.DataGridPickView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridPickView.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle111.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle111.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle111.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle111.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle111.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle111.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle111.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridPickView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle111;
+            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle43.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridPickView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle43;
             this.DataGridPickView.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle112.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle112.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle112.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle112.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle112.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle112.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle112.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridPickView.DefaultCellStyle = dataGridViewCellStyle112;
+            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle44.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle44.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle44.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle44.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridPickView.DefaultCellStyle = dataGridViewCellStyle44;
             this.DataGridPickView.Location = new System.Drawing.Point(6, 97);
             this.DataGridPickView.MultiSelect = false;
             this.DataGridPickView.Name = "DataGridPickView";
             this.DataGridPickView.ReadOnly = true;
-            dataGridViewCellStyle113.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle113.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle113.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle113.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle113.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle113.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle113.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridPickView.RowHeadersDefaultCellStyle = dataGridViewCellStyle113;
-            dataGridViewCellStyle114.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridPickView.RowsDefaultCellStyle = dataGridViewCellStyle114;
+            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle45.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle45.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle45.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle45.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle45.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridPickView.RowHeadersDefaultCellStyle = dataGridViewCellStyle45;
+            dataGridViewCellStyle46.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridPickView.RowsDefaultCellStyle = dataGridViewCellStyle46;
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
@@ -1847,6 +1166,8 @@ namespace Neutron.Forms
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.RoyalBlue;
+            this.PickScreen.Controls.Add(this.LabelPickMessages);
+            this.PickScreen.Controls.Add(this.MBShortCut);
             this.PickScreen.Controls.Add(this.LabelNotify);
             this.PickScreen.Controls.Add(this.GroupBoxMultipleLocations);
             this.PickScreen.Controls.Add(this.panel13);
@@ -1882,6 +1203,28 @@ namespace Neutron.Forms
             this.PickScreen.Size = new System.Drawing.Size(1147, 734);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
+            // 
+            // LabelPickMessages
+            // 
+            this.LabelPickMessages.BackColor = System.Drawing.Color.AliceBlue;
+            this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickMessages.Location = new System.Drawing.Point(14, 330);
+            this.LabelPickMessages.Name = "LabelPickMessages";
+            this.LabelPickMessages.Size = new System.Drawing.Size(1076, 22);
+            this.LabelPickMessages.TabIndex = 198;
+            this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MBShortCut
+            // 
+            this.MBShortCut.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBShortCut.Location = new System.Drawing.Point(1101, 326);
+            this.MBShortCut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBShortCut.Name = "MBShortCut";
+            this.MBShortCut.Size = new System.Drawing.Size(26, 26);
+            this.MBShortCut.TabIndex = 197;
+            this.MBShortCut.Text = "?";
+            this.MBShortCut.UseSelectable = true;
+            this.MBShortCut.Click += new System.EventHandler(this.MBShortCut_Click);
             // 
             // LabelNotify
             // 
@@ -2067,602 +1410,11 @@ namespace Neutron.Forms
             // 
             // PanelOrderPositions
             // 
-            this.PanelOrderPositions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.PanelOrderPositions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.PanelOrderPositions.Controls.Add(this.LabelPickMessages);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos9);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos9);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos10);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos10);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos11);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos11);
-            this.PanelOrderPositions.Controls.Add(this.MBShortCut);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos12);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos12);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos13);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos13);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos14);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos14);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos15);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos15);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos16);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos16);
-            this.PanelOrderPositions.Controls.Add(this.Pos9Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos10Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos11Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos12Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos13Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos14Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos15Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos16Display);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos1);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos1);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos2);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos2);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos3);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos3);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos4);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos4);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos5);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos5);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos6);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos6);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos7);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos7);
-            this.PanelOrderPositions.Controls.Add(this.TextBoxPickPos8);
-            this.PanelOrderPositions.Controls.Add(this.LabelPickPos8);
-            this.PanelOrderPositions.Controls.Add(this.Pos1Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos2Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos3Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos4Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos5Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos6Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos7Display);
-            this.PanelOrderPositions.Controls.Add(this.Pos8Display);
-            this.PanelOrderPositions.Location = new System.Drawing.Point(4, 135);
+            this.PanelOrderPositions.Location = new System.Drawing.Point(7, 138);
             this.PanelOrderPositions.Name = "PanelOrderPositions";
-            this.PanelOrderPositions.Size = new System.Drawing.Size(1140, 220);
+            this.PanelOrderPositions.Size = new System.Drawing.Size(1137, 186);
             this.PanelOrderPositions.TabIndex = 112;
-            // 
-            // LabelPickMessages
-            // 
-            this.LabelPickMessages.BackColor = System.Drawing.Color.AliceBlue;
-            this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickMessages.Location = new System.Drawing.Point(11, 186);
-            this.LabelPickMessages.Name = "LabelPickMessages";
-            this.LabelPickMessages.Size = new System.Drawing.Size(1076, 22);
-            this.LabelPickMessages.TabIndex = 190;
-            this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos9
-            // 
-            this.TextBoxPickPos9.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos9.Location = new System.Drawing.Point(18, 38);
-            this.TextBoxPickPos9.Multiline = true;
-            this.TextBoxPickPos9.Name = "TextBoxPickPos9";
-            this.TextBoxPickPos9.ReadOnly = true;
-            this.TextBoxPickPos9.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos9.TabIndex = 167;
-            this.TextBoxPickPos9.Tag = "8";
-            this.TextBoxPickPos9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos9
-            // 
-            this.LabelPickPos9.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickPos9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPickPos9.Location = new System.Drawing.Point(56, 6);
-            this.LabelPickPos9.Name = "LabelPickPos9";
-            this.LabelPickPos9.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos9.TabIndex = 166;
-            this.LabelPickPos9.Text = "9";
-            this.LabelPickPos9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPickPos10
-            // 
-            this.LabelPickPos10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos10.Location = new System.Drawing.Point(197, 6);
-            this.LabelPickPos10.Name = "LabelPickPos10";
-            this.LabelPickPos10.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos10.TabIndex = 168;
-            this.LabelPickPos10.Text = "10";
-            this.LabelPickPos10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos10
-            // 
-            this.TextBoxPickPos10.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos10.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos10.Location = new System.Drawing.Point(159, 38);
-            this.TextBoxPickPos10.Multiline = true;
-            this.TextBoxPickPos10.Name = "TextBoxPickPos10";
-            this.TextBoxPickPos10.ReadOnly = true;
-            this.TextBoxPickPos10.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos10.TabIndex = 169;
-            this.TextBoxPickPos10.Tag = "9";
-            this.TextBoxPickPos10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos11
-            // 
-            this.LabelPickPos11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos11.Location = new System.Drawing.Point(338, 6);
-            this.LabelPickPos11.Name = "LabelPickPos11";
-            this.LabelPickPos11.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos11.TabIndex = 170;
-            this.LabelPickPos11.Text = "11";
-            this.LabelPickPos11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos11
-            // 
-            this.TextBoxPickPos11.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos11.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos11.Location = new System.Drawing.Point(300, 38);
-            this.TextBoxPickPos11.Multiline = true;
-            this.TextBoxPickPos11.Name = "TextBoxPickPos11";
-            this.TextBoxPickPos11.ReadOnly = true;
-            this.TextBoxPickPos11.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos11.TabIndex = 171;
-            this.TextBoxPickPos11.Tag = "10";
-            this.TextBoxPickPos11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // MBShortCut
-            // 
-            this.MBShortCut.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShortCut.Location = new System.Drawing.Point(1099, 182);
-            this.MBShortCut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBShortCut.Name = "MBShortCut";
-            this.MBShortCut.Size = new System.Drawing.Size(26, 26);
-            this.MBShortCut.TabIndex = 119;
-            this.MBShortCut.Text = "?";
-            this.MBShortCut.UseSelectable = true;
-            this.MBShortCut.Click += new System.EventHandler(this.MBShortCut_Click);
-            // 
-            // LabelPickPos12
-            // 
-            this.LabelPickPos12.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickPos12.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos12.Location = new System.Drawing.Point(479, 6);
-            this.LabelPickPos12.Name = "LabelPickPos12";
-            this.LabelPickPos12.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos12.TabIndex = 172;
-            this.LabelPickPos12.Text = "12";
-            this.LabelPickPos12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos12
-            // 
-            this.TextBoxPickPos12.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos12.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos12.Location = new System.Drawing.Point(441, 38);
-            this.TextBoxPickPos12.Multiline = true;
-            this.TextBoxPickPos12.Name = "TextBoxPickPos12";
-            this.TextBoxPickPos12.ReadOnly = true;
-            this.TextBoxPickPos12.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos12.TabIndex = 173;
-            this.TextBoxPickPos12.Tag = "11";
-            this.TextBoxPickPos12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos13
-            // 
-            this.LabelPickPos13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos13.Location = new System.Drawing.Point(620, 6);
-            this.LabelPickPos13.Name = "LabelPickPos13";
-            this.LabelPickPos13.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos13.TabIndex = 174;
-            this.LabelPickPos13.Text = "13";
-            this.LabelPickPos13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos13
-            // 
-            this.TextBoxPickPos13.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos13.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos13.Location = new System.Drawing.Point(582, 38);
-            this.TextBoxPickPos13.Multiline = true;
-            this.TextBoxPickPos13.Name = "TextBoxPickPos13";
-            this.TextBoxPickPos13.ReadOnly = true;
-            this.TextBoxPickPos13.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos13.TabIndex = 175;
-            this.TextBoxPickPos13.Tag = "12";
-            this.TextBoxPickPos13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos14
-            // 
-            this.LabelPickPos14.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos14.Location = new System.Drawing.Point(761, 6);
-            this.LabelPickPos14.Name = "LabelPickPos14";
-            this.LabelPickPos14.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos14.TabIndex = 176;
-            this.LabelPickPos14.Text = "14";
-            this.LabelPickPos14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos14
-            // 
-            this.TextBoxPickPos14.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos14.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos14.Location = new System.Drawing.Point(723, 38);
-            this.TextBoxPickPos14.Multiline = true;
-            this.TextBoxPickPos14.Name = "TextBoxPickPos14";
-            this.TextBoxPickPos14.ReadOnly = true;
-            this.TextBoxPickPos14.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos14.TabIndex = 177;
-            this.TextBoxPickPos14.Tag = "13";
-            this.TextBoxPickPos14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TextBoxPickPos15
-            // 
-            this.TextBoxPickPos15.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos15.Location = new System.Drawing.Point(864, 38);
-            this.TextBoxPickPos15.Multiline = true;
-            this.TextBoxPickPos15.Name = "TextBoxPickPos15";
-            this.TextBoxPickPos15.ReadOnly = true;
-            this.TextBoxPickPos15.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos15.TabIndex = 184;
-            this.TextBoxPickPos15.Tag = "14";
-            this.TextBoxPickPos15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos15
-            // 
-            this.LabelPickPos15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos15.Location = new System.Drawing.Point(902, 6);
-            this.LabelPickPos15.Name = "LabelPickPos15";
-            this.LabelPickPos15.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos15.TabIndex = 185;
-            this.LabelPickPos15.Text = "15";
-            this.LabelPickPos15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos16
-            // 
-            this.TextBoxPickPos16.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos16.Location = new System.Drawing.Point(1005, 38);
-            this.TextBoxPickPos16.Multiline = true;
-            this.TextBoxPickPos16.Name = "TextBoxPickPos16";
-            this.TextBoxPickPos16.ReadOnly = true;
-            this.TextBoxPickPos16.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos16.TabIndex = 188;
-            this.TextBoxPickPos16.Tag = "15";
-            this.TextBoxPickPos16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos16
-            // 
-            this.LabelPickPos16.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos16.Location = new System.Drawing.Point(1043, 6);
-            this.LabelPickPos16.Name = "LabelPickPos16";
-            this.LabelPickPos16.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos16.TabIndex = 187;
-            this.LabelPickPos16.Text = "16";
-            this.LabelPickPos16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Pos9Display
-            // 
-            this.Pos9Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos9Display.Location = new System.Drawing.Point(10, 38);
-            this.Pos9Display.Name = "Pos9Display";
-            this.Pos9Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos9Display.TabIndex = 178;
-            // 
-            // Pos10Display
-            // 
-            this.Pos10Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos10Display.Location = new System.Drawing.Point(151, 38);
-            this.Pos10Display.Name = "Pos10Display";
-            this.Pos10Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos10Display.TabIndex = 179;
-            // 
-            // Pos11Display
-            // 
-            this.Pos11Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos11Display.Location = new System.Drawing.Point(292, 38);
-            this.Pos11Display.Name = "Pos11Display";
-            this.Pos11Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos11Display.TabIndex = 180;
-            // 
-            // Pos12Display
-            // 
-            this.Pos12Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos12Display.Location = new System.Drawing.Point(433, 38);
-            this.Pos12Display.Name = "Pos12Display";
-            this.Pos12Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos12Display.TabIndex = 181;
-            // 
-            // Pos13Display
-            // 
-            this.Pos13Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos13Display.Location = new System.Drawing.Point(574, 38);
-            this.Pos13Display.Name = "Pos13Display";
-            this.Pos13Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos13Display.TabIndex = 182;
-            // 
-            // Pos14Display
-            // 
-            this.Pos14Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos14Display.Location = new System.Drawing.Point(715, 38);
-            this.Pos14Display.Name = "Pos14Display";
-            this.Pos14Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos14Display.TabIndex = 183;
-            // 
-            // Pos15Display
-            // 
-            this.Pos15Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos15Display.Location = new System.Drawing.Point(856, 38);
-            this.Pos15Display.Name = "Pos15Display";
-            this.Pos15Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos15Display.TabIndex = 186;
-            // 
-            // Pos16Display
-            // 
-            this.Pos16Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos16Display.Location = new System.Drawing.Point(997, 38);
-            this.Pos16Display.Name = "Pos16Display";
-            this.Pos16Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos16Display.TabIndex = 189;
-            // 
-            // TextBoxPickPos1
-            // 
-            this.TextBoxPickPos1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos1.Location = new System.Drawing.Point(18, 128);
-            this.TextBoxPickPos1.Multiline = true;
-            this.TextBoxPickPos1.Name = "TextBoxPickPos1";
-            this.TextBoxPickPos1.ReadOnly = true;
-            this.TextBoxPickPos1.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos1.TabIndex = 121;
-            this.TextBoxPickPos1.Tag = "0";
-            this.TextBoxPickPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos1
-            // 
-            this.LabelPickPos1.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPickPos1.Location = new System.Drawing.Point(56, 96);
-            this.LabelPickPos1.Name = "LabelPickPos1";
-            this.LabelPickPos1.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos1.TabIndex = 120;
-            this.LabelPickPos1.Text = "1";
-            this.LabelPickPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelPickPos2
-            // 
-            this.LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos2.Location = new System.Drawing.Point(197, 96);
-            this.LabelPickPos2.Name = "LabelPickPos2";
-            this.LabelPickPos2.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos2.TabIndex = 122;
-            this.LabelPickPos2.Text = "2";
-            this.LabelPickPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos2
-            // 
-            this.TextBoxPickPos2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos2.Location = new System.Drawing.Point(159, 128);
-            this.TextBoxPickPos2.Multiline = true;
-            this.TextBoxPickPos2.Name = "TextBoxPickPos2";
-            this.TextBoxPickPos2.ReadOnly = true;
-            this.TextBoxPickPos2.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos2.TabIndex = 123;
-            this.TextBoxPickPos2.Tag = "1";
-            this.TextBoxPickPos2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos3
-            // 
-            this.LabelPickPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos3.Location = new System.Drawing.Point(338, 96);
-            this.LabelPickPos3.Name = "LabelPickPos3";
-            this.LabelPickPos3.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos3.TabIndex = 124;
-            this.LabelPickPos3.Text = "3";
-            this.LabelPickPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos3
-            // 
-            this.TextBoxPickPos3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos3.Location = new System.Drawing.Point(300, 128);
-            this.TextBoxPickPos3.Multiline = true;
-            this.TextBoxPickPos3.Name = "TextBoxPickPos3";
-            this.TextBoxPickPos3.ReadOnly = true;
-            this.TextBoxPickPos3.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos3.TabIndex = 125;
-            this.TextBoxPickPos3.Tag = "2";
-            this.TextBoxPickPos3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos4
-            // 
-            this.LabelPickPos4.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos4.Location = new System.Drawing.Point(479, 96);
-            this.LabelPickPos4.Name = "LabelPickPos4";
-            this.LabelPickPos4.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos4.TabIndex = 126;
-            this.LabelPickPos4.Text = "4";
-            this.LabelPickPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos4
-            // 
-            this.TextBoxPickPos4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos4.Location = new System.Drawing.Point(441, 128);
-            this.TextBoxPickPos4.Multiline = true;
-            this.TextBoxPickPos4.Name = "TextBoxPickPos4";
-            this.TextBoxPickPos4.ReadOnly = true;
-            this.TextBoxPickPos4.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos4.TabIndex = 127;
-            this.TextBoxPickPos4.Tag = "3";
-            this.TextBoxPickPos4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos5
-            // 
-            this.LabelPickPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos5.Location = new System.Drawing.Point(620, 96);
-            this.LabelPickPos5.Name = "LabelPickPos5";
-            this.LabelPickPos5.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos5.TabIndex = 128;
-            this.LabelPickPos5.Text = "5";
-            this.LabelPickPos5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos5
-            // 
-            this.TextBoxPickPos5.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos5.Location = new System.Drawing.Point(582, 128);
-            this.TextBoxPickPos5.Multiline = true;
-            this.TextBoxPickPos5.Name = "TextBoxPickPos5";
-            this.TextBoxPickPos5.ReadOnly = true;
-            this.TextBoxPickPos5.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos5.TabIndex = 129;
-            this.TextBoxPickPos5.Tag = "4";
-            this.TextBoxPickPos5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos6
-            // 
-            this.LabelPickPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos6.Location = new System.Drawing.Point(761, 96);
-            this.LabelPickPos6.Name = "LabelPickPos6";
-            this.LabelPickPos6.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos6.TabIndex = 130;
-            this.LabelPickPos6.Text = "6";
-            this.LabelPickPos6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos6
-            // 
-            this.TextBoxPickPos6.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos6.Location = new System.Drawing.Point(723, 128);
-            this.TextBoxPickPos6.Multiline = true;
-            this.TextBoxPickPos6.Name = "TextBoxPickPos6";
-            this.TextBoxPickPos6.ReadOnly = true;
-            this.TextBoxPickPos6.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos6.TabIndex = 131;
-            this.TextBoxPickPos6.Tag = "5";
-            this.TextBoxPickPos6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TextBoxPickPos7
-            // 
-            this.TextBoxPickPos7.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos7.Location = new System.Drawing.Point(864, 128);
-            this.TextBoxPickPos7.Multiline = true;
-            this.TextBoxPickPos7.Name = "TextBoxPickPos7";
-            this.TextBoxPickPos7.ReadOnly = true;
-            this.TextBoxPickPos7.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos7.TabIndex = 160;
-            this.TextBoxPickPos7.Tag = "6";
-            this.TextBoxPickPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos7
-            // 
-            this.LabelPickPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos7.Location = new System.Drawing.Point(902, 96);
-            this.LabelPickPos7.Name = "LabelPickPos7";
-            this.LabelPickPos7.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos7.TabIndex = 161;
-            this.LabelPickPos7.Text = "7";
-            this.LabelPickPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextBoxPickPos8
-            // 
-            this.TextBoxPickPos8.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.TextBoxPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos8.Location = new System.Drawing.Point(1005, 128);
-            this.TextBoxPickPos8.Multiline = true;
-            this.TextBoxPickPos8.Name = "TextBoxPickPos8";
-            this.TextBoxPickPos8.ReadOnly = true;
-            this.TextBoxPickPos8.Size = new System.Drawing.Size(112, 44);
-            this.TextBoxPickPos8.TabIndex = 165;
-            this.TextBoxPickPos8.Tag = "7";
-            this.TextBoxPickPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelPickPos8
-            // 
-            this.LabelPickPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos8.Location = new System.Drawing.Point(1043, 96);
-            this.LabelPickPos8.Name = "LabelPickPos8";
-            this.LabelPickPos8.Size = new System.Drawing.Size(36, 26);
-            this.LabelPickPos8.TabIndex = 164;
-            this.LabelPickPos8.Text = "8";
-            this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Pos1Display
-            // 
-            this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos1Display.Location = new System.Drawing.Point(10, 128);
-            this.Pos1Display.Name = "Pos1Display";
-            this.Pos1Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos1Display.TabIndex = 153;
-            // 
-            // Pos2Display
-            // 
-            this.Pos2Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos2Display.Location = new System.Drawing.Point(151, 128);
-            this.Pos2Display.Name = "Pos2Display";
-            this.Pos2Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos2Display.TabIndex = 154;
-            // 
-            // Pos3Display
-            // 
-            this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos3Display.Location = new System.Drawing.Point(292, 128);
-            this.Pos3Display.Name = "Pos3Display";
-            this.Pos3Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos3Display.TabIndex = 155;
-            // 
-            // Pos4Display
-            // 
-            this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos4Display.Location = new System.Drawing.Point(433, 128);
-            this.Pos4Display.Name = "Pos4Display";
-            this.Pos4Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos4Display.TabIndex = 156;
-            // 
-            // Pos5Display
-            // 
-            this.Pos5Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos5Display.Location = new System.Drawing.Point(574, 128);
-            this.Pos5Display.Name = "Pos5Display";
-            this.Pos5Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos5Display.TabIndex = 157;
-            // 
-            // Pos6Display
-            // 
-            this.Pos6Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos6Display.Location = new System.Drawing.Point(715, 128);
-            this.Pos6Display.Name = "Pos6Display";
-            this.Pos6Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos6Display.TabIndex = 158;
-            // 
-            // Pos7Display
-            // 
-            this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos7Display.Location = new System.Drawing.Point(856, 128);
-            this.Pos7Display.Name = "Pos7Display";
-            this.Pos7Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos7Display.TabIndex = 162;
-            // 
-            // Pos8Display
-            // 
-            this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos8Display.Location = new System.Drawing.Point(997, 128);
-            this.Pos8Display.Name = "Pos8Display";
-            this.Pos8Display.Size = new System.Drawing.Size(128, 53);
-            this.Pos8Display.TabIndex = 165;
             // 
             // TextBoxPickedSoFar
             // 
@@ -3321,35 +2073,35 @@ namespace Neutron.Forms
             this.DataGridViewOrderDetails.AllowUserToDeleteRows = false;
             this.DataGridViewOrderDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewOrderDetails.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle115.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle115.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle115.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle115.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle115.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle115.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle115.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewOrderDetails.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle115;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle47.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle47.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle47.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle47.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle47.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle47.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewOrderDetails.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle47;
             this.DataGridViewOrderDetails.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle116.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle116.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle116.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle116.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle116.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle116.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle116.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewOrderDetails.DefaultCellStyle = dataGridViewCellStyle116;
+            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle48.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle48.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle48.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle48.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle48.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle48.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewOrderDetails.DefaultCellStyle = dataGridViewCellStyle48;
             this.DataGridViewOrderDetails.Location = new System.Drawing.Point(19, 97);
             this.DataGridViewOrderDetails.Name = "DataGridViewOrderDetails";
-            dataGridViewCellStyle117.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle117.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle117.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle117.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle117.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle117.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle117.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewOrderDetails.RowHeadersDefaultCellStyle = dataGridViewCellStyle117;
-            dataGridViewCellStyle118.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewOrderDetails.RowsDefaultCellStyle = dataGridViewCellStyle118;
+            dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle49.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle49.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle49.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle49.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle49.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle49.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewOrderDetails.RowHeadersDefaultCellStyle = dataGridViewCellStyle49;
+            dataGridViewCellStyle50.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewOrderDetails.RowsDefaultCellStyle = dataGridViewCellStyle50;
             this.DataGridViewOrderDetails.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewOrderDetails.RowTemplate.Height = 28;
             this.DataGridViewOrderDetails.RowTemplate.ReadOnly = true;
@@ -3455,38 +2207,38 @@ namespace Neutron.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DataGridViewNewOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewNewOrder.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle119.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle119.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle119.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle119.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle119.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle119.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle119.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewNewOrder.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle119;
+            dataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle51.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle51.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle51.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle51.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle51.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle51.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewNewOrder.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle51;
             this.DataGridViewNewOrder.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle120.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle120.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle120.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle120.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle120.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle120.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle120.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewNewOrder.DefaultCellStyle = dataGridViewCellStyle120;
+            dataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle52.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle52.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle52.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle52.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle52.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewNewOrder.DefaultCellStyle = dataGridViewCellStyle52;
             this.DataGridViewNewOrder.Location = new System.Drawing.Point(3, 97);
             this.DataGridViewNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewNewOrder.MultiSelect = false;
             this.DataGridViewNewOrder.Name = "DataGridViewNewOrder";
             this.DataGridViewNewOrder.ReadOnly = true;
-            dataGridViewCellStyle121.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle121.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle121.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle121.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle121.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle121.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle121.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewNewOrder.RowHeadersDefaultCellStyle = dataGridViewCellStyle121;
-            dataGridViewCellStyle122.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewNewOrder.RowsDefaultCellStyle = dataGridViewCellStyle122;
+            dataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle53.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle53.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle53.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle53.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle53.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle53.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewNewOrder.RowHeadersDefaultCellStyle = dataGridViewCellStyle53;
+            dataGridViewCellStyle54.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewNewOrder.RowsDefaultCellStyle = dataGridViewCellStyle54;
             this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewNewOrder.RowTemplate.Height = 28;
             this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
@@ -3573,6 +2325,18 @@ namespace Neutron.Forms
             this.GroupBoxDetailInformation.TabIndex = 2;
             this.GroupBoxDetailInformation.TabStop = false;
             this.GroupBoxDetailInformation.Text = "Detail Information";
+            // 
+            // ComboBoxCostCenter
+            // 
+            this.ComboBoxCostCenter.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ComboBoxCostCenter.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxCostCenter.FormattingEnabled = true;
+            this.ComboBoxCostCenter.Location = new System.Drawing.Point(150, 141);
+            this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
+            this.ComboBoxCostCenter.Size = new System.Drawing.Size(302, 28);
+            this.ComboBoxCostCenter.TabIndex = 69;
             // 
             // LabelCostCenter
             // 
@@ -3796,36 +2560,36 @@ namespace Neutron.Forms
             this.DataGridViewAvailableOrdersRack.AllowUserToDeleteRows = false;
             this.DataGridViewAvailableOrdersRack.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewAvailableOrdersRack.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle123.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle123.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle123.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle123.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle123.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle123.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle123.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrdersRack.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle123;
+            dataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle55.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle55.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle55.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle55.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle55.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle55.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrdersRack.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle55;
             this.DataGridViewAvailableOrdersRack.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle124.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle124.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle124.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle124.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle124.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle124.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle124.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewAvailableOrdersRack.DefaultCellStyle = dataGridViewCellStyle124;
+            dataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle56.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle56.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle56.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle56.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle56.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle56.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAvailableOrdersRack.DefaultCellStyle = dataGridViewCellStyle56;
             this.DataGridViewAvailableOrdersRack.Location = new System.Drawing.Point(6, 94);
             this.DataGridViewAvailableOrdersRack.Name = "DataGridViewAvailableOrdersRack";
             this.DataGridViewAvailableOrdersRack.ReadOnly = true;
-            dataGridViewCellStyle125.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle125.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle125.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle125.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle125.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle125.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle125.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrdersRack.RowHeadersDefaultCellStyle = dataGridViewCellStyle125;
-            dataGridViewCellStyle126.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewAvailableOrdersRack.RowsDefaultCellStyle = dataGridViewCellStyle126;
+            dataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle57.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle57.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle57.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle57.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle57.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle57.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrdersRack.RowHeadersDefaultCellStyle = dataGridViewCellStyle57;
+            dataGridViewCellStyle58.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewAvailableOrdersRack.RowsDefaultCellStyle = dataGridViewCellStyle58;
             this.DataGridViewAvailableOrdersRack.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrdersRack.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrdersRack.RowTemplate.ReadOnly = true;
@@ -3997,23 +2761,23 @@ namespace Neutron.Forms
             // DataGridViewAdjust
             // 
             this.DataGridViewAdjust.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle127.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle127.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle127.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle127.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle127.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle127.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle127.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAdjust.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle127;
+            dataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle59.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle59.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle59.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle59.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle59.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle59.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAdjust.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle59;
             this.DataGridViewAdjust.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle128.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle128.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle128.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle128.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle128.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle128.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle128.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewAdjust.DefaultCellStyle = dataGridViewCellStyle128;
+            dataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle60.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle60.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle60.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle60.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle60.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle60.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAdjust.DefaultCellStyle = dataGridViewCellStyle60;
             this.DataGridViewAdjust.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.DataGridViewAdjust.Location = new System.Drawing.Point(149, 108);
             this.DataGridViewAdjust.Name = "DataGridViewAdjust";
@@ -4090,37 +2854,37 @@ namespace Neutron.Forms
             this.DataGridViewSkip.AllowUserToAddRows = false;
             this.DataGridViewSkip.AllowUserToDeleteRows = false;
             this.DataGridViewSkip.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle129.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle129.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle129.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle129.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle129.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle129.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle129.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkip.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle129;
+            dataGridViewCellStyle61.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle61.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle61.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle61.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle61.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle61.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle61.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkip.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle61;
             this.DataGridViewSkip.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle130.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle130.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle130.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle130.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle130.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle130.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle130.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewSkip.DefaultCellStyle = dataGridViewCellStyle130;
+            dataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle62.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle62.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle62.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle62.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle62.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewSkip.DefaultCellStyle = dataGridViewCellStyle62;
             this.DataGridViewSkip.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataGridViewSkip.Location = new System.Drawing.Point(0, 0);
             this.DataGridViewSkip.Name = "DataGridViewSkip";
             this.DataGridViewSkip.ReadOnly = true;
-            dataGridViewCellStyle131.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle131.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle131.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle131.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle131.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle131.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle131.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkip.RowHeadersDefaultCellStyle = dataGridViewCellStyle131;
-            dataGridViewCellStyle132.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewSkip.RowsDefaultCellStyle = dataGridViewCellStyle132;
+            dataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle63.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle63.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle63.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle63.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle63.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle63.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkip.RowHeadersDefaultCellStyle = dataGridViewCellStyle63;
+            dataGridViewCellStyle64.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewSkip.RowsDefaultCellStyle = dataGridViewCellStyle64;
             this.DataGridViewSkip.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkip.RowTemplate.Height = 28;
             this.DataGridViewSkip.RowTemplate.ReadOnly = true;
@@ -4258,7 +3022,7 @@ namespace Neutron.Forms
             // 
             this.LabelSkipInventoryRequired.AutoSize = true;
             this.LabelSkipInventoryRequired.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelSkipInventoryRequired.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSkipInventoryRequired.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.LabelSkipInventoryRequired.Location = new System.Drawing.Point(488, 143);
             this.LabelSkipInventoryRequired.Name = "LabelSkipInventoryRequired";
             this.LabelSkipInventoryRequired.Size = new System.Drawing.Size(145, 37);
@@ -4335,37 +3099,37 @@ namespace Neutron.Forms
             this.DataGridViewSkipInventory.AllowUserToDeleteRows = false;
             this.DataGridViewSkipInventory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewSkipInventory.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle133.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle133.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle133.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle133.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle133.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle133.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle133.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle133;
+            dataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle65.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle65.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle65.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle65.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle65.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle65.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle65;
             this.DataGridViewSkipInventory.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle134.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle134.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle134.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle134.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle134.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle134.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle134.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewSkipInventory.DefaultCellStyle = dataGridViewCellStyle134;
+            dataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle66.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle66.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle66.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle66.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle66.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle66.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewSkipInventory.DefaultCellStyle = dataGridViewCellStyle66;
             this.DataGridViewSkipInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.DataGridViewSkipInventory.Location = new System.Drawing.Point(113, 219);
             this.DataGridViewSkipInventory.MultiSelect = false;
             this.DataGridViewSkipInventory.Name = "DataGridViewSkipInventory";
-            dataGridViewCellStyle135.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle135.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle135.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle135.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle135.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle135.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle135.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkipInventory.RowHeadersDefaultCellStyle = dataGridViewCellStyle135;
-            dataGridViewCellStyle136.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewSkipInventory.RowsDefaultCellStyle = dataGridViewCellStyle136;
+            dataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle67.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle67.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle67.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle67.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle67.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle67.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkipInventory.RowHeadersDefaultCellStyle = dataGridViewCellStyle67;
+            dataGridViewCellStyle68.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewSkipInventory.RowsDefaultCellStyle = dataGridViewCellStyle68;
             this.DataGridViewSkipInventory.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkipInventory.RowTemplate.Height = 28;
             this.DataGridViewSkipInventory.RowTemplate.ReadOnly = true;
@@ -4430,18 +3194,6 @@ namespace Neutron.Forms
             // 
             this.ErrorProvider1.ContainerControl = this;
             // 
-            // ComboBoxCostCenter
-            // 
-            this.ComboBoxCostCenter.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.ComboBoxCostCenter.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxCostCenter.FormattingEnabled = true;
-            this.ComboBoxCostCenter.Location = new System.Drawing.Point(150, 141);
-            this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
-            this.ComboBoxCostCenter.Size = new System.Drawing.Size(302, 28);
-            this.ComboBoxCostCenter.TabIndex = 69;
-            // 
             // FrmPick
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -4470,8 +3222,6 @@ namespace Neutron.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.AvailableOrders.ResumeLayout(false);
             this.AvailableOrders.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrders)).EndInit();
             this.PickList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DataGridPickView)).EndInit();
@@ -4480,8 +3230,6 @@ namespace Neutron.Forms
             this.GroupBoxMultipleLocations.ResumeLayout(false);
             this.PanelMultipleLocations.ResumeLayout(false);
             this.panel13.ResumeLayout(false);
-            this.PanelOrderPositions.ResumeLayout(false);
-            this.PanelOrderPositions.PerformLayout();
             this.GroupBoxLocation.ResumeLayout(false);
             this.GroupBoxLocation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemImage)).EndInit();
@@ -4608,24 +3356,7 @@ namespace Neutron.Forms
         private System.Windows.Forms.Button ButtonClearFindAvailableOrders;
         private MetroFramework.Controls.MetroButton MBSearchAvailableOrders;
         private System.Windows.Forms.Panel PanelOrderPositions;
-        private System.Windows.Forms.Label LabelPickPos1;
-        private System.Windows.Forms.TextBox TextBoxPickPos1;
-        private System.Windows.Forms.Label LabelPickPos2;
-        private System.Windows.Forms.TextBox TextBoxPickPos2;
-        private System.Windows.Forms.Label LabelPickPos3;
-        private System.Windows.Forms.TextBox TextBoxPickPos3;
-        private System.Windows.Forms.Label LabelPickPos4;
-        private System.Windows.Forms.TextBox TextBoxPickPos4;
-        private System.Windows.Forms.Label LabelPickPos5;
-        private System.Windows.Forms.TextBox TextBoxPickPos5;
-        private System.Windows.Forms.Label LabelPickPos6;
-        private System.Windows.Forms.TextBox TextBoxPickPos6;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox TextBoxPos2;
-        private System.Windows.Forms.TextBox TextBoxPos3;
-        private System.Windows.Forms.TextBox TextBoxPos4;
-        private System.Windows.Forms.TextBox TextBoxPos5;
-        private System.Windows.Forms.TextBox TextBoxPos6;
+        private System.Windows.Forms.Panel PanelOrderInduction;
         private System.Windows.Forms.PictureBox PictureBoxItemImage;
         private MetroFramework.Controls.MetroButton MBPrintOrderListing;
         private MetroFramework.Controls.MetroButton MBPrintPickList;
@@ -4635,27 +3366,9 @@ namespace Neutron.Forms
         private System.Windows.Forms.TextBox TextBoxReceivedDate;
         private System.Windows.Forms.Label LabelReceivedDate;
         private System.Windows.Forms.Label LabelDevice;
-        private System.Windows.Forms.Panel Pos1Display;
-        private System.Windows.Forms.Panel Pos2Display;
-        private System.Windows.Forms.Panel Pos3Display;
-        private System.Windows.Forms.Panel Pos4Display;
-        private System.Windows.Forms.Panel Pos5Display;
-        private System.Windows.Forms.Panel Pos6Display;
         private MetroFramework.Controls.MetroButton MBPickScreenHotPick;
         private MetroFramework.Controls.MetroButton MBPrint;
         private System.Windows.Forms.Label LabelPrimeBin;
-        private System.Windows.Forms.Label LabelPos2;
-        private System.Windows.Forms.Label LabelPos3;
-        private System.Windows.Forms.Label LabelPos4;
-        private System.Windows.Forms.Label LabelPos5;
-        private System.Windows.Forms.Label LabelPos6;
-        private System.Windows.Forms.Label LabelPos1;
-        private System.Windows.Forms.Panel AvailablePos1Display;
-        private System.Windows.Forms.Panel AvailablePos2Display;
-        private System.Windows.Forms.Panel AvailablePos3Display;
-        private System.Windows.Forms.Panel AvailablePos4Display;
-        private System.Windows.Forms.Panel AvailablePos5Display;
-        private System.Windows.Forms.Panel AvailablePos6Display;
         private MetroFramework.Controls.MetroButton MBPrintOrderDetails;
         private MetroFramework.Controls.MetroButton MBFillStarters;
         private MetroFramework.Controls.MetroButton MBFill;
@@ -4679,11 +3392,6 @@ namespace Neutron.Forms
         private MetroFramework.Controls.MetroButton MBCompleted;
         private MetroFramework.Controls.MetroButton MBDeleteOrder;
         private MetroFramework.Controls.MetroButton ButtonPrintPacking;
-        private System.Windows.Forms.Label LabelPickPos8;
-        private System.Windows.Forms.Panel Pos8Display;
-        private System.Windows.Forms.Label LabelPickPos7;
-        private System.Windows.Forms.TextBox TextBoxPickPos7;
-        private System.Windows.Forms.Panel Pos7Display;
         private MetroFramework.Controls.MetroButton MBAdjustOrder;
         private System.Windows.Forms.TabPage AdjustOrder;
         private MetroFramework.Controls.MetroButton MBAdjustOrderSave;
@@ -4718,63 +3426,6 @@ namespace Neutron.Forms
         private MetroFramework.Controls.MetroButton MBGo2;
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.DataGridView DataGridViewSkip;
-        private System.Windows.Forms.TextBox TextBoxPickPos8;
-        private System.Windows.Forms.Label LabelPos8;
-        private System.Windows.Forms.Label LabelPos7;
-        private System.Windows.Forms.TextBox TextBoxPos8;
-        private System.Windows.Forms.TextBox TextBoxPos7;
-        private System.Windows.Forms.Panel AvailablePos7Display;
-        private System.Windows.Forms.Panel AvailablePos8Display;
-        private System.Windows.Forms.TextBox TextBoxPos1;
-        private System.Windows.Forms.Label LabelPickMessages;
-        private System.Windows.Forms.TextBox TextBoxPickPos9;
-        private System.Windows.Forms.Label LabelPickPos9;
-        private System.Windows.Forms.Label LabelPickPos10;
-        private System.Windows.Forms.TextBox TextBoxPickPos10;
-        private System.Windows.Forms.Label LabelPickPos11;
-        private System.Windows.Forms.TextBox TextBoxPickPos11;
-        private System.Windows.Forms.Label LabelPickPos12;
-        private System.Windows.Forms.TextBox TextBoxPickPos12;
-        private System.Windows.Forms.Label LabelPickPos13;
-        private System.Windows.Forms.TextBox TextBoxPickPos13;
-        private System.Windows.Forms.Label LabelPickPos14;
-        private System.Windows.Forms.TextBox TextBoxPickPos14;
-        private System.Windows.Forms.TextBox TextBoxPickPos15;
-        private System.Windows.Forms.Label LabelPickPos15;
-        private System.Windows.Forms.TextBox TextBoxPickPos16;
-        private System.Windows.Forms.Label LabelPickPos16;
-        private System.Windows.Forms.Panel Pos9Display;
-        private System.Windows.Forms.Panel Pos10Display;
-        private System.Windows.Forms.Panel Pos11Display;
-        private System.Windows.Forms.Panel Pos12Display;
-        private System.Windows.Forms.Panel Pos13Display;
-        private System.Windows.Forms.Panel Pos14Display;
-        private System.Windows.Forms.Panel Pos15Display;
-        private System.Windows.Forms.Panel Pos16Display;
-        private System.Windows.Forms.TextBox TextBoxPos9;
-        private System.Windows.Forms.Label LabelPos16;
-        private System.Windows.Forms.Label LabelPos15;
-        private System.Windows.Forms.TextBox TextBoxPos16;
-        private System.Windows.Forms.TextBox TextBoxPos15;
-        private System.Windows.Forms.Panel AvailablePos15Display;
-        private System.Windows.Forms.Panel AvailablePos16Display;
-        private System.Windows.Forms.Label LabelPos10;
-        private System.Windows.Forms.Label LabelPos11;
-        private System.Windows.Forms.Label LabelPos12;
-        private System.Windows.Forms.Label LabelPos13;
-        private System.Windows.Forms.Label LabelPos14;
-        private System.Windows.Forms.Label LabelPos9;
-        private System.Windows.Forms.TextBox TextBoxPos10;
-        private System.Windows.Forms.TextBox TextBoxPos11;
-        private System.Windows.Forms.TextBox TextBoxPos12;
-        private System.Windows.Forms.TextBox TextBoxPos13;
-        private System.Windows.Forms.TextBox TextBoxPos14;
-        private System.Windows.Forms.Panel AvailablePos9Display;
-        private System.Windows.Forms.Panel AvailablePos10Display;
-        private System.Windows.Forms.Panel AvailablePos11Display;
-        private System.Windows.Forms.Panel AvailablePos12Display;
-        private System.Windows.Forms.Panel AvailablePos13Display;
-        private System.Windows.Forms.Panel AvailablePos14Display;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.ComboBox ComboBoxStationNumber;
         private MetroFramework.Controls.MetroButton MBPrintPick;
@@ -4791,7 +3442,6 @@ namespace Neutron.Forms
         private System.Windows.Forms.TextBox TextBoxNewOrderFind;
         private System.Windows.Forms.Button ButtonNewOrderClear;
         private System.Windows.Forms.DataGridView DataGridViewNewOrder;
-        private MetroFramework.Controls.MetroButton MBShortCut;
         private MetroFramework.Controls.MetroButton MBFillOptimized;
         private MetroFramework.Controls.MetroButton MBMainUpload;
         private MetroFramework.Controls.MetroButton MBRunUpload;
@@ -4820,5 +3470,7 @@ namespace Neutron.Forms
         private System.Windows.Forms.Label LabelNotify;
         private System.Windows.Forms.Label LabelCostCenter;
         private System.Windows.Forms.ComboBox ComboBoxCostCenter;
+        private System.Windows.Forms.Label LabelPickMessages;
+        private MetroFramework.Controls.MetroButton MBShortCut;
     }
 }

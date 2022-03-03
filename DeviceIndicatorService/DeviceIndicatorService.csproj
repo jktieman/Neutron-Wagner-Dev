@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8DFABB4E-0083-4930-9E48-978F4470C61D}</ProjectGuid>
+    <ProjectGuid>{2AEDD746-887B-411D-A2B9-52AB4835ACBF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeutronCore</RootNamespace>
-    <AssemblyName>NeutronCore</AssemblyName>
+    <RootNamespace>DeviceIndicatorService</RootNamespace>
+    <AssemblyName>DeviceIndicatorService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,23 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=2.0.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.13\lib\net45\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Remotion, Version=1.18.0.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CurrentDeviceIndicator">
+      <HintPath>..\..\CurrentDeviceIndicator\CurrentDeviceIndicator\bin\Release\CurrentDeviceIndicator.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,44 +46,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchiveFile.cs" />
-    <Compile Include="BorderedTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Enums\ActionCode.cs" />
-    <Compile Include="Enums\DeviceType.cs" />
-    <Compile Include="Enums\EnumModel.cs" />
-    <Compile Include="Enums\LineStatus.cs" />
-    <Compile Include="Enums\OrderStatus.cs" />
-    <Compile Include="Enums\StationType.cs" />
-    <Compile Include="Enums\StorageType.cs" />
-    <Compile Include="Extensions\ByteExtensions.cs" />
-    <Compile Include="Extensions\DataGridViewExtensions.cs" />
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\EnumExtensions.cs" />
-    <Compile Include="Extensions\FileInfoExtensions.cs" />
-    <Compile Include="Extensions\IntegerExtensions.cs" />
-    <Compile Include="Extensions\MyExtensions.cs" />
-    <Compile Include="Extensions\StringHelper.cs" />
-    <Compile Include="Global\NeutronVariables.cs" />
-    <Compile Include="LoaderSettings.cs" />
-    <Compile Include="Models\DeviceDriverName.cs" />
-    <Compile Include="Models\NeutronLicense.cs" />
-    <Compile Include="OperationResult.cs" />
+    <Compile Include="DeviceIndicatorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
-      <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
+      <Project>{BA17BDF5-4F6B-4ADA-A7F0-9AE6A51A9816}</Project>
       <Name>AlliedLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JsonManager\JsonManager.csproj">
-      <Project>{41E13F41-40DC-4F3A-BA34-43008EF8A4B8}</Project>
-      <Name>JsonManager</Name>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8DFABB4E-0083-4930-9E48-978F4470C61D}</Project>
+      <Name>NeutronCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronData\NeutronData.csproj">
+      <Project>{e325f3e2-6660-451f-b9b2-d8866447be4d}</Project>
+      <Name>NeutronData</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

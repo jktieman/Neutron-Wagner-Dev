@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NeutronData.Interfaces;
 
 namespace NeutronLoader
 {
@@ -20,7 +21,7 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
-        private readonly StationRepository _stationRepository = new StationRepository(new NeutronDb());
+        private readonly IStationRepository _stationRepository;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly Station _rackStation;
@@ -29,6 +30,7 @@ namespace NeutronLoader
 
         public HostFilePr1(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
         {
+            //_stationRepository = stationRepository;
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _rackStation = rackStation;
@@ -39,7 +41,7 @@ namespace NeutronLoader
             var folderName = @"HostFile";
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-
+            
             var rackStationIsNull = true;
             // SAP requires a 9 for the Off Carousel station number
             if (_rackStation == null)
@@ -51,6 +53,8 @@ namespace NeutronLoader
                 rackStationIsNull = false;
                 _rackStationId = _rackStation.Id;
             }
+            _stationRepository = new StationRepository(_logger);
+
             _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 

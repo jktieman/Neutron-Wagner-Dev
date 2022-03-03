@@ -8,29 +8,62 @@ using System.Threading.Tasks;
 
 namespace AlliedLogger
 {
-    public class DynamicLogger
+    public class DynamicLogger : IDynamicLogger
     {
         private readonly object _myLock = new object();
         private static bool _validLocation;
-        private readonly string _baseFolder;
-        private readonly string _folderName;
+        private  string _baseFolder;
+        private  string _folderName;
         private static readonly object MyLock = new object();
 
-        public bool LogActivity { get; set; }
+        
+        //public string FolderName { get; set; }
+        //public bool LogActivity { get; set; }
+        public string LogActivity { get; set; }
+
         public string FileName { get; set; }
 
-        public DynamicLogger(string logFileDir, string folderName = @"General\\", string logActivity = "true")
+        public DynamicLogger(string logFileDir = "", string folderName = @"General", string logActivity = "true")
         {
-            _baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
-            _baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
-            _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
-            LogActivity = logActivity == "true";
+            LogFileDir = logFileDir;
+            FolderName = folderName;
+            //_baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
+            //_baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
+           // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
+            LogActivity = logActivity;
             IsValidLocation(FilePath);
             IsValidLocation(TempFilePath);
         }
 
+        public string LogFileDir
+        {
+            get
+            {
+                return _baseFolder;
+            }
+            set
+            {
+                _baseFolder = string.IsNullOrEmpty(value) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : value;
+                _baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
+            }
+        }
+
+        public string FolderName
+        {
+            get
+            {
+                return _folderName;
+            }
+            set
+            {
+                _folderName = value.EndsWith(@"\") ? value : value + @"\";
+            }
+        }
+
+
         public string FilePath => _baseFolder + _folderName + GetFileName();
         public string TempFilePath => $"{_baseFolder}{_folderName}Temp\\{GetFileName()}";
+
 
         private void IsValidLocation(string filePath)
         {
@@ -60,6 +93,8 @@ namespace AlliedLogger
         {
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
+            IsValidLocation(FilePath);
+            IsValidLocation(TempFilePath);
             if (!_validLocation) return;
             lock (_myLock)
             {
@@ -77,6 +112,7 @@ namespace AlliedLogger
                     }
                     catch (Exception)
                     {
+
                         //silent fail
                     }
                 }
@@ -87,6 +123,8 @@ namespace AlliedLogger
         {
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
+            IsValidLocation(FilePath);
+            IsValidLocation(TempFilePath);
             if (!_validLocation) return;
             if (msg.Length > 0)
             {
@@ -105,12 +143,43 @@ namespace AlliedLogger
             }
         }
 
+        public void LogDetail(string msg = ""
+            , [CallerMemberName] string origin = ""
+            , [CallerFilePath] string filePath = ""
+            , [CallerLineNumber] int lineNumber = 0)
+        {
+            var ci = CultureInfo.InvariantCulture;
+            IsValidLocation(FilePath);
+            IsValidLocation(TempFilePath);
+            if (!_validLocation) return;
+
+            if (msg.Length <= 0) return;
+            try
+            {
+                using (var sw = File.AppendText(FilePath))
+                {
+                    var message =
+                        $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+
+                    sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {message} {Environment.NewLine}");
+                    sw.FlushAsync();
+                }
+            }
+            catch (Exception)
+            {
+                //silent fail
+            }
+        }
+
         public async void LogDetailAsync(string msg = ""
             , [CallerMemberName] string origin = ""
             , [CallerFilePath] string filePath = ""
             , [CallerLineNumber] int lineNumber = 0)
         {
             var ci = CultureInfo.InvariantCulture;
+            IsValidLocation(FilePath);
+            IsValidLocation(TempFilePath);
+            if (!_validLocation) return;
 
             if (msg.Length <= 0) return;
             try

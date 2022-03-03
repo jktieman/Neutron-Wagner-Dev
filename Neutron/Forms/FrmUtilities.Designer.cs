@@ -56,6 +56,7 @@
             this.MBUtilitiesClose = new MetroFramework.Controls.MetroButton();
             this.MBEmailServer = new MetroFramework.Controls.MetroButton();
             this.MBManageLookups = new MetroFramework.Controls.MetroButton();
+            this.MBMaintenance = new MetroFramework.Controls.MetroButton();
             this.MBAbout = new MetroFramework.Controls.MetroButton();
             this.MBEmailAddresses = new MetroFramework.Controls.MetroButton();
             this.MBPrinterSetup = new MetroFramework.Controls.MetroButton();
@@ -433,7 +434,10 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.MBMaintenance = new MetroFramework.Controls.MetroButton();
+            this.LabelSettingsPickBatchRows = new System.Windows.Forms.Label();
+            this.LabelSettingsStoreBatchRows = new System.Windows.Forms.Label();
+            this.TextBoxPickBatchRows = new System.Windows.Forms.TextBox();
+            this.TextBoxStoreBatchRows = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -596,6 +600,18 @@
             this.MBManageLookups.Text = "Manage Lookups";
             this.MBManageLookups.UseSelectable = true;
             this.MBManageLookups.Click += new System.EventHandler(this.MBLookups_Click);
+            // 
+            // MBMaintenance
+            // 
+            this.MBMaintenance.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBMaintenance.Location = new System.Drawing.Point(217, 522);
+            this.MBMaintenance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBMaintenance.Name = "MBMaintenance";
+            this.MBMaintenance.Size = new System.Drawing.Size(350, 84);
+            this.MBMaintenance.TabIndex = 5;
+            this.MBMaintenance.Text = "Maintenance";
+            this.MBMaintenance.UseSelectable = true;
+            this.MBMaintenance.Click += new System.EventHandler(this.MBMaintenance_Click);
             // 
             // MBAbout
             // 
@@ -1066,10 +1082,14 @@
             this.Settings.Controls.Add(this.LabelSettingsSlotFormat);
             this.Settings.Controls.Add(this.TextBoxLoaderDelay);
             this.Settings.Controls.Add(this.LabelDefaultStorageType);
+            this.Settings.Controls.Add(this.LabelSettingsStoreBatchRows);
+            this.Settings.Controls.Add(this.LabelSettingsPickBatchRows);
             this.Settings.Controls.Add(this.LabelSettingsLogLevel);
             this.Settings.Controls.Add(this.LabelDefaultLanguage);
             this.Settings.Controls.Add(this.TextBoxActionCodes);
             this.Settings.Controls.Add(this.LabelSettingsDeviceDriver);
+            this.Settings.Controls.Add(this.TextBoxStoreBatchRows);
+            this.Settings.Controls.Add(this.TextBoxPickBatchRows);
             this.Settings.Controls.Add(this.TextBoxFieldDelimiter);
             this.Settings.Controls.Add(this.TextBoxLicenseCode);
             this.Settings.Controls.Add(this.TextBoxStationNumber);
@@ -1119,12 +1139,39 @@
             this.ComboBoxStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxStoreBatchSize.FormattingEnabled = true;
             this.ComboBoxStoreBatchSize.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
             "4",
+            "5",
             "6",
-            "8"});
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30"});
             this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(167, 311);
             this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
-            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(65, 24);
+            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(54, 24);
             this.ComboBoxStoreBatchSize.TabIndex = 7;
             // 
             // ComboBoxPickBatchSize
@@ -1133,13 +1180,39 @@
             this.ComboBoxPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxPickBatchSize.FormattingEnabled = true;
             this.ComboBoxPickBatchSize.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
             "4",
+            "5",
             "6",
+            "7",
             "8",
-            "16"});
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30"});
             this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(167, 274);
             this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
-            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(65, 24);
+            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(54, 24);
             this.ComboBoxPickBatchSize.TabIndex = 6;
             // 
             // GroupBoxPickMethod
@@ -1149,9 +1222,9 @@
             this.GroupBoxPickMethod.Controls.Add(this.RadioButtonPrimeBinLast);
             this.GroupBoxPickMethod.Controls.Add(this.RadioButtonPrimeBinFirst);
             this.GroupBoxPickMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxPickMethod.Location = new System.Drawing.Point(64, 391);
+            this.GroupBoxPickMethod.Location = new System.Drawing.Point(70, 417);
             this.GroupBoxPickMethod.Name = "GroupBoxPickMethod";
-            this.GroupBoxPickMethod.Size = new System.Drawing.Size(200, 162);
+            this.GroupBoxPickMethod.Size = new System.Drawing.Size(247, 162);
             this.GroupBoxPickMethod.TabIndex = 23;
             this.GroupBoxPickMethod.TabStop = false;
             this.GroupBoxPickMethod.Text = "Pick Method";
@@ -1303,21 +1376,21 @@
             // LabelSettingsStoreBatchSize
             // 
             this.LabelSettingsStoreBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsStoreBatchSize.Location = new System.Drawing.Point(43, 314);
+            this.LabelSettingsStoreBatchSize.Location = new System.Drawing.Point(14, 314);
             this.LabelSettingsStoreBatchSize.Name = "LabelSettingsStoreBatchSize";
-            this.LabelSettingsStoreBatchSize.Size = new System.Drawing.Size(108, 16);
+            this.LabelSettingsStoreBatchSize.Size = new System.Drawing.Size(137, 16);
             this.LabelSettingsStoreBatchSize.TabIndex = 19;
-            this.LabelSettingsStoreBatchSize.Text = "Store Batch Size";
+            this.LabelSettingsStoreBatchSize.Text = "Store Batch Positions";
             this.LabelSettingsStoreBatchSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelSettingsPickBatchSize
             // 
             this.LabelSettingsPickBatchSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSettingsPickBatchSize.Location = new System.Drawing.Point(40, 277);
+            this.LabelSettingsPickBatchSize.Location = new System.Drawing.Point(14, 277);
             this.LabelSettingsPickBatchSize.Name = "LabelSettingsPickBatchSize";
-            this.LabelSettingsPickBatchSize.Size = new System.Drawing.Size(111, 16);
+            this.LabelSettingsPickBatchSize.Size = new System.Drawing.Size(137, 16);
             this.LabelSettingsPickBatchSize.TabIndex = 19;
-            this.LabelSettingsPickBatchSize.Text = "Pick Batch Size";
+            this.LabelSettingsPickBatchSize.Text = "Pick Batch Positions";
             this.LabelSettingsPickBatchSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CheckBoxUsePr1Processor
@@ -1551,7 +1624,7 @@
             this.ComboBoxDefaultStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxDefaultStorageType.FormattingEnabled = true;
-            this.ComboBoxDefaultStorageType.Location = new System.Drawing.Point(167, 597);
+            this.ComboBoxDefaultStorageType.Location = new System.Drawing.Point(167, 379);
             this.ComboBoxDefaultStorageType.Name = "ComboBoxDefaultStorageType";
             this.ComboBoxDefaultStorageType.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDefaultStorageType.TabIndex = 10;
@@ -1644,7 +1717,7 @@
             // LabelDefaultStorageType
             // 
             this.LabelDefaultStorageType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDefaultStorageType.Location = new System.Drawing.Point(14, 600);
+            this.LabelDefaultStorageType.Location = new System.Drawing.Point(14, 382);
             this.LabelDefaultStorageType.Name = "LabelDefaultStorageType";
             this.LabelDefaultStorageType.Size = new System.Drawing.Size(137, 16);
             this.LabelDefaultStorageType.TabIndex = 10;
@@ -1714,7 +1787,7 @@
             // TextBoxStationNumber
             // 
             this.TextBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxStationNumber.Location = new System.Drawing.Point(498, 35);
+            this.TextBoxStationNumber.Location = new System.Drawing.Point(17, 10);
             this.TextBoxStationNumber.Name = "TextBoxStationNumber";
             this.TextBoxStationNumber.Size = new System.Drawing.Size(31, 22);
             this.TextBoxStationNumber.TabIndex = 9;
@@ -1737,7 +1810,7 @@
             // 
             this.CheckBoxUsePrimeBin.AutoSize = true;
             this.CheckBoxUsePrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(64, 572);
+            this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(598, 94);
             this.CheckBoxUsePrimeBin.Name = "CheckBoxUsePrimeBin";
             this.CheckBoxUsePrimeBin.Size = new System.Drawing.Size(205, 20);
             this.CheckBoxUsePrimeBin.TabIndex = 9;
@@ -5136,17 +5209,45 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // MBMaintenance
+            // LabelSettingsPickBatchRows
             // 
-            this.MBMaintenance.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMaintenance.Location = new System.Drawing.Point(217, 522);
-            this.MBMaintenance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBMaintenance.Name = "MBMaintenance";
-            this.MBMaintenance.Size = new System.Drawing.Size(350, 84);
-            this.MBMaintenance.TabIndex = 5;
-            this.MBMaintenance.Text = "Maintenance";
-            this.MBMaintenance.UseSelectable = true;
-            this.MBMaintenance.Click += new System.EventHandler(this.MBMaintenance_Click);
+            this.LabelSettingsPickBatchRows.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSettingsPickBatchRows.Location = new System.Drawing.Point(228, 277);
+            this.LabelSettingsPickBatchRows.Name = "LabelSettingsPickBatchRows";
+            this.LabelSettingsPickBatchRows.Size = new System.Drawing.Size(53, 16);
+            this.LabelSettingsPickBatchRows.TabIndex = 10;
+            this.LabelSettingsPickBatchRows.Text = "Rows";
+            this.LabelSettingsPickBatchRows.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelSettingsStoreBatchRows
+            // 
+            this.LabelSettingsStoreBatchRows.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSettingsStoreBatchRows.Location = new System.Drawing.Point(228, 314);
+            this.LabelSettingsStoreBatchRows.Name = "LabelSettingsStoreBatchRows";
+            this.LabelSettingsStoreBatchRows.Size = new System.Drawing.Size(53, 16);
+            this.LabelSettingsStoreBatchRows.TabIndex = 10;
+            this.LabelSettingsStoreBatchRows.Text = "Rows";
+            this.LabelSettingsStoreBatchRows.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxPickBatchRows
+            // 
+            this.TextBoxPickBatchRows.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickBatchRows.Location = new System.Drawing.Point(287, 274);
+            this.TextBoxPickBatchRows.Name = "TextBoxPickBatchRows";
+            this.TextBoxPickBatchRows.Size = new System.Drawing.Size(31, 22);
+            this.TextBoxPickBatchRows.TabIndex = 8;
+            this.TextBoxPickBatchRows.Text = "1";
+            this.TextBoxPickBatchRows.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxStoreBatchRows
+            // 
+            this.TextBoxStoreBatchRows.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxStoreBatchRows.Location = new System.Drawing.Point(287, 311);
+            this.TextBoxStoreBatchRows.Name = "TextBoxStoreBatchRows";
+            this.TextBoxStoreBatchRows.Size = new System.Drawing.Size(31, 22);
+            this.TextBoxStoreBatchRows.TabIndex = 8;
+            this.TextBoxStoreBatchRows.Text = "1";
+            this.TextBoxStoreBatchRows.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FrmUtilities
             // 
@@ -5631,5 +5732,9 @@
         private System.Windows.Forms.CheckBox CheckBoxLandscape;
         private System.Windows.Forms.Label label8;
         private MetroFramework.Controls.MetroButton MBMaintenance;
+        private System.Windows.Forms.Label LabelSettingsStoreBatchRows;
+        private System.Windows.Forms.Label LabelSettingsPickBatchRows;
+        private System.Windows.Forms.TextBox TextBoxStoreBatchRows;
+        private System.Windows.Forms.TextBox TextBoxPickBatchRows;
     }
 }

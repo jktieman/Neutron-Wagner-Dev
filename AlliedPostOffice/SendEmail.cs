@@ -15,6 +15,10 @@ namespace AlliedPostOffice
         private readonly EmailProcessor _emailProcessor;
         private readonly List<string> _people;
 
+        public SendEmail()
+        {
+
+        }
 
         public SendEmail(EmailProcessor emailProcessor, List<EmailAddressData> people)
         {

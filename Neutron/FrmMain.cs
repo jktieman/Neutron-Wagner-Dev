@@ -32,8 +32,10 @@ using System.Timers;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
 using Neutron.Models;
+using Neutron.Ninject;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
+using NeutronData.PrintModels;
 using SqlSchemaManager;
 using Timer = System.Timers.Timer;
 
@@ -57,10 +59,9 @@ namespace Neutron
         private readonly ISecurityProcessor _securityProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private StationView _station;
+        private StationView _stationView;
         private int _stationId;
-        private DynamicLogger _logger;
-        private string _logFileDir = string.Empty;
+        private IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
         private static Timer _compressTimer;
@@ -69,6 +70,7 @@ namespace Neutron
         private SendEmail _sendEmail = null;
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
+        private HistoryManager _historyManager;
 
         /// <summary>
         /// Passed from NInject Kernel
@@ -83,12 +85,18 @@ namespace Neutron
         /// <param name="replenOrdersRepository"></param>
         /// <param name="enumManager"></param>
         /// <param name="itemDefinitionsRepository"></param>
+        /// <param name="dynamicLogger"></param>
+        /// <param name="storedProcedureManager"></param>
+        /// <param name="neutronVariables"></param>
+        /// <param name="neutronLicense"></param>
+        /// <param name="historyManager"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IStationRepository stationRepository
             , IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository
-            , IEnumManager enumManager, IItemDefinitionsRepository itemDefinitionsRepository,
-            IStoredProcedureManager storedProcedureManager)
+            , IEnumManager enumManager, IItemDefinitionsRepository itemDefinitionsRepository
+            , IDynamicLogger dynamicLogger, IStoredProcedureManager storedProcedureManager
+            , NeutronVariables neutronVariables, NeutronLicense neutronLicense)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -106,11 +114,13 @@ namespace Neutron
             _enumManager = enumManager;
             _itemDefinitionsRepository = itemDefinitionsRepository;
             _storedProcedureManager = storedProcedureManager;
-            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            _neutronLicense = _jsonData.LoadFile<NeutronLicense>();
+            // _neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            _neutronVariables = neutronVariables;
+            //_neutronLicense = _jsonData.LoadFile<NeutronLicense>();
+            _neutronLicense = neutronLicense;
             _rackStation = _stationRepository.GetRackStation();
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
-
+            _logger = dynamicLogger;
 
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -128,17 +138,20 @@ namespace Neutron
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
             }
-            GlobalVar.HistoryManager = new HistoryManager(_station);
+
+            _historyManager = DI.Create<HistoryManager>(_stationView);
+            GlobalVar.HistoryManager = _historyManager;
+            
             var id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
 
-            if (_station.StationTypeId != (int) StationType.Supervisor) return;
+            if (_stationView.StationTypeId != (int)StationType.Supervisor) return;
             if (!_neutronVariables.UseAutoCompress) return;
             // Run every RunCompressInterval time 1 hour (3600000)
             var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
             var compressTimer = new Timer(interval);
 
-            compressTimer.Elapsed += new ElapsedEventHandler(OnRunCompress);
+            compressTimer.Elapsed += OnRunCompress;
             compressTimer.AutoReset = true;
             compressTimer.Enabled = true;
 
@@ -160,7 +173,7 @@ namespace Neutron
 
         private void LogGeneralError(string message)
         {
-            Task.Run(() => _logger.LogAsync($"Unknown Error: {message}"));
+            Task.Run(() => _logger.LogDetailAsync($"Unknown Error: {message}"));
         }
 
         private void EmailLoaderError(string message)
@@ -173,7 +186,7 @@ namespace Neutron
 
         private void OnRunCompress(object sender, ElapsedEventArgs e)
         {
-           if (_compressRunning) return;
+            if (_compressRunning) return;
 
             var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
             var days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
@@ -246,7 +259,7 @@ namespace Neutron
         {
             foreach (var order in orders)
             {
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderArchived, order);
+                _historyManager.SaveHistory(ActionCode.OrderArchived, order);
             }
         }
 
@@ -304,13 +317,13 @@ namespace Neutron
         {
             foreach (var order in orders)
             {
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderArchived, order);
+                _historyManager.SaveHistory(ActionCode.OrderArchived, order);
             }
         }
 
         private bool InitForm()
         {
-           // var icon = FontAwesome.Sharp.IconChar.BatteryEmpty.ToBitmap( Color.Black);
+            // var icon = FontAwesome.Sharp.IconChar.BatteryEmpty.ToBitmap( Color.Black);
 
             var result = false;
             _enumManager.SaveActionCodesToDatabase();
@@ -324,17 +337,19 @@ namespace Neutron
                     if (_stationId == 0) _stationId = 1;
                     if (_stationId > 0)
                     {
-                        _station = _stationRepository.GetStationView(_stationId);
-                        if (_station != null)
+                        _stationView = _stationRepository.GetStationView(_stationId);
+                        if (_stationView != null)
                         {
-                            if (CreateLog("Main", _station.StationNumber))
+                            if (CreateLog("Main", _stationView.StationNumber))
                             {
                                 SetupEmail();
                                 Task.Run(() => _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}"));
                                 var rackStation = _stationRepository.GetRackStation();
-                                _startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
-                                _startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
-                                if (_station != null)
+                                _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, rackStation);
+                                //_startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
+                                _startStopUploadManager = DI.Create<StartStopUploadManager>(_neutronVariables, _neutronLicense, rackStation);
+                                //_startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
+                                if (_stationView != null)
                                 {
 
                                     if (SetupShuttle())
@@ -386,7 +401,7 @@ namespace Neutron
                                     caption: "File Error", buttons: MessageBoxButtons.OK);
                             }
                         }
-                        else  // _station is null
+                        else  // _stationView is null
                         {
                             MessageBox.Show("Station has not been configured.   Neutron Exiting.",
                                 caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
@@ -490,10 +505,10 @@ namespace Neutron
             bool result;
             try
             {
-                _logFileDir = LoaderSettings.GetLogFileDirectory();
-                var folderName = ($"{name}_{stationNumber.ToString()}");
-                var logActivity = LoaderSettings.EnableLogging;
-                _logger = new DynamicLogger(_logFileDir, folderName, logActivity);
+                // _logger = new DynamicLogger(_logFileDir, folderName, logActivity);
+                _logger.LogFileDir = LoaderSettings.GetLogFileDirectory();
+                _logger.FolderName = $"{name}_{stationNumber.ToString()}";
+                _logger.LogActivity = LoaderSettings.EnableLogging;
                 result = true;
             }
             catch (Exception ex)
@@ -507,7 +522,7 @@ namespace Neutron
 
         private bool SetupDisplay()
         {
-            if (_station.StationTypeId == (int)StationType.Supervisor) return true;
+            if (_stationView.StationTypeId == (int)StationType.Supervisor) return true;
             bool result;
             try
             {
@@ -519,7 +534,7 @@ namespace Neutron
                         {
                             Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
                             // ReSharper disable once UseObjectOrCollectionInitializer
-                            GlobalVar.Displays = new IptiController(_jsonData, _station, _neutronVariables);
+                            GlobalVar.Displays = new IptiController(_jsonData, _stationView, _neutronVariables);
                             //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
                             result = GlobalVar.Displays != null;
                         }
@@ -527,7 +542,7 @@ namespace Neutron
                         {
 
                             Task.Run(() => _logger.LogDetailAsync("Remstar Displays are being used."));
-                            GlobalVar.Displays = new DisplayController(_jsonData, _station);
+                            GlobalVar.Displays = new DisplayController(_jsonData, _stationView);
                             result = GlobalVar.Displays != null;
                             if (!GlobalVar.Displays.Ready)
                             {
@@ -577,35 +592,35 @@ namespace Neutron
 
         private bool SetupShuttle()
         {
-            if (_station.StationTypeId == (int)StationType.Supervisor) return true;
+            if (_stationView.StationTypeId == (int)StationType.Supervisor) return true;
             var result = false;
             try
             {
                 if (_neutronVariables.ShuttleEnabled)
                 {
-                    Task.Run(() =>_logger.LogAsync("Shuttle Enabled - Setup."));
-                    if (_station.HardwareDevices.Count > 0)
+                    Task.Run(() => _logger.LogAsync("Shuttle Enabled - Setup."));
+                    if (_stationView.HardwareDevices.Count > 0)
                     {
                         if (_neutronVariables.DeviceDriver == DeviceDriverName.C3000() && GlobalVar.Shuttle == null)
                         {
-                            Task.Run(() =>_logger.LogAsync("C3000 Controller."));
-                            GlobalVar.Shuttle = new C3000(this, _station);
+                            Task.Run(() => _logger.LogAsync("C3000 Controller."));
+                            GlobalVar.Shuttle = new C3000(this, _stationView);
                             GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
                         }
 
                         if (_neutronVariables.DeviceDriver == DeviceDriverName.C2000() && GlobalVar.Shuttle == null)
                         {
-                            Task.Run(() =>_logger.LogAsync("C2000 Controller."));
-                            GlobalVar.Shuttle = new C2000(this, _station);
+                            Task.Run(() => _logger.LogAsync("C2000 Controller."));
+                            GlobalVar.Shuttle = new C2000(this, _stationView);
                             GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
                         }
 
                         if (_neutronVariables.DeviceDriver == DeviceDriverName.RCC2() && GlobalVar.Shuttle == null)
                         {
-                            Task.Run(() =>_logger.LogAsync("RCC2 Controller."));
-                            GlobalVar.Shuttle = new RCC2(this, _station);
+                            Task.Run(() => _logger.LogAsync("RCC2 Controller."));
+                            GlobalVar.Shuttle = new RCC2(this, _stationView);
                             GlobalVar.Shuttle.InitStatus();
                             result = GlobalVar.Shuttle != null;
                         }
@@ -893,7 +908,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageItems])
             {
                 Hide();
-                using (MetroForm frm = new FrmItemDefinitions(_jsonData, _station, _akaRepository, _imageManager))
+                using (MetroForm frm = new FrmItemDefinitions(_stationRepository, _jsonData, _stationView, _akaRepository, _imageManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -906,7 +921,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations])
             {
                 Hide();
-                using (MetroForm frm = new FrmLocations(_jsonData, _station, _neutronVariables, _lacProcessor))
+                using (MetroForm frm = new FrmLocations(_jsonData, _stationRepository, _stationView, _neutronVariables, _lacProcessor))
                 {
                     frm.ShowDialog();
                     Show();
@@ -919,8 +934,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory])
             {
                 var main = this;
-
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
+                using (var frm = DI.Create<FrmInventory>(_stationView, _neutronVariables))
                 {
                     main.Hide();
                     frm.ShowDialog();
@@ -935,9 +949,19 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
             {
                 Hide();
-
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository
-                    , _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository))
+                //using (MetroForm frm = new FrmHotAction(_stationView, _jsonData, _akaRepository
+                //    , _neutronVariables, _neutronLicense, _lacProcessor, _imageManager, _itemDefinitionsRepository, _stationRepository, _historyManager))
+                //using (var frm = DI.Create<FrmHotAction>(
+                //           _neutronVariables
+                //           , _neutronLicense
+                //           , _stationView
+                //           , _historyManager))
+                ////, item))
+                ////, quantity))
+                ////, pickList))
+                using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
+                           , _lacProcessor, _imageManager, _stationRepository, _itemDefinitionsRepository, _neutronVariables
+                           , _neutronLicense, _stationView, _historyManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -950,7 +974,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
             Hide();
-            using (MetroForm frm = new FrmSystem(_jsonData, _logger, _rackStation, _sendEmail, _storedProcedureManager))
+            using (var frm = DI.Create<FrmSystem>(false))
             {
                 frm.ShowDialog();
                 Show();
@@ -961,10 +985,16 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
             Hide();
-            using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables
-                                                , _securityProcessor, _lacProcessor, _imageManager
-                                                , _stationRepository, _ordersRepository, _neutronLicense
-                                                , _itemDefinitionsRepository))
+            //using (MetroForm frm = new FrmPick(_jsonData,
+            //    _stationView, _akaRepository, _neutronVariables
+            //                                    , _securityProcessor, _lacProcessor, _imageManager
+            //                                    , _stationRepository, _ordersRepository, _neutronLicense
+            //                                    , _itemDefinitionsRepository, _historyManager))
+            using (var frm = DI.Create<FrmPick>(
+                       _neutronVariables
+                       , _neutronLicense
+                       , _stationView
+                       , _historyManager))
             {
                 frm.ShowDialog();
 
@@ -1021,9 +1051,11 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.StoreItemsandOrders])
             {
                 Hide();
-                using (MetroForm frm = new FrmReplen(_jsonData, _station, _akaRepository,
-                    _neutronVariables, _securityProcessor, _lacProcessor, _imageManager,
-                    _stationRepository, _replenOrdersRepository, _neutronLicense))
+                using (var frm = DI.Create<FrmReplen>(
+                           _neutronVariables
+                           , _neutronLicense
+                           , _stationView
+                           , _historyManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -1049,7 +1081,7 @@ namespace Neutron
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLac])
             {
                 Hide();
-                using (Form frm = new FrmLAC(_neutronVariables))
+                using (Form frm = new FrmLAC(_stationRepository, _neutronVariables))
                 {
                     frm.ShowDialog();
                     Show();
@@ -1096,17 +1128,31 @@ namespace Neutron
         {
             if (e.KeyCode == Keys.F12)
             {
-                using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
+                using (var frm = DI.Create<FrmInventory>(_stationView, _neutronVariables))
                 {
                     frm.ShowDialog();
                     Show();
                 }
+
+                //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor, _stationVienew FrmPickw))
+                //{
+                //    frm.ShowDialog();
+                //    Show();
+                //}
             }
 
             if (e.KeyCode == Keys.F5 || e.KeyCode == Keys.F6)
             {
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository
-                    , _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository))
+                //using (var frm = DI.Create<FrmHotAction>(
+                //           _neutronVariables
+                //           , _neutronLicense
+                //           , _stationView
+                //           , _historyManager))
+                ////, 1
+                ////, null))
+                using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
+                           , _lacProcessor, _imageManager, _stationRepository, _itemDefinitionsRepository, _neutronVariables
+                           , _neutronLicense, _stationView, _historyManager))
                 {
                     frm.ShowDialog();
                     Show();
@@ -1116,9 +1162,16 @@ namespace Neutron
             if (e.KeyCode == Keys.F7 || e.KeyCode == Keys.F8)
             {
 
-                using (MetroForm frm = new FrmPick(_jsonData, _station, _akaRepository, _neutronVariables,
-                    _securityProcessor, _lacProcessor, _imageManager, _stationRepository
-                    , _ordersRepository, _neutronLicense, _itemDefinitionsRepository))
+
+                //using (MetroForm frm = new FrmPick(_jsonData, _stationView, _akaRepository, _neutronVariables,
+                //    _securityProcessor, _lacProcessor, _imageManager, _stationRepository
+                //    , _ordersRepository, _neutronLicense, _itemDefinitionsRepository))
+                //{
+                using (var frm = DI.Create<FrmPick>(
+                           _neutronVariables
+                           , _neutronLicense
+                           , _stationView
+                           , _historyManager))
                 {
                     frm.ShowDialog();
                     Show();

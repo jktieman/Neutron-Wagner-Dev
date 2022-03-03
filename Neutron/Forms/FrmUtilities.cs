@@ -749,6 +749,8 @@ namespace Neutron.Forms
             _neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
             _neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();
             _neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt();
+            _neutronVariables.PickBatchRows = TextBoxPickBatchRows.Text.ParseInt();
+            _neutronVariables.StoreBatchRows = TextBoxStoreBatchRows.Text.ParseInt();
             _neutronVariables.BliEnabled = CheckBoxBliEnabled.Checked;
             _neutronVariables.ShiEnabled = CheckBoxShiEnabled.Checked;
             _neutronVariables.ParkPositionAfterBatch = CheckBoxParkPositionAfterBatch.Checked;
@@ -823,6 +825,8 @@ namespace Neutron.Forms
                 ComboBoxPickBatchSize.FindStringExact(_neutronVariables.PickBatchSize.ToString());
             ComboBoxStoreBatchSize.SelectedIndex =
                 ComboBoxStoreBatchSize.FindStringExact(_neutronVariables.StoreBatchSize.ToString());
+            TextBoxPickBatchRows.Text = _neutronVariables.PickBatchRows.ToString();
+            TextBoxStoreBatchRows.Text = _neutronVariables.StoreBatchRows.ToString();
             CheckBoxBliEnabled.Checked = _neutronVariables.BliEnabled;
             CheckBoxShiEnabled.Checked = _neutronVariables.ShiEnabled;
             CheckBoxParkPositionAfterBatch.Checked = _neutronVariables.ParkPositionAfterBatch;

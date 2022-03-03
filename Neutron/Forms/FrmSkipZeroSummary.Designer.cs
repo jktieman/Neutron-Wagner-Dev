@@ -30,6 +30,7 @@
         {
             this.DataGridViewSkipZeroSummary = new System.Windows.Forms.DataGridView();
             this.ButtonClose = new System.Windows.Forms.Button();
+            this.ButtonPrint = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewSkipZeroSummary)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,11 +54,23 @@
             this.ButtonClose.UseVisualStyleBackColor = true;
             this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
             // 
+            // ButtonPrint
+            // 
+            this.ButtonPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrint.Location = new System.Drawing.Point(498, 410);
+            this.ButtonPrint.Name = "ButtonPrint";
+            this.ButtonPrint.Size = new System.Drawing.Size(119, 39);
+            this.ButtonPrint.TabIndex = 1;
+            this.ButtonPrint.Text = "Print";
+            this.ButtonPrint.UseVisualStyleBackColor = true;
+            this.ButtonPrint.Click += new System.EventHandler(this.ButtonPrint_Click);
+            // 
             // FrmSkipZeroSummary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 461);
+            this.Controls.Add(this.ButtonPrint);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.DataGridViewSkipZeroSummary);
             this.Name = "FrmSkipZeroSummary";
@@ -73,5 +86,6 @@
 
         private System.Windows.Forms.DataGridView DataGridViewSkipZeroSummary;
         private System.Windows.Forms.Button ButtonClose;
+        private System.Windows.Forms.Button ButtonPrint;
     }
 }

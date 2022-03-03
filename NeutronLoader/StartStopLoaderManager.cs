@@ -12,17 +12,18 @@ namespace NeutronLoader
     public class StartStopLoaderManager
     {
         private readonly IJsonData _jsonData;
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private IInterfaceProcessor _interfaceProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly Station _rackStation;
 
-        public StartStopLoaderManager(IJsonData jsonData, DynamicLogger logger, NeutronVariables neutronVariables,
+        public StartStopLoaderManager(IJsonData jsonData, IDynamicLogger logger, NeutronVariables neutronVariables,
             NeutronLicense neutronLicense, Station rackStation)
         {
             _jsonData = jsonData;
             _logger = logger;
+            _logger.FolderName = $"LoaderManager_{rackStation.Id}"; 
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _rackStation = rackStation;

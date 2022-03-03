@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
+using DGVPrinterHelper;
 using NeutronCore;
 using NeutronData.ModelViews;
+
+
 
 namespace Neutron.Forms
 {
@@ -189,6 +193,39 @@ namespace Neutron.Forms
         private void DataGridViewSkipZeroSummary_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             DataGridViewSkipZeroSummary.ClearSelection();
+        }
+
+        private void ButtonPrint_Click(object sender, EventArgs e)
+        {
+            PrinterSettings myprintsettings = null;
+            PageSettings mypagesettings = null;
+
+            var printer = new DGVPrinter();
+            printer.Title = "Zero Pick Report";
+            printer.SubTitle = DateTime.Now.ToString("F");
+            printer.SubTitleFormatFlags = StringFormatFlags.LineLimit |
+                                          StringFormatFlags.NoClip;
+            printer.PageNumbers = true;
+            printer.PageNumberInHeader = false;
+            printer.ColumnWidth = DGVPrinter.ColumnWidthSetting.Porportional;
+            printer.HeaderCellAlignment = StringAlignment.Near;
+            printer.Footer = "";
+            printer.FooterSpacing = 15;
+
+            
+
+            if (myprintsettings != null)
+                printer.printDocument.PrinterSettings = myprintsettings;
+            if (null != mypagesettings)
+                printer.printDocument.DefaultPageSettings = mypagesettings;
+            if (DialogResult.OK == printer.DisplayPrintDialog()) // you may replace DisplayPrintDialog() with your own print dialog
+            {
+                // save users' settings
+                myprintsettings = printer.PrintSettings;
+                mypagesettings = printer.PageSettings;
+                // print without redisplaying the printdialog
+                printer.PrintNoDisplay(DataGridViewSkipZeroSummary);
+            }
         }
     }
 }

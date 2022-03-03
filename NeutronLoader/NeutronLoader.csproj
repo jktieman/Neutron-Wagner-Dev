@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlliedLogger">
-      <HintPath>..\..\..\Neutron-Dev\AlliedLogger\bin\Debug\AlliedLogger.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -129,6 +126,10 @@
     <ProjectReference Include="..\AlliedFileSystemWatcher\AlliedFileSystemWatcher.csproj">
       <Project>{A8C533EF-F9B0-4B04-A1BA-53AAF5354A2B}</Project>
       <Name>AlliedFileSystemWatcher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
+      <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
+      <Name>AlliedLogger</Name>
     </ProjectReference>
     <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
       <Project>{6CE97D6F-A149-42FE-A858-2272DB64897E}</Project>

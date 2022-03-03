@@ -5,10 +5,12 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
+using AlliedLogger;
 using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
+using NeutronData.Interfaces;
 
 namespace Neutron.Forms
 {
@@ -18,7 +20,7 @@ namespace Neutron.Forms
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private readonly SecureDb _context = new SecureDb();
-        private readonly StationRepository _repoStationRepository; // = new StationRepository(context);
+        private readonly IStationRepository _stationRepository;
         private List<Station> _stations;
 
         private bool checkAllUsers;
@@ -33,19 +35,20 @@ namespace Neutron.Forms
         private Station _currentStation;
         private NeutronVariables _neutronVariables;
 
-        public FrmLAC(NeutronVariables neutronVariables)
+        public FrmLAC(IStationRepository stationRepository, NeutronVariables neutronVariables)
         {
+            _stationRepository = stationRepository;
             _neutronVariables = neutronVariables;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            _repoStationRepository = new StationRepository(_context);
+           // _stationRepository = new StationRepository(new DynamicLogger(), _context, _neutronVariables.StationId);
             InitLac();
             // SetCulture(_cultureInfo.Name);
         }
 
         private void InitLac()
         {
-            _stations = _repoStationRepository.GetMovablePickStations();
+            _stations = _stationRepository.GetMovablePickStations();
             _currentStation = _stations.FirstOrDefault(r => r.Id == _neutronVariables.StationId);
             if(_currentStation != null) _currentStationNumber = _currentStation.StationNumber;
             if(_stations != null) InitCarriers();

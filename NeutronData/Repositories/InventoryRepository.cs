@@ -8,17 +8,18 @@ using NeutronData.SqlModelViews;
 using System.Data.SqlClient;
 using System.Globalization;
 using AlliedLogger;
+using NeutronData.Interfaces;
 
 namespace NeutronData.Repositories
 {
-    public class InventoryRepository : IDisposable
+    public class InventoryRepository : IDisposable, IInventoryRepository
     {
 
         private readonly GenericRepository<Inventory> _repo = new GenericRepository<Inventory>(new NeutronDb());
 
         public List<InventoryView> GetInventoryViewAll()
         {
-            var projection = new List<InventoryView>();
+            List<InventoryView> projection;
 
             IEnumerable<Inventory> task = _repo.All().ToList();
 
@@ -154,7 +155,7 @@ namespace NeutronData.Repositories
                             || d.ItemDefinition.Description.ToLower().Contains(s)
                             || d.Location.Slot.Contains(s)).ToList();
 
-            if (task != null)
+            if (task.Any())
             {
                 projection = task.Select(r => new HotStoreListView
                 {
@@ -227,23 +228,27 @@ namespace NeutronData.Repositories
 
             return recs;
         }
-
+        /// <summary>
+        /// Gets the Slot field from the Locations Table if the
+        /// Inventory record is a Prime Bin
+        /// </summary>
+        /// <param name="itemDefinitionId">The Id of an <see cref="ItemDefinition"/></param>
+        /// <returns>Returns and empty string if there is not a Prime Bin
+        /// otherwise it returns the Slot field from the Locations table
+        /// </returns>
         public string GetPrimeBin(int itemDefinitionId)
         {
-            string slot = string.Empty;
-            List<Inventory> recs = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).ToList();
+            var slot = string.Empty;
+            // Get a list of Inventory records that have this Item
+            var recs = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).ToList();
 
-            if (recs.Count > 0)
+            if (recs.Count <= 0) return slot;
+            // If there are records, find the first one that is a PrimeBin
+            // and return the Slot from the Locations table
+            foreach (var item in recs.Where(item => item.PrimeBin))
             {
-                foreach (var item in recs)
-                {
-                    if (item.PrimeBin)
-                    {
-                        slot = item.Location.Slot;
-                        break;
-                    }
-                }
-                slot = recs.First().Location.Slot;
+                slot = item.Location.Slot;
+                break;
             }
 
             return slot;
@@ -251,8 +256,8 @@ namespace NeutronData.Repositories
 
         public int GetStationNumber(int itemDefinitionId)
         {
-            int stationNumber = 1;
-            Inventory rec = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).FirstOrDefault();
+            var stationNumber = 1;
+            var rec = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).FirstOrDefault();
 
             if (rec != null)
             {

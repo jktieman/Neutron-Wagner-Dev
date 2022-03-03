@@ -30,7 +30,7 @@ namespace Neutron.Controllers
         private string _cError = string.Empty;
         private DynamicLogger _logger;
         private string _logFileDir = string.Empty;
-        private readonly StationView _station;
+        private readonly StationView _stationView;
         private readonly List<Hart_BLI> _bliList = new List<Hart_BLI>();
         private readonly List<Hart_SHI> _shiList = new List<Hart_SHI>();
         private readonly List<Hart_SHI> _shiListClear = new List<Hart_SHI>();
@@ -46,9 +46,9 @@ namespace Neutron.Controllers
         public bool Ready { get; set; }
         public event EventHandler<IptiController.MySerialDataReceivedEventArgs> MySerialDataReceived;
 
-        public DisplayController(IJsonData jsonData, StationView station)
+        public DisplayController(IJsonData jsonData, StationView stationView)
         {
-            _station = station;
+            _stationView = stationView;
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();
             _bliEnabled = _neutronVariables.BliEnabled;
@@ -81,7 +81,7 @@ namespace Neutron.Controllers
         {
             var result = false;
 
-            var serialConfigurationId = _repoHardwareDevice.All().FirstOrDefault(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.RemstarDisplays && r.StationId == _station.StationId)?.SerialConfigurationId;
+            var serialConfigurationId = _repoHardwareDevice.All().FirstOrDefault(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.RemstarDisplays && r.StationId == _stationView.StationId)?.SerialConfigurationId;
 
             if (serialConfigurationId == null) return false;
 
@@ -164,7 +164,7 @@ namespace Neutron.Controllers
         private void CreateLog()
         {
             _logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = string.Format(format: @"Display Controller_{0}", arg0: _station.StationNumber.ToString());
+            var folderName = string.Format(format: @"Display Controller_{0}", arg0: _stationView.StationNumber.ToString());
             var logActivity = LoaderSettings.EnableLogging;
             Task.Run(() => _logger = new DynamicLogger(_logFileDir, folderName, logActivity));
         }

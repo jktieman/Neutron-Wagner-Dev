@@ -27,6 +27,7 @@ using EnumsNET;
 using NeutronCore.Extensions;
 using Neutron.Interfaces;
 using Neutron.Models;
+using Neutron.Ninject;
 using NeutronCore.Global;
 using NeutronCore;
 using NeutronData.Interfaces;
@@ -60,12 +61,12 @@ namespace Neutron.Forms
             new GenericRepository<NeutronData.Models.Lookups.StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue =
             new GenericRepository<UnitOfIssue>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
+        private IStationRepository _stationRepository ;
         private readonly LocationsRepository _locationsRepository;
         private readonly InventoryRepository _inventoryRepository = new InventoryRepository();
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
-        private readonly StationView _station;
+        private readonly StationView _stationView;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
         private bool _allAvailable;
@@ -77,21 +78,24 @@ namespace Neutron.Forms
         private readonly Station _rackStation;
         private DynamicLogger _logger;
 
-        public FrmInventory(IJsonData jsonData, StationView station, IAkaRepository akaRepository,
-            ILacProcessor lacProcessor)
+        public FrmInventory(IJsonData jsonData, IAkaRepository akaRepository,
+            ILacProcessor lacProcessor, IStationRepository stationRepository, StationView stationView, NeutronVariables neutronVariables)
         {
             InitializeComponent();
+
+            _stationRepository = stationRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             KeyPreview = true;
             CloseButtonPressed = false;
-            _station = station;
+            _stationView = stationView;
             _jsonData = jsonData;
-            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            //_neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            _neutronVariables = neutronVariables;
             _akaRepository = akaRepository;
             _lacProcessor = lacProcessor;
-            _rackStation = _repoStation.GetRackStation();
-            LabelStationName.Text = _station.Name;
+
+            LabelStationName.Text = _stationView.Name;
             SetupGrids();
             HideTabControlTabs();
             SetupNewForm();
@@ -99,25 +103,29 @@ namespace Neutron.Forms
             SetupAddDetailForm();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             _logger = CreateLog();
-           _locationsRepository = new LocationsRepository();
+            _locationsRepository = new LocationsRepository();
 
-            if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
+            //_repStation = DI.Create<StationRepository>(_stationView.StationId);
+           // _stationRepository = new StationRepository(_logger, new NeutronDb(), _stationView.StationId);
+            _rackStation = _stationRepository.GetRackStation();
+            if (_stationView.StationType.Id == (int)StationType.Supervisor)
             {
                 CheckBoxAllStations.Checked = true;
             }
 
-            ComboBoxStationNumber.DataSource = _repoStation.GetPickStations();
+            ComboBoxStationNumber.DataSource = _stationRepository.GetPickStations();
             ComboBoxStationNumber.ValueMember = "Id";
             ComboBoxStationNumber.DisplayMember = "Name";
             _firstTime = false;
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            LoadInventory();
         }
 
         private DynamicLogger CreateLog()
         {
             var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = $"Inventory_{_station.StationNumber.ToString()}";
+            var folderName = $"Inventory_{_stationView.StationNumber.ToString()}";
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             return _logger;
@@ -136,21 +144,22 @@ namespace Neutron.Forms
 
         private void FrmInventory_Load(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
-            Cursor.Current = Cursors.Default;
+            
+            //LoadInventory();
+            
         }
         // Set the focus to the passed in recId if it's passed in
         private void LoadInventory(int recId = 0)
         {
+            Cursor.Current = Cursors.WaitCursor;
             //ItemDefinition itemDefinition;
             var findWhat = TextBoxFind.Text.ToLower().Trim();
             var find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
-            var station = _repoStation.GetStation(_station.StationId);
+            var station = _stationRepository.GetStation(_stationView.StationId);
             if (station != null)
             {
-                if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
+                if (_stationView.StationType.Id == (int)StationType.Supervisor)
                 {
                     if (_rackStation != null)
                     {
@@ -165,7 +174,7 @@ namespace Neutron.Forms
 
                 //Task<IEnumerable<SqlInventoryView>> views = CheckBoxAllStations.Checked
                 //    ?  _inventoryRepository.FindInventoryViews(find)
-                //    : _inventoryRepository.FindInventoryViewsByStation(find, _station.StationId);
+                //    : _inventoryRepository.FindInventoryViewsByStation(find, _stationView.StationId);
                 var blv = new BindingListView<SqlInventoryView>(views.ToList());
                 _bindingSource.DataSource = blv;
                 DataGridView1.DataSource = _bindingSource;
@@ -203,6 +212,7 @@ namespace Neutron.Forms
                     //LoadViewEdit();
                 }
             }
+            Cursor.Current = Cursors.Default;
         }
         private void SetCurrentInventoryItem()
         {
@@ -282,103 +292,7 @@ namespace Neutron.Forms
             LabelAvailableLocations.Text = $"{_resourceManager.GetString("Records")}: {count}";
             return count;
         }
-        private void DataGridViewCellFormatting(DataGridView dgv, DataGridViewCellFormattingEventArgs e)
-        {
-            //if (e.RowIndex < 0)
-            //{
-            //    return;
-            //}
-            //if (dgv.Columns[e.ColumnIndex].Name.Equals("StorageTypeName"))
-            //{
-            //    if (e.Value != null)
-            //    {
-            //        switch (e.Value.ToString())
-            //        {
-            //            case "Non-Pickable":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-            //                break;
-            //            case "Inactive":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.PaleGoldenrod;
-            //                break;
-            //            case "Static":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
-            //                break;
-            //            case "Release":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.AliceBlue;
-            //                break;
-            //            default:
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-            //                break;
-            //        }
-            //    }
-            //}
-        }
-        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            //var dgv = sender as DataGridView;
-            //DataGridViewCellFormatting(dgv, e);
-            //if (e.RowIndex < 0)
-            //{
-            //    return;
-            //}
-            //if (dgv.Columns[e.ColumnIndex].Name.Equals("StorageTypeName"))
-            //{
-            //    if (e.Value != null)
-            //    {
-            //        switch (e.Value.ToString())
-            //        {
-            //            case "Non-Pickable":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-            //                break;
-            //            case "Inactive":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.PaleGoldenrod;
-            //                break;
-            //            case "Static":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
-            //                break;
-            //            case "Release":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.AliceBlue;
-            //                break;
-            //            default:
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-            //                break;
-            //        }
-            //    }
-            //}
-        }
-        private void DataGridViewInventoryLocations_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            //var dgv = sender as DataGridView;
-            //DataGridViewCellFormatting(dgv, e);
-            ////if (e.RowIndex < 0)
-            //{
-            //    return;
-            //}
-            //if (dgv.Columns[e.ColumnIndex].Name.Equals("StorageTypeName"))
-            //{
-            //    if (e.Value != null)
-            //    {
-            //        switch (e.Value.ToString())
-            //        {
-            //            case "Non-Pickable":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-            //                break;
-            //            case "Inactive":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-            //                break;
-            //            case "Static":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
-            //                break;
-            //            case "Release":
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.AliceBlue;
-            //                break;
-            //            default:
-            //                dgv.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-            //                break;
-            //        }
-            //    }
-            //}
-        }
+        
         #region Find Functions
         private void MButtonFind_Click(object sender, EventArgs e)
         {
@@ -678,7 +592,7 @@ namespace Neutron.Forms
             var bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString(""),
-                Visible = _station.StationTypeId != (int)StationType.Rack && _station.StationTypeId != (int)StationType.Supervisor,
+                Visible = _stationView.StationTypeId != (int)StationType.Rack && _stationView.StationTypeId != (int)StationType.Supervisor,
                 Name = "Position",
                 Text = position,
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -866,7 +780,7 @@ namespace Neutron.Forms
             bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString("Id"),
-                Visible = _station.StationTypeId != (int)StationType.Rack && _station.StationTypeId != (int)StationType.Supervisor,
+                Visible = _stationView.StationTypeId != (int)StationType.Rack && _stationView.StationTypeId != (int)StationType.Supervisor,
                 Name = "Position",
                 Text = position,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -1036,7 +950,7 @@ namespace Neutron.Forms
             bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString("Id"),
-                Visible = _station.StationTypeId != (int)StationType.Rack && _station.StationTypeId != (int)StationType.Supervisor,
+                Visible = _stationView.StationTypeId != (int)StationType.Rack && _stationView.StationTypeId != (int)StationType.Supervisor,
                 Name = "Position",
                 Text = position,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -1204,7 +1118,7 @@ namespace Neutron.Forms
             ComboBoxNewLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxNewLocationCode.DisplayMember = "Name";
             ComboBoxNewLocationCode.ValueMember = "Id";
-            ComboBoxNewStation.DataSource = _repoStation.Lookup();
+            ComboBoxNewStation.DataSource = _stationRepository.Lookup();
             ComboBoxNewStation.DisplayMember = "Name";
             ComboBoxNewStation.ValueMember = "Id";
             ComboBoxNewStorageType.DataSource = _repoStorageType.All();
@@ -1231,7 +1145,7 @@ namespace Neutron.Forms
             ComboBoxAddDetailLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxAddDetailLocationCode.DisplayMember = "Name";
             ComboBoxAddDetailLocationCode.ValueMember = "Id";
-            ComboBoxAddDetailStation.DataSource = _repoStation.Lookup();
+            ComboBoxAddDetailStation.DataSource = _stationRepository.Lookup();
             ComboBoxAddDetailStation.DisplayMember = "Name";
             ComboBoxAddDetailStation.ValueMember = "Id";
             ComboBoxAddDetailStorageType.DataSource = _repoStorageType.All();
@@ -1435,7 +1349,7 @@ namespace Neutron.Forms
         public async void GetAvailableLocations(ItemDefinition itemDefinition, int recId = 0)
         {
             var idx = recId;
-            var station = _repoStation.GetStation(itemDefinition.StationId);
+            var station = _stationRepository.GetStation(itemDefinition.StationId);
             if (station != null)
             {
                 var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(station,
@@ -1465,7 +1379,7 @@ namespace Neutron.Forms
         public async void GetAllAvailableLocations(ItemDefinition itemDefinition, int recId = 0)
         {
             var idx = recId;
-            var station = _repoStation.GetStation(itemDefinition.StationId);
+            var station = _stationRepository.GetStation(itemDefinition.StationId);
             if (station != null)
             {
                 IEnumerable<LocationView> views = new List<LocationView>();
@@ -1836,12 +1750,12 @@ namespace Neutron.Forms
 
         private void MoveDevice(int deviceNumber, int trayNumber, int level, int part, int quantity = 0, string display = "")
         {
-            if (_lacProcessor.MovePermitted(_station.StationNumber, deviceNumber, trayNumber))
+            if (_lacProcessor.MovePermitted(_stationView.StationNumber, deviceNumber, trayNumber))
             {
                 if (_neutronVariables.ShuttleEnabled)
                 {
                     var hardwareDevice =
-                        _station.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                        _stationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
                     if (hardwareDevice != null)
                     {
                         if (hardwareDevice.Enabled)
@@ -2048,15 +1962,15 @@ namespace Neutron.Forms
 
         private void ButtonPositionDevice_Click(object sender, EventArgs e)
         {
-           var deviceNumber = TextBoxAddDetailLoc1.Text.ParseInt();
-           var trayNumber = TextBoxAddDetailLoc2.Text.ParseInt();
-           var level = TextBoxAddDetailLoc3.Text.ParseInt();
-           var part = TextBoxAddDetailLoc4.Text.ParseInt();
-           var qty = TextBoxAddDetailQuantity.Text.ParseInt();
-           Task.Run(() =>
-               _logger.LogDetailAsync(
-                   $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
-            MoveDevice(deviceNumber,trayNumber,level,part, qty);
+            var deviceNumber = TextBoxAddDetailLoc1.Text.ParseInt();
+            var trayNumber = TextBoxAddDetailLoc2.Text.ParseInt();
+            var level = TextBoxAddDetailLoc3.Text.ParseInt();
+            var part = TextBoxAddDetailLoc4.Text.ParseInt();
+            var qty = TextBoxAddDetailQuantity.Text.ParseInt();
+            Task.Run(() =>
+                _logger.LogDetailAsync(
+                    $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+            MoveDevice(deviceNumber, trayNumber, level, part, qty);
         }
     }
 }

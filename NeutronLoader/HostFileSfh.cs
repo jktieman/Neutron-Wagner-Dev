@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using NeutronData.Interfaces;
 
 namespace NeutronLoader
 {
@@ -20,14 +21,14 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
-        private readonly StationRepository _stationRepository = new StationRepository(new NeutronDb());
+        private readonly IStationRepository _stationRepository;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly Station _rackStation;
         private readonly DynamicLogger _logger;
         private readonly int _rackStationId;
 
-        public HostFileSfh(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
+        public HostFileSfh( NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
@@ -50,6 +51,7 @@ namespace NeutronLoader
                 rackStationIsNull = false;
                 _rackStationId = _rackStation.Id;
             }
+            _stationRepository = new StationRepository(_logger);
             _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 

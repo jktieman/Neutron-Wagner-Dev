@@ -25,6 +25,8 @@
         public bool PinLoginOnly = true;
         public int PickBatchSize = 8;
         public int StoreBatchSize = 8;
+        public int PickBatchRows = 1;
+        public int StoreBatchRows = 1;
         public bool BliEnabled = false;
         public bool ShiEnabled = false;
         public bool ParkPositionAfterBatch = false;
@@ -55,5 +57,6 @@
         public double RunCompressInterval { get; set; }
         public bool SpecialBackOrder { get; set; }
         public bool EnableEmailNotification { get; set; }
+
     }
 }

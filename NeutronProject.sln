@@ -33,6 +33,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlliedPostOffice", "AlliedP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlSchemaManager", "SqlSchemaManager\SqlSchemaManager.csproj", "{294872D2-FEB8-4825-9755-E5AE9DE5B7B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGVPrint", "DGVPrinter\DGVPrint.csproj", "{E992BD9A-8437-48E4-B9DE-000EFC15032B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceIndicatorService", "DeviceIndicatorService\DeviceIndicatorService.csproj", "{2AEDD746-887B-411D-A2B9-52AB4835ACBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +104,14 @@ Global
 		{294872D2-FEB8-4825-9755-E5AE9DE5B7B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{294872D2-FEB8-4825-9755-E5AE9DE5B7B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{294872D2-FEB8-4825-9755-E5AE9DE5B7B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E992BD9A-8437-48E4-B9DE-000EFC15032B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E992BD9A-8437-48E4-B9DE-000EFC15032B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E992BD9A-8437-48E4-B9DE-000EFC15032B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E992BD9A-8437-48E4-B9DE-000EFC15032B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

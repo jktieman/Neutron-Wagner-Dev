@@ -39,7 +39,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
         private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
         private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
+        private readonly IStationRepository _stationRepository; 
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<StorageType> _repoStorageType = new GenericRepository<StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
@@ -56,9 +56,10 @@ namespace Neutron.Forms
         private readonly List<Station> _pickStations;
         //private readonly int[] _stationTypesThatHaveInventory = new[] { 1, 2, 3 };  // 4 is a Supervisor 
 
-        public FrmItemDefinitions(IJsonData jsonData, StationView station, IAkaRepository akaRepository, IImageManager imageManager)
+        public FrmItemDefinitions(IStationRepository stationRepository,  IJsonData jsonData, StationView station, IAkaRepository akaRepository, IImageManager imageManager)
         {
             InitializeComponent();
+            _stationRepository = stationRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _dgvColumnWidthSizer = new BackgroundWorker();
@@ -73,10 +74,11 @@ namespace Neutron.Forms
             SetupTabControl();
             SetupNewForm();
             SetupViewEditForm();
-            _rackStation = _repoStation.GetRackStation();
+            //_stationRepository = new StationRepository(_logger, new NeutronDb(), _station.StationId);
+            _rackStation = _stationRepository.GetRackStation();
             _akaRepository = akaRepository;
             _imageManager = imageManager;
-            _pickStations = _repoStation.GetPickStations();
+            _pickStations = _stationRepository.GetPickStations();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             LabelStationName.Text = _station.Name;
             if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
@@ -84,6 +86,9 @@ namespace Neutron.Forms
                 CheckBoxAllStations.Checked = true;
             }
             SetupViewEditBindings();
+
+
+
             RefreshData();
         }
 
@@ -156,7 +161,7 @@ namespace Neutron.Forms
         }
         private void RefreshData(int recId = 0)
         {
-            var station = _repoStation.GetStation(_station.StationId);
+            var station = _stationRepository.GetStation(_station.StationId);
             Cursor.Current = Cursors.WaitCursor;
             var idx = 0;
             var findWhat = TextBoxFind.Text.ToLower().Trim();
@@ -768,7 +773,7 @@ namespace Neutron.Forms
             ComboBoxNewLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxNewLocationCode.DisplayMember = "Name";
             ComboBoxNewLocationCode.ValueMember = "Id";
-            ComboBoxNewStation.DataSource = _repoStation.GetPickStations();
+            ComboBoxNewStation.DataSource = _stationRepository.GetPickStations();
             ComboBoxNewStation.DisplayMember = "Name";
             ComboBoxNewStation.ValueMember = "Id";
             ComboBoxNewStorageType.DataSource = _repoStorageType.All();
@@ -794,7 +799,7 @@ namespace Neutron.Forms
             ComboBoxViewEditLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxViewEditLocationCode.DisplayMember = "Name";
             ComboBoxViewEditLocationCode.ValueMember = "Id";
-            ComboBoxViewEditStation.DataSource = _repoStation.GetPickStations();
+            ComboBoxViewEditStation.DataSource = _stationRepository.GetPickStations();
             ComboBoxViewEditStation.DisplayMember = "Name";
             ComboBoxViewEditStation.ValueMember = "Id";
             ComboBoxViewEditStorageType.DataSource = _repoStorageType.All();

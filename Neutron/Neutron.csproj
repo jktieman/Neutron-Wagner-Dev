@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>481</ApplicationRevision>
+    <ApplicationRevision>482</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -186,7 +186,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bindings.cs" />
+    <Compile Include="Classes\PanelManager.cs" />
+    <Compile Include="Extensions\UCExtensions.cs" />
+    <Compile Include="Global\IHistoryManager.cs" />
+    <Compile Include="Ninject\Bindings.cs" />
     <Compile Include="Builders\BayControllerBuilder.cs" />
     <Compile Include="Builders\InterfaceControllerBuilder.cs" />
     <Compile Include="Builders\Interfaces\IBayControllerBuilder.cs" />
@@ -237,10 +240,10 @@
     <Compile Include="Forms\FrmChangeLineStatus.Designer.cs">
       <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FrmChangeOrderStatus.cs">
+    <Compile Include="Controllers\FrmChangeOrderStatus.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmChangeOrderStatus.Designer.cs">
+    <Compile Include="Controllers\FrmChangeOrderStatus.Designer.cs">
       <DependentUpon>FrmChangeOrderStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmChangePriority.cs">
@@ -474,6 +477,7 @@
     <Compile Include="Models\StationOrderDetail.cs" />
     <Compile Include="Models\UploadActionIdString.cs" />
     <Compile Include="Models\UserIdString.cs" />
+    <Compile Include="Ninject\DI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AdditionalFiles Include="Hart_Device_Controller.exe">
@@ -484,6 +488,12 @@
     </Compile>
     <Compile Include="UserControls\InductionPosition.Designer.cs">
       <DependentUpon>InductionPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserControlPickPosition.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlPickPosition.Designer.cs">
+      <DependentUpon>UserControlPickPosition.cs</DependentUpon>
     </Compile>
     <Content Include="NeutronAtomLogo.ico" />
     <Content Include="Neutron_Logo32.ico" />
@@ -518,7 +528,7 @@
     <EmbeddedResource Include="Forms\FrmChangeLineStatus.resx">
       <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmChangeOrderStatus.resx">
+    <EmbeddedResource Include="Controllers\FrmChangeOrderStatus.resx">
       <DependentUpon>FrmChangeOrderStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeQuantityOnly.resx">
@@ -818,6 +828,14 @@
     <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
       <Project>{6ce97d6f-a149-42fe-a858-2272db64897e}</Project>
       <Name>AlliedPostOffice</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DeviceIndicatorService\DeviceIndicatorService.csproj">
+      <Project>{2AEDD746-887B-411D-A2B9-52AB4835ACBF}</Project>
+      <Name>DeviceIndicatorService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DGVPrinter\DGVPrint.csproj">
+      <Project>{e992bd9a-8437-48e4-b9de-000efc15032b}</Project>
+      <Name>DGVPrint</Name>
     </ProjectReference>
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>

@@ -31,12 +31,20 @@ using System.Resources;
 using System.Text;
 using System.Threading;
 using System.Data.SqlClient;
+using System.Windows.Input;
 using CurrentDeviceIndicator;
+using DeviceIndicatorService;
 using Neutron.Controllers;
 using Neutron.Enums;
+using Neutron.Extensions;
+using Neutron.Ninject;
+using Neutron.UserControls;
 using NeutronCore.Extensions;
 using NeutronEvents;
 using NeutronDllu;
+using Cursor = System.Windows.Forms.Cursor;
+using Cursors = System.Windows.Forms.Cursors;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Timer = System.Threading.Timer;
 
@@ -50,14 +58,16 @@ namespace Neutron.Forms
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+        private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
+
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly GenericRepository<PrintJob> _repoPrintJob = new GenericRepository<PrintJob>(new NeutronDb());
 
-        private readonly InventoryRepository _repoInv = new InventoryRepository();
+        //private readonly InventoryRepository _repoInv = new InventoryRepository();
         private readonly OrderDetailsRepository _orderDetailsRepository = new OrderDetailsRepository();
-        private readonly LocationsRepository _locationsRepository = new LocationsRepository();
+        //private readonly LocationsRepository _locationsRepository = new LocationsRepository();
         private readonly IStationRepository _stationRepository;
         private readonly IOrdersRepository _ordersRepository;
 
@@ -94,6 +104,7 @@ namespace Neutron.Forms
         readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IItemDefinitionsRepository _itemDefinitionsRepository;
+        private readonly HistoryManager _historyManager;
 
         private string _imagesDirectory;
         private PickDeviceManager _deviceManager;
@@ -102,7 +113,7 @@ namespace Neutron.Forms
         private LabelPrinterPreferences _labelPrinter;
 
         private readonly IJsonData _jsonData;
-        private readonly StationView _station;
+
         private readonly IAkaRepository _akaRepository;
         private readonly ISecurityProcessor _securityProcessor;
         private readonly ILacProcessor _lacProcessor;
@@ -111,8 +122,9 @@ namespace Neutron.Forms
 
         private CurrentDataSet _currentDataSet;
         private int _currentJobDetailsOrderId;
-        private Dictionary<int, DeviceIndicator> _deviceIndicators;
-        private DeviceIndicator _currentDeviceIndicator;
+        // private Dictionary<int, DeviceIndicator> _deviceIndicators;
+        //  private DeviceIndicator _currentDeviceIndicator;
+        private DeviceIndicatorManager _deviceIndicatorManager;
 
         //GRIDS
         private bool _orderGridReady;
@@ -127,31 +139,33 @@ namespace Neutron.Forms
         private bool _skipInventoryGridReady;
 
         private readonly int[] _moveableDeviceTypes;
+
         private readonly Station _rackStation;
         private readonly List<Station> _pickStations;
+        private readonly StationView _stationView;
 
-        private SynchronizationContext _synchronizationContext;
+        private readonly SynchronizationContext _synchronizationContext;
         private List<Inventory> _currentInventory;
         private bool _multiLocationStop;
         private bool _spaceBarDisabled;
-        private Timer _spaceBarDelayTimer;
+        // private Timer _spaceBarDelayTimer;
         private bool _useCostCenter = false;
 
         public delegate void UpdatePickAcceptDelegate(bool b);
 
-        public FrmPick(IJsonData jsonData, StationView station
+        public FrmPick(IJsonData jsonData, StationView stationView
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor,
             IImageManager imageManager, IStationRepository stationRepository
             , IOrdersRepository ordersRepository, NeutronLicense neutronLicense
-            , IItemDefinitionsRepository itemDefinitionsRepository)
+            , IItemDefinitionsRepository itemDefinitionsRepository, HistoryManager historyManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
 
             _jsonData = jsonData;
-            _station = station;
+            _stationView = stationView;
             _akaRepository = akaRepository;
             _neutronVariables = neutronVariables;
             _securityProcessor = securityProcessor;
@@ -161,6 +175,7 @@ namespace Neutron.Forms
             _ordersRepository = ordersRepository;
             _neutronLicense = neutronLicense;
             _itemDefinitionsRepository = itemDefinitionsRepository;
+            _historyManager = historyManager;
 
             _rackStation = _stationRepository.GetRackStation();
             _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
@@ -175,18 +190,18 @@ namespace Neutron.Forms
             KeyPreview = true;
             SetupLogger();
             Task.Run(() => _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
-            //if (_station.StationType.Id == (int)StationType.Supervisor)
-           // {
-                MBMainLoadOrders.Visible = true;
-                MBMainUpload.Visible = true;
-                MBRunLoader.Visible = true;
-                MBRunUpload.Visible = true;
-           // }
+            //if (_stationView.StationType.Id == (int)StationType.Supervisor)
+            // {
+            MBMainLoadOrders.Visible = true;
+            MBMainUpload.Visible = true;
+            MBRunLoader.Visible = true;
+            MBRunUpload.Visible = true;
+            // }
             SetupPrinters();
 
             InitGrids();
             _useCostCenter = _neutronVariables.UseCostCenter;
-            SetupPickPositions(_neutronVariables.PickBatchSize);
+            SetupPickPositions(_neutronVariables.PickBatchSize, _neutronVariables.PickBatchRows);
             InitOrdersToPick(_neutronVariables.PickBatchSize);
             HideTabControlTabs();
             ShowButtons();
@@ -194,7 +209,7 @@ namespace Neutron.Forms
             SetUploadButtonText();
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
-            _currentTextBoxPos = TextBoxPos1;
+            _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();  //TextBoxPos1;
             //ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
             if (_neutronVariables.DisplaysEnabled && _neutronVariables.IptiDisplays)
             {
@@ -207,10 +222,12 @@ namespace Neutron.Forms
             InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
-            if (_station.StationType.Id == (int)StationType.Supervisor || _station.StationType.Id == (int)StationType.Rack)
+            if (_stationView.StationType.Id == (int)StationType.Supervisor || _stationView.StationType.Id == (int)StationType.Rack)
             {
                 MBMainAvailableOrders.Text = _resourceManager.GetString($"OffCarousel");
             }
+
+            InitDeviceIndicators();
 
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
@@ -325,32 +342,37 @@ namespace Neutron.Forms
             if (PickScreen.Controls.ContainsKey("PanelDeviceIndicators")) return;
 
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
-            _deviceIndicators = new Dictionary<int, DeviceIndicator>();
 
-            //var hardwareDevices = _station.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            _deviceIndicatorManager = new DeviceIndicatorManager(_logger, _stationView, new Point(189, 0),
+                new Size(769, 127), _neutronVariables);
+
+
+            //_deviceIndicators = new Dictionary<int, DeviceIndicator>();
+
+            ////var hardwareDevices = _stationView.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            ////var numDevices = hardwareDevices.Count;
+            //var hardwareDevices = _stationView.HardwareDevices.ToList();
             //var numDevices = hardwareDevices.Count;
-            var hardwareDevices = _station.HardwareDevices.ToList();
-            var numDevices = hardwareDevices.Count;
 
 
-            var panel = new Panel();
-            panel.Location = new Point(189, 0);
-            panel.Size = new Size(769, 127);
-            panel.BackColor = Color.Transparent;
-            panel.Name = "PanelDeviceIndicators";
-            var flashRate = _neutronVariables.DeviceFlashRate;
-            foreach (var hardwareDevice in hardwareDevices)
-            {
-                var device = new DeviceIndicator(hardwareDevice.DeviceNumber, flashRate, Color.Yellow
-                    , Color.Transparent);
-                device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
-                device.DeviceNumber = hardwareDevice.DeviceNumber;
-                device.Location = GetLocation(panel.Size.Width, numDevices, hardwareDevice.DeviceNumber);
-                _deviceIndicators.Add(hardwareDevice.DeviceNumber, device);
-                panel.Controls.Add(device);
-            }
+            //var panel = new Panel();
+            //panel.Location = new Point(189, 0);
+            //panel.Size = new Size(769, 127);
+            //panel.BackColor = Color.Transparent;
+            //panel.Name = "PanelDeviceIndicators";
+            //var flashRate = _neutronVariables.DeviceFlashRate;
+            //foreach (var hardwareDevice in hardwareDevices)
+            //{
+            //    var device = new DeviceIndicator(hardwareDevice.DeviceNumber, flashRate, Color.Yellow
+            //        , Color.Transparent);
+            //    device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
+            //    device.DeviceNumber = hardwareDevice.DeviceNumber;
+            //    device.Location = GetLocation(panel.Size.Width, numDevices, hardwareDevice.DeviceNumber);
+            //    _deviceIndicators.Add(hardwareDevice.DeviceNumber, device);
+            //    panel.Controls.Add(device);
+            //}
 
-            PickScreen.Controls.Add(panel);
+            PickScreen.Controls.Add(_deviceIndicatorManager.DeviceIndicatorPanel);
 
         }
 
@@ -417,717 +439,39 @@ namespace Neutron.Forms
             bp.OrderComplete = true;
         }
 
-        private void SetupPickPositions(int pickBatchSize)
+        private void SetupPickPositions(int pickBatchSize, int pickBatchRows = 1)
         {
-            switch (pickBatchSize)
+            var rows = pickBatchRows;
+            var positions = pickBatchSize;
+
+            var panelManager = new PanelManager(PanelOrderPositions, PanelType.OrderSelection);
+            PanelOrderPositions = panelManager.AddPositions(rows, positions);
+
+            //foreach (var textBox in PanelOrderPositions.Controls.OfType<TextBox>())
+            //{
+
+            //}
+
+            var inductionPanelManager = new PanelManager(PanelOrderInduction, PanelType.OrderInduction);
+            PanelOrderInduction = inductionPanelManager.AddPositions(rows, positions);
+
+            // Events
+
+            foreach (var userControl in PanelOrderInduction.Controls.OfType<UserControlPickPosition>())
             {
-                case 6:
-                    {
-                        // 
-                        // LabelPickPos1
-                        // 
-                        LabelPickPos1.BackColor = Color.RoyalBlue;
-                        LabelPickPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPickPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPickPos1.ForeColor = SystemColors.ControlText;
-                        LabelPickPos1.Location = new Point(77, 77);
-                        LabelPickPos1.Name = "LabelPickPos1";
-                        LabelPickPos1.Size = new Size(36, 26);
-                        LabelPickPos1.TabIndex = 120;
-                        LabelPickPos1.Text = "1";
-                        LabelPickPos1.TextAlign = ContentAlignment.MiddleCenter;
-                        // 
-                        // LabelPickPos2
-                        // 
-                        LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPickPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPickPos2.Location = new Point(267, 77);
-                        LabelPickPos2.Name = "LabelPickPos2";
-                        LabelPickPos2.Size = new Size(36, 26);
-                        LabelPickPos2.TabIndex = 122;
-                        LabelPickPos2.Text = "2";
-                        LabelPickPos2.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPickPos2.Visible = false;
-                        // 
-                        // LabelPickPos3
-                        // 
-                        LabelPickPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPickPos3.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPickPos3.Location = new Point(457, 77);
-                        LabelPickPos3.Name = "LabelPickPos3";
-                        LabelPickPos3.Size = new Size(36, 26);
-                        LabelPickPos3.TabIndex = 124;
-                        LabelPickPos3.Text = "3";
-                        LabelPickPos3.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPickPos3.Visible = false;
-                        // 
-                        // LabelPickPos4
-                        // 
-                        LabelPickPos4.BackColor = Color.RoyalBlue;
-                        LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPickPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPickPos4.Location = new Point(647, 77);
-                        LabelPickPos4.Name = "LabelPickPos4";
-                        LabelPickPos4.Size = new Size(36, 26);
-                        LabelPickPos4.TabIndex = 126;
-                        LabelPickPos4.Text = "4";
-                        LabelPickPos4.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPickPos4.Visible = false;
-                        // 
-                        // LabelPickPos5
-                        // 
-                        LabelPickPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPickPos5.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPickPos5.Location = new Point(837, 77);
-                        LabelPickPos5.Name = "LabelPickPos5";
-                        LabelPickPos5.Size = new Size(36, 26);
-                        LabelPickPos5.TabIndex = 128;
-                        LabelPickPos5.Text = "5";
-                        LabelPickPos5.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPickPos5.Visible = false;
-                        // 
-                        // LabelPickPos6
-                        // 
-                        LabelPickPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPickPos6.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPickPos6.Location = new Point(1027, 77);
-                        LabelPickPos6.Name = "LabelPickPos6";
-                        LabelPickPos6.Size = new Size(36, 26);
-                        LabelPickPos6.TabIndex = 130;
-                        LabelPickPos6.Text = "6";
-                        LabelPickPos6.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPickPos6.Visible = false;
-                        // 
-                        // LabelPickPos7
-                        // 
-                        //this.LabelPickPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        //this.LabelPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.LabelPickPos7.Location = new System.Drawing.Point(907, 12);
-                        //this.LabelPickPos7.Name = "LabelPickPos7";
-                        //this.LabelPickPos7.Size = new System.Drawing.Size(26, 26);
-                        //this.LabelPickPos7.TabIndex = 161;
-                        //this.LabelPickPos7.Text = "7";
-                        //this.LabelPickPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-                        LabelPickPos7.Visible = false;
-                        // 
-                        // LabelPickPos8
-                        // 
-                        //this.LabelPickPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        //this.LabelPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.LabelPickPos8.Location = new System.Drawing.Point(1048, 12);
-                        //this.LabelPickPos8.Name = "LabelPickPos8";
-                        //this.LabelPickPos8.Size = new System.Drawing.Size(26, 26);
-                        //this.LabelPickPos8.TabIndex = 164;
-                        //this.LabelPickPos8.Text = "8";
-                        //this.LabelPickPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-                        LabelPickPos8.Visible = false;
+                foreach (var panel in userControl.Controls.OfType<Panel>())
+                {
+                    var textBox = panel.Controls.OfType<TextBox>().FirstOrDefault();
+                    if (textBox == null) continue;
 
-                        LabelPickPos9.Visible = false;
-                        LabelPickPos10.Visible = false;
-                        LabelPickPos11.Visible = false;
-                        LabelPickPos12.Visible = false;
-                        LabelPickPos13.Visible = false;
-                        LabelPickPos14.Visible = false;
-                        LabelPickPos15.Visible = false;
-                        LabelPickPos16.Visible = false;
+                    textBox.Click += TextBoxPos_Click;
+                    textBox.Enter += TextBoxEnter;
+                    textBox.KeyDown += TextBoxPosKeyDown;
+                    textBox.Leave += TextBoxPosLeave;
+                }
 
-                        // 
-                        // TextBoxPickPos1
-                        // 
-                        TextBoxPickPos1.BackColor = SystemColors.ButtonHighlight;
-                        TextBoxPickPos1.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPickPos1.Location = new Point(28, 109);
-                        TextBoxPickPos1.Multiline = true;
-                        TextBoxPickPos1.Name = "TextBoxPickPos1";
-                        TextBoxPickPos1.ReadOnly = true;
-                        TextBoxPickPos1.Size = new Size(134, 44);
-                        TextBoxPickPos1.TabIndex = 121;
-                        TextBoxPickPos1.Tag = "0";
-                        TextBoxPickPos1.Text = "";
-                        TextBoxPickPos1.TextAlign = HorizontalAlignment.Center;
-                        // 
-                        // TextBoxPickPos2
-                        // 
-                        TextBoxPickPos2.BackColor = SystemColors.ButtonHighlight;
-                        TextBoxPickPos2.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPickPos2.Location = new Point(218, 109);
-                        TextBoxPickPos2.Multiline = true;
-                        TextBoxPickPos2.Name = "TextBoxPickPos2";
-                        TextBoxPickPos2.ReadOnly = true;
-                        TextBoxPickPos2.Size = new Size(134, 44);
-                        TextBoxPickPos2.TabIndex = 123;
-                        TextBoxPickPos2.Tag = "1";
-                        TextBoxPickPos2.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPickPos2.Visible = false;
-                        // 
-                        // TextBoxPickPos3
-                        // 
-                        TextBoxPickPos3.BackColor = SystemColors.ButtonHighlight;
-                        TextBoxPickPos3.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPickPos3.Location = new Point(408, 109);
-                        TextBoxPickPos3.Multiline = true;
-                        TextBoxPickPos3.Name = "TextBoxPickPos3";
-                        TextBoxPickPos3.ReadOnly = true;
-                        TextBoxPickPos3.Size = new Size(134, 44);
-                        TextBoxPickPos3.TabIndex = 125;
-                        TextBoxPickPos3.Tag = "2";
-                        TextBoxPickPos3.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPickPos3.Visible = false;
-                        // 
-                        // TextBoxPickPos4
-                        // 
-                        TextBoxPickPos4.BackColor = SystemColors.ButtonHighlight;
-                        TextBoxPickPos4.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPickPos4.Location = new Point(598, 109);
-                        TextBoxPickPos4.Multiline = true;
-                        TextBoxPickPos4.Name = "TextBoxPickPos4";
-                        TextBoxPickPos4.ReadOnly = true;
-                        TextBoxPickPos4.Size = new Size(134, 44);
-                        TextBoxPickPos4.TabIndex = 127;
-                        TextBoxPickPos4.Tag = "3";
-                        TextBoxPickPos4.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPickPos4.Visible = false;
-                        // 
-                        // TextBoxPickPos5
-                        // 
-                        TextBoxPickPos5.BackColor = SystemColors.ButtonHighlight;
-                        TextBoxPickPos5.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPickPos5.Location = new Point(788, 109);
-                        TextBoxPickPos5.Multiline = true;
-                        TextBoxPickPos5.Name = "TextBoxPickPos5";
-                        TextBoxPickPos5.ReadOnly = true;
-                        TextBoxPickPos5.Size = new Size(134, 44);
-                        TextBoxPickPos5.TabIndex = 129;
-                        TextBoxPickPos5.Tag = "4";
-                        TextBoxPickPos5.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPickPos5.Visible = false;
-                        // 
-                        // TextBoxPickPos6
-                        // 
-                        TextBoxPickPos6.BackColor = SystemColors.ButtonHighlight;
-                        TextBoxPickPos6.Font = new Font("Microsoft Sans Serif", 20.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPickPos6.Location = new Point(978, 109);
-                        TextBoxPickPos6.Multiline = true;
-                        TextBoxPickPos6.Name = "TextBoxPickPos6";
-                        TextBoxPickPos6.ReadOnly = true;
-                        TextBoxPickPos6.Size = new Size(134, 44);
-                        TextBoxPickPos6.TabIndex = 131;
-                        TextBoxPickPos6.Tag = "5";
-                        TextBoxPickPos6.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPickPos6.Visible = false;
-                        // 
-                        // TextBoxPickPos7
-                        // 
-                        //this.TextBoxPickPos7.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-                        //this.TextBoxPickPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.TextBoxPickPos7.Location = new System.Drawing.Point(864, 44);
-                        //this.TextBoxPickPos7.Multiline = true;
-                        //this.TextBoxPickPos7.Name = "TextBoxPickPos7";
-                        //this.TextBoxPickPos7.ReadOnly = true;
-                        //this.TextBoxPickPos7.Size = new System.Drawing.Size(112, 44);
-                        //this.TextBoxPickPos7.TabIndex = 160;
-                        //this.TextBoxPickPos7.Tag = "6";
-                        //this.TextBoxPickPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-                        TextBoxPickPos7.Visible = false;
-                        // 
-                        // TextBoxPickPos8
-                        // 
-                        //this.TextBoxPickPos8.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-                        //this.TextBoxPickPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.TextBoxPickPos8.Location = new System.Drawing.Point(1005, 44);
-                        //this.TextBoxPickPos8.Multiline = true;
-                        //this.TextBoxPickPos8.Name = "TextBoxPickPos8";
-                        //this.TextBoxPickPos8.ReadOnly = true;
-                        //this.TextBoxPickPos8.Size = new System.Drawing.Size(112, 44);
-                        //this.TextBoxPickPos8.TabIndex = 165;
-                        //this.TextBoxPickPos8.Tag = "7";
-                        //this.TextBoxPickPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-                        TextBoxPickPos8.Visible = false;
-                        TextBoxPickPos9.Visible = false;
-                        TextBoxPickPos10.Visible = false;
-                        TextBoxPickPos11.Visible = false;
-                        TextBoxPickPos12.Visible = false;
-                        TextBoxPickPos13.Visible = false;
-                        TextBoxPickPos14.Visible = false;
-                        TextBoxPickPos15.Visible = false;
-                        TextBoxPickPos16.Visible = false;
-
-                        // 
-                        // Pos1Display
-                        // 
-                        Pos1Display.BackColor = Color.Transparent;
-                        Pos1Display.Location = new Point(20, 109);
-                        Pos1Display.Name = "Pos1Display";
-                        Pos1Display.Size = new Size(150, 53);
-                        Pos1Display.TabIndex = 153;
-                        // 
-                        // Pos2Display
-                        // 
-                        Pos2Display.BackColor = Color.Transparent;
-                        Pos2Display.Location = new Point(210, 109);
-                        Pos2Display.Name = "Pos2Display";
-                        Pos2Display.Size = new Size(150, 53);
-                        Pos2Display.TabIndex = 154;
-                        Pos2Display.Visible = false;
-                        // 
-                        // Pos3Display
-                        // 
-                        Pos3Display.BackColor = Color.Transparent;
-                        Pos3Display.Location = new Point(400, 109);
-                        Pos3Display.Name = "Pos3Display";
-                        Pos3Display.Size = new Size(150, 53);
-                        Pos3Display.TabIndex = 155;
-                        Pos3Display.Visible = false;
-                        // 
-                        // Pos4Display
-                        // 
-                        Pos4Display.BackColor = Color.Transparent;
-                        Pos4Display.Location = new Point(590, 109);
-                        Pos4Display.Name = "Pos4Display";
-                        Pos4Display.Size = new Size(150, 53);
-                        Pos4Display.TabIndex = 156;
-                        Pos4Display.Visible = false;
-                        // 
-                        // Pos5Display
-                        // 
-                        Pos5Display.BackColor = Color.Transparent;
-                        Pos5Display.Location = new Point(780, 109);
-                        Pos5Display.Name = "Pos5Display";
-                        Pos5Display.Size = new Size(150, 53);
-                        Pos5Display.TabIndex = 157;
-                        Pos5Display.Visible = false;
-                        // 
-                        // Pos6Display
-                        // 
-                        Pos6Display.BackColor = Color.Transparent;
-                        Pos6Display.Location = new Point(970, 109);
-                        Pos6Display.Name = "Pos6Display";
-                        Pos6Display.Size = new Size(150, 53);
-                        Pos6Display.TabIndex = 158;
-                        Pos6Display.Visible = false;
-                        // 
-                        // Pos7Display
-                        // 
-                        //this.Pos7Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos7Display.Location = new System.Drawing.Point(856, 44);
-                        //this.Pos7Display.Name = "Pos7Display";
-                        //this.Pos7Display.Size = new System.Drawing.Size(128, 53);
-                        //this.Pos7Display.TabIndex = 162;
-                        Pos7Display.Visible = false;
-
-                        // 
-                        // Pos8Display
-                        // 
-                        //this.Pos8Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.Pos8Display.Location = new System.Drawing.Point(997, 44);
-                        //this.Pos8Display.Name = "Pos8Display";
-                        //this.Pos8Display.Size = new System.Drawing.Size(128, 53);
-                        //this.Pos8Display.TabIndex = 165;
-                        Pos8Display.Visible = false;
-                        Pos9Display.Visible = false;
-                        Pos10Display.Visible = false;
-                        Pos11Display.Visible = false;
-                        Pos12Display.Visible = false;
-                        Pos13Display.Visible = false;
-                        Pos14Display.Visible = false;
-                        Pos15Display.Visible = false;
-                        Pos16Display.Visible = false;
-
-                        //-----------------Induction Screen ----------------------
-                        // 
-                        // LabelPos1
-                        // 
-                        LabelPos1.BackColor = Color.RoyalBlue;
-                        LabelPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPos1.ForeColor = SystemColors.ControlText;
-                        LabelPos1.Location = new Point(77, 77);
-                        LabelPos1.Name = "LabelPos1";
-                        LabelPos1.Size = new Size(36, 26);
-                        LabelPos1.TabIndex = 151;
-                        LabelPos1.Text = "1";
-                        LabelPos1.TextAlign = ContentAlignment.MiddleCenter;
-                        // 
-                        // LabelPos2
-                        // 
-                        LabelPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPos2.Location = new Point(267, 77);
-                        LabelPos2.Name = "LabelPos2";
-                        LabelPos2.Size = new Size(36, 26);
-                        LabelPos2.TabIndex = 152;
-                        LabelPos2.Text = "2";
-                        LabelPos2.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPos2.Visible = false;
-                        // 
-                        // LabelPos3
-                        // 
-                        LabelPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPos3.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPos3.Location = new Point(457, 77);
-                        LabelPos3.Name = "LabelPos3";
-                        LabelPos3.Size = new Size(36, 26);
-                        LabelPos3.TabIndex = 153;
-                        LabelPos3.Text = "3";
-                        LabelPos3.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPos3.Visible = false;
-                        // 
-                        // LabelPos4
-                        // 
-                        LabelPos4.BackColor = Color.RoyalBlue;
-                        LabelPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPos4.Location = new Point(647, 77);
-                        LabelPos4.Name = "LabelPos4";
-                        LabelPos4.Size = new Size(36, 26);
-                        LabelPos4.TabIndex = 154;
-                        LabelPos4.Text = "4";
-                        LabelPos4.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPos4.Visible = false;
-                        // 
-                        // LabelPos5
-                        // 
-                        LabelPos5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPos5.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPos5.Location = new Point(837, 77);
-                        LabelPos5.Name = "LabelPos5";
-                        LabelPos5.Size = new Size(36, 26);
-                        LabelPos5.TabIndex = 155;
-                        LabelPos5.Text = "5";
-                        LabelPos5.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPos5.Visible = false;
-                        // 
-                        // LabelPos6
-                        // 
-                        LabelPos6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        LabelPos6.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-                        LabelPos6.Location = new Point(1027, 77);
-                        LabelPos6.Name = "LabelPos6";
-                        LabelPos6.Size = new Size(36, 26);
-                        LabelPos6.TabIndex = 156;
-                        LabelPos6.Text = "6";
-                        LabelPos6.TextAlign = ContentAlignment.MiddleCenter;
-                        LabelPos6.Visible = false;
-                        // 
-                        // LabelPos7
-                        // 
-                        //this.LabelPos7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        //this.LabelPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.LabelPos7.Location = new System.Drawing.Point(619, 558);
-                        //this.LabelPos7.Name = "LabelPos7";
-                        //this.LabelPos7.Size = new System.Drawing.Size(26, 26);
-                        //this.LabelPos7.TabIndex = 171;
-                        //this.LabelPos7.Text = "7";
-                        //this.LabelPos7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-                        LabelPos7.Visible = false;
-                        // 
-                        // LabelPos8
-                        // 
-                        //this.LabelPos8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-                        //this.LabelPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.LabelPos8.Location = new System.Drawing.Point(759, 557);
-                        //this.LabelPos8.Name = "LabelPos8";
-                        //this.LabelPos8.Size = new System.Drawing.Size(26, 26);
-                        //this.LabelPos8.TabIndex = 172;
-                        //this.LabelPos8.Text = "8";
-                        //this.LabelPos8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-                        LabelPos8.Visible = false;
-                        LabelPos9.Visible = false;
-                        LabelPos10.Visible = false;
-                        LabelPos11.Visible = false;
-                        LabelPos12.Visible = false;
-                        LabelPos13.Visible = false;
-                        LabelPos14.Visible = false;
-                        LabelPos15.Visible = false;
-                        LabelPos16.Visible = false;
-                        // 
-                        // TextBoxPos1
-                        // 
-                        TextBoxPos1.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPos1.Location = new Point(28, 109);
-                        TextBoxPos1.Name = "TextBoxPos1";
-                        TextBoxPos1.Size = new Size(134, 44);
-                        TextBoxPos1.TabIndex = 0;
-                        TextBoxPos1.Tag = "0";
-                        TextBoxPos1.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPos1.Click += new EventHandler(TextBoxPos_Click);
-                        TextBoxPos1.Enter += new EventHandler(TextBoxEnter);
-                        TextBoxPos1.KeyDown += new KeyEventHandler(TextBoxPosKeyDown);
-                        //TextBoxPos1.Leave += new EventHandler(TextBoxPosLeave);
-                        // 
-                        // TextBoxPos2
-                        // 
-                        TextBoxPos2.BackColor = SystemColors.Control;
-                        TextBoxPos2.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPos2.Location = new Point(218, 109);
-                        TextBoxPos2.Name = "TextBoxPos2";
-                        TextBoxPos2.Size = new Size(134, 44);
-                        TextBoxPos2.TabIndex = 1;
-                        TextBoxPos2.Tag = "1";
-                        TextBoxPos2.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPos2.Visible = false;
-                        TextBoxPos2.Click += new EventHandler(TextBoxPos_Click);
-                        TextBoxPos2.Enter += new EventHandler(TextBoxEnter);
-                        TextBoxPos2.KeyDown += new KeyEventHandler(TextBoxPosKeyDown);
-                        //TextBoxPos2.Leave += new EventHandler(TextBoxPosLeave);
-                        // 
-                        // TextBoxPos3
-                        // 
-                        TextBoxPos3.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPos3.Location = new Point(408, 109);
-                        TextBoxPos3.Name = "TextBoxPos3";
-                        TextBoxPos3.Size = new Size(134, 44);
-                        TextBoxPos3.TabIndex = 2;
-                        TextBoxPos3.Tag = "2";
-                        TextBoxPos3.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPos3.Visible = false;
-                        TextBoxPos3.Click += new EventHandler(TextBoxPos_Click);
-                        TextBoxPos3.Enter += new EventHandler(TextBoxEnter);
-                        TextBoxPos3.KeyDown += new KeyEventHandler(TextBoxPosKeyDown);
-                        //TextBoxPos3.Leave += new EventHandler(TextBoxPosLeave);
-                        // 
-                        // TextBoxPos4
-                        // 
-                        TextBoxPos4.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPos4.Location = new Point(598, 109);
-                        TextBoxPos4.Name = "TextBoxPos4";
-                        TextBoxPos4.Size = new Size(134, 44);
-                        TextBoxPos4.TabIndex = 3;
-                        TextBoxPos4.Tag = "3";
-                        TextBoxPos4.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPos4.Visible = false;
-                        TextBoxPos4.Click += new EventHandler(TextBoxPos_Click);
-                        TextBoxPos4.Enter += new EventHandler(TextBoxEnter);
-                        TextBoxPos4.KeyDown += new KeyEventHandler(TextBoxPosKeyDown);
-                        //TextBoxPos4.Leave += new EventHandler(TextBoxPosLeave);
-                        // 
-                        // TextBoxPos5
-                        // 
-                        TextBoxPos5.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPos5.Location = new Point(788, 109);
-                        TextBoxPos5.Name = "TextBoxPos5";
-                        TextBoxPos5.Size = new Size(134, 44);
-                        TextBoxPos5.TabIndex = 4;
-                        TextBoxPos5.Tag = "4";
-                        TextBoxPos5.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPos5.Visible = false;
-                        TextBoxPos5.Click += new EventHandler(TextBoxPos_Click);
-                        TextBoxPos5.Enter += new EventHandler(TextBoxEnter);
-                        TextBoxPos5.KeyDown += new KeyEventHandler(TextBoxPosKeyDown);
-                        //TextBoxPos5.Leave += new EventHandler(TextBoxPosLeave);
-                        // 
-                        // TextBoxPos6
-                        // 
-                        TextBoxPos6.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-                        TextBoxPos6.Location = new Point(978, 109);
-                        TextBoxPos6.Name = "TextBoxPos6";
-                        TextBoxPos6.Size = new Size(134, 44);
-                        TextBoxPos6.TabIndex = 5;
-                        TextBoxPos6.Tag = "5";
-                        TextBoxPos6.TextAlign = HorizontalAlignment.Center;
-                        TextBoxPos6.Visible = false;
-                        TextBoxPos6.Click += new EventHandler(TextBoxPos_Click);
-                        TextBoxPos6.Enter += new EventHandler(TextBoxEnter);
-                        TextBoxPos6.KeyDown += new KeyEventHandler(TextBoxPosKeyDown);
-                        //TextBoxPos6.Leave += new EventHandler(TextBoxPosLeave);
-                        // 
-                        // TextBoxPos7
-                        // 
-                        //this.TextBoxPos7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.TextBoxPos7.Location = new System.Drawing.Point(577, 590);
-                        //this.TextBoxPos7.Name = "TextBoxPos7";
-                        //this.TextBoxPos7.Size = new System.Drawing.Size(110, 29);
-                        //this.TextBoxPos7.TabIndex = 169;
-                        //this.TextBoxPos7.Tag = "6";
-                        //this.TextBoxPos7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-                        TextBoxPos7.Visible = false;
-                        // 
-                        // TextBoxPos8
-                        // 
-                        //this.TextBoxPos8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        //this.TextBoxPos8.Location = new System.Drawing.Point(717, 590);
-                        //this.TextBoxPos8.Name = "TextBoxPos8";
-                        //this.TextBoxPos8.Size = new System.Drawing.Size(110, 29);
-                        //this.TextBoxPos8.TabIndex = 170;
-                        //this.TextBoxPos8.Tag = "7";
-                        //this.TextBoxPos8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-                        TextBoxPos8.Visible = false;
-                        TextBoxPos9.Visible = false;
-                        TextBoxPos10.Visible = false;
-                        TextBoxPos11.Visible = false;
-                        TextBoxPos12.Visible = false;
-                        TextBoxPos13.Visible = false;
-                        TextBoxPos14.Visible = false;
-                        TextBoxPos15.Visible = false;
-                        TextBoxPos16.Visible = false;
-
-
-                        // 
-                        // AvailablePos1Display
-                        // 
-                        // this.AvailablePos1Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos1Display.Location = new Point(20, 109);
-                        //  this.AvailablePos1Display.Name = "Pos1Display";
-                        AvailablePos1Display.Size = new Size(150, 53);
-                        //  this.AvailablePos1Display.TabIndex = 161;
-                        AvailablePos1Display.Visible = true;
-                        // 
-                        // AvailablePos2Display
-                        // 
-                        // this.AvailablePos2Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos2Display.Location = new Point(210, 109);
-                        // this.AvailablePos2Display.Name = "Pos2Display";
-                        AvailablePos2Display.Size = new Size(150, 53);
-                        // this.AvailablePos2Display.TabIndex = 162;
-                        AvailablePos2Display.Visible = true;
-                        // 
-                        // AvailablePos3Display
-                        // 
-                        //  this.AvailablePos3Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos3Display.Location = new Point(400, 109);
-                        //   this.AvailablePos3Display.Name = "Pos3Display";
-                        AvailablePos3Display.Size = new Size(150, 53);
-                        //  this.AvailablePos3Display.TabIndex = 163;
-                        AvailablePos3Display.Visible = true;
-                        // 
-                        // AvailablePos4Display
-                        // 
-                        //  this.AvailablePos4Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos4Display.Location = new Point(590, 109);
-                        //  this.AvailablePos4Display.Name = "Pos4Display";
-                        AvailablePos4Display.Size = new Size(150, 53);
-                        //  this.AvailablePos4Display.TabIndex = 164;
-                        AvailablePos4Display.Visible = true;
-                        // 
-                        // AvailablePos5Display
-                        // 
-                        // this.AvailablePos5Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos5Display.Location = new Point(780, 109);
-                        //  this.AvailablePos5Display.Name = "Pos5Display";
-                        AvailablePos5Display.Size = new Size(150, 53);
-                        // this.AvailablePos5Display.TabIndex = 165;
-                        AvailablePos5Display.Visible = true;
-                        // 
-                        // AvailablePos6Display
-                        // 
-                        // this.AvailablePos6Display.BackColor = System.Drawing.Color.Transparent;
-                        AvailablePos6Display.Location = new Point(970, 109);
-                        // this.AvailablePos6Display.Name = "Pos6Display";
-                        AvailablePos6Display.Size = new Size(150, 53);
-                        //  this.AvailablePos6Display.TabIndex = 166;
-                        AvailablePos6Display.Visible = true;
-                        // 
-                        // AvailablePos7Display
-                        // 
-                        //this.AvailablePos7Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.AvailablePos7Display.Location = new System.Drawing.Point(569, 590);
-                        //this.AvailablePos7Display.Name = "Pos7Display";
-                        //this.AvailablePos7Display.Size = new System.Drawing.Size(126, 53);
-                        //this.AvailablePos7Display.TabIndex = 173;
-                        AvailablePos7Display.Visible = false;
-                        // 
-                        // AvailablePos8Display
-                        // 
-                        //this.AvailablePos8Display.BackColor = System.Drawing.Color.Transparent;
-                        //this.AvailablePos8Display.Location = new System.Drawing.Point(709, 590);
-                        //this.AvailablePos8Display.Name = "Pos8Display";
-                        //this.AvailablePos8Display.Size = new System.Drawing.Size(126, 53);
-                        //this.AvailablePos8Display.TabIndex = 174;
-                        AvailablePos8Display.Visible = false;
-                        AvailablePos9Display.Visible = false;
-                        AvailablePos10Display.Visible = false;
-                        AvailablePos11Display.Visible = false;
-                        AvailablePos12Display.Visible = false;
-                        AvailablePos13Display.Visible = false;
-                        AvailablePos14Display.Visible = false;
-                        AvailablePos15Display.Visible = false;
-                        AvailablePos16Display.Visible = false;
-
-                        break;
-                    }
-                case 8:
-                    {
-                        // 
-                        // LabelPickPos1
-                        // 
-                        LabelPickPos9.Visible = false;
-                        LabelPickPos10.Visible = false;
-                        LabelPickPos11.Visible = false;
-                        LabelPickPos12.Visible = false;
-                        LabelPickPos13.Visible = false;
-                        LabelPickPos14.Visible = false;
-                        LabelPickPos15.Visible = false;
-                        LabelPickPos16.Visible = false;
-
-                        // 
-                        // TextBoxPickPos1
-                        // 
-
-                        TextBoxPickPos9.Visible = false;
-                        TextBoxPickPos10.Visible = false;
-                        TextBoxPickPos11.Visible = false;
-                        TextBoxPickPos12.Visible = false;
-                        TextBoxPickPos13.Visible = false;
-                        TextBoxPickPos14.Visible = false;
-                        TextBoxPickPos15.Visible = false;
-                        TextBoxPickPos16.Visible = false;
-
-                        // 
-                        // Pos1Display
-                        // 
-
-                        Pos9Display.Visible = false;
-                        Pos10Display.Visible = false;
-                        Pos11Display.Visible = false;
-                        Pos12Display.Visible = false;
-                        Pos13Display.Visible = false;
-                        Pos14Display.Visible = false;
-                        Pos15Display.Visible = false;
-                        Pos16Display.Visible = false;
-
-                        //-----------------Induction Screen ----------------------
-                        // 
-                        // LabelPos1
-                        // 
-
-                        LabelPos9.Visible = false;
-                        LabelPos10.Visible = false;
-                        LabelPos11.Visible = false;
-                        LabelPos12.Visible = false;
-                        LabelPos13.Visible = false;
-                        LabelPos14.Visible = false;
-                        LabelPos15.Visible = false;
-                        LabelPos16.Visible = false;
-
-                        // 
-                        // TextBoxPos1
-                        // 
-
-                        TextBoxPos9.Visible = false;
-                        TextBoxPos10.Visible = false;
-                        TextBoxPos11.Visible = false;
-                        TextBoxPos12.Visible = false;
-                        TextBoxPos13.Visible = false;
-                        TextBoxPos14.Visible = false;
-                        TextBoxPos15.Visible = false;
-                        TextBoxPos16.Visible = false;
-
-                        // 
-                        // AvailablePos1Display
-                        // 
-
-                        AvailablePos9Display.Visible = false;
-                        AvailablePos10Display.Visible = false;
-                        AvailablePos11Display.Visible = false;
-                        AvailablePos12Display.Visible = false;
-                        AvailablePos13Display.Visible = false;
-                        AvailablePos14Display.Visible = false;
-                        AvailablePos15Display.Visible = false;
-                        AvailablePos16Display.Visible = false;
-
-                        break;
-                    }
             }
+
         }
 
         private void SetLoaderButtonText()
@@ -1405,12 +749,12 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetAvailableOrdersForInductionScreen(_station, searchField);
-                //  var views = _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking);
-                // var views = _ordersRepository.GetAvailableOrders(_station);
+                var views = _ordersRepository.GetAvailableOrdersForInductionScreen(_stationView, searchField);
+                //  var views = _ordersRepository.GetAvailableOrders(_stationView, findWhat, _neutronVariables.SerialPicking);
+                // var views = _ordersRepository.GetAvailableOrders(_stationView);
                 //var views = !string.IsNullOrEmpty(findWhat)
-                //    ? _ordersRepository.GetAvailableOrders(_station, findWhat, _neutronVariables.SerialPicking)
-                //    : _ordersRepository.GetAvailableOrders(_station);
+                //    ? _ordersRepository.GetAvailableOrders(_stationView, findWhat, _neutronVariables.SerialPicking)
+                //    : _ordersRepository.GetAvailableOrders(_stationView);
 
                 _bindingListViewAvailableOrdersViews = new BindingListView<AvailableOrdersView>(views.ToList());
                 _bindingSourceAvailableOrders.DataSource = _bindingListViewAvailableOrdersViews;
@@ -2991,42 +2335,6 @@ namespace Neutron.Forms
             //}
         }
 
-        private void DataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-
-            //var dgv = sender as DataGridView;
-
-            //if (dgv.Columns[e.ColumnIndex].Name.Equals("OrderStatusName"))
-            //{
-            //    if (e.Value != null)
-            //    {
-            //        switch (e.Value.ToString().Trim())
-            //        {
-            //            case "Available":
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.White;
-            //                break;
-            //            case "Hold":
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.Yellow;
-            //                break;
-            //            case "Picking":
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.Blue;
-            //                break;
-            //            case "Partial":
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.Orange;
-            //                break;
-            //            case "Deleted":
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.Red;
-            //                break;
-            //            case "Complete":
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.ForestGreen;
-            //                break;
-            //            default:
-            //                dgv.Rows[e.RowIndex].Cells["IsChecked"].Style.BackColor = Color.White;
-            //                break;
-            //        }
-            //    }
-            //}
-        }
 
         private void DataGridView1_KeyUp(object sender, KeyEventArgs e)
         {
@@ -3156,13 +2464,14 @@ namespace Neutron.Forms
 
         private void MBGo_Click(object sender, EventArgs e)
         {
-            this.KeyDown -= new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);
             _spaceBarDisabled = true;
-            EnablePickAccept(false);
+            //EnablePickAccept(false);
             DisableNextButtons();
+            MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"ShowJobs");
             Cursor.Current = Cursors.WaitCursor;
             Go();
             Cursor.Current = Cursors.Default;
+            _spaceBarDisabled = false;
         }
 
         private void DisableNextButtons()
@@ -3290,7 +2599,7 @@ namespace Neutron.Forms
         //    foreach (var batchPosition in orderIds)
         //    {
         //        var orderDetails = _repoOrderDetails.FindBy(r =>
-        //            r.OrderId == batchPosition.OrderId && r.StationNumber == _station.StationNumber &&
+        //            r.OrderId == batchPosition.OrderId && r.StationNumber == _stationView.StationNumber &&
         //            r.LineStatusId == (int) LineStatus.Available);
         //        foreach (var orderDetail in orderDetails)
         //        {
@@ -3509,7 +2818,7 @@ namespace Neutron.Forms
                 var currentOrder = ((ObjectView<AvailableOrdersView>)_bindingSourceAvailableOrders.Current).Object;
                 var firstTime = true;
                 var counter = 0;
-                var orderAndDetails = _ordersRepository.GetOrderAndOrderDetails(bp.OrderId, _station.StationNumber);
+                var orderAndDetails = _ordersRepository.GetOrderAndOrderDetails(bp.OrderId, _stationView.StationNumber);
                 currentOrder.Order = orderAndDetails;
                 var details = currentOrder.Order.OrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
@@ -3738,7 +3047,7 @@ namespace Neutron.Forms
 
         private void RemoveItemFromBatch(int orderId)
         {
-            var bp = _ordersToPick.Where(o => o.OrderId == orderId).FirstOrDefault();
+            var bp = _ordersToPick.FirstOrDefault(o => o.OrderId == orderId);
             if (bp != null)
             {
                 bp.OrderId = null;
@@ -3788,28 +3097,45 @@ namespace Neutron.Forms
             {
                 Task.Run(() => _logger.LogDetailAsync($"Index in Range: {idx}"));
                 // Set the initial Orders to Pick item values
-                _ordersToPick[idx].OrderId = orderId;
-                _ordersToPick[idx].Ord1 = ord1;
-                _ordersToPick[idx].Ord2 = ord2;
-                _ordersToPick[idx].OrderComplete = false;
-                Task.Run(() => _logger.LogDetailAsync($" Set the Current TextBox Posx Text to the Order Number"));
-                _currentTextBoxPos.Text = ord1;
-            }
-            // Now we can turn off the Manual override
-            ManualOverrideCurrentTextBoxPos = false;
-            Task.Run(() => _logger.LogDetailAsync($"  Clear the TextBox Posx BackColor"));
-            ClearTextBoxPosBackColor();
-            Task.Run(() => _logger.LogDetailAsync($" Back with the idx:{idx} it could be -1"));
+                if (!OrderInBatch(orderId))
+                {
+                    _ordersToPick[idx].OrderId = orderId;
+                    _ordersToPick[idx].Ord1 = ord1;
+                    _ordersToPick[idx].Ord2 = ord2;
+                    _ordersToPick[idx].OrderComplete = false;
+                    Task.Run(() => _logger.LogDetailAsync($" Set the Current TextBox Posx Text to the Order Number"));
+                    _currentTextBoxPos.Text = $"{ord1}{Environment.NewLine}{ord2}";
 
-            NextButtonEnabled();
+                    // Now we can turn off the Manual override
+                    ManualOverrideCurrentTextBoxPos = false;
+                    Task.Run(() => _logger.LogDetailAsync($"  Clear the TextBox Posx BackColor"));
+                    ClearTextBoxPosBackColor();
+                    Task.Run(() => _logger.LogDetailAsync($" Back with the idx:{idx} it could be -1"));
+
+                    NextButtonEnabled();
+                }
+                else
+                {
+                    ManualOverrideCurrentTextBoxPos = true;
+                    _currentTextBoxPos.SelectAll();
+                    _currentTextBoxPos.Focus();
+                }
+            }
+
             return idx;
+        }
+
+        private bool OrderInBatch(int orderId)
+        {
+            var result = _ordersToPick.FirstOrDefault(r => r.OrderId == orderId);
+            return result != null;
         }
 
         private int SetBatchPositionToManualOverride()
         {
             var result = -1;
             result = int.Parse(_currentTextBoxPos.Tag.ToString());
-            return result;
+            return result - 1;
         }
 
         private void ClearAllSelectOrdersToPick()
@@ -3884,13 +3210,13 @@ namespace Neutron.Forms
                     OrderComplete = false
                 };
                 _ordersToPick.Add(bp);
-                ShowPosition(i + 1);
+                // ShowPosition(i + 1);
             }
         }
 
         private void ShowPosition(int position)
         {
-            var font = new Font("Microsoft Sans Serif", 20);
+            // var font = new Font("Microsoft Sans Serif", 20);
             var pos = position.ToString();
 
             Control c = Controls.Find("LabelPickPos" + pos, true).Single() as Label;
@@ -3902,7 +3228,7 @@ namespace Neutron.Forms
             c = Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
             if (c != null)
             {
-                c.Font = font;
+                // c.Font = font;
                 c.Visible = true;
             }
 
@@ -3919,15 +3245,13 @@ namespace Neutron.Forms
         private void ShowOrdersToPick()
         {
             Task.Run(() => _logger.LogDetailAsync($"ShowOrdersToPick Start: [{DateTime.Now.ToLongTimeString()}]"));
-            var font = new Font("Microsoft Sans Serif", 10);
             for (var i = 0; i < _ordersToPick.Count; i++)
             {
                 var pos = (i + 1).ToString();
-                Control c = Controls.Find("TextBoxPickPos" + pos, true).First() as TextBox;
-                if (c == null) continue;
-                c.Font = font;
-                c.Height = 43;
-                c.Text = _ordersToPick[i].Ord1 + Environment.NewLine + _ordersToPick[i].Ord2;
+                var textBox = Controls.Find("TextBoxPickPos" + pos, true).First() as TextBox;
+                if (textBox == null) continue;
+                textBox.SizeTextBoxFont(2);
+                textBox.Text = $"{_ordersToPick[i].Ord1}{Environment.NewLine}{_ordersToPick[i].Ord2}";
             }
 
             Task.Run(() => _logger.LogDetailAsync($"ShowOrdersToPick Clear All Bli"));
@@ -3980,7 +3304,7 @@ namespace Neutron.Forms
             ClearAllShi();
             ClearAllBli();
             Console.WriteLine("Clear Active Device Indicator  PickBack");
-            ClearActiveDeviceIndicators();
+            _deviceIndicatorManager.ClearActiveDeviceIndicators();
             NextButtonEnabled();
             //TODO  commented out because I'm not handling something correctly
             // and items are getting stuck in Pick status
@@ -3995,7 +3319,7 @@ namespace Neutron.Forms
         //    var orderIds = ordersToPick.Where(r => r.OrderId != null && r.OrderComplete == false).ToList();
         //    foreach (var batchPosition in orderIds)
         //    {
-        //        var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.StationNumber == _station.StationNumber && r.LineStatusId == (int)LineStatus.Picking);
+        //        var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.StationNumber == _stationView.StationNumber && r.LineStatusId == (int)LineStatus.Picking);
         //        foreach (var orderDetail in orderDetails)
         //        {
         //            orderDetail.LineStatusId = (int)LineStatus.Available;
@@ -4006,6 +3330,7 @@ namespace Neutron.Forms
 
         private void MBStart_Click(object sender, EventArgs e)
         {
+            MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"ShowJobs");
             var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
             if (pickViews == null) return;
 
@@ -4024,9 +3349,8 @@ namespace Neutron.Forms
         private void Start()
         {
             _spaceBarDisabled = true;
-            EnablePickAccept(false);
-            Console.WriteLine("Init Device Indicators  Start");
-            InitDeviceIndicators();
+            //EnablePickAccept(false);
+            // InitDeviceIndicators();
             //-------------------------------------
             Task.Run(() => _logger.LogDetailAsync($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -4108,16 +3432,19 @@ namespace Neutron.Forms
             PrintLabels(_currentPickStop);
             UpdatePickScreen();
 
-            UpdateCurrentDeviceIndicator();
+            //UpdateCurrentDeviceIndicator();
+            _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
             UpdatePickPosition();
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
             UpdateTowerDisplay();
 
             tabControl1.SelectedTab = PickScreen;
+            MBPickAccept.Focus();
 
             //feels good to here
             Task.Run(() => _logger.LogDetailAsync($"Start_Click End: [{DateTime.Now.ToLongTimeString()}]"));
-            StartSpaceBarEnableTimer();
+            // StartSpaceBarEnableTimer();
+            _spaceBarDisabled = false;
         }
 
         private List<PickStop> FinalPickSequence(List<PickStop> pickStops)
@@ -4125,7 +3452,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start: [{DateTime.Now.ToLongTimeString()}]"));
             var newCarList = new List<List<PickStop>>();
             var newList = new List<PickStop>();
-            for (var i = 0; i < _station.HardwareDevices.Count; i++)
+            for (var i = 0; i < _stationView.HardwareDevices.Count; i++)
             {
                 var carList = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == i + 1)
                     .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
@@ -4151,7 +3478,7 @@ namespace Neutron.Forms
             }
             Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
             _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
-            for (var i = 1; i <= _station.HardwareDevices.Count; i++)
+            for (var i = 1; i <= _stationView.HardwareDevices.Count; i++)
             {
                 _deviceManager.MoveNext(i);
             }
@@ -4183,7 +3510,7 @@ namespace Neutron.Forms
                 _bindingSourcePickStops.MoveFirst();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
-                UpdateCurrentDeviceIndicator();
+                // UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
@@ -4191,6 +3518,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetFirstStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
                 //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
@@ -4206,7 +3534,7 @@ namespace Neutron.Forms
                 _bindingSourcePickStops.MoveNext();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
-                UpdateCurrentDeviceIndicator();
+                // UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
@@ -4214,6 +3542,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetNextStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
                 //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
@@ -4229,7 +3558,7 @@ namespace Neutron.Forms
                 _bindingSourcePickStops.MovePrevious();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
-                UpdateCurrentDeviceIndicator();
+                // UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
@@ -4237,6 +3566,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetPreviousStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
                 //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
@@ -4252,7 +3582,7 @@ namespace Neutron.Forms
                 _bindingSourcePickStops.MoveLast();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
-                UpdateCurrentDeviceIndicator();
+                //UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
@@ -4261,6 +3591,7 @@ namespace Neutron.Forms
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                 // UpdateTowerDisplay();
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetLastStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
                 // PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
@@ -4385,39 +3716,39 @@ namespace Neutron.Forms
             return result;
         }
 
-        private void UpdateCurrentDeviceIndicator()
-        {
-            Task.Run(() => _logger.LogDetailAsync($"Update Current Device Indicator START"));
-            ClearActiveDeviceIndicators();
-            var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-            _deviceIndicators[loc1].BlinkOn();
-            _deviceIndicators[loc1].Active = true;
-            Task.Run(() => _logger.LogDetailAsync($"Update Current Device Indicator: {loc1} END"));
-        }
+        //private void UpdateCurrentDeviceIndicator()
+        //{
+        //    Task.Run(() => _logger.LogDetailAsync($"Update Current Device Indicator START"));
+        //   _deviceIndicatorManager.ClearActiveDeviceIndicators();
+        //    var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+        //    _deviceIndicators[loc1].BlinkOn();
+        //    _deviceIndicators[loc1].Active = true;
+        //    Task.Run(() => _logger.LogDetailAsync($"Update Current Device Indicator: {loc1} END"));
+        //}
 
-        private void ClearActiveDeviceIndicators()
-        {
-            Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicators START"));
-            var devices = _deviceIndicators.Where(x => x.Value.Active == true).ToList();
-            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
-            {
-                deviceIndicator.Value.BlinkOff();
-                deviceIndicator.Value.Active = false;
-                Task.Run(() => _logger.LogDetailAsync($"Blink Off: {deviceIndicator.Value.DeviceNumber}"));
-            }
-            Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicators END"));
-        }
+        //private void ClearActiveDeviceIndicators()
+        //{
+        //    Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicators START"));
+        //    var devices = _deviceIndicators.Where(x => x.Value.Active == true).ToList();
+        //    foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
+        //    {
+        //        deviceIndicator.Value.BlinkOff();
+        //        deviceIndicator.Value.Active = false;
+        //        Task.Run(() => _logger.LogDetailAsync($"Blink Off: {deviceIndicator.Value.DeviceNumber}"));
+        //    }
+        //    Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicators END"));
+        //}
 
-        private void ClearAllDeviceIndicators()
-        {
-            Task.Run(() => _logger.LogDetailAsync($"Clear All Device Indicators START"));
-            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
-            {
-                deviceIndicator.Value.Active = false;
-                deviceIndicator.Value.BlinkOff();
-            }
-            Task.Run(() => _logger.LogDetailAsync($"Clear All Device Indicators END"));
-        }
+        //private void ClearAllDeviceIndicators()
+        //{
+        //    Task.Run(() => _logger.LogDetailAsync($"Clear All Device Indicators START"));
+        //    foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
+        //    {
+        //        deviceIndicator.Value.Active = false;
+        //        deviceIndicator.Value.BlinkOff();
+        //    }
+        //    Task.Run(() => _logger.LogDetailAsync($"Clear All Device Indicators END"));
+        //}
 
         //private void UpdateInventoryLocation()
         //{
@@ -4560,12 +3891,13 @@ namespace Neutron.Forms
             {
                 var pos = pickView.PickPosition;
 
-                Control control = Controls.Find($"TextBoxPickPos{pos}", true).First();
-                if (control != null)
+                var textBox = Controls.Find($"TextBoxPickPos{pos}", true).First() as TextBox;
+                if (textBox != null)
                 {
-                    var textBox = ((TextBox)control);
+                    //var textBox = ((TextBox)control);
                     //if (pickView.PickedQty == 0)
                     //{
+                    textBox.SizeTextBoxFont(1);
                     textBox.Text = pickView.QuantityToBePicked.ToString();
                     //}
                     //else
@@ -4574,16 +3906,11 @@ namespace Neutron.Forms
                     //}
 
                 }
-                control = Controls.Find($"LabelPickPos{pos}", true).First();
-                if (control != null)
+
+                var panel = Controls.Find($"Pos{pos}Display", true).First() as Panel;
+                if (panel != null)
                 {
-                    var label = ((Label)control);
-                    label.BackColor = GetBackColor(pickView.QuantityToBePicked);
-                }
-                control = Controls.Find($"Pos{pos}Display", true).First();
-                if (control != null)
-                {
-                    var panel = ((Panel)control);
+                    //var panel = ((Panel)control);
                     panel.BackColor = Color.Red;
                 }
                 TurnOnBatchPositionDisplay(position: pos, beacon: 2, text: pickView.QuantityToBePicked.ToString());
@@ -4615,32 +3942,6 @@ namespace Neutron.Forms
             }
         }
 
-        private Color GetBackColor(int quantityToBePicked)
-        {
-            if (quantityToBePicked == 0)
-            {
-                return Color.Green;
-            }
-            else
-            {
-                return Color.RoyalBlue;
-            }
-        }
-
-        private string GetRemainingToPick(int totalQty, int pickedSoFar)
-        {
-            var result = totalQty - pickedSoFar;
-
-            if (result == 0)
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return result.ToString();
-            }
-        }
-
         private void ClearOrderPositions()
         {
             foreach (var bp in _ordersToPick)
@@ -4661,7 +3962,7 @@ namespace Neutron.Forms
             {
                 if (bp.OrderId == null) continue;
                 var linesNotComplete = _repoOrderDetails
-                    .FindBy(r => r.OrderId == bp.OrderId && r.StationNumber == _station.StationNumber)
+                    .FindBy(r => r.OrderId == bp.OrderId && r.StationNumber == _stationView.StationNumber)
                     .Where(r => r.LineStatusId != (int)LineStatus.Complete).ToList();
                 if (linesNotComplete.Any()) continue;
                 bp.OrderComplete = true;
@@ -4670,7 +3971,7 @@ namespace Neutron.Forms
 
         private void ClearPickPositions()
         {
-            var font = new Font("Microsoft San Serif", 24);
+            // var font = new Font("Microsoft San Serif", 24);
             foreach (var bp in _ordersToPick)
             {
                 string pos = bp.PositionNumber.ToString();
@@ -4678,7 +3979,7 @@ namespace Neutron.Forms
                 if (c != null)
                 {
                     var textBox = ((TextBox)c);
-                    textBox.Font = font;
+                    // textBox.Font = font;
                     textBox.Text = bp.OrderComplete ? "END" : string.Empty;
                 }
             }
@@ -4707,10 +4008,10 @@ namespace Neutron.Forms
         {
             if (_currentPickStop.PickViews.Count > 1 && _neutronVariables.SpecialBackOrder)
             {
-                EnablePickAccept(false);
+                //EnablePickAccept(false);
                 SpecialPickAccept();
                 CompleteSpecialPick();
-                EnablePickAccept(true);
+                //EnablePickAccept(true);
             }
             else  // only skipping one pickview
             {
@@ -4743,7 +4044,8 @@ namespace Neutron.Forms
                     _bindingSourcePickStops.MoveNext();
                     _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                     UpdatePickScreen();
-                    UpdateCurrentDeviceIndicator();
+                    // UpdateCurrentDeviceIndicator();
+                    _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                     UpdatePickPosition();
                     UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                     UpdateTowerDisplay();
@@ -4767,7 +4069,7 @@ namespace Neutron.Forms
             ClearAllBli();
             ClearOrderPositions();
             ClearBatchPositions();
-            ClearAllDeviceIndicators();
+            _deviceIndicatorManager.ClearAllDeviceIndicators();
 
             //if (_neutronLicense.CompanyCode == "SFH")
             //{
@@ -4805,12 +4107,13 @@ namespace Neutron.Forms
         private void MBPickAccept_Click(object sender, EventArgs e)
         {
             Task.Run(() => _logger.LogDetailAsync($"PickAccept_Click Start BUTTON"));
-            if (_spaceBarDisabled)
-            {
-                Task.Run(() => _logger.LogDetailAsync($"PickAccept_Click Start BUTTON Space Bar Disabled"));
-                return;
-            }
+            //if (_spaceBarDisabled)
+            //{
+            //    Task.Run(() => _logger.LogDetailAsync($"PickAccept_Click Start BUTTON Space Bar Disabled"));
+            //    return;
+            //}
             PickAccept();
+
             MBPickAccept.Focus();
         }
 
@@ -4818,12 +4121,12 @@ namespace Neutron.Forms
         {
             _spaceBarDisabled = true;
 
-            EnablePickAccept(false);
+            //EnablePickAccept(false);
             //TEST
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
 
 
-            Task.Run(() => _logger.LogDetailAsync($"Pick Accept Button Pressed"));
+            _logger.LogDetail($"Pick Accept Button Pressed");
 
             if (InvokeRequired)
             {
@@ -4832,8 +4135,8 @@ namespace Neutron.Forms
                 return;
             }
 
-            Console.WriteLine("Clear Active Device Indicator - Pick Accept");
-            ClearAllDeviceIndicators();
+            // _deviceIndicatorManager.ClearAllDeviceIndicators();
+            _deviceIndicatorManager.ClearActiveDeviceIndicators();
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -4931,7 +4234,8 @@ namespace Neutron.Forms
                         _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                         PrintLabels(_currentPickStop);
                         UpdatePickScreen();
-                        UpdateCurrentDeviceIndicator();
+                        // UpdateCurrentDeviceIndicator();
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         UpdateTowerDisplay();
@@ -4956,7 +4260,8 @@ namespace Neutron.Forms
                     PositionDevice(loc1, loc2, loc3, loc4, true);
 
                     UpdatePickScreen();
-                    UpdateCurrentDeviceIndicator();
+                    //UpdateCurrentDeviceIndicator();
+                    _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                     UpdatePickPosition();
                     UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                     UpdateTowerDisplay();
@@ -4964,17 +4269,18 @@ namespace Neutron.Forms
             }
             else
             {
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 MessageBox.Show(text: _resourceManager.GetString($"PickExceedsInventory"),
                     caption: _resourceManager.GetString($"Inventory"), buttons: MessageBoxButtons.OK,
                     icon: MessageBoxIcon.Stop);
             }
 
-            Task.Run(() => _logger.LogDetailAsync($"PickAccept End : [{DateTime.Now.ToLongTimeString()}]"));
+            _logger.LogDetail($"PickAccept End : [{DateTime.Now.ToLongTimeString()}]");
             Cursor.Current = Cursors.Default;
-            EnablePickAccept(true);
+            //EnablePickAccept(true);
             MBPickAccept.Focus();
-            StartSpaceBarEnableTimer();
-
+            // StartSpaceBarEnableTimer();
+            _spaceBarDisabled = false;
         }
 
         // SpecialBackorderProcess Form
@@ -5051,7 +4357,8 @@ namespace Neutron.Forms
         private void CompleteSpecialPick()
         {
             Console.WriteLine("Clear Active Device Indicator - Pick Accept");
-            ClearAllDeviceIndicators();
+            _deviceIndicatorManager.ClearAllDeviceIndicators();
+
 
             foreach (var pickView in _currentPickStop.PickViews)
             {
@@ -5096,7 +4403,8 @@ namespace Neutron.Forms
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
                 PrintLabels(_currentPickStop);
                 UpdatePickScreen();
-                UpdateCurrentDeviceIndicator();
+                //UpdateCurrentDeviceIndicator();
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
@@ -5110,6 +4418,8 @@ namespace Neutron.Forms
 
         private void PrintLabels(PickStop currentPickStop, int reqFunc = 1, int pos = 0)
         {
+            if (_neutronVariables.EnableLabelPrinter == false) return;
+
             foreach (var pickView in currentPickStop.PickViews)
             {
                 var upc = _repoAka.GetUpc(pickView.Item);
@@ -5280,44 +4590,46 @@ namespace Neutron.Forms
             ClearOrderPositions();
             ClearBatchPositions();
             Console.WriteLine("Clear All Device Indicators - Close Batch");
-            ClearAllDeviceIndicators();
-            // check for Inventory locations that need to be Released
-            using (var db = new NeutronDb())
-            {
-                var locationIds = new List<int>();
-                var invs = db.Inventory.Where(r => r.Quantity == 0 && r.StationId == _station.StationId && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
-                if (invs.Count > 0)
-                {
-                    foreach (var inv in invs)
-                    {
-                        locationIds.Add(inv.LocationId);
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
-                        db.Inventory.Remove(inv);
-                    }
+            _deviceIndicatorManager.ClearAllDeviceIndicators();
 
-                    db.SaveChanges();
-                }
+            DeleteRelease();
+            //// check for Inventory locations that need to be Released
+            //using (var db = new NeutronDb())
+            //{
+            //    var locationIds = new List<int>();
+            //    var invs = db.Inventory.Where(r => r.Quantity == 0 && r.StationId == _stationView.StationId && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
+            //    if (invs.Count > 0)
+            //    {
+            //        foreach (var inv in invs)
+            //        {
+            //            locationIds.Add(inv.LocationId);
+            //            GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
+            //            db.Inventory.Remove(inv);
+            //        }
 
-                if (locationIds.Count > 0)
-                {
-                    foreach (var locationId in locationIds)
-                    {
-                        // Look for other items in inventory where the location is the same.
-                        // Don't want to change InUse to False is there are other items using this location.
+            //        db.SaveChanges();
+            //    }
 
-                        var item = db.Inventory.Where(r => r.LocationId == locationId).FirstOrDefault();
-                        if (item == null)
-                        {
-                            var location = db.Locations.Find(locationId);
-                            if (location != null)
-                            {
-                                location.InUse = false;
-                            }
-                        }
-                    }
-                    db.SaveChanges();
-                }
-            }
+            //    if (locationIds.Count > 0)
+            //    {
+            //        foreach (var locationId in locationIds)
+            //        {
+            //            // Look for other items in inventory where the location is the same.
+            //            // Don't want to change InUse to False is there are other items using this location.
+
+            //            var item = db.Inventory.Where(r => r.LocationId == locationId).FirstOrDefault();
+            //            if (item == null)
+            //            {
+            //                var location = db.Locations.Find(locationId);
+            //                if (location != null)
+            //                {
+            //                    location.InUse = false;
+            //                }
+            //            }
+            //        }
+            //        db.SaveChanges();
+            //    }
+            //}
 
             //if (_neutronLicense.CompanyCode == "SFH")
             //{
@@ -5338,6 +4650,43 @@ namespace Neutron.Forms
                 //ShowAvailableOrders();
                 //tabControl1.SelectedTab = AvailableOrders;
             }
+        }
+
+        private void DeleteRelease()
+        {
+            // check for Inventory locations that need to be Released
+            var locationIds = new List<int>();
+            var invs = _repoInventory.All().Where(r => r.Quantity == 0 && r.StationId == _stationView.StationId && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
+            if (invs.Count > 0)
+            {
+                foreach (var inv in invs)
+                {
+                    locationIds.Add(inv.LocationId);
+                    GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
+                    _repoInventory.Delete(inv.Id);
+                }
+            }
+
+            if (locationIds.Count > 0)
+            {
+                foreach (var locationId in locationIds)
+                {
+                    // Look for other items in inventory where the location is the same.
+                    // Don't want to change InUse to False is there are other items using this location.
+
+                    var item = _repoInventory.FindBy(r => r.LocationId == locationId).FirstOrDefault();
+                    if (item == null)
+                    {
+                        var location = _repoLocation.FindByKey(locationId);
+                        if (location != null)
+                        {
+                            location.InUse = false;
+                            _repoLocation.Update(location);
+                        }
+                    }
+                }
+            }
+
         }
 
         private void PrintAllDocuments()
@@ -5725,7 +5074,8 @@ namespace Neutron.Forms
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
 
             UpdatePickScreen();
-            UpdateCurrentDeviceIndicator();
+            // UpdateCurrentDeviceIndicator();
+            _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
             UpdatePickPosition();
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
             UpdateTowerDisplay();
@@ -5922,10 +5272,10 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"Job Manager Main Screen Start"));
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.RoyalBlue;
-            MBOffCarousel.Visible = _station.StationTypeId == (int)StationType.Supervisor ||
-                                    _station.StationTypeId == (int)StationType.Rack;
+            MBOffCarousel.Visible = _stationView.StationTypeId == (int)StationType.Supervisor ||
+                                    _stationView.StationTypeId == (int)StationType.Rack;
 
-            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
             MBCompress.Visible = false;
             tabControl1.SelectedTab = OrderListing;
             MBShowAvailable.Focus();
@@ -5936,8 +5286,8 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             _previousTab = null;
-            if (_station.StationType.Id == (int)StationType.Supervisor ||
-                _station.StationType.Id == (int)StationType.Rack)
+            if (_stationView.StationType.Id == (int)StationType.Supervisor ||
+                _stationView.StationType.Id == (int)StationType.Rack)
             {
                 ShowAvailableRackScreen();
             }
@@ -6131,8 +5481,8 @@ namespace Neutron.Forms
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
             MBCompress.Visible = false;
-            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
-            MBKillOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
             Cursor.Current = Cursors.Default;
         }
 
@@ -6180,12 +5530,12 @@ namespace Neutron.Forms
             MBRelease.Visible = true;
             MBReturnToStock.Visible = _neutronVariables.UseReturnToStock;
             MBReturnToStockOrderDetail.Visible = _neutronVariables.UseReturnToStock;
-            MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillLine.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillLineSkip.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-            MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+            MBCompress.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillLine.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillLineSkip.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrderRack.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
         }
 
         //private void HideButtons()
@@ -6195,12 +5545,12 @@ namespace Neutron.Forms
         //    MBRelease.Visible = false;
         //    MBReturnToStock.Visible = false;
         //    MBReturnToStockOrderDetail.Visible = false;
-        //    MBDeleteOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-        //    MBCompress.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillLine.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillLineSkip.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillOrder.Visible = _station.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillOrderRack.Visible = _station.StationTypeId == (int)StationType.Supervisor;
+        //    MBDeleteOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBCompress.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillLine.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillLineSkip.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillOrderRack.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
         //}
 
         //Ready
@@ -6296,7 +5646,7 @@ namespace Neutron.Forms
                 ,
                 Quantity = TextBoxNewOrderQuantity.Text.ParseInt()
                 ,
-                CostCenter = GetCostCenter() 
+                CostCenter = GetCostCenter()
 
             };
             _bindingSourceNewItems.Add(rec);
@@ -6339,7 +5689,7 @@ namespace Neutron.Forms
             LabelCostCenter.Visible = _useCostCenter;
 
             FillCostCenterComboBox();
-           
+
         }
         private async Task FillCostCenterComboBox()
         {
@@ -6352,8 +5702,8 @@ namespace Neutron.Forms
             ComboBoxCostCenter.ValueMember = "Code";
         }
 
-//Ready
-private void InitDataGridViewNewItems()
+        //Ready
+        private void InitDataGridViewNewItems()
         {
             DataGridViewNewItems.DataSource = _bindingSourceNewItems;
         }
@@ -6471,7 +5821,8 @@ private void InitDataGridViewNewItems()
                     {
                         UpdatePickViews();
                         UpdatePickScreen();
-                        UpdateCurrentDeviceIndicator();
+                        //UpdateCurrentDeviceIndicator();
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         UpdateTowerDisplay();
@@ -6618,11 +5969,9 @@ private void InitDataGridViewNewItems()
         private void UpdateInventoryAfterHotAction()
         {
             var exactInventorySequence = new List<Inventory>();
-            var success = false;
             var currentPickView = _currentPickStop.PickViews.FirstOrDefault();
             if (currentPickView != null)
             {
-
                 switch (_neutronVariables.PickMethod)
                 {
                     case "RadioButtonPrimeBinFirst":
@@ -6654,7 +6003,6 @@ private void InitDataGridViewNewItems()
                     pickView.SlotQty = pickView.TotalQuantityInInventory;
                     pickView.InventoryIndex = 0;
                     pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
-                    success = true;
                 }
 
                 var firstPickView = _currentPickStop.PickViews.FirstOrDefault();
@@ -6676,7 +6024,6 @@ private void InitDataGridViewNewItems()
                     _currentPickStop.Slot = firstPickView.Slot;
                     _currentPickStop.SlotQty = firstPickView.SlotQty;
                     _currentPickStop.TotalQuantityInInventory = firstPickView.TotalQuantityInInventory;
-
                 }
             }
         }
@@ -6707,14 +6054,19 @@ private void InitDataGridViewNewItems()
         /// </summary>
         /// <param name="orderNumber">Could represent an order number or an invoice number</param>
         /// <returns>Return a List of <see cref="OrderView"/> records.</returns>
-        private List<OrderView> GetValidOrdersFromBindingSource(string orderNumber)
+        private List<AvailableOrdersView> GetValidOrdersFromBindingSource(string orderNumber)
         {
+            var list = _ordersRepository.GetAvailableOrdersForInductionScreen(_stationView, string.Empty);
             // Convert the AvailableOrders BindingSource to a List 
-            var list = _bindingSourceAvailableOrders.List.OfType<OrderView>();
+            //var list =  _bindingSourceAvailableOrders.List.OfType<AvailableOrdersView>();
 
+            //var list = ((IList<AvailableOrdersView>)_bindingSourceAvailableOrders.List);
+
+            //var list = ((List<ObjectView<AvailableOrdersView>>)_bindingSourceAvailableOrders.List);
             // Return all the orders where the order number or invoice number
             // equals the passed in orderNumber value
-            return list.Where(s => s.Ord1 == orderNumber || s.Ord2 == orderNumber).ToList();
+            var recs = list.Where(s => s.Ord1 == orderNumber || s.Ord2 == orderNumber).ToList();
+            return recs;
         }
 
         private bool CheckForMultipleOrders(string orderNumber)
@@ -6754,8 +6106,8 @@ private void InitDataGridViewNewItems()
         private void TextBoxPosKeyDown(object sender, KeyEventArgs e)
         {
             var textBox = (TextBox)sender;
-            var pos = Convert.ToInt32(textBox.Tag) + 1;
-            var batchPosition = _ordersToPick.Where(r => r.PositionNumber == pos).FirstOrDefault();
+            var pos = Convert.ToInt32(textBox.Tag);
+            var batchPosition = _ordersToPick.FirstOrDefault(r => r.PositionNumber == pos);
 
             if (e.KeyCode == Keys.Enter)
             {
@@ -6776,7 +6128,7 @@ private void InitDataGridViewNewItems()
             {
                 Cursor.Current = Cursors.WaitCursor;
                 //ShowAvailableOrders();
-                var find = TextBoxFindAvailableOrders.Text.Trim();
+                var find = TextBoxFindAvailableOrders.Text.Trim().ToLower();
                 FilterAvailableOrders(find);
                 Cursor.Current = Cursors.Default;
             }
@@ -6801,7 +6153,7 @@ private void InitDataGridViewNewItems()
             }
             else
             {
-                _bindingListViewAvailableOrdersViews.ApplyFilter(r => r.Ord1.Contains(find) || r.Ord2.Contains(find));
+                _bindingListViewAvailableOrdersViews.ApplyFilter(r => r.Ord1.ToLower().Contains(find) || r.Ord2.ToLower().Contains(find));
             }
         }
 
@@ -6846,7 +6198,6 @@ private void InitDataGridViewNewItems()
 
         private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
-            // MessageBox.Show($" TextBoxFind Key code: {e.KeyCode}");
             if (e.KeyCode == Keys.Return)
             {
                 SearchDataSet();
@@ -6856,66 +6207,13 @@ private void InitDataGridViewNewItems()
                 TextBoxFind.Text = "";
             }
         }
+
         private void ButtonClear_Click(object sender, EventArgs e)
         {
             TextBoxFind.Text = string.Empty;
             SearchDataSet();
             TextBoxFind.Focus();
         }
-
-
-        //private void MBFindItem_Click(object sender, EventArgs e)
-        //{
-        //    Cursor.Current = Cursors.WaitCursor;
-        //    FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-        //    Cursor.Current = Cursors.Default;
-        //}
-
-        //private void FindHotRecord(string findWhat = @"")
-        //{
-        //    string find = _akaRepository.Get(findWhat);
-        //    TextBoxFindItem.Text = find;
-
-        //    try
-        //    {
-        //        //if (string.IsNullOrEmpty(s))
-        //        //{
-        //        //    bindingSourceHot.DataSource = repoInv.GetInventoryViewAll();
-        //        //    DataGridViewInventory.DataSource = bindingSourceHot;
-        //        //}
-        //        //else
-        //        //{
-        //        _bindingSourceHot.DataSource = _repoInv.FindInventoryViewsByStation(find, _station.StationId);
-        //        //IEnumerable<InventoryView> task = repoInv.GetInventoryViewAll();
-        //        //bindingSourceHot.DataSource = task
-        //        //    .Where(d => d.Item.ToLower().Contains(s) || d.Description.ToLower().Contains(s) || d.Slot.Contains(s)).ToList();
-        //        DataGridViewInventory.DataSource = _bindingSourceHot;
-        //        //}
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Hot Find Error: " + ex.Message);
-        //    }
-        //}
-
-        //private void TextBoxFindItem_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    // MessageBox.Show($" TextBoxFindItem Key code: {e.KeyCode}");
-        //    if (e.KeyCode == Keys.Return)
-        //    {
-        //        FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-        //    }
-        //    if (e.KeyCode == Keys.Escape)
-        //    {
-        //        TextBoxFindItem.Text = "";
-        //    }
-        //}
-
-        //private void ButtonHotPickClear_Click(object sender, EventArgs e)
-        //{
-        //    TextBoxFindItem.Text = string.Empty;
-        //    TextBoxFindItem.Focus();
-        //}
 
         private void MBAvailableOrdersRefresh_Click(object sender, EventArgs e)
         {
@@ -7217,48 +6515,6 @@ private void InitDataGridViewNewItems()
         }
 
 
-        private void DataGridPickView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            return;
-            //if (e.RowIndex < 0)
-            //{
-            //    return;
-            //}
-
-            //for (int i = 0; i < DataGridPickView.RowCount ; i++)
-            //{
-            //    var totalQuantityCell = DataGridPickView.Rows[i].Cells["TotalQuantityInInventory"];
-            //    var quantityCell = DataGridPickView.Rows[i].Cells["Quantity"];
-
-            //    var totalValue = totalQuantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(totalQuantityCell.Value.ToString());
-            //    var quantityValue = quantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(quantityCell.Value.ToString());
-
-            //    if (quantityValue > totalValue)
-            //    {
-            //        DataGridPickView.Rows[i].DefaultCellStyle.BackColor = Color.Gold;
-            //    }
-            //    else
-            //    {
-            //        DataGridPickView.Rows[i].DefaultCellStyle.BackColor = Color.White;
-            //    }
-            //}
-
-            //var totalQuantityCell = DataGridPickView.Rows[e.RowIndex].Cells["TotalQuantityInInventory"];
-            //var quantityCell = DataGridPickView.Rows[e.RowIndex].Cells["Quantity"];
-
-            //var totalValue = totalQuantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(totalQuantityCell.Value.ToString());
-            //var quantityValue = quantityCell.Value == null ? 0 : IntegerExtensions.ParseInt(quantityCell.Value.ToString());
-
-            //if (quantityValue > totalValue)
-            //{
-            //    DataGridPickView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Gold;
-            //}
-            //else
-            //{
-            //    DataGridPickView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-            //}
-        }
-
         private void MBPickScreenHotPick_Click(object sender, EventArgs e)
         {
             HotAction();
@@ -7270,8 +6526,24 @@ private void InitDataGridViewNewItems()
             {
                 var item = LabelPickItemNumber.Text;
                 Hide();
-                using (MetroForm frm = new FrmHotAction(_station, _jsonData, _akaRepository, _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository, item))
+                //item = "10006886";
+                //var quantity = 0;
+
+
+                //using (var frm = DI.Create<FrmHotAction>(
+                //          _neutronVariables
+                //          , _neutronLicense
+                //          , _stationView
+                //          , _historyManager
+                //          , item))
+                //          //, quantity))
+                //          //, null))
+
+                using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
+                                          , _lacProcessor, _imageManager, _stationRepository, _itemDefinitionsRepository, _neutronVariables
+                                          , _neutronLicense, _stationView, _historyManager, item))
                 {
+                    //frm.Item = item;
                     var result = frm.ShowDialog();
                     Show();
                     _deviceManager.Reset();
@@ -7282,7 +6554,8 @@ private void InitDataGridViewNewItems()
                 LoadInventory();
                 UpdateInventoryAfterHotAction();
                 UpdatePickScreen();
-                UpdateCurrentDeviceIndicator();
+                // UpdateCurrentDeviceIndicator();
+                _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 UpdateTowerDisplay();
@@ -7492,7 +6765,7 @@ private void InitDataGridViewNewItems()
             if (linesNotComplete.Any()) return false;
 
             order.OrderStatusId = (int)OrderStatus.Complete;
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _station.StationId);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _stationView.StationId);
             _repoOrders.Update(order);
             Mediator.GetInstance().OnOrderComplete(this, order);
             return true;
@@ -7654,7 +6927,7 @@ private void InitDataGridViewNewItems()
             ShowCompleted();
             MBDeleteOrder.Visible = false;
             MBKillOrder.Visible = false;
-            MBCompress.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBCompress.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
 
         }
 
@@ -7728,7 +7001,7 @@ private void InitDataGridViewNewItems()
         private void ButtonPrintAO_Click(object sender, EventArgs e)
         {
             var outs = new List<AnticipatedOut>();
-            if (_station.StationType.Id == (int)StationType.Supervisor)
+            if (_stationView.StationType.Id == (int)StationType.Supervisor)
             {
                 // print all station if Supervisor Station
                 foreach (var pickStation in _pickStations)
@@ -7739,7 +7012,7 @@ private void InitDataGridViewNewItems()
             }
             else
             {
-                outs = GetAnticipatedOuts(_station.StationId);
+                outs = GetAnticipatedOuts(_stationView.StationId);
                 _documentToPrint.PrintAnticipatedOuts(outs, _documentPrinter, _neutronVariables.PrintPreview);
             }
         }
@@ -7758,13 +7031,13 @@ private void InitDataGridViewNewItems()
         {
 
             int stationNumber;
-            if (_station.StationType.Id == (int)StationType.Supervisor)
+            if (_stationView.StationType.Id == (int)StationType.Supervisor)
             {
                 stationNumber = _rackStation.StationNumber;
             }
             else
             {
-                stationNumber = _station.StationNumber;
+                stationNumber = _stationView.StationNumber;
             }
             var orders = GetSelectedOrders(DataGridViewAvailableOrdersRack);
             if (orders.Any())
@@ -7810,13 +7083,13 @@ private void InitDataGridViewNewItems()
         private void MBRackOrderComplete_Click(object sender, EventArgs e)
         {
             int stationNumber;
-            if (_station.StationType.Id == (int)StationType.Supervisor)
+            if (_stationView.StationType.Id == (int)StationType.Supervisor)
             {
                 stationNumber = _rackStation.StationNumber;
             }
             else
             {
-                stationNumber = _station.StationNumber;
+                stationNumber = _stationView.StationNumber;
             }
             var orders = GetSelectedOrders(DataGridViewAvailableOrdersRack);
             if (orders.Count > 0)
@@ -7885,8 +7158,8 @@ private void InitDataGridViewNewItems()
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
             MBCompress.Visible = false;
-            MBKillOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
-            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
 
 
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
@@ -8108,8 +7381,8 @@ private void InitDataGridViewNewItems()
             _currentDataSet = CurrentDataSet.Rack;
             ShowRackOrders();
             MBCompress.Visible = false;
-            MBKillOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
-            MBDeleteOrder.Visible = _station.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
             Cursor.Current = Cursors.Default;
         }
 
@@ -8148,7 +7421,7 @@ private void InitDataGridViewNewItems()
 
         private void ShortPick()
         {
-            EnablePickAccept(false);
+            //EnablePickAccept(false);
 
             foreach (var pickView in _currentPickStop.PickViews)
             {
@@ -8173,7 +7446,7 @@ private void InitDataGridViewNewItems()
 
             // function to finish the move and update the lights for the next pick
             CompleteSpecialPick();
-            EnablePickAccept(true);
+            //EnablePickAccept(true);
         }
 
         private void MBOffCarousel_Click(object sender, EventArgs e)
@@ -8192,10 +7465,20 @@ private void InitDataGridViewNewItems()
         private void MBRackHotAction_Click(object sender, EventArgs e)
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
-            var station = _stationRepository.GetStationView(8);
+            var stationView = _stationRepository.GetStationView(8);
             Hide();
-            using (MetroForm frm = new FrmHotAction(station, _jsonData, _akaRepository
-                , _neutronVariables, _lacProcessor, _imageManager, _itemDefinitionsRepository))
+            //using (var frm = DI.Create<FrmHotAction>(
+            //           _neutronVariables
+            //           , _neutronLicense
+            //           , _stationView
+            //           , _historyManager))
+            ////, 1
+            ////, null))
+
+            using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
+                       , _lacProcessor, _imageManager, _stationRepository, _itemDefinitionsRepository, _neutronVariables
+                       , _neutronLicense, _stationView, _historyManager))
+
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -8398,19 +7681,24 @@ private void InitDataGridViewNewItems()
 
         public void StartSpaceBarEnableTimer()
         {
-            var startTimeSpan = TimeSpan.FromMilliseconds(0);
-            var periodTimeSpan = TimeSpan.FromMilliseconds(500);
-            _spaceBarDelayTimer = new Timer(t => { SetSpaceBarDisabledFalse(); }, null, startTimeSpan, periodTimeSpan);
+            //TODO: Fix or Remove Spacebar and Accept Button Delay
+            //var startTimeSpan = TimeSpan.FromMilliseconds(0);
+            //var periodTimeSpan = TimeSpan.FromMilliseconds(500);
+            //_spaceBarDelayTimer = new Timer(t => { SetSpaceBarDisabledFalse(); }, null, startTimeSpan, periodTimeSpan);
         }
 
         private void SetSpaceBarDisabledFalse()
         {
-            _spaceBarDisabled = false;
-            EnablePickAccept(true);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);
-            _spaceBarDelayTimer.Dispose();
-            Task.Run(() => _logger.LogDetailAsync("*********  You can press the space bar now.  ***********"));
+            //TODO: Fix or Remove Spacebar and Accept Button Delay
+            //_spaceBarDisabled = false;
+            //EnablePickAccept(true);
+            //this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);
+            //_spaceBarDelayTimer.Dispose();
+            //Task.Run(() => _logger.LogDetailAsync("*********  You can press the space bar now.  ***********"));
         }
+
+        //TODO: Fix or Remove Spacebar and Accept Button Delay
+        //TODO: All references to EnablePickAccept have been commented out
 
         private void EnablePickAccept(bool b)
         {
@@ -8445,17 +7733,16 @@ private void InitDataGridViewNewItems()
                                 }
                             case Keys.Space:
                                 {
-                                    Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key"));
+                                    _logger.LogDetail($"FrmPick_KeyDown: SPACE Key");
                                     e.Handled = true;
                                     if (!_spaceBarDisabled)
                                     {
-                                        Task.Run(() =>
-                                            _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key MBPickAccept is Enabled"));
+                                        _logger.LogDetail($"FrmPick_KeyDown: SPACE Key ENABLED");
                                         PickAccept();
                                     }
                                     else
                                     {
-                                        Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key PickAccept Disabled"));
+                                        _logger.LogDetail($"FrmPick_KeyDown: SPACE Key DISABLED");
                                     }
 
                                     break;
@@ -8538,7 +7825,8 @@ private void InitDataGridViewNewItems()
                     }
                     if (e.KeyCode == Keys.F12)
                     {
-                        using (MetroForm frm = new FrmInventory(_jsonData, _station, _akaRepository, _lacProcessor))
+                        //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor, _stationView))
+                        using (var frm = DI.Create<FrmInventory>())
                         {
                             var result = frm.ShowDialog();
                             Show();
@@ -8669,7 +7957,7 @@ private void InitDataGridViewNewItems()
                         if (order.OrderStatusId == (int)OrderStatus.Available)
                         {
                             KillLine(order.OrderDetails);
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.KillOrder, order, _station.StationId);
+                            GlobalVar.HistoryManager.SaveHistory(ActionCode.KillOrder, order, _stationView.StationId);
                             CheckForOrderComplete(order);
                         }
                     }
@@ -8757,7 +8045,7 @@ private void InitDataGridViewNewItems()
             if (linesNotComplete.Any()) return false;
             Task.Run(() => _logger.LogDetailAsync($"CheckForOrderComplete Order is Complete.  Ord:{order.Ord1}   Res:{order.Ord2} "));
             order.OrderStatusId = (int)OrderStatus.Complete;
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _station.StationId);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _stationView.StationId);
             _repoOrders.Update(order);
             return true;
         }
@@ -8784,13 +8072,14 @@ private void InitDataGridViewNewItems()
 
         private void AvailableOrders_Enter(object sender, EventArgs e)
         {
-            TextBoxPos1.Focus();
+            var textBoxPos1 = (TextBox)Controls.Find($"TextBoxPos1", true).First();
+            textBoxPos1.Focus();
         }
 
         private void ClearItemFromBatchByPosition(int position)
         {
             Task.Run(() => _logger.LogDetailAsync($" Start ClearItemFromBatchByPosition: {position}"));
-            var bp = _ordersToPick.Where(o => o.PositionNumber == position).FirstOrDefault();
+            var bp = _ordersToPick.FirstOrDefault(o => o.PositionNumber == position);
             if (bp != null)
             {
                 bp.OrderId = null;
@@ -8808,52 +8097,47 @@ private void InitDataGridViewNewItems()
         {
 
             var textBox = ((TextBox)sender);
-            var orderNumber = textBox.Text;
-            var position = IntegerExtensions.ParseInt(textBox.Tag.ToString());
+            var orderNumber = string.Empty;
+            if (textBox.Lines.Length > 0) orderNumber = textBox.Lines[0];
+
+            var position = textBox.Tag.ToString().ParseInt();
 
             if (string.IsNullOrEmpty(orderNumber)) return;
-            if (ValidateOrderAndPosition(position, orderNumber)) return;
-            // textBox.SelectAll();
-            // textBox.Focus();
+            if (!ValidateOrderAndPosition(position, orderNumber))
+            {
+                textBox.SelectAll();
+                textBox.Focus();
+            }
+
         }
 
         private bool ValidateOrderAndPosition(int position, string orderNumber)
         {
             var orders = GetValidOrdersFromBindingSource(orderNumber);
             //ordersToPick 
-            if (orders != null)
-            {
-                var rowsWithThisOrderNumber = new List<DataGridViewRow>();
-                foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
-                {
-                    var ord1 = (row.Cells["Ord1"].Value).ToString();
-                    var ord2 = (row.Cells["Ord2"].Value).ToString();
-                    if (orderNumber.Trim() == ord1.Trim() || orderNumber.Trim() == ord2.Trim())
-                    {
-                        rowsWithThisOrderNumber.Add(row);
-                    }
-                }
+            if (orders == null) return false;
+            var rec = (from DataGridViewRow row in DataGridViewAvailableOrders.Rows let ord1 = (row.Cells["Ord1"].Value).ToString() let ord2 = (row.Cells["Ord2"].Value).ToString() where orderNumber.Trim() == ord1.Trim() || orderNumber.Trim() == ord2.Trim() select row).FirstOrDefault();
 
-                foreach (var row in rowsWithThisOrderNumber)
-                {
-                    var chk = (DataGridViewCheckBoxCell)row.Cells[0];
-                    var idValue = IntegerExtensions.ParseInt(row.Cells["Id"].Value.ToString());
-                    var ord1 = row.Cells["Ord1"].Value.ToString();
-                    var ord2 = row.Cells["Ord2"].Value.ToString();
-                    var bp = _ordersToPick.FirstOrDefault(r => r.OrderId == idValue);
+            if (rec == null) return false;
+            var chk = (DataGridViewCheckBoxCell)rec.Cells[0];
+            var idValue = rec.Cells["Id"].Value.ToString().ParseInt();
+            var order1 = rec.Cells["Ord1"].Value.ToString();
+            var order2 = rec.Cells["Ord2"].Value.ToString();
+            var bp = _ordersToPick.FirstOrDefault(r => r.OrderId == idValue && r.PositionNumber == position);
 
-                    if (bp == null)
-                    {
-                        //not in a Batch POsition
-                        //position is good
-                        chk.Value = chk.TrueValue;
-                        AddItemToBatch(idValue, ord1, ord2);
-                        return true;
-                    }
-                }
-            }
+            if (bp != null) return true;
+            //not in a Batch Position
+            //position is good
+            chk.Value = chk.TrueValue;
 
-            return false;
+            //_ordersToPick[position - 1].OrderId = idValue;
+            //_ordersToPick[position - 1].Ord1 = order1;
+            //_ordersToPick[position - 1].Ord2 = order2;
+            //_ordersToPick[position - 1].OrderComplete = false;
+            //_ordersToPick[position - 1].PositionNumber = position;
+
+            var idx = AddItemToBatch(idValue, order1, order2);
+            return idx != -1;
         }
         #endregion
 

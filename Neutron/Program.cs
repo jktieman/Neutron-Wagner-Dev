@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Ninject;
-using System.Reflection;
 using JsonManager;
 using Neutron.Interfaces;
 using System.Threading;
 using NeutronCore.Models;
-using NeutronData.Interfaces;
-using Neutron.Models;
 using System.Globalization;
-using System.IO;
-using AlliedLogger;
 using AlliedPostOffice;
+using AlliedPostOffice.Concrete;
 using Neutron.Forms;
+using Neutron.Ninject;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.General;
-using NeutronData.Models;
-using Newtonsoft.Json;
-using SqlSchemaManager;
 
 namespace Neutron
 {
@@ -55,47 +48,18 @@ namespace Neutron
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(defaultValue: false);
-            //Database.SetInitializer(new NullDatabaseInitializer<NeutronDb>());
 
+            DI.Initialize();
+            var rootDirectory = DI.Create<INeutronRootDirectory>().RootDirectory;
 
-            //var kernel = new StandardKernel();
-            //kernel.Load(Assembly.GetExecutingAssembly());
-            //var jsonData = kernel.Get<IJsonData>();
-            //jsonData.RootDirectory =  $"{Properties.Settings.Default.RootDirectory}";
-            //LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
-            //var akaRepository = kernel.Get<IAkaRepository>();
-            //var securityProcessor = kernel.Get<ISecurityProcessor>();
-            //var lacProcessor = kernel.Get<ILacProcessor>();
-
-            IKernel kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
-            var rootDirectory = kernel.Get<INeutronRootDirectory>().RootDirectory;
-
-            var jsonData = kernel.Get<IJsonData>();
+            var jsonData = DI.Create<IJsonData>();
             jsonData.RootDirectory = rootDirectory;
             LoaderSettings.SetRootDirectory(rootDirectory);
 
-            //jsonData.RootDirectory = $"{Properties.Settings.Default.RootDirectory}";
-            //LoaderSettings.SetRootDirectory($"{Properties.Settings.Default.RootDirectory}");
-
             var context = new NeutronDb().CheckConnection();
 
-            if (context)
-            {
-                var stationRepository = kernel.Get<IStationRepository>();
-                var ordersRepository = kernel.Get<IOrdersRepository>();
-                var replenOrdersRepository = kernel.Get<IReplenOrdersRepository>();
-            }
-            var akaRepository = kernel.Get<IAkaRepository>();
-            var securityProcessor = kernel.Get<ISecurityProcessor>();
-            var lacProcessor = kernel.Get<ILacProcessor>();
-            var imageManager = kernel.Get<IImageManager>();
-            var enumManager = kernel.Get<IEnumManager>();
-            
-            var storedProcedureManager = kernel.Get<IStoredProcedureManager>();
-            var logger = new DynamicLogger(@"C:\Neutron\Logs\", "Startup.log", "true");
-
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            var neutronLicense = jsonData.LoadFile<NeutronLicense>();
 
             var cultureInfo = neutronVariables.DefaultLanguage;
 
@@ -112,23 +76,14 @@ namespace Neutron
 
             if (context)
             {
-                var frmMain = kernel.Get<FrmMain>();
+                var frmMain = DI.Create<FrmMain>(neutronVariables, neutronLicense);
                 Application.Run(frmMain);
             }
             else
             {
-                var frmSystem = new FrmSystem(jsonData, logger, null, null, storedProcedureManager, true);
+                var frmSystem = DI.Create<FrmSystem>(true);
                 Application.Run(frmSystem);
             }
-
-
-
-            //Application.Run(new FrmMain(jsonData, akaRepository, securityProcessor
-            //    , lacProcessor, imageManager, stationRepository
-            //    , ordersRepository, replenOrdersRepository));
-
         }
-
-
     }
 }

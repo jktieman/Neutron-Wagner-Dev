@@ -28,6 +28,7 @@ using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using NeutronDllu;
 using SlotNameFactory;
+using NeutronData.Interfaces;
 
 namespace Neutron.Forms
 {
@@ -58,7 +59,7 @@ namespace Neutron.Forms
             new GenericRepository<LocationCode>(new NeutronDb());
 
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-        private readonly StationRepository _repoStation = new StationRepository(new NeutronDb());
+        private readonly IStationRepository _stationRepository; 
 
         private readonly GenericRepository<VelocityCode> _repoVelocityCode =
             new GenericRepository<VelocityCode>(new NeutronDb());
@@ -67,17 +68,19 @@ namespace Neutron.Forms
         private DocumentToPrint _documentToPrint;
         private readonly Station _rackStation;
 
-        public FrmLocations(IJsonData jsonData, StationView station, NeutronVariables neutronVariables,
+        public FrmLocations(IJsonData jsonData, IStationRepository stationRepository, StationView station, NeutronVariables neutronVariables,
             ILacProcessor lacProcessor)
         {
             InitializeComponent();
+            _stationRepository = stationRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
             _station = station;
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
-            _rackStation = _repoStation.GetRackStation();
+            //_stationRepository = new StationRepository(new DynamicLogger(), new NeutronDb(), _station.StationId);
+            _rackStation = _stationRepository.GetRackStation();
             InitForm();
         }
 
@@ -95,7 +98,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             _locationRepository = new LocationsRepository();
             LabelStationName.Text = _station.Name;
-            var pickStations = _repoStation.GetPickStations();
+            var pickStations = _stationRepository.GetPickStations();
             ComboBoxStationNumber.DataSource = pickStations;
             ComboBoxStationNumber.ValueMember = "Id";
             ComboBoxStationNumber.DisplayMember = "Name";
@@ -150,7 +153,7 @@ namespace Neutron.Forms
             IEnumerable<LocationView> recs;
             var idx = 0;
             var find = TextBoxFind.Text.ToLower().Trim();
-            var station = _repoStation.GetStation(_station.StationId);
+            var station = _stationRepository.GetStation(_station.StationId);
             if (_station.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
                 // Show the rack locations if this is a Supervisor Station
@@ -710,7 +713,7 @@ namespace Neutron.Forms
         {
             var station = ((Station)ComboBoxNewStation.SelectedItem);
             if (station == null) return;
-            var stationView = _repoStation.GetStationView(station.Id);
+            var stationView = _stationRepository.GetStationView(station.Id);
             TextBoxNewSlot.ReadOnly = true;
             LabelSlotInformation.Visible = true;
 
@@ -726,7 +729,7 @@ namespace Neutron.Forms
             var station = ((Station)ComboBoxViewEditStation.SelectedItem);
             if (station != null)
             {
-                var stationView = _repoStation.GetStationView(station.Id);
+                var stationView = _stationRepository.GetStationView(station.Id);
                 TextBoxViewEditSlot.ReadOnly = true;
                 LabelSlotInformation.Visible = true;
 
@@ -1020,7 +1023,7 @@ namespace Neutron.Forms
             ComboBoxNewLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxNewLocationCode.DisplayMember = "Name";
             ComboBoxNewLocationCode.ValueMember = "Id";
-            ComboBoxNewStation.DataSource = _repoStation.GetPickStations();
+            ComboBoxNewStation.DataSource = _stationRepository.GetPickStations();
             ComboBoxNewStation.DisplayMember = "Name";
             ComboBoxNewStation.ValueMember = "Id";
             ComboBoxNewStation.SelectedIndex = ComboBoxNewStation.FindString(_station.Name);
@@ -1045,7 +1048,7 @@ namespace Neutron.Forms
             ComboBoxViewEditLocationCode.DataSource = _repoLocationCode.All();
             ComboBoxViewEditLocationCode.DisplayMember = "Name";
             ComboBoxViewEditLocationCode.ValueMember = "Id";
-            ComboBoxViewEditStation.DataSource = _repoStation.GetPickStations();
+            ComboBoxViewEditStation.DataSource = _stationRepository.GetPickStations();
             ComboBoxViewEditStation.DisplayMember = "Name";
             ComboBoxViewEditStation.ValueMember = "Id";
             ComboBoxNewStation.SelectedIndex = ComboBoxNewStation.FindString(_station.Name);

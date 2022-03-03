@@ -218,6 +218,7 @@
     <Compile Include="Interfaces\ILocationsRepository.cs" />
     <Compile Include="Repositories\IGenericRepository.cs" />
     <Compile Include="Interfaces\IItemDefinitionsRepository.cs" />
+    <Compile Include="Interfaces\IInventoryRepository.cs" />
     <Compile Include="Repositories\InventoryRepository.cs" />
     <Compile Include="Interfaces\IStationRepository.cs" />
     <Compile Include="Interfaces\IOrdersRepository.cs" />

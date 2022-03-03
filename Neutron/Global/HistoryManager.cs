@@ -11,23 +11,26 @@ using NeutronData.ModelViews;
 using NeutronCore.Enums;
 using System.Data.SqlClient;
 using NeutronCore.Extensions;
+using NeutronData.Interfaces;
 using NeutronData.PrintModels;
 
 namespace Neutron.Global
 {
 
-    public class HistoryManager
+    public class HistoryManager : IHistoryManager
     {
-        private readonly StationView _station;
-        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
-        private readonly InventoryRepository _repoInventory = new InventoryRepository();
+        private readonly StationView _stationView;
+        private readonly IInventoryRepository _inventoryRepository;
 
+        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
             new GenericRepository<ReplenOrderDetail>(new NeutronDb());
 
-        public HistoryManager(StationView station)
+
+        public HistoryManager(IInventoryRepository inventoryRepository,  StationView stationView)
         {
-            _station = station;
+            _inventoryRepository = inventoryRepository;
+            _stationView = stationView;
         }
 
 
@@ -46,7 +49,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = order.OrderInfo,
                 OrderDetailInfo = string.Empty,
-                StationId = _station.StationNumber
+                StationId = _stationView.StationNumber
             };
             Save(history);
 
@@ -67,7 +70,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = order.OrderInfo,
                 OrderDetailInfo = string.Empty,
-                StationId = _station.StationNumber
+                StationId = _stationView.StationNumber
             };
             Save(history);
 
@@ -88,7 +91,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = string.Empty,   //order.Order.OrderInfo,
                 OrderDetailInfo = string.Empty,
-                StationId = _station.StationNumber
+                StationId = _stationView.StationNumber
             };
             Save(history);
 
@@ -109,7 +112,7 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = string.Empty,   //.ReplenOrder.OrderInfo,
                 OrderDetailInfo = string.Empty,
-                StationId = _station.StationNumber
+                StationId = _stationView.StationNumber
             };
              Save(history);
 
@@ -335,7 +338,7 @@ namespace Neutron.Global
         //Inventory Modify
         public void SaveHistory(ActionCode actionCode, Inventory inventory)
         {
-            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            var inv = _inventoryRepository.GetInventoryViewById(inventory.Id);
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -389,7 +392,7 @@ namespace Neutron.Global
                 }
             }
 
-            var inv = _repoInventory.GetInventoryViewById(inventory.Id);
+            var inv = _inventoryRepository.GetInventoryViewById(inventory.Id);
             var history = new History
             {
                 ActionCode = (int)actionCode,
@@ -561,7 +564,7 @@ namespace Neutron.Global
         // LocationCount
         public void SaveHistory(ActionCode actionCode, LocationCount cnt)
         {
-            var inv = _repoInventory.GetInventoryViewById(cnt.InventoryId);
+            var inv = _inventoryRepository.GetInventoryViewById(cnt.InventoryId);
             var history = new History
             {
                 ActionCode = (int)actionCode,

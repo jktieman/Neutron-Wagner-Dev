@@ -37,14 +37,13 @@ namespace Neutron.Forms
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private string _rootDirectory;
-        private readonly DynamicLogger _logger;
-        private readonly Station _rackStation;
-        private readonly SendEmail _sendEmail;
+        private readonly IDynamicLogger _logger;
+        private SendEmail _sendEmail;
         private readonly IStoredProcedureManager _storedProcedureManager;
         private readonly bool _standAlone;
         private readonly bool _emailEnabled;
 
-        public FrmSystem(IJsonData jsonData, DynamicLogger logger, Station rackStation, SendEmail sendEmail, IStoredProcedureManager storedProcedureManager, bool standAlone = false)
+        public FrmSystem(IJsonData jsonData, IDynamicLogger logger, IStoredProcedureManager storedProcedureManager, bool standAlone = false)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -53,8 +52,7 @@ namespace Neutron.Forms
             _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronLicense = jsonData.LoadFile<NeutronLicense>();
             _logger = logger;
-            _rackStation = rackStation;
-            _sendEmail = sendEmail;
+            SetupEmail();
             _storedProcedureManager = storedProcedureManager;
             _standAlone = standAlone;
             _emailEnabled = _neutronVariables.EnableEmailNotification;
@@ -66,6 +64,26 @@ namespace Neutron.Forms
             SetUploadButtonText();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
+        }
+
+        private void SetupEmail()
+        {
+            _sendEmail = null;
+            if (_neutronVariables.EnableEmailNotification)
+            {
+                try
+                {
+                    var emailServerSettings = _jsonData.LoadFile<EmailSettings>();
+                    var emailListing = _jsonData.LoadFile<List<EmailAddressData>>();
+                    var emailProcessor = new EmailProcessor(emailServerSettings);
+
+                    _sendEmail = new SendEmail(emailProcessor, emailListing);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Unable to setup Email Notification. {Environment.NewLine}{ex.Message}");
+                }
+            }
         }
 
         protected override CreateParams CreateParams
