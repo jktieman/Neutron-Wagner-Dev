@@ -121,7 +121,7 @@ namespace NeutronLoader
                     {
                         var fields = parser.ReadFields();
 
-                        if (fields != null && fields.Length == 10)
+                        if (fields != null && fields.Length == 13)
                         {
                             var hostOrder = new HostOrder()
                             {
@@ -135,6 +135,26 @@ namespace NeutronLoader
                                 TroubleBit = fields[7],
                                 DateTime = fields[8],
                                 EmpId = fields[9],
+                                BaseNum = fields[10],
+                                Machine = fields[11],
+                                Dept = fields[12]
+                            };
+                            hostOrderList.Add(hostOrder);
+                        }
+                        else if (fields != null && fields.Length == 10)
+                        {
+                            var hostOrder = new HostOrder()
+                            {
+                                TypeCode = fields[0],
+                                PartNum = fields[1],
+                                PartDesc = fields[2],
+                                JobNum = fields[3],
+                                PrimeBin = fields[4],
+                                NewBin = fields[5],
+                                Qty = fields[6],
+                                TroubleBit = fields[7],
+                                DateTime = fields[8],
+                                EmpId = fields[9]
                             };
                             hostOrderList.Add(hostOrder);
                         }
@@ -156,6 +176,8 @@ namespace NeutronLoader
             ProcessType3(hostOrderLines);
 
             ProcessType4(hostOrderLines);
+            
+            ProcessType5(hostOrderLines);
         }
 
         private void ProcessType2(IList<HostOrder> hostOrderLines)
@@ -183,6 +205,26 @@ namespace NeutronLoader
             {
                 InventoryAdjust(orders);
             }
+        }
+
+        private void ProcessType5(IList<HostOrder> hostOrderLines)
+        {
+            var orders = hostOrderLines.Where(s => s.TypeCode == "5").ToList();
+            if (orders.Any())
+            {
+                GetJobInfo(orders);
+            }
+        }
+
+        /// <summary>
+        /// Type 5 Record
+        /// Pull information from HOST system
+        /// </summary>
+        /// <param name="orders"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void GetJobInfo(List<HostOrder> orders)
+        {
+            MessageBox.Show("This is where I query the database for items to build a kit with.");
         }
 
         private void InventoryAdjust(List<HostOrder> hostOrderLines)

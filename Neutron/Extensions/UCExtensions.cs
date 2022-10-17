@@ -183,7 +183,7 @@ namespace Neutron.Extensions
             textBox.Font = new Font("Tahoma", 50F);
             textBox.Size = size;
             textBox = GetTextBoxDetails(textBox, Convert.ToString(panel.Tag), panelType);
-            textBox.ReadOnly = true;
+            textBox.ReadOnly = false;
             textBox.Padding = new Padding(0, topPad, 0, 0);
             textBox.Location = point;
             textBox.Tag = panel.Tag;
@@ -290,7 +290,6 @@ namespace Neutron.Extensions
 
             // Use that font size.
             textBox.Font = new Font(textBox.Font.FontFamily.Name, bestSize);
-
             return textBox;
         }
     }

@@ -192,10 +192,10 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
             //if (_stationView.StationType.Id == (int)StationType.Supervisor)
             // {
-            MBMainLoadOrders.Visible = true;
-            MBMainUpload.Visible = true;
-            MBRunLoader.Visible = true;
-            MBRunUpload.Visible = true;
+            //MBMainLoadOrders.Visible = true;
+            //MBMainUpload.Visible = true;
+            //MBRunLoader.Visible = true;
+            //MBRunUpload.Visible = true;
             // }
             SetupPrinters();
 
@@ -343,7 +343,7 @@ namespace Neutron.Forms
 
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
 
-            _deviceIndicatorManager = new DeviceIndicatorManager(_logger, _stationView, new Point(189, 0),
+            _deviceIndicatorManager = new DeviceIndicatorManager(_stationView, new Point(189, 0),
                 new Size(769, 127), _neutronVariables);
 
 
@@ -1086,6 +1086,16 @@ namespace Neutron.Forms
                 HeaderText = @"5",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_5_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_6_HasPicks",
+                HeaderText = @"6",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_6_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
@@ -3899,6 +3909,7 @@ namespace Neutron.Forms
                     //{
                     textBox.SizeTextBoxFont(1);
                     textBox.Text = pickView.QuantityToBePicked.ToString();
+
                     //}
                     //else
                     //{
@@ -5309,7 +5320,7 @@ namespace Neutron.Forms
             LabelFormTitle.BackColor = Color.RoyalBlue;
             ClearBatchPositions();
             ClearOrderPositions();
-            _showSkipped = false;
+            _showSkipped = true;
             tabControl1.TabPages["AvailableOrders"].BringToFront();
             tabControl1.SelectedTab = AvailableOrders;
             NextButtonEnabled();

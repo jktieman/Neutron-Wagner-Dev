@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <License>
   <Product>Neutron</Product>
-  <Licensee>Demo License</Licensee>
-  <Code>DEMO</Code>
-  <LicenseDate>1/21/2022</LicenseDate>
+  <Licensee>Milwaukee Tool</Licensee>
+  <Code>MET</Code>
+  <LicenseDate>3/6/2022</LicenseDate>
   <ExpireDate>12/31/2999</ExpireDate>
   <CoveredVersion>*.*.*.*</CoveredVersion>
-  <SerialNumber>123456</SerialNumber>
-  <SupervisorStations>6</SupervisorStations>
-  <WorkStations>6</WorkStations>
-  <RackStations>1</RackStations>
+  <SerialNumber>11215401</SerialNumber>
+  <SupervisorStations>2</SupervisorStations>
+  <WorkStations>4</WorkStations>
+  <RackStations>0</RackStations>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
       <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
@@ -19,9 +19,9 @@
           <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
         </Transforms>
         <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <DigestValue>yAjeSZ2qr0yReQLKtQkN34+NIXU=</DigestValue>
+        <DigestValue>a6wqapmN0ggLu/bYcPZEL9iGeYo=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>xjvGPzadUpQmkrhP1pjbHgli4e/eG/elOD/Q4279gb+HwUOTct9DkTIHsbmY6YV5ngur5Twa4DGCPjm5vOArEu8Ap3IufFgJgVxkKzPxo3u2Dn3uNlOVWBEeiERGzs6u8bU+npiIiK0fSKMzzC+gI1UcZqcVVDwR4gHFqBdspvY=</SignatureValue>
+    <SignatureValue>BryiQlXMyu6BGdKTZCxeIvaupmDi/d0JH/dI3xPFcKxEU4TJlhs177MPcHeoCChkbeqsw3j+H5f/tJ5t9Pr5T4Mb1vWO00ZT1wxTWlGlUCZ7KgdClLVQ+yi2MTqn6gz0or3IxNkcsxnZyY8RJ6VkrxXFZFAqzKFKQWCGMykljaQ=</SignatureValue>
   </Signature>
 </License>

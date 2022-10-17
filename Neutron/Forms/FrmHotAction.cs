@@ -244,7 +244,7 @@ namespace Neutron.Forms
 
             _logger.LogDetail("Initialize Device Indicators - InitDeviceIndicators");
 
-            _deviceIndicatorManager = new DeviceIndicatorManager(_logger, _stationView, new Point(140, 0),
+            _deviceIndicatorManager = new DeviceIndicatorManager(_stationView, new Point(140, 0),
                 new Size(860, 150), _neutronVariables);
 
 

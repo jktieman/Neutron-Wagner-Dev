@@ -1390,7 +1390,7 @@ namespace NeutronData.Repositories
                 var parameters = new List<object>();
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter(parameterName: "@STATIONNUMBER", value: station.StationId);
+                    var param = new SqlParameter(parameterName: "@STATIONNUMBER", value: station.StationNumber);
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SEARCHFIELD", value: searchField);
                     parameters.Add(param);

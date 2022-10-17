@@ -9,6 +9,7 @@ using CurrentDeviceIndicator;
 using AlliedLogger;
 using System.Windows.Forms;
 using System.Drawing;
+using NeutronCore;
 using NeutronCore.Global;
 using NeutronData.Models;
 
@@ -16,7 +17,7 @@ namespace DeviceIndicatorService
 {
     public class DeviceIndicatorManager
     {
-        private readonly IDynamicLogger _logger;
+
         private readonly StationView _stationView;
         private readonly Point _panelLocation;
         private readonly Size _panelSize;
@@ -25,19 +26,27 @@ namespace DeviceIndicatorService
         private List<HardwareDevice> _hardwareDevices;
         private int _numDevices;
         private int _flashRate;
+        private IDynamicLogger _logger;
 
         public Panel DeviceIndicatorPanel { get; set; }
 
 
-        public DeviceIndicatorManager(IDynamicLogger logger, StationView stationView, Point panelLocation, Size panelSize, NeutronVariables neutronVariables)
+        public DeviceIndicatorManager(StationView stationView, Point panelLocation, Size panelSize, NeutronVariables neutronVariables)
         {
-            _logger = logger;
-            _logger.FolderName = "DeviceIndicators";
+            SetupLogger();
             _stationView = stationView;
             _panelLocation = panelLocation;
             _panelSize = panelSize;
             _neutronVariables = neutronVariables;
             Init();
+        }
+
+        private void SetupLogger()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = @"DeviceIndicators";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
 
         private void Init()

@@ -12,5 +12,6 @@
         string Qty { get; set; }
         string TroubleBit { get; set; }
         string TypeCode { get; set; }
+
     }
 }

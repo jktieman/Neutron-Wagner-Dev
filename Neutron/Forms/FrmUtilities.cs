@@ -2392,7 +2392,8 @@ namespace Neutron.Forms
         {
             var station = new Station
             {
-                Id = int.Parse(TextBoxNewStationNumber.Text),
+                // Id is an Identity field now
+               // Id = int.Parse(TextBoxNewStationNumber.Text),
                 Name = TextBoxNewStationName.Text,
                 StationNumber = int.Parse(TextBoxNewStationNumber.Text),
                 StationTypeId = ((StationType)ComboBoxNewStationType.SelectedItem).Id,

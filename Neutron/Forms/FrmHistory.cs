@@ -191,11 +191,11 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationId",
+                DataPropertyName = "StationNumber",
                 HeaderText = _gridResourceManager.GetString("StationId"),
                 Visible = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationId",
+                Name = "StationNumber",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);

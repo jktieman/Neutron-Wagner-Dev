@@ -51,7 +51,7 @@ namespace NeutronData.Repositories
                     try
                     {
                         var hardwareDevices = _repoHardwareDevices.All().Where(r => r.StationId == station.Id).ToList();
-                        Task.Run(() => _logger.LogDetailAsync("Station Name: " + station.Name + " Number of Devices: " + station.HardwareDevices.Count));
+                        Task.Run(() => _logger.LogDetailAsync($"Station Name: " + station.Name + " Number of Devices: " + hardwareDevices.Count));
                         foreach (var device in hardwareDevices)
                         {
                             Task.Run(() => _logger.LogDetailAsync($"Hardware Device: {device.Name}"));

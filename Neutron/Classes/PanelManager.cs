@@ -66,13 +66,16 @@ namespace Neutron.Classes
             var posDisplayHeightPercent = .7F;
             var posDisplayWidthPercent = .8F;
 
-            int offset = 0;
+            int widthOffset = 0;
 
             // The number of positions in each row
             var positionsInRow = positions / rows;
             // The height of each row is determined by dividing
-            // the height of the master panel by the number of rows 
-            var rowHeight = _height / rows;
+            // the height of the master panel by the number of rows
+            // if there is only a single row, in order to center it vertically
+            // calculate the rowDivider 
+            var rowDivider = rows == 1 ? 2 : rows;
+            var rowHeight = _height / rowDivider;
             // The width of each position based on dividing the 
             //  width of the master panel by the number of positions requested. 
             var positionWidth = _width / positionsInRow;
@@ -98,10 +101,11 @@ namespace Neutron.Classes
 
                     if (positionsInRow < 4)
                     {
-                        offset = (_width - (positionsInRow * maxPositionWidth)) / 2;
+                        widthOffset = (_width - (positionsInRow * maxPositionWidth)) / 2;
                     }
 
-                    ucPickPosition.Location = new Point(i * positionWidth + offset, j * rowHeight);
+
+                    ucPickPosition.Location = new Point(i * positionWidth + widthOffset, j * rowHeight);
 
 
 

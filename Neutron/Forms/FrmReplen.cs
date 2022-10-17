@@ -42,8 +42,8 @@ using Neutron.Extensions;
 using Neutron.Ninject;
 using Neutron.UserControls;
 using NeutronEvents;
-using Remotion.FunctionalProgramming;
 using StorageType = NeutronData.Models.Lookups.StorageType;
+using LabelDetail = NeutronData.PrintModels.LabelDetail;
 
 namespace Neutron.Forms
 {
@@ -436,7 +436,7 @@ namespace Neutron.Forms
 
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
 
-            _deviceIndicatorManager = new DeviceIndicatorManager(_logger, _stationView, new Point(189, 0),
+            _deviceIndicatorManager = new DeviceIndicatorManager(_stationView, new Point(189, 0),
                 new Size(769, 127), _neutronVariables);
 
 
@@ -2293,8 +2293,8 @@ namespace Neutron.Forms
                 inventorySequence = recs;
             else if (recs.Count > 1)
                 inventorySequence = recs.OrderBy(o => o.ReceivedDate).ToList();
-            else
-                inventorySequence = inventorySequence;
+            //else
+            //    inventorySequence = inventorySequence;
 
             return inventorySequence;
         }

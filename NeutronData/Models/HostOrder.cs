@@ -15,6 +15,9 @@ namespace NeutronData.Models
         public string TroubleBit { get; set; }
         public string DateTime { get; set; }
         public string EmpId { get; set; }
+        public string BaseNum { get; set; }
+        public string Machine { get; set; }
+        public string Dept { get; set; }
         public string LineStatusId { get; set; }
         public OrderDetail OrderDetail { get; set; }
     }
