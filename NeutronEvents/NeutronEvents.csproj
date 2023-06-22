@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptButtonPressedEventArgs.cs" />
     <Compile Include="BatchCompleteEventArgs.cs" />
     <Compile Include="InventoryFileCreatedErrorEventArgs.cs" />
     <Compile Include="IptiButtonPressedEventArgs.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="StartStopEventArgs.cs" />
     <Compile Include="StationOrderDetailsCompleteEventArgs.cs" />
     <Compile Include="TransmitStateChangedEventArgs.cs" />
+    <Compile Include="WorkItEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

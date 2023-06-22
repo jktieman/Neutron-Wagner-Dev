@@ -102,7 +102,7 @@ namespace NeutronData.General
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Save Line Status to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
+                MessageBox.Show($@"Save Line Status to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
                                 $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
             }
         }

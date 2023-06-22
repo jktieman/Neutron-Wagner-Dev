@@ -18,7 +18,7 @@ namespace DeviceIndicatorService
     public class DeviceIndicatorManager
     {
 
-        private readonly StationView _stationView;
+        private readonly WorkstationView _workstationView;
         private readonly Point _panelLocation;
         private readonly Size _panelSize;
         private readonly NeutronVariables _neutronVariables;
@@ -31,10 +31,10 @@ namespace DeviceIndicatorService
         public Panel DeviceIndicatorPanel { get; set; }
 
 
-        public DeviceIndicatorManager(StationView stationView, Point panelLocation, Size panelSize, NeutronVariables neutronVariables)
+        public DeviceIndicatorManager(WorkstationView workstationView, Point panelLocation, Size panelSize, NeutronVariables neutronVariables)
         {
             SetupLogger();
-            _stationView = stationView;
+            _workstationView = workstationView;
             _panelLocation = panelLocation;
             _panelSize = panelSize;
             _neutronVariables = neutronVariables;
@@ -53,7 +53,7 @@ namespace DeviceIndicatorService
         {
             _logger.LogDetail("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new List<DeviceIndicator>();
-            _hardwareDevices = _stationView.HardwareDevices.ToList();
+            _hardwareDevices = _workstationView.HardwareDevices.ToList();
             _flashRate = _neutronVariables.DeviceFlashRate;
             _numDevices = _hardwareDevices.Count;
 

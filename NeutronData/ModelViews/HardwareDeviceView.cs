@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public int DeviceNumber { get; set; }
         public string Name { get; set; }
-        public int StationId { get; set; }
+        public int WorkstationId { get; set; }
         public string StationName { get; set; }
         public int NumberOfCarriers { get; set; }
         public int CarrierLevel { get; set; }

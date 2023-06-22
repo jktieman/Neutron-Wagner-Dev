@@ -15,6 +15,8 @@ using System.Windows.Forms;
 using Equin.ApplicationFramework;
 using NeutronCore;
 using NeutronCore.Enums;
+using Neutron.Models;
+
 namespace Neutron.Forms
 {
     public partial class FrmHistory : MetroForm
@@ -25,10 +27,14 @@ namespace Neutron.Forms
         private ResourceManager _enumResourceManager;
 
         readonly IAkaRepository _akaRepository;
+        private readonly HistoryManager _historyManager;
+        private readonly WorkstationView _workstationView;
         private BindingListView<HistoryView> _bindingSourceEquin;
         private DateTime _currentFromDateTime;
         private DateTime _currentToDateTime;
-        public FrmHistory(IAkaRepository akaRepository)
+        private readonly HeaderTextManager _headerTextManager;
+
+        public FrmHistory(IAkaRepository akaRepository, HistoryManager historyManager, WorkstationView workstationView)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -36,6 +42,9 @@ namespace Neutron.Forms
             HideTabControlTabs();
             SetupCheckListBoxActionCodes();
             _akaRepository = akaRepository;
+            _historyManager = historyManager;
+            _workstationView = workstationView;
+            _headerTextManager = new HeaderTextManager();
             SetupGrids();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
         }
@@ -44,9 +53,9 @@ namespace Neutron.Forms
         private void FrmHistory_Load(object sender, EventArgs e)
         {
             var date = DateTime.Now;
-            DateTimePickerFrom.Value = date.FirstDayOfMonth();
+            DateTimePickerFrom.Value = new DateTime(2023, 1, 1, 0, 0, 0);
             DateTimePickerTo.Value = date;
-            _currentFromDateTime = date.FirstDayOfMonth();
+            _currentFromDateTime = new DateTime(2023, 1, 1, 0, 0, 0);
             _currentToDateTime = date;
         }
 
@@ -85,6 +94,7 @@ namespace Neutron.Forms
         }
         private void SetupGrids()
         {
+
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
@@ -191,18 +201,18 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _gridResourceManager.GetString("StationId"),
+                DataPropertyName = "AreaId",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 Visible = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationNumber",
+                Name = "AreaId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc1",
-                HeaderText = _gridResourceManager.GetString("Loc1"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc1", _gridResourceManager),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc1",
@@ -212,7 +222,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc2",
-                HeaderText = _gridResourceManager.GetString("Loc2"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc2", _gridResourceManager),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc2",
@@ -222,7 +232,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc3",
-                HeaderText = _gridResourceManager.GetString("Loc3"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc3", _gridResourceManager),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc3",
@@ -232,7 +242,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc4",
-                HeaderText = _gridResourceManager.GetString("Loc4"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc4", _gridResourceManager),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc4",
@@ -242,7 +252,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc5",
-                HeaderText = _gridResourceManager.GetString("Loc5"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc5", _gridResourceManager),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc5",
@@ -365,15 +375,17 @@ namespace Neutron.Forms
         }
 
 
-       
+
 
         private void ButtonCheckAll_Click(object sender, EventArgs e)
         {
             SelectAllCheckBoxes(checkThem: true);
+            Run();
         }
         private void ButtonClearAll_Click(object sender, EventArgs e)
         {
             SelectAllCheckBoxes(checkThem: false);
+            Run();
         }
         private void SelectAllCheckBoxes(bool checkThem)
         {
@@ -396,7 +408,7 @@ namespace Neutron.Forms
             var findWhat = TextBoxFind.Text.Trim().ToLower();
             var find = _akaRepository.Get(findWhat);
             TextBoxFind.Text = find;
-            var history = GlobalVar.HistoryManager.GetHistoryRecords(codes, fromDate, toDate, find);
+            var history = _historyManager.GetHistoryRecords(codes, fromDate, toDate, find);
             _bindingSourceEquin = new BindingListView<HistoryView>(history);
             DataGridView1.DataSource = _bindingSourceEquin;
         }
@@ -489,6 +501,11 @@ namespace Neutron.Forms
         }
         private void MButtonRun_Click(object sender, EventArgs e)
         {
+            Run();
+        }
+
+        private void Run()
+        {
             Cursor.Current = Cursors.WaitCursor;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
@@ -530,7 +547,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+                MessageBox.Show($"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
             }
         }
 

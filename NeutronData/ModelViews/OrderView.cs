@@ -22,6 +22,7 @@ namespace NeutronData.ModelViews
         public string Station_4_HasPicks { get; set; }
         public string Station_5_HasPicks { get; set; }
         public string Station_6_HasPicks { get; set; }
+        public string Station_7_HasPicks { get; set; }
         public string Station_8_HasPicks { get; set; }
         public int Lines { get; set; } = 0;
         public int Pieces { get; set; } = 0;
@@ -30,8 +31,8 @@ namespace NeutronData.ModelViews
         public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
         public Order Order { get; set; }
-        public int CurrentPickStation { get; set; }
-        public int FirstPickStation { get; set; }
+        public int CurrentPickArea { get; set; }
+        public int FirstPickArea { get; set; }
         public string OrderStatus1 = "1000";
         public string OrderStatus2 = "2000";
         public string SearchField

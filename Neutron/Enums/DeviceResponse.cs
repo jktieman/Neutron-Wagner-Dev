@@ -7,19 +7,19 @@ namespace Neutron.Enums
     {
         [Description("Success")]
         Success = 0,
-        [Description("Previous Tray Did Not Arrive, please try again.")]
+        [Description("Previous Bin/Tray Did Not Arrive, please try again.")]
         TrayDidNotArrive = 1,
         [Description("Unknown Failure")]
         UnknownFailure = 2,
-        [Description("Device Not Initialized")]
+        [Description("Hardware Device Not Initialized")]
         DeviceNotInitialized = 3,
-        [Description("Device not Enabled")]
+        [Description("Hardware Device not Enabled")]
         DeviceNotEnabled = 4,
-        [Description("Device Not Found")]
+        [Description("Hardware Device Not Found")]
         DeviceNotFound = 5,
         [Description("Bad Status")]
         DeviceBadStatus = 6,
-        [Description("Device In Motion")]
+        [Description("Hardware Device In Motion")]
         DeviceInMotion = 7
     }
 }

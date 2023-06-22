@@ -27,32 +27,32 @@ namespace NeutronMaintenance
     {
         private readonly ILocationManager _locationManager;
 
-        readonly string masterFileFilter;
-        readonly DirectoryInfo masterPath;
-        readonly DynamicLogger logger;
+        private readonly string _masterFileFilter;
+        private readonly DirectoryInfo _masterPath;
+        private readonly DynamicLogger _logger;
 
-        public MasterMaintenanceProcessor(ILocationManager locationManager )
+        public MasterMaintenanceProcessor( ILocationManager locationManager )
         {
             _locationManager = locationManager;
             try
             {
-                masterPath = new DirectoryInfo(LoaderSettings.GetMaintenanceFileDirectory());
-                masterFileFilter = LoaderSettings.GetMaintenanceFileFilter();
+                _masterPath = new DirectoryInfo(LoaderSettings.GetMaintenanceFileDirectory());
+                _masterFileFilter = LoaderSettings.GetMaintenanceFileFilter();
 
-                string logFileDir = LoaderSettings.GetLogFileDirectory();
-                string folderName = @"Master Maintenance";
-                string logActivity = LoaderSettings.EnableLogging;
-                logger = new DynamicLogger(logFileDir, folderName, logActivity);
+                var logFileDir = LoaderSettings.GetLogFileDirectory();
+                var folderName = @"Master Maintenance";
+                var logActivity = LoaderSettings.EnableLogging;
+                _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             }
             catch (Exception ex)
             {
-                logger.Log($"INIT Master Maintenance Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
+                _logger.Log($"INIT Master Maintenance Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
             }
         }
 
         public void ProcessFiles()
         {
-            FileInfo[] files = GetFiles();
+            var files = GetFiles();
             if (files.Count() > 0)
             {
                 FileProcessor(files);
@@ -64,11 +64,11 @@ namespace NeutronMaintenance
             var result = new FileInfo[] { };
             try
             {
-                result = masterPath.GetFiles(masterFileFilter);
+                result = _masterPath.GetFiles(_masterFileFilter);
             }
             catch (Exception ex)
             {
-                logger.Log($"Get Master Maintenance Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
+                _logger.Log($"Get Master Maintenance Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
             }
             return result;
         }
@@ -79,7 +79,7 @@ namespace NeutronMaintenance
             {
                 try
                 {
-                    logger.Log($"File Name: {file.FullName}");
+                    _logger.Log($"File Name: {file.FullName}");
                     var allLines = File.ReadAllLines(file.FullName);
                     foreach (var line in allLines)
                     {
@@ -87,7 +87,7 @@ namespace NeutronMaintenance
                         //What kind of line is it>
                         if (line.Contains("RANDOMLOCATION"))
                         {
-                            Task.Run(() => logger.LogDetailAsync($"RANDOMLOCATION: {line}"));
+                            Task.Run(() => _logger.LogDetailAsync($"RANDOMLOCATION: {line}"));
                             var randomLocation = CreateRandomLocation(line);
                             if (randomLocation != null)
                             {
@@ -96,32 +96,32 @@ namespace NeutronMaintenance
                         }
                         else if (line.Contains("RANDOMSKU"))
                         {
-                            logger.Log($"RANDOMSKU");
+                            _logger.Log($"RANDOMSKU");
                             ProcessRandomSku(line);
                         }
                         else if (line.Contains("OFFCARDEFSKU"))
                         {
-                            logger.Log($"OFFCARDEFSKU");
+                            _logger.Log($"OFFCARDEFSKU");
                             ProcessOffCarSku(line);
                         }
                         else if (line.Contains("OFFCARDEFSLOT"))
                         {
-                            logger.Log($"OFFCARDEFSLOT");
+                            _logger.Log($"OFFCARDEFSLOT");
                             ProcessOffCarLocation(line);
                         }
                         else if (line.Contains("OFFCARRESERVE"))
                         {
-                            logger.Log($"OFFCARRESERVE");
+                            _logger.Log($"OFFCARRESERVE");
                             ProcessOffCarInventory(line);
                         }
                         else if (line.Contains("AKADEFINITION"))
                         {
-                            logger.Log($"AKADEFINITION");
+                            _logger.Log($"AKADEFINITION");
                             ProcessAka(line);
                         }
                         else
                         {
-                            logger.Log($"Last Else");
+                            _logger.Log($"Last Else");
                             //if the line doesn't have any of these, it's Inventory
                             // Sku and Location with quantity
                             ProcessInventory(line);
@@ -168,14 +168,14 @@ namespace NeutronMaintenance
             var akaRecords = new List<AkaLoad>();
             var akaDefinitionUpdate = new AkaDefinitionUpdate();
 
-            logger.Log($"AKA: {line}");
-            logger.Log($"Line Length: {line.Length}");
+            _logger.Log($"AKA: {line}");
+            _logger.Log($"Line Length: {line.Length}");
             if (line.Length > 49)
             {
-                string akaSku = line.Substring(50).Trim();
-                logger.Log($"AKA: {akaSku} Length: {akaSku.Length}");
-                string sku = line.Substring(0, 35).Trim();
-                logger.Log($"AKA: {sku} Length: {sku.Length}");
+                var akaSku = line.Substring(50).Trim();
+                _logger.Log($"AKA: {akaSku} Length: {akaSku.Length}");
+                var sku = line.Substring(0, 35).Trim();
+                _logger.Log($"AKA: {sku} Length: {sku.Length}");
                 if (akaSku.Length > 0 && sku.Length > 0)
                 {
                     var rec = new AkaLoad();
@@ -186,7 +186,7 @@ namespace NeutronMaintenance
                 }
             }
 
-            akaDefinitionUpdate.ProcessAkaDefinitions(akaRecords, logger);
+            akaDefinitionUpdate.ProcessAkaDefinitions(akaRecords, _logger);
 
         }
 
@@ -232,7 +232,7 @@ namespace NeutronMaintenance
 
             try
             {
-                logger.Log($"RandomSku: {line}");
+                _logger.Log($"RandomSku: {line}");
 
                 var rec = new ItemDefinitionLoad();
                 rec.Station = line.Substring(126, 1);
@@ -259,7 +259,7 @@ namespace NeutronMaintenance
                 MessageBox.Show($"Error Reading ItemDefinitionLoad Lines. {ex.Message} \r\n {ex.InnerException}");
             }
 
-            itemDefinitionUpdate.ProcessItemDefinitions(itemMaintenanceRecords, logger);
+            itemDefinitionUpdate.ProcessItemDefinitions(itemMaintenanceRecords, _logger);
 
         }
 
@@ -289,12 +289,12 @@ namespace NeutronMaintenance
 
         public void ArchiveFile(FileInfo fileInfo)
         {
-            string archiveDir = ($"{masterPath.FullName}Archive\\");
+            var archiveDir = ($"{_masterPath.FullName}Archive\\");
             try
             {
                 if (File.Exists(fileInfo.FullName))
                 {
-                    string archivefile = Path.Combine(archiveDir, fileInfo.Name);
+                    var archivefile = Path.Combine(archiveDir, fileInfo.Name);
                     if (File.Exists($"{archivefile}"))
                     {
                         File.Delete(archivefile);
@@ -305,7 +305,7 @@ namespace NeutronMaintenance
             }
             catch (Exception ex)
             {
-                logger.Log("Archive Master Maintenance File Error: " + ex.Message);
+                _logger.Log("Archive Master Maintenance File Error: " + ex.Message);
             }
         }
 

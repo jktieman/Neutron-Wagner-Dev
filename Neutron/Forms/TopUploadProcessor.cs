@@ -12,13 +12,14 @@ namespace Neutron.Forms
     {
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
 
-        public TopUploadProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, Station rackStation)
+        public TopUploadProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense
+            , WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
         }
 
         public void CreateHostFile(BindingSource bindingSourcePickStops)
@@ -69,7 +70,7 @@ namespace Neutron.Forms
                             DateTime = pickLocation.PickDate.ToString($"yyyyMMddHHmmss"),
                             EmpId = ($"EmpId:{empId} Note: Picked From Different Location")
                         };
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                         hostFile.CreateHostFile(ord);
                     }
                 }
@@ -99,7 +100,7 @@ namespace Neutron.Forms
                         EmpId = ($"EmpId:{empId} Note: Picked Used")
                     };
 
-                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                     hostFile.CreateHostFile(ord);
                 }
             }
@@ -130,7 +131,7 @@ namespace Neutron.Forms
                             DateTime = pickLocation.PickDate.ToString($"yyyyMMddHHmmss"),
                             EmpId = ($"EmpId:{empId} Note: Stored in Different Location")
                         };
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                         hostFile.CreateHostFile(ord);
                     }
                 }

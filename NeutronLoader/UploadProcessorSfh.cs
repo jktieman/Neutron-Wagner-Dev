@@ -6,9 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NeutronData.DataContexts;
+using NeutronData.Interfaces;
 using NeutronData.Models;
 using static System.Int32;
 using Timer = System.Threading.Timer;
+using NeutronData.ModelViews;
 
 namespace NeutronLoader
 {
@@ -17,17 +19,17 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly DynamicLogger _logger;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _uploadBusy;
 
         public UploadProcessorSfh(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            DynamicLogger logger, Station rackStation)
+            DynamicLogger logger, WorkstationView workstationView)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
         }
 
         public void RunUploadOnce()
@@ -80,7 +82,7 @@ namespace NeutronLoader
                     var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode)).ToList();
                     if (recs.Count > 0)
                     {
-                        var hostFile = new HostFileSfh(_neutronLicense, _neutronVariables, _rackStation);
+                        var hostFile = new HostFileSfh(_neutronLicense, _neutronVariables, _workstationView);
                         var result = hostFile.CreateHostFile(recs);
                         if (result)
                         {

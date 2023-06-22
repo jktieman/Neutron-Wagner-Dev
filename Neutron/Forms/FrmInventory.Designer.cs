@@ -35,7 +35,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.GroupBoxInventoryFile = new System.Windows.Forms.GroupBox();
-            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
+            this.ComboBoxAreaNumber = new System.Windows.Forms.ComboBox();
             this.MBCreateInventoryFile = new MetroFramework.Controls.MetroButton();
             this.CheckBoxAllStations = new System.Windows.Forms.CheckBox();
             this.MBPrintInventory = new MetroFramework.Controls.MetroButton();
@@ -75,20 +75,20 @@
             this.LabelNewUnitOfIssue = new System.Windows.Forms.Label();
             this.ComboBoxNewStorageType = new System.Windows.Forms.ComboBox();
             this.LabelNewStorageType = new System.Windows.Forms.Label();
+            this.TextBoxNewLocationCode = new System.Windows.Forms.TextBox();
             this.TextBoxNewWeight = new System.Windows.Forms.TextBox();
             this.LabelNewWeight = new System.Windows.Forms.Label();
             this.CheckBoxNewScale = new System.Windows.Forms.CheckBox();
             this.TextBoxNewSystemMin = new System.Windows.Forms.TextBox();
             this.LabelNewSystemMin = new System.Windows.Forms.Label();
-            this.ComboBoxNewLocationCode = new System.Windows.Forms.ComboBox();
-            this.LabelNewUser = new System.Windows.Forms.Label();
+            this.LabelNewLocationCode = new System.Windows.Forms.Label();
             this.ComboBoxNewHeightCode = new System.Windows.Forms.ComboBox();
             this.LabelNewHeight = new System.Windows.Forms.Label();
             this.ComboBoxNewVelocityCode = new System.Windows.Forms.ComboBox();
             this.LabelNewVelocity = new System.Windows.Forms.Label();
             this.ComboBoxNewSizeCode = new System.Windows.Forms.ComboBox();
             this.LabelNewSize = new System.Windows.Forms.Label();
-            this.ComboBoxNewStation = new System.Windows.Forms.ComboBox();
+            this.ComboBoxNewArea = new System.Windows.Forms.ComboBox();
             this.TextBoxNewSystemMax = new System.Windows.Forms.TextBox();
             this.TextBoxNewLocationMin = new System.Windows.Forms.TextBox();
             this.TextBoxNewLocationMax = new System.Windows.Forms.TextBox();
@@ -97,7 +97,7 @@
             this.LabelNewLocationMin = new System.Windows.Forms.Label();
             this.LabelNewLocationMax = new System.Windows.Forms.Label();
             this.LabelNewDescriiption = new System.Windows.Forms.Label();
-            this.LabelNewStation = new System.Windows.Forms.Label();
+            this.LabelNewArea = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.LabelActionNewLocations = new System.Windows.Forms.Label();
             this.MbNewLocationsListing = new MetroFramework.Controls.MetroButton();
@@ -126,6 +126,7 @@
             this.MbAddDetailClose = new MetroFramework.Controls.MetroButton();
             this.MbAddDetailSave = new MetroFramework.Controls.MetroButton();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.ButtonPositionDevice = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.CheckBoxAddDetailPrimeBin = new System.Windows.Forms.CheckBox();
             this.DateTimePickerAddDetailReceivedDate = new System.Windows.Forms.DateTimePicker();
@@ -141,8 +142,7 @@
             this.GroupBoxAddDetailLocation = new System.Windows.Forms.GroupBox();
             this.LabelSlotInformation = new System.Windows.Forms.Label();
             this.CheckBoxInUse = new System.Windows.Forms.CheckBox();
-            this.ComboBoxAddDetailLocationCode = new System.Windows.Forms.ComboBox();
-            this.LabelAddDetailUser = new System.Windows.Forms.Label();
+            this.LabelLocationCode = new System.Windows.Forms.Label();
             this.ComboBoxAddDetailHeightCode = new System.Windows.Forms.ComboBox();
             this.LabelAddDetailHeight = new System.Windows.Forms.Label();
             this.ComboBoxAddDetailVelocityCode = new System.Windows.Forms.ComboBox();
@@ -150,25 +150,31 @@
             this.LabelAddDetailSlot = new System.Windows.Forms.Label();
             this.ComboBoxAddDetailSizeCode = new System.Windows.Forms.ComboBox();
             this.LabelAddDetailSize = new System.Windows.Forms.Label();
-            this.ComboBoxAddDetailStation = new System.Windows.Forms.ComboBox();
+            this.ComboBoxAddDetailArea = new System.Windows.Forms.ComboBox();
+            this.TextBoxPickSequence = new System.Windows.Forms.TextBox();
+            this.TextBoxAddDetailLocationCode = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailLoc5 = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailLoc4 = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailLoc3 = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailLoc2 = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailSlot = new System.Windows.Forms.TextBox();
+            this.LabelPickSequence = new System.Windows.Forms.Label();
             this.TextBoxAddDetailLoc1 = new System.Windows.Forms.TextBox();
             this.LabelAddDetailTag = new System.Windows.Forms.Label();
             this.LabelAddDetailBack = new System.Windows.Forms.Label();
             this.LabelAddDetailOver = new System.Windows.Forms.Label();
             this.LabelAddDetailTray = new System.Windows.Forms.Label();
             this.LabelAddDetailDevice = new System.Windows.Forms.Label();
-            this.LabelAddDetailStation = new System.Windows.Forms.Label();
+            this.LabelAddDetailArea = new System.Windows.Forms.Label();
             this.TextBoxAddDetailInventoryId = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailItemDefinitionId = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailLocationId = new System.Windows.Forms.TextBox();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
-            this.ButtonPositionDevice = new System.Windows.Forms.Button();
+            this.LabelAddDetailRfid = new System.Windows.Forms.Label();
+            this.TextBoxAddDetailRfid = new System.Windows.Forms.TextBox();
+            this.TextBoxInventoryNewLocationsRfid = new System.Windows.Forms.TextBox();
+            this.LabelInventoryNewLocationsRfid = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.GroupBoxInventoryFile.SuspendLayout();
@@ -263,7 +269,7 @@
             // 
             // GroupBoxInventoryFile
             // 
-            this.GroupBoxInventoryFile.Controls.Add(this.ComboBoxStationNumber);
+            this.GroupBoxInventoryFile.Controls.Add(this.ComboBoxAreaNumber);
             this.GroupBoxInventoryFile.Controls.Add(this.MBCreateInventoryFile);
             this.GroupBoxInventoryFile.Location = new System.Drawing.Point(875, 5);
             this.GroupBoxInventoryFile.Name = "GroupBoxInventoryFile";
@@ -271,12 +277,12 @@
             this.GroupBoxInventoryFile.TabIndex = 27;
             this.GroupBoxInventoryFile.TabStop = false;
             // 
-            // ComboBoxStationNumber
+            // ComboBoxAreaNumber
             // 
-            this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxStationNumber.FormattingEnabled = true;
-            this.ComboBoxStationNumber.Items.AddRange(new object[] {
+            this.ComboBoxAreaNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxAreaNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxAreaNumber.FormattingEnabled = true;
+            this.ComboBoxAreaNumber.Items.AddRange(new object[] {
             "ALL",
             "1",
             "2",
@@ -284,10 +290,10 @@
             "4",
             "5",
             "8"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(6, 15);
-            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(121, 24);
-            this.ComboBoxStationNumber.TabIndex = 0;
+            this.ComboBoxAreaNumber.Location = new System.Drawing.Point(6, 15);
+            this.ComboBoxAreaNumber.Name = "ComboBoxAreaNumber";
+            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(121, 24);
+            this.ComboBoxAreaNumber.TabIndex = 0;
             // 
             // MBCreateInventoryFile
             // 
@@ -710,20 +716,20 @@
             this.panel4.Controls.Add(this.LabelNewUnitOfIssue);
             this.panel4.Controls.Add(this.ComboBoxNewStorageType);
             this.panel4.Controls.Add(this.LabelNewStorageType);
+            this.panel4.Controls.Add(this.TextBoxNewLocationCode);
             this.panel4.Controls.Add(this.TextBoxNewWeight);
             this.panel4.Controls.Add(this.LabelNewWeight);
             this.panel4.Controls.Add(this.CheckBoxNewScale);
             this.panel4.Controls.Add(this.TextBoxNewSystemMin);
             this.panel4.Controls.Add(this.LabelNewSystemMin);
-            this.panel4.Controls.Add(this.ComboBoxNewLocationCode);
-            this.panel4.Controls.Add(this.LabelNewUser);
+            this.panel4.Controls.Add(this.LabelNewLocationCode);
             this.panel4.Controls.Add(this.ComboBoxNewHeightCode);
             this.panel4.Controls.Add(this.LabelNewHeight);
             this.panel4.Controls.Add(this.ComboBoxNewVelocityCode);
             this.panel4.Controls.Add(this.LabelNewVelocity);
             this.panel4.Controls.Add(this.ComboBoxNewSizeCode);
             this.panel4.Controls.Add(this.LabelNewSize);
-            this.panel4.Controls.Add(this.ComboBoxNewStation);
+            this.panel4.Controls.Add(this.ComboBoxNewArea);
             this.panel4.Controls.Add(this.TextBoxNewSystemMax);
             this.panel4.Controls.Add(this.TextBoxNewLocationMin);
             this.panel4.Controls.Add(this.TextBoxNewLocationMax);
@@ -732,11 +738,10 @@
             this.panel4.Controls.Add(this.LabelNewLocationMin);
             this.panel4.Controls.Add(this.LabelNewLocationMax);
             this.panel4.Controls.Add(this.LabelNewDescriiption);
-            this.panel4.Controls.Add(this.LabelNewStation);
-            this.panel4.Enabled = false;
+            this.panel4.Controls.Add(this.LabelNewArea);
             this.panel4.Location = new System.Drawing.Point(107, 78);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(927, 364);
+            this.panel4.Size = new System.Drawing.Size(927, 367);
             this.panel4.TabIndex = 62;
             // 
             // ComboBoxNewUnitOfIssue
@@ -780,6 +785,17 @@
             this.LabelNewStorageType.TabIndex = 86;
             this.LabelNewStorageType.Text = "Storage Type";
             this.LabelNewStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxNewLocationCode
+            // 
+            this.TextBoxNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewLocationCode.Location = new System.Drawing.Point(234, 303);
+            this.TextBoxNewLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewLocationCode.Name = "TextBoxNewLocationCode";
+            this.TextBoxNewLocationCode.Size = new System.Drawing.Size(190, 29);
+            this.TextBoxNewLocationCode.TabIndex = 12;
+            this.TextBoxNewLocationCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxNewLocationCode.Visible = false;
             // 
             // TextBoxNewWeight
             // 
@@ -834,26 +850,16 @@
             this.LabelNewSystemMin.Text = "System Min";
             this.LabelNewSystemMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ComboBoxNewLocationCode
+            // LabelNewLocationCode
             // 
-            this.ComboBoxNewLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxNewLocationCode.FormattingEnabled = true;
-            this.ComboBoxNewLocationCode.Location = new System.Drawing.Point(234, 301);
-            this.ComboBoxNewLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxNewLocationCode.Name = "ComboBoxNewLocationCode";
-            this.ComboBoxNewLocationCode.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxNewLocationCode.TabIndex = 7;
-            // 
-            // LabelNewUser
-            // 
-            this.LabelNewUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewUser.Location = new System.Drawing.Point(37, 302);
-            this.LabelNewUser.Name = "LabelNewUser";
-            this.LabelNewUser.Size = new System.Drawing.Size(190, 29);
-            this.LabelNewUser.TabIndex = 81;
-            this.LabelNewUser.Text = "User";
-            this.LabelNewUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewLocationCode.Location = new System.Drawing.Point(37, 302);
+            this.LabelNewLocationCode.Name = "LabelNewLocationCode";
+            this.LabelNewLocationCode.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewLocationCode.TabIndex = 81;
+            this.LabelNewLocationCode.Text = "Location Code";
+            this.LabelNewLocationCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewLocationCode.Visible = false;
             // 
             // ComboBoxNewHeightCode
             // 
@@ -918,16 +924,16 @@
             this.LabelNewSize.Text = "Size";
             this.LabelNewSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ComboBoxNewStation
+            // ComboBoxNewArea
             // 
-            this.ComboBoxNewStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxNewStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxNewStation.FormattingEnabled = true;
-            this.ComboBoxNewStation.Location = new System.Drawing.Point(234, 65);
-            this.ComboBoxNewStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxNewStation.Name = "ComboBoxNewStation";
-            this.ComboBoxNewStation.Size = new System.Drawing.Size(251, 32);
-            this.ComboBoxNewStation.TabIndex = 1;
+            this.ComboBoxNewArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxNewArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxNewArea.FormattingEnabled = true;
+            this.ComboBoxNewArea.Location = new System.Drawing.Point(234, 65);
+            this.ComboBoxNewArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ComboBoxNewArea.Name = "ComboBoxNewArea";
+            this.ComboBoxNewArea.Size = new System.Drawing.Size(190, 32);
+            this.ComboBoxNewArea.TabIndex = 1;
             // 
             // TextBoxNewSystemMax
             // 
@@ -1009,15 +1015,15 @@
             this.LabelNewDescriiption.Text = "Description";
             this.LabelNewDescriiption.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelNewStation
+            // LabelNewArea
             // 
-            this.LabelNewStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewStation.Location = new System.Drawing.Point(37, 68);
-            this.LabelNewStation.Name = "LabelNewStation";
-            this.LabelNewStation.Size = new System.Drawing.Size(190, 29);
-            this.LabelNewStation.TabIndex = 70;
-            this.LabelNewStation.Text = "Station";
-            this.LabelNewStation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewArea.Location = new System.Drawing.Point(37, 68);
+            this.LabelNewArea.Name = "LabelNewArea";
+            this.LabelNewArea.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewArea.TabIndex = 70;
+            this.LabelNewArea.Text = "Area";
+            this.LabelNewArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabPage4
             // 
@@ -1120,6 +1126,8 @@
             // panel5
             // 
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.TextBoxInventoryNewLocationsRfid);
+            this.panel5.Controls.Add(this.LabelInventoryNewLocationsRfid);
             this.panel5.Controls.Add(this.CheckBoxInventoryNewLocationsPrimeBin);
             this.panel5.Controls.Add(this.ComboBoxInventoryNewLocationsStorageType);
             this.panel5.Controls.Add(this.LabelNewLocationsStorageType);
@@ -1133,16 +1141,16 @@
             this.panel5.Controls.Add(this.LabelNewLocationsItem);
             this.panel5.Location = new System.Drawing.Point(33, 10);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1075, 134);
+            this.panel5.Size = new System.Drawing.Size(1075, 137);
             this.panel5.TabIndex = 89;
             // 
             // CheckBoxInventoryNewLocationsPrimeBin
             // 
             this.CheckBoxInventoryNewLocationsPrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxInventoryNewLocationsPrimeBin.Location = new System.Drawing.Point(613, 91);
+            this.CheckBoxInventoryNewLocationsPrimeBin.Location = new System.Drawing.Point(321, 53);
             this.CheckBoxInventoryNewLocationsPrimeBin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.CheckBoxInventoryNewLocationsPrimeBin.Name = "CheckBoxInventoryNewLocationsPrimeBin";
-            this.CheckBoxInventoryNewLocationsPrimeBin.Size = new System.Drawing.Size(190, 29);
+            this.CheckBoxInventoryNewLocationsPrimeBin.Size = new System.Drawing.Size(126, 29);
             this.CheckBoxInventoryNewLocationsPrimeBin.TabIndex = 5;
             this.CheckBoxInventoryNewLocationsPrimeBin.Text = "Prime Bin";
             this.CheckBoxInventoryNewLocationsPrimeBin.UseVisualStyleBackColor = true;
@@ -1179,9 +1187,9 @@
             // LabelNewLocationsReceivedDate
             // 
             this.LabelNewLocationsReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewLocationsReceivedDate.Location = new System.Drawing.Point(417, 53);
+            this.LabelNewLocationsReceivedDate.Location = new System.Drawing.Point(453, 53);
             this.LabelNewLocationsReceivedDate.Name = "LabelNewLocationsReceivedDate";
-            this.LabelNewLocationsReceivedDate.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewLocationsReceivedDate.Size = new System.Drawing.Size(154, 29);
             this.LabelNewLocationsReceivedDate.TabIndex = 95;
             this.LabelNewLocationsReceivedDate.Text = "Received Date";
             this.LabelNewLocationsReceivedDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1192,7 +1200,7 @@
             this.TextBoxInventoryNewLocationsQuantity.Location = new System.Drawing.Point(209, 51);
             this.TextBoxInventoryNewLocationsQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxInventoryNewLocationsQuantity.Name = "TextBoxInventoryNewLocationsQuantity";
-            this.TextBoxInventoryNewLocationsQuantity.Size = new System.Drawing.Size(105, 29);
+            this.TextBoxInventoryNewLocationsQuantity.Size = new System.Drawing.Size(100, 29);
             this.TextBoxInventoryNewLocationsQuantity.TabIndex = 1;
             this.TextBoxInventoryNewLocationsQuantity.Text = "0";
             this.TextBoxInventoryNewLocationsQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1253,12 +1261,12 @@
             // 
             this.DataGridViewInventoryNewLocations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.DataGridViewInventoryNewLocations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridViewInventoryNewLocations.Location = new System.Drawing.Point(3, 174);
+            this.DataGridViewInventoryNewLocations.Location = new System.Drawing.Point(3, 161);
             this.DataGridViewInventoryNewLocations.MultiSelect = false;
             this.DataGridViewInventoryNewLocations.Name = "DataGridViewInventoryNewLocations";
             this.DataGridViewInventoryNewLocations.RowTemplate.Height = 28;
             this.DataGridViewInventoryNewLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewInventoryNewLocations.Size = new System.Drawing.Size(1135, 359);
+            this.DataGridViewInventoryNewLocations.Size = new System.Drawing.Size(1135, 364);
             this.DataGridViewInventoryNewLocations.TabIndex = 0;
             this.DataGridViewInventoryNewLocations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewInventoryAddDetailLocations_CellClick);
             // 
@@ -1351,13 +1359,25 @@
             this.panel3.Size = new System.Drawing.Size(1141, 536);
             this.panel3.TabIndex = 23;
             // 
+            // ButtonPositionDevice
+            // 
+            this.ButtonPositionDevice.Location = new System.Drawing.Point(427, 492);
+            this.ButtonPositionDevice.Name = "ButtonPositionDevice";
+            this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 32);
+            this.ButtonPositionDevice.TabIndex = 104;
+            this.ButtonPositionDevice.Text = "Position Device";
+            this.ButtonPositionDevice.UseVisualStyleBackColor = true;
+            this.ButtonPositionDevice.Click += new System.EventHandler(this.ButtonPositionDevice_Click);
+            // 
             // panel6
             // 
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel6.Controls.Add(this.CheckBoxAddDetailPrimeBin);
             this.panel6.Controls.Add(this.DateTimePickerAddDetailReceivedDate);
             this.panel6.Controls.Add(this.LabelAddDetailReceivedDate);
+            this.panel6.Controls.Add(this.TextBoxAddDetailRfid);
             this.panel6.Controls.Add(this.TextBoxAddDetailDescription);
+            this.panel6.Controls.Add(this.LabelAddDetailRfid);
             this.panel6.Controls.Add(this.TextBoxAddDetailItem);
             this.panel6.Controls.Add(this.LabelAddDetailDescription);
             this.panel6.Controls.Add(this.LabelAddDetailItem);
@@ -1367,16 +1387,16 @@
             this.panel6.Controls.Add(this.LabelAddDetailQuantity);
             this.panel6.Location = new System.Drawing.Point(33, 10);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1075, 134);
+            this.panel6.Size = new System.Drawing.Size(1075, 145);
             this.panel6.TabIndex = 103;
             // 
             // CheckBoxAddDetailPrimeBin
             // 
             this.CheckBoxAddDetailPrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAddDetailPrimeBin.Location = new System.Drawing.Point(613, 91);
+            this.CheckBoxAddDetailPrimeBin.Location = new System.Drawing.Point(321, 53);
             this.CheckBoxAddDetailPrimeBin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.CheckBoxAddDetailPrimeBin.Name = "CheckBoxAddDetailPrimeBin";
-            this.CheckBoxAddDetailPrimeBin.Size = new System.Drawing.Size(190, 29);
+            this.CheckBoxAddDetailPrimeBin.Size = new System.Drawing.Size(126, 29);
             this.CheckBoxAddDetailPrimeBin.TabIndex = 5;
             this.CheckBoxAddDetailPrimeBin.Text = "Prime Bin";
             this.CheckBoxAddDetailPrimeBin.UseVisualStyleBackColor = true;
@@ -1392,9 +1412,9 @@
             // LabelAddDetailReceivedDate
             // 
             this.LabelAddDetailReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailReceivedDate.Location = new System.Drawing.Point(417, 53);
+            this.LabelAddDetailReceivedDate.Location = new System.Drawing.Point(453, 53);
             this.LabelAddDetailReceivedDate.Name = "LabelAddDetailReceivedDate";
-            this.LabelAddDetailReceivedDate.Size = new System.Drawing.Size(190, 29);
+            this.LabelAddDetailReceivedDate.Size = new System.Drawing.Size(154, 29);
             this.LabelAddDetailReceivedDate.TabIndex = 111;
             this.LabelAddDetailReceivedDate.Text = "Received Date";
             this.LabelAddDetailReceivedDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1483,8 +1503,7 @@
             // 
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelSlotInformation);
             this.GroupBoxAddDetailLocation.Controls.Add(this.CheckBoxInUse);
-            this.GroupBoxAddDetailLocation.Controls.Add(this.ComboBoxAddDetailLocationCode);
-            this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailUser);
+            this.GroupBoxAddDetailLocation.Controls.Add(this.LabelLocationCode);
             this.GroupBoxAddDetailLocation.Controls.Add(this.ComboBoxAddDetailHeightCode);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailHeight);
             this.GroupBoxAddDetailLocation.Controls.Add(this.ComboBoxAddDetailVelocityCode);
@@ -1492,23 +1511,25 @@
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailSlot);
             this.GroupBoxAddDetailLocation.Controls.Add(this.ComboBoxAddDetailSizeCode);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailSize);
-            this.GroupBoxAddDetailLocation.Controls.Add(this.ComboBoxAddDetailStation);
+            this.GroupBoxAddDetailLocation.Controls.Add(this.ComboBoxAddDetailArea);
+            this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxPickSequence);
+            this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailLocationCode);
             this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailLoc5);
             this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailLoc4);
             this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailLoc3);
             this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailLoc2);
             this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailSlot);
+            this.GroupBoxAddDetailLocation.Controls.Add(this.LabelPickSequence);
             this.GroupBoxAddDetailLocation.Controls.Add(this.TextBoxAddDetailLoc1);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailTag);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailBack);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailOver);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailTray);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailDevice);
-            this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailStation);
-            this.GroupBoxAddDetailLocation.Enabled = false;
-            this.GroupBoxAddDetailLocation.Location = new System.Drawing.Point(86, 159);
+            this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailArea);
+            this.GroupBoxAddDetailLocation.Location = new System.Drawing.Point(86, 161);
             this.GroupBoxAddDetailLocation.Name = "GroupBoxAddDetailLocation";
-            this.GroupBoxAddDetailLocation.Size = new System.Drawing.Size(968, 305);
+            this.GroupBoxAddDetailLocation.Size = new System.Drawing.Size(968, 325);
             this.GroupBoxAddDetailLocation.TabIndex = 62;
             this.GroupBoxAddDetailLocation.TabStop = false;
             this.GroupBoxAddDetailLocation.Text = "Location";
@@ -1517,7 +1538,7 @@
             // 
             this.LabelSlotInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSlotInformation.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LabelSlotInformation.Location = new System.Drawing.Point(793, 72);
+            this.LabelSlotInformation.Location = new System.Drawing.Point(805, 109);
             this.LabelSlotInformation.Name = "LabelSlotInformation";
             this.LabelSlotInformation.Size = new System.Drawing.Size(157, 36);
             this.LabelSlotInformation.TabIndex = 59;
@@ -1537,33 +1558,22 @@
             this.CheckBoxInUse.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxInUse.UseVisualStyleBackColor = true;
             // 
-            // ComboBoxAddDetailLocationCode
+            // LabelLocationCode
             // 
-            this.ComboBoxAddDetailLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxAddDetailLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxAddDetailLocationCode.FormattingEnabled = true;
-            this.ComboBoxAddDetailLocationCode.Location = new System.Drawing.Point(597, 252);
-            this.ComboBoxAddDetailLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxAddDetailLocationCode.Name = "ComboBoxAddDetailLocationCode";
-            this.ComboBoxAddDetailLocationCode.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxAddDetailLocationCode.TabIndex = 11;
-            // 
-            // LabelAddDetailUser
-            // 
-            this.LabelAddDetailUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailUser.Location = new System.Drawing.Point(401, 253);
-            this.LabelAddDetailUser.Name = "LabelAddDetailUser";
-            this.LabelAddDetailUser.Size = new System.Drawing.Size(192, 29);
-            this.LabelAddDetailUser.TabIndex = 57;
-            this.LabelAddDetailUser.Text = "User";
-            this.LabelAddDetailUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLocationCode.Location = new System.Drawing.Point(409, 285);
+            this.LabelLocationCode.Name = "LabelLocationCode";
+            this.LabelLocationCode.Size = new System.Drawing.Size(192, 29);
+            this.LabelLocationCode.TabIndex = 57;
+            this.LabelLocationCode.Text = "Location Code";
+            this.LabelLocationCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxAddDetailHeightCode
             // 
             this.ComboBoxAddDetailHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailHeightCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxAddDetailHeightCode.FormattingEnabled = true;
-            this.ComboBoxAddDetailHeightCode.Location = new System.Drawing.Point(597, 206);
+            this.ComboBoxAddDetailHeightCode.Location = new System.Drawing.Point(605, 243);
             this.ComboBoxAddDetailHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxAddDetailHeightCode.Name = "ComboBoxAddDetailHeightCode";
             this.ComboBoxAddDetailHeightCode.Size = new System.Drawing.Size(190, 32);
@@ -1573,7 +1583,7 @@
             // LabelAddDetailHeight
             // 
             this.LabelAddDetailHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailHeight.Location = new System.Drawing.Point(401, 209);
+            this.LabelAddDetailHeight.Location = new System.Drawing.Point(409, 243);
             this.LabelAddDetailHeight.Name = "LabelAddDetailHeight";
             this.LabelAddDetailHeight.Size = new System.Drawing.Size(192, 29);
             this.LabelAddDetailHeight.TabIndex = 27;
@@ -1585,7 +1595,7 @@
             this.ComboBoxAddDetailVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailVelocityCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxAddDetailVelocityCode.FormattingEnabled = true;
-            this.ComboBoxAddDetailVelocityCode.Location = new System.Drawing.Point(597, 164);
+            this.ComboBoxAddDetailVelocityCode.Location = new System.Drawing.Point(605, 200);
             this.ComboBoxAddDetailVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxAddDetailVelocityCode.Name = "ComboBoxAddDetailVelocityCode";
             this.ComboBoxAddDetailVelocityCode.Size = new System.Drawing.Size(190, 32);
@@ -1595,7 +1605,7 @@
             // LabelAddDetailVelocity
             // 
             this.LabelAddDetailVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailVelocity.Location = new System.Drawing.Point(401, 165);
+            this.LabelAddDetailVelocity.Location = new System.Drawing.Point(409, 201);
             this.LabelAddDetailVelocity.Name = "LabelAddDetailVelocity";
             this.LabelAddDetailVelocity.Size = new System.Drawing.Size(192, 29);
             this.LabelAddDetailVelocity.TabIndex = 23;
@@ -1605,7 +1615,7 @@
             // LabelAddDetailSlot
             // 
             this.LabelAddDetailSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailSlot.Location = new System.Drawing.Point(401, 77);
+            this.LabelAddDetailSlot.Location = new System.Drawing.Point(409, 117);
             this.LabelAddDetailSlot.Name = "LabelAddDetailSlot";
             this.LabelAddDetailSlot.Size = new System.Drawing.Size(192, 29);
             this.LabelAddDetailSlot.TabIndex = 19;
@@ -1617,7 +1627,7 @@
             this.ComboBoxAddDetailSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxAddDetailSizeCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxAddDetailSizeCode.FormattingEnabled = true;
-            this.ComboBoxAddDetailSizeCode.Location = new System.Drawing.Point(597, 120);
+            this.ComboBoxAddDetailSizeCode.Location = new System.Drawing.Point(605, 158);
             this.ComboBoxAddDetailSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxAddDetailSizeCode.Name = "ComboBoxAddDetailSizeCode";
             this.ComboBoxAddDetailSizeCode.Size = new System.Drawing.Size(190, 32);
@@ -1627,29 +1637,51 @@
             // LabelAddDetailSize
             // 
             this.LabelAddDetailSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailSize.Location = new System.Drawing.Point(401, 121);
+            this.LabelAddDetailSize.Location = new System.Drawing.Point(409, 159);
             this.LabelAddDetailSize.Name = "LabelAddDetailSize";
             this.LabelAddDetailSize.Size = new System.Drawing.Size(192, 29);
             this.LabelAddDetailSize.TabIndex = 20;
             this.LabelAddDetailSize.Text = "Size";
             this.LabelAddDetailSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ComboBoxAddDetailStation
+            // ComboBoxAddDetailArea
             // 
-            this.ComboBoxAddDetailStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxAddDetailStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxAddDetailStation.FormattingEnabled = true;
-            this.ComboBoxAddDetailStation.Location = new System.Drawing.Point(204, 30);
-            this.ComboBoxAddDetailStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxAddDetailStation.Name = "ComboBoxAddDetailStation";
-            this.ComboBoxAddDetailStation.Size = new System.Drawing.Size(190, 32);
-            this.ComboBoxAddDetailStation.TabIndex = 0;
-            this.ComboBoxAddDetailStation.TabStop = false;
+            this.ComboBoxAddDetailArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxAddDetailArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxAddDetailArea.FormattingEnabled = true;
+            this.ComboBoxAddDetailArea.Location = new System.Drawing.Point(200, 71);
+            this.ComboBoxAddDetailArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ComboBoxAddDetailArea.Name = "ComboBoxAddDetailArea";
+            this.ComboBoxAddDetailArea.Size = new System.Drawing.Size(190, 32);
+            this.ComboBoxAddDetailArea.TabIndex = 0;
+            this.ComboBoxAddDetailArea.TabStop = false;
+            // 
+            // TextBoxPickSequence
+            // 
+            this.TextBoxPickSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxPickSequence.Location = new System.Drawing.Point(605, 75);
+            this.TextBoxPickSequence.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxPickSequence.Name = "TextBoxPickSequence";
+            this.TextBoxPickSequence.Size = new System.Drawing.Size(190, 29);
+            this.TextBoxPickSequence.TabIndex = 5;
+            this.TextBoxPickSequence.TabStop = false;
+            this.TextBoxPickSequence.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxAddDetailLocationCode
+            // 
+            this.TextBoxAddDetailLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxAddDetailLocationCode.Location = new System.Drawing.Point(605, 285);
+            this.TextBoxAddDetailLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxAddDetailLocationCode.Name = "TextBoxAddDetailLocationCode";
+            this.TextBoxAddDetailLocationCode.Size = new System.Drawing.Size(190, 29);
+            this.TextBoxAddDetailLocationCode.TabIndex = 5;
+            this.TextBoxAddDetailLocationCode.TabStop = false;
+            this.TextBoxAddDetailLocationCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxAddDetailLoc5
             // 
             this.TextBoxAddDetailLoc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailLoc5.Location = new System.Drawing.Point(204, 252);
+            this.TextBoxAddDetailLoc5.Location = new System.Drawing.Point(200, 284);
             this.TextBoxAddDetailLoc5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailLoc5.Name = "TextBoxAddDetailLoc5";
             this.TextBoxAddDetailLoc5.Size = new System.Drawing.Size(100, 29);
@@ -1660,7 +1692,7 @@
             // TextBoxAddDetailLoc4
             // 
             this.TextBoxAddDetailLoc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailLoc4.Location = new System.Drawing.Point(204, 208);
+            this.TextBoxAddDetailLoc4.Location = new System.Drawing.Point(200, 242);
             this.TextBoxAddDetailLoc4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailLoc4.Name = "TextBoxAddDetailLoc4";
             this.TextBoxAddDetailLoc4.Size = new System.Drawing.Size(100, 29);
@@ -1671,7 +1703,7 @@
             // TextBoxAddDetailLoc3
             // 
             this.TextBoxAddDetailLoc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailLoc3.Location = new System.Drawing.Point(204, 164);
+            this.TextBoxAddDetailLoc3.Location = new System.Drawing.Point(200, 200);
             this.TextBoxAddDetailLoc3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailLoc3.Name = "TextBoxAddDetailLoc3";
             this.TextBoxAddDetailLoc3.Size = new System.Drawing.Size(100, 29);
@@ -1682,7 +1714,7 @@
             // TextBoxAddDetailLoc2
             // 
             this.TextBoxAddDetailLoc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailLoc2.Location = new System.Drawing.Point(204, 120);
+            this.TextBoxAddDetailLoc2.Location = new System.Drawing.Point(200, 158);
             this.TextBoxAddDetailLoc2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailLoc2.Name = "TextBoxAddDetailLoc2";
             this.TextBoxAddDetailLoc2.Size = new System.Drawing.Size(100, 29);
@@ -1693,7 +1725,7 @@
             // TextBoxAddDetailSlot
             // 
             this.TextBoxAddDetailSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailSlot.Location = new System.Drawing.Point(597, 76);
+            this.TextBoxAddDetailSlot.Location = new System.Drawing.Point(605, 117);
             this.TextBoxAddDetailSlot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailSlot.Name = "TextBoxAddDetailSlot";
             this.TextBoxAddDetailSlot.ReadOnly = true;
@@ -1702,10 +1734,20 @@
             this.TextBoxAddDetailSlot.TabStop = false;
             this.TextBoxAddDetailSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // LabelPickSequence
+            // 
+            this.LabelPickSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelPickSequence.Location = new System.Drawing.Point(409, 75);
+            this.LabelPickSequence.Name = "LabelPickSequence";
+            this.LabelPickSequence.Size = new System.Drawing.Size(190, 29);
+            this.LabelPickSequence.TabIndex = 13;
+            this.LabelPickSequence.Text = "Pick Sequence";
+            this.LabelPickSequence.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // TextBoxAddDetailLoc1
             // 
             this.TextBoxAddDetailLoc1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailLoc1.Location = new System.Drawing.Point(204, 76);
+            this.TextBoxAddDetailLoc1.Location = new System.Drawing.Point(200, 116);
             this.TextBoxAddDetailLoc1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailLoc1.Name = "TextBoxAddDetailLoc1";
             this.TextBoxAddDetailLoc1.Size = new System.Drawing.Size(100, 29);
@@ -1716,7 +1758,7 @@
             // LabelAddDetailTag
             // 
             this.LabelAddDetailTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailTag.Location = new System.Drawing.Point(8, 253);
+            this.LabelAddDetailTag.Location = new System.Drawing.Point(4, 284);
             this.LabelAddDetailTag.Name = "LabelAddDetailTag";
             this.LabelAddDetailTag.Size = new System.Drawing.Size(190, 29);
             this.LabelAddDetailTag.TabIndex = 13;
@@ -1726,7 +1768,7 @@
             // LabelAddDetailBack
             // 
             this.LabelAddDetailBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailBack.Location = new System.Drawing.Point(8, 209);
+            this.LabelAddDetailBack.Location = new System.Drawing.Point(4, 242);
             this.LabelAddDetailBack.Name = "LabelAddDetailBack";
             this.LabelAddDetailBack.Size = new System.Drawing.Size(190, 29);
             this.LabelAddDetailBack.TabIndex = 12;
@@ -1736,7 +1778,7 @@
             // LabelAddDetailOver
             // 
             this.LabelAddDetailOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailOver.Location = new System.Drawing.Point(8, 165);
+            this.LabelAddDetailOver.Location = new System.Drawing.Point(4, 200);
             this.LabelAddDetailOver.Name = "LabelAddDetailOver";
             this.LabelAddDetailOver.Size = new System.Drawing.Size(190, 29);
             this.LabelAddDetailOver.TabIndex = 11;
@@ -1746,7 +1788,7 @@
             // LabelAddDetailTray
             // 
             this.LabelAddDetailTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailTray.Location = new System.Drawing.Point(8, 121);
+            this.LabelAddDetailTray.Location = new System.Drawing.Point(4, 158);
             this.LabelAddDetailTray.Name = "LabelAddDetailTray";
             this.LabelAddDetailTray.Size = new System.Drawing.Size(190, 29);
             this.LabelAddDetailTray.TabIndex = 10;
@@ -1756,22 +1798,22 @@
             // LabelAddDetailDevice
             // 
             this.LabelAddDetailDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailDevice.Location = new System.Drawing.Point(8, 77);
+            this.LabelAddDetailDevice.Location = new System.Drawing.Point(4, 116);
             this.LabelAddDetailDevice.Name = "LabelAddDetailDevice";
             this.LabelAddDetailDevice.Size = new System.Drawing.Size(190, 29);
             this.LabelAddDetailDevice.TabIndex = 15;
             this.LabelAddDetailDevice.Text = "Device";
             this.LabelAddDetailDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelAddDetailStation
+            // LabelAddDetailArea
             // 
-            this.LabelAddDetailStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailStation.Location = new System.Drawing.Point(8, 33);
-            this.LabelAddDetailStation.Name = "LabelAddDetailStation";
-            this.LabelAddDetailStation.Size = new System.Drawing.Size(190, 29);
-            this.LabelAddDetailStation.TabIndex = 9;
-            this.LabelAddDetailStation.Text = "Station";
-            this.LabelAddDetailStation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelAddDetailArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAddDetailArea.Location = new System.Drawing.Point(4, 74);
+            this.LabelAddDetailArea.Name = "LabelAddDetailArea";
+            this.LabelAddDetailArea.Size = new System.Drawing.Size(190, 29);
+            this.LabelAddDetailArea.TabIndex = 9;
+            this.LabelAddDetailArea.Text = "Area";
+            this.LabelAddDetailArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxAddDetailInventoryId
             // 
@@ -1827,15 +1869,45 @@
             this.LabelStationName.TabIndex = 21;
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ButtonPositionDevice
+            // LabelAddDetailRfid
             // 
-            this.ButtonPositionDevice.Location = new System.Drawing.Point(427, 480);
-            this.ButtonPositionDevice.Name = "ButtonPositionDevice";
-            this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 32);
-            this.ButtonPositionDevice.TabIndex = 104;
-            this.ButtonPositionDevice.Text = "Position Device";
-            this.ButtonPositionDevice.UseVisualStyleBackColor = true;
-            this.ButtonPositionDevice.Click += new System.EventHandler(this.ButtonPositionDevice_Click);
+            this.LabelAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAddDetailRfid.Location = new System.Drawing.Point(417, 89);
+            this.LabelAddDetailRfid.Name = "LabelAddDetailRfid";
+            this.LabelAddDetailRfid.Size = new System.Drawing.Size(190, 29);
+            this.LabelAddDetailRfid.TabIndex = 107;
+            this.LabelAddDetailRfid.Text = "RFID";
+            this.LabelAddDetailRfid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxAddDetailRfid
+            // 
+            this.TextBoxAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxAddDetailRfid.Location = new System.Drawing.Point(613, 89);
+            this.TextBoxAddDetailRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxAddDetailRfid.Name = "TextBoxAddDetailRfid";
+            this.TextBoxAddDetailRfid.Size = new System.Drawing.Size(450, 29);
+            this.TextBoxAddDetailRfid.TabIndex = 3;
+            this.TextBoxAddDetailRfid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxInventoryNewLocationsRfid
+            // 
+            this.TextBoxInventoryNewLocationsRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxInventoryNewLocationsRfid.Location = new System.Drawing.Point(613, 89);
+            this.TextBoxInventoryNewLocationsRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxInventoryNewLocationsRfid.Name = "TextBoxInventoryNewLocationsRfid";
+            this.TextBoxInventoryNewLocationsRfid.Size = new System.Drawing.Size(450, 29);
+            this.TextBoxInventoryNewLocationsRfid.TabIndex = 108;
+            this.TextBoxInventoryNewLocationsRfid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelInventoryNewLocationsRfid
+            // 
+            this.LabelInventoryNewLocationsRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelInventoryNewLocationsRfid.Location = new System.Drawing.Point(417, 89);
+            this.LabelInventoryNewLocationsRfid.Name = "LabelInventoryNewLocationsRfid";
+            this.LabelInventoryNewLocationsRfid.Size = new System.Drawing.Size(190, 29);
+            this.LabelInventoryNewLocationsRfid.TabIndex = 109;
+            this.LabelInventoryNewLocationsRfid.Text = "RFID";
+            this.LabelInventoryNewLocationsRfid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FrmInventory
             // 
@@ -1854,7 +1926,6 @@
             this.Padding = new System.Windows.Forms.Padding(22, 75, 22, 25);
             this.Resizable = false;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmInventory_FormClosing);
-            this.Load += new System.EventHandler(this.FrmInventory_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -1949,7 +2020,7 @@
         private System.Windows.Forms.Label LabelAddDetailSlot;
         private System.Windows.Forms.ComboBox ComboBoxAddDetailSizeCode;
         private System.Windows.Forms.Label LabelAddDetailSize;
-        private System.Windows.Forms.ComboBox ComboBoxAddDetailStation;
+        private System.Windows.Forms.ComboBox ComboBoxAddDetailArea;
         private System.Windows.Forms.TextBox TextBoxAddDetailLoc5;
         private System.Windows.Forms.TextBox TextBoxAddDetailLoc4;
         private System.Windows.Forms.TextBox TextBoxAddDetailLoc3;
@@ -1961,11 +2032,10 @@
         private System.Windows.Forms.Label LabelAddDetailOver;
         private System.Windows.Forms.Label LabelAddDetailTray;
         private System.Windows.Forms.Label LabelAddDetailDevice;
-        private System.Windows.Forms.Label LabelAddDetailStation;
+        private System.Windows.Forms.Label LabelAddDetailArea;
         private System.Windows.Forms.TextBox TextBoxAddDetailInventoryId;
         private MetroFramework.Controls.MetroButton MbViewEditEdit;
-        private System.Windows.Forms.ComboBox ComboBoxAddDetailLocationCode;
-        private System.Windows.Forms.Label LabelAddDetailUser;
+        private System.Windows.Forms.Label LabelLocationCode;
         private MetroFramework.Controls.MetroButton MBPrintInventory;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ComboBox ComboBoxNewUnitOfIssue;
@@ -1977,15 +2047,14 @@
         private System.Windows.Forms.CheckBox CheckBoxNewScale;
         private System.Windows.Forms.TextBox TextBoxNewSystemMin;
         private System.Windows.Forms.Label LabelNewSystemMin;
-        private System.Windows.Forms.ComboBox ComboBoxNewLocationCode;
-        private System.Windows.Forms.Label LabelNewUser;
+        private System.Windows.Forms.Label LabelNewLocationCode;
         private System.Windows.Forms.ComboBox ComboBoxNewHeightCode;
         private System.Windows.Forms.Label LabelNewHeight;
         private System.Windows.Forms.ComboBox ComboBoxNewVelocityCode;
         private System.Windows.Forms.Label LabelNewVelocity;
         private System.Windows.Forms.ComboBox ComboBoxNewSizeCode;
         private System.Windows.Forms.Label LabelNewSize;
-        private System.Windows.Forms.ComboBox ComboBoxNewStation;
+        private System.Windows.Forms.ComboBox ComboBoxNewArea;
         private System.Windows.Forms.TextBox TextBoxNewSystemMax;
         private System.Windows.Forms.TextBox TextBoxNewLocationMin;
         private System.Windows.Forms.TextBox TextBoxNewLocationMax;
@@ -1994,7 +2063,7 @@
         private System.Windows.Forms.Label LabelNewLocationMin;
         private System.Windows.Forms.Label LabelNewLocationMax;
         private System.Windows.Forms.Label LabelNewDescriiption;
-        private System.Windows.Forms.Label LabelNewStation;
+        private System.Windows.Forms.Label LabelNewArea;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.ComboBox ComboBoxInventoryNewLocationsStorageType;
         private System.Windows.Forms.Label LabelNewLocationsStorageType;
@@ -2023,10 +2092,18 @@
         private System.Windows.Forms.CheckBox CheckBoxInUse;
         private System.Windows.Forms.CheckBox CheckBoxAllStations;
         private System.Windows.Forms.GroupBox GroupBoxInventoryFile;
-        private System.Windows.Forms.ComboBox ComboBoxStationNumber;
+        private System.Windows.Forms.ComboBox ComboBoxAreaNumber;
         private MetroFramework.Controls.MetroButton MBCreateInventoryFile;
         private System.Windows.Forms.Label LabelSlotInformation;
         private System.Windows.Forms.Label LabelStationName;
         private System.Windows.Forms.Button ButtonPositionDevice;
+        private System.Windows.Forms.TextBox TextBoxPickSequence;
+        private System.Windows.Forms.Label LabelPickSequence;
+        private System.Windows.Forms.TextBox TextBoxAddDetailLocationCode;
+        private System.Windows.Forms.TextBox TextBoxNewLocationCode;
+        private System.Windows.Forms.TextBox TextBoxAddDetailRfid;
+        private System.Windows.Forms.Label LabelAddDetailRfid;
+        private System.Windows.Forms.TextBox TextBoxInventoryNewLocationsRfid;
+        private System.Windows.Forms.Label LabelInventoryNewLocationsRfid;
     }
 }

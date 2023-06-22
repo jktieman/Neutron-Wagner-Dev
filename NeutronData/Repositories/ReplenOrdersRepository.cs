@@ -23,36 +23,43 @@ namespace NeutronData.Repositories
         private readonly  GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
 
-        private readonly IStationRepository _stationRepository;
+        private readonly WorkstationView _workstationView;
+        private readonly IWorkstationRepository _workstationRepository;
+        private readonly IAreaRepository _areaRepository;
         private static int _totalOrderDetailCount;
         private static int _runningOrderDetailCount;
         private int[] _moveablePickStationIds;
-        private Station _rackStation;
-        private List<Station> _pickStations;
-        private int[] _pickStationIds;
+        private Workstation _rackStation;
+        private List<Workstation> _pickStations;
+        private int[] _allPickableAreaIds;
 
-        public ReplenOrdersRepository(IStationRepository stationRepository)
+        public ReplenOrdersRepository(WorkstationView workstationView
+            , IWorkstationRepository workstationRepository
+            , IAreaRepository areaRepository)
         {
-            _stationRepository = stationRepository;
+            _workstationView = workstationView;
+            _workstationRepository = workstationRepository;
+            _areaRepository = areaRepository;
             Init();
         }
 
         private void Init()
         {
-            _moveablePickStationIds = _stationRepository.GetMoveablePickStationIds();
-            _rackStation = _stationRepository.GetRackStation();
-            _pickStations = _stationRepository.GetPickStations();
-            _pickStationIds = _stationRepository.GetPickStationIds();
+           
+            _moveablePickStationIds = _workstationRepository.GetMoveablePickStationIds();
+            _rackStation = _workstationRepository.GetRackStation(8);
+            _pickStations = _workstationRepository.GetAllPickStations();
+            _allPickableAreaIds = _areaRepository.GetAllAreaIds(); // .GetAllPickStationIds();
             _totalOrderDetailCount = 0;
             _runningOrderDetailCount = 0;
         }
 
-       public ReplenOrder GetOrder(int id)
+       public ReplenOrder GetOrder(int orderId)
         {
-            ReplenOrder order;
+            ReplenOrder order = null;
             using (var db = new NeutronDb())
             {
-                order = db.ReplenOrders.Include("ReplenOrderDetails").FirstOrDefault(r => r.Id == id);
+                order = db.ReplenOrders.Include("ReplenOrderDetails").FirstOrDefault(r => r.Id == orderId);
             }
             return order;
         }
@@ -114,7 +121,7 @@ namespace NeutronData.Repositories
         }
 
         // This will not get called unless there is a Station NUmber and OrderDetails
-        private string CheckForPicks4(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
+        private string CheckForPicks4(int areaId, ICollection<ReplenOrderDetail> orderDetails)
         {
             string result = string.Empty;
             var sb = new StringBuilder();
@@ -124,15 +131,15 @@ namespace NeutronData.Repositories
             }
 
             int key;
-            var groups = orderDetails.GroupBy(g => new { g.LineStatusId, g.StationNumber })
-                .Select(r => new { Key = r.Key }).Where(s => s.Key.StationNumber == stationNumber)
+            var groups = orderDetails.GroupBy(g => new { g.LineStatusId, g.AreaId })
+                .Select(r => new { Key = r.Key }).Where(s => s.Key.AreaId == areaId)
                 .ToList();
             switch (groups.Count == 1 ? "One" : groups.Count > 1 ? "Multiple" : "None")
             {
                 case "One":
                     {
                         key = groups.First().Key.LineStatusId;
-                        _runningOrderDetailCount += orderDetails.Count(r => r.LineStatusId == key && r.StationNumber == stationNumber);
+                        _runningOrderDetailCount += orderDetails.Count(r => r.LineStatusId == key && r.AreaId == areaId);
                         var s = (LineStatus)key;
                         result = s.GetEnumDescription().Substring(0, 1);
                         break;
@@ -143,7 +150,7 @@ namespace NeutronData.Repositories
                         foreach (var group in groups)
                         {
                             key = group.Key.LineStatusId;
-                            _runningOrderDetailCount += orderDetails.Count(r => r.LineStatusId == key && r.StationNumber == stationNumber);
+                            _runningOrderDetailCount += orderDetails.Count(r => r.LineStatusId == key && r.AreaId == areaId);
                             var code = ((LineStatus)key).GetEnumDescription().Substring(0, 1);
                             if (!codes.Contains(code)) { codes.Add(code); }
                         }
@@ -170,12 +177,15 @@ namespace NeutronData.Repositories
                     ShipMethodName = s.ShipMethod.Name,
                     Priority = s.Priority,
                     ReplenOrder = s,
-                    Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                    Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                    Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                    Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                    Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                    Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                    Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                    Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                    Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                    Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                    Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                    Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                    Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                   // Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
@@ -198,12 +208,15 @@ namespace NeutronData.Repositories
                 ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
-                Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId,
@@ -214,17 +227,20 @@ namespace NeutronData.Repositories
         }
 
 
-        public List<AvailableReplenOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false)
+        public List<AvailableReplenOrdersView> GetAvailableOrders(WorkstationView workstationView, string search, bool serialPicking, bool showSkips = false)
         {
             var recs = new List<AvailableReplenOrdersView>();
             try
             {
                 using (var context = new NeutronDb())
                 {
-                    var records = context.ReplenOrderDetails.Include("ReplenOrder").Where(o => o.StationNumber == station.StationNumber && o.ReplenOrder.OrderStatusId == (int)OrderStatus.Available)
+                    var records = context.ReplenOrderDetails.Include("ReplenOrder")
+                        .Where(o => o.AreaId == workstationView.AreaId 
+                                    && o.ReplenOrder.OrderStatusId == (int)OrderStatus.Available)
                         .Where(p => p.LineStatusId == (int)LineStatus.Available).ToList();
                    
-                    var ords = records.GroupBy(r => new { r.ReplenOrderId, r.ReplenOrder.Ord1, r.ReplenOrder.Ord2, r.ReplenOrder.Priority, r.ReplenOrder.LoadDate })
+                    var ords = records.GroupBy(r => new { r.ReplenOrderId, r.ReplenOrder.Ord1
+                            , r.ReplenOrder.Ord2, r.ReplenOrder.Priority, r.ReplenOrder.LoadDate })
                          .Select(r => new AvailableReplenOrdersView
                          {
                              Id = r.Key.ReplenOrderId
@@ -266,33 +282,35 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public IEnumerable<ReplenOrderView> GetAvailableOrders(StationView station, string search)
+        public IEnumerable<ReplenOrderView> GetAvailableOrders(WorkstationView workstationView, string search)
         {
             var availableRecs = new List<ReplenOrderView>();
             IEnumerable<ReplenOrderView> recs = null;
-            List<ReplenOrder> rs = _repoReplenOrders.All().ToList();
-
+            var replenOrderList = _repoReplenOrders.All().ToList();
+            if (replenOrderList.Count == 0) return availableRecs;
+            
             try
             {
-                recs = rs.Select(s => new ReplenOrderView
+                recs = replenOrderList.Select(s => new ReplenOrderView
                 {
                     Id = s.Id,
                     Ord1 = s.Ord1,
                     Ord2 = s.Ord2,
-                    //Starter = StartOnThisStation(station.StationNumber, s.ReplenOrderDetails),
+                    //Starter = StartOnThisStation(workstationView.StationNumber, s.ReplenOrderDetails),
                     OrderStatusName = s.OrderStatus.Name,
                     ShipMethodName = s.ShipMethod.Name,
                     Priority = s.Priority,
                     ReplenOrder = s,
-
-
-                    Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                    Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                    Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                    Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                    Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                    Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
-                    FirstPickStation = GetFirstPickStation(s.ReplenOrderDetails),
+                    Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                    Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                    Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                    Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                    Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                    Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                    Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                    Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                    //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                    FirstPickArea = GetFirstPickArea(s.ReplenOrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
@@ -316,7 +334,7 @@ namespace NeutronData.Repositories
                     {
                         if (!string.Equals(item.Station_1_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
                         {
-                            item.CurrentPickStation = 1;
+                            item.CurrentPickArea = 1;
                             continue;
                         }
                     }
@@ -325,7 +343,7 @@ namespace NeutronData.Repositories
                     {
                         if (!string.Equals(item.Station_2_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
                         {
-                            item.CurrentPickStation = 2;
+                            item.CurrentPickArea = 2;
                             continue;
                         }
                     }
@@ -334,7 +352,7 @@ namespace NeutronData.Repositories
                     {
                         if (!string.Equals(item.Station_3_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
                         {
-                            item.CurrentPickStation = 3;
+                            item.CurrentPickArea = 3;
                             continue;
                         }
                     }
@@ -343,7 +361,7 @@ namespace NeutronData.Repositories
                     {
                         if (!string.Equals(item.Station_4_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
                         {
-                            item.CurrentPickStation = 4;
+                            item.CurrentPickArea = 4;
                             continue;
                         }
                     }
@@ -352,7 +370,25 @@ namespace NeutronData.Repositories
                     {
                         if (!string.Equals(item.Station_5_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
                         {
-                            item.CurrentPickStation = 5;
+                            item.CurrentPickArea = 5;
+                            continue;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(item.Station_6_HasPicks))
+                    {
+                        if (!string.Equals(item.Station_6_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            item.CurrentPickArea = 6;
+                            continue;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(item.Station_7_HasPicks))
+                    {
+                        if (!string.Equals(item.Station_7_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            item.CurrentPickArea = 7;
                             continue;
                         }
                     }
@@ -361,7 +397,7 @@ namespace NeutronData.Repositories
                     {
                         if (!string.Equals(item.Station_8_HasPicks, b: @"C", comparisonType: StringComparison.CurrentCultureIgnoreCase))
                         {
-                            item.CurrentPickStation = 8;
+                            item.CurrentPickArea = 8;
                             continue;
                         }
                     }
@@ -374,16 +410,17 @@ namespace NeutronData.Repositories
            
             try
             {
-                foreach (var item in recs.Where(r => r.CurrentPickStation == station.StationNumber))
+                foreach (var item in recs.Where(r => r.CurrentPickArea == workstationView.AreaId))
                 {
-                    List<ReplenOrderDetail> details = item.ReplenOrder.ReplenOrderDetails.Where(r => r.StationNumber == station.StationNumber).ToList();
+                    //todo fix this here "_areaIdsForThisWorkstation.Contains(r.AreaId))" something not right
+                    List<ReplenOrderDetail> details = item.ReplenOrder.ReplenOrderDetails.Where(r => r.AreaId == workstationView.AreaId).ToList();
                     item.ReplenOrder.ReplenOrderDetails = details;
                     availableRecs.Add(item);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Assign Detail Lines this Station - {station.StationNumber}: Rec Count: {recs.Count()}\r\n  {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]");
+                MessageBox.Show($"Assign Detail Lines this Station - {workstationView.WorkstationNumber}: Rec Count: {recs.Count()}\r\n  {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]");
             }
 
             IEnumerable<ReplenOrderView> result = availableRecs.Where(s => s.SearchField.Contains(search));
@@ -391,15 +428,15 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        private string StartOnThisStation(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
+        private string StartOnThisArea(int areaId, ICollection<ReplenOrderDetail> orderDetails)
         {
-            string result = string.Empty;
+            var result = string.Empty;
             try
             {
-                if (orderDetails.Count > 0 && stationNumber > 1)
+                if (orderDetails.Count > 0 && areaId > 1)
                 {
-                    int firstPickStation = orderDetails.Min(o => o.StationNumber);
-                    if (firstPickStation == stationNumber)
+                    int firstPickArea = orderDetails.Min(o => o.AreaId);
+                    if (firstPickArea == areaId)
                     {
                         result = @"S";
                     }
@@ -407,14 +444,14 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Start on this Station Error.  {ex.Message} \r\n {ex.InnerException}");
+                MessageBox.Show($"Start on this Area Error.  {ex.Message} \r\n {ex.InnerException}");
             }
             return result;
         }
 
-        private int GetFirstPickStation(ICollection<ReplenOrderDetail> orderDetails)
+        private int GetFirstPickArea(IEnumerable<ReplenOrderDetail> orderDetails)
         {
-            return orderDetails.Min(o => o.StationNumber);
+            return orderDetails.Min(o => o.AreaId);
         }
 
         public IEnumerable<ReplenOrderView> GetCompletedOrders(string find = "")
@@ -428,12 +465,15 @@ namespace NeutronData.Repositories
                 ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
-                Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId
@@ -446,7 +486,7 @@ namespace NeutronData.Repositories
         public ReplenOrder GetOrder()
         {
             var ord = _repoReplenOrders.All().FirstOrDefault();
-
+            if (ord == null) return null;
             var lines = ord.Lines();
             var pieces = ord.Pieces();
 
@@ -457,10 +497,11 @@ namespace NeutronData.Repositories
         {
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
             var pickList = new List<ReplenPickView>();
-            List<ReplenOrder> result = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails).Where(r => statusToGet.Contains(r.OrderStatusId)).ToList();
-            foreach (ReplenOrder ord in result)
+            List<ReplenOrder> result = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails)
+                .Where(r => statusToGet.Contains(r.OrderStatusId)).ToList();
+            foreach (var ord in result)
             {
-                List<ReplenOrderDetail> orderDetails = ord.ReplenOrderDetails.Where(o => statusToGet.Contains(o.LineStatusId)).ToList();
+                var orderDetails = ord.ReplenOrderDetails.Where(o => statusToGet.Contains(o.LineStatusId)).ToList();
 
                 foreach (var detail in orderDetails)
                 {
@@ -477,7 +518,7 @@ namespace NeutronData.Repositories
                         Slot = string.Empty,
                         SlotQty = 0,
                         OrderDetail = detail,
-                        StationNumber = detail.StationNumber
+                        AreaId = detail.AreaId
                     };
                     pickList.Add(pickView);
                 }
@@ -510,7 +551,7 @@ namespace NeutronData.Repositories
             return pickList.OrderBy(o => o.Slot).ToList();
         }
 
-        public List<AvailableReplenOrdersView> GetAvailableOrders(StationView station)
+        public List<AvailableReplenOrdersView> GetAvailableOrders(WorkstationView workstationView)
         {
             var recs = new List<AvailableReplenOrdersView>();
 
@@ -519,10 +560,10 @@ namespace NeutronData.Repositories
                 var parameters = new List<object>();
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter(parameterName: "@STATIONID", value: station.StationNumber);
+                    var param = new SqlParameter(parameterName: "@WORKSTATIONID", value: workstationView.WorkstationId);
                     parameters.Add(param);
 
-                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersByStation @STATIONID", parameters.ToArray()).ToList();
+                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersByStation @WORKSTATIONID", parameters.ToArray()).ToList();
                 }
             }
             catch (Exception ex)
@@ -545,12 +586,15 @@ namespace NeutronData.Repositories
                 ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
-                Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId,
@@ -560,13 +604,13 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        private string CheckForPicks(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
+        private string CheckForPicks(int areaId, IEnumerable<ReplenOrderDetail> orderDetails)
         {
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Complete };
             string result = @"";
             foreach (var item in orderDetails)
             {
-                if (item.StationNumber == stationNumber)
+                if (item.AreaId == areaId)
                 {
                     if (statusToGet.Contains(item.ReplenOrder.OrderStatusId))
                     {
@@ -584,13 +628,13 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        private string CheckForPicks2(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
+        private string CheckForPicks2(int areaId, ICollection<ReplenOrderDetail> orderDetails)
         {
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Complete };
             string result = @"";
             foreach (var item in orderDetails)
             {
-                if (item.StationNumber == stationNumber)
+                if (item.AreaId == areaId)
                 {
                     if (statusToGet.Contains(item.ReplenOrder.OrderStatusId))
                     {
@@ -608,7 +652,7 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        private string CheckForPicks3(int stationNumber, ICollection<ReplenOrderDetail> orderDetails)
+        private string CheckForPicks3(int areaId, ICollection<ReplenOrderDetail> orderDetails)
         {
             var lineStatus = new List<int>();
             string result = @"";
@@ -616,7 +660,7 @@ namespace NeutronData.Repositories
             {
                 foreach (var item in orderDetails)
                 {
-                    if (item.StationNumber == stationNumber)
+                    if (item.AreaId == areaId)
                     {
                         lineStatus.Add(item.LineStatusId);
                     }
@@ -689,7 +733,7 @@ namespace NeutronData.Repositories
                                     Slot = string.Empty,
                                     SlotQty = 0,
                                     OrderDetail = detail,
-                                    StationNumber = detail.StationNumber
+                                    AreaId = detail.AreaId
                                 };
                                 pickViews.Add(pickView);
                             }
@@ -769,7 +813,7 @@ namespace NeutronData.Repositories
                                             Slot = string.Empty,
                                             SlotQty = 0,
                                             OrderDetail = detail,
-                                            StationNumber = detail.StationNumber
+                                            AreaId = detail.AreaId
                                         };
                                         ItemDefinition def = _repoItemDefinition.FindBy(f => f.Id == pickView.ItemId).FirstOrDefault();
                                         if (def != null)
@@ -850,18 +894,18 @@ namespace NeutronData.Repositories
         //    throw new NotImplementedException();
         //}
 
-        public IEnumerable<RackReplenOrderView> GetRackOrdersView(int stationNumber, string search)
+        public IEnumerable<RackReplenOrderView> GetRackOrdersView(int areaId, string search)
         {
             IEnumerable<RackReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new RackReplenOrderView
                 {
-                    StationNumber = stationNumber,
+                    AreaId = areaId,
                     Id = s.Id,
                     Ord1 = s.Ord1,
                     Ord2 = s.Ord2,
                     Priority = s.Priority,
                     Order = s,
                     LoadDate = s.LoadDate,
-                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.StationNumber == stationNumber).ToList()
+                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.AreaId == areaId).ToList()
                 }).Where(o => o.Order.OrderStatusId != (int)LineStatus.Complete)
                 .OrderBy(o => o.Ord2).ToList();
 
@@ -869,7 +913,7 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        ReplenOrder IReplenOrdersRepository.GetOrderAndOrderDetails(int? orderId, int stationNumber)
+        ReplenOrder IReplenOrdersRepository.GetOrderAndOrderDetails(int? orderId, int areaId)
         {
             var ord = new ReplenOrder();
             var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
@@ -894,7 +938,7 @@ namespace NeutronData.Repositories
                 //ord.OrderDetails = null;
 
                 // var details = _repoOrderDetails.All()
-                ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.StationNumber == stationNumber && availableSkip.Contains(x.LineStatusId)).ToList();
+                ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
                 //ord.OrderDetails = details;
             }
 
@@ -904,7 +948,7 @@ namespace NeutronData.Repositories
 
 
 
-        public ReplenOrder GetOrderAndOrderDetails(int? orderId, int stationNumber)
+        public ReplenOrder GetOrderAndOrderDetails(int? orderId, int areaId)
         {
             var ord = new ReplenOrder();
             var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
@@ -913,7 +957,7 @@ namespace NeutronData.Repositories
                 ord = _repoReplenOrders.FindByKey(orderId);
                 if (ord != null)
                 {
-                    ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.StationNumber == stationNumber && availableSkip.Contains(x.LineStatusId)).ToList();
+                    ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
                 }
             }
             return ord;
@@ -930,12 +974,15 @@ namespace NeutronData.Repositories
                 ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
-                Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.ReplenOrderDetails),
-                Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.ReplenOrderDetails),
-                Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.ReplenOrderDetails),
-                Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.ReplenOrderDetails),
-                Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.ReplenOrderDetails),
-                Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
                 ShipMethodId = s.ShipMethodId
@@ -945,7 +992,7 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(StationView station, string searchField)
+        public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(WorkstationView workstationView, string searchField)
         {
             var recs = new List<AvailableReplenOrdersView>();
 
@@ -954,12 +1001,12 @@ namespace NeutronData.Repositories
                 var parameters = new List<object>();
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter(parameterName: "@STATIONNUMBER", value: station.StationNumber);
+                    var param = new SqlParameter(parameterName: "@WORKSTATIONID", value: workstationView.WorkstationId);
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SEARCHFIELD", value: searchField);
                     parameters.Add(param);
 
-                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersForInductionScreen @STATIONNUMBER, @SEARCHFIELD", parameters.ToArray()).ToList();
+                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersForInductionScreen @WORKSTATIONID, @SEARCHFIELD", parameters.ToArray()).ToList();
                 }
             }
             catch (Exception ex)

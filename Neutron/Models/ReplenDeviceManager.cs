@@ -61,6 +61,17 @@ namespace Neutron.Models
                         , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                 }
             }
+            if (GlobalVar.Hanel != null)
+            {
+                var loc1 = location.Loc1;
+                var loc2 = location.Loc2;
+                var response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2));
+                if (response.Result != DeviceResponse.Success)
+                {
+                    MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: "Device Response Move Next"
+                        , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                }
+            }
         }
 
         public void Reset()
@@ -76,6 +87,17 @@ namespace Neutron.Models
                             int loc1 = kvp.Value.Loc1;
                             int loc2 = kvp.Value.Loc2;
                             Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
+                            if (response.Result != DeviceResponse.Success)
+                            {
+                                MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: @"Device Response Reset"
+                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            }
+                        }
+                        if (GlobalVar.Hanel != null)
+                        {
+                            int loc1 = kvp.Value.Loc1;
+                            int loc2 = kvp.Value.Loc2;
+                            Task<DeviceResponse> response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2));
                             if (response.Result != DeviceResponse.Success)
                             {
                                 MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: @"Device Response Reset"

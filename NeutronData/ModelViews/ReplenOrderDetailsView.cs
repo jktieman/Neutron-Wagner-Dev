@@ -13,6 +13,6 @@
         public int PickedQuantity { get; set; }
         public int LineStatusId { get; set; }
         public string LineStatusName { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
     }
 }

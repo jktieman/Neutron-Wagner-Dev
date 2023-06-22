@@ -2,7 +2,7 @@
 
 namespace NeutronData.Models.Lookups
 {
-    public class DeviceType : IEntity, ILookup
+    public class DeviceType : ILookup, IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

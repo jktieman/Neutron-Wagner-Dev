@@ -20,8 +20,8 @@ namespace Neutron.Forms
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private readonly SecureDb _context = new SecureDb();
-        private readonly IStationRepository _stationRepository;
-        private List<Station> _stations;
+        private readonly IWorkstationRepository _workstationRepository;
+        private List<Workstation> _stations;
 
         private bool checkAllUsers;
         private bool checkAllDevice1;
@@ -32,24 +32,24 @@ namespace Neutron.Forms
         private bool checkAllDevice6;
 
         private int _currentStationNumber;
-        private Station _currentStation;
-        private NeutronVariables _neutronVariables;
+        private Workstation _currentStation;
+        private readonly NeutronVariables _neutronVariables;
 
-        public FrmLAC(IStationRepository stationRepository, NeutronVariables neutronVariables)
+        public FrmLAC(IWorkstationRepository workstationRepository, NeutronVariables neutronVariables)
         {
-            _stationRepository = stationRepository;
+            _workstationRepository = workstationRepository;
             _neutronVariables = neutronVariables;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-           // _stationRepository = new StationRepository(new DynamicLogger(), _context, _neutronVariables.StationId);
             InitLac();
             // SetCulture(_cultureInfo.Name);
         }
 
         private void InitLac()
         {
-            _stations = _stationRepository.GetMovablePickStations();
-            _currentStation = _stations.FirstOrDefault(r => r.Id == _neutronVariables.StationId);
+            
+            _stations = _workstationRepository.GetMovablePickStations();
+            _currentStation = _stations.FirstOrDefault(r => r.Id == _neutronVariables.WorkstationId);
             if(_currentStation != null) _currentStationNumber = _currentStation.StationNumber;
             if(_stations != null) InitCarriers();
         }
@@ -67,9 +67,9 @@ namespace Neutron.Forms
 
         private void InitCarriers()
         {
-            foreach (var station in _stations)
+            foreach (var workstation in _stations)
             {
-                var devices = _context.HardwareDevices.Where(r => r.StationId == station.Id).ToList();
+                var devices = _context.HardwareDevices.Where(r => r.WorkstationId == workstation.Id).ToList();
                 if (devices.Any())
                 {
                     foreach (var hardwareDevice in devices)
@@ -80,12 +80,12 @@ namespace Neutron.Forms
                             {
                                 DeviceNumber = hardwareDevice.DeviceNumber,
                                 CarrierNumber = i,
-                                StationNumber = station.StationNumber
+                                WorkstationId = workstation.Id
                             };
                             var carr = _context.Carriers
                                 .FirstOrDefault(r => r.DeviceNumber == carrier.DeviceNumber
                                                      && r.CarrierNumber == carrier.CarrierNumber &&
-                                                     r.StationNumber == carrier.StationNumber);
+                                                     r.WorkstationId == carrier.WorkstationId);
                             if (carr == null)
                             {
                                 _context.Carriers.Add(carrier);
@@ -103,15 +103,15 @@ namespace Neutron.Forms
             Carrier[] carriers = _context.Carriers.ToArray();
             Role[] roles = _context.Roles.ToArray();
             User[] users = _context.Users.ToArray();
-            //Station[] stations = _context.Stations.ToArray();
-            _currentStationNumber = carriers.Min(c => c.StationNumber);
+            //Workstation[] stations = _context.Stations.ToArray();
+            _currentStationNumber = carriers.Min(c => c.WorkstationId);
 
-            ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
-            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice1.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice2.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice3.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice4.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice5.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice6.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
 
 
 
@@ -149,42 +149,42 @@ namespace Neutron.Forms
         {
             ListViewDevice1.Clear();
             Carrier[] carriers = _context.Carriers.ToArray();
-            ListViewDevice1.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice1.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 1).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice2()
         {
             ListViewDevice2.Clear();
             Carrier[] carriers = _context.Carriers.ToArray();
-            ListViewDevice2.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice2.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 2).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice3()
         {
             ListViewDevice3.Clear();
             Carrier[] carriers = _context.Carriers.ToArray();
-            ListViewDevice3.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice3.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 3).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice4()
         {
             ListViewDevice4.Clear();
             Carrier[] carriers = _context.Carriers.ToArray();
-            ListViewDevice4.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice4.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 4).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice5()
         {
             ListViewDevice5.Clear();
             Carrier[] carriers = _context.Carriers.ToArray();
-            ListViewDevice5.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice5.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 5).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void LoadDevice6()
         {
             ListViewDevice6.Clear();
             Carrier[] carriers = _context.Carriers.ToArray();
-            ListViewDevice6.Items.AddRange(carriers.Where(r => r.StationNumber == _currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
+            ListViewDevice6.Items.AddRange(carriers.Where(r => r.WorkstationId == _currentStationNumber && r.DeviceNumber == 6).Select(c => new ListViewItem { Text = c.ToString(), Tag = c }).ToArray());
         }
 
         private void ListViewDevice1_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -627,8 +627,8 @@ namespace Neutron.Forms
         }
         private void ComboBoxStation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var station = ComboBoxStation.SelectedItem as Station;
-            _currentStationNumber = station.StationNumber;
+            var workstation = ComboBoxStation.SelectedItem as Workstation;
+            _currentStationNumber = workstation.StationNumber;
             RefreshUsersAndCarriers();
         }
 

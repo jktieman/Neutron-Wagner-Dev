@@ -67,7 +67,7 @@ namespace NeutronMaintenance
             if (rec == null)
             {
                 rec = new Location();
-                rec.StationId = novaRandomLocation.SystemNumber.ParseInt();
+                rec.AreaId = novaRandomLocation.SystemNumber.ParseInt();
                 rec.Loc1 = novaRandomLocation.Car.ParseInt();
                 rec.Loc2 = novaRandomLocation.Bin.ParseInt();
                 rec.Loc3 = novaRandomLocation.Lvl.ParseInt();
@@ -97,7 +97,7 @@ namespace NeutronMaintenance
 
         private Location Get(NovaRandomLocation novaRandomLocation)
         {
-            return _repoLocation.All().FirstOrDefault(r => r.StationId == novaRandomLocation.SystemNumber.ParseInt() && r.Loc1 == novaRandomLocation.Car.ParseInt() && r.Loc2 == novaRandomLocation.Bin.ParseInt() && r.Loc3 == novaRandomLocation.Lvl.ParseInt() && r.Loc4 == novaRandomLocation.Prt.ParseInt());
+            return _repoLocation.All().FirstOrDefault(r => r.AreaId == novaRandomLocation.SystemNumber.ParseInt() && r.Loc1 == novaRandomLocation.Car.ParseInt() && r.Loc2 == novaRandomLocation.Bin.ParseInt() && r.Loc3 == novaRandomLocation.Lvl.ParseInt() && r.Loc4 == novaRandomLocation.Prt.ParseInt());
         }
     }
 }

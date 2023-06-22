@@ -17,7 +17,7 @@ namespace NeutronData.Models
         public string Description { get; set; }
         public int RequestedQuantity { get; set; }
         public int IssuedQuantity { get; set; }
-        public int StationId { get; set; }
+        public int AreaId { get; set; }
         public int Loc1 { get; set; }
         public int Loc2 { get; set; }
         public int Loc3 { get; set; }
@@ -37,5 +37,6 @@ namespace NeutronData.Models
         public string PrimeBin { get; set; }
         public string NewBin { get; set; }
         public string TroubleBit { get; set; }
+        public int WorkstationId { get; set; }
     }
 }

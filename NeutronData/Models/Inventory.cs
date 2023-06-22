@@ -14,7 +14,8 @@ namespace NeutronData.Models
         public int Quantity { get; set; }
         public DateTime ReceivedDate { get; set; }
         public bool PrimeBin { get; set; }
-        public int StationId { get; set; }
+        public int AreaId { get; set; }
+        public string RFID { get; set; }
         public int StorageTypeId { get; set; }
         [ForeignKey("ItemDefinitionId")]
         public virtual ItemDefinition ItemDefinition { get; set; }
@@ -22,7 +23,7 @@ namespace NeutronData.Models
         public virtual Location Location { get; set; }
         [ForeignKey("StorageTypeId")]
         public virtual StorageType StorageType { get; set; }
-        //[ForeignKey("StationId")]
-        public virtual Station Station { get; set; }
+        [ForeignKey("AreaId")]
+        public virtual Area Area { get; set; }
     }
 }

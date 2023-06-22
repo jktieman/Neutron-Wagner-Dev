@@ -1,0 +1,43 @@
+﻿
+
+CREATE PROCEDURE[dbo].[usp_GetLocationViewsByAreaAndSlot]
+@AreaId int,
+@Slot varchar(50)
+AS
+BEGIN
+
+
+SET NOCOUNT ON;
+
+DECLARE @SQL varchar(MAX);
+DECLARE @AREAFILTER VARCHAR(MAX);
+DECLARE @SLOTFILTER VARCHAR(MAX);
+DECLARE @ALL VARCHAR(2) = '-1';
+
+SET @AREAFILTER =  CASE WHEN @AreaId IS NULL OR @AreaId = -1
+THEN '''' + @ALL + ''' = ''' + @ALL + ''''
+ELSE ' dbo.LocationView.AreaId = ' + CONVERT(VARCHAR(10), @AreaId) + ''
+END
+
+SET @SLOTFILTER =  CASE WHEN @Slot IS NULL OR @Slot = ''
+THEN '''' + @ALL + ''' = ''' + @ALL + ''''
+ELSE ' dbo.LocationView.Slot LIKE ' + '''%' + @Slot + '%'''  
+END
+
+--PRINT 'AREA FILTER : ' + (@AREAFILTER);
+--PRINT 'SLOT FILTER : ' + (@SLOTFILTER);
+
+
+SET @SQL = 'SELECT * FROM dbo.LocationView
+	WHERE ' + @AREAFILTER
+	+ ' AND ' + @SLOTFILTER
+	+ ' ORDER BY AreaId,Loc1,Loc2,Loc3,Loc4,Loc5 ' + '' 
+
+
+
+--PRINT (@SQL)
+EXEC (@SQL)
+	--, dbo.Areas.Id As AreaId, dbo.Areas.[Name] As AreaName
+END
+
+GO

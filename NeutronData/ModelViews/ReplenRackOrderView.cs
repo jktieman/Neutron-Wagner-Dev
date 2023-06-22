@@ -20,7 +20,7 @@ namespace NeutronData.ModelViews
         public DateTime LoadDate { get; set; }
         public ReplenOrder Order { get; set; }
         public ICollection<ReplenOrderDetail> OrderDetails { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
 
         public string StatusName
         {
@@ -52,7 +52,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _lines = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).ToList().Count;
+                _lines = Order.ReplenOrderDetails.Where(o => o.AreaId == AreaId).ToList().Count;
                 return _lines;
             }
             set { _lines = value; }
@@ -62,7 +62,7 @@ namespace NeutronData.ModelViews
         {
             get
             {
-                _pieces = Order.ReplenOrderDetails.Where(o => o.StationNumber == StationNumber).Sum(s => s.Quantity);
+                _pieces = Order.ReplenOrderDetails.Where(o => o.AreaId == AreaId).Sum(s => s.Quantity);
                 return _pieces;
             }
             set { _pieces = value; }

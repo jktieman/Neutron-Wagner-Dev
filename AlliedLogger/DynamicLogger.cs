@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,11 +13,11 @@ namespace AlliedLogger
     {
         private readonly object _myLock = new object();
         private static bool _validLocation;
-        private  string _baseFolder;
-        private  string _folderName;
+        private string _baseFolder;
+        private string _folderName;
         private static readonly object MyLock = new object();
+        private ConcurrentQueue<string> _messages = new ConcurrentQueue<string>();
 
-        
         //public string FolderName { get; set; }
         //public bool LogActivity { get; set; }
         public string LogActivity { get; set; }
@@ -29,7 +30,7 @@ namespace AlliedLogger
             FolderName = folderName;
             //_baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
             //_baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
-           // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
+            // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
             LogActivity = logActivity;
             IsValidLocation(FilePath);
             IsValidLocation(TempFilePath);
@@ -165,36 +166,54 @@ namespace AlliedLogger
                     sw.FlushAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //silent fail
+                Log($"Detail Error: {ex.Message}");
             }
         }
-
-        public async void LogDetailAsync(string msg = ""
+            private bool _inProcess = false;
+        
+            public async void LogDetailAsync(string msg = ""
             , [CallerMemberName] string origin = ""
             , [CallerFilePath] string filePath = ""
             , [CallerLineNumber] int lineNumber = 0)
         {
+
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
             IsValidLocation(TempFilePath);
             if (!_validLocation) return;
 
             if (msg.Length <= 0) return;
+
+            var message =
+                $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+            
+            _messages.Enqueue(message);
+
             try
             {
-                using (var sw = File.AppendText(FilePath))
+                if (!_inProcess)
                 {
-                    var message =
-                        $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+                    _inProcess = true;
 
-                    await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {message} {Environment.NewLine}");
-                    await sw.FlushAsync();
+                    using (var sw = File.AppendText(FilePath))
+                    {
+                        while (!_messages.IsEmpty)
+                        {
+                            _messages.TryDequeue(out msg);
+
+                        await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
+                        await sw.FlushAsync();
+                        }
+                    }
+                    _inProcess = false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log($"Detail Async Error: {ex.Message}");
                 //silent fail
             }
         }

@@ -16,6 +16,7 @@ using NeutronCore.Models;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
+using NeutronData.ModelViews;
 using NeutronData.Repositories;
 using NeutronEvents;
 using NovaLoader.Models;
@@ -40,7 +41,7 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
@@ -49,12 +50,12 @@ namespace NeutronLoader
         private bool _emailEnabled = false;
 
         public InterfaceProcessorMET(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, Station rackStation)
+            IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
             Initialize();
         }
 
@@ -63,7 +64,7 @@ namespace NeutronLoader
             var logFileDir = LoaderSettings.GetLogFileDirectory();
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
-            _fileProcessor = new METFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _rackStation);
+            _fileProcessor = new METFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView);
 
         }
 
@@ -135,7 +136,7 @@ namespace NeutronLoader
                                     PartDesc = orderDetail.Description,
                                     Quantity = int.Parse(orderDetail.Quantity),
                                     LineStatusId = (int)LineStatus.Available,
-                                    StationNumber = itemDef.StationId,
+                                    AreaId = itemDef.AreaId,
                                     OrderDetailInfo = orderDetail.CountryOfOrigin,
                                     OrderId = orderId,
                                     JobNum = orderDetail.Order,

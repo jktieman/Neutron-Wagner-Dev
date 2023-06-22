@@ -23,7 +23,7 @@ namespace NeutronData.Models
         public string TroubleBit { get; set; }
         public string TypeCode { get; set; }
         public int LineStatusId { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
         public string OrderDetailInfo { get; set; }
         [ForeignKey("OrderId")]
         public virtual Order Order { get; set; }

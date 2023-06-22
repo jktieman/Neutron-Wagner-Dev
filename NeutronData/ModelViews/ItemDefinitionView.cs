@@ -10,14 +10,15 @@ namespace NeutronData.ModelViews
             Images = new List<ItemImage>();
         }
         public int Id { get; set; }
-        public int StationId { get; set; }
+        public int AreaId { get; set; }
+        public string AreaName { get; set; }
+        public int AreaNumber { get; set; }
         public string Item { get; set; }
         public string Description { get; set; }
         public int UnitOfIssueId { get; set; }
         public int SizeCodeId { get; set; }
         public int VelocityCodeId { get; set; }
         public int HeightCodeId { get; set; }
-        public int LocationCodeId { get; set; }
         public int LocationMax { get; set; }
         public int LocationMin { get; set; }
         public int SystemMax { get; set; }
@@ -31,7 +32,5 @@ namespace NeutronData.ModelViews
         public string SizeCodeName { get; set; }
         public string VelocityCodeName { get; set; }
         public string HeightCodeName { get; set; }
-        public string StationName { get; set; }
-        public string LocationCodeName { get; set; }
     }
 }

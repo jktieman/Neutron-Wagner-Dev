@@ -31,17 +31,17 @@ namespace Neutron.Controllers
         private readonly int Device_Alignment_DontCare = 0;
 
         private readonly DynamicLogger _logger;
-        private readonly StationView _station;
+        private readonly WorkstationView _workstation;
         Form _currentForm;
         private readonly Object _locker = new Object();
         private int[] _previousTray;
 
-        public RCC2(Form frm, StationView station)
+        public RCC2(Form frm, WorkstationView workstation)
         {
             _previousTray = new int[10];
-            _station = station;
+            _workstation = workstation;
             var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = string.Format(format: @"RCC2_Station_{0}", arg0: station.StationNumber.ToString());
+            var folderName = string.Format(format: @"RCC2_Station_{0}", arg0: workstation.WorkstationId.ToString());
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             _currentForm = frm;
@@ -72,9 +72,9 @@ namespace Neutron.Controllers
 
         private void RCC2Init()
         {
-            if (_station != null)
+            if (_workstation != null)
             {
-                var firstDevice = _station.HardwareDevices.FirstOrDefault();
+                var firstDevice = _workstation.HardwareDevices.FirstOrDefault();
 
                 if (firstDevice != null)
                 {
@@ -83,12 +83,12 @@ namespace Neutron.Controllers
                     if (serialConfiguration != null)
                     {
 
-                        var deviceCount = _station.HardwareDevices.Count;
+                        var deviceCount = _workstation.HardwareDevices.Count;
                         _previousTray = new int[deviceCount + 1];
                         NotificationTimeOutSeconds = serialConfiguration.NotificationTimeout;
                         var simulationMode = firstDevice.SimulationMode;
                         var logLevel = firstDevice.LogLevel;
-                        var enabledUnitNumbers = _station.HardwareDevices.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
+                        var enabledUnitNumbers = _workstation.HardwareDevices.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
 
                         Task.Run(() => _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}Device Count: {serialConfiguration.DeviceCount}"));
 
@@ -115,7 +115,7 @@ namespace Neutron.Controllers
             }
             else
             {
-                Task.Run(() => _logger.LogDetailAsync("Station is null or empty "));
+                Task.Run(() => _logger.LogDetailAsync("Workstation is null or empty "));
             }
         }
 
@@ -227,7 +227,7 @@ namespace Neutron.Controllers
             Task.Run(() => _logger.LogDetailAsync($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
             var continueLoop = true;
             var loopCounter = 0;
-            var device = _station.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+            var device = _workstation.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
             if (device != null)
             {
                 if (device.Enabled)
@@ -351,7 +351,7 @@ namespace Neutron.Controllers
         public DeviceResponse Park()
         {
             var response = DeviceResponse.UnknownFailure;
-            foreach (var item in _station.HardwareDevices)
+            foreach (var item in _workstation.HardwareDevices)
             {
                 if (!item.Enabled) continue;
                 switch (item.DeviceTypeId)
@@ -403,7 +403,7 @@ namespace Neutron.Controllers
                 if (Shuttle_1.Get_Device_Status(ref myDeviceStatusList, ref cError))
                 {
                     // At this point, you have current status for every device in your list
-                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_station.EnabledDevices.Count}");
+                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstation.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)

@@ -2,7 +2,7 @@
 {
     public class PackingList
     {
-        public string Station { get; set; }
+        public string Area { get; set; }
         public string BatchPosition { get; set; }
         public string Order { get; set; }
         public string Invoice { get; set; }

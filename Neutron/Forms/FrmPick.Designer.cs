@@ -79,7 +79,7 @@ namespace Neutron.Forms
             this.OrderListing = new System.Windows.Forms.TabPage();
             this.MBKillOrder = new MetroFramework.Controls.MetroButton();
             this.panel12 = new System.Windows.Forms.Panel();
-            this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
+            this.ComboBoxAreaNumber = new System.Windows.Forms.ComboBox();
             this.MBPrintPick = new MetroFramework.Controls.MetroButton();
             this.ButtonPrintAO = new MetroFramework.Controls.MetroButton();
             this.MBCompress = new MetroFramework.Controls.MetroButton();
@@ -506,7 +506,7 @@ namespace Neutron.Forms
             // panel12
             // 
             this.panel12.BackColor = System.Drawing.Color.MidnightBlue;
-            this.panel12.Controls.Add(this.ComboBoxStationNumber);
+            this.panel12.Controls.Add(this.ComboBoxAreaNumber);
             this.panel12.Controls.Add(this.MBPrintPick);
             this.panel12.Controls.Add(this.ButtonPrintAO);
             this.panel12.Location = new System.Drawing.Point(8, 644);
@@ -514,12 +514,12 @@ namespace Neutron.Forms
             this.panel12.Size = new System.Drawing.Size(388, 45);
             this.panel12.TabIndex = 25;
             // 
-            // ComboBoxStationNumber
+            // ComboBoxAreaNumber
             // 
-            this.ComboBoxStationNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxStationNumber.FormattingEnabled = true;
-            this.ComboBoxStationNumber.Items.AddRange(new object[] {
+            this.ComboBoxAreaNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxAreaNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxAreaNumber.FormattingEnabled = true;
+            this.ComboBoxAreaNumber.Items.AddRange(new object[] {
             "ALL",
             "1",
             "2",
@@ -527,10 +527,10 @@ namespace Neutron.Forms
             "4",
             "5",
             "8"});
-            this.ComboBoxStationNumber.Location = new System.Drawing.Point(195, 6);
-            this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(58, 32);
-            this.ComboBoxStationNumber.TabIndex = 1;
+            this.ComboBoxAreaNumber.Location = new System.Drawing.Point(195, 6);
+            this.ComboBoxAreaNumber.Name = "ComboBoxAreaNumber";
+            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(58, 32);
+            this.ComboBoxAreaNumber.TabIndex = 1;
             // 
             // MBPrintPick
             // 
@@ -709,6 +709,7 @@ namespace Neutron.Forms
             this.MBShowRackOrders.TabIndex = 3;
             this.MBShowRackOrders.Text = "Off";
             this.MBShowRackOrders.UseSelectable = true;
+            this.MBShowRackOrders.Visible = false;
             this.MBShowRackOrders.Click += new System.EventHandler(this.MBShowRackOrders_Click);
             // 
             // ButtonClear
@@ -1247,6 +1248,7 @@ namespace Neutron.Forms
             this.GroupBoxMultipleLocations.TabIndex = 195;
             this.GroupBoxMultipleLocations.TabStop = false;
             this.GroupBoxMultipleLocations.Text = "Multiple Locations";
+            this.GroupBoxMultipleLocations.Visible = false;
             // 
             // PanelMultipleLocations
             // 
@@ -1458,7 +1460,7 @@ namespace Neutron.Forms
             this.LabelReqQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelReqQty.Location = new System.Drawing.Point(760, 604);
             this.LabelReqQty.Name = "LabelReqQty";
-            this.LabelReqQty.Size = new System.Drawing.Size(64, 16);
+            this.LabelReqQty.Size = new System.Drawing.Size(63, 16);
             this.LabelReqQty.TabIndex = 104;
             this.LabelReqQty.Text = "Req Qty";
             this.LabelReqQty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1571,6 +1573,7 @@ namespace Neutron.Forms
             this.MBResetCarousels.TabIndex = 8;
             this.MBResetCarousels.Text = "&Reset Carousels";
             this.MBResetCarousels.UseSelectable = true;
+            this.MBResetCarousels.Visible = false;
             this.MBResetCarousels.Click += new System.EventHandler(this.MBResetCarousels_Click);
             // 
             // MBPickScreenHotPick
@@ -3427,7 +3430,7 @@ namespace Neutron.Forms
         private System.Windows.Forms.Panel panel11;
         private System.Windows.Forms.DataGridView DataGridViewSkip;
         private System.Windows.Forms.Panel panel12;
-        private System.Windows.Forms.ComboBox ComboBoxStationNumber;
+        private System.Windows.Forms.ComboBox ComboBoxAreaNumber;
         private MetroFramework.Controls.MetroButton MBPrintPick;
         private MetroFramework.Controls.MetroButton ButtonPrintAO;
         private System.Windows.Forms.TextBox TextBoxNewOrderDescription;

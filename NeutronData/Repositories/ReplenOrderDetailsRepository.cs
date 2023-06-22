@@ -5,18 +5,24 @@ using System.Collections.Generic;
 using System.Linq;
 using NeutronCore.Enums;
 using NeutronCore.Extensions;
+using NeutronData.Interfaces;
 
 namespace NeutronData.Repositories
 {
     public class ReplenOrderDetailsRepository
     {
-        private readonly GenericRepository<ReplenOrderDetail> repo = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly NeutronDb db = new NeutronDb();
 
+        public ReplenOrderDetailsRepository()
+        {
+ 
+        }
         public List<ReplenOrderDetailsView> GetOrderDetailsView()
         {
             var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<ReplenOrderDetailsView> recs = repo.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
+            IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
                 .Where(r => statusToGet.Contains(r.LineStatusId))
                 .Select(s => new ReplenOrderDetailsView
                 {
@@ -31,7 +37,7 @@ namespace NeutronData.Repositories
                     PickedQuantity = s.PickedQuantity,
                     LineStatusId = s.LineStatusId,
                     LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
-                    StationNumber = s.StationNumber
+                    AreaId = s.AreaId
                 }).Where(s => statusToGet.Contains(s.LineStatusId))
             .OrderBy(o => o.Ord1);
 
@@ -69,7 +75,7 @@ namespace NeutronData.Repositories
         public List<ReplenOrderDetailsView> GetOrderDetailsViewByOrder(int orderId)
         {
             //var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<ReplenOrderDetailsView> recs = repo.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
+            IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
                 .Where(r => r.ReplenOrderId == orderId).Select(s => new ReplenOrderDetailsView
                 //.Where(r => r.OrderId == orderId && statusToGet.Contains(r.LineStatusId)).Select(s => new OrderDetailsView
                 {
@@ -84,23 +90,56 @@ namespace NeutronData.Repositories
                     PickedQuantity = s.PickedQuantity,
                     LineStatusId = s.LineStatusId,
                     LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
-                    StationNumber = s.StationNumber
-                }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item);
+                    AreaId = s.AreaId
+                }).OrderBy(o => o.AreaId).ThenBy(p => p.Item);
 
             return recs.ToList();
         }
 
-        public List<ReplenOrderDetail> GetOrderDetailsByOrderAndStation(int orderId, int stationNumber)
-        {
-            var recs = repo.All().Where(r => r.ReplenOrderId == orderId && r.StationNumber == stationNumber).ToList();
-            return recs.ToList();
-        }
+        //public List<ReplenOrderDetail> GetOrderDetailsByOrderAndWorkstation(int orderId, WorkstationView workstationView)
+        //{
+        //    var areaIds = workstationView.Areas.Select(r => r.Id).ToList();
+        //    var orderDetails = new List<ReplenOrderDetail>();
+        //    if (areaIds.Count <= 0) return orderDetails;
+        //    {
+        //        foreach (var areaId in areaIds)
+        //        {
+        //            var recs = _repoReplenOrderDetails.All().Where(r => r.ReplenOrderId == orderId && r.AreaId == areaId).ToList();
+        //            orderDetails.AddRange(recs);
+        //        }
+        //    }
+        //    return orderDetails;
+        //}
 
-        public List<ReplenOrderDetail> GetOrderDetailsByOrderAndStationNotCompleted(int orderId, int stationNumber)
+        //public List<ReplenOrderDetail> GetOrderDetailsByOrderAndWorkstationNotCompleted(int orderId, WorkstationView workstationView)
+        //{
+        //    var areaIds = workstationView.Areas.Select(r => r.Id).ToList();
+        //    var orderDetails = new List<ReplenOrderDetail>();
+        //    if (areaIds.Count <= 0) return orderDetails;
+        //    {
+        //        foreach (var areaId in areaIds)
+        //        {
+        //            var recs = _repoReplenOrderDetails.All().Where(r => r.ReplenOrderId == orderId && r.AreaId == areaId
+        //                && r.LineStatusId != (int)LineStatus.Complete).ToList();
+        //            orderDetails.AddRange(recs);
+        //        }
+        //    }
+        //    return orderDetails;
+        //}
+        public List<ReplenOrderDetail> GetOrderDetailsByOrderAndAreaNotCompleted(int orderId, int areaId)
         {
-            var recs = repo.All().Where(r => r.ReplenOrderId == orderId && r.StationNumber == stationNumber
-                                                                        && r.LineStatusId != (int)LineStatus.Complete).ToList();
-            return recs.ToList();
+           // var areaIds = workstationView.Areas.Select(r => r.Id).ToList();
+            //var orderDetails = new List<ReplenOrderDetail>();
+            //if (areaIds.Count <= 0) return orderDetails;
+            //{
+                //foreach (var areaId in areaIds)
+               // {
+                    var orderDetails = _repoReplenOrderDetails.All().Where(r => r.ReplenOrderId == orderId && r.AreaId == areaId
+                        && r.LineStatusId != (int)LineStatus.Complete).ToList();
+                   // orderDetails.AddRange(recs);
+               // }
+            //}
+            return orderDetails;
         }
     }
 }

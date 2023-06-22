@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using JsonManager;
 using NeutronCore.Enums;
 using NeutronCore.Global;
+using NeutronData.ModelViews;
 
 namespace NeutronLoader
 {
@@ -29,16 +30,16 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly DynamicLogger _logger;
         private readonly IJsonData _jsonData;
-        private readonly Station _rackStation;
+        private readonly WorkstationView workstationView;
 
         public SfhFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger,
-            IJsonData jsonData, Station rackStation)
+            IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
-            _rackStation = rackStation;
+            workstationView = workstationView;
         }
 
         public void LoadFiles(List<FileInfo> files)
@@ -157,7 +158,7 @@ namespace NeutronLoader
                                 PrimeBin = primeBin,
                                 PartDesc = itemDef.Description,
                                 OrderDetailInfo = line.Substring(105, 100).Trim(),
-                                StationNumber = _rackStation.StationNumber,
+                                AreaId = itemDef.AreaId,
                                 LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0
                             };
@@ -171,8 +172,8 @@ namespace NeutronLoader
                                 itemDef = UpdateItemDefinitionDescription(itemDef, description);
                             }
 
-                            _logger.Log($"Station Id: {itemDef.StationId}");
-                            var stationNumber = _repoStation.FindByKey(itemDef.StationId).StationNumber;
+                            _logger.Log($"Station Id: {itemDef.AreaId}");
+                            var stationNumber = _repoStation.FindByKey(itemDef.AreaId).StationNumber;
                             var primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
                             detail = new OrderDetail
                             {
@@ -183,7 +184,7 @@ namespace NeutronLoader
                                 PrimeBin = primeBin,
                                 PartDesc = itemDef.Description,
                                 OrderDetailInfo = line.Substring(105).Trim(),
-                                StationNumber = stationNumber,
+                                AreaId = itemDef.AreaId,
                                 LineStatusId = (int)LineStatus.Available,
                                 PickedQuantity = 0
                             };
@@ -315,8 +316,8 @@ namespace NeutronLoader
                             itemDef = UpdateItemDefinitionDescription(itemDef, description);
                         }
 
-                        var stationNumber = GetStationNumber(itemDef.StationId);
-                        var primeBin = GetPrimeBin(stationNumber, line.Substring(55, 11));
+                        var areaId = itemDef.AreaId;
+                        var primeBin = GetPrimeBin(areaId, line.Substring(55, 11));
                         replenDetail = new ReplenOrderDetail();
                         replenDetail.ReplenOrderId = orderId;
                         replenDetail.ItemDefinitionId = itemDef.Id;
@@ -325,7 +326,7 @@ namespace NeutronLoader
                         replenDetail.PrimeBin = primeBin;
                         replenDetail.PartDesc = itemDef.Description;
                         replenDetail.OrderDetailInfo = line.Substring(105, 100);
-                        replenDetail.StationNumber = stationNumber;
+                        replenDetail.AreaId = itemDef.AreaId;
                         replenDetail.LineStatusId = (int) LineStatus.Available;
                         replenDetail.PickedQuantity = 0;
                         break;
@@ -378,10 +379,10 @@ namespace NeutronLoader
                 _logger.Log(msg: "GetItemDefinition oc = 0  ");
                 try
                 {
-                    var stationId = _rackStation.Id;
+                    var areaId = workstationView.AreaId;
                     //try to find it anywhere first
                     item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault() ??
-                           new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description, stationId);
+                           new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description, areaId);
                 }
                 catch (Exception ex)
                 {
@@ -438,17 +439,17 @@ namespace NeutronLoader
             return itemDef;
         }
 
-        private int GetStationNumber(int stationId)
+        private int GetStationNumber(int workstationId)
         {
             var stationNum = 0;
 
             try
             {
-                var station = _repoStation.FindBy(r => r.Id == stationId).FirstOrDefault();
+                var station = _repoStation.FindBy(r => r.Id == workstationId).FirstOrDefault();
 
                 if (station != null)
                 {
-                    _logger.Log($"Get Station Number: {station.StationNumber}  StationId: {stationId} ");
+                    _logger.Log($"Get Station Number: {station.StationNumber}  WorkstationId: {workstationId} ");
                     stationNum = station.StationNumber;
                 }
             }
@@ -456,27 +457,27 @@ namespace NeutronLoader
             {
                 MessageBox.Show($"Error Returning Station Number. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
-            _logger.Log($"Get Station Number Return: {stationNum}  StationId: {stationId} ");
+            _logger.Log($"Get Station Number Return: {stationNum}  WorkstationId: {workstationId} ");
             return stationNum;
         }
 
         private int GetStationId(int stationNumber)
         {
-            var stationId = 0;
+            var workstationId = 0;
 
             try
             {
                 var station = _repoStation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
                 if (station != null)
                 {
-                    stationId = station.Id;
+                    workstationId = station.Id;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error Returning Station Id. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
-            return stationId;
+            return workstationId;
         }
 
         private string GetPrimeBin(int stationNum, string v)

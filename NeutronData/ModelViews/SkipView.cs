@@ -11,7 +11,7 @@ namespace NeutronData.ModelViews
             PickLocations = new List<PickLocation>();
         }
         public int Id { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
         public int OrderDetailId { get; set; }
         public int OrderId { get; set; }
         public string Ord1 { get; set; }

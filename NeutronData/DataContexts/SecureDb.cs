@@ -8,7 +8,7 @@ namespace NeutronData.DataContexts
     {
         public SecureDb() : base("name=Neutron") { }
 
-        public DbSet<Station> Stations { get; set; }
+        public DbSet<Workstation> Workstations { get; set; }
         public DbSet<HardwareDevice> HardwareDevices { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Language> Languages { get; set; }

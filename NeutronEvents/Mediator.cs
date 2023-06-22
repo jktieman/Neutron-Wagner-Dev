@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using NeutronData.Models;
+using NeutronData.ModelViews;
 
 
 namespace NeutronEvents
@@ -17,6 +19,47 @@ namespace NeutronEvents
         public static Mediator GetInstance()
         {
             return Instance;
+        }
+        //--------------------------------------------------------------------------
+
+        public event EventHandler<WorkItEventArgs> WorkItMessageChng;
+        public void OnWorkItMessageChng(WorkItEventArgs e)
+        {
+            if (WorkItMessageChng != null)
+            {
+                var eventListeners = WorkItMessageChng.GetInvocationList();
+                foreach (var t in eventListeners)
+                {
+                    var methodToInvoke = (EventHandler<WorkItEventArgs>)t;
+                    methodToInvoke.BeginInvoke(this, e, EndAsyncWorkItMessageChng, null);
+                }
+            }
+        }
+
+        public void EndAsyncWorkItMessageChng(IAsyncResult iar)
+        {
+            var ar = (AsyncResult)iar;
+            var invokedMethod = (EventHandler<WorkItEventArgs>)ar.AsyncDelegate;
+            try
+            {
+                invokedMethod.EndInvoke(iar);
+            }
+            catch
+            {
+                // Handle any exceptions that were thrown by the invoked method
+                Console.WriteLine("An event listener went kaboom!");
+            }
+        }
+
+
+
+
+        //-------------------------------------------------------------------
+        public event EventHandler<WorkItEventArgs> WorkItMessageChange;
+
+        public void OnWorkItMessageChange(object sender, List<string> list)
+        {
+            WorkItMessageChange?.Invoke(sender, new WorkItEventArgs(list) { MessageList = list });
         }
 
         public event EventHandler<SerialPortChangedEventArgs> SerialPortChanged;
@@ -51,6 +94,13 @@ namespace NeutronEvents
         public void OnIptiButtonPressed(object sender, ResponseInfo responseInfo)
         {
             IptiButtonPressed?.Invoke(sender, new IptiButtonPressedEventArgs { ResponseInfo = responseInfo });
+        }
+
+        public event EventHandler<AcceptButtonPressedEventArgs> AcceptButtonPressed;
+
+        public void OnAcceptButtonPressed(object sender, PickStop pickStop)
+        {
+            AcceptButtonPressed?.Invoke(sender, new AcceptButtonPressedEventArgs { PickStop = pickStop });
         }
 
 

@@ -31,6 +31,7 @@ using System.Resources;
 using System.Text;
 using System.Threading;
 using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 using System.Windows.Input;
 using CurrentDeviceIndicator;
 using DeviceIndicatorService;
@@ -45,13 +46,21 @@ using NeutronDllu;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using Label = System.Windows.Forms.Label;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
+using Panel = System.Windows.Forms.Panel;
+using ScrollBars = System.Windows.Forms.ScrollBars;
+using TextBox = System.Windows.Forms.TextBox;
 using Timer = System.Threading.Timer;
 
 namespace Neutron.Forms
 {
     public partial class FrmPick : MetroForm
     {
+        private readonly ILocationsRepository _locationsRepository;
+
+
+        private readonly IAreaRepository _areaRepository;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private readonly AkaRepository _repoAka = new AkaRepository();
@@ -67,8 +76,7 @@ namespace Neutron.Forms
 
         //private readonly InventoryRepository _repoInv = new InventoryRepository();
         private readonly OrderDetailsRepository _orderDetailsRepository = new OrderDetailsRepository();
-        //private readonly LocationsRepository _locationsRepository = new LocationsRepository();
-        private readonly IStationRepository _stationRepository;
+        private readonly IWorkstationRepository _workstationRepository;
         private readonly IOrdersRepository _ordersRepository;
 
         private BindingListView<AvailableOrdersView> _bindingListViewAvailableOrdersViews;
@@ -94,7 +102,7 @@ namespace Neutron.Forms
         private List<BatchPosition> _ordersToPick = new List<BatchPosition>();
         private PickStop _currentPickStop = new PickStop();
 
-        private SqlInventoryView _currentInventoryView = new SqlInventoryView();
+        // private SqlInventoryView _currentInventoryView = new SqlInventoryView();
         private bool _openHotPickFromPickScreen;
         private bool _showSkipped;
         private bool _shortPick;
@@ -138,11 +146,11 @@ namespace Neutron.Forms
         private bool _skipGridReady;
         private bool _skipInventoryGridReady;
 
-        private readonly int[] _moveableDeviceTypes;
+        //private readonly int[] _moveableDeviceTypes;
 
-        private readonly Station _rackStation;
-        private readonly List<Station> _pickStations;
-        private readonly StationView _stationView;
+        private readonly List<Workstation> _pickStations;
+        private readonly WorkstationView _workstationView;
+        private int[] _areaIdsForThisWorkstation;
 
         private readonly SynchronizationContext _synchronizationContext;
         private List<Inventory> _currentInventory;
@@ -153,33 +161,38 @@ namespace Neutron.Forms
 
         public delegate void UpdatePickAcceptDelegate(bool b);
 
-        public FrmPick(IJsonData jsonData, StationView stationView
+        public FrmPick(IJsonData jsonData, WorkstationView workstationView
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor,
-            IImageManager imageManager, IStationRepository stationRepository
+            IImageManager imageManager, IWorkstationRepository workstationRepository
             , IOrdersRepository ordersRepository, NeutronLicense neutronLicense
-            , IItemDefinitionsRepository itemDefinitionsRepository, HistoryManager historyManager)
+            , IItemDefinitionsRepository itemDefinitionsRepository, HistoryManager historyManager
+            , ILocationsRepository locationsRepository
+            , IAreaRepository areaRepository)
         {
+
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
 
             _jsonData = jsonData;
-            _stationView = stationView;
+            _workstationView = workstationView;
             _akaRepository = akaRepository;
             _neutronVariables = neutronVariables;
             _securityProcessor = securityProcessor;
             _lacProcessor = lacProcessor;
             _imageManager = imageManager;
-            _stationRepository = stationRepository;
+            _workstationRepository = workstationRepository;
             _ordersRepository = ordersRepository;
             _neutronLicense = neutronLicense;
             _itemDefinitionsRepository = itemDefinitionsRepository;
             _historyManager = historyManager;
+            _locationsRepository = locationsRepository;
+            _areaRepository = areaRepository;
+            // _moveableDeviceTypes = _workstationRepository.GetMoveableDeviceTypeIds();
+            _pickStations = _workstationRepository.GetAllPickStations();
 
-            _rackStation = _stationRepository.GetRackStation();
-            _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
-            _pickStations = _stationRepository.GetPickStations();
+
             _synchronizationContext = SynchronizationContext.Current;
 
             InitForm();
@@ -190,7 +203,7 @@ namespace Neutron.Forms
             KeyPreview = true;
             SetupLogger();
             Task.Run(() => _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
-            //if (_stationView.StationType.Id == (int)StationType.Supervisor)
+            //if (_workstationView.StationType.Id == (int)StationType.Supervisor)
             // {
             //MBMainLoadOrders.Visible = true;
             //MBMainUpload.Visible = true;
@@ -207,6 +220,7 @@ namespace Neutron.Forms
             ShowButtons();
             SetLoaderButtonText();
             SetUploadButtonText();
+            FillComboBoxAreaNumbers();
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
             _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();  //TextBoxPos1;
@@ -222,7 +236,8 @@ namespace Neutron.Forms
             InitDataGridViewNewItems();
             _imagesDirectory = LoaderSettings.GetImagesDirectory();
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
-            if (_stationView.StationType.Id == (int)StationType.Supervisor || _stationView.StationType.Id == (int)StationType.Rack)
+            
+            if (_workstationView.StationType.Id == (int)StationType.Supervisor || _workstationView.StationType.Id == (int)StationType.RackTablet)
             {
                 MBMainAvailableOrders.Text = _resourceManager.GetString($"OffCarousel");
             }
@@ -233,6 +248,11 @@ namespace Neutron.Forms
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
+        }
+
+        private void AcceptButtonPickAccept(PickStop pickStop)
+        {
+            throw new NotImplementedException();
         }
 
         private void InitGrids()
@@ -343,15 +363,15 @@ namespace Neutron.Forms
 
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
 
-            _deviceIndicatorManager = new DeviceIndicatorManager(_stationView, new Point(189, 0),
+            _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(189, 0),
                 new Size(769, 127), _neutronVariables);
 
 
             //_deviceIndicators = new Dictionary<int, DeviceIndicator>();
 
-            ////var hardwareDevices = _stationView.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
+            ////var hardwareDevices = _workstationView.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
             ////var numDevices = hardwareDevices.Count;
-            //var hardwareDevices = _stationView.HardwareDevices.ToList();
+            //var hardwareDevices = _workstationView.HardwareDevices.ToList();
             //var numDevices = hardwareDevices.Count;
 
 
@@ -396,20 +416,20 @@ namespace Neutron.Forms
 
         }
 
-        private void FillComboBoxStationNumber()
+        private void FillComboBoxAreaNumbers()
         {
-            List<string> stationNumbers = new List<string>();
-            stationNumbers = _stationRepository.GetPickStationNumbers();
-            if (stationNumbers.Count > 0)
+
+            var areaNumbers = _areaRepository.GetAllPickableAreaNumbersAsString();
+
+            // ComboBoxAreaNumber.DisplayMember = "AreaNumber";
+            // ComboBoxAreaNumber.ValueMember = "AreaNumber";
+
+            if (areaNumbers.Count > 0)
             {
-                stationNumbers.Insert(0, _resourceManager.GetString($"ALL"));
+                areaNumbers.Insert(0, _resourceManager.GetString($"ALL"));
             }
-            //else
-            //{
-            //    stationNumbers = new List<string> { "All", "1", "2", "3", "4", "5", "8" };
-            //}
-            ComboBoxStationNumber.DataSource = stationNumbers;
-            ComboBoxStationNumber.SelectedIndex = 0;
+            ComboBoxAreaNumber.DataSource = areaNumbers;
+            ComboBoxAreaNumber.SelectedIndex = 0;
         }
 
         private void ShowOrderComplete(Order order)
@@ -434,7 +454,8 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Control not Found {Environment.NewLine}{ex.Message}", "Control Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Control not Found {Environment.NewLine}{ex.Message}"
+                    , "Control Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             bp.OrderComplete = true;
         }
@@ -684,7 +705,7 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrdersRack: [{DateTime.Now.ToLongTimeString()}]"));
             var idx = 0;
-            // var station = _stationRepository.GetStationView(8);
+
             if (string.IsNullOrEmpty(findWhat))
             {
                 findWhat = TextBoxFindAvailableOrdersRack.Text.Trim().ToLower();
@@ -692,7 +713,7 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetRackOrdersView(_rackStation.StationNumber, findWhat);
+                var views = _ordersRepository.GetRackOrdersView(_workstationView.WorkstationId, findWhat);
 
                 var rackOrderViews = views.ToList();
                 foreach (var rackOrderView in rackOrderViews)
@@ -749,12 +770,12 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetAvailableOrdersForInductionScreen(_stationView, searchField);
-                //  var views = _ordersRepository.GetAvailableOrders(_stationView, findWhat, _neutronVariables.SerialPicking);
-                // var views = _ordersRepository.GetAvailableOrders(_stationView);
+                var views = _ordersRepository.GetAvailableOrdersForInductionScreen(_workstationView, searchField);
+                //  var views = _ordersRepository.GetAvailableOrders(_workstationView, findWhat, _neutronVariables.SerialPicking);
+                // var views = _ordersRepository.GetAvailableOrders(_workstationView);
                 //var views = !string.IsNullOrEmpty(findWhat)
-                //    ? _ordersRepository.GetAvailableOrders(_stationView, findWhat, _neutronVariables.SerialPicking)
-                //    : _ordersRepository.GetAvailableOrders(_stationView);
+                //    ? _ordersRepository.GetAvailableOrders(_workstationView, findWhat, _neutronVariables.SerialPicking)
+                //    : _ordersRepository.GetAvailableOrders(_workstationView);
 
                 _bindingListViewAvailableOrdersViews = new BindingListView<AvailableOrdersView>(views.ToList());
                 _bindingSourceAvailableOrders.DataSource = _bindingListViewAvailableOrdersViews;
@@ -1099,11 +1120,21 @@ namespace Neutron.Forms
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView1.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Station_7_HasPicks",
+                HeaderText = @"7",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Station_7_HasPicks",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+            DataGridView1.Columns.Add(col);
+
 
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_8_HasPicks",
-                HeaderText = _resourceManager.GetString($"Off"),
+                HeaderText = @"8",  // _resourceManager.GetString($"Off"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_8_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1192,11 +1223,11 @@ namespace Neutron.Forms
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DataPropertyName = "AreaId",
+                HeaderText = _resourceManager.GetString($"Area"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Name = "StationNumber"
+                Name = "AreaId"
             };
             DataGridViewSkip.Columns.Add(col);
 
@@ -1781,11 +1812,11 @@ namespace Neutron.Forms
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DataPropertyName = "AreaId",
+                HeaderText = _resourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationNumber"
+                Name = "AreaId"
             };
             DataGridViewNewOrder.Columns.Add(col);
 
@@ -1865,11 +1896,11 @@ namespace Neutron.Forms
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DataPropertyName = "AreaId",
+                HeaderText = _resourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationNumber"
+                Name = "AreaId"
             };
             DataGridViewOrderDetails.Columns.Add(col);
 
@@ -1999,11 +2030,11 @@ namespace Neutron.Forms
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DataPropertyName = "AreaId",
+                HeaderText = _resourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationNumber",
+                Name = "AreaId",
                 ReadOnly = true
 
             };
@@ -2110,11 +2141,11 @@ namespace Neutron.Forms
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DataPropertyName = "AreaId",
+                HeaderText = _resourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationNumber"
+                Name = "AreaId"
             };
             DataGridViewNewItems.Columns.Add(col);
 
@@ -2179,12 +2210,12 @@ namespace Neutron.Forms
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _resourceManager.GetString($"StationNumber"),
+                DataPropertyName = "AreaId",
+                HeaderText = _resourceManager.GetString($"Area"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
-                Name = "StationNumber"
+                Name = "AreaId"
             };
             DataGridViewSkipInventory.Columns.Add(col);
 
@@ -2365,7 +2396,7 @@ namespace Neutron.Forms
                     if (order.OrderStatusId != (int)OrderStatus.Available) continue;
                     order.OrderStatusId = (int)OrderStatus.Hold;
                     _repoOrders.Update(order);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.HoldOrder, order);
+                    _historyManager.SaveHistory(ActionCode.HoldOrder, order);
                 }
             }
             ShowAllOrders();
@@ -2381,7 +2412,7 @@ namespace Neutron.Forms
                     if (order.OrderStatusId != (int)OrderStatus.Hold) continue;
                     order.OrderStatusId = (int)OrderStatus.Available;
                     _repoOrders.Update(order);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.ReleaseOrder, order);
+                    _historyManager.SaveHistory(ActionCode.ReleaseOrder, order);
                 }
             }
             ShowAllOrders();
@@ -2506,7 +2537,7 @@ namespace Neutron.Forms
 
             TextBoxFindAvailableOrders.Text = string.Empty;
             // UpdateOrdersToPickingStatus(_ordersToPick);
-            var numOrders = _ordersToPick.Where(o => o.OrderId != null).Count();
+            var numOrders = _ordersToPick.Count(o => o.OrderId != null);
             if (numOrders > 0)
             {
                 LabelFormTitle.Text = _resourceManager.GetString($"PickList");
@@ -2567,8 +2598,8 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($" Start FinalCheckOfOrdersToPick"));
             foreach (var bp in _ordersToPick)
             {
-                string pos = bp.PositionNumber.ToString();
-                Control c = Controls.Find($"TextBoxPos{pos}", true).First();
+                var pos = bp.PositionNumber.ToString();
+                var c = Controls.Find($"TextBoxPos{pos}", true).First();
                 if (c != null)
                 {
                     var textBox = ((TextBox)c);
@@ -2609,7 +2640,7 @@ namespace Neutron.Forms
         //    foreach (var batchPosition in orderIds)
         //    {
         //        var orderDetails = _repoOrderDetails.FindBy(r =>
-        //            r.OrderId == batchPosition.OrderId && r.StationNumber == _stationView.StationNumber &&
+        //            r.OrderId == batchPosition.OrderId && r.StationNumber == _workstationView.StationNumber &&
         //            r.LineStatusId == (int) LineStatus.Available);
         //        foreach (var orderDetail in orderDetails)
         //        {
@@ -2637,7 +2668,7 @@ namespace Neutron.Forms
         private void LoadInventory()
         {
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory START"));
-            var pickableLocations = new int[] { 1, 2 };
+            var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                 .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory END"));
@@ -2658,8 +2689,8 @@ namespace Neutron.Forms
                 var orderDetail = item.OrderDetail;
                 //TODO  commented out because I'm not handling something correctly
                 // and items are getting stuck in Pick status
-                //orderDetail.LineStatusId = (int)LineStatus.Picking;
-                // _repoOrderDetails.Update(orderDetail);
+                orderDetail.LineStatusId = (int)LineStatus.Picking;
+                _repoOrderDetails.Update(orderDetail);
 
                 List<Inventory> exactInventorySequence;
                 switch (_neutronVariables.PickMethod)
@@ -2692,7 +2723,7 @@ namespace Neutron.Forms
                     item.ReceivedDate = item.CurrentInventoryLocation.ReceivedDate;
                     pickableViews.Add(item);
                 }
-                else // no Inventory oopen Skip Option Form
+                else // no Inventory open Skip Option Form
                 {
                     using (var form = new FrmSkipOption(item))
                     {
@@ -2706,7 +2737,7 @@ namespace Neutron.Forms
                                 item.OrderDetail.LineStatusId = (int)LineStatus.Skipped;
                                 skipPickableViews.Add(item);
                                 _repoOrderDetails.Update(item.OrderDetail);
-                                GlobalVar.HistoryManager.SaveHistory(ActionCode.Skip, item.OrderDetail, item.OrderDetail.StationNumber);
+                                _historyManager.SaveHistory(ActionCode.Skip, item.OrderDetail, item.OrderDetail.AreaId);
                             }
                             else if (pushed == "Pick Zero")
                             {
@@ -2716,7 +2747,7 @@ namespace Neutron.Forms
                                 _repoOrderDetails.Update(item.OrderDetail);
                                 Task.Run(() => _logger.LogDetailAsync($"PickListLoad Pick Zero Option Ord:{item.Ord1}   Res:{item.Ord2}   Item:{item.Item}"));
                                 Task.Run(() => _logger.LogDetailAsync($"PickListLoad SaveHistory Ord:{item.Ord1}   Res:{item.Ord2}   Item:{item.Item}"));
-                                GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail, item.OrderDetail.StationNumber);
+                                _historyManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail, item.OrderDetail.AreaId);
                                 CheckForOrderComplete(item.OrderDetail.Order);
                             }
                         }
@@ -2744,7 +2775,8 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"1487 Prime Bin First Inventory Rec Count:  {recs.Count}"));
             if (recs.Count <= 0) return inventorySequence;
             //if there is a prime bin make it first, remove it from the list of inventory locations
-            var prime = recs.FirstOrDefault(r => r.Location.Slot == item.OrderDetail.PrimeBin);
+            // var prime = recs.FirstOrDefault(r => r.Location.Slot == item.OrderDetail.PrimeBin);
+            var prime = recs.FirstOrDefault(r => r.PrimeBin == true);  // .Location.Slot == item.OrderDetail.PrimeBin);
             if (prime != null)
             {
                 Task.Run(() => _logger.LogDetailAsync($"recs Add Prime [{DateTime.Now.ToLongTimeString()}] "));
@@ -2804,7 +2836,7 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"1553 LIFO Inventory Rec Count:  {recs.Count}"));
             if (recs.Count > 0)
             {
-                //sequence the inventory Recs by Received Date Decending
+                //sequence the inventory Recs by Received Date Descending
                 var sortedRecs = recs.OrderByDescending(o => o.ReceivedDate).ToList();
                 foreach (var inv in sortedRecs)
                 {
@@ -2828,7 +2860,7 @@ namespace Neutron.Forms
                 var currentOrder = ((ObjectView<AvailableOrdersView>)_bindingSourceAvailableOrders.Current).Object;
                 var firstTime = true;
                 var counter = 0;
-                var orderAndDetails = _ordersRepository.GetOrderAndOrderDetails(bp.OrderId, _stationView.StationNumber);
+                var orderAndDetails = _ordersRepository.GetOrderAndOrderDetails(bp.OrderId, _workstationView.AreaId);
                 currentOrder.Order = orderAndDetails;
                 var details = currentOrder.Order.OrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
@@ -2876,7 +2908,7 @@ namespace Neutron.Forms
                         Slot = string.Empty,
                         SlotQty = 0,
                         OrderDetail = detail,
-                        StationNumber = detail.StationNumber,
+                        AreaId = detail.AreaId,
                         PreviousLineStatusId = detail.LineStatusId,
                         ItemKey = key
                     };
@@ -3329,7 +3361,7 @@ namespace Neutron.Forms
         //    var orderIds = ordersToPick.Where(r => r.OrderId != null && r.OrderComplete == false).ToList();
         //    foreach (var batchPosition in orderIds)
         //    {
-        //        var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.StationNumber == _stationView.StationNumber && r.LineStatusId == (int)LineStatus.Picking);
+        //        var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.StationNumber == _workstationView.StationNumber && r.LineStatusId == (int)LineStatus.Picking);
         //        foreach (var orderDetail in orderDetails)
         //        {
         //            orderDetail.LineStatusId = (int)LineStatus.Available;
@@ -3433,8 +3465,20 @@ namespace Neutron.Forms
             }
 
             Task.Run(() => _logger.LogDetailAsync($"Start_Click 2: [{DateTime.Now.ToLongTimeString()}]"));
+
+
+            // FinalPickSequence sorts the Pickstops to be picked 1,2,3,4 across all devices
+            // If this is not a pick workstation with devices
+            // Sort the Picks in PickSequence order
+            if (_workstationView.StationType.Id == (int)StationType.Carousel)
+            {
+
+            }
             var finalPickSequence = FinalPickSequence(pickStops);
             _bindingSourcePickStops.DataSource = finalPickSequence;
+
+
+
             Task.Run(() => _logger.LogDetailAsync($"Start_Click 3 Run GetFirstStop?: [{DateTime.Now.ToLongTimeString()}]"));
             // GetFirstStop();
             _bindingSourcePickStops.MoveFirst();
@@ -3456,39 +3500,57 @@ namespace Neutron.Forms
             // StartSpaceBarEnableTimer();
             _spaceBarDisabled = false;
         }
-
+        /// <summary>
+        /// FinalPickSequence sorts the Pickstops to be picked 1,2,3,4 across all devices
+        /// If this is not a pick workstation with devices
+        /// Sort the Picks in PickSequence order
+        /// </summary>
+        /// <param name="pickStops"></param>
+        /// <returns>A list of PickStops in Machine Pick Order</returns>
         private List<PickStop> FinalPickSequence(List<PickStop> pickStops)
         {
             Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start: [{DateTime.Now.ToLongTimeString()}]"));
             var newCarList = new List<List<PickStop>>();
             var newList = new List<PickStop>();
-            for (var i = 0; i < _stationView.HardwareDevices.Count; i++)
-            {
-                var carList = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == i + 1)
-                    .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
-                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
-                    .ToList();
-                newCarList.Add(carList);
-            }
-            var seq = 1;
-            var totalPickStops = pickStops.Count;
 
-            for (var i = 0; i < totalPickStops; i++)
+            if (_workstationView.HardwareDevices.Count > 0)
             {
-                for (var j = 0; j < newCarList.Count; j++)
+                for (var i = 0; i < _workstationView.HardwareDevices.Count; i++)
                 {
-                    if (newCarList[j].Count >= i + 1)
+                    var carList = pickStops.Where(p => p.CurrentInventoryLocation.Location.Loc1 == i + 1)
+                        .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
+                        .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
+                        .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
+                        .ToList();
+                    newCarList.Add(carList);
+                }
+                var seq = 1;
+                var totalPickStops = pickStops.Count;
+
+                for (var i = 0; i < totalPickStops; i++)
+                {
+                    for (var j = 0; j < newCarList.Count; j++)
                     {
-                        newCarList[j][i].Sequence = seq;
-                        seq += 1;
-                        newList.Add(newCarList[j][i]);
+                        if (newCarList[j].Count >= i + 1)
+                        {
+                            newCarList[j][i].Sequence = seq;
+                            seq += 1;
+                            newList.Add(newCarList[j][i]);
+                        }
                     }
                 }
+
             }
+            else  //OC Workstation so picks are in PickSequence order
+            {
+                var carList = pickStops.OrderBy(r => r.Sequence).ToList();
+                newCarList.Add(carList);
+            }
+
+
             Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
             _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
-            for (var i = 1; i <= _stationView.HardwareDevices.Count; i++)
+            for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
             {
                 _deviceManager.MoveNext(i);
             }
@@ -3507,6 +3569,11 @@ namespace Neutron.Forms
                 {
                     Task.Run(() => _logger.LogDetailAsync($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}"));
                     GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4);
+                }
+                if (GlobalVar.Hanel != null)
+                {
+                    Task.Run(() => _logger.LogDetailAsync($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}"));
+                    GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
                 }
             }
         }
@@ -3887,7 +3954,7 @@ namespace Neutron.Forms
         private void UpdatePickPosition()
         {
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickPosition Start : [{DateTime.Now.ToLongTimeString()}]"));
-            SetOrderCompleteThisStation();
+            SetOrderCompleteThisArea();
             ClearPickPositions();
             ClearPickDisplays();
             ClearAllBli();
@@ -3967,13 +4034,26 @@ namespace Neutron.Forms
             }
         }
 
-        private void SetOrderCompleteThisStation()
+        //private void SetOrderCompleteThisArea()
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.OrderId == null) continue;
+        //        var linesNotComplete = _repoOrderDetails
+        //            .FindBy(r => r.OrderId == bp.OrderId && _areaIdsForThisWorkstation.Contains(r.AreaId))
+        //            .Where(r => r.LineStatusId != (int)LineStatus.Complete).ToList();
+        //        if (linesNotComplete.Any()) continue;
+        //        bp.OrderComplete = true;
+        //    }
+        //}
+
+        private void SetOrderCompleteThisArea()
         {
             foreach (var bp in _ordersToPick)
             {
                 if (bp.OrderId == null) continue;
                 var linesNotComplete = _repoOrderDetails
-                    .FindBy(r => r.OrderId == bp.OrderId && r.StationNumber == _stationView.StationNumber)
+                    .FindBy(r => r.OrderId == bp.OrderId && r.AreaId == _workstationView.AreaId)
                     .Where(r => r.LineStatusId != (int)LineStatus.Complete).ToList();
                 if (linesNotComplete.Any()) continue;
                 bp.OrderComplete = true;
@@ -4130,6 +4210,15 @@ namespace Neutron.Forms
 
         private void PickAccept()
         {
+            // NeutronDllu exit to do something with the selection
+            // before processing the pick. 
+            // For example: Ask operator to scan a lot or serial number
+            // Verify something else
+            // Returns true is process is to continue
+            // Return false if the process is canceled
+            if (!SelectAction.Accept(_currentPickStop)) return;
+
+
             _spaceBarDisabled = true;
 
             //EnablePickAccept(false);
@@ -4322,7 +4411,7 @@ namespace Neutron.Forms
                         case "Highlight":
                             {
                                 success = true;
-                                GlobalVar.HistoryManager.SaveHistory(ActionCode.Skip, pickView.OrderDetail);
+                                _historyManager.SaveHistory(ActionCode.Skip, pickView.OrderDetail);
                                 break;
                             }
                         case "Backorder":
@@ -4573,7 +4662,7 @@ namespace Neutron.Forms
 
                         _repoInventory.Update(inventory);
                         sb.AppendLine("Update Inventory");
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inventory, pickLocation.Quantity, pickView);
+                        _historyManager.SaveHistory(ActionCode.PickOrder, inventory, pickLocation.Quantity, pickView);
                         sb.AppendLine("Write Pick Order to History");
                     }
                     else
@@ -4587,7 +4676,7 @@ namespace Neutron.Forms
                 // no PickLocations so no inventory
                 // use the PickViews first Inventory Location by default
                 var inventory = pickView.Inventory[0];
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inventory, 0, pickView);
+                _historyManager.SaveHistory(ActionCode.PickOrder, inventory, 0, pickView);
                 sb.AppendLine("Write Pick Order of zero quantity to History");
             }
 
@@ -4604,48 +4693,6 @@ namespace Neutron.Forms
             _deviceIndicatorManager.ClearAllDeviceIndicators();
 
             DeleteRelease();
-            //// check for Inventory locations that need to be Released
-            //using (var db = new NeutronDb())
-            //{
-            //    var locationIds = new List<int>();
-            //    var invs = db.Inventory.Where(r => r.Quantity == 0 && r.StationId == _stationView.StationId && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
-            //    if (invs.Count > 0)
-            //    {
-            //        foreach (var inv in invs)
-            //        {
-            //            locationIds.Add(inv.LocationId);
-            //            GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
-            //            db.Inventory.Remove(inv);
-            //        }
-
-            //        db.SaveChanges();
-            //    }
-
-            //    if (locationIds.Count > 0)
-            //    {
-            //        foreach (var locationId in locationIds)
-            //        {
-            //            // Look for other items in inventory where the location is the same.
-            //            // Don't want to change InUse to False is there are other items using this location.
-
-            //            var item = db.Inventory.Where(r => r.LocationId == locationId).FirstOrDefault();
-            //            if (item == null)
-            //            {
-            //                var location = db.Locations.Find(locationId);
-            //                if (location != null)
-            //                {
-            //                    location.InUse = false;
-            //                }
-            //            }
-            //        }
-            //        db.SaveChanges();
-            //    }
-            //}
-
-            //if (_neutronLicense.CompanyCode == "SFH")
-            //{
-            //    var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
-            //}
 
             ParkPositionAfterBatch();
 
@@ -4663,17 +4710,54 @@ namespace Neutron.Forms
             }
         }
 
+        //private void DeleteRelease()
+        //{
+        //    // check for Inventory locations that need to be Released
+        //    var locationIds = new List<int>();
+        //    var invs = _repoInventory.All().Where(r => r.Quantity == 0 && _areaIdsForThisWorkstation.Contains(r.AreaId) && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
+        //    if (invs.Count > 0)
+        //    {
+        //        foreach (var inv in invs)
+        //        {
+        //            locationIds.Add(inv.LocationId);
+        //            _historyManager.SaveHistory(ActionCode.InventoryDelete, inv);
+        //            _repoInventory.Delete(inv.Id);
+        //        }
+        //    }
+
+        //    if (locationIds.Count > 0)
+        //    {
+        //        foreach (var locationId in locationIds)
+        //        {
+        //            // Look for other items in inventory where the location is the same.
+        //            // Don't want to change InUse to False is there are other items using this location.
+
+        //            var item = _repoInventory.FindBy(r => r.LocationId == locationId).FirstOrDefault();
+        //            if (item == null)
+        //            {
+        //                var location = _repoLocation.FindByKey(locationId);
+        //                if (location != null)
+        //                {
+        //                    location.InUse = false;
+        //                    _repoLocation.Update(location);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //}
+
         private void DeleteRelease()
         {
             // check for Inventory locations that need to be Released
             var locationIds = new List<int>();
-            var invs = _repoInventory.All().Where(r => r.Quantity == 0 && r.StationId == _stationView.StationId && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
+            var invs = _repoInventory.All().Where(r => r.Quantity == 0 && r.AreaId == _workstationView.AreaId && r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
             if (invs.Count > 0)
             {
                 foreach (var inv in invs)
                 {
                     locationIds.Add(inv.LocationId);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inv);
+                    _historyManager.SaveHistory(ActionCode.InventoryDelete, inv);
                     _repoInventory.Delete(inv.Id);
                 }
             }
@@ -4733,16 +4817,50 @@ namespace Neutron.Forms
             }
         }
 
-        private List<AnticipatedOut> GetAnticipatedOuts(int stationId)
+        private List<AnticipatedOut> GetAnticipatedOuts()
         {
-            var outs = new List<AnticipatedOut>();
+            var anticipatedOuts = new List<AnticipatedOut>();
             using (var context = new NeutronDb())
             {
-                var paramStation = new SqlParameter("@StationId", stationId);
-
-                outs = context.Database.SqlQuery<AnticipatedOut>("usp_GetAnticipatedOuts @StationId", paramStation).ToList();
+                anticipatedOuts = context.Database.SqlQuery<AnticipatedOut>("usp_GetAnticipatedOuts").ToList();
             }
-            return outs;
+            return anticipatedOuts;
+        }
+
+        private List<AnticipatedOut> GetAnticipatedOutsByWorkstation(int workstationId)
+        {
+            var anticipatedOuts = new List<AnticipatedOut>();
+            using (var context = new NeutronDb())
+            {
+                var paramStation = new SqlParameter("@WorkstationId", workstationId);
+
+                anticipatedOuts = context.Database.SqlQuery<AnticipatedOut>("usp_GetAnticipatedOutsByWorkstation @WorkstationId", paramStation).ToList();
+            }
+            return anticipatedOuts;
+        }
+
+        private List<AnticipatedOut> GetAnticipatedOutsByArea(int areaId)
+        {
+            var anticipatedOuts = new List<AnticipatedOut>();
+            using (var context = new NeutronDb())
+            {
+                var paramStation = new SqlParameter("@AREAID", areaId);
+
+                anticipatedOuts = context.Database.SqlQuery<AnticipatedOut>("usp_GetAnticipatedOutsByArea @AREAID", paramStation).ToList();
+            } // SQL Tested
+            return anticipatedOuts;
+        }
+
+        private List<AnticipatedOut> GetAnticipatedOutsByOrder(int orderId)
+        {
+            var anticipatedOuts = new List<AnticipatedOut>();
+            using (var context = new NeutronDb())
+            {
+                var paramStation = new SqlParameter("@ORDERID", orderId);
+
+                anticipatedOuts = context.Database.SqlQuery<AnticipatedOut>("usp_GetAnticipatedOutsByOrder @ORDERID", paramStation).ToList();
+            }
+            return anticipatedOuts;
         }
 
         //private void PrintAnticipatedOuts()
@@ -4756,15 +4874,15 @@ namespace Neutron.Forms
 
         //    if (comboBoxValue != _resourceManager.GetString($"ALL"))
         //    {
-        //        var stationId = IntegerExtensions.ParseInt(comboBoxValue);
-        //        anticipatedOuts = anticipatedOuts.Where(r => r.Station == stationId).ToList();
+        //        var workstationId = IntegerExtensions.ParseInt(comboBoxValue);
+        //        anticipatedOuts = anticipatedOuts.Where(r => r.Workstation == workstationId).ToList();
         //    }
         //    _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
         //}
 
         private void MBPrintPick_Click(object sender, EventArgs e)
         {
-            var comboBoxValue = ComboBoxStationNumber.Text;
+            var comboBoxValue = ComboBoxAreaNumber.Text;
             var orders = GetSelectedOrders(DataGridView1);
             if (!orders.Any()) return;
 
@@ -4777,10 +4895,11 @@ namespace Neutron.Forms
             }
             else
             {
-                var stationId = IntegerExtensions.ParseInt(comboBoxValue);
+                var areaId = _areaRepository.GetAreaId(IntegerExtensions.ParseInt(comboBoxValue));
+                //var workstationId = IntegerExtensions.ParseInt(comboBoxValue);
                 foreach (var order in orders)
                 {
-                    PrintPickListByStation(order.Id, stationId);
+                    PrintPickListByArea(order.Id, areaId);
                 }
             }
         }
@@ -4789,6 +4908,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var packingList = GetPackingList(orderId);
+            if (!packingList.Any()) return;
             foreach (var pack in packingList)
             {
                 pack.BatchPosition = batchPosition;
@@ -4810,12 +4930,12 @@ namespace Neutron.Forms
         // Rack print - Pick List
         private void MBPrintDocument_Click(object sender, EventArgs e)
         {
-            PrintPickList(_rackStation);
+            PrintPickList(_workstationView);
             ShowAvailableOrdersRack();
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
-        private void PrintPickList(Station station)
+        private void PrintPickList(WorkstationView workstationView)
         {
             var orders = GetSelectedOrders(DataGridViewAvailableOrdersRack);
             if (orders.Count <= 0) return;
@@ -4824,9 +4944,9 @@ namespace Neutron.Forms
                 //TODO  commented out because I'm not handling something correctly
                 // and items are getting stuck in Pick status
 
-                var orderDetails = order.OrderDetails.Where(r => r.StationNumber == station.StationNumber
-                                                             && (r.LineStatusId == (int)LineStatus.Available ||
-                                                             r.LineStatusId == (int)LineStatus.Picking)).ToList();
+                var orderDetails = order.OrderDetails.Where(r => _areaIdsForThisWorkstation.Contains(r.AreaId)
+                                                                 && (r.LineStatusId == (int)LineStatus.Available ||
+                                                                     r.LineStatusId == (int)LineStatus.Picking)).ToList();
                 foreach (var orderDetail in orderDetails)
                 {
                     orderDetail.LineStatusId = (int)LineStatus.Picking;
@@ -4840,7 +4960,7 @@ namespace Neutron.Forms
                     //}
                 }
 
-                PrintPickListByStation(order.Id, station.Id);
+                PrintPickListByArea(order.Id, workstationView.AreaId);
             }
         }
 
@@ -4858,39 +4978,51 @@ namespace Neutron.Forms
             using (var context = new NeutronDb())
             {
                 var paramOrder = new SqlParameter(parameterName: "@ORDERID", value: orderId);
-                outs = context.Database.SqlQuery<PickList>("usp_GetPickList @ORDERID", new object[] { paramOrder }).ToList();
+                outs = context.Database.SqlQuery<PickList>("usp_GetPickList @ORDERID", new object[] { paramOrder }).ToList(); //SQL Tested
             }
             return outs;
         }
 
-        private void PrintPickListByStation(int orderId, int stationId)
+        //private void PrintPickListByStation(int orderId, int workstationId)
+        //{
+        //    if (!_neutronVariables.EnableDocumentPrinter) return;
+        //    var pickList = GetPickListByWorkstation(orderId, workstationId);
+        //    _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
+        //}
+
+        //private List<PickList> GetPickListByWorkstation(int orderId, int workstationId)
+        //{
+        //    var outs = new List<PickList>();
+        //    using (var context = new NeutronDb())
+        //    {
+        //        var paramOrder = new SqlParameter(parameterName: "@ORDERID", value: orderId);
+        //        var paramStation = new SqlParameter(parameterName: "@STATIONID", value: workstationId);
+        //        outs = context.Database.SqlQuery<PickList>("usp_GetPickListByStation @ORDERID, @STATIONID", paramOrder, paramStation).ToList();
+        //    }
+        //    return outs;
+        //}
+
+
+
+        private void PrintPickListByArea(int orderId, int areaId)
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
-            var pickList = GetPickListByStation(orderId, stationId);
+            var pickList = GetPickListByArea(orderId, areaId);
             _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
         }
 
-        private List<PickList> GetPickListByStation(int orderId, int stationId)
+        private List<PickList> GetPickListByArea(int orderId, int areaId)
         {
             var outs = new List<PickList>();
             using (var context = new NeutronDb())
             {
                 var paramOrder = new SqlParameter(parameterName: "@ORDERID", value: orderId);
-                var paramStation = new SqlParameter(parameterName: "@STATIONID", value: stationId);
-                outs = context.Database.SqlQuery<PickList>("usp_GetPickListByStation @ORDERID, @STATIONID", paramOrder, paramStation).ToList();
+                var paramStation = new SqlParameter(parameterName: "@AREAID", value: areaId);
+                outs = context.Database.SqlQuery<PickList>("usp_GetPickListByArea @ORDERID, @AREAID", paramOrder, paramStation).ToList();
             }
             return outs;
         }
 
-        private List<AnticipatedOut> GetAnticipatedOuts()
-        {
-            var outs = new List<AnticipatedOut>();
-            using (var context = new NeutronDb())
-            {
-                outs = context.Database.SqlQuery<AnticipatedOut>("usp_GetAnticipatedOuts").ToList();
-            }
-            return outs;
-        }
 
         private void PrintDoc(int positionNumber, Order order)
         {
@@ -5114,7 +5246,7 @@ namespace Neutron.Forms
                 {
                     order.Priority = priority;
                     _repoOrders.Update(order);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.ChangePriority, order);
+                    _historyManager.SaveHistory(ActionCode.ChangePriority, order);
                 }
             }
             ShowAllOrders();
@@ -5127,7 +5259,7 @@ namespace Neutron.Forms
             if (orders.Any())
             {
                 var ord = orders.FirstOrDefault();
-                using (var form = new FrmChangeOrderStatus(ord))
+                using (var form = new FrmChangeOrderStatus(ord, _historyManager))
                 {
                     var result = form.ShowDialog();
                     if (result == DialogResult.OK)
@@ -5141,27 +5273,31 @@ namespace Neutron.Forms
 
         private void MBChangeLineStatus_Click(object sender, EventArgs e)
         {
-            OrderDetail line = null;
+            //OrderDetail line = null;
             var lines = GetSelectedOrderDetails(DataGridViewOrderDetails);
 
             if (lines.Any())
             {
-                line = lines.FirstOrDefault();
-                using (var form = new FrmChangeLineStatus(line))
+                foreach (var line in lines)
                 {
-                    var result = form.ShowDialog();
-                    if (result == DialogResult.OK)
+                    using (var form = new FrmChangeLineStatus(line, _historyManager))
                     {
+                        var result = form.ShowDialog();
+                        if (result == DialogResult.OK)
+                        {
 
+                        }
                     }
+                    ShowOrderDetailsByOrder(line.OrderId);
                 }
             }
-            ShowOrderDetailsByOrder(line.OrderId);
+            
         }
 
         private void MBReturnToStock_Click(object sender, EventArgs e)
         {
-            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
+            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger
+                , _workstationView);
             var orders = GetSelectedOrders(DataGridView1);
             if (orders.Any())
             {
@@ -5181,7 +5317,7 @@ namespace Neutron.Forms
                             uploadProcessor.ReturnOrderToStock(order);  //sets the RTS code to each OrderDetail line
                             order.OrderStatusId = (int)OrderStatus.Returned;  //Returned
                             _repoOrders.Update(order);
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderRts, order);
+                            _historyManager.SaveHistory(ActionCode.OrderRts, order);
                         }
                         if (_neutronVariables.CreateStoreOrderWithRts)
                         {
@@ -5199,7 +5335,7 @@ namespace Neutron.Forms
         //    {
         //        order.OrderStatusId = status;
         //        _repoOrders.Update(order);
-        //       GlobalVar.HistoryManager .SaveHistory(actionCode, order);
+        //       _historyManager .SaveHistory(actionCode, order);
         //    }
         //    catch (Exception ex)
         //    {
@@ -5215,7 +5351,7 @@ namespace Neutron.Forms
             {
                 detail.LineStatusId = lineStatusId;
                 _repoOrderDetails.Update(detail);
-                GlobalVar.HistoryManager.SaveHistory(actionCode, detail, detail.StationNumber);
+                _historyManager.SaveHistory(actionCode, detail, detail.AreaId);
             }
             catch (Exception ex)
             {
@@ -5249,9 +5385,9 @@ namespace Neutron.Forms
                                  (int)LineStatus.Complete;
         }
 
-        private void ShowOrderDetailsByOrderAndStation(Order order, int stationNumber)
+        private void ShowOrderDetailsByOrderAndWorkstation(Order order, WorkstationView workstationView)
         {
-            var details = _orderDetailsRepository.GetOrderDetailsByOrderAndStation(order.Id, stationNumber);
+            var details = _orderDetailsRepository.GetOrderDetailsByOrderAndWorkstation(order.Id, workstationView);
             if (!details.Any()) return;
             foreach (var detail in details)
             {
@@ -5283,10 +5419,10 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"Job Manager Main Screen Start"));
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
             LabelFormTitle.BackColor = Color.RoyalBlue;
-            MBOffCarousel.Visible = _stationView.StationTypeId == (int)StationType.Supervisor ||
-                                    _stationView.StationTypeId == (int)StationType.Rack;
+            //MBOffCarousel.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor ||
+            //                        _workstationView.StationTypeId == (int)StationType.Rack;
 
-            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
             MBCompress.Visible = false;
             tabControl1.SelectedTab = OrderListing;
             MBShowAvailable.Focus();
@@ -5297,8 +5433,7 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             _previousTab = null;
-            if (_stationView.StationType.Id == (int)StationType.Supervisor ||
-                _stationView.StationType.Id == (int)StationType.Rack)
+            if (_workstationView.StationType.Id == (int)StationType.Supervisor)
             {
                 ShowAvailableRackScreen();
             }
@@ -5462,7 +5597,7 @@ namespace Neutron.Forms
             var prevQty = inv.Quantity;
             inv.Quantity = qty;
             _repoInventory.Update(inv);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryModify, inv);
+            _historyManager.SaveHistory(ActionCode.InventoryModify, inv);
 
             var locationCount = new LocationCount()
             {
@@ -5475,16 +5610,16 @@ namespace Neutron.Forms
                 CountDate = DateTime.Now,
             };
             // _repoLocationCount.Insert(locationCount);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.LocationCount, locationCount);
+            _historyManager.SaveHistory(ActionCode.LocationCount, locationCount);
         }
 
-        private void SetCurrentInventoryView(int inventoryId)
-        {
-            var rec = _bindingSourceHot.List.OfType<InventoryView>().ToList().Find(f => f.Id == inventoryId);
-            var pos = _bindingSourceHot.IndexOf(rec);
-            _bindingSourceHot.Position = pos;
-            _currentInventoryView = (SqlInventoryView)_bindingSourceHot.Current;
-        }
+        //private void SetCurrentInventoryView(int inventoryId)
+        //{
+        //    var rec = _bindingSourceHot.List.OfType<InventoryView>().ToList().Find(f => f.Id == inventoryId);
+        //    var pos = _bindingSourceHot.IndexOf(rec);
+        //    _bindingSourceHot.Position = pos;
+        //    _currentInventoryView = (SqlInventoryView)_bindingSourceHot.Current;
+        //}
 
         private void MBShowAvailable_Click(object sender, EventArgs e)
         {
@@ -5492,8 +5627,8 @@ namespace Neutron.Forms
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
             MBCompress.Visible = false;
-            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
-            MBKillOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
             Cursor.Current = Cursors.Default;
         }
 
@@ -5541,12 +5676,12 @@ namespace Neutron.Forms
             MBRelease.Visible = true;
             MBReturnToStock.Visible = _neutronVariables.UseReturnToStock;
             MBReturnToStockOrderDetail.Visible = _neutronVariables.UseReturnToStock;
-            MBDeleteOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-            MBCompress.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-            MBKillLine.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-            MBKillLineSkip.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-            MBKillOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-            MBKillOrderRack.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+            MBCompress.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillLine.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillLineSkip.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+            MBKillOrderRack.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
         }
 
         //private void HideButtons()
@@ -5556,12 +5691,12 @@ namespace Neutron.Forms
         //    MBRelease.Visible = false;
         //    MBReturnToStock.Visible = false;
         //    MBReturnToStockOrderDetail.Visible = false;
-        //    MBDeleteOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-        //    MBCompress.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillLine.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillLineSkip.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillOrder.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
-        //    MBKillOrderRack.Visible = _stationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBDeleteOrder.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBCompress.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillLine.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillLineSkip.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillOrder.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
+        //    MBKillOrderRack.Visible = _workstationView.StationTypeId == (int)StationType.Supervisor;
         //}
 
         //Ready
@@ -5631,7 +5766,7 @@ namespace Neutron.Forms
             {
                 var currentItem = (NewItemView)_bindingSourceItems.Current;
                 LabelNewOrderItemId.Text = currentItem.ItemDefinitionId.ToString();
-                LabelNewOrderStationNumber.Text = currentItem.StationNumber.ToString();
+                LabelNewOrderStationNumber.Text = currentItem.AreaId.ToString();
                 TextBoxNewOrderItem.Text = currentItem.Item;
                 TextBoxNewOrderDescription.Text = currentItem.Description;
                 TextBoxNewOrderQuantity.Focus();
@@ -5649,7 +5784,7 @@ namespace Neutron.Forms
             {
                 ItemDefinitionId = LabelNewOrderItemId.Text.ParseInt()
                 ,
-                StationNumber = LabelNewOrderStationNumber.Text.ParseInt()
+                AreaId = LabelNewOrderStationNumber.Text.ParseInt()
                 ,
                 Item = TextBoxNewOrderItem.Text
                 ,
@@ -5749,7 +5884,7 @@ namespace Neutron.Forms
                         ItemDefinitionId = itemDefinitionId,
                         OrderId = order.Id,
                         Quantity = view.Quantity,
-                        StationNumber = view.StationNumber,
+                        AreaId = view.AreaId,
                         LineStatusId = (int)LineStatus.Available,
                         DateTime = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(),
                         EmpId = GlobalVar.User.EmpId,
@@ -5782,7 +5917,7 @@ namespace Neutron.Forms
                 {
                     g.ItemDefinitionId
                     ,
-                    g.ItemDefinition.Station.StationNumber
+                    g.ItemDefinition.AreaId
                     ,
                     g.ItemDefinition.Item
                     ,
@@ -5792,7 +5927,7 @@ namespace Neutron.Forms
                         {
                             ItemDefinitionId = r.Key.ItemDefinitionId
                             ,
-                            StationNumber = r.Key.StationNumber
+                            AreaId = r.Key.AreaId
                             ,
                             Item = r.Key.Item
                             ,
@@ -6067,7 +6202,7 @@ namespace Neutron.Forms
         /// <returns>Return a List of <see cref="OrderView"/> records.</returns>
         private List<AvailableOrdersView> GetValidOrdersFromBindingSource(string orderNumber)
         {
-            var list = _ordersRepository.GetAvailableOrdersForInductionScreen(_stationView, string.Empty);
+            var list = _ordersRepository.GetAvailableOrdersForInductionScreen(_workstationView, string.Empty);
             // Convert the AvailableOrders BindingSource to a List 
             //var list =  _bindingSourceAvailableOrders.List.OfType<AvailableOrdersView>();
 
@@ -6250,7 +6385,8 @@ namespace Neutron.Forms
         private void MBReturnToStockOrderDetail_Click(object sender, EventArgs e)
         {
             var orderId = 0;
-            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger, _rackStation);
+            var uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger
+                , _workstationView);
             var orderDetails = GetSelectedOrderDetails(DataGridViewOrderDetails);
             if (orderDetails.Any())
             {
@@ -6265,7 +6401,7 @@ namespace Neutron.Forms
                             uploadProcessor.ReturnToStock(orderDetail);
                             orderDetail.LineStatusId = (int)LineStatus.Returned;
                             _repoOrderDetails.Update(orderDetail);
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderRts, orderDetail);
+                            _historyManager.SaveHistory(ActionCode.OrderRts, orderDetail);
                         }
                         if (_neutronVariables.CreateStoreOrderWithRts)
                         {
@@ -6342,7 +6478,7 @@ namespace Neutron.Forms
                             TroubleBit = detailLine.TroubleBit,
                             TypeCode = detailLine.TypeCode,
                             LineStatusId = (int)LineStatus.Available,
-                            StationNumber = rec.Location.Station.StationNumber
+                            AreaId = rec.Location.AreaId
                         };
                         try
                         {
@@ -6440,7 +6576,7 @@ namespace Neutron.Forms
                                     TroubleBit = hostOrder.TroubleBit,
                                     TypeCode = hostOrder.TypeCode,
                                     LineStatusId = (int)LineStatus.Available,
-                                    StationNumber = rec.Location.Station.StationNumber
+                                    AreaId = rec.Location.AreaId
                                 };
                                 try
                                 {
@@ -6476,7 +6612,8 @@ namespace Neutron.Forms
                 {
                     item.LineStatusId = (int)LineStatus.Available;
                     _repoOrderDetails.Update(item);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.ReleaseLine, item);
+                    item.Order = _repoOrders.FindByKey(item.OrderId);
+                    _historyManager.SaveHistory(ActionCode.ReleaseLine, item);
                 }
             }
             ShowOrderDetails(orderId);
@@ -6494,7 +6631,10 @@ namespace Neutron.Forms
                     {
                         item.LineStatusId = (int)LineStatus.Hold;
                         _repoOrderDetails.Update(item);
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.HoldLine, item);
+
+                        item.Order = _repoOrders.FindByKey(item.OrderId);
+
+                        _historyManager.SaveHistory(ActionCode.HoldLine, item);
                     }
                 }
                 ShowOrderDetails(orderId);
@@ -6544,15 +6684,15 @@ namespace Neutron.Forms
                 //using (var frm = DI.Create<FrmHotAction>(
                 //          _neutronVariables
                 //          , _neutronLicense
-                //          , _stationView
+                //          , _workstationView
                 //          , _historyManager
                 //          , item))
                 //          //, quantity))
                 //          //, null))
 
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                                          , _lacProcessor, _imageManager, _stationRepository, _itemDefinitionsRepository, _neutronVariables
-                                          , _neutronLicense, _stationView, _historyManager, item))
+                                          , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                                          , _neutronLicense, _workstationView, _historyManager, _locationsRepository, item))
                 {
                     //frm.Item = item;
                     var result = frm.ShowDialog();
@@ -6776,7 +6916,7 @@ namespace Neutron.Forms
             if (linesNotComplete.Any()) return false;
 
             order.OrderStatusId = (int)OrderStatus.Complete;
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _stationView.StationId);
+            _historyManager.SaveHistory(ActionCode.OrderComplete, order);
             _repoOrders.Update(order);
             Mediator.GetInstance().OnOrderComplete(this, order);
             return true;
@@ -6938,7 +7078,7 @@ namespace Neutron.Forms
             ShowCompleted();
             MBDeleteOrder.Visible = false;
             MBKillOrder.Visible = false;
-            MBCompress.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBCompress.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
 
         }
 
@@ -6958,10 +7098,10 @@ namespace Neutron.Forms
                     foreach (var orderDetail in order.OrderDetails)
                     {
                         _repoOrderDetails.Delete(orderDetail.Id);
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderDetailDelete, orderDetail);
+                        _historyManager.SaveHistory(ActionCode.OrderDetailDelete, orderDetail);
                     }
                     _repoOrders.Delete(order.Id);
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderDelete, order);
+                    _historyManager.SaveHistory(ActionCode.OrderDelete, order);
                 }
             }
             ShowAllOrders();
@@ -6998,7 +7138,7 @@ namespace Neutron.Forms
         //        foreach (DataGridViewRow row in DataGridViewAvailableOrdersRack.Rows)
         //        {
         //            if (row.Cells["Ord1"].Value.ToString().Trim() == TextBoxFindAvailableOrdersRack.Text)
-        //            {
+        //            {_pickStations
         //                var chk = (DataGridViewCheckBoxCell) row.Cells[0];
         //                row.Cells[0].Value = chk.TrueValue;
         //                TextBoxFindAvailableOrdersRack.Text = string.Empty;
@@ -7009,22 +7149,57 @@ namespace Neutron.Forms
         //    }
         //}
 
+        //private void ButtonPrintAO_Click(object sender, EventArgs e)
+        //{
+        //    var anticipatedOuts = new List<AnticipatedOut>();
+        //    //if (_workstationView.StationType.Id == (int)StationType.Supervisor)
+        //    if (ComboBoxStationNumber.SelectedText == "ALL")
+        //    {
+        //        // print all workstation if Supervisor Workstation
+        //        foreach (var pickStation in _pickStations)
+        //        {
+        //            anticipatedOuts = GetAnticipatedOutsByWorkstation(pickStation.Id);
+        //            _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        var workstationId =  ((Workstation)ComboBoxStationNumber.SelectedItem).Id;
+        //        anticipatedOuts = GetAnticipatedOutsByWorkstation(workstationId);
+        //        _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+        //    }
+        //}
+        /// <summary>
+        /// Print Anticipated Outs by Area
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonPrintAO_Click(object sender, EventArgs e)
         {
-            var outs = new List<AnticipatedOut>();
-            if (_stationView.StationType.Id == (int)StationType.Supervisor)
+            var anticipatedOuts = new List<AnticipatedOut>();
+
+            if ((string)ComboBoxAreaNumber.SelectedValue == "ALL")
             {
-                // print all station if Supervisor Station
-                foreach (var pickStation in _pickStations)
+                // print all areas  
+                foreach (var area in _areaRepository.GetAllPickableAreas())
                 {
-                    outs = GetAnticipatedOuts(pickStation.Id);
-                    _documentToPrint.PrintAnticipatedOuts(outs, _documentPrinter, _neutronVariables.PrintPreview);
+                    anticipatedOuts = GetAnticipatedOutsByArea(area.Id);
+                    if (anticipatedOuts.Any())
+                    {
+                        _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+                    }
                 }
             }
             else
             {
-                outs = GetAnticipatedOuts(_stationView.StationId);
-                _documentToPrint.PrintAnticipatedOuts(outs, _documentPrinter, _neutronVariables.PrintPreview);
+                var areaNumber = int.Parse((string)ComboBoxAreaNumber.SelectedValue);
+                var areaId = _areaRepository.GetAreaId(areaNumber);
+                anticipatedOuts = GetAnticipatedOutsByArea(areaId);
+                if (anticipatedOuts.Any())
+                {
+                    _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter,
+                        _neutronVariables.PrintPreview);
+                }
             }
         }
 
@@ -7040,20 +7215,10 @@ namespace Neutron.Forms
 
         private void MBAdjustOrder_Click(object sender, EventArgs e)
         {
-
-            int stationNumber;
-            if (_stationView.StationType.Id == (int)StationType.Supervisor)
-            {
-                stationNumber = _rackStation.StationNumber;
-            }
-            else
-            {
-                stationNumber = _stationView.StationNumber;
-            }
             var orders = GetSelectedOrders(DataGridViewAvailableOrdersRack);
             if (orders.Any())
             {
-                ShowOrderDetailsByOrderAndStation(orders.First(), stationNumber);
+                ShowOrderDetailsByOrderAndWorkstation(orders.First(), _workstationView);
             }
         }
 
@@ -7068,7 +7233,7 @@ namespace Neutron.Forms
                     order = detail.Order;
                     detail.LineStatusId = (int)LineStatus.Complete;
                     detail.EmpId = GlobalVar.User.EmpId;
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.StoreRack, detail);
+                    _historyManager.SaveHistory(ActionCode.StoreRack, detail);
                     _repoOrderDetails.Update(detail);
                 }
                 //Mediator.GetInstance().OnBatchComplete(this);
@@ -7093,21 +7258,13 @@ namespace Neutron.Forms
 
         private void MBRackOrderComplete_Click(object sender, EventArgs e)
         {
-            int stationNumber;
-            if (_stationView.StationType.Id == (int)StationType.Supervisor)
-            {
-                stationNumber = _rackStation.StationNumber;
-            }
-            else
-            {
-                stationNumber = _stationView.StationNumber;
-            }
+
             var orders = GetSelectedOrders(DataGridViewAvailableOrdersRack);
             if (orders.Count > 0)
             {
                 foreach (var order in orders)
                 {
-                    var detailLinesThisStation = _repoOrderDetails.FindBy(r => r.OrderId == order.Id && r.StationNumber == stationNumber).ToList();
+                    var detailLinesThisStation = _repoOrderDetails.FindBy(r => r.OrderId == order.Id && _areaIdsForThisWorkstation.Contains(r.AreaId)).ToList();
                     if (detailLinesThisStation.Count > 0)
                     {
                         foreach (var detail in detailLinesThisStation)
@@ -7115,7 +7272,7 @@ namespace Neutron.Forms
                             detail.LineStatusId = (int)LineStatus.Complete;
                             detail.PickedQuantity = detail.Quantity;
                             detail.EmpId = GlobalVar.User.EmpId;
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.PickRack, detail, _rackStation.Id);
+                            _historyManager.SaveHistory(ActionCode.PickRack, detail, _workstationView.WorkstationId);
                             _repoOrderDetails.Update(detail);
                         }
                         // Mediator.GetInstance().OnBatchComplete(this);
@@ -7169,8 +7326,8 @@ namespace Neutron.Forms
             _currentDataSet = CurrentDataSet.Available;
             ShowAllOrders();
             MBCompress.Visible = false;
-            MBKillOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
-            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
 
 
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
@@ -7213,9 +7370,10 @@ namespace Neutron.Forms
                     var skipInventory = new SkipInventoryView();
                     skipInventory.InventoryId = invView.Id;
                     skipInventory.StorageType = invView.StorageTypeName;
-                    skipInventory.StationNumber = invView.StationNumber;
+                    skipInventory.AreaId = invView.AreaId;
                     skipInventory.Quantity = invView.Quantity;
                     skipInventory.Slot = invView.Slot;
+                    skipInventory.PickSequence = invView.PickSequence;
                     skipInventory.Item = invView.Item;
                     skipInventory.Description = invView.Description;
 
@@ -7263,10 +7421,10 @@ namespace Neutron.Forms
 
                 //var currentSkip = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
                 currentSkip.Picked = currentSkip.Quantity;
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
+                _historyManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
 
                 currentSkip.Picked = currentSkip.Quantity;
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipPick, currentSkip);
+                _historyManager.SaveHistory(ActionCode.SkipPick, currentSkip);
 
                 var detail = _repoOrderDetails.FindByKey(currentSkip.OrderDetail.Id);
 
@@ -7303,10 +7461,10 @@ namespace Neutron.Forms
 
                 //    var currentSkip = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
                 currentSkip.Picked = 0;
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
+                _historyManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
 
                 //currentSkip.Picked = 0;
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipPick, currentSkip);
+                _historyManager.SaveHistory(ActionCode.SkipPick, currentSkip);
 
                 var detail = _repoOrderDetails.FindByKey(currentSkip.OrderDetail.Id);
 
@@ -7350,10 +7508,10 @@ namespace Neutron.Forms
                     {
                         var newQty = form.NewQty;
                         currentSkip.Picked = newQty;
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
+                        _historyManager.SaveHistory(ActionCode.SkipReplen, currentSkip);
 
                         //currentSkip.Picked = newQty;
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.SkipPick, currentSkip);
+                        _historyManager.SaveHistory(ActionCode.SkipPick, currentSkip);
 
                         // Mediator.GetInstance().OnBatchComplete(this);
 
@@ -7392,8 +7550,8 @@ namespace Neutron.Forms
             _currentDataSet = CurrentDataSet.Rack;
             ShowRackOrders();
             MBCompress.Visible = false;
-            MBKillOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
-            MBDeleteOrder.Visible = _stationView.StationType.Id == (int)StationType.Supervisor;
+            MBKillOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
+            MBDeleteOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
             Cursor.Current = Cursors.Default;
         }
 
@@ -7476,19 +7634,19 @@ namespace Neutron.Forms
         private void MBRackHotAction_Click(object sender, EventArgs e)
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
-            var stationView = _stationRepository.GetStationView(8);
+            var workstationView = _workstationRepository.GetStationView(8);
             Hide();
             //using (var frm = DI.Create<FrmHotAction>(
             //           _neutronVariables
             //           , _neutronLicense
-            //           , _stationView
+            //           , _workstationView
             //           , _historyManager))
             ////, 1
             ////, null))
 
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                       , _lacProcessor, _imageManager, _stationRepository, _itemDefinitionsRepository, _neutronVariables
-                       , _neutronLicense, _stationView, _historyManager))
+                       , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
 
             {
                 var result = frm.ShowDialog();
@@ -7836,7 +7994,7 @@ namespace Neutron.Forms
                     }
                     if (e.KeyCode == Keys.F12)
                     {
-                        //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor, _stationView))
+                        //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor, _workstationView))
                         using (var frm = DI.Create<FrmInventory>())
                         {
                             var result = frm.ShowDialog();
@@ -7968,7 +8126,7 @@ namespace Neutron.Forms
                         if (order.OrderStatusId == (int)OrderStatus.Available)
                         {
                             KillLine(order.OrderDetails);
-                            GlobalVar.HistoryManager.SaveHistory(ActionCode.KillOrder, order, _stationView.StationId);
+                            _historyManager.SaveHistory(ActionCode.KillOrder, order);
                             CheckForOrderComplete(order);
                         }
                     }
@@ -7991,11 +8149,11 @@ namespace Neutron.Forms
                     if ((orderDetail.LineStatusId == (int)LineStatus.Available || orderDetail.LineStatusId == (int)LineStatus.Skipped)
                         && order.OrderStatusId == (int)OrderStatus.Available)
                     {
-                        var stationId = _stationRepository.GetStationId(orderDetail.StationNumber);
+                        var areaId = orderDetail.AreaId;
                         orderDetail.PickedQuantity = 0;
                         orderDetail.LineStatusId = (int)LineStatus.Complete;
                         _repoOrderDetails.Update(orderDetail);
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.KillLine, orderDetail, stationId);
+                        _historyManager.SaveHistory(ActionCode.KillLine, orderDetail, areaId);
                         CheckForOrderComplete(order);
                     }
                 }
@@ -8056,7 +8214,7 @@ namespace Neutron.Forms
             if (linesNotComplete.Any()) return false;
             Task.Run(() => _logger.LogDetailAsync($"CheckForOrderComplete Order is Complete.  Ord:{order.Ord1}   Res:{order.Ord2} "));
             order.OrderStatusId = (int)OrderStatus.Complete;
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _stationView.StationId);
+            _historyManager.SaveHistory(ActionCode.OrderComplete, order);
             _repoOrders.Update(order);
             return true;
         }
@@ -8284,7 +8442,7 @@ namespace Neutron.Forms
         //    //    return;
         //    //}
         //    //// If there is something in the TextBox, see if it's a valid order
-        //    //// to be picked on this station.
+        //    //// to be picked on this workstation.
         //    //// If it is NOT, just return
         //    //if (ValidateOrderAndPosition(position, orderNumber)) return;
         //    //// If the order is NOT valid

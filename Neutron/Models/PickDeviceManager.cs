@@ -9,6 +9,7 @@ using Neutron.Global;
 using NeutronCore;
 using NeutronData.Models;
 using NeutronData.ModelViews;
+using static DGVPrinterHelper.DGVPrinter;
 
 namespace Neutron.Models
 {
@@ -17,7 +18,7 @@ namespace Neutron.Models
         private readonly List<DeviceMover> _deviceMovers = new List<DeviceMover>();
         private readonly bool _shuttleEnabled;
         private DynamicLogger _logger;
-        private readonly Dictionary<int, Location> _currentLocations = new Dictionary<int, Location>();
+        private readonly Dictionary<int, NeutronData.Models.Location> _currentLocations = new Dictionary<int, NeutronData.Models.Location>();
 
         public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled)
         {
@@ -44,7 +45,7 @@ namespace Neutron.Models
         {
             _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
             var firstLocation = true;
-            var locs = new List<Location>();
+            var locs = new List<NeutronData.Models.Location>();
             foreach (var pickStop in carList)
             {
                 locs.Add(pickStop.CurrentInventoryLocation.Location);
@@ -68,12 +69,21 @@ namespace Neutron.Models
                 {
                     var loc1 = location.Loc1;
                     var loc2 = location.Loc2;
+                    var loc3 = location.Loc3;
+                    var loc4 = location.Loc4;
+                    var loc5 = location.Loc5;
+                    
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
                         {
                             _logger.LogDetailAsync($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}");
                             GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                        }
+                        if (GlobalVar.Hanel != null)
+                        {
+                            _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
+                            GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4 );
                         }
                     }
                 }
@@ -101,6 +111,10 @@ namespace Neutron.Models
                 {
                     var loc1 = kvp.Value.Loc1;
                     var loc2 = kvp.Value.Loc2;
+                    var loc3 = kvp.Value.Loc3;
+                    var loc4 = kvp.Value.Loc4;
+                    var loc5 = kvp.Value.Loc5;
+
                     _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                     if (_shuttleEnabled)
                     {
@@ -113,6 +127,11 @@ namespace Neutron.Models
                             //    MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: @"Device Response Reset"
                             //        , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                             //}
+                        }
+                        if (GlobalVar.Hanel != null)
+                        {
+                            _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
+                            GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
                         }
                     }
                 }
@@ -128,6 +147,10 @@ namespace Neutron.Models
                 {
                     var loc1 = kvp.Value.Loc1;
                     var loc2 = kvp.Value.Loc2;
+                    var loc3 = kvp.Value.Loc3;
+                    var loc4 = kvp.Value.Loc4;
+                    var loc5 = kvp.Value.Loc5;
+
                     if (loc1 == moveNext)
                     {
                         _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
@@ -140,6 +163,10 @@ namespace Neutron.Models
                         if (GlobalVar.Shuttle != null)
                         {
                             GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                        }
+                        if (GlobalVar.Hanel != null)
+                        {
+                            GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
                         }
                     }
                 }

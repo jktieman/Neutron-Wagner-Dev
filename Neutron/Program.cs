@@ -32,17 +32,18 @@ namespace Neutron
         static void Main()
         {
 
-
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
 
             const string appName = "Neutron";
 
-            bool createdNew;
-            _mutex = new Mutex(initiallyOwned: true, name: appName, createdNew: out createdNew);
+            _mutex = new Mutex(initiallyOwned: true, name: appName, createdNew: out var createdNew);
             if (!createdNew)
             {
                 //app is already running!  Exiting the application
+                MessageBox.Show("Neutron application is already running.", "Neutron Startup", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
                 return;
             }
 
@@ -56,7 +57,14 @@ namespace Neutron
             jsonData.RootDirectory = rootDirectory;
             LoaderSettings.SetRootDirectory(rootDirectory);
 
-            var context = new NeutronDb().CheckConnection();
+            // Check the Database connections
+            var context = false;
+            var neutron = new NeutronDb().CheckConnection();
+            var secure = new SecureDb().CheckConnection();
+            if (neutron && secure)
+            {
+                context = true;
+            }
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
             var neutronLicense = jsonData.LoadFile<NeutronLicense>();

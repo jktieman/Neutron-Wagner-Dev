@@ -9,7 +9,7 @@
         public int Level { get; set; }
         public int Part { get; set; }
         public int Qty { get; set; }
-        public int Station { get; set; }
+        public int AreaId { get; set; }
         public string Slot { get; set; }
     }
 }

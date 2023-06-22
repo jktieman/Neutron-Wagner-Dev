@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NeutronCore.Enums;
+using NeutronData.ModelViews;
 
 namespace NeutronLoader
 {
@@ -33,21 +34,21 @@ namespace NeutronLoader
         readonly NeutronLicense _neutronLicense;
         DynamicLogger _logger;
         private readonly IJsonData _jsonData;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
 
         public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger,
-            IJsonData jsonData, Station rackStation)
+            IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
         }
 
         public void LoadFile(FileInfo fileInfo)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationId);
+            CreateLog(name: "File Processor", stationNumber: _neutronVariables.WorkstationId);
             var orders = new List<HostOrder>();
 
             var filename = fileInfo.FullName;
@@ -70,7 +71,7 @@ namespace NeutronLoader
 
         public void LoadFiles(List<FileInfo> files)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.StationId);
+            CreateLog(name: "File Processor", stationNumber: _neutronVariables.WorkstationId);
             var orders = new List<HostOrder>();
             Thread.Sleep(millisecondsTimeout: 100);
             foreach (var fileInfo in files)
@@ -246,7 +247,7 @@ namespace NeutronLoader
                         hostOrder.TroubleBit = "1";
                         hostOrder.EmpId = ($"EmpId:--- Note: Item Not Found At That Location");
                         
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                         hostFile.CreateHostFile(hostOrder);
                     }
                 }
@@ -300,7 +301,7 @@ namespace NeutronLoader
                                     TroubleBit = hostOrder.TroubleBit,
                                     TypeCode = hostOrder.TypeCode,
                                     LineStatusId = (int)LineStatus.Available,
-                                    StationNumber = rec.Location.Station.StationNumber
+                                    AreaId = rec.AreaId
                                 };
                                 try
                                 {
@@ -337,7 +338,7 @@ namespace NeutronLoader
                                             TroubleBit = hostOrder.TroubleBit,
                                             TypeCode = hostOrder.TypeCode,
                                             LineStatusId = (int)LineStatus.Available,
-                                            StationNumber = location.Station.StationNumber
+                                            AreaId = location.AreaId
                                         };
                                         try
                                         {
@@ -355,7 +356,7 @@ namespace NeutronLoader
                                     _logger.Log($"{hostOrder.PrimeBin} is not set up in Locations. ");
                                     hostOrder.TroubleBit = "1";
                                     hostOrder.EmpId = ($"EmpId:--- Note: Location is not set up in Neutron");
-                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                                     hostFile.CreateHostFile(hostOrder);
                                 }
                             }
@@ -365,7 +366,7 @@ namespace NeutronLoader
                             _logger.Log($"{hostOrder.PartNum} is not set up in the System.");
                             hostOrder.TroubleBit = "1";
                             hostOrder.EmpId = ($"EmpId:--- Note: Item Not Defined in Shuttle");
-                            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                             hostFile.CreateHostFile(hostOrder);
                         }
                     }
@@ -388,7 +389,7 @@ namespace NeutronLoader
                 Quantity = 0,
                 ReceivedDate = DateTime.Now,
                 PrimeBin = true,
-                StationId = location.StationId,
+                AreaId = location.AreaId,
                 StorageTypeId = 1
             };
             try
@@ -459,7 +460,7 @@ namespace NeutronLoader
         {
 
             var distinctOrders = hostOrderLines.Select(s => s.JobNum).Distinct();
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
 
             foreach (var item in distinctOrders)
             {
@@ -585,7 +586,7 @@ namespace NeutronLoader
                         TroubleBit = hostOrder.TroubleBit,
                         TypeCode = hostOrder.TypeCode,
                         LineStatusId = (int)LineStatus.Available,
-                        StationNumber = inv.Location.Station.StationNumber
+                        AreaId = inv.AreaId
                     };
                     try
                     {
@@ -636,7 +637,7 @@ namespace NeutronLoader
                     TroubleBit = hostOrder.TroubleBit,
                     TypeCode = hostOrder.TypeCode,
                     LineStatusId = (int)LineStatus.Available,
-                    StationNumber = inv.Location.Station.StationNumber
+                    AreaId = inv.AreaId
                 };
                 try
                 {
@@ -679,7 +680,7 @@ namespace NeutronLoader
                     TroubleBit = hostOrder.TroubleBit,
                     TypeCode = hostOrder.TypeCode,
                     LineStatusId = (int)LineStatus.Available,
-                    StationNumber = inv.Location.Station.StationNumber
+                    AreaId = inv.AreaId
                 };
                 try
                 {
@@ -726,7 +727,7 @@ namespace NeutronLoader
                         TroubleBit = hostOrder.TroubleBit,
                         TypeCode = hostOrder.TypeCode,
                         LineStatusId = (int)LineStatus.Available,
-                        StationNumber = inv.Location.Station.StationNumber
+                        AreaId = inv.AreaId
                     };
                     try
                     {
@@ -812,7 +813,7 @@ namespace NeutronLoader
             if (location == null)
             {
                 var loc = new Location();
-                loc.StationId = def.StationId;
+                loc.AreaId = def.AreaId;
                 loc.Loc1 = hostOrder.PrimeBin.Substring(1, 1).ParseInt();
                 loc.Loc2 = hostOrder.PrimeBin.Substring(2, 2).ParseInt();
                 loc.Loc3 = hostOrder.PrimeBin.Substring(5, 2).ParseInt();
@@ -822,7 +823,7 @@ namespace NeutronLoader
                 loc.SizeCodeId = def.SizeCodeId;
                 loc.HeightCodeId = def.HeightCodeId;
                 loc.VelocityCodeId = def.VelocityCodeId;
-                loc.LocationCodeId = def.LocationCodeId;
+                loc.LocationCode = string.Empty;
                 loc.InUse = true;
 
                 _repoLocation.Insert(loc);

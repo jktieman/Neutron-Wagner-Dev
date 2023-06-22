@@ -45,10 +45,10 @@ namespace NeutronMaintenance
                     else  //ADD a new ItemDefinition
                     {
                         itemDefinition = new ItemDefinition();
-                        int stationId = GetStationId(item.Station);
-                        if (stationId > 0)
+                        int areaId = item.AreaId;
+                        if (areaId > 0)
                         {
-                            itemDefinition.StationId = stationId;
+                            itemDefinition.AreaId = areaId;
                             int unitOfIssueId = GetUnitOfIssueId(item.UnitOfIssue);
                             if (unitOfIssueId > 0)
                             {
@@ -72,18 +72,6 @@ namespace NeutronMaintenance
                                             if (heightCodeId > 0)
                                             {
                                                 itemDefinition.HeightCodeId = heightCodeId;
-                                            }
-                                        }
-                                        if (string.IsNullOrEmpty(item.LocationCode))
-                                        {
-                                            itemDefinition.LocationCodeId = db.LocationCodes.FirstOrDefault().Id;
-                                        }
-                                        else
-                                        {
-                                            int locationCodeId = GetLocationCodeId(item.LocationCode);
-                                            if (locationCodeId > 0)
-                                            {
-                                                itemDefinition.LocationCodeId = locationCodeId;
                                             }
                                         }
                                         int storageTypeId = GetStorageTypeId(item.StorageType);
@@ -120,119 +108,83 @@ namespace NeutronMaintenance
 
         private int GetStorageTypeId(string storageTypeVar)
         {
-            StorageType storageType;
-            storageType = db.StorageTypes.Where(s => s.Name.ToLower().Trim() == storageTypeVar.ToLower().Trim()).FirstOrDefault();
+            var storageType = db.StorageTypes.FirstOrDefault(s => s.Name.ToLower().Trim() == storageTypeVar.ToLower().Trim());
             if (storageType != null)
             {
                 return storageType.Id;
             }
-            else
-            {
-                return -1;
-            }
-        }
-
-        private int GetLocationCodeId(string locationCodeVar)
-        {
-            LocationCode locationCode;
-            locationCodeVar = locationCodeVar.TrimStart('0');
-            locationCode = db.LocationCodes.Where(s => s.Name.ToLower().Trim() == locationCodeVar.ToLower().Trim()).FirstOrDefault();
-            if (locationCode != null)
-            {
-                return locationCode.Id;
-            }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         private int GetHeightCodeId(string heightCodeVar)
         {
-            HeightCode heightCode;
             heightCodeVar = heightCodeVar.TrimStart('0');
-            heightCode = db.HeightCodes.Where(s => s.Name.ToLower().Trim() == heightCodeVar.ToLower().Trim()).FirstOrDefault();
+            var heightCode = db.HeightCodes.FirstOrDefault(s => s.Name.ToLower().Trim() == heightCodeVar.ToLower().Trim());
             if (heightCode != null)
             {
                 return heightCode.Id;
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         private int GetVelocityCodeId(string velocityCodeVar)
         {
-            VelocityCode velocityCode;
             velocityCodeVar = velocityCodeVar.TrimStart('0');
-            velocityCode = db.VelocityCodes.Where(s => s.Name.ToLower().Trim() == velocityCodeVar.ToLower().Trim()).FirstOrDefault();
+            var velocityCode = db.VelocityCodes.FirstOrDefault(s => s.Name.ToLower().Trim() == velocityCodeVar.ToLower().Trim());
             if (velocityCode != null)
             {
                 return velocityCode.Id;
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         private int GetSizeCodeId(string sizeCodeVar)
         {
-            string scode = sizeCodeVar.TrimStart('0');
-            SizeCode sizeCode;
-            sizeCode = db.SizeCodes.Where(s => s.Name.ToLower().Trim() == scode.ToLower().Trim()).FirstOrDefault();
+            var scode = sizeCodeVar.TrimStart('0');
+            var sizeCode = db.SizeCodes.FirstOrDefault(s => s.Name.ToLower().Trim() == scode.ToLower().Trim());
             if (sizeCode != null)
             {
                 return sizeCode.Id;
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         private int GetUnitOfIssueId(string unitOfIssueVar)
         {
-            UnitOfIssue unitOfIssue;
-            unitOfIssue = db.UnitOfIssues.Where(s => s.Name.ToLower().Trim() == unitOfIssueVar.ToLower().Trim()).FirstOrDefault();
+            var unitOfIssue = db.UnitOfIssues.FirstOrDefault(s => s.Name.ToLower().Trim() == unitOfIssueVar.ToLower().Trim());
             if (unitOfIssue != null)
             {
                 return unitOfIssue.Id;
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         private int GetStationId(string stationVar)
         {
-            Station station;
-            int result = -1;
-            int id;
-            int.TryParse(stationVar, out id);
-            // if it's a number, look for StationNumber
-            try
-            {
-                if (stationVar.IsNumeric())
-                {
-                    station = db.Stations.Where(s => s.StationNumber == id).FirstOrDefault();
-                }
-                else  // if it's a string, look for Station Name
-                {
-                    station = db.Stations.Where(s => s.Name.ToLower().Trim() == stationVar.ToLower().Trim()).FirstOrDefault();
-                }
-                if (station != null)
-                {
-                    result = station.Id;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Station Error: {ex.Message} \r\n {ex.InnerException} \r\n {ex.InnerException.Message} \r\n {ex.InnerException.InnerException.Message}");
+            var result = -1;
+            //int.TryParse(stationVar, out var id);
+            //// if it's a number, look for StationNumber
+            //try
+            //{
+            //    Station station;
+            //    if (stationVar.IsNumeric())
+            //    {
+            //        station = db.Stations.FirstOrDefault(s => s.StationNumber == id);
+            //    }
+            //    else  // if it's a string, look for Station Name
+            //    {
+            //        station = db.Stations.FirstOrDefault(s => s.Name.ToLower().Trim() == stationVar.ToLower().Trim());
+            //    }
+            //    if (station != null)
+            //    {
+            //        result = station.Id;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Station Error: {ex.Message} \r\n {ex.InnerException} \r\n {ex.InnerException.Message} \r\n {ex.InnerException.InnerException.Message}");
 
-            }
+            //}
             return result;
         }
     }

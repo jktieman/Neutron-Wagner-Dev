@@ -51,7 +51,7 @@ namespace Neutron.Controllers
         private readonly bool _bliEnabled;
         private readonly bool _shiEnabled;
 
-        private readonly StationView _station;
+        private readonly WorkstationView _workstation;
 
         private DynamicLogger _logger;
 
@@ -65,9 +65,9 @@ namespace Neutron.Controllers
         public event EventHandler<MySerialDataReceivedEventArgs> MySerialDataReceived;
         public bool Ready { get; set; }
 
-        public IptiController(IJsonData jsonData, StationView station, NeutronVariables neutronVariables)
+        public IptiController(IJsonData jsonData, WorkstationView workstation, NeutronVariables neutronVariables)
         {
-            _station = station;
+            _workstation = workstation;
             _neutronVariables = neutronVariables;
 
             _bliEnabled = _neutronVariables.BliEnabled;
@@ -252,7 +252,7 @@ namespace Neutron.Controllers
         {
             var logFileDir = LoaderSettings.GetLogFileDirectory();
             var folderName =
-                $"Display Controller_{_station.StationNumber.ToString()}";
+                $"Display Controller_{_workstation.WorkstationNumber.ToString()}";
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
@@ -321,7 +321,7 @@ namespace Neutron.Controllers
             var loggingMessage = string.Empty;
 
             var displayDevice = _repoHardwareDevice
-                .FindBy(r => r.DeviceTypeId == (int)DeviceType.IptiDisplays && r.StationId == _station.StationId).FirstOrDefault();
+                .FindBy(r => r.DeviceTypeId == (int)DeviceType.IptiDisplays && r.WorkstationId == _workstation.WorkstationId).FirstOrDefault();
             if (displayDevice != null)
             {
                 var serialConfiguration = _repoSerial.FindBy(r => r.Id == displayDevice.SerialConfigurationId).FirstOrDefault();
@@ -667,7 +667,7 @@ namespace Neutron.Controllers
         public void GetTowerLevelInfoList()
         {
             var towerList = new Dictionary<int, TowerLevelInfo>();
-            if (_station.StationNumber == 1)
+            if (_workstation.WorkstationNumber == 1)
             {
                 var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Left" };
                 towerList.Add(11, rec);
@@ -735,7 +735,7 @@ namespace Neutron.Controllers
                 towerList.Add(48, rec);
             }
 
-            if (_station.StationNumber == 2)
+            if (_workstation.WorkstationNumber == 2)
             {
                 var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
                 towerList.Add(11, rec);
@@ -803,7 +803,7 @@ namespace Neutron.Controllers
                 towerList.Add(48, rec);
             }
 
-            if (_station.StationNumber == 3)
+            if (_workstation.WorkstationNumber == 3)
             {
                 var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
                 towerList.Add(11, rec);

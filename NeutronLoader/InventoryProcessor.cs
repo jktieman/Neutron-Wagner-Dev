@@ -46,7 +46,7 @@ namespace NeutronLoader
                 {
                     newDefinition = new Inventory
                     {
-                        StationId = location.StationId
+                        AreaId= location.AreaId
                         , ItemDefinitionId = itemDef.Id
                         , LocationId = location.Id
                         , StorageTypeId = 1

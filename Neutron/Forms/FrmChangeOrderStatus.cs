@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Neutron.Global;
 using NeutronCore.Enums;
@@ -19,19 +12,19 @@ namespace Neutron.Forms
     public partial class FrmChangeOrderStatus : Form
     {
         private readonly Order _order;
+        private readonly HistoryManager _historyManager;
         private readonly GenericRepository<OrderStatus> _repoStatus = new GenericRepository<OrderStatus>(new NeutronDb());
-
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
 
-        public FrmChangeOrderStatus(Order order)
+        public FrmChangeOrderStatus(Order order, HistoryManager historyManager)
         {
             _order = order;
+            _historyManager = historyManager;
             InitializeComponent();
             SetupStatusComboBox();
             if (order == null) return;
             LabelInfo.Text = order.Ord1;
             ComboBoxStatus.SelectedValue = order.OrderStatusId;
-
         }
 
         private void SetupStatusComboBox()
@@ -47,7 +40,7 @@ namespace Neutron.Forms
         {
             _order.OrderStatusId = ((OrderStatus) ComboBoxStatus.SelectedItem).Id;
             _repoOrders.Update(_order);
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.ChangePriority, _order);
+            _historyManager.SaveHistory(ActionCode.ChangePriority, _order);
             Close();
         }
     }

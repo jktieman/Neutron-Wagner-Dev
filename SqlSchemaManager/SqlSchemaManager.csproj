@@ -46,7 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SqlScripts\StoredProcedures\usp_GetLocationViewsByStationAndSlot">
+    <EmbeddedResource Include="SqlScripts\StoredProcedures\usp_GetLocationViewsByAreaAndSlot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

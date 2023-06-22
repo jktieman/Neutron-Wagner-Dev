@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using NeutronData.Interfaces;
+using NeutronData.ModelViews;
 
 namespace NeutronLoader
 {
@@ -21,18 +22,18 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
-        private readonly IStationRepository _stationRepository;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
         private readonly DynamicLogger _logger;
         private readonly int _rackStationId;
 
-        public HostFileSfh( NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
+        public HostFileSfh( NeutronLicense neutronLicense, NeutronVariables neutronVariables
+            , WorkstationView workstationView)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
             var logFileDir = LoaderSettings.GetLogFileDirectory();
@@ -40,19 +41,18 @@ namespace NeutronLoader
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
 
-            var rackStationIsNull = true;
-            // SAP requires a 9 for the Off Carousel station number
-            if (_rackStation == null)
-            {
-                _rackStationId = 8;
-            }
-            else
-            {
-                rackStationIsNull = false;
-                _rackStationId = _rackStation.Id;
-            }
-            _stationRepository = new StationRepository(_logger);
-            _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
+           // var rackStationIsNull = true;
+            // SAP requires a 9 for the Off Carousel area number 8
+            //if (_rackStation == null)
+            //{
+            //    _rackStationId = 8;
+            //}
+            //else
+            //{
+            //    rackStationIsNull = false;
+            //    _rackStationId = _rackStation.Id;
+            //}
+            //_logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 
         public bool CreateHostFile(List<History> historyRecs)
@@ -126,10 +126,11 @@ namespace NeutronLoader
                 string empName;
 
                 _logger.Log($"Get Upload Dat Record - Begin Try");
-                var stat = _stationRepository.GetStation(history.StationId);
+                //var stat = _workstationRepository.GetStation(history.AreaId);
+                var areaId = history.AreaId;
                 _logger.Log($"Get Upload Dat Record - 1");
-                var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
-                _logger.Log($"Get Upload Dat Record - Station Number: {station}");
+               // var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
+                _logger.Log($"Get Upload Dat Record - Station Number: {areaId}");
 
                 order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
                 _logger.Log($"Get Upload Dat Record - Order - Check For Hot Pick");
@@ -178,7 +179,7 @@ namespace NeutronLoader
 
                 _logger.Log($"Get Upload Dat Record - Begin StringBuilder 14");
                 var sb = new StringBuilder(new string(' ', 170));
-                sb.Insert(0, $"{station}O");
+                sb.Insert(0, $"{areaId}O");
                 sb.Insert(2, order);
                 sb.Insert(13, invoice);
                 sb.Insert(24, history.ActionDateTime.ToString("yyyyMMdd"));
@@ -190,7 +191,7 @@ namespace NeutronLoader
                 sb.Insert(104, upCode);
                 sb.Insert(107, empName);
                 sb.Insert(118, costCenter);
-                sb.Insert(129, station);
+                sb.Insert(129, areaId);
                 sb.Insert(130, orderDetailInfo);
                 sb.Length = 154;
 

@@ -12,7 +12,8 @@
         public string Description { get; set; }
         public int RequestedQuantity { get; set; }
         public int IssuedQuantity { get; set; }
-        public int StationNumber { get; set; }
+        public int WorkstationId { get; set; }
+        public int AreaId { get; set; }
         public int Loc1 { get; set; }
         public int Loc2 { get; set; }
         public int Loc3 { get; set; }
@@ -27,5 +28,6 @@
         public string TransmitDate { get; set; }
         public string OrderInfo { get; set; }
         public string OrderDetailInfo { get; set; }
+
     }
 }

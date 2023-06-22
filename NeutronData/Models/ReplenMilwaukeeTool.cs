@@ -9,7 +9,7 @@ namespace NeutronData.Models
     public class ReplenMilwaukeeTool
     {
         public int Id { get; set; }
-        public int StationId { get; set; }
+        public int AreaId { get; set; }
         public string Item { get; set; }
         public int RequestedQuantity { get; set; }
         public string Size { get; set; }

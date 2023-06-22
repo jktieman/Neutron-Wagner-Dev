@@ -29,16 +29,18 @@ namespace Neutron.Forms
         private bool _checkAllSecureItems;
         private SecureItem[] _secureItems;
         private readonly NeutronVariables _neutronVariables;
+        private readonly HistoryManager _historyManager;
         private User _currentUser;
         private List<User> _allUsers = new List<User>();
         public bool CloseButtonPressed { get; set; }
 
-        public FrmSecurity(NeutronVariables neutronVariables)
+        public FrmSecurity(NeutronVariables neutronVariables, HistoryManager historyManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             _neutronVariables = neutronVariables;
+            _historyManager = historyManager;
             ButtonDeleteEditUser.Enabled = false;
             CloseButtonPressed = false;
             SetupGrids();
@@ -445,7 +447,7 @@ namespace Neutron.Forms
             var empId = TextBoxEmpIdEditUser.Text.Trim();
             try
             {
-                var recs = GlobalVar.HistoryManager.GetHistoryRecordsByUser(empId).Take(50)
+                var recs = _historyManager.GetHistoryRecordsByUser(empId).Take(50)
                                  .OrderByDescending(h => h.ActionDateTime).ToList();
                 if (!recs.Any())
                 {

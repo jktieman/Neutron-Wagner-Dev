@@ -23,7 +23,7 @@ namespace NeutronData.Repositories
         }
         public IEnumerable<TEntity> All()
         {
-            return _dbSet.AsNoTracking().ToList();
+            return _dbSet.ToList();
         }
 
         public IEnumerable<TEntity> AllInclude(
@@ -56,7 +56,7 @@ namespace NeutronData.Repositories
 
         public TEntity FindByKey(int? id)
         {
-            var rec = _dbSet.AsNoTracking().FirstOrDefault(s => s.Id == id);
+            var rec = _dbSet.FirstOrDefault(s => s.Id == id);
             return rec;
         }
 

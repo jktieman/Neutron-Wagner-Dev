@@ -10,6 +10,6 @@ namespace Neutron.Interfaces
         bool UseLacProcessor { get; set; }
 
         void ReprocessLacSet(int userId);
-        bool MovePermitted(int station, int device, int carrier);
+        bool MovePermitted(int workstationId, int device, int carrier);
     }
 }

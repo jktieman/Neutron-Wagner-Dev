@@ -50,13 +50,13 @@
         public bool UseImages { get; set; }
         public string DefaultLanguage { get; set; }
         public int DeviceFlashRate { get; set; }
-        public int StationId { get; set; }
+        public int WorkstationId { get; set; }
         public int DefaultStorageTypeId { get; set; }
         public bool UseAutoCompress { get; set; }
         public int CompressDays { get; set; }
         public double RunCompressInterval { get; set; }
         public bool SpecialBackOrder { get; set; }
         public bool EnableEmailNotification { get; set; }
-
+        public int LoaderStation { get; set; }
     }
 }

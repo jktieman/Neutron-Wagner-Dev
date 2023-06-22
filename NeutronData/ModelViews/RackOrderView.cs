@@ -20,7 +20,7 @@ namespace NeutronData.ModelViews
         public DateTime LoadDate { get; set; }
         public Order Order { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
 
         public string StatusName
         {
@@ -34,38 +34,32 @@ namespace NeutronData.ModelViews
                 _statusName = lineStatus.GetEnumDescription();
                 return _statusName;
             }
-            set
-            {
-                _statusName = value;
-            }
+            set => _statusName = value;
         }
         public string SearchField
         {
-            get
-            {
-                return $"{Ord1.ToLower()}{Ord2.ToLower()}";
-            }
-            set { _searchField = value; }
+            get => $"{Ord1.ToLower()}{Ord2.ToLower()}";
+            set => _searchField = value;
         }
 
         public int Lines
         {
             get
             {
-                _lines = Order.OrderDetails.Where(o => o.StationNumber == StationNumber).ToList().Count;
+                _lines = Order.OrderDetails.Where(o => o.AreaId == AreaId).ToList().Count;
                 return _lines;
             }
-            set { _lines = value; }
+            set => _lines = value;
         }
 
         public int Pieces
         {
             get
             {
-                _pieces = Order.OrderDetails.Where(o => o.StationNumber == StationNumber).Sum(s => s.Quantity);
+                _pieces = Order.OrderDetails.Where(o => o.AreaId == AreaId).Sum(s => s.Quantity);
                 return _pieces;
             }
-            set { _pieces = value; }
+            set => _pieces = value;
         }
     }
 }

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -34,9 +36,12 @@ using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
 using NeutronDllu;
+using NeutronTrayLayout;
 using DeviceType = NeutronCore.Enums.DeviceType;
 using StorageType = Neutron.Enums.StorageType;
 using StationType = NeutronCore.Enums;
+using NeutronEvents;
+using static DGVPrinterHelper.DGVPrinter;
 
 namespace Neutron.Forms
 {
@@ -52,17 +57,16 @@ namespace Neutron.Forms
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
         private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
-        private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
             new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-       // private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
+        //private readonly LocationsRepository _repoLocation = new LocationsRepository();
         //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
-        private readonly IStationRepository _stationRepository;
+        private readonly IWorkstationRepository _workstationRepository;
         private readonly HistoryManager _historyManager;
 
-        private LocationsRepository _locationsRepository;
+        private ILocationsRepository _locationsRepository;
         private readonly InventoryRepository _repoInv = new InventoryRepository();
         //private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
         private BindingSource _bindingSourceCurrent = new BindingSource();
@@ -78,7 +82,7 @@ namespace Neutron.Forms
         private readonly IItemDefinitionsRepository _itemDefinitionsRepository;
 
         private DynamicLogger _logger;
-        readonly StationView _stationView;
+        readonly WorkstationView _workstationView;
         string _imagesDirectory;
         readonly IAkaRepository _akaRepository;
         private readonly IJsonData _jsonData;
@@ -93,18 +97,17 @@ namespace Neutron.Forms
         private string _newLocationButtonText = "New Locations";
         private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private DeviceIndicatorManager _deviceIndicatorManager;
-
-        private readonly int[] _moveableDeviceTypes;
-        private readonly Station _rackStation;
+        private NeutronTrayManager _neutronTrayManager;
+        //private readonly int[] _moveableDeviceTypes;
         private string _item;
         private int _initialQuantity;
         private int _quantityToPick;
         private readonly PickList _pickList;
         private LabelPrinterPreferences _labelPrinter;
-
+        private HeaderTextManager _headerTextManager;
         public string Item
         {
-            get { return _item;}
+            get { return _item; }
             set { _item = value; }
         }
 
@@ -118,23 +121,24 @@ namespace Neutron.Forms
         public delegate void UpdateDataGridDelegate(BindingSource bindingSource);
 
         public FrmHotAction(IJsonData jsonData, IAkaRepository akaRepository
-                , ILacProcessor lacProcessor, IImageManager imageManager
-                , IStationRepository stationRepository, IItemDefinitionsRepository itemDefinitionsRepository
-                , NeutronVariables neutronVariables, NeutronLicense neutronLicense
-                , StationView stationView, HistoryManager historyManager
-                , string item = "", int quantity = 0 , PickList pickList = null)
+            , ILacProcessor lacProcessor, IImageManager imageManager
+            , IWorkstationRepository workstationRepository, IItemDefinitionsRepository itemDefinitionsRepository
+            , NeutronVariables neutronVariables, NeutronLicense neutronLicense
+            , WorkstationView workstationView, HistoryManager historyManager, ILocationsRepository locationsRepository
+            , string item = "", int quantity = 1, PickList pickList = null)
         {
 
             InitializeComponent();
-           //int quantity = 0;
+            //int quantity = 0;
             //var pickList = new PickList();
             //var item = "10015665";
-           
-            _stationRepository = stationRepository;
+
+            _workstationRepository = workstationRepository;
             _historyManager = historyManager;
+            _locationsRepository = locationsRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
-            _stationView = stationView;
+            _workstationView = workstationView;
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -142,6 +146,7 @@ namespace Neutron.Forms
             _imageManager = imageManager;
             _itemDefinitionsRepository = itemDefinitionsRepository;
             _akaRepository = akaRepository;
+            _headerTextManager = new HeaderTextManager();
             SetupLogger();
             Task.Run(() => _logger.LogDetailAsync("HotAction Constructor Start"));
             _pickList = pickList;
@@ -152,20 +157,17 @@ namespace Neutron.Forms
             InitForm();
             Task.Run(() => _logger.LogDetailAsync("HotAction Constructor Complete"));
 
-            //_stationRepository = new StationRepository(_logger, new NeutronDb(), _station.StationId);
-            _rackStation = _stationRepository.GetRackStation();
-            _moveableDeviceTypes = _stationRepository.GetMoveableDeviceTypeIds();
+            Mediator.GetInstance().WorkItMessageChng += FrmHotAction_WorkItMessageChng;
         }
 
         private void InitForm()
         {
+            // _pickList is a value passed in from another process like Picking
             if (_pickList == null)
             {
                 KeyPreview = true;
 
                 SetupGridItemDefinition();
-
-                InitDeviceIndicators();
 
                 _useCostCenter = _neutronVariables.UseCostCenter;
                 LabelFormTitle.Text = _resourceManager.GetString("HotActions");
@@ -174,14 +176,13 @@ namespace Neutron.Forms
                 mlUserInfo.Text = GlobalVar.User?.UserInfo;
                 CloseButtonPressed = false;
                 _imagesDirectory = LoaderSettings.GetImagesDirectory();
-                _locationsRepository = new LocationsRepository();
                 FillComboBoxes();
-                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository, _historyManager);
                 InitialSearch(_item);
-                LabelStationName.Text = _stationView.Name;
-                LabelStationName2.Text = _stationView.Name;
-                if (_stationView.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
-                    || _stationView.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical)
+                LabelStationName.Text = _workstationView.ToString();
+                LabelStationName2.Text = _workstationView.ToString();
+                if (_workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
+                    || _workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical)
                 {
                     TextBoxScanLocation.Visible = true;
                 }
@@ -190,6 +191,56 @@ namespace Neutron.Forms
                     TextBoxScanLocation.Visible = false;
                     _newLocationButtonText = _resourceManager.GetString("AllLocations");
                     MBNewLocations.Text = _newLocationButtonText;
+                }
+
+
+                // Check for the type of Workstation in order to determine
+                // the proper location indicator
+                // Is it a Carousel, Vertical, or Rack
+                switch (_workstationView.StationType.Name)
+                {
+                    case "Carousel":
+                    {
+                        // Display the Device Indicator
+                        // And the Tray Layout
+                        InitDeviceIndicators();
+                        //BuildTrayLayout();
+                        break;
+                    }
+                    case "Vertical":
+                    {
+                        // Display the Device Indicator
+                        // And the Tray Layout
+                        InitDeviceIndicators();
+                        //BuildTrayLayout();
+                        break;
+                    }
+                    case "Rack":
+                    {
+                        InitDeviceIndicators();
+                            // Just the Tray Layout
+                            break;
+                    }
+                    case "Blastzone":
+                    {
+                        InitDeviceIndicators();
+                            // Just the Tray Layout
+                            break;
+                    }
+                        //case "EBin":
+                        //{
+                        //    // Display the Device Indicator
+                        //    // And the Tray Layout
+                        //    InitDeviceIndicators();
+                        //    //BuildTrayLayout();
+                        //    LabelFormTitle.Visible = false;
+                        //    LabelFormHeaderText.Text = "Neutron EBin";
+                        //    MBHotPick.Text = "Pick";
+                        //    MBHotStore.Text = "Store";
+                        //    TextBoxFindItem.Focus();
+                        //    break;
+                        //}
+
                 }
             }
             else
@@ -200,7 +251,7 @@ namespace Neutron.Forms
                 KeyPreview = true;
                 SetupLogger();
                 SetupGridItemDefinition();
-                //InitDeviceIndicators();
+                InitDeviceIndicators();
                 _useCostCenter = _neutronVariables.UseCostCenter;
                 LabelFormTitle.Text = _resourceManager.GetString("HotActions");
                 LabelFormTitle.BackColor = Color.Green;
@@ -208,14 +259,13 @@ namespace Neutron.Forms
                 mlUserInfo.Text = GlobalVar.User?.UserInfo;
                 CloseButtonPressed = false;
                 _imagesDirectory = LoaderSettings.GetImagesDirectory();
-                _locationsRepository = new LocationsRepository();
                 FillComboBoxes();
-                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository, _historyManager);
                 InitialSearch(_item);
-                LabelStationName.Text = _stationView.Name;
-                LabelStationName2.Text = _stationView.Name;
-                if (_stationView.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
-                    || _stationView.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
+                LabelStationName.Text = _workstationView.ToString();
+                LabelStationName2.Text = _workstationView.ToString();
+                if (_workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
+                    || _workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
 
                 _newLocationButtonText = _resourceManager.GetString("AllLocations");
                 MBNewLocations.Text = _newLocationButtonText;
@@ -224,8 +274,47 @@ namespace Neutron.Forms
                 ButtonClearFindItem.Visible = false;
                 MBFindItem.Visible = false;
                 MBHotActionCount.Visible = false;
+
             }
         }
+
+        private void BuildTrayLayout(int maxColumns, int maxRows, int loc3, int loc4, int columnSpan = 1, int rowSpan = 1)
+        {
+            
+            if (HotAction.Controls.ContainsKey("TrayLayout"))
+            {
+                HotAction.Controls.RemoveByKey("TrayLayout");
+            }
+
+            _logger.LogDetail("Build TrayLayout");
+            var panel = new Panel();
+            panel.Size = new Size(525, 235);
+            panel.Location = new Point(470, 10);
+            panel.Name = "TrayLayout";
+            _neutronTrayManager = new NeutronTrayManager(panel, 0, 0, maxColumns, maxRows, loc3, loc4, 1, 1);
+
+            HotAction.Controls.Add(_neutronTrayManager.TrayLayout);
+
+        }
+
+        private void FrmHotAction_WorkItMessageChng(object sender, WorkItEventArgs e)
+        {
+            var msg = e.Message;
+            UpdateWorkItMessage(msg);
+        }
+
+public void UpdateWorkItMessage(string message)
+{
+    if (InvokeRequired)
+    {
+        BeginInvoke(new Action<string>(UpdateWorkItMessage), message);
+    }
+    else
+    {
+        MessageBox.Show(message);
+        //TextBoxCurrentTray.Text = message;
+    }
+}
 
         protected override CreateParams CreateParams
         {
@@ -244,35 +333,11 @@ namespace Neutron.Forms
 
             _logger.LogDetail("Initialize Device Indicators - InitDeviceIndicators");
 
-            _deviceIndicatorManager = new DeviceIndicatorManager(_stationView, new Point(140, 0),
-                new Size(860, 150), _neutronVariables);
-
-
-            //_deviceIndicators = new Dictionary<int, DeviceIndicator>();
-
-            ////var hardwareDevices = _stationView.HardwareDevices.Where(x => _moveableDeviceTypes.Contains(x.DeviceTypeId)).ToList();
-            //var hardwareDevices = _stationView.HardwareDevices.ToList();
-            //var numDevices = hardwareDevices.Count;
-            //var panel = new Panel();
-            //panel.Location = new Point(140, 0);
-            //panel.Size = new Size(860, 150);
-            //panel.BackColor = Color.Transparent;
-            //panel.Name = "PanelDeviceIndicators";
-            //var flashRate = _neutronVariables.DeviceFlashRate;
-            //foreach (var hardwareDevice in hardwareDevices)
-            //{
-            //    var device = new DeviceIndicator(hardwareDevice.DeviceNumber, flashRate, Color.Yellow
-            //        , Color.Transparent);
-            //    device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
-            //    device.DeviceNumber = hardwareDevice.DeviceNumber;
-            //    device.Location = GetLocation(panel.Size.Width, numDevices, hardwareDevice.DeviceNumber);
-            //    _deviceIndicators.Add(hardwareDevice.DeviceNumber, device);
-            //    panel.Controls.Add(device);
-            //}
-
+            _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(10, 10),
+                new Size(450, 235), _neutronVariables);
 
             HotAction.Controls.Add(_deviceIndicatorManager.DeviceIndicatorPanel);
-            //HotAction.Controls.Add(panel);
+
         }
         private Point GetLocation(int sizeWidth, int numDevices, int deviceNumber)
         {
@@ -292,7 +357,6 @@ namespace Neutron.Forms
             return point;
 
         }
-
         private void InitialSearch(string item)
         {
             if (string.IsNullOrEmpty(item))
@@ -318,43 +382,39 @@ namespace Neutron.Forms
         }
         private void FillComboBoxes()
         {
-            ComboBoxSizeCodeItem.DataSource = _repoSizeCode.All();
+            var sizeCodes = _repoSizeCode.All();
+            var velocityCodes = _repoVelocityCode.All();
+            var heightCodes = _repoHeightCode.All();
+
+            ComboBoxSizeCodeItem.DataSource = sizeCodes; // _repoSizeCode.All();
             ComboBoxSizeCodeItem.DisplayMember = "Name";
             ComboBoxSizeCodeItem.ValueMember = "Id";
-            ComboBoxVelocityCodeItem.DataSource = _repoVelocityCode.All();
+            ComboBoxVelocityCodeItem.DataSource = velocityCodes; // _repoVelocityCode.All();
             ComboBoxVelocityCodeItem.DisplayMember = "Name";
             ComboBoxVelocityCodeItem.ValueMember = "Id";
-            ComboBoxHeightCodeItem.DataSource = _repoHeightCode.All();
+            ComboBoxHeightCodeItem.DataSource = heightCodes; // _repoHeightCode.All();
             ComboBoxHeightCodeItem.DisplayMember = "Name";
             ComboBoxHeightCodeItem.ValueMember = "Id";
-            ComboBoxLocationCodeItem.DataSource = _repoLocationCode.All();
-            ComboBoxLocationCodeItem.DisplayMember = "Name";
-            ComboBoxLocationCodeItem.ValueMember = "Id";
-            ComboBoxSizeCodeLocation.DataSource = _repoSizeCode.All();
+            ComboBoxSizeCodeLocation.DataSource = sizeCodes; // _repoSizeCode.All();
             ComboBoxSizeCodeLocation.DisplayMember = "Name";
             ComboBoxSizeCodeLocation.ValueMember = "Id";
-            ComboBoxVelocityCodeLocation.DataSource = _repoVelocityCode.All();
+            ComboBoxVelocityCodeLocation.DataSource = velocityCodes; //  _repoVelocityCode.All();
             ComboBoxVelocityCodeLocation.DisplayMember = "Name";
             ComboBoxVelocityCodeLocation.ValueMember = "Id";
-            ComboBoxHeightCodeLocation.DataSource = _repoHeightCode.All();
+            ComboBoxHeightCodeLocation.DataSource = heightCodes; //  _repoHeightCode.All();
             ComboBoxHeightCodeLocation.DisplayMember = "Name";
             ComboBoxHeightCodeLocation.ValueMember = "Id";
-            ComboBoxLocationCodeLocation.DataSource = _repoLocationCode.All();
-            ComboBoxLocationCodeLocation.DisplayMember = "Name";
-            ComboBoxLocationCodeLocation.ValueMember = "Id";
             //Tray
-            ComboBoxSizeCodeLocationTray.DataSource = _repoSizeCode.All();
+            ComboBoxSizeCodeLocationTray.DataSource = sizeCodes; // _repoSizeCode.All();
             ComboBoxSizeCodeLocationTray.DisplayMember = "Name";
             ComboBoxSizeCodeLocationTray.ValueMember = "Id";
-            ComboBoxVelocityCodeLocationTray.DataSource = _repoVelocityCode.All();
+            ComboBoxVelocityCodeLocationTray.DataSource = velocityCodes; //  _repoVelocityCode.All();
             ComboBoxVelocityCodeLocationTray.DisplayMember = "Name";
             ComboBoxVelocityCodeLocationTray.ValueMember = "Id";
-            ComboBoxHeightCodeLocationTray.DataSource = _repoHeightCode.All();
+            ComboBoxHeightCodeLocationTray.DataSource = heightCodes; //  _repoHeightCode.All();
             ComboBoxHeightCodeLocationTray.DisplayMember = "Name";
             ComboBoxHeightCodeLocationTray.ValueMember = "Id";
-            ComboBoxLocationCodeLocationTray.DataSource = _repoLocationCode.All();
-            ComboBoxLocationCodeLocationTray.DisplayMember = "Name";
-            ComboBoxLocationCodeLocationTray.ValueMember = "Id";
+
         }
         private void SetupLogger()
         {
@@ -380,8 +440,6 @@ namespace Neutron.Forms
 
             Task.Run(() => _logger.LogDetailAsync($"Load Current By Item: {_currentItemDefinition.Item}  END"));
         }
-
-
         private void PrintLabel()
         {
             var upc = _repoAka.GetUpc(LabelHotPickItem.Text);
@@ -401,28 +459,29 @@ namespace Neutron.Forms
 
             ToteToPrint.Print(1, 1, labelDetail, upc, _labelPrinter);
         }
-
         private async Task LoadNewLocations()
         {
-            Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Item: {_currentItemDefinition.Item}  START"));
+            await Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Item: {_currentItemDefinition.Item}  START"));
 
-            var station = _stationRepository.GetStation(_stationView.StationId);
-            if (_stationView.StationType.Id == (int)StationType.StationType.Supervisor)
+            if (_workstationView.StationType.Id == (int)StationType.StationType.Supervisor)
             {
-                if (_rackStation != null)
-                {
-                    station = _rackStation;
-                    CheckBoxAll.Checked = true;
-                    CheckBoxAll.Visible = false;
-                }
+                CheckBoxAll.Checked = true;
+                CheckBoxAll.Visible = false;
             }
             else
             {
                 CheckBoxAll.Visible = true;
             }
+
+            var areaId = _workstationView.AreaId;
+            var sizeCodeId = _currentItemDefinition.SizeCodeId;
+            var velocityCodeId = _currentItemDefinition.VelocityCodeId;
+            var heightCodeId = _currentItemDefinition.HeightCodeId;
+            var inUse = 0;
+
             if (CheckBoxAll.Checked)
             {
-                var views = await Task.Run(() => _locationsRepository.FindLocationViewsByStation(station));
+                var views = await Task.Run(() => _locationsRepository.FindLocationViewsByArea(areaId));
                 var locationViews = views.ToList();
                 var blvAll = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blvAll;
@@ -430,8 +489,9 @@ namespace Neutron.Forms
             }
             else
             {
-                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(station,
-                     _currentItemDefinition.SizeCodeId, _currentItemDefinition.VelocityCodeId, _currentItemDefinition.HeightCodeId, _currentItemDefinition.LocationCodeId, inUse: false));
+                var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(areaId,
+                     sizeCodeId, velocityCodeId, heightCodeId, inUse));
+                
                 var locationViews = views.ToList();
                 var blv = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blv;
@@ -440,36 +500,36 @@ namespace Neutron.Forms
             //var blv = new BindingListView<LocationView>(views.ToList());
             //_bindingSourceNewLocations.DataSource = blv;
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
+
             Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Item: {_currentItemDefinition.Item}  END"));
         }
-
         private void LoadNewLocationsBySlot(string slot)
         {
             Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Slot: {slot}  START"));
-            IEnumerable<LocationView> views = null;  // = new List<LocationView>();
-            var station = _stationRepository.GetStation(_stationView.StationId);
-            if (_stationView.StationType.Id == (int)StationType.StationType.Supervisor)
-            {
+            IEnumerable<LocationView> views = null;  
 
-                if (_rackStation != null)
-                {
-                    station = _rackStation;
-                    CheckBoxAll.Checked = true;
-                    CheckBoxAll.Visible = false;
-                }
+            // Sending an areaId of -1 returns ALL LocationViews
+            var areaId = -1;
+            if (_workstationView.StationType.Id == (int)StationType.StationType.Supervisor)
+            {
+                areaId = -1;
+                CheckBoxAll.Checked = true;
+                CheckBoxAll.Visible = false;
             }
             else
             {
                 CheckBoxAll.Visible = true;
+                areaId = _workstationView.AreaId;
             }
+            
             if (CheckBoxAll.Checked)
             {
 
-                views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot).ToList();
+                views = _locationsRepository.FindLocationViewsByAreaAndSlot(areaId, slot).ToList();
             }
             else
             {
-                views = _locationsRepository.FindLocationViewsByStationAndSlot(station, slot).ToList();
+                views = _locationsRepository.FindLocationViewsByAreaAndSlot(areaId, slot).ToList();
                 //views = views.Where(r => r.InUse == false);
             }
             var locationViews = views.ToList();
@@ -482,10 +542,6 @@ namespace Neutron.Forms
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
             Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Slot: {slot}  END"));
         }
-
-
-
-
         // Not Used
         public void UpdateDataGrid(BindingSource bindingSource)
         {
@@ -499,19 +555,6 @@ namespace Neutron.Forms
                 DataGridViewHot.DataSource = bindingSource.DataSource;
                 DataGridViewHot.ClearSelection();
                 var recordCount = GetRecordCount(bindingSource);
-            }
-        }
-
-        private async Task LoadLocationData(string slot = @"")
-        {
-            var stationId = _stationView.StationType.Id == (int)StationType.StationType.Supervisor
-                ? _rackStation.Id
-                : _stationView.StationId;
-
-            var inventory = _repoInventory.FindBy(r => r.Location.Slot.Contains(slot) && r.StationId == stationId).ToList();
-            if (inventory.Any())
-            {
-                await LoadItemDefinitions(inventory.First().ItemDefinition.Item);
             }
         }
 
@@ -529,35 +572,34 @@ namespace Neutron.Forms
             var findWhat = string.IsNullOrEmpty(find) ? TextBoxFindItem.Text.ToLower().Trim() : find;
 
             IEnumerable<ItemDefinitionView> views;
-            _logger.LogDetailAsync($"Load Item Definitions Check Station Type ");
-            // if its a Supervisor station, load the Rack items
-            if (_stationView.StationType.Id == (int)StationType.StationType.Supervisor)
+            _logger.LogDetailAsync($"Load Item Definitions Check Workstation Type ");
+            // if its a Supervisor workstation, load the Rack items
+            if (_workstationView.StationType.Id == (int)StationType.StationType.Supervisor)
             {
-                _logger.LogDetailAsync($"Load Item Definitions Station Type Is Supervisor ");
-                if (_rackStation != null)
-                {
-                    _logger.LogDetailAsync($"Load Item Definitions Rack Station is NOT null ");
-                    _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByStation  ");
-                    _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and Rack Station: {_rackStation.Id} ");
-                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _rackStation.Id);
+                _logger.LogDetailAsync($"Load Item Definitions Workstation Type Is Supervisor ");
+                
+                    _logger.LogDetailAsync($"Load Item Definitions Rack Workstation is NOT null ");
+                    _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByArea  ");
+                    _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and AreaId: {_workstationView.AreaId} ");
+                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(findWhat, _workstationView.AreaId);
                     _logger.LogDetailAsync($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
                     blv = new BindingListView<ItemDefinitionView>(views.ToList());
                     _logger.LogDetailAsync($"Load Item Definitions BLV created ");
-                }
+                
             }
             else
             {
-                _logger.LogDetailAsync($"Load Item Definitions NOT a Supervisor Station ");
-                _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByStation  ");
-                _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and Station: {_stationView.StationId} ");
-                views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(findWhat, _stationView.StationId).ToList();
+                _logger.LogDetailAsync($"Load Item Definitions NOT a Supervisor Workstation ");
+                _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByArea  ");
+                _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and Area: {_workstationView.AreaId} ");
+                views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(findWhat, _workstationView.AreaId).ToList();
                 _logger.LogDetailAsync($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
 
                 if (!views.Any() && !string.IsNullOrEmpty(findWhat))
                 {
                     var akaFind = _akaRepository.Get(findWhat);
                     TextBoxFindItem.Text = akaFind;
-                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByStation(akaFind, _stationView.StationId).ToList();
+                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(akaFind, _workstationView.AreaId).ToList();
                     _logger.LogDetailAsync($"Load Item Definitions Back with Views Using AKA Find.  Setting them to BindingListView ");
                 }
 
@@ -615,7 +657,7 @@ namespace Neutron.Forms
                 var item = _repoItemDefinition.FindBy(r => r.Item == findWhat).FirstOrDefault();
                 if (item != null)
                 {
-                    MessageBox.Show($"{item.Item} {_resourceManager.GetString("Message0")} {item.Station.StationNumber}");
+                    MessageBox.Show($"{item.Item} {_resourceManager.GetString("Message0")} {item.AreaId}");
                 }
                 ClearCurrentAndNew();
             }
@@ -673,11 +715,11 @@ namespace Neutron.Forms
             _logger.LogDetailAsync($"SetupGridItemDefinition 2");
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationName",
-                HeaderText = _gridResourceManager.GetString("StationName"),
+                DataPropertyName = "AreaName",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "StationName"
+                Name = "Area"
             };
             DataGridViewHot.Columns.Add(col);
 
@@ -831,10 +873,10 @@ namespace Neutron.Forms
             DataGridViewHot.Columns.Add(xcol);
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationName",
-                HeaderText = _gridResourceManager.GetString("StationName"),
+                DataPropertyName = "AreaName",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Name = "StationName"
+                Name = "AreaName"
             };
             DataGridViewHot.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
@@ -849,7 +891,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc1",
-                HeaderText = _gridResourceManager.GetString("Loc1"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc1", _gridResourceManager),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc1"
             };
@@ -857,7 +899,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc2",
-                HeaderText = _gridResourceManager.GetString("Loc2"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc2", _gridResourceManager),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc2"
             };
@@ -865,7 +907,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc3",
-                HeaderText = _gridResourceManager.GetString("Loc3"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc3", _gridResourceManager),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc3"
             };
@@ -873,7 +915,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc4",
-                HeaderText = _gridResourceManager.GetString("Loc4"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc4", _gridResourceManager),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc4"
             };
@@ -881,7 +923,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Loc5",
-                HeaderText = _gridResourceManager.GetString("Loc5"),
+                HeaderText = _headerTextManager.GetHeaderText(_workstationView, "Loc5", _gridResourceManager),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc5"
             };
@@ -912,10 +954,10 @@ namespace Neutron.Forms
             DataGridViewHot.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "LocationCodeName",
-                HeaderText = _gridResourceManager.GetString("LocationCodeName"),
+                DataPropertyName = "LocationCode",
+                HeaderText = _gridResourceManager.GetString("LocationCode"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Name = "LocationCodeName"
+                Name = "LocationCode"
             };
             DataGridViewHot.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
@@ -946,7 +988,19 @@ namespace Neutron.Forms
             DataGridViewHot.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridViewHot.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewHot.DefaultCellStyle.BackColor = Color.White;
+
             var col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "AreaName",
+                HeaderText = _gridResourceManager.GetString("Area"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "AreaName"
+            };
+            DataGridViewHot.Columns.Add(col);
+
+
+            col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
                 HeaderText = _gridResourceManager.GetString("Item"),
@@ -1083,7 +1137,7 @@ namespace Neutron.Forms
         private void PositionDevice(int loc1, int loc2, int loc3, int loc4, bool moveDevice)
         {
             Task.Run(() => _logger.LogDetailAsync($"Position Device: {loc1} {loc2} {loc3} {loc4}  START"));
-            if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+            if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
             {
                 if (_neutronVariables.ShuttleEnabled)
                 {
@@ -1099,6 +1153,21 @@ namespace Neutron.Forms
                                 var resp = _enumResourceManager.GetString(response.Result.ToString());
                                 MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: _resourceManager.GetString("DeviceInformation")
                                                                     , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    if (GlobalVar.Hanel != null)
+                    {
+                        if (moveDevice)
+                        {
+                            Task.Run(() => _logger.LogDetailAsync($"905 HOT Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}"));
+                            var response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4));
+                            Task.Run(() => _logger.LogDetailAsync($"956 HOT Position Device Tray Response:{response.Result.AsString(EnumFormat.Description)}"));
+                            if (response.Result != DeviceResponse.Success)
+                            {
+                                var resp = _enumResourceManager.GetString(response.Result.ToString());
+                                MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: _resourceManager.GetString("DeviceInformation")
+                                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                             }
                         }
                     }
@@ -1152,14 +1221,19 @@ namespace Neutron.Forms
             _bindingSourceNewLocations.DataSource = null;
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
             TextBoxFindItem.Text = string.Empty;
+            //if (_workstationView.StationType.Name != "EBin")
+            //{
+            //    LoadItemDefinitions();
+            //}
             LoadItemDefinitions();
+            
             TextBoxFindItem.Focus();
             Cursor.Current = Cursors.Default;
             Task.Run(() => _logger.LogDetailAsync("Hot Pick Clear END"));
         }
         private async void MBHotPick_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Pressed START"));
+            await Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Pressed START"));
             _hotPickButtonPressed = true;
             _hotStoreButtonPressed = false;
             CloseButtonPressed = false;
@@ -1181,7 +1255,10 @@ namespace Neutron.Forms
             var loc3 = _currentInventoryView.Loc3;
             var loc4 = _currentInventoryView.Loc4;
 
-            var device = _stationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
+            var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.AreaId, loc1, loc2);
+            var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, loc1, loc2);
+
+            var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
 
             if (device == null) //No Hardware devices
             {
@@ -1190,12 +1267,14 @@ namespace Neutron.Forms
                 LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
                 MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
                 await UpdateHotPickScreen(_currentInventoryView);
+                BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                 tabControl1.SelectedTab = HotAction;
             }
             else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
             {
-                if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                 {
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     HotActionTray.BackColor = Color.LightGray;
                     LabelFormTitle.BackColor = Color.Red;
                     LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
@@ -1214,14 +1293,15 @@ namespace Neutron.Forms
             }
             else if (device.DeviceTypeId == (int)DeviceType.Carousel)
             {
-                if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                 {
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     HotAction.BackColor = Color.Red;
                     LabelFormTitle.BackColor = Color.Red;
                     LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
                     MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
                     _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
-                   // UpdateCurrentDeviceIndicator();
+                    // UpdateCurrentDeviceIndicator();
                     PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                     ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -1234,9 +1314,31 @@ namespace Neutron.Forms
                     MessageBox.Show($"Location Access Denied");
                 }
             }
+            else if (device.DeviceTypeId == (int)DeviceType.Hanel12D)
+            {
+                if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
+                {
+                    _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                    HotActionTray.BackColor = Color.LightGray;
+                    LabelFormTitle.BackColor = Color.LightGray;
+                    LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                    MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                    PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                    //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                    //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
+                    await UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotAction;
+                }
+                else
+                {
+                    //Access Denied
+                    MessageBox.Show($"Location Access Denied");
+                }
+            }
             else if (device.DeviceTypeId == (int)DeviceType.Rack)
             {
-
+                BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                 //HotAction.BackColor = Color.Red;
                 LabelFormTitle.BackColor = Color.Red;
                 LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString("HotPick")}";
@@ -1265,7 +1367,7 @@ namespace Neutron.Forms
 
         private async void MBHotStore_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync("Hot Store Button Pressed START"));
+            _ = Task.Run(() => _logger.LogDetailAsync("Hot Store Button Pressed START"));
             TextBoxHotPickQuantity.Text = _quantityToPick.ToString();
             _hotPickButtonPressed = false;
             _hotStoreButtonPressed = true;
@@ -1284,9 +1386,12 @@ namespace Neutron.Forms
                 var loc3 = _currentInventoryView.Loc3;
                 var loc4 = _currentInventoryView.Loc4;
 
-                //if (_moveableDeviceTypes.Contains(_stationView.StationType.Id))
+                var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.Area.Id, loc1, loc2);
+                var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, loc1, loc2);
+
+                //if (_moveableDeviceTypes.Contains(_workstationView.StationType.Id))
                 //{
-                //    if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                //    if (_lacProcessor.MovePermitted(_workstationView.StationNumber, loc1, loc2))
                 //    {
                 //        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 //        UpdateCurrentDeviceIndicator();
@@ -1308,7 +1413,7 @@ namespace Neutron.Forms
                 //    tabControl1.SelectedTab = HotAction;
                 //}
                 //---------------------------------------------------------------------
-                var device = _stationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
+                var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
 
 
                 HotAction.BackColor = Color.Green;
@@ -1320,22 +1425,26 @@ namespace Neutron.Forms
 
                 if (device == null) //No Hardware devices
                 {
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     await UpdateHotPickScreen(_currentInventoryView);
                     tabControl1.SelectedTab = HotAction;
                 }
                 else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
                 {
-                    if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                     {
                         HotActionTray.BackColor = Color.LightGray;
                         LabelFormTitle.BackColor = Color.Red;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
                         MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
                         PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                         //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
                         await UpdateHotPickScreenTray(_currentInventoryView);
-                        tabControl1.SelectedTab = HotActionTray;
+                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
+
+                        tabControl1.SelectedTab = HotAction;
                     }
                     else
                     {
@@ -1345,8 +1454,10 @@ namespace Neutron.Forms
                 }
                 else if (device.DeviceTypeId == (int)DeviceType.Carousel)
                 {
-                    if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                     {
+                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+
                         //  UpdateCurrentDeviceIndicator();
                         _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                         PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
@@ -1360,9 +1471,31 @@ namespace Neutron.Forms
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
+                else if (device.DeviceTypeId == (int)DeviceType.Hanel12D)
+                {
+                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
+                    {
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
+                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                        HotActionTray.BackColor = Color.LightGray;
+                        LabelFormTitle.BackColor = Color.LightGray;
+                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                        //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                        //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
+                        await UpdateHotPickScreen(_currentInventoryView);
+                        tabControl1.SelectedTab = HotAction;
+                    }
+                    else
+                    {
+                        //Access Denied
+                        MessageBox.Show($"Location Access Denied");
+                    }
+                }
                 else if (device.DeviceTypeId == (int)DeviceType.Rack)
                 {
-
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     //HotAction.BackColor = Color.Red;
                     LabelFormTitle.BackColor = Color.Red;
                     LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString("HotPick")}";
@@ -1372,7 +1505,8 @@ namespace Neutron.Forms
                     //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                     //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
                     //await UpdateHotPickScreen(_currentInventoryView);
-                    tabControl1.SelectedTab = HotRackTray;
+                    var manager = new NeutronTrayManager(PanelTableLayoutRack, 4, 1, 4, 2, 2, 2, 1, 1);
+                    tabControl1.SelectedTab = HotAction;
 
                 }
                 else  // Rack or Supervisor
@@ -1388,47 +1522,59 @@ namespace Neutron.Forms
 
 
             }
-            else
+            else  // the current grid is New Items, Not Current Items
             {
                 var location = ((ObjectView<LocationView>)_bindingSourceNewLocations.Current).Object;
 
                 var itemDef = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
-                _currentInventoryView = new SqlInventoryView
+                // Is this location and itemDef already in inventory
+                var inventoryView = _repoInv.GetInventoryViewByItemDefinitionIdAndLocationId(itemDef.Id, location.Id);
+                if (inventoryView == null)
                 {
-                    ItemDefinitionId = itemDef.Id,
-                    Item = itemDef.Item,
-                    Description = itemDef.Description,
-                    HeightCodeId = itemDef.HeightCodeId,
-                    HeightCodeName = itemDef.HeightCodeName,
-                    LocationCodeId = itemDef.LocationCodeId,
-                    LocationCodeName = itemDef.LocationCodeName,
-                    ReceivedDate = DateTime.Now,
-                    SizeCodeId = itemDef.SizeCodeId,
-                    SizeCodeName = itemDef.SizeCodeName,
-                    VelocityCodeId = itemDef.VelocityCodeId,
-                    VelocityCodeName = itemDef.VelocityCodeName,
-                    StorageTypeId = itemDef.StorageTypeId,
-                    StorageTypeName = itemDef.StorageTypeName,
-                    StationId = itemDef.StationId,
-                    Quantity = 0,
-                    LocationId = location.Id,
-                    Loc1 = location.Loc1,
-                    Loc2 = location.Loc2,
-                    Loc3 = location.Loc3,
-                    Loc4 = location.Loc4,
-                    Loc5 = location.Loc5,
-                    InUse = location.InUse,
-                    UnitOfIssueId = itemDef.UnitOfIssueId,
-                    UnitOfIssueName = itemDef.UnitOfIssueName
-                };
-                var loc1 = _currentInventoryView.Loc1;
-                var loc2 = _currentInventoryView.Loc2;
-                var loc3 = _currentInventoryView.Loc3;
-                var loc4 = _currentInventoryView.Loc4;
+                    _currentInventoryView = new SqlInventoryView
+                    {
+                        ItemDefinitionId = itemDef.Id,
+                        Item = itemDef.Item,
+                        Description = itemDef.Description,
+                        HeightCodeId = itemDef.HeightCodeId,
+                        HeightCodeName = itemDef.HeightCodeName,
+                        ReceivedDate = DateTime.Now,
+                        SizeCodeId = itemDef.SizeCodeId,
+                        SizeCodeName = itemDef.SizeCodeName,
+                        VelocityCodeId = itemDef.VelocityCodeId,
+                        VelocityCodeName = itemDef.VelocityCodeName,
+                        StorageTypeId = itemDef.StorageTypeId,
+                        StorageTypeName = itemDef.StorageTypeName,
+                        AreaId = itemDef.AreaId,
+                        Quantity = 0,
+                        LocationId = location.Id,
+                        Loc1 = location.Loc1,
+                        Loc2 = location.Loc2,
+                        Loc3 = location.Loc3,
+                        Loc4 = location.Loc4,
+                        Loc5 = location.Loc5,
+                        LocationCode = location.LocationCode,
+                        InUse = location.InUse,
+                        UnitOfIssueId = itemDef.UnitOfIssueId,
+                        UnitOfIssueName = itemDef.UnitOfIssueName
+                    };
+                }
+                else
+                {
+                    _currentInventoryView = inventoryView;
+                }
 
-                //if (_moveableDeviceTypes.Contains(_stationView.StationType.Id))
+                // var loc1 = location.Loc1;
+                var loc2 = location.Loc2;
+                var loc3 = location.Loc3;
+                var loc4 = location.Loc4;
+
+                var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.AreaId, location.Loc1, loc2);
+                var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, location.Loc1, loc2);
+
+                //if (_moveableDeviceTypes.Contains(_workstationView.StationType.Id))
                 //{
-                //    if (_lacProcessor.MovePermitted(_stationView.StationNumber, location.Loc1, location.Loc2))
+                //    if (_lacProcessor.MovePermitted(_workstationView.StationNumber, location.Loc1, location.Loc2))
                 //    {
                 //        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 //        ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
@@ -1448,7 +1594,7 @@ namespace Neutron.Forms
                 //    tabControl1.SelectedTab = HotAction;
                 //}
 
-                var device = _stationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1);
+                var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == location.Loc1);
 
 
                 HotAction.BackColor = Color.Green;
@@ -1460,18 +1606,22 @@ namespace Neutron.Forms
 
                 if (device == null) //No Hardware devices
                 {
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                    HotActionTray.BackColor = Color.LightGray;
                     await UpdateHotPickScreen(_currentInventoryView);
                     tabControl1.SelectedTab = HotAction;
                 }
                 else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
                 {
-                    if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
                     {
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(location.Loc1);
+                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                         HotActionTray.BackColor = Color.LightGray;
                         LabelFormTitle.BackColor = Color.Red;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
+                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
                         MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
-                        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                        PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);
                         //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
                         await UpdateHotPickScreenTray(_currentInventoryView);
@@ -1485,12 +1635,13 @@ namespace Neutron.Forms
                 }
                 else if (device.DeviceTypeId == (int)DeviceType.Carousel)
                 {
-                    if (_lacProcessor.MovePermitted(_stationView.StationNumber, loc1, loc2))
+                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
                     {
+                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                         // UpdateCurrentDeviceIndicator();
-                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
-                        PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-                        ShowShi(loc1, loc2, loc3, loc4.ToString(), 1.ToString());
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(location.Loc1);
+                        PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);
+                        ShowShi(location.Loc1, loc2, loc3, loc4.ToString(), 1.ToString());
                         await UpdateHotPickScreen(_currentInventoryView);
                         tabControl1.SelectedTab = HotAction;
                     }
@@ -1500,11 +1651,33 @@ namespace Neutron.Forms
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
+                else if (device.DeviceTypeId == (int)DeviceType.Hanel12D)
+                {
+                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
+                    {
+                        _deviceIndicatorManager.UpdateCurrentDeviceIndicator(location.Loc1);
+                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                        HotActionTray.BackColor = Color.LightGray;
+                        LabelFormTitle.BackColor = Color.LightGray;
+                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                        PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);
+                        //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                        //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
+                        await UpdateHotPickScreen(_currentInventoryView);
+                        tabControl1.SelectedTab = HotAction;
+                    }
+                    else
+                    {
+                        //Access Denied
+                        MessageBox.Show($"Location Access Denied");
+                    }
+                }
                 else  // Rack or Supervisor
                 {
                     await UpdateHotPickScreen(_currentInventoryView);
                     // UpdateCurrentDeviceIndicator();
-                    _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
+                    _deviceIndicatorManager.UpdateCurrentDeviceIndicator(location.Loc1);
                     tabControl1.SelectedTab = HotAction;
                 }
                 Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Press END"));
@@ -1537,11 +1710,10 @@ namespace Neutron.Forms
                     ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
                     ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
                     ComboBoxHeightCodeItem.SelectedIndex = ComboBoxHeightCodeItem.FindStringExact(itemDefinition.HeightCode.Name);
-                    ComboBoxLocationCodeItem.SelectedIndex = ComboBoxLocationCodeItem.FindStringExact(itemDefinition.LocationCode.Name);
+                    TextBoxLocationCode.Text = location.LocationCode;
                     ComboBoxSizeCodeLocation.SelectedIndex = ComboBoxSizeCodeLocation.FindStringExact(location.SizeCode.Name);
                     ComboBoxVelocityCodeLocation.SelectedIndex = ComboBoxVelocityCodeLocation.FindStringExact(location.VelocityCode.Name);
                     ComboBoxHeightCodeLocation.SelectedIndex = ComboBoxHeightCodeLocation.FindStringExact(location.HeightCode.Name);
-                    ComboBoxLocationCodeLocation.SelectedIndex = ComboBoxLocationCodeLocation.FindStringExact(location.LocationCode.Name);
                     TextBoxHotPickQuantity.Text = _initialQuantity.ToString();
                     TextBoxHotPickQuantity.Focus();
                     TextBoxHotPickLocationQuantity.Text = invItem.Quantity.ToString();
@@ -1580,23 +1752,23 @@ namespace Neutron.Forms
                     TextBoxHotPickLoc4Tray.Text = location.Loc4.ToString();
                     TextBoxHotPickLoc5Tray.Text = location.Loc5.ToString();
 
-                    Control c = Controls.Find($"LabelWidth{location.Loc3.ToString()}", true).First();
-                    if (c != null)
-                    {
-                        var label = ((Label)c);
-                        label.BackColor = Color.Red;
-                        //label.Visible = true;
-                        label.Refresh();
-                    }
+                    //Control c = Controls.Find($"LabelWidth{location.Loc3.ToString()}", true).First();
+                    //if (c != null)
+                    //{
+                    //    var label = ((Label)c);
+                    //    label.BackColor = Color.Red;
+                    //    //label.Visible = true;
+                    //    label.Refresh();
+                    //}
 
-                    c = Controls.Find($"LabelDepth{location.Loc4.ToString()}", true).First();
-                    if (c != null)
-                    {
-                        var label = ((Label)c);
-                        label.BackColor = Color.Red;
-                        //label.Visible = true;
-                        label.Refresh();
-                    }
+                    //c = Controls.Find($"LabelDepth{location.Loc4.ToString()}", true).First();
+                    //if (c != null)
+                    //{
+                    //    var label = ((Label)c);
+                    //    label.BackColor = Color.Red;
+                    //    //label.Visible = true;
+                    //    label.Refresh();
+                    //}
 
                     LabelSlotTray.Text = location.Slot;
                     // ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
@@ -1606,7 +1778,7 @@ namespace Neutron.Forms
                     ComboBoxSizeCodeLocationTray.SelectedIndex = ComboBoxSizeCodeLocationTray.FindStringExact(location.SizeCode.Name);
                     ComboBoxVelocityCodeLocationTray.SelectedIndex = ComboBoxVelocityCodeLocationTray.FindStringExact(location.VelocityCode.Name);
                     ComboBoxHeightCodeLocationTray.SelectedIndex = ComboBoxHeightCodeLocationTray.FindStringExact(location.HeightCode.Name);
-                    ComboBoxLocationCodeLocationTray.SelectedIndex = ComboBoxLocationCodeLocationTray.FindStringExact(location.LocationCode.Name);
+                    TextBoxHotPickLocationCodeTray.Text = location.LocationCode;
                     TextBoxHotPickQuantityTray.Text = string.Empty;
                     TextBoxHotPickQuantityTray.Focus();
                     TextBoxHotPickLocationQuantityTray.Text = invItem.Quantity.ToString();
@@ -1714,6 +1886,8 @@ namespace Neutron.Forms
             MBHotStore.Enabled = true;
             MBCurrentLocations.Enabled = true;
             MBNewLocations.Enabled = true;
+            TextBoxScanLocation.Text = String.Empty;
+            TextBoxScanLocation.Enabled = true;
 
             if (_bindingSourceNewLocations.Count == 0 && _bindingSourceCurrent.Count == 0)
             {
@@ -1752,7 +1926,7 @@ namespace Neutron.Forms
                 CloseButtonPressed = false;
                 ClearAllShi();
                 // ClearAllDeviceIndicators();
-                _deviceIndicatorManager.ClearAllDeviceIndicators();
+                _deviceIndicatorManager?.ClearAllDeviceIndicators();
                 FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
                 LabelFormTitle.Text = _resourceManager.GetString("HotActions");
                 LabelFormTitle.BackColor = Color.Red;
@@ -1791,7 +1965,7 @@ namespace Neutron.Forms
                 actionCode = ActionCode.PickHot;
 
                 ClearAllShi();
-                _deviceIndicatorManager.ClearAllDeviceIndicators();
+                _deviceIndicatorManager?.ClearAllDeviceIndicators();
                 //  ClearAllDeviceIndicators();
 
                 if (_useCostCenter)
@@ -1823,11 +1997,11 @@ namespace Neutron.Forms
                         StorageTypeId = _currentInventoryView.StorageTypeId,
                         ReceivedDate = DateTime.Now,
                         PrimeBin = _currentInventoryView.PrimeBin,
-                        StationId = _currentInventoryView.StationId,
+                        AreaId = _currentInventoryView.AreaId,
                     };
                     if (inventory.Quantity > 0 || inventory.StorageTypeId == (int)StorageType.Static)
                     {
-                        _repoInventory.Insert(inventory);
+                        await _repoInventory.InsertAsync(inventory);
 
                         _locationsRepository.SetLocationInUse(inventory.LocationId, true);
                         inv = _repoInventory.FindByKey(inventory.Id);
@@ -1902,9 +2076,16 @@ namespace Neutron.Forms
                 }
             }
 
+            
+
             if (_pickList == null)
             {
-                if (inv != null) TextBoxFindItem.Text = inv.ItemDefinition.Item;
+                if (inv != null)
+                {
+                    var invItem = _repoInv.GetInventoryViewById(inv.Id);
+                    TextBoxFindItem.Text = invItem.ItemDefinition.Item;
+                }
+
                 await LoadItemDefinitions();
                 await LoadCurrentAndNew();
                 LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
@@ -1930,7 +2111,11 @@ namespace Neutron.Forms
                     _quantityToPick = _pickList.Ordered.ParseInt() - orderDetail.PickedQuantity;
                     _repoReplenOrderDetails.Update(orderDetail);
                     TextBoxHotPickQuantity.Text = _quantityToPick.ToString();
-                    if (inv != null) TextBoxFindItem.Text = inv.ItemDefinition.Item;
+                    if (inv != null)
+                    {
+                        var invItem = _repoInv.GetInventoryViewById(inv.Id);
+                        TextBoxFindItem.Text = invItem.ItemDefinition.Item;
+                    }
                     await LoadItemDefinitions();
                     await LoadCurrentAndNew();
                     LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
@@ -1940,7 +2125,7 @@ namespace Neutron.Forms
                     tabControl1.SelectedTab = HotPick;
                 }
             }
-            Task.Run(() => _logger.LogDetailAsync("Hot Accept Button Press END"));
+            await Task.Run(() => _logger.LogDetailAsync("Hot Accept Button Press END"));
         }
 
         private bool CheckForOverPick(int pickQty)
@@ -2061,9 +2246,9 @@ namespace Neutron.Forms
                         else if (TextBoxScanLocation.Focused)
                         {
                             var slot = TextBoxScanLocation.Text;
-                            var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
-                            TextBoxScanLocation.Text = searchSlot;
-                            LoadNewLocationsBySlot(searchSlot);
+                           // var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+                           // TextBoxScanLocation.Text = searchSlot;
+                            LoadNewLocationsBySlot(slot);
                         }
                         else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
                         {
@@ -2075,6 +2260,29 @@ namespace Neutron.Forms
                         }
                         break;
                     }
+                case Keys.Tab:
+                {
+                    if (TextBoxFindItem.Focused)
+                    {
+                        FindItem();
+                    }
+                    else if (TextBoxScanLocation.Focused)
+                    {
+                        var slot = TextBoxScanLocation.Text;
+                        // var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+                        // TextBoxScanLocation.Text = searchSlot;
+                        LoadNewLocationsBySlot(slot);
+                    }
+                    else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
+                    {
+                        await Accept();
+                    }
+                    else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && TextBoxHotPickQuantity.Focused)
+                    {
+                        MBHotAccept.Focus();
+                    }
+                    break;
+                }
                 case Keys.Escape:
                     {
                         TextBoxFindItem.Text = "";
@@ -2137,7 +2345,7 @@ namespace Neutron.Forms
             //}
             //if (e.KeyCode == Keys.F12)
             //{
-            //    using (MetroForm frm = new FrmInventory(_jsonData, _stationView, _akaRepository, _lacProcessor))
+            //    using (MetroForm frm = new FrmInventory(_jsonData, _workstationView, _akaRepository, _lacProcessor))
             //    {
             //        var result = frm.ShowDialog();
             //        Show();
@@ -2178,7 +2386,7 @@ namespace Neutron.Forms
         private async Task EditItemDefinition(int id)
         {
             Hide();
-            using (var frm = new FrmEditItemDefinition(id))
+            using (var frm = new FrmEditItemDefinition(id, _historyManager))
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -2192,7 +2400,7 @@ namespace Neutron.Forms
         private async void EditLocationDefinition(int id)
         {
             Hide();
-            using (var frm = new FrmEditLocationDefinition(id))
+            using (var frm = new FrmEditLocationDefinition(id, _historyManager))
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -2238,19 +2446,7 @@ namespace Neutron.Forms
                 await UpdateHotPickScreen(_currentInventoryView);
             }
         }
-        private async void ComboBoxLocationCodeItem_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var box = (ComboBox)sender;
-            using (var db = new NeutronDb())
-            {
-                var rec = await db.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.ItemDefinitionId);
-                if (rec == null) return;
-                rec.LocationCodeId = (int)box.SelectedValue;
-                await db.SaveChangesAsync();
-                await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
-                await UpdateHotPickScreen(_currentInventoryView);
-            }
-        }
+      
         private async void ComboBoxSizeCodeLocation_SelectionChangeCommitted(object sender, EventArgs e)
         {
             var box = (ComboBox)sender;
@@ -2290,19 +2486,7 @@ namespace Neutron.Forms
                 await UpdateHotPickScreen(_currentInventoryView);
             }
         }
-        private async void ComboBoxLocationCodeLocation_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var box = (ComboBox)sender;
-            using (var db = new NeutronDb())
-            {
-                var rec = await db.Locations.FirstOrDefaultAsync(r => r.Id == _currentInventoryView.LocationId);
-                if (rec == null) return;
-                rec.LocationCodeId = (int)box.SelectedValue;
-                await db.SaveChangesAsync();
-                await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
-                await UpdateHotPickScreen(_currentInventoryView);
-            }
-        }
+
         private void TextBoxHotPickQuantity_TextChanged(object sender, EventArgs e)
         {
         }
@@ -2444,7 +2628,7 @@ namespace Neutron.Forms
         private void UpdateCurrentDeviceIndicator()
         {
             _logger.LogDetail("Update Current Device Indicator START");
-           // Task.Run(() => _logger.LogDetailAsync("Update Current Device Indicator START"));
+            // Task.Run(() => _logger.LogDetailAsync("Update Current Device Indicator START"));
             ClearActiveDeviceIndicators();
             var loc1 = _currentInventoryView.Loc1;
             _deviceIndicators[loc1].BlinkOn();
@@ -2461,7 +2645,7 @@ namespace Neutron.Forms
             foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
             {
                 _logger.LogDetail($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}");
-               // Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
+                // Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
                 deviceIndicator.Value.BlinkOff();
                 deviceIndicator.Value.Active = false;
             }
@@ -2476,7 +2660,7 @@ namespace Neutron.Forms
             foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
             {
                 _logger.LogDetail($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}");
-               // Task.Run(() => _logger.LogDetailAsync($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
+                // Task.Run(() => _logger.LogDetailAsync($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
                 deviceIndicator.Value.Active = false;
                 deviceIndicator.Value.BlinkOff();
             }
@@ -2507,7 +2691,6 @@ namespace Neutron.Forms
                 MBCurrentLocations.Text = _resourceManager.GetString("CurrentLocations");
                 MBFindItem.Text = _resourceManager.GetString("Search");
                 HotAction.Text = _resourceManager.GetString("HotAction");
-                LabelMainLocation.Text = _resourceManager.GetString("Location");
                 ButtonEditItemDefinition.Text = _resourceManager.GetString("Edit");
                 LabelMainHeight.Text = _resourceManager.GetString("Height");
                 LabelMainVelocity.Text = _resourceManager.GetString("Velocity");
@@ -2523,7 +2706,7 @@ namespace Neutron.Forms
                 LabelMainItem.Text = _resourceManager.GetString("Item");
                 LabelMainDescription.Text = _resourceManager.GetString("Desc");
                 GroupBoxHotPickLocation.Text = _resourceManager.GetString("Location");
-                LabelLocation.Text = _resourceManager.GetString("Location");
+                LabelLocationCode.Text = _resourceManager.GetString("LocationCode");
                 ButtonEditLocationDefinition.Text = _resourceManager.GetString("Edit");
                 LabelHeight.Text = _resourceManager.GetString("Height");
                 LabelVelocity.Text = _resourceManager.GetString("Velocity");
@@ -2545,18 +2728,18 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+                MessageBox.Show($"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
             }
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-            ControlPaint.DrawBorder(e.Graphics, panel1.ClientRectangle,
-                Color.Black, 10, ButtonBorderStyle.Dashed, // left
-                Color.Black, 10, ButtonBorderStyle.Dashed, // top
-                Color.Black, 10, ButtonBorderStyle.Dashed, // right
-                Color.Black, 10, ButtonBorderStyle.Dashed);// bottom
-        }
+        //private void panel2_Paint(object sender, PaintEventArgs e)
+        //{
+        //    ControlPaint.DrawBorder(e.Graphics, panel1.ClientRectangle,
+        //        Color.Black, 10, ButtonBorderStyle.Dashed, // left
+        //        Color.Black, 10, ButtonBorderStyle.Dashed, // top
+        //        Color.Black, 10, ButtonBorderStyle.Dashed, // right
+        //        Color.Black, 10, ButtonBorderStyle.Dashed);// bottom
+        //}
 
         private void TextBoxScanLocation_Enter(object sender, EventArgs e)
         {

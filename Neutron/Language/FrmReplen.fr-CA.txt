@@ -66,6 +66,6 @@ Description=La description
 ReceivedDate=Date de réception
 Starter=Entrée
 AddItem=Ajouter un item
-Station=Gare
+Workstation=Gare
 PickedQuantity=Quantité prélevée
 LineStatus=Statut de la ligne

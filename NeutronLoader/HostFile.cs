@@ -6,6 +6,7 @@ using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.DataContexts;
 using NeutronData.Models;
+using NeutronData.ModelViews;
 using NeutronData.Repositories;
 using System;
 using System.Collections.Generic;
@@ -27,15 +28,15 @@ namespace NeutronLoader
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
         private readonly DynamicLogger _logger;
         private string _neutronUpFileName;
 
-        public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation)
+        public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables, WorkstationView workstationView)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
 
@@ -380,7 +381,8 @@ namespace NeutronLoader
         // Saint Francis Upload Format
         private string GetUploadDatRecord(History history)
         {
-            var station = history.StationId == _rackStation.Id ? "9" : history.StationId.ToString();
+          //  var station = history.AreaId == _workstationView.Id ? "9" : history.AreaId.ToString();
+            var areaId = history.AreaId;
             var order = history.Ord1.PadRight(10);
             var costCenter = history.CostCenter;
             var orderDetailInfo = string.Empty;
@@ -405,7 +407,7 @@ namespace NeutronLoader
             var invoice = history.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
 
             var sb = new StringBuilder(new string(' ', 170));
-            sb.Insert(0, $"{station}O");
+            sb.Insert(0, $"{areaId}O");
             sb.Insert(2, order);
             sb.Insert(13, invoice);
             sb.Insert(24, history.ActionDateTime.ToString("yyyyMMdd"));
@@ -417,7 +419,7 @@ namespace NeutronLoader
             sb.Insert(104, upCode);
             sb.Insert(107, empName);
             sb.Insert(118, costCenter);
-            sb.Insert(129, station);
+            sb.Insert(129, areaId);
             sb.Insert(130, orderDetailInfo);
             sb.Length = 154;
 
@@ -581,10 +583,10 @@ namespace NeutronLoader
             string qty = ($"000000000");
             string loc = string.Empty;
             order.EmpId = string.Empty;
-            string station = order.OrderDetail.StationNumber.ToString();
+            string area = order.OrderDetail.AreaId.ToString();
             var sb = new StringBuilder();
             sb.Length = 118;
-            sb.Insert(index: 0, value: $"{station}O");
+            sb.Insert(index: 0, value: $"{area}O");
             sb.Insert(index: 2, value: order.JobNum.PadRight(totalWidth: 10));
             sb.Insert(index: 13, value: order.OrderDetail.ReplenOrder.Ord2.PadRight(totalWidth: 10, paddingChar: ' '));
             sb.Insert(index: 24, value: order.DateTime);
@@ -606,12 +608,12 @@ namespace NeutronLoader
             string time = DateTime.Now.ToString(format: "HH:mm");
             string reqQty = order.OrderDetail.Quantity.ToString().PadLeft(9, '0');
             string loc = order.OrderDetail.OrderDetailInfo;
-            string station = order.OrderDetail.StationNumber.ToString();
+            string area = order.OrderDetail.AreaId.ToString();
             string ord1 = order.JobNum.StartsWith(@"R") ? @"REPLENOPRP" : order.JobNum;
             string invoice = order.OrderDetail.ReplenOrder.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
             var sb = new StringBuilder();
             sb.Length = 160;
-            sb.Insert(index: 0, value: $"{station}O");
+            sb.Insert(index: 0, value: $"{area}O");
             sb.Insert(index: 2, value: ord1.PadRight(10));
             sb.Insert(index: 13, value: invoice);
             sb.Insert(index: 24, value: order.DateTime);
@@ -975,10 +977,10 @@ namespace NeutronLoader
             string qty = ($"000000000");
             string loc = string.Empty;
             hostOrder.EmpId = string.Empty;
-            string station = hostOrder.OrderDetail.StationNumber.ToString();
+            string area = hostOrder.OrderDetail.AreaId.ToString();
             var sb = new StringBuilder();
             sb.Length = 118;
-            sb.Insert(0, value: $"{station}O");
+            sb.Insert(0, value: $"{area}O");
             sb.Insert(2, hostOrder.JobNum.PadRight(totalWidth: 10));
             sb.Insert(13, hostOrder.OrderDetail.Order.Ord2.PadRight(totalWidth: 10, paddingChar: ' '));
             sb.Insert(24, hostOrder.DateTime);
@@ -1000,11 +1002,11 @@ namespace NeutronLoader
             string time = DateTime.Now.ToString(format: "HH:mm");
             string reqQty = hostOrder.OrderDetail.Quantity.ToString().PadLeft(9, '0');
             string loc = hostOrder.OrderDetail.OrderDetailInfo;  //.Substring(0, 9)
-            string station = hostOrder.OrderDetail.StationNumber.ToString();
+            string area = hostOrder.OrderDetail.AreaId.ToString();
             string invoice = hostOrder.OrderDetail.Order.Ord2.PadRight(totalWidth: 10, paddingChar: ' ');
             var sb = new StringBuilder();
             sb.Length = 127;
-            sb.Insert(0, $"{station}O");
+            sb.Insert(0, $"{area}O");
             sb.Insert(2, hostOrder.JobNum.PadRight(10));
             sb.Insert(13, invoice);
             sb.Insert(24, hostOrder.DateTime);

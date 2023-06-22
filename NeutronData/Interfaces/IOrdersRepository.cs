@@ -8,11 +8,11 @@ namespace NeutronData.Interfaces
     public interface IOrdersRepository
     {
         Order GetOrder(int id);
-        List<AvailableOrdersView> GetAvailableOrdersForInductionScreen(StationView station, string searchField);
+        List<AvailableOrdersView> GetAvailableOrdersForInductionScreen(WorkstationView workstationView, string searchField);
         IEnumerable<OrderView> GetOrderViews(string orderStatus, string searchField);
         IEnumerable<OrderView> GetOrderView();
-        List<AvailableOrdersView> GetAvailableOrders(StationView station);
-        List<AvailableOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false);
+        List<AvailableOrdersView> GetAvailableOrders(WorkstationView workstationView);
+        List<AvailableOrdersView> GetAvailableOrders(WorkstationView workstationView, string search, bool serialPicking, bool showSkips = false);
         IEnumerable<OrderView> GetCompletedOrders(string search);
         Order GetOrder();
         List<PickView> GetOrderLines();
@@ -22,6 +22,7 @@ namespace NeutronData.Interfaces
         List<SkipView> GetSkippedOrders();
         IEnumerable<OrderView> GetRackOrders(string search);
         IEnumerable<RackOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
-        Order GetOrderAndOrderDetails(int? orderId, int stationNumber);
+        Order GetOrderAndOrderDetails(int? orderId, int[] areaIdsForThisWorkstation);
+        Order GetOrderAndOrderDetails(int? orderId, int areaId);
     }
 }

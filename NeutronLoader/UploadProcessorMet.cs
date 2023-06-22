@@ -15,6 +15,7 @@ using Timer = System.Threading.Timer;
 using static System.Int32;
 using NeutronData.DataContexts;
 using System.Data.Entity;
+using NeutronData.Interfaces;
 
 namespace NeutronLoader
 {
@@ -23,7 +24,7 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly DynamicLogger _logger;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
         private Timer _timer;
         private Timer _replenTimer;
 
@@ -31,12 +32,13 @@ namespace NeutronLoader
         public bool ReplenBusy;
 
         public UploadProcessorMet(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            DynamicLogger logger, Station rackStation)
+            DynamicLogger logger, WorkstationView workstationView)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
+
         }
 
 
@@ -93,7 +95,7 @@ namespace NeutronLoader
                         .ToList();
                     _logger.Log($"History Record Count: {recs.Count}");
                     if (recs.Count <= 0) return;
-                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _rackStation);
+                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                     hostFile.CreateMetHostFile(recs);
 
                     foreach (var rec in recs)
@@ -161,7 +163,7 @@ namespace NeutronLoader
                         foreach (var rec in recs)
                         {
                             var sb = new StringBuilder();
-                            sb.Append($"{rec.StationId}|");
+                            sb.Append($"{rec.AreaId}|");
                             sb.Append($"{rec.Item}|");
                             sb.Append($"{rec.RequestedQuantity}|");
                             sb.Append($"{rec.Size}");

@@ -77,9 +77,10 @@ namespace Neutron.Forms
         private void FrmProductivity_Load(object sender, EventArgs e)
         {
             var date = DateTime.Now;
-            DateTimePickerFrom.Value = date.FirstDayOfMonth();
+            DateTimePickerFrom.Value = new DateTime(2023, 1, 1, 0, 0, 0);
+
             DateTimePickerTo.Value = date;
-            _currentFromDateTime = date.FirstDayOfMonth();
+            _currentFromDateTime = new DateTime(2023, 1, 1, 0, 0, 0);
             _currentToDateTime = date.LastDayOfMonth();
         }
 
@@ -312,11 +313,11 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Station",
-                HeaderText = _gridResourceManager.GetString("Station"),
+                DataPropertyName = "Workstation",
+                HeaderText = _gridResourceManager.GetString("Workstation"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                Name = "Station",
+                Name = "Workstation",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
@@ -342,10 +343,10 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationId",
-                HeaderText = _gridResourceManager.GetString("StationId"),
+                DataPropertyName = "WorkstationId",
+                HeaderText = _gridResourceManager.GetString("WorkstationId"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "StationId",
+                Name = "WorkstationId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Visible = false
             };
@@ -467,11 +468,11 @@ namespace Neutron.Forms
             DataGridView2.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Station",
-                HeaderText = _gridResourceManager.GetString("Station"),
+                DataPropertyName = "Workstation",
+                HeaderText = _gridResourceManager.GetString("Workstation"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                Name = "Station",
+                Name = "Workstation",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
@@ -497,11 +498,11 @@ namespace Neutron.Forms
             DataGridView2.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationId",
-                HeaderText = _gridResourceManager.GetString("StationId"),
+                DataPropertyName = "WorkstationId",
+                HeaderText = _gridResourceManager.GetString("WorkstationId"),
                 Visible = false,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "StationId",
+                Name = "WorkstationId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
             DataGridView2.Columns.Add(col);
@@ -699,7 +700,7 @@ namespace Neutron.Forms
         {
             var currentItem = ((ObjectView<ProductivitySummary>)_bindingSourceSummary.Current).Object;
             var recs = GetProductivityDetailRecords(currentItem.ActionCodeId, _fromDate, _toDate, currentItem.UserId,
-                currentItem.StationId);
+                currentItem.WorkstationId);
             var blv = new BindingListView<ProductivityDetail>(recs);
             _bindingSourceDetail = new BindingSource { DataSource = blv };
             DataGridView2.DataSource = _bindingSourceDetail;
@@ -937,7 +938,7 @@ namespace Neutron.Forms
             {
                 var currentItem = ((ObjectView<ProductivitySummary>)item).Object;
                 var recs = GetProductivityDetailRecords(currentItem.ActionCodeId, _fromDate, _toDate, currentItem.UserId,
-                    currentItem.StationId);
+                    currentItem.AreaId);
                 var totalLines = recs.Count;
                 var totalPieces = recs.Sum(r => r.Issued);
                 var totalOrders = recs.Select(r => r.OrderId).Distinct().Count();

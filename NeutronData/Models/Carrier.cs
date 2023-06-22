@@ -10,7 +10,8 @@ namespace NeutronData.Models
             Roles = new List<Role>();
         }
         public int CarrierId { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
+        public int WorkstationId { get; set; }
         public int DeviceNumber { get; set; }
         public int CarrierNumber { get; set; }
         public virtual ICollection<Role> Roles { get; set; }

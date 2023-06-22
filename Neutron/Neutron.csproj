@@ -13,28 +13,26 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>ftp://ftp.nameit21.com/Programs/Neutron/Demo/</PublishUrl>
+    <PublishUrl>C:\Neutron\EBin Project\Neutron Installation PowerSpec Server\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>http://www.nameit21.com/Programs/Neutron/Demo/</InstallUrl>
     <SupportUrl>http://www.put2light.com</SupportUrl>
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>486</ApplicationRevision>
+    <ApplicationRevision>488</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -145,10 +143,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="NeutronDllu, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\NeutronDllu\NeutronDllu\bin\Debug\NeutronDllu.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -163,11 +157,14 @@
       <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Syncfusion.Core.WinForms, Version=21.1460.35.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Shared.Base, Version=21.1460.35.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>True</Private>
@@ -189,8 +186,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\PanelManager.cs" />
+    <Compile Include="Controllers\IBlastzoneDisplayController.cs" />
+    <Compile Include="Controllers\IProLiteController.cs" />
+    <Compile Include="Controllers\Mp12D.cs" />
+    <Compile Include="Controllers\Mp12N.cs" />
     <Compile Include="Extensions\UCExtensions.cs" />
     <Compile Include="Global\IHistoryManager.cs" />
+    <Compile Include="Interfaces\IHanelDriver.cs" />
+    <Compile Include="Models\HeaderTextManager.cs" />
     <Compile Include="Ninject\Bindings.cs" />
     <Compile Include="Builders\BayControllerBuilder.cs" />
     <Compile Include="Builders\InterfaceControllerBuilder.cs" />
@@ -242,10 +245,10 @@
     <Compile Include="Forms\FrmChangeLineStatus.Designer.cs">
       <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\FrmChangeOrderStatus.cs">
+    <Compile Include="Forms\FrmChangeOrderStatus.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controllers\FrmChangeOrderStatus.Designer.cs">
+    <Compile Include="Forms\FrmChangeOrderStatus.Designer.cs">
       <DependentUpon>FrmChangeOrderStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmChangePriority.cs">
@@ -530,7 +533,7 @@
     <EmbeddedResource Include="Forms\FrmChangeLineStatus.resx">
       <DependentUpon>FrmChangeLineStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controllers\FrmChangeOrderStatus.resx">
+    <EmbeddedResource Include="Forms\FrmChangeOrderStatus.resx">
       <DependentUpon>FrmChangeOrderStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeQuantityOnly.resx">
@@ -823,13 +826,33 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\VS2019\Projects\HanelCommands\HanelCommands\HanelCommands.csproj">
+      <Project>{e5c92f26-e834-4913-9482-c8af45f358ea}</Project>
+      <Name>HanelCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\VS2019\Projects\Hanel\Hanel_DC\Hanel_DC.csproj">
+      <Project>{156add50-d792-4d9b-897d-f4b38aed9234}</Project>
+      <Name>Hanel_DC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
       <Project>{b600904b-1b59-47bf-8884-5a4982d8b2fe}</Project>
       <Name>HighJump</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
+      <Project>{ab3c26a8-5c8c-40d0-b937-c5e7b27d70ce}</Project>
+      <Name>NeutronDllu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NeutronUserControls\NeutronTrayLayout\NeutronTrayLayout\NeutronTrayLayout.csproj">
+      <Project>{4f32e28f-e0e0-4144-982f-fe7920ad93a1}</Project>
+      <Name>NeutronTrayLayout</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
       <Project>{6ce97d6f-a149-42fe-a858-2272db64897e}</Project>
       <Name>AlliedPostOffice</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj">
+      <Project>{69b6d943-9c4f-417e-9a5e-07f56926e526}</Project>
+      <Name>BlastzoneController</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeviceIndicatorService\DeviceIndicatorService.csproj">
       <Project>{2AEDD746-887B-411D-A2B9-52AB4835ACBF}</Project>
@@ -838,6 +861,10 @@
     <ProjectReference Include="..\DGVPrinter\DGVPrint.csproj">
       <Project>{e992bd9a-8437-48e4-b9de-000efc15032b}</Project>
       <Name>DGVPrint</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EBinDisplayManager\EBinDisplay.csproj">
+      <Project>{51955251-c665-4f33-b31b-45011e6bab99}</Project>
+      <Name>EBinDisplay</Name>
     </ProjectReference>
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>
@@ -866,6 +893,10 @@
     <ProjectReference Include="..\NeutronMaintenance\NeutronMaintenance.csproj">
       <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
       <Name>NeutronMaintenance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
+      <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
+      <Name>ProliteController</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>
@@ -901,36 +932,18 @@
   </Target>
   -->
   <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll" />
-  
-	<Target Name="AfterCompile" AfterTargets="AfterCompile" 
-			Condition="Exists('App.$(Configuration).config')">
-    
-	<!--Generate transformed app config in the intermediate directory-->
-    
-	<TransformXml Source="App.config" 
-			Destination="$(IntermediateOutputPath)$(TargetFileName).config" 
-			Transform="App.$(Configuration).config" />
-    
-	<!--Force build process to use the transformed configuration file from now on.-->
-    
-	<ItemGroup>
-    
-	<!--<AppConfigWithTargetPath Remove="App.config" />-->
-	<AppConfigWithTargetPath Remove="@(AppConfigWithTargetPath)" />
-  
-	<AppConfigWithTargetPath 
-			Include="$(IntermediateOutputPath)$(TargetFileName).config">
-
-	<TargetPath>$(TargetFileName).config</TargetPath>
-
-	</AppConfigWithTargetPath>
-
-	</ItemGroup>
-
-	</Target>
-  
-  
-  
+  <Target Name="AfterCompile" AfterTargets="AfterCompile" Condition="Exists('App.$(Configuration).config')">
+    <!--Generate transformed app config in the intermediate directory-->
+    <TransformXml Source="App.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="App.$(Configuration).config" />
+    <!--Force build process to use the transformed configuration file from now on.-->
+    <ItemGroup>
+      <!--<AppConfigWithTargetPath Remove="App.config" />-->
+      <AppConfigWithTargetPath Remove="@(AppConfigWithTargetPath)" />
+      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
+        <TargetPath>$(TargetFileName).config</TargetPath>
+      </AppConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
   <!--Override After Publish to support ClickOnce AfterPublish. Target replaces the untransformed config file copied to the deployment directory with the transformed one.-->
   <Target Name="AfterPublish">
     <PropertyGroup>

@@ -61,8 +61,6 @@
             this.LabelViewEditUnitOfIssue = new System.Windows.Forms.Label();
             this.ComboBoxViewEditStorageType = new System.Windows.Forms.ComboBox();
             this.LabelViewEditStorageType = new System.Windows.Forms.Label();
-            this.ComboBoxViewEditLocationCode = new System.Windows.Forms.ComboBox();
-            this.LabelViewEditLocation = new System.Windows.Forms.Label();
             this.ComboBoxViewEditHeightCode = new System.Windows.Forms.ComboBox();
             this.LabelViewEditHeight = new System.Windows.Forms.Label();
             this.ComboBoxViewEditVelocityCode = new System.Windows.Forms.ComboBox();
@@ -70,21 +68,19 @@
             this.LabelViewEditSystemMin = new System.Windows.Forms.Label();
             this.ComboBoxViewEditSizeCode = new System.Windows.Forms.ComboBox();
             this.LabelViewEditSize = new System.Windows.Forms.Label();
-            this.ComboBoxViewEditStation = new System.Windows.Forms.ComboBox();
-            this.TextBoxViewEditId = new System.Windows.Forms.TextBox();
+            this.ComboBoxViewEditArea = new System.Windows.Forms.ComboBox();
             this.TextBoxViewEditSystemMax = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditLocationMin = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditLocationMax = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditDescription = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditSystemMin = new System.Windows.Forms.TextBox();
-            this.TextBoxViewEditStation = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditItem = new System.Windows.Forms.TextBox();
             this.LabelViewEditSystemMax = new System.Windows.Forms.Label();
             this.LabelViewEditLocationMin = new System.Windows.Forms.Label();
             this.LabelViewEditLocationMax = new System.Windows.Forms.Label();
             this.LabelViewEditDexcription = new System.Windows.Forms.Label();
             this.LabelViewEditItem = new System.Windows.Forms.Label();
-            this.LabelViewEditStation = new System.Windows.Forms.Label();
+            this.LabelViewEditArea = new System.Windows.Forms.Label();
             this.New = new System.Windows.Forms.TabPage();
             this.LabelActionNew = new System.Windows.Forms.Label();
             this.MbNewListing = new MetroFramework.Controls.MetroButton();
@@ -96,8 +92,6 @@
             this.PanelNew = new System.Windows.Forms.Panel();
             this.LabelNewDefaultImage = new System.Windows.Forms.Label();
             this.PictureBoxNewImage = new System.Windows.Forms.PictureBox();
-            this.ComboBoxNewLocationCode = new System.Windows.Forms.ComboBox();
-            this.LabelNewLocation = new System.Windows.Forms.Label();
             this.ComboBoxNewUnitOfIssue = new System.Windows.Forms.ComboBox();
             this.LabelNewUnitOfIssue = new System.Windows.Forms.Label();
             this.ComboBoxNewStorageType = new System.Windows.Forms.ComboBox();
@@ -113,7 +107,7 @@
             this.LabelNewVelocity = new System.Windows.Forms.Label();
             this.ComboBoxNewSizeCode = new System.Windows.Forms.ComboBox();
             this.LabelNewSize = new System.Windows.Forms.Label();
-            this.ComboBoxNewStation = new System.Windows.Forms.ComboBox();
+            this.ComboBoxNewArea = new System.Windows.Forms.ComboBox();
             this.TextBoxNewSystemMax = new System.Windows.Forms.TextBox();
             this.TextBoxNewLocationMin = new System.Windows.Forms.TextBox();
             this.TextBoxNewLocationMax = new System.Windows.Forms.TextBox();
@@ -214,9 +208,9 @@
             this.CheckBoxAllStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxAllStations.Location = new System.Drawing.Point(530, 73);
             this.CheckBoxAllStations.Name = "CheckBoxAllStations";
-            this.CheckBoxAllStations.Size = new System.Drawing.Size(90, 17);
+            this.CheckBoxAllStations.Size = new System.Drawing.Size(76, 17);
             this.CheckBoxAllStations.TabIndex = 21;
-            this.CheckBoxAllStations.Text = "All Stations";
+            this.CheckBoxAllStations.Text = "All Areas";
             this.CheckBoxAllStations.UseVisualStyleBackColor = true;
             this.CheckBoxAllStations.CheckedChanged += new System.EventHandler(this.CheckBoxAllStations_CheckedChanged);
             // 
@@ -327,6 +321,7 @@
             this.DataGridView1.Size = new System.Drawing.Size(1141, 536);
             this.DataGridView1.TabIndex = 6;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
+            this.DataGridView1.DoubleClick += new System.EventHandler(this.DataGridView1_DoubleClick);
             // 
             // ViewEdit
             // 
@@ -417,8 +412,6 @@
             this.panel1.Controls.Add(this.LabelViewEditUnitOfIssue);
             this.panel1.Controls.Add(this.ComboBoxViewEditStorageType);
             this.panel1.Controls.Add(this.LabelViewEditStorageType);
-            this.panel1.Controls.Add(this.ComboBoxViewEditLocationCode);
-            this.panel1.Controls.Add(this.LabelViewEditLocation);
             this.panel1.Controls.Add(this.ComboBoxViewEditHeightCode);
             this.panel1.Controls.Add(this.LabelViewEditHeight);
             this.panel1.Controls.Add(this.ComboBoxViewEditVelocityCode);
@@ -426,21 +419,19 @@
             this.panel1.Controls.Add(this.LabelViewEditSystemMin);
             this.panel1.Controls.Add(this.ComboBoxViewEditSizeCode);
             this.panel1.Controls.Add(this.LabelViewEditSize);
-            this.panel1.Controls.Add(this.ComboBoxViewEditStation);
-            this.panel1.Controls.Add(this.TextBoxViewEditId);
+            this.panel1.Controls.Add(this.ComboBoxViewEditArea);
             this.panel1.Controls.Add(this.TextBoxViewEditSystemMax);
             this.panel1.Controls.Add(this.TextBoxViewEditLocationMin);
             this.panel1.Controls.Add(this.TextBoxViewEditLocationMax);
             this.panel1.Controls.Add(this.TextBoxViewEditDescription);
             this.panel1.Controls.Add(this.TextBoxViewEditSystemMin);
-            this.panel1.Controls.Add(this.TextBoxViewEditStation);
             this.panel1.Controls.Add(this.TextBoxViewEditItem);
             this.panel1.Controls.Add(this.LabelViewEditSystemMax);
             this.panel1.Controls.Add(this.LabelViewEditLocationMin);
             this.panel1.Controls.Add(this.LabelViewEditLocationMax);
             this.panel1.Controls.Add(this.LabelViewEditDexcription);
             this.panel1.Controls.Add(this.LabelViewEditItem);
-            this.panel1.Controls.Add(this.LabelViewEditStation);
+            this.panel1.Controls.Add(this.LabelViewEditArea);
             this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(3, 97);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -541,26 +532,6 @@
             this.LabelViewEditStorageType.Text = "Storage Type";
             this.LabelViewEditStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ComboBoxViewEditLocationCode
-            // 
-            this.ComboBoxViewEditLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxViewEditLocationCode.FormattingEnabled = true;
-            this.ComboBoxViewEditLocationCode.Location = new System.Drawing.Point(216, 396);
-            this.ComboBoxViewEditLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxViewEditLocationCode.Name = "ComboBoxViewEditLocationCode";
-            this.ComboBoxViewEditLocationCode.Size = new System.Drawing.Size(190, 30);
-            this.ComboBoxViewEditLocationCode.TabIndex = 8;
-            this.ComboBoxViewEditLocationCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxViewEditHeightCode_KeyDown);
-            // 
-            // LabelViewEditLocation
-            // 
-            this.LabelViewEditLocation.Location = new System.Drawing.Point(20, 396);
-            this.LabelViewEditLocation.Name = "LabelViewEditLocation";
-            this.LabelViewEditLocation.Size = new System.Drawing.Size(190, 29);
-            this.LabelViewEditLocation.TabIndex = 7;
-            this.LabelViewEditLocation.Text = "Location";
-            this.LabelViewEditLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // ComboBoxViewEditHeightCode
             // 
             this.ComboBoxViewEditHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -570,7 +541,6 @@
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxViewEditHeightCode.TabIndex = 7;
-            this.ComboBoxViewEditHeightCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxViewEditHeightCode_KeyDown);
             // 
             // LabelViewEditHeight
             // 
@@ -630,28 +600,16 @@
             this.LabelViewEditSize.Text = "Size";
             this.LabelViewEditSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ComboBoxViewEditStation
+            // ComboBoxViewEditArea
             // 
-            this.ComboBoxViewEditStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxViewEditStation.Enabled = false;
-            this.ComboBoxViewEditStation.FormattingEnabled = true;
-            this.ComboBoxViewEditStation.Location = new System.Drawing.Point(216, 156);
-            this.ComboBoxViewEditStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxViewEditStation.Name = "ComboBoxViewEditStation";
-            this.ComboBoxViewEditStation.Size = new System.Drawing.Size(190, 30);
-            this.ComboBoxViewEditStation.TabIndex = 2;
-            // 
-            // TextBoxViewEditId
-            // 
-            this.TextBoxViewEditId.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.TextBoxViewEditId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditId.Location = new System.Drawing.Point(868, 483);
-            this.TextBoxViewEditId.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxViewEditId.Name = "TextBoxViewEditId";
-            this.TextBoxViewEditId.Size = new System.Drawing.Size(85, 20);
-            this.TextBoxViewEditId.TabIndex = 1;
-            this.TextBoxViewEditId.TabStop = false;
-            this.TextBoxViewEditId.Visible = false;
+            this.ComboBoxViewEditArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxViewEditArea.Enabled = false;
+            this.ComboBoxViewEditArea.FormattingEnabled = true;
+            this.ComboBoxViewEditArea.Location = new System.Drawing.Point(216, 156);
+            this.ComboBoxViewEditArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ComboBoxViewEditArea.Name = "ComboBoxViewEditArea";
+            this.ComboBoxViewEditArea.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditArea.TabIndex = 2;
             // 
             // TextBoxViewEditSystemMax
             // 
@@ -701,18 +659,6 @@
             this.TextBoxViewEditSystemMin.Size = new System.Drawing.Size(100, 28);
             this.TextBoxViewEditSystemMin.TabIndex = 10;
             this.TextBoxViewEditSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TextBoxViewEditStation
-            // 
-            this.TextBoxViewEditStation.Location = new System.Drawing.Point(976, 483);
-            this.TextBoxViewEditStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxViewEditStation.Name = "TextBoxViewEditStation";
-            this.TextBoxViewEditStation.ReadOnly = true;
-            this.TextBoxViewEditStation.Size = new System.Drawing.Size(127, 28);
-            this.TextBoxViewEditStation.TabIndex = 1;
-            this.TextBoxViewEditStation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxViewEditStation.Visible = false;
-            this.TextBoxViewEditStation.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditItem_KeyDown);
             // 
             // TextBoxViewEditItem
             // 
@@ -770,14 +716,14 @@
             this.LabelViewEditItem.Text = "Item";
             this.LabelViewEditItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelViewEditStation
+            // LabelViewEditArea
             // 
-            this.LabelViewEditStation.Location = new System.Drawing.Point(20, 156);
-            this.LabelViewEditStation.Name = "LabelViewEditStation";
-            this.LabelViewEditStation.Size = new System.Drawing.Size(190, 29);
-            this.LabelViewEditStation.TabIndex = 0;
-            this.LabelViewEditStation.Text = "Station";
-            this.LabelViewEditStation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelViewEditArea.Location = new System.Drawing.Point(20, 156);
+            this.LabelViewEditArea.Name = "LabelViewEditArea";
+            this.LabelViewEditArea.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditArea.TabIndex = 0;
+            this.LabelViewEditArea.Text = "Area";
+            this.LabelViewEditArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // New
             // 
@@ -835,7 +781,6 @@
             // 
             // MbSaveAsDefault
             // 
-            this.MbSaveAsDefault.Enabled = false;
             this.MbSaveAsDefault.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.MbSaveAsDefault.Location = new System.Drawing.Point(288, 48);
             this.MbSaveAsDefault.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -889,8 +834,6 @@
             this.PanelNew.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.PanelNew.Controls.Add(this.LabelNewDefaultImage);
             this.PanelNew.Controls.Add(this.PictureBoxNewImage);
-            this.PanelNew.Controls.Add(this.ComboBoxNewLocationCode);
-            this.PanelNew.Controls.Add(this.LabelNewLocation);
             this.PanelNew.Controls.Add(this.ComboBoxNewUnitOfIssue);
             this.PanelNew.Controls.Add(this.LabelNewUnitOfIssue);
             this.PanelNew.Controls.Add(this.ComboBoxNewStorageType);
@@ -906,7 +849,7 @@
             this.PanelNew.Controls.Add(this.LabelNewVelocity);
             this.PanelNew.Controls.Add(this.ComboBoxNewSizeCode);
             this.PanelNew.Controls.Add(this.LabelNewSize);
-            this.PanelNew.Controls.Add(this.ComboBoxNewStation);
+            this.PanelNew.Controls.Add(this.ComboBoxNewArea);
             this.PanelNew.Controls.Add(this.TextBoxNewSystemMax);
             this.PanelNew.Controls.Add(this.TextBoxNewLocationMin);
             this.PanelNew.Controls.Add(this.TextBoxNewLocationMax);
@@ -944,25 +887,6 @@
             this.PictureBoxNewImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBoxNewImage.TabIndex = 36;
             this.PictureBoxNewImage.TabStop = false;
-            // 
-            // ComboBoxNewLocationCode
-            // 
-            this.ComboBoxNewLocationCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxNewLocationCode.FormattingEnabled = true;
-            this.ComboBoxNewLocationCode.Location = new System.Drawing.Point(216, 396);
-            this.ComboBoxNewLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxNewLocationCode.Name = "ComboBoxNewLocationCode";
-            this.ComboBoxNewLocationCode.Size = new System.Drawing.Size(190, 30);
-            this.ComboBoxNewLocationCode.TabIndex = 8;
-            // 
-            // LabelNewLocation
-            // 
-            this.LabelNewLocation.Location = new System.Drawing.Point(20, 396);
-            this.LabelNewLocation.Name = "LabelNewLocation";
-            this.LabelNewLocation.Size = new System.Drawing.Size(190, 29);
-            this.LabelNewLocation.TabIndex = 34;
-            this.LabelNewLocation.Text = "Location";
-            this.LabelNewLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxNewUnitOfIssue
             // 
@@ -1058,7 +982,6 @@
             this.ComboBoxNewHeightCode.Name = "ComboBoxNewHeightCode";
             this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewHeightCode.TabIndex = 7;
-            this.ComboBoxNewHeightCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxNewHeightCode_KeyDown);
             // 
             // LabelNewHeight
             // 
@@ -1109,15 +1032,15 @@
             this.LabelNewSize.Text = "Size";
             this.LabelNewSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ComboBoxNewStation
+            // ComboBoxNewArea
             // 
-            this.ComboBoxNewStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxNewStation.FormattingEnabled = true;
-            this.ComboBoxNewStation.Location = new System.Drawing.Point(216, 156);
-            this.ComboBoxNewStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ComboBoxNewStation.Name = "ComboBoxNewStation";
-            this.ComboBoxNewStation.Size = new System.Drawing.Size(189, 30);
-            this.ComboBoxNewStation.TabIndex = 2;
+            this.ComboBoxNewArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxNewArea.FormattingEnabled = true;
+            this.ComboBoxNewArea.Location = new System.Drawing.Point(216, 156);
+            this.ComboBoxNewArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ComboBoxNewArea.Name = "ComboBoxNewArea";
+            this.ComboBoxNewArea.Size = new System.Drawing.Size(189, 30);
+            this.ComboBoxNewArea.TabIndex = 2;
             // 
             // TextBoxNewSystemMax
             // 
@@ -1221,7 +1144,7 @@
             this.LabelNewStation.Name = "LabelNewStation";
             this.LabelNewStation.Size = new System.Drawing.Size(190, 29);
             this.LabelNewStation.TabIndex = 9;
-            this.LabelNewStation.Text = "Station";
+            this.LabelNewStation.Text = "Area";
             this.LabelNewStation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelRecordCount
@@ -1293,7 +1216,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TabPage New;
         private System.Windows.Forms.TextBox TextBoxViewEditItem;
-        private System.Windows.Forms.Label LabelViewEditStation;
+        private System.Windows.Forms.Label LabelViewEditArea;
         private System.Windows.Forms.Label LabelAction;
         private MetroFramework.Controls.MetroButton MbViewEditListing;
         private MetroFramework.Controls.MetroButton MbViewEditDelete;
@@ -1307,7 +1230,7 @@
         private System.Windows.Forms.Panel PanelNew;
         private System.Windows.Forms.Label LabelRecordCount;
         private System.Windows.Forms.Label LabelFindDescription;
-        private System.Windows.Forms.ComboBox ComboBoxViewEditStation;
+        private System.Windows.Forms.ComboBox ComboBoxViewEditArea;
         private System.Windows.Forms.ComboBox ComboBoxViewEditHeightCode;
         private System.Windows.Forms.Label LabelViewEditHeight;
         private System.Windows.Forms.ComboBox ComboBoxViewEditVelocityCode;
@@ -1318,7 +1241,6 @@
         private System.Windows.Forms.TextBox TextBoxViewEditLocationMax;
         private System.Windows.Forms.TextBox TextBoxViewEditDescription;
         private System.Windows.Forms.TextBox TextBoxViewEditSystemMax;
-        private System.Windows.Forms.TextBox TextBoxViewEditId;
         private System.Windows.Forms.Label LabelViewEditSystemMax;
         private System.Windows.Forms.Label LabelViewEditLocationMin;
         private System.Windows.Forms.Label LabelViewEditLocationMax;
@@ -1330,7 +1252,7 @@
         private System.Windows.Forms.Label LabelNewVelocity;
         private System.Windows.Forms.ComboBox ComboBoxNewSizeCode;
         private System.Windows.Forms.Label LabelNewSize;
-        private System.Windows.Forms.ComboBox ComboBoxNewStation;
+        private System.Windows.Forms.ComboBox ComboBoxNewArea;
         private System.Windows.Forms.TextBox TextBoxNewSystemMax;
         private System.Windows.Forms.TextBox TextBoxNewLocationMin;
         private System.Windows.Forms.TextBox TextBoxNewLocationMax;
@@ -1360,17 +1282,12 @@
         private System.Windows.Forms.Label LabelNewUnitOfIssue;
         private System.Windows.Forms.ComboBox ComboBoxNewStorageType;
         private System.Windows.Forms.Label LabelNewStorageType;
-        private System.Windows.Forms.ComboBox ComboBoxViewEditLocationCode;
-        private System.Windows.Forms.Label LabelViewEditLocation;
-        private System.Windows.Forms.ComboBox ComboBoxNewLocationCode;
-        private System.Windows.Forms.Label LabelNewLocation;
         private System.Windows.Forms.PictureBox PictureBoxNewImage;
         private System.Windows.Forms.PictureBox PictureBoxViewEditImage;
         private MetroFramework.Controls.MetroButton MBPrintItemDefinitions;
         private MetroFramework.Controls.MetroButton MbSaveAsDefault;
         private MetroFramework.Controls.MetroButton MbLoadDefault;
         private System.Windows.Forms.CheckBox CheckBoxAllStations;
-        private System.Windows.Forms.TextBox TextBoxViewEditStation;
         private System.Windows.Forms.Label LabelViewEditChangeStationWarning;
         private System.Windows.Forms.Label LabelNewDefaultImage;
         private System.Windows.Forms.Label LabelViewEditDefaultImage;

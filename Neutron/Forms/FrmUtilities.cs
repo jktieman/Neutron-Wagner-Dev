@@ -39,9 +39,11 @@ using NeutronDllu;
 using NeutronMaintenance;
 using Ninject;
 //using CommunicationType = NeutronCore.Enums.CommunicationType;
-using DeviceType = NeutronData.Models.Lookups.DeviceType;
+using StorageDeviceType = NeutronData.Models.Lookups.StorageDeviceType;
 using StationType = NeutronData.Models.Lookups.StationType;
 using StorageType = NeutronData.Models.Lookups.StorageType;
+using AlliedLogger;
+using NeutronCore;
 
 //using CommunicationType = NeutronCore.Enums.CommunicationType;
 //using DeviceType = NeutronCore.Enums.DeviceType;
@@ -55,16 +57,25 @@ namespace Neutron.Forms
 
         private readonly GenericRepository<HardwareDevice> _repoHardwareDevices =
             new GenericRepository<HardwareDevice>(new NeutronDb());
+
+        private readonly GenericRepository<Area> _repoAreas = new GenericRepository<Area>(new NeutronDb());
         private readonly AkaRepository _repoAka = new AkaRepository();
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocations = new GenericRepository<Location>(new NeutronDb());
         private readonly GenericRepository<Station> _repoStations = new GenericRepository<Station>(new NeutronDb());
-        private readonly GenericRepository<StationType> _repoStationTypes = new GenericRepository<StationType>(new NeutronDb());
-        private readonly GenericRepository<DeviceType> _repoDeviceTypes =
-            new GenericRepository<DeviceType>(new NeutronDb());
+
+        private readonly GenericRepository<Workstation> _repoWorkstations =
+            new GenericRepository<Workstation>(new NeutronDb());
+
+        private readonly GenericRepository<StationType> _repoStationTypes =
+            new GenericRepository<StationType>(new NeutronDb());
+
+        private readonly GenericRepository<StorageDeviceType> _repoDeviceTypes =
+            new GenericRepository<StorageDeviceType>(new NeutronDb());
 
         private readonly GenericRepository<StorageType> _repoStorageTypes =
             new GenericRepository<StorageType>(new NeutronDb());
+
         private readonly GenericRepository<CommunicationType> _repoCommunicationTypes =
             new GenericRepository<CommunicationType>(new NeutronDb());
 
@@ -85,6 +96,7 @@ namespace Neutron.Forms
         public bool CloseButtonPressed { get; set; }
 
         private bool _formOpening = true;
+
         //public bool CloseForm = false;
         private readonly IJsonData _jsonData;
         private HardwareDeviceView _currentHardwareDeviceView;
@@ -105,6 +117,7 @@ namespace Neutron.Forms
         private BindingSource _bindingSource;
         private readonly Random _randomNumber = new Random();
         private EmailSettings _settings;
+        private IDynamicLogger _logger;
 
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
         {
@@ -118,29 +131,33 @@ namespace Neutron.Forms
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
-
+            SetupLogger();
             SetupGrids();
             _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
-                $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}"; 
+                $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}";
             //.{ApplicationVersion.MajorRevision}.{ApplicationVersion.MinorRevision}";
             ComboBoxDefaultLanguage.DataSource = _repoLanguages.All();
             ComboBoxDefaultLanguage.DisplayMember = "Name";
             ComboBoxDefaultLanguage.ValueMember = "CultureInfo";
 
-            ComboBoxStationNumber.DataSource = _repoStations.All();
+            ComboBoxStationNumber.DataSource = _repoWorkstations.All();
             ComboBoxStationNumber.DisplayMember = "Name";
             ComboBoxStationNumber.ValueMember = "Id";
 
             ComboBoxDefaultStorageType.DataSource = _repoStorageTypes.All();
             ComboBoxDefaultStorageType.DisplayMember = "Name";
             ComboBoxDefaultStorageType.ValueMember = "Id";
+
+            ComboBoxLoaderStation.DataSource = _repoWorkstations.All();
+            ComboBoxLoaderStation.DisplayMember = "Name";
+            ComboBoxLoaderStation.ValueMember = "Id";
         }
 
         private void SetupDeviceForms()
         {
             //ComboBoxViewEditDeviceStation.DataSource = _repoStation.Lookup();
-            ComboBoxViewEditDeviceStation.DataSource = _repoStations.All();
+            ComboBoxViewEditDeviceStation.DataSource = _repoWorkstations.All();
             ComboBoxViewEditDeviceStation.DisplayMember = "Name";
             ComboBoxViewEditDeviceStation.ValueMember = "Id";
 
@@ -161,7 +178,7 @@ namespace Neutron.Forms
             ComboBoxViewEditSerialConfiguration.ValueMember = "Id";
 
 
-            ComboBoxNewDeviceStation.DataSource = _repoStations.All();
+            ComboBoxNewDeviceStation.DataSource = _repoWorkstations.All();
             ComboBoxNewDeviceStation.DisplayMember = "Name";
             ComboBoxNewDeviceStation.ValueMember = "Id";
 
@@ -183,7 +200,15 @@ namespace Neutron.Forms
 
             CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
             CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter() != null;
-            
+
+        }
+
+        private void SetupLogger()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = @"Utilities";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
 
         protected override CreateParams CreateParams
@@ -191,7 +216,7 @@ namespace Neutron.Forms
             get
             {
                 var parms = base.CreateParams;
-                parms.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                parms.ExStyle |= 0x02000000; // Turn on WS_EX_COMPOSITED
                 //parms.Style &= ~0x02000000;  // Turn off WS_CLIPCHILDREN
                 return parms;
             }
@@ -211,6 +236,7 @@ namespace Neutron.Forms
                 }
             }
         }
+
         private void SetupGrids()
         {
             DataGridView1.AutoGenerateColumns = false;
@@ -245,7 +271,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationName",
-                HeaderText = @"Station Name",
+                HeaderText = @"Workstation Name",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "StationName"
@@ -575,7 +601,7 @@ namespace Neutron.Forms
             DataGridViewSerial.Columns.Add(col);
 
 
-            //--- Station Grid --------------------------
+            //--- Workstation Grid --------------------------
 
             DataGridViewStations.AutoGenerateColumns = false;
             DataGridViewStations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -585,7 +611,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationNumber",
-                HeaderText = @"Station Number",
+                HeaderText = @"Workstation Number",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "StationNumber"
@@ -595,7 +621,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Name",
-                HeaderText = @"Station Name",
+                HeaderText = @"Workstation Name",
                 DefaultCellStyle =
                 {
                     Alignment = DataGridViewContentAlignment.MiddleLeft
@@ -608,10 +634,20 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationTypeName",
-                HeaderText = @"Station Type",
+                HeaderText = @"Workstation Type",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Name = "Station Type"
+                Name = "Workstation Type"
+            };
+            DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "AreaName",
+                HeaderText = @"Area Name",
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                Name = "AreaName"
             };
             DataGridViewStations.Columns.Add(col);
 
@@ -637,16 +673,27 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StationTypeId",
-                HeaderText = @"Station Type Id",
+                HeaderText = @"Workstation Type Id",
                 Visible = false,
                 Name = "StationTypeId"
             };
             DataGridViewStations.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "AreaId",
+                HeaderText = @"Area Id",
+                Visible = false,
+                Name = "AreaId"
+            };
+            DataGridViewStations.Columns.Add(col);
         }
+
         private void MBMainClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
         }
+
         private void HideTabControlTabs()
         {
             var controls = GetTabControls(this, typeof(TabControl));
@@ -662,12 +709,15 @@ namespace Neutron.Forms
                 }
             }
         }
+
         private IEnumerable<Control> GetTabControls(Control control, Type type)
         {
             var controls = control.Controls.Cast<Control>();
             var enumerable = controls.ToList();
-            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable).Where(c => c.GetType() == type);
+            return enumerable.SelectMany(c => GetTabControls(c, type)).Concat(enumerable)
+                .Where(c => c.GetType() == type);
         }
+
         private void FrmUtilities_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!CloseButtonPressed)
@@ -675,6 +725,7 @@ namespace Neutron.Forms
                 e.Cancel = true;
             }
         }
+
         public int IndexOf(BindingSource bs, int value)
         {
             if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
@@ -682,12 +733,14 @@ namespace Neutron.Forms
             itemIndex = bs.Find("Id", value);
             return itemIndex;
         }
+
         private int GetRecordCount(BindingSource bs)
         {
             var count = bs.Count;
             LabelRecordCount.Text = $"Records: {count.ToString()}";
             return count;
         }
+
         private void MBDevices_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Device Listing";
@@ -695,15 +748,18 @@ namespace Neutron.Forms
             LoadHardwareDevices();
             tabControl1.SelectedTab = HardwareDevices;
         }
+
         private void MBInterfaceFilesBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
+
         private string GetPickMethod()
         {
             var a = from RadioButton r in GroupBoxPickMethod.Controls where r.Checked == true select r.Name;
             return a.First();
         }
+
         private void SetPickMethod(string pickMethod)
         {
             switch (pickMethod)
@@ -725,6 +781,7 @@ namespace Neutron.Forms
                     break;
             }
         }
+
         private void MBSaveVariables_Click(object sender, EventArgs e)
         {
             _neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
@@ -735,7 +792,7 @@ namespace Neutron.Forms
             _neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
             _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
             _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
-            _neutronVariables.StationId = ((Station)ComboBoxStationNumber.SelectedItem).Id;
+            _neutronVariables.WorkstationId = ((Workstation)ComboBoxStationNumber.SelectedItem).Id;
             _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
             _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
             _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
@@ -780,12 +837,13 @@ namespace Neutron.Forms
             _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
             _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
             _neutronVariables.EnableEmailNotification = CheckBoxEnableEmailNotification.Checked;
+            _neutronVariables.LoaderStation = ((Workstation)ComboBoxLoaderStation.SelectedItem).Id;
 
             if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
             {
                 _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
-                _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text }); 
+                _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
             }
             else
             {
@@ -793,6 +851,7 @@ namespace Neutron.Forms
                     MessageBoxIcon.Information);
             }
         }
+
         private void MBOptions_Click(object sender, EventArgs e)
         {
 
@@ -807,7 +866,7 @@ namespace Neutron.Forms
             CheckBoxUseLAC.Checked = _neutronVariables.UseLAC;
             CheckBoxUseMenuSecurity.Checked = _neutronVariables.UseMenuSecurity;
             CheckBoxUseReturnToStock.Checked = _neutronVariables.UseReturnToStock;
-            ComboBoxStationNumber.SelectedValue = _neutronVariables.StationId;
+            ComboBoxStationNumber.SelectedValue = _neutronVariables.WorkstationId;
             ComboBoxDeviceDriver.SelectedIndex = ComboBoxDeviceDriver.FindStringExact(_neutronVariables.DeviceDriver);
             NumericUpDownLogLevel.Value = _neutronVariables.LogLevel == 0
                 ? NumericUpDownLogLevel.Minimum
@@ -849,17 +908,21 @@ namespace Neutron.Forms
             SetPickMethod(_neutronVariables.PickMethod);
             CheckBoxUseCostCenter.Checked = _neutronVariables.UseCostCenter;
             CheckBoxUseImages.Checked = _neutronVariables.UseImages;
-            ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage == null ? "en-US" : _neutronVariables.DefaultLanguage;
+            ComboBoxDefaultLanguage.SelectedValue = _neutronVariables.DefaultLanguage == null
+                ? "en-US"
+                : _neutronVariables.DefaultLanguage;
             TextBoxDeviceFlashRate.Text = _neutronVariables.DeviceFlashRate.ToString();
             TextBoxLicenseCode.Text = _neutronLicense.CompanyCode;
             ComboBoxDefaultStorageType.SelectedValue = _neutronVariables.DefaultStorageTypeId;
             CheckBoxUseAutoCompress.Checked = _neutronVariables.UseAutoCompress;
             CheckBoxSpecialBackorder.Checked = _neutronVariables.SpecialBackOrder;
             TextBoxCompressDays.Text = _neutronVariables.CompressDays.ToString();
-            TextBoxRunCompressInterval.Text = _neutronVariables.RunCompressInterval.ToString(CultureInfo.InvariantCulture);
+            TextBoxRunCompressInterval.Text =
+                _neutronVariables.RunCompressInterval.ToString(CultureInfo.InvariantCulture);
             CheckBoxEnableEmailNotification.Checked = _neutronVariables.EnableEmailNotification;
             CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
             CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter() != null;
+            ComboBoxLoaderStation.SelectedValue = _neutronVariables.LoaderStation;
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -899,18 +962,21 @@ namespace Neutron.Forms
                     $"Error Saving Label Printer Information.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
+
         private void ButtonDocumentPrinter_Click(object sender, EventArgs e)
         {
             var pd = new PrintDialog();
             pd.ShowDialog();
             TextBoxDocumentPrinter.Text = pd.PrinterSettings.PrinterName;
         }
+
         private void ButtonLabelPrinter_Click(object sender, EventArgs e)
         {
             var pd = new PrintDialog();
             pd.ShowDialog();
             TextBoxLabelPrinter.Text = pd.PrinterSettings.PrinterName;
         }
+
         public void LoadDocumentPrinterPreferences()
         {
             DocumentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
@@ -921,6 +987,7 @@ namespace Neutron.Forms
             TextBoxDocumentBottomMargin.Text = DocumentPrinter.BottomMargin.ToString();
             CheckBoxLandscape.Checked = DocumentPrinter.Landscape;
         }
+
         public void LoadLabelPrinterPreferences()
         {
             LabelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
@@ -928,6 +995,7 @@ namespace Neutron.Forms
             TextBoxLabelHomeX.Text = LabelPrinter.HomeX.ToString();
             TextBoxLabelHomeY.Text = LabelPrinter.HomeY.ToString();
         }
+
         private LabelPrinterPreferences GetCurrentLabelPrinter()
         {
             LabelPrinterPreferences printer = null;
@@ -943,6 +1011,7 @@ namespace Neutron.Forms
 
             return printer;
         }
+
         private void MBPrinterSetup_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Printer Settings";
@@ -951,6 +1020,7 @@ namespace Neutron.Forms
             LoadLabelPrinterPreferences();
             tabControl1.SelectedTab = PrintSettings;
         }
+
         private void ButtonPrintTestDocument_Click(object sender, EventArgs e)
         {
             var printer = GetCurrentDocumentPrinter();
@@ -985,6 +1055,7 @@ namespace Neutron.Forms
                 MessageBox.Show("Invalid Printer.");
             }
         }
+
         private List<PackingList> GetPackingList(int orderId)
         {
             var outs = new List<PackingList>();
@@ -997,6 +1068,7 @@ namespace Neutron.Forms
 
             return outs;
         }
+
         private DocumentPrinterPreferences GetCurrentDocumentPrinter()
         {
             DocumentPrinterPreferences printer = null;
@@ -1015,11 +1087,13 @@ namespace Neutron.Forms
 
             return printer;
         }
+
         private static bool ValidPrinterName(string printer)
         {
             return PrinterSettings.InstalledPrinters.Cast<string>()
                 .Any(installedPrinter => installedPrinter == printer);
         }
+
         private void ButtonPrintTestToteLabel_Click(object sender, EventArgs e)
         {
             try
@@ -1053,10 +1127,12 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error Printing Tote Label.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
+
         private void ButtonPrintTestShortReport_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Set up Test Short Report.");
         }
+
         private void MBLookups_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Lookup Tables";
@@ -1065,6 +1141,7 @@ namespace Neutron.Forms
             LoadLookups();
             tabControl1.SelectedTab = ManageLookups;
         }
+
         private void SetupLookupGrid()
         {
             DataGridViewLookups.AutoGenerateColumns = false;
@@ -1097,25 +1174,30 @@ namespace Neutron.Forms
             };
             DataGridViewLookups.Columns.Add(col);
         }
+
         private void MBPrintSetUpBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
+
         private void MBHardwareDevicesBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
+
         private void BackToMain()
         {
             LabelFormTitle.Text = "Utilities";
             LabelFormTitle.BackColor = Color.RoyalBlue;
             tabControl1.SelectedTab = Main;
         }
+
         //Lookup Tables
         private void MBManageLookupsBack_Click(object sender, EventArgs e)
         {
             BackToMain();
         }
+
         private int RefreshData(int recId = 0)
         {
             _currentTableName = ((LookupTable)ListBoxCodeNames.SelectedItem).TableName;
@@ -1139,11 +1221,13 @@ namespace Neutron.Forms
             DataGridViewLookups.Rows[idx].Selected = true;
             return idx;
         }
+
         private int GetRecordCount()
         {
             int count = DataGridViewLookups.RowCount;
             return count;
         }
+
         private void LoadLookups()
         {
             try
@@ -1160,6 +1244,7 @@ namespace Neutron.Forms
 
             ListBoxCodeNames.DataSource = _lookupTables;
         }
+
         private List<LookupData> GetTableData(string tableName)
         {
             _currentTableName = tableName;
@@ -1182,11 +1267,6 @@ namespace Neutron.Forms
                             break;
                         case "HeightCodes":
                             recs = context.HeightCodes
-                                .Select(s => new LookupData() { Id = s.Id, Name = s.Name, Sequence = s.Sequence })
-                                .OrderBy(o => o.Sequence).ToList();
-                            break;
-                        case "LocationCodes":
-                            recs = context.LocationCodes
                                 .Select(s => new LookupData() { Id = s.Id, Name = s.Name, Sequence = s.Sequence })
                                 .OrderBy(o => o.Sequence).ToList();
                             break;
@@ -1217,16 +1297,19 @@ namespace Neutron.Forms
 
             return recs;
         }
+
         private void ListBoxCodeNames_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshData();
         }
+
         private async void MButtonSave_Click(object sender, EventArgs e)
         {
             var s = _currentRecs;
             var t = DataGridViewLookups.DataSource;
             await UpdateTableData();
         }
+
         private async Task UpdateTableData()
         {
             try
@@ -1252,12 +1335,6 @@ namespace Neutron.Forms
                                 var heightCode = new HeightCode()
                                 { Id = rec.Id, Name = rec.Name, Sequence = rec.Sequence };
                                 context.HeightCodes.AddOrUpdate(heightCode);
-                                await context.SaveChangesAsync();
-                                break;
-                            case "LocationCodes":
-                                var locationCode = new LocationCode()
-                                { Id = rec.Id, Name = rec.Name, Sequence = rec.Sequence };
-                                context.LocationCodes.AddOrUpdate(locationCode);
                                 await context.SaveChangesAsync();
                                 break;
                             case "ShipMethods":
@@ -1287,6 +1364,7 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error updating Lookup Tables.  {ex.Message}");
             }
         }
+
         private void MBAddNew_Click(object sender, EventArgs e)
         {
             var r = new LookupData { Name = "", Sequence = 100 };
@@ -1295,14 +1373,17 @@ namespace Neutron.Forms
             DataGridViewLookups.DataSource = _bindingSource.DataSource;
             DataGridViewLookups.Update();
         }
+
         private void MBPrintLookup_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridViewLookups);
         }
+
         private void MBPrintHardwareDevices_Click(object sender, EventArgs e)
         {
             CsvUtility.SaveToCsv(DataGridView1);
         }
+
         private void MBHardwareDevicesViewEdit_Click(object sender, EventArgs e)
         {
             SetupDeviceForms();
@@ -1314,11 +1395,12 @@ namespace Neutron.Forms
         private void LoadViewEditStationData()
         {
             var id = ((ObjectView<StationViewModel>)_bindingSourceStations.Current).Object.Id;
-            var station = _repoStations.FindByKey(id);
-            TextBoxViewEditStationName.Text = station.Name;
-            TextBoxViewEditStationNumber.Text = station.StationNumber.ToString();
-            TextBoxViewEditStationSequence.Text = station.Sequence.ToString();
-            ComboBoxViewEditStationType.SelectedValue = station.StationTypeId;
+            var workstation = _repoWorkstations.FindByKey(id);
+            TextBoxViewEditStationName.Text = workstation.Name;
+            TextBoxViewEditStationNumber.Text = workstation.StationNumber.ToString();
+            TextBoxViewEditStationSequence.Text = workstation.Sequence.ToString();
+            ComboBoxViewEditStationType.SelectedValue = workstation.StationTypeId;
+            ComboBoxViewEditArea.SelectedValue = workstation.AreaId;
 
         }
 
@@ -1328,6 +1410,7 @@ namespace Neutron.Forms
             TextBoxViewEditStationNumber.Text = string.Empty;
             TextBoxViewEditStationSequence.Text = string.Empty;
             ComboBoxViewEditStationType.SelectedIndex = 0;
+            ComboBoxViewEditArea.SelectedIndex = 0;
         }
 
         private void LoadViewEditDeviceData()
@@ -1338,7 +1421,7 @@ namespace Neutron.Forms
             var hardwareDevice = _repoHardwareDevices.FindByKey(id);
 
             TextBoxViewEditDeviceName.Text = hardwareDevice.Name;
-            ComboBoxViewEditDeviceStation.SelectedValue = hardwareDevice.StationId;
+            ComboBoxViewEditDeviceStation.SelectedValue = hardwareDevice.WorkstationId;
             ComboBoxViewEditDeviceType.SelectedValue = hardwareDevice.DeviceTypeId;
             TextBoxViewEditDeviceNumber.Text = hardwareDevice.DeviceNumber.ToString();
             TextBoxViewEditNumberOfCarriers.Text = hardwareDevice.NumberOfCarriers.ToString();
@@ -1521,38 +1604,52 @@ namespace Neutron.Forms
 
         private void SaveNewHardwareDevice()
         {
-            var hardwareDevice = new HardwareDevice
+            try
             {
-                DeviceNumber = TextBoxNewDeviceNumber.Text.ParseInt(),
-                DeviceTypeId = ((DeviceType)ComboBoxNewDeviceType.SelectedItem).Id,
-                Name = TextBoxNewDeviceName.Text,
-                StationId = ((Station)ComboBoxNewDeviceStation.SelectedItem).Id,
-                NumberOfCarriers = TextBoxNewNumberOfCarriers.Text.ParseInt(),
-                CarrierLevel = TextBoxNewCarrierLevel.Text.ParseInt(),
-                CarrierWidth = TextBoxNewCarrierWidth.Text.ParseInt(),
-                CarrierDepth = TextBoxNewCarrierDepth.Text.ParseInt(),
-                Enabled = CheckBoxNewDeviceEnabled.Checked,
-                TcpConfigurationId = ((TcpConfiguration)ComboBoxNewTcpConfiguration.SelectedItem)?.Id,
-                CommunicationTypeId =
-                    ((CommunicationType)ComboBoxNewCommunicationType.SelectedItem)?.Id,
-                SerialConfigurationId = ((SerialConfiguration)ComboBoxNewSerialConfiguration.SelectedItem)?.Id,
-                SimulationMode = CheckBoxNewSimulationMode.Checked,
-                LogLevel = NumericUpDownNewDeviceLogLevel.Text.ParseInt(),
-            };
-            _repoHardwareDevices.Insert(hardwareDevice);
-            LoadHardwareDevices(hardwareDevice.Id);
+                var hardwareDevice = new HardwareDevice
+                {
+                    DeviceNumber = TextBoxNewDeviceNumber.Text.ParseInt(),
+                    DeviceTypeId = ((StorageDeviceType)ComboBoxNewDeviceType.SelectedItem).Id,
+                    Name = TextBoxNewDeviceName.Text,
+                    WorkstationId = ((Workstation)ComboBoxNewDeviceStation.SelectedItem).Id,
+                    NumberOfCarriers = TextBoxNewNumberOfCarriers.Text.ParseInt(),
+                    CarrierLevel = TextBoxNewCarrierLevel.Text.ParseInt(),
+                    CarrierWidth = TextBoxNewCarrierWidth.Text.ParseInt(),
+                    CarrierDepth = TextBoxNewCarrierDepth.Text.ParseInt(),
+                    Enabled = CheckBoxNewDeviceEnabled.Checked,
+                    TcpConfigurationId = ((TcpConfiguration)ComboBoxNewTcpConfiguration.SelectedItem)?.Id,
+                    CommunicationTypeId =
+                            ((CommunicationType)ComboBoxNewCommunicationType.SelectedItem)?.Id,
+                    SerialConfigurationId = ((SerialConfiguration)ComboBoxNewSerialConfiguration.SelectedItem)?.Id,
+                    SimulationMode = CheckBoxNewSimulationMode.Checked,
+                    LogLevel = NumericUpDownNewDeviceLogLevel.Text.ParseInt(),
+                };
+                _repoHardwareDevices.Insert(hardwareDevice);
+                LoadHardwareDevices(hardwareDevice.Id);
 
-            AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
-                , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+                AddOrUpdateLocations(hardwareDevice.WorkstationId, hardwareDevice.DeviceNumber,
+                    hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
+                    , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Save New Hardware Device Error: {ex.Message}");
+
+
+            }
+
+
+
 
             //if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
             //    hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
             //{
-            //    AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
+            //    AddOrUpdateCarriers(hardwareDevice.WorkstationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
             //}
         }
 
-        private void AddOrUpdateCarriers(int stationNumber, int device, int numberOfCarriers)
+        private void AddOrUpdateCarriers(int areaId, int device, int numberOfCarriers)
         {
             try
             {
@@ -1563,7 +1660,7 @@ namespace Neutron.Forms
                     {
                         var i1 = i;
 
-                        var carrier = context.Carriers.FirstOrDefault(r => r.StationNumber == stationNumber
+                        var carrier = context.Carriers.FirstOrDefault(r => r.AreaId == areaId
                                                                            && r.DeviceNumber == device
                                                                            && r.CarrierNumber == i1);
                         if (carrier != null) continue;
@@ -1571,21 +1668,24 @@ namespace Neutron.Forms
                         {
                             DeviceNumber = device,
                             CarrierNumber = i1,
-                            StationNumber = stationNumber
+                            AreaId = areaId
                         };
                         context.Carriers.Add(newCarrier);
                     }
+
                     context.SaveChanges();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Adding or Updating Carriers {Environment.NewLine}{ex.Message}", "Carrier Maintenance", MessageBoxButtons.OK,
+                MessageBox.Show($"Error Adding or Updating Carriers {Environment.NewLine}{ex.Message}",
+                    "Carrier Maintenance", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
 
-        private void AddOrUpdateLocations(int stationId, int device, int numberOfCarriers, int levels, int widths, int depths)
+        private void AddOrUpdateLocations(int areaId, int device, int numberOfCarriers, int levels, int widths,
+            int depths)
         {
             int i;
 
@@ -1603,14 +1703,14 @@ namespace Neutron.Forms
                             var i1 = i;
                             var j1 = j;
                             var k1 = k;
-                            var locations = _repoLocations.All().Where(r => r.StationId == stationId
-                                                                      && r.Loc1 == device
-                                                                      && r.Loc2 == i1
-                                                                      && r.Loc3 == j1
-                                                                      && r.Loc4 == k1);
+                            var locations = _repoLocations.All().Where(r => r.AreaId == areaId
+                                                                            && r.Loc1 == device
+                                                                            && r.Loc2 == i1
+                                                                            && r.Loc3 == j1
+                                                                            && r.Loc4 == k1);
                             if (!locations.Any())
                             {
-                                SaveNew(stationId, device, i1, j1, k1, l);
+                                SaveNew(areaId, device, i1, j1, k1, l);
                             }
                         }
                     }
@@ -1618,19 +1718,17 @@ namespace Neutron.Forms
             }
         }
 
-        private void SaveNew(int stationId, int deviceId, int carrier, int level, int width, int depth = 1)
+        private void SaveNew(int areaId, int deviceId, int carrier, int level, int width, int depth = 1)
         {
             int sizeCodeId;
             int velocityCodeId;
             int heightCodeId;
-            int locationCodeId;
 
             using (var context = new NeutronDb())
             {
                 sizeCodeId = context.SizeCodes.Min(r => r.Id);
                 velocityCodeId = context.VelocityCodes.Min(r => r.Id);
                 heightCodeId = context.HeightCodes.Min(r => r.Id);
-                locationCodeId = context.LocationCodes.Min(r => r.Id);
             }
 
             if (IntegerValidator(carrier))
@@ -1646,10 +1744,11 @@ namespace Neutron.Forms
                         {
                             var loc5 = depth;
 
-                            var slotName = GlobalVar.SlotNameFactory.CreateSlotName(stationId, deviceId, loc2, loc3, loc4, loc5).SlotName;
+                            var slotName = GlobalVar.SlotNameFactory
+                                .CreateSlotName(areaId, deviceId, loc2, loc3, loc4, loc5).SlotName;
                             var loc = new Location
                             {
-                                StationId = stationId,
+                                AreaId = areaId,
                                 Loc1 = deviceId,
                                 Loc2 = loc2,
                                 Loc3 = loc3,
@@ -1660,7 +1759,7 @@ namespace Neutron.Forms
                                 SizeCodeId = sizeCodeId,
                                 VelocityCodeId = velocityCodeId,
                                 HeightCodeId = heightCodeId,
-                                LocationCodeId = locationCodeId
+                                LocationCode = string.Empty
                             };
                             try
                             {
@@ -1704,8 +1803,10 @@ namespace Neutron.Forms
                     MessageBox.Show(_resourceManager.GetString("Message14"));
                     return false;
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -1726,9 +1827,9 @@ namespace Neutron.Forms
             if (hardwareDevice != null)
             {
                 hardwareDevice.DeviceNumber = TextBoxViewEditDeviceNumber.Text.ParseInt();
-                hardwareDevice.DeviceTypeId = ((DeviceType)ComboBoxViewEditDeviceType.SelectedItem).Id;
+                hardwareDevice.DeviceTypeId = ((StorageDeviceType)ComboBoxViewEditDeviceType.SelectedItem).Id;
                 hardwareDevice.Name = TextBoxViewEditDeviceName.Text;
-                hardwareDevice.StationId = ((Station)ComboBoxViewEditDeviceStation.SelectedItem).Id;
+                hardwareDevice.WorkstationId = ((Workstation)ComboBoxViewEditDeviceStation.SelectedItem).Id;
                 hardwareDevice.NumberOfCarriers = TextBoxViewEditNumberOfCarriers.Text.ParseInt();
                 hardwareDevice.CarrierLevel = TextBoxViewEditCarrierLevel.Text.ParseInt();
                 hardwareDevice.CarrierWidth = TextBoxViewEditCarrierWidth.Text.ParseInt();
@@ -1740,13 +1841,13 @@ namespace Neutron.Forms
                 if (hardwareDevice.CommunicationTypeId == 1)
                 {
                     hardwareDevice.TcpConfigurationId =
-                                        ((TcpConfiguration)ComboBoxViewEditTcpConfiguration.SelectedItem)?.Id;
+                        ((TcpConfiguration)ComboBoxViewEditTcpConfiguration.SelectedItem)?.Id;
                     hardwareDevice.SerialConfigurationId = null;
                 }
                 else if (hardwareDevice.CommunicationTypeId == 2)
                 {
                     hardwareDevice.SerialConfigurationId =
-                    ((SerialConfiguration)ComboBoxViewEditSerialConfiguration.SelectedItem)?.Id;
+                        ((SerialConfiguration)ComboBoxViewEditSerialConfiguration.SelectedItem)?.Id;
                     hardwareDevice.TcpConfigurationId = null;
                 }
                 else
@@ -1762,7 +1863,7 @@ namespace Neutron.Forms
             _repoHardwareDevices.Update(hardwareDevice);
             if (hardwareDevice != null) LoadHardwareDevices(hardwareDevice.Id);
 
-            if (!TextBoxViewEditNumberOfCarriers.Modified  &&
+            if (!TextBoxViewEditNumberOfCarriers.Modified &&
                 !TextBoxViewEditCarrierLevel.Modified &&
                 !TextBoxViewEditCarrierWidth.Modified &&
                 !TextBoxViewEditCarrierDepth.Modified)
@@ -1775,23 +1876,43 @@ namespace Neutron.Forms
             //MessageBox.Show("Preparing to update Locations and Location Access Control Carriers", "Location Update",
             //    MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            //AddOrUpdateLocations(hardwareDevice.StationId, hardwareDevice.DeviceNumber,
+            //AddOrUpdateLocations(hardwareDevice.WorkstationId, hardwareDevice.DeviceNumber,
             //    hardwareDevice.NumberOfCarriers, hardwareDevice.CarrierLevel
             //    , hardwareDevice.CarrierWidth, hardwareDevice.CarrierDepth);
 
             //if (hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Carousel ||
             //    hardwareDevice.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.Shuttle)
             //{
-            //    AddOrUpdateCarriers(hardwareDevice.StationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
+            //    AddOrUpdateCarriers(hardwareDevice.WorkstationId, hardwareDevice.DeviceNumber, hardwareDevice.NumberOfCarriers);
             //}
             Cursor.Current = Cursors.Default;
         }
 
         private void MBViewEditDeviceDelete_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                var hardwareDeviceView = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object;
+                var hardwareDevice = _repoHardwareDevices.FindByKey(hardwareDeviceView.Id);
+                if (hardwareDevice != null)
+                {
+                    _repoHardwareDevices.Delete(hardwareDevice.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Delete Hardware Device Error: {ex.Message}");
+            }
+            finally
+            {
+                LoadHardwareDevices();
+                tabControl2.SelectedTab = Listing;
+                Cursor.Current = Cursors.Default;
+            }
+
 
         }
-
 
 
         // Set the focus to the passed in recId if it's passed in
@@ -1799,7 +1920,7 @@ namespace Neutron.Forms
         {
             var idx = -1;
             Cursor.Current = Cursors.WaitCursor;
-            var recs = _repoHardwareDevices.AllInclude(r => r.Station
+            var recs = _repoHardwareDevices.AllInclude(r => r.Workstation
                 , r => r.DeviceType
                 , r => r.CommunicationType
                 , r => r.TcpConfiguration
@@ -1813,8 +1934,8 @@ namespace Neutron.Forms
                     Id = r.Id,
                     DeviceNumber = r.DeviceNumber,
                     Name = r.Name,
-                    StationId = r.StationId,
-                    StationName = r.Station.Name,
+                    WorkstationId = r.WorkstationId,
+                    StationName = r.Workstation.Name,
                     NumberOfCarriers = int.Parse(r.NumberOfCarriers.ToString()),
                     CarrierLevel = r.CarrierLevel,
                     CarrierWidth = r.CarrierWidth,
@@ -1852,7 +1973,8 @@ namespace Neutron.Forms
                     }
 
                     DataGridView1.Refresh();
-                    _currentHardwareDeviceView = ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object;
+                    _currentHardwareDeviceView =
+                        ((ObjectView<HardwareDeviceView>)_bindingSourceHardwareDevices.Current).Object;
                 }
             }
 
@@ -1957,6 +2079,7 @@ namespace Neutron.Forms
             LoadTcpConfigurations();
             TabControlCommunications.SelectedTab = Tcp;
         }
+
         #endregion
 
         #region Serial
@@ -2030,6 +2153,7 @@ namespace Neutron.Forms
             LoadSerialConfigurations();
             TabControlCommunications.SelectedTab = Serial;
         }
+
         #endregion
 
         #region Communication
@@ -2065,6 +2189,7 @@ namespace Neutron.Forms
         {
             BackToMain();
         }
+
         #endregion
 
         // Set the focus to the passed in recId if it's passed in
@@ -2289,42 +2414,54 @@ namespace Neutron.Forms
             tabControl2.SelectedTab = SerialViewEdit;
         }
 
+        private void ComboBoxNewDeviceType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var comboBox = (ComboBox)sender;
+            if (comboBox.SelectedIndex == -1) return;
+            var deviceType = ((StorageDeviceType)comboBox.SelectedItem);
+            SetDeviceTypeDisplay(deviceType);
+        }
+
         private void ComboBoxViewEditDeviceType_SelectedIndexChanged(object sender, EventArgs e)
         {
             var comboBox = (ComboBox)sender;
             if (comboBox.SelectedIndex == -1) return;
-            var deviceType = ((DeviceType)comboBox.SelectedItem).Id;
+            var deviceType = ((StorageDeviceType)comboBox.SelectedItem);
             SetDeviceTypeDisplay(deviceType);
         }
 
-        private void SetDeviceTypeDisplay(int deviceType)
+        private void SetDeviceTypeDisplay(StorageDeviceType deviceType)
         {
-            var devices = new[] { 1, 2, 3 };
-            if (devices.Contains(deviceType))
+            var devices = new[] { 1, 2, 8, 9 };
+            if (devices.Contains(deviceType.Id))
             {
-                LabelViewEditDeviceNumber.Visible = true;
-                TextBoxViewEditDeviceNumber.Visible = true;
+                //LabelViewEditDeviceNumber.Visible = true;
+                //TextBoxViewEditDeviceNumber.Visible = true;
                 LabelViewEditDeviceNumberOfCarriers.Visible = true;
                 TextBoxViewEditNumberOfCarriers.Visible = true;
-                LabelViewEditDeviceCarrierLevel.Visible = true;
-                LabelViewEditDeviceCarrierWidth.Visible = true;
-                LabelViewEditDeviceCarrierDepth.Visible = true;
-                TextBoxViewEditCarrierLevel.Visible = true;
-                TextBoxViewEditCarrierWidth.Visible = true;
-                TextBoxViewEditCarrierDepth.Visible = true;
+                LabelNewDeviceNumberOfCarriers.Visible = true;
+                TextBoxNewNumberOfCarriers.Visible = true;
+                //LabelViewEditDeviceCarrierLevel.Visible = true;
+                //LabelViewEditDeviceCarrierWidth.Visible = true;
+                //LabelViewEditDeviceCarrierDepth.Visible = true;
+                //TextBoxViewEditCarrierLevel.Visible = true;
+                //TextBoxViewEditCarrierWidth.Visible = true;
+                //TextBoxViewEditCarrierDepth.Visible = true;
             }
             else
             {
-                LabelViewEditDeviceNumber.Visible = false;
-                TextBoxViewEditDeviceNumber.Visible = false;
+                //LabelViewEditDeviceNumber.Visible = false;
+                //TextBoxViewEditDeviceNumber.Visible = false;
                 LabelViewEditDeviceNumberOfCarriers.Visible = false;
                 TextBoxViewEditNumberOfCarriers.Visible = false;
-                LabelViewEditDeviceCarrierLevel.Visible = false;
-                LabelViewEditDeviceCarrierWidth.Visible = false;
-                LabelViewEditDeviceCarrierDepth.Visible = false;
-                TextBoxViewEditCarrierLevel.Visible = false;
-                TextBoxViewEditCarrierWidth.Visible = false;
-                TextBoxViewEditCarrierDepth.Visible = false;
+                LabelNewDeviceNumberOfCarriers.Visible = false;
+                TextBoxNewNumberOfCarriers.Visible = false;
+                //LabelViewEditDeviceCarrierLevel.Visible = false;
+                //LabelViewEditDeviceCarrierWidth.Visible = false;
+                //LabelViewEditDeviceCarrierDepth.Visible = false;
+                //TextBoxViewEditCarrierLevel.Visible = false;
+                //TextBoxViewEditCarrierWidth.Visible = false;
+                //TextBoxViewEditCarrierDepth.Visible = false;
             }
         }
 
@@ -2353,6 +2490,11 @@ namespace Neutron.Forms
 
         private void MBStationsViewEdit_Click(object sender, EventArgs e)
         {
+            ViewEditStation();
+        }
+
+        private void ViewEditStation()
+        {
             SetupStationForms();
             LoadViewEditStationData();
             TabControl3.SelectedTab = StationViewEdit;
@@ -2380,29 +2522,31 @@ namespace Neutron.Forms
         private void UpdateStation()
         {
             CurrentStation = ((ObjectView<StationViewModel>)_bindingSourceStations.Current).Object;
-            var station = _repoStations.FindByKey(CurrentStation.Id);
-            station.Id = CurrentStation.Id;
-            station.Name = TextBoxViewEditStationName.Text;
-            station.StationTypeId = ((StationType)ComboBoxViewEditStationType.SelectedItem).Id;
-            station.Sequence = TextBoxViewEditStationSequence.Text.ParseInt();
-            _repoStations.Update(station);
+            var workstation = _repoWorkstations.FindByKey(CurrentStation.Id);
+            workstation.Id = CurrentStation.Id;
+            workstation.Name = TextBoxViewEditStationName.Text;
+            workstation.StationTypeId = ((StationType)ComboBoxViewEditStationType.SelectedItem).Id;
+            workstation.AreaId = ((Area)ComboBoxViewEditArea.SelectedItem).Id;
+            workstation.Sequence = TextBoxViewEditStationSequence.Text.ParseInt();
+            _repoWorkstations.Update(workstation);
         }
 
         private void SaveStation()
         {
-            var station = new Station
+            var workstation = new Workstation
             {
                 // Id is an Identity field now
-               // Id = int.Parse(TextBoxNewStationNumber.Text),
+                Id = int.Parse(TextBoxNewStationNumber.Text),
                 Name = TextBoxNewStationName.Text,
                 StationNumber = int.Parse(TextBoxNewStationNumber.Text),
                 StationTypeId = ((StationType)ComboBoxNewStationType.SelectedItem).Id,
+                AreaId = ((Area)ComboBoxNewArea.SelectedItem).Id,
                 Sequence = int.Parse(TextBoxNewStationSequence.Text)
             };
-            var result = ValidateStation(station);
+            var result = ValidateStation(workstation);
             if (string.IsNullOrEmpty(result))
             {
-                _repoStations.Insert(station);
+                _repoWorkstations.Insert(workstation);
             }
             else
             {
@@ -2411,11 +2555,11 @@ namespace Neutron.Forms
 
         }
 
-        private string ValidateStation(Station station)
+        private string ValidateStation(Workstation workstation)
         {
-            // Does the station already exist
-            var rec = _repoStations.FindByKey(station.Id);
-            if (rec != null) return $"Station already exists";
+            // Does the workstation already exist
+            var rec = _repoWorkstations.FindByKey(workstation.Id);
+            if (rec != null) return $"Workstation already exists";
 
             return string.Empty;
         }
@@ -2454,14 +2598,15 @@ namespace Neutron.Forms
             var result = string.Empty;
             using (var context = new NeutronDb())
             {
-                var rec1 = context.Inventory.FirstOrDefault(s => s.StationId == id);
-                if (rec1 != null) return $"Inventory Records Exist for Station {id}.";
-                var rec2 = context.Locations.FirstOrDefault(s => s.StationId == id);
-                if (rec2 != null) return $"Location Records Exist for Station {id}.";
-                var rec3 = context.ItemDefinitions.FirstOrDefault(s => s.StationId == id);
-                if (rec3 != null) return $"Item Definitions Exist for Station {id}.";
+                var rec1 = context.Inventory.FirstOrDefault(s => s.AreaId == id);
+                if (rec1 != null) return $"Inventory Records Exist for Area {id}.";
+                var rec2 = context.Locations.FirstOrDefault(s => s.AreaId == id);
+                if (rec2 != null) return $"Location Records Exist for Area {id}.";
+                var rec3 = context.ItemDefinitions.FirstOrDefault(s => s.AreaId == id);
+                if (rec3 != null) return $"Item Definitions Exist for Area {id}.";
             }
-            _repoStations.Delete(id);
+
+            _repoWorkstations.Delete(id);
             return result;
         }
 
@@ -2470,18 +2615,15 @@ namespace Neutron.Forms
             var idx = 1;
             Cursor.Current = Cursors.WaitCursor;
 
-            var recs = _repoStations.All().Select(s => new StationViewModel
+            var recs = _repoWorkstations.All().Select(s => new StationViewModel
             {
-                Id = s.Id
-                ,
-                Name = s.Name
-                ,
-                StationNumber = s.StationNumber
-                ,
-                StationTypeName = s.StationType.Name
-                ,
-                Sequence = s.Sequence
-                ,
+                Id = s.Id,
+                Name = s.Name,
+                StationNumber = s.StationNumber,
+                StationTypeName = s.StationType.Name,
+                AreaId = s.AreaId,
+                AreaName = s.Area.Name,
+                Sequence = s.Sequence,
                 StationTypeId = s.StationTypeId
             })
                 .OrderBy(o => o.Sequence)
@@ -2520,6 +2662,7 @@ namespace Neutron.Forms
         private void SetupStationForms()
         {
             var stationTypes = _repoStationTypes.All();
+            var areas = _repoAreas.All();
 
             ComboBoxViewEditStationType.DataSource = stationTypes;
             ComboBoxViewEditStationType.DisplayMember = "Name";
@@ -2528,15 +2671,25 @@ namespace Neutron.Forms
             ComboBoxNewStationType.DataSource = stationTypes;
             ComboBoxNewStationType.DisplayMember = "Name";
             ComboBoxNewStationType.ValueMember = "Id";
+
+            ComboBoxViewEditArea.DataSource = areas;
+            ComboBoxViewEditArea.DisplayMember = "Name";
+            ComboBoxViewEditArea.ValueMember = "Id";
+
+            ComboBoxNewArea.DataSource = areas;
+            ComboBoxNewArea.DisplayMember = "Name";
+            ComboBoxNewArea.ValueMember = "Id";
         }
 
         public class StationViewModel
         {
             public int Id { get; set; }
-            public string Name { get; set; }
+            public string Name { get; set; } = string.Empty;
             public int StationNumber { get; set; }
             public int StationTypeId { get; set; }
-            public string StationTypeName { get; set; }
+            public string StationTypeName { get; set; } = string.Empty;
+            public int AreaId { get; set; }
+            public string AreaName { get; set; } = string.Empty;
             public int Sequence { get; set; }
         }
 
@@ -2547,6 +2700,7 @@ namespace Neutron.Forms
                 _formOpening = false;
                 return;
             }
+
             var compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now.AddDays(-1) };
             _jsonData.SaveFile(compressLastRunDate);
         }
@@ -2667,6 +2821,7 @@ namespace Neutron.Forms
                         recs.Remove(recs[i]);
                     }
                 }
+
                 _jsonData.SaveFile<List<EmailAddressData>>(recs);
             }
             catch (Exception)
@@ -2674,6 +2829,7 @@ namespace Neutron.Forms
 
             }
         }
+
         #endregion
 
         #region Email Server
@@ -2733,6 +2889,7 @@ namespace Neutron.Forms
         {
             BackToMain();
         }
+
         #endregion
 
         private void MBEmailAddresses_Click(object sender, EventArgs e)
@@ -2746,6 +2903,7 @@ namespace Neutron.Forms
                 var boundRecs = new BindingListView<EmailAddressData>(recs);
                 DataGridViewEmailAddresses.DataSource = boundRecs;
             }
+
             tabControl1.SelectedTab = EmailAddresses;
         }
 
@@ -2763,6 +2921,7 @@ namespace Neutron.Forms
                 CheckBoxUseSsl.Checked = _settings.UseSsl;
                 TextBoxPort.Text = _settings.ServerPort.ToString();
             }
+
             tabControl1.SelectedTab = EmailServer;
         }
 
@@ -2791,6 +2950,40 @@ namespace Neutron.Forms
             var locationManager = new RandomLocationManager(new VelocityCodeManager());
             var maintenance = new MasterMaintenanceProcessor(locationManager);
             maintenance.ProcessFiles();
+        }
+
+        private void ViewEditStation(object sender, EventArgs e)
+        {
+            ViewEditStation();
+        }
+
+        private void ButtonRefreshSlotNames_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                ButtonRefreshSlotNames.Enabled = false;
+                Cursor.Current = Cursors.WaitCursor;
+                var locations = _repoLocations.All().ToList();
+                foreach (var location in locations)
+                {
+                    location.Slot = GlobalVar.SlotNameFactory
+                        .CreateSlotName(location.Area.AreaNumber, location.Loc1, location.Loc2, location.Loc3,
+                            location.Loc4, location.Loc5).SlotName;
+                    _repoLocations.Update(location);
+                }
+                Thread.Sleep(2000);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                throw;
+            }
+            finally
+            {
+                ButtonRefreshSlotNames.Enabled = true;
+                Cursor.Current = Cursors.Default;
+            }
         }
     }
 }

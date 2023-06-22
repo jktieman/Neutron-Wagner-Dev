@@ -758,7 +758,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(123, 20);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Select Station";
+            this.label1.Text = "Select Workstation";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ComboBoxStation

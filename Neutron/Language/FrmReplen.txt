@@ -71,7 +71,7 @@ Description=Description
 ReceivedDate=Received Date
 Starter=Starter
 AddItem=Add Item
-Station=Station
+Workstation=Workstation
 PickedQuantity=Picked Quantity
 LineStatus=Line Status
 

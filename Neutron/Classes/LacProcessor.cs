@@ -50,13 +50,13 @@ namespace Neutron.Classes
             }
         }
 
-        public bool MovePermitted(int station, int device, int carrier)
+        public bool MovePermitted(int workstationId, int device, int carrier)
        {
            //if not using LacProcessor always return true to allow move
             if (!UseLacProcessor) return true;
             var result = false;
             var x = LacProfile.Find(r =>
-                r.CarrierNumber == carrier && r.DeviceNumber == device && r.StationNumber == station);
+                r.CarrierNumber == carrier && r.DeviceNumber == device && r.WorkstationId == workstationId);
             if (x != null) result = true;
             return result;
         }

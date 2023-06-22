@@ -1,32 +1,32 @@
-﻿using NeutronData.Models;
+﻿using BlastzoneController;
+using NeutronData.Models;
 using NeutronData.Models.Lookups;
+using ProliteController;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Security.Cryptography;
+
 
 namespace NeutronData.ModelViews
 {
-    public class StationView
+    public class WorkstationView
     {
-        public StationView()
+        public WorkstationView()
         {
             HardwareDevices = new List<HardwareDevice>();
         }
-        public int StationId { get; set; }
-        public int StationNumber { get; set; }
+        public int WorkstationId { get; set; }
+        public int WorkstationNumber { get; set; }
         public string Name { get; set; }
         public StationType StationType { get; set; }
         public int StationTypeId { get; set; }
-        //public int? CommunicationTypeId { get; set; }
-        //public string CommunicationTypeName { get; set; }
-        //public TcpConfiguration TcpConfiguration { get; set; }
-        //public int? TcpConfigurationId { get; set; }
-        //public string TcpConfigurationName { get; set; }
-        //public SerialConfiguration SerialConfiguration { get; set; }
-        //public int? SerialConfigurationId { get; set; }
-        //public string SerialConfigurationName { get; set; }
+        //public List<Area> Areas { get; set; }
+        public Area Area { get; set; }
+        public int AreaId { get; set; }
         public int Sequence { get; set; }
         public List<HardwareDevice> HardwareDevices { get; set; }
-        //public HardwareDevice CurrentShuttle { get; set; }
         public IReadOnlyCollection<int> EnabledDevices
         {
             get
@@ -41,6 +41,13 @@ namespace NeutronData.ModelViews
                 }
                 return new ReadOnlyCollection<int>(list);
             }
+        }
+        public IBlastzone Blastzone { get; set; }
+        public IProlite Prolite { get; set; }
+
+        public override string ToString()
+        {
+           return $"{Name}  Area: {Area.AreaNumber}";
         }
     }
 }

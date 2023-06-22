@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AlliedLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AlliedLogger\bin\Release\AlliedLogger.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -45,6 +49,10 @@
     <Reference Include="log4net, Version=2.0.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.13\lib\net45\log4net.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="NeutronCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NeutronCore\bin\Release\NeutronCore.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
@@ -78,6 +86,8 @@
     <Compile Include="Interfaces\IAkaRepository.cs" />
     <Compile Include="Interfaces\IReplenOrdersRepository.cs" />
     <Compile Include="Interfaces\ISqlServer.cs" />
+    <Compile Include="Interfaces\IWorkstationAreaRepository.cs" />
+    <Compile Include="Interfaces\IWorkstationRepository.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.Designer.cs">
       <DependentUpon>201902271513321_PickLocationSkip.cs</DependentUpon>
@@ -106,11 +116,19 @@
     <Compile Include="Migrations\202103041204412_station.Designer.cs">
       <DependentUpon>202103041204412_station.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202210272054127_station1.cs" />
+    <Compile Include="Migrations\202210272054127_station1.designer.cs">
+      <DependentUpon>202210272054127_station1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ActionCodeItem.cs" />
     <Compile Include="Models\AkaType.cs" />
+    <Compile Include="Models\Area.cs" />
     <Compile Include="Models\Carrier.cs" />
+    <Compile Include="Models\Lookups\DeviceType.cs" />
+    <Compile Include="Models\StorageDevice.cs" />
     <Compile Include="Models\GroupUser.cs" />
     <Compile Include="Models\HostOrderLine.cs" />
+    <Compile Include="Interfaces\IRFIDManager.cs" />
     <Compile Include="Models\LocationDetail.cs" />
     <Compile Include="Models\GroupSecureItem.cs" />
     <Compile Include="Models\History.cs" />
@@ -125,7 +143,7 @@
     <Compile Include="General\TransferRec.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\ILookup.cs" />
-    <Compile Include="Models\Lookups\DeviceType.cs" />
+    <Compile Include="Models\Lookups\StorageDeviceType.cs" />
     <Compile Include="Models\Lookups\Language.cs" />
     <Compile Include="Models\Lookups\LineStatusLookup.cs" />
     <Compile Include="Models\Lookups\StationType.cs" />
@@ -156,6 +174,7 @@
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\Lookups\OrderStatus.cs" />
     <Compile Include="Models\OrdSummRec.cs" />
+    <Compile Include="Models\RFID.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\RoleCarrier.cs" />
     <Compile Include="Models\SecureItem.cs" />
@@ -174,6 +193,9 @@
     <Compile Include="Models\Lookups\VelocityCode.cs" />
     <Compile Include="Models\RoleUser.cs" />
     <Compile Include="Models\UserRoles.cs" />
+    <Compile Include="Models\RFIDManager.cs" />
+    <Compile Include="Models\Workstation.cs" />
+    <Compile Include="Models\WorkstationArea.cs" />
     <Compile Include="ModelViews\AvailableOrdersView.cs" />
     <Compile Include="ModelViews\AvailableReplenOrdersView.cs" />
     <Compile Include="ModelViews\HardwareDeviceView.cs" />
@@ -203,7 +225,7 @@
     <Compile Include="ModelViews\SkipInventoryView.cs" />
     <Compile Include="ModelViews\SkipView.cs" />
     <Compile Include="ModelViews\StationOrderDetail.cs" />
-    <Compile Include="ModelViews\StationView.cs" />
+    <Compile Include="ModelViews\WorkstationView.cs" />
     <Compile Include="ModelViews\UserView.cs" />
     <Compile Include="PrintModels\AnticipatedOut.cs" />
     <Compile Include="PrintModels\DocumentPrinterPreferences.cs" />
@@ -220,7 +242,7 @@
     <Compile Include="Interfaces\IItemDefinitionsRepository.cs" />
     <Compile Include="Interfaces\IInventoryRepository.cs" />
     <Compile Include="Repositories\InventoryRepository.cs" />
-    <Compile Include="Interfaces\IStationRepository.cs" />
+    <Compile Include="Interfaces\IAreaRepository.cs" />
     <Compile Include="Interfaces\IOrdersRepository.cs" />
     <Compile Include="Repositories\ItemDefinitionsRepository.cs" />
     <Compile Include="Repositories\LocationsRepository.cs" />
@@ -230,22 +252,14 @@
     <Compile Include="Repositories\OrdersRepository.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\SerialConfigurationsRepository.cs" />
-    <Compile Include="Repositories\StationRepository.cs" />
+    <Compile Include="Repositories\WorkstationRepository.cs" />
+    <Compile Include="Repositories\AreaRepository.cs" />
+    <Compile Include="Repositories\WorkstationAreaRepository.cs" />
     <Compile Include="SqlModelViews\SqlInventoryView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
-      <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
-      <Name>AlliedLogger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
-      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
-      <Name>NeutronCore</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\1121.jpg" />
@@ -275,8 +289,20 @@
     <EmbeddedResource Include="Migrations\202103041204412_station.resx">
       <DependentUpon>202103041204412_station.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202210272054127_station1.resx">
+      <DependentUpon>202210272054127_station1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj">
+      <Project>{69B6D943-9C4F-417E-9A5E-07F56926E526}</Project>
+      <Name>BlastzoneController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
+      <Project>{CC797714-8D01-40AF-8A2F-737B06F133CD}</Project>
+      <Name>ProliteController</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

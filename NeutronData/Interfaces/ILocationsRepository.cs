@@ -7,11 +7,18 @@ namespace NeutronData.Interfaces
 {
     public interface ILocationsRepository
     {
-        IEnumerable<Location> AvailableLocations();
-        IEnumerable<Location> AvailableLocationsAll();
-        Task<IEnumerable<LocationView>> GetAllLocationViewsExact(Station station, int sizeCodeId, int velocityCodeId, int heightCodeId, int locationCodeId, bool inUse );
-        IEnumerable<LocationView> FindLocationViewsByStation(Station station);
+        Task<IEnumerable<LocationView>> GetAllLocationViewsExact(int areaId, int sizeCodeId
+            , int velocityCodeId, int heightCodeId, int inUse);
+        Task<IEnumerable<LocationView>> GetAllLocationViewsExactByAreas(string areas, int itemDefinitionSizeCodeId
+            , int itemDefinitionVelocityCodeId, int itemDefinitionHeightCodeId, int inUse);
+        IEnumerable<LocationView> FindLocationViewsByArea(int areaId);
+        IEnumerable<LocationView> FindLocationViewsByAreaAndSlot(int areaId, string slot);
+        IEnumerable<LocationView> FindLocationViewsBySlot(string find);
         IEnumerable<LocationView> FindLocationViews(string find = "");
         void SetLocationInUse(int locationId, bool b);
+        int GetMaxColumns(int areaId, int device, int tray);
+        int GetMaxRows(int areaId, int device, int tray);
+        Task<bool> IsInInventory(int locationId);
+        void SetLocationCode(int locationId, string locationCode);
     }
 }

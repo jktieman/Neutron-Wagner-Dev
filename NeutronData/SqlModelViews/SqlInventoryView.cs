@@ -15,10 +15,11 @@ namespace NeutronData.SqlModelViews
         public int Loc4 { get; set; }
         public int Loc5 { get; set; }
         public string Slot { get; set; }
+        public int PickSequence { get; set; }
         public bool InUse { get; set; }
         public DateTime ReceivedDate { get; set; }
-        public int StationId { get; set; }
-        public string StationName { get; set; }
+        public int AreaId { get; set; }
+        public string AreaName { get; set; }
         public int StorageTypeId { get; set; }
         public string StorageTypeName { get; set; }
         public int SizeCodeId { get; set; }
@@ -27,12 +28,13 @@ namespace NeutronData.SqlModelViews
         public string VelocityCodeName { get; set; }
         public int HeightCodeId { get; set; }
         public string HeightCodeName { get; set; }
-        public int LocationCodeId { get; set; }
-        public string LocationCodeName { get; set; }
+        public string LocationCode { get; set; }
         public int ItemDefinitionId { get; set; }
         public int LocationId { get; set; }
         public int UnitOfIssueId { get; set; }
         public string UnitOfIssueName { get; set; }
         public int LocationMax { get; set; }
+        public string RFID { get; set; }
+
     }
 }

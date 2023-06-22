@@ -59,17 +59,17 @@ namespace NeutronLoader
             return itemDef;
         }
 
-        public ItemDefinition GetOrCreate(string partNum, string description, int stationId)
+        public ItemDefinition GetOrCreate(string partNum, string description, int areaId)
         {
             ItemDefinition itemDef = null;
             try
             {
                 itemDef = _repoItemDefinition.FindBy(r => r.Item == partNum
-                && r.StationId == stationId).FirstOrDefault();
+                && r.AreaId == areaId).FirstOrDefault();
                 if (itemDef == null)
                 {
 
-                    itemDef = CreateNewItemDefinition(partNum, description, stationId);
+                    itemDef = CreateNewItemDefinition(partNum, description, areaId);
                 }
             }
             catch (Exception ex)
@@ -87,27 +87,22 @@ namespace NeutronLoader
             try
             {
                 var def = _jsonData.LoadFile<ItemDefinition>();
-                var stationId = 0;
+                var areaId = def.AreaId;
                 var sizeCodeId = 0;
                 var velocityCodeId = 0;
                 var heightCodeId = 0;
-                var locationCodeId = 0;
                 var unitOfIssueId = 0;
                 var storageTypeId = 0;
 
                 using (var db = new NeutronDb())
                 {
                     //Station
-                    var sta = db.Stations.Find(def.StationId);
-                    if (sta != null)
+                    if (areaId == 0)
                     {
-                        stationId = sta.Id;
-                    }
-                    else
-                    {
-                        MessageBox.Show(@"Invalid Station Setup in default Item Definition.", @"Invalid Station",
+                        MessageBox.Show(@"Invalid area Setup in default Item Definition.", @"Invalid Area",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    
                     //SizeCode
                     var size = db.SizeCodes.Find(def.SizeCodeId);
                     if (size != null)
@@ -174,28 +169,7 @@ namespace NeutronLoader
                             heightCodeId = heightCode.Id;
                         }
                     }
-                    //LocationCode
-                    var loc = db.LocationCodes.Find(def.LocationCodeId);
-                    if (loc != null)
-                    {
-                        locationCodeId = loc.Id;
-                    }
-                    else
-                    {
-                        var loc2 = db.LocationCodes.FirstOrDefault();
-                        if (loc2 != null)
-                        {
-                            locationCodeId = loc2.Id;
-                        }
-                        else
-                        {
-                            // Create LocationCode
-                            var locationCode = new LocationCode { Name = "Unknown", Sequence = 10 };
-                            db.LocationCodes.Add(locationCode);
-                            db.SaveChanges();
-                            locationCodeId = locationCode.Id;
-                        }
-                    }
+
                     //UnitOfIssueCode
                     var unit = db.UnitOfIssues.Find(def.UnitOfIssueId);
                     if (unit != null)
@@ -248,7 +222,7 @@ namespace NeutronLoader
                 {
                     newDefinition = new ItemDefinition
                     {
-                        StationId = stationId
+                        AreaId = areaId
                         , Item = hostOrder.PartNum
                         , Description = hostOrder.PartDesc
                         , LocationMax = def.LocationMax
@@ -262,7 +236,6 @@ namespace NeutronLoader
                         , SizeCodeId = sizeCodeId
                         , VelocityCodeId = velocityCodeId
                         , HeightCodeId = heightCodeId
-                        , LocationCodeId = locationCodeId
                     };
                     _repoItemDefinition.Insert(newDefinition);
                 }
@@ -283,7 +256,7 @@ namespace NeutronLoader
             return newDefinition;
         }
 
-        private ItemDefinition CreateNewItemDefinition(string partNum, string partDesc, int stationId)
+        private ItemDefinition CreateNewItemDefinition(string partNum, string partDesc, int areaId)
         {
 
             var newDefinition = new ItemDefinition();
@@ -295,7 +268,7 @@ namespace NeutronLoader
                 {
                     newDefinition = new ItemDefinition
                     {
-                        StationId = stationId
+                        AreaId = areaId
                         ,
                         Item = partNum
                         ,
@@ -322,8 +295,6 @@ namespace NeutronLoader
                         VelocityCodeId = def.VelocityCodeId
                         ,
                         HeightCodeId = def.HeightCodeId
-                        ,
-                        LocationCodeId = def.LocationCodeId
                     };
                     _repoItemDefinition.Insert(newDefinition);
 

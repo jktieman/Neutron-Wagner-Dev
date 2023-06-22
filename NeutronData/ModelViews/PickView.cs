@@ -38,7 +38,7 @@ namespace NeutronData.ModelViews
         public List<ItemImage> Images { get; set; }
         public List<PickLocation> PickLocations { get; set; }
         public DateTime ReceivedDate { get; set; }
-        public int StationNumber { get; set; }
+        public int AreaId { get; set; }
         public int PreviousLineStatusId { get; set; }
         public int GetQuantityToBePicked()
         {

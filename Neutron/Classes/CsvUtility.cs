@@ -74,11 +74,11 @@ namespace Neutron.Classes
             }
         }
 
-        public static void SaveToCsv(string fileName, int stationId)
+        public static void SaveToCsv(string fileName, int areaId)
         {
             try
             {
-                var inventory = RepoInventory.All().Where(r => r.StationId == stationId).OrderBy(o => o.ItemDefinition.Item).ToList();
+                var inventory = RepoInventory.All().Where(r => r.AreaId == areaId).OrderBy(o => o.ItemDefinition.Item).ToList();
                 const string columnNames = "sku" +
                                            ",Description" +
                                            ",Unit-Of_Issue" +

@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NeutronData.Interfaces;
+using BlastzoneController;
+using ProliteController;
 
 namespace NeutronLoader
 {
@@ -21,18 +23,21 @@ namespace NeutronLoader
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
-        private readonly IStationRepository _stationRepository;
+        private readonly IWorkstationRepository _workstationRepository;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        private readonly Station _rackStation;
+       // private readonly IWorkstationAreaRepository _workstationAreaRepository;
+        private readonly Workstation _rackStation;
         private readonly int _rackStationId;
         private readonly DynamicLogger _logger;
 
-        public HostFilePr1(NeutronLicense neutronLicense, NeutronVariables neutronVariables, Station rackStation = null)
+        public HostFilePr1(NeutronLicense neutronLicense, NeutronVariables neutronVariables
+            , IWorkstationRepository workstationRepository , Workstation rackStation = null)
         {
-            //_stationRepository = stationRepository;
+            //_workstationRepository = workstationRepository;
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
+            _workstationRepository = workstationRepository;
             _rackStation = rackStation;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
@@ -53,7 +58,7 @@ namespace NeutronLoader
                 rackStationIsNull = false;
                 _rackStationId = _rackStation.Id;
             }
-            _stationRepository = new StationRepository(_logger);
+            //_workstationRepository = new WorkstationRepository(_logger, _workstationAreaRepository, _blastzone, _prolite);
 
             _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
@@ -262,11 +267,11 @@ namespace NeutronLoader
                 string empName;
 
                 _logger.Log($"Get Upload Dat Record - Begin Try");
-                var stat = _stationRepository.GetStation(history.StationId);
+                var stat = _workstationRepository.GetStation(history.AreaId);
                 _logger.Log($"Get Upload Dat Record - 1");
-                // if the stationId is the same as the Rack Station Id (8 is the normal Rack Id)
+                // if the workstationId is the same as the Rack Station Id (8 is the normal Rack Id)
                 // then change the StationId that goes back to Saint Francis to 9 instead of 8
-                // otherwise just use the stationId
+                // otherwise just use the workstationId
                 var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
                 _logger.Log($"Get Upload Dat Record - 2");
                 order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronData", "NeutronData\NeutronData.csproj", "{E325F3E2-6660-451F-B9B2-D8866447BE4D}"
 EndProject
@@ -36,6 +36,24 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGVPrint", "DGVPrinter\DGVPrint.csproj", "{E992BD9A-8437-48E4-B9DE-000EFC15032B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceIndicatorService", "DeviceIndicatorService\DeviceIndicatorService.csproj", "{2AEDD746-887B-411D-A2B9-52AB4835ACBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronTrayLayout", "..\NeutronUserControls\NeutronTrayLayout\NeutronTrayLayout\NeutronTrayLayout.csproj", "{4F32E28F-E0E0-4144-982F-FE7920AD93A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDllu", "..\NeutronDllu\NeutronDllu\NeutronDllu.csproj", "{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neutron_Test", "Neutron_Test\Neutron_Test.csproj", "{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanel_DC", "..\..\..\VS2019\Projects\Hanel\Hanel_DC\Hanel_DC.csproj", "{156ADD50-D792-4D9B-897D-F4B38AED9234}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HanelCommands", "..\..\..\VS2019\Projects\HanelCommands\HanelCommands\HanelCommands.csproj", "{E5C92F26-E834-4913-9482-C8AF45F358EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBinDisplay", "EBinDisplayManager\EBinDisplay.csproj", "{51955251-C665-4F33-B31B-45011E6BAB99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDataTests", "NeutronDataTests\NeutronDataTests.csproj", "{A4825200-9451-4D7C-AB6D-830FEABFEDFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlastzoneController", "BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj", "{69B6D943-9C4F-417E-9A5E-07F56926E526}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProliteController", "ProLiteController\ProliteController\ProliteController.csproj", "{CC797714-8D01-40AF-8A2F-737B06F133CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,8 +130,47 @@ Global
 		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AEDD746-887B-411D-A2B9-52AB4835ACBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51955251-C665-4F33-B31B-45011E6BAB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51955251-C665-4F33-B31B-45011E6BAB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51955251-C665-4F33-B31B-45011E6BAB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51955251-C665-4F33-B31B-45011E6BAB99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE06F961-1F5D-4A2E-9848-543AF6FB1C8D}
 	EndGlobalSection
 EndGlobal

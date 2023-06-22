@@ -12,7 +12,7 @@ namespace SqlSchemaManager
     public class StoredProcedureManager : IStoredProcedureManager
     {
         private SqlConnection _connection;
-        private List<string> _storedProcedureNames = new List<string>(){ "usp_GetLocationViewsByStationAndSlot" };
+        private List<string> _storedProcedureNames = new List<string>(){ "usp_GetLocationViewsByAreaAndSlot" };
         private static readonly string StoredProceduresPath = $"SqlSchemaManager.SqlScripts.StoredProcedures";
 
         public SqlConnection Connection

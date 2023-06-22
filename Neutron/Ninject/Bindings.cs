@@ -1,22 +1,22 @@
-﻿using System.Data.Entity;
-using System.Windows.Data;
-using AlliedLogger;
+﻿using AlliedLogger;
 using Ninject.Modules;
 using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
+using Neutron.Controllers;
 using Neutron.Forms;
 using Neutron.Global;
 using Neutron.Models;
-using NeutronCore.Global;
-using NeutronData.DataContexts;
 using NeutronData.General;
 using NeutronData.Interfaces;
-using NeutronData.ModelViews;
+using NeutronData.Models;
 using NeutronData.Repositories;
 using NeutronLoader;
 using NeutronMaintenance;
 using SqlSchemaManager;
+using BlastzoneController;
+using ProliteController;
+
 
 namespace Neutron.Ninject
 {
@@ -41,19 +41,19 @@ namespace Neutron.Ninject
                 .WithConstructorArgument("standAlone");
 
             Bind<FrmInventory>().To<FrmInventory>()
-                .WithConstructorArgument("stationView")
+                .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("neutronVariables");
 
             Bind<FrmPick>().ToSelf()
                 .WithConstructorArgument("neutronVariables")
                 .WithConstructorArgument("neutronLicense")
-                .WithConstructorArgument("stationView")
+                .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("historyManager");
 
             Bind<FrmHotAction>().To<FrmHotAction>()
                 .WithConstructorArgument("neutronVariables")
                 .WithConstructorArgument("neutronLicense")
-                .WithConstructorArgument("stationView")
+                .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("historyManager");
                 //.WithConstructorArgument("Item");
                 //.WithConstructorArgument("quantity");
@@ -62,7 +62,7 @@ namespace Neutron.Ninject
             Bind<FrmReplen>().ToSelf()
                 .WithConstructorArgument("neutronVariables")
                 .WithConstructorArgument("neutronLicense")
-                .WithConstructorArgument("stationView")
+                .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("historyManager");
 
             Bind<StartStopLoaderManager>().To<StartStopLoaderManager>();
@@ -75,13 +75,19 @@ namespace Neutron.Ninject
             Bind<ILocationManager>().To<RandomLocationManager>().InSingletonScope();
             Bind<IVelocityCodeManager>().To<VelocityCodeManager>().InSingletonScope();
             Bind<IMasterMaintenanceProcessor>().To<MasterMaintenanceProcessor>().InSingletonScope();
-            Bind<IHistoryManager>().To<HistoryManager>().WithConstructorArgument("stationView");
+            Bind<IHistoryManager>().To<HistoryManager>().WithConstructorArgument("workstationView");
             Bind<IDynamicLogger>().To<DynamicLogger>()
                 .WithConstructorArgument("logFileDir", string.Empty)
                 .WithConstructorArgument("folderName", @"General")
                 .WithConstructorArgument("logActivity", "false");
 
-            Bind<IStationRepository>().To<StationRepository>().InSingletonScope();
+            Bind<IWorkstationRepository>().To<WorkstationRepository>().InSingletonScope();
+            Bind<IWorkstationAreaRepository>().To<WorkstationAreaRepository>().InSingletonScope();
+            Bind<IAreaRepository>().To<AreaRepository>().InSingletonScope();
+            Bind<IRFIDManager>().To<RFIDManager>().InSingletonScope();
+            Bind<ILocationsRepository>().To<LocationsRepository>().InSingletonScope();
+            Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
+            Bind<IProlite>().To<Prolite>().InSingletonScope();
         }
     }
 }

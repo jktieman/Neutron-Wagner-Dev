@@ -11,6 +11,7 @@ using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.Models;
+using NeutronData.ModelViews;
 using Timer = System.Threading.Timer;
 
 namespace NeutronLoader
@@ -25,7 +26,7 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
         private string _neutronDownFileName;
         private Timer _timer;
         private bool _loadOrdersBusy;
@@ -34,12 +35,12 @@ namespace NeutronLoader
         private IFileProcessor _fileProcessor;
 
         public InterfaceProcessorSfh(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, Station rackStation)
+            IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
             Initialize();
         }
 
@@ -53,7 +54,7 @@ namespace NeutronLoader
             var logActivity = LoaderSettings.EnableLogging;
             _loaderDelay = _neutronVariables.LoaderDelay;
             _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
-            _fileProcessor = new SfhFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _rackStation);
+            _fileProcessor = new SfhFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView);
             InitBackgroundWorker();
         }
 

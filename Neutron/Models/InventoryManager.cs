@@ -11,11 +11,14 @@ namespace Neutron.Models
     {
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly ILocationsRepository _locationsRepository;
-       
-        public InventoryManager(GenericRepository<Inventory> repoInventory, ILocationsRepository locationsRepository)
+        private readonly HistoryManager _historyManager;
+
+        public InventoryManager(GenericRepository<Inventory> repoInventory, ILocationsRepository locationsRepository
+        , HistoryManager historyManager)
         {
             _repoInventory = repoInventory;
             _locationsRepository = locationsRepository;
+            _historyManager = historyManager;
         }
 
         public void DeleteInventoryRecord(int invId, bool releaseOnly = false)
@@ -26,14 +29,14 @@ namespace Neutron.Models
             {
                 if (inventory.StorageTypeId == (int)StorageType.Release)
                 {
-                    GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
+                    _historyManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                     _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
                     _repoInventory.Delete(invId);
                 }
             }
             else
             {
-                GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
+                _historyManager.SaveHistory(ActionCode.InventoryDelete, inventory);
                 _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
                 _repoInventory.Delete(invId);
             }

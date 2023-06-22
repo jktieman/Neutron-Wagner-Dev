@@ -10,9 +10,11 @@ namespace Neutron.Global
     {
         public static IDisplayController Displays { get; set; }
 
-        public static StationView Station { get; set; }
+        public static WorkstationView Workstation { get; set; }
 
         public static IShuttleDriver Shuttle { get; set; }
+        public static IHanelDriver Hanel { get; set; }
+
 
         public static ISlotNameFactory SlotNameFactory { get; set; }
 

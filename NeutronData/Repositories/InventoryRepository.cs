@@ -29,9 +29,9 @@ namespace NeutronData.Repositories
                     Item = r.ItemDefinition.Item,
                     Description = r.ItemDefinition.Description,
                     Quantity = r.Quantity,
-                    StationId = r.Location.StationId,
-                    StationName = r.Location.Station.Name,
-                    StationNumber = r.Location.Station.StationNumber,
+                    AreaId = r.Location.AreaId,
+                    AreaName = r.Location.Area.Name,
+                    AreaNumber = r.Location.Area.AreaNumber,
                     Loc1 = r.Location.Loc1,
                     Loc2 = r.Location.Loc2,
                     Loc3 = r.Location.Loc3,
@@ -41,16 +41,16 @@ namespace NeutronData.Repositories
                     SizeCodeId = r.Location.SizeCodeId,
                     VelocityCodeId = r.Location.VelocityCodeId,
                     HeightCodeId = r.Location.HeightCodeId,
-                    LocationCodeId = r.Location.LocationCodeId,
                     StorageTypeId = r.StorageTypeId,
                     ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
                     SizeCodeName = r.Location.SizeCode.Name,
                     VelocityCodeName = r.Location.VelocityCode.Name,
                     HeightCodeName = r.Location.HeightCode.Name,
-                    LocationCodeName = r.Location.LocationCode.Name,
+                    LocationCode = r.Location.LocationCode,
                     StorageTypeName = r.StorageType.Name,
                     LocationId = r.LocationId,
                     ItemDefinitionId = r.ItemDefinitionId,
+                    RFID = r.RFID,
                     ItemDefinition = r.ItemDefinition,
                     Location = r.Location
                 }).ToList();
@@ -71,9 +71,9 @@ namespace NeutronData.Repositories
                     Item = r.ItemDefinition.Item,
                     Description = r.ItemDefinition.Description,
                     Quantity = r.Quantity,
-                    StationId = r.Location.StationId,
-                    StationName = r.Location.Station.Name,
-                    StationNumber = r.Location.Station.StationNumber,
+                    AreaId = r.Location.AreaId,
+                    AreaName = r.Location.Area.Name,
+                    AreaNumber = r.Location.Area.AreaNumber,
                     Loc1 = r.Location.Loc1,
                     Loc2 = r.Location.Loc2,
                     Loc3 = r.Location.Loc3,
@@ -83,16 +83,16 @@ namespace NeutronData.Repositories
                     SizeCodeId = r.Location.SizeCodeId,
                     VelocityCodeId = r.Location.VelocityCodeId,
                     HeightCodeId = r.Location.HeightCodeId,
-                    LocationCodeId = r.Location.LocationCodeId,
                     StorageTypeId = r.StorageTypeId,
                     ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
                     SizeCodeName = r.Location.SizeCode.Name,
                     VelocityCodeName = r.Location.VelocityCode.Name,
                     HeightCodeName = r.Location.HeightCode.Name,
-                    LocationCodeName = r.Location.LocationCode.Name,
+                    LocationCode = r.Location.LocationCode,
                     StorageTypeName = r.StorageType.Name,
                     LocationId = r.LocationId,
                     ItemDefinitionId = r.ItemDefinitionId,
+                    RFID = r.RFID,
                     ItemDefinition = r.ItemDefinition,
                     Location = r.Location
                 };
@@ -105,7 +105,8 @@ namespace NeutronData.Repositories
             List<InventoryView> inventoryViews = new List<InventoryView>();
             using (var db = new NeutronDb())
             {
-                var recs = db.Inventory.Include("ItemDefinition").Where(r => r.ItemDefinition.Item == item).ToList();
+                var recs = db.Inventory.Include("ItemDefinition")
+                    .Where(r => r.ItemDefinition.Item == item).ToList();
 
                 foreach (var r in recs)
                 {
@@ -115,28 +116,29 @@ namespace NeutronData.Repositories
                         Item = r.ItemDefinition.Item,
                         Description = r.ItemDefinition.Description,
                         Quantity = r.Quantity,
-                        StationId = r.Location.StationId,
-                        StationName = r.Location.Station.Name,
-                        StationNumber = r.Location.Station.StationNumber,
+                        AreaId = r.Location.AreaId,
+                        AreaName = r.Location.Area.Name,
+                        AreaNumber = r.Location.Area.AreaNumber,
                         Loc1 = r.Location.Loc1,
                         Loc2 = r.Location.Loc2,
                         Loc3 = r.Location.Loc3,
                         Loc4 = r.Location.Loc4,
                         Loc5 = r.Location.Loc5,
                         Slot = r.Location.Slot,
+                        PickSequence = r.Location.PickSequence,
                         SizeCodeId = r.Location.SizeCodeId,
                         VelocityCodeId = r.Location.VelocityCodeId,
                         HeightCodeId = r.Location.HeightCodeId,
-                        LocationCodeId = r.Location.LocationCodeId,
                         StorageTypeId = r.StorageTypeId,
                         ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
                         SizeCodeName = r.Location.SizeCode.Name,
                         VelocityCodeName = r.Location.VelocityCode.Name,
                         HeightCodeName = r.Location.HeightCode.Name,
-                        LocationCodeName = r.Location.LocationCode.Name,
+                        LocationCode = r.Location.LocationCode,
                         StorageTypeName = r.StorageType.Name,
                         LocationId = r.LocationId,
                         ItemDefinitionId = r.ItemDefinitionId,
+                        RFID = r.RFID,
                         ItemDefinition = r.ItemDefinition,
                         Location = r.Location
 
@@ -171,7 +173,7 @@ namespace NeutronData.Repositories
             return projection;
         }
 
-        public List<SqlInventoryView> FindInventoryViewsByStation(string find, int stationId)
+        public List<SqlInventoryView> FindInventoryViewsByStation(string find, int workstationId)
         {
             var recs = new List<SqlInventoryView>();
             try
@@ -179,8 +181,28 @@ namespace NeutronData.Repositories
                 using (var context = new NeutronDb())
                 {
                     var param = new SqlParameter(parameterName: "@Find", value: find);
-                    var paramStation = new SqlParameter(parameterName: "@StationId", value: stationId);
+                    var paramStation = new SqlParameter(parameterName: "@StationId", value: workstationId);
                     recs = context.Database.SqlQuery<SqlInventoryView>(sql: "usp_GetInventoryViewFind_Station @Find, @StationId", parameters: new object[] { param, paramStation }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+            return recs;
+        }
+
+        public List<SqlInventoryView> FindInventoryViewsByArea(string find, int areaId)
+        {
+            var recs = new List<SqlInventoryView>();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@FIND", value: find);
+                    var paramArea = new SqlParameter(parameterName: "@AREAID", value: areaId);
+                    recs = context.Database.SqlQuery<SqlInventoryView>(sql: "usp_GetInventoryViewFind_Area @FIND, @AREAID", parameters: new object[] { param, paramArea }).ToList();
                 }
             }
             catch (Exception ex)
@@ -228,6 +250,29 @@ namespace NeutronData.Repositories
 
             return recs;
         }
+
+        public SqlInventoryView GetInventoryViewByItemDefinitionIdAndLocationId(int itemId, int locationId)
+        {
+            var rec = new SqlInventoryView();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramItemId = new SqlParameter("@ITEMID", itemId);
+                    var paramLocationId = new SqlParameter("@LOCATIONID", locationId);
+                    rec = context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewByItemDefinitionIdAndLocationId @ITEMID, @LOCATIONID", paramItemId, paramLocationId).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+            return rec;
+        }
+
+
+
         /// <summary>
         /// Gets the Slot field from the Locations Table if the
         /// Inventory record is a Prime Bin
@@ -254,17 +299,17 @@ namespace NeutronData.Repositories
             return slot;
         }
 
-        public int GetStationNumber(int itemDefinitionId)
+        public int GetAreaNumber(int itemDefinitionId)
         {
-            var stationNumber = 1;
+            var areaNumber = 1;
             var rec = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).FirstOrDefault();
 
             if (rec != null)
             {
-                stationNumber = rec.Location.Station.StationNumber;
+                areaNumber = rec.Location.Area.AreaNumber;
             }
 
-            return stationNumber;
+            return areaNumber;
         }
 
         public void Dispose()

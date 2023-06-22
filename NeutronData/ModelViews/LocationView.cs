@@ -6,7 +6,9 @@ namespace NeutronData.ModelViews
     public class LocationView
     {
         public int Id { get; set; }
-        public int StationId { get; set; }
+        public int AreaId { get; set; }
+        public string AreaName { get; set; }
+        public int AreaNumber { get; set; }
         public int Loc1 { get; set; }
         public int Loc2 { get; set; }
         public int Loc3 { get; set; }
@@ -17,12 +19,10 @@ namespace NeutronData.ModelViews
         public int SizeCodeId { get; set; }
         public int VelocityCodeId { get; set; }
         public int HeightCodeId { get; set; }
-        public int LocationCodeId { get; set; }
         public string SizeCodeName { get; set; }
         public string VelocityCodeName { get; set; }
         public string HeightCodeName { get; set; }
-        public string LocationCodeName { get; set; }
-        public string StationName { get; set; }
-        public string DeviceName { get; set; }
+        public int PickSequence { get; set; }
+        public string LocationCode { get; set; }
     }
 }

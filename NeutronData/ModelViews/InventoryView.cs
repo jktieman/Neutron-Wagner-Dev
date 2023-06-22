@@ -14,22 +14,23 @@ namespace NeutronData.ModelViews
         public int Loc4 { get; set; }
         public int Loc5 { get; set; }
         public string Slot { get; set; }
-        public int StationId { get; set; }
-        public int StationNumber { get; set; }
-        public string StationName { get; set; }
+        public int PickSequence { get; set; }
+        public int AreaId { get; set; }
+        public int AreaNumber { get; set; }
+        public string AreaName { get; set; }
         public int SizeCodeId { get; set; }
         public int VelocityCodeId { get; set; }
         public int HeightCodeId { get; set; }
-        public int LocationCodeId { get; set; }
         public int StorageTypeId { get; set; }
         public string ReceivedDate { get; set; }
         public string StorageTypeName { get; set; }
         public string SizeCodeName { get; set; }
         public string VelocityCodeName { get; set; }
         public string HeightCodeName { get; set; }
-        public string LocationCodeName { get; set; }
+        public string LocationCode { get; set; }
         public int ItemDefinitionId { get; set; }
         public int LocationId { get; set; }
+        public string RFID { get; set; }
         public ItemDefinition ItemDefinition { get; set; }
         public Location Location { get; set; }
     }

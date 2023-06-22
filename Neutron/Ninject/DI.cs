@@ -44,13 +44,13 @@ namespace Neutron.Ninject
         // FrmPick and FrmHotAction
         public static T Create<T>(NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
-            , StationView stationView
+            , WorkstationView workstationView
             , HistoryManager historyManager)
         {
             return _kernel.Get<T>(
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense)
-                , new ConstructorArgument("stationView", stationView)
+                , new ConstructorArgument("workstationView", workstationView)
                 , new ConstructorArgument("historyManager", historyManager));
         }
 
@@ -58,7 +58,7 @@ namespace Neutron.Ninject
         //public static T Create<T>(
         //    NeutronVariables neutronVariables
         //    , NeutronLicense neutronLicense
-        //    , StationView stationView
+        //    , WorkstationView workstationView
         //    , HistoryManager historyManager)
         //    //, string item)
         //    //, int quantity)
@@ -68,7 +68,7 @@ namespace Neutron.Ninject
         //    var result = _kernel.Get<T>(
         //        new ConstructorArgument("neutronVariables", neutronVariables)
         //        , new ConstructorArgument("neutronLicense", neutronLicense)
-        //        , new ConstructorArgument("stationView", stationView)
+        //        , new ConstructorArgument("workstationView", workstationView)
         //        , new ConstructorArgument("historyManager", historyManager));
         //        //, new ConstructorArgument("item", item));
         //        //, new ConstructorArgument("quantity", quantity));
@@ -80,12 +80,12 @@ namespace Neutron.Ninject
         public static T Create<T>(
             NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
-            , Station rackStation)
+            , WorkstationView workstationView)
         {
             return _kernel.Get<T>(
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense)
-                , new ConstructorArgument("rackStation", rackStation));
+                , new ConstructorArgument("workstationView",workstationView));
         }
 
         public static T Create<T>(
@@ -96,11 +96,11 @@ namespace Neutron.Ninject
         }
 
         public static T Create<T>(
-            StationView stationView
+            WorkstationView workstationView
             , NeutronVariables neutronVariables)
         {
             return _kernel.Get<T>(
-                new ConstructorArgument("stationView", stationView)
+                new ConstructorArgument("workstationView", workstationView)
                 , new ConstructorArgument("neutronVariables", neutronVariables));
         }
 
@@ -114,15 +114,24 @@ namespace Neutron.Ninject
         }
 
         public static T Create<T>(
-            StationView stationView)
+            WorkstationView workstationView)
         {
             return _kernel.Get<T>(
-                new ConstructorArgument("stationView", stationView));
+                new ConstructorArgument("workstationView", workstationView));
+        }
+
+        public static T Create<T>(
+            WorkstationView workstationView
+            ,SendEmail sendEmail)
+        {
+            return _kernel.Get<T>(
+                new ConstructorArgument("workstationView", workstationView)
+                , new ConstructorArgument("sendEmail", sendEmail));
         }
 
         public static T Create<T>(int value)
         {
-            return _kernel.Get<T>(new ConstructorArgument("stationId", value));
+            return _kernel.Get<T>(new ConstructorArgument("workstationId", value));
         }
     }
 }

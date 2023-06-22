@@ -5,6 +5,7 @@ using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.Models;
+using NeutronData.ModelViews;
 using NeutronEvents;
 
 namespace NeutronLoader
@@ -16,17 +17,17 @@ namespace NeutronLoader
         private IInterfaceProcessor _interfaceProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private readonly Station _rackStation;
+        private readonly WorkstationView _workstationView;
 
         public StartStopLoaderManager(IJsonData jsonData, IDynamicLogger logger, NeutronVariables neutronVariables,
-            NeutronLicense neutronLicense, Station rackStation)
+            NeutronLicense neutronLicense, WorkstationView workstationView)
         {
             _jsonData = jsonData;
             _logger = logger;
-            _logger.FolderName = $"LoaderManager_{rackStation.Id}"; 
+            _logger.FolderName = $"LoaderManager_{workstationView.WorkstationId}"; 
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
-            _rackStation = rackStation;
+            _workstationView = workstationView;
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().RunLoaderOnce += (s, e) => RunLoaderOnce();
@@ -39,32 +40,32 @@ namespace NeutronLoader
             {
                 case "SFH":
                     {
-                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
                 case "TOP":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
                 case "TMG":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
                 case "PR1":
                     {
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
                 case "MET":
                 {
-                   _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                   _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                     break;
                 }
                 default:
                     {
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _rackStation);
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
             }

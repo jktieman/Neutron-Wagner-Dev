@@ -8,6 +8,7 @@ namespace NeutronMaintenance.Models
 {
     public class ItemDefinitionLoad
     {
+        public int AreaId { get; set; }
         public string Station { get; set; }
         public string Item { get; set; }
         public string Description { get; set; }

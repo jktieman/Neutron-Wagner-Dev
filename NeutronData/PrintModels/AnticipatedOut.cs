@@ -2,7 +2,7 @@
 {
     public class AnticipatedOut
     {
-        public int Station { get; set; }
+        public int Area { get; set; }
         public string Item { get; set; }
         public string Description { get; set; }
         public int Required { get; set; }

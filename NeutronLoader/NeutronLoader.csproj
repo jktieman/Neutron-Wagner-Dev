@@ -136,6 +136,10 @@
       <Project>{6CE97D6F-A149-42FE-A858-2272DB64897E}</Project>
       <Name>AlliedPostOffice</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj">
+      <Project>{69B6D943-9C4F-417E-9A5E-07F56926E526}</Project>
+      <Name>BlastzoneController</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
@@ -147,6 +151,10 @@
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
+      <Project>{CC797714-8D01-40AF-8A2F-737B06F133CD}</Project>
+      <Name>ProliteController</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

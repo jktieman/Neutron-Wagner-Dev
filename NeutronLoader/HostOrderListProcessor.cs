@@ -24,7 +24,6 @@ namespace NeutronLoader
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
         private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
-        private readonly GenericRepository<LocationCode> _repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
 
         private DynamicLogger _logger;
@@ -71,25 +70,19 @@ namespace NeutronLoader
                     //Get the Location and Delete it
                     var loc1 = Convert.ToInt32(hostOrder.PrimeBin.Substring(1, 1));
                     var loc2 = Convert.ToInt32(hostOrder.PrimeBin.Substring(2, 3));
-                    var stationId = _repoStation.All().FirstOrDefault().Id;
+                    var areaId = hostOrder.OrderDetail.AreaId;
                     var sizeCodeId = _repoSizeCode.All().FirstOrDefault().Id;
                     var velocityCodeId = _repoVelocityCode.All().FirstOrDefault().Id;
                     var heightCodeId = _repoHeightCode.All().FirstOrDefault().Id;
-                    var locationCodeId = _repoLocationCode.All().FirstOrDefault().Id;
                     var unitOfIssue = _repoUnitOfIssue.All().FirstOrDefault().Id;
-                    //_logger.Log($"Inserting new Location Record. Station Id:  {stationId}");
-                    //_logger.Log($"Inserting new Location Record. SizeCode: {sizeCodeId}");
-                    //_logger.Log($"Inserting new Location Record. VelocityCode: {velocityCodeId}");
-                    //_logger.Log($"Inserting new Location Record. HeightCode: {heightCodeId}");
-                    //_logger.Log($"Inserting new Location Record. LocationCode: {locationCodeId}");
 
-                    _logger.Log($"Station Id: {stationId}");
+                    _logger.Log($"Area Id: {areaId}");
                     var location = _repoLocation.FindBy(r => r.Loc1 == loc1 && r.Loc2 == loc2).FirstOrDefault();
                     if (location == null)
                     {
                         var loc = new Location()
                         {
-                            StationId = stationId,
+                            AreaId = areaId,
                             Loc1 = loc1,
                             Loc2 = loc2,
                             Loc3 = 1,
@@ -99,12 +92,12 @@ namespace NeutronLoader
                             SizeCodeId = sizeCodeId,
                             VelocityCodeId = velocityCodeId,
                             HeightCodeId = heightCodeId,
-                            LocationCodeId = locationCodeId,
+                            LocationCode = string.Empty,
                             InUse = true
                         };
-                        _logger.Log($"Before Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCodeId}-{loc.InUse}");
+                        _logger.Log($"Before Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCode}-{loc.InUse}");
                         _repoLocation.Insert(loc);
-                        _logger.Log($"After Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCodeId}-{loc.InUse}");
+                        _logger.Log($"After Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCode}-{loc.InUse}");
                         location = loc;
 
                     }
@@ -118,7 +111,7 @@ namespace NeutronLoader
                     {
                         var itemDef = new ItemDefinition()
                         {
-                            StationId = stationId,
+                            AreaId = areaId,
                             Item = hostOrder.PartNum,
                             Description = hostOrder.PartDesc,
                             LocationMax = 0,
@@ -128,13 +121,12 @@ namespace NeutronLoader
                             SizeCodeId = sizeCodeId,
                             VelocityCodeId = velocityCodeId,
                             HeightCodeId = heightCodeId,
-                            LocationCodeId = locationCodeId,
                             StorageTypeId = 1,
                             UnitOfIssueId = unitOfIssue,
                             Weight = 0,
                             Scale = false
                         };
-                        _logger.Log($"Inserting new Item Definition Record. Station Id:  {itemDef.StationId}");
+                        _logger.Log($"Inserting new Item Definition Record. Station Id:  {itemDef.AreaId}");
                         _repoItemDefinition.Insert(itemDef);
                         itemDefinition = itemDef;
                     }
@@ -175,9 +167,9 @@ namespace NeutronLoader
                         StorageTypeId = 1,
                         ReceivedDate = DateTime.Now,
                         PrimeBin = true,
-                        StationId = stationId
+                        AreaId = areaId
                     };
-                    _logger.Log($"Inserting new Inventory Record. Station Id:  {inventory.StationId}");
+                    _logger.Log($"Inserting new Inventory Record. Area Id:  {inventory.AreaId}");
                     _repoInventory.Insert(inventory);
                 }
             }
@@ -223,21 +215,8 @@ namespace NeutronLoader
                             var itemDef = new ItemDefinitionProcessor(_jsonData).GetOrCreate(hostOrder);
                             var location = new LocationProcessor(_jsonData).GetOrCreate(hostOrder);
 
-                            //if (itemDef != null && location != null)
-                            //{
-                            //    var inventory = new InventoryProcessor().GetOrCreate(itemDef, location);
-
-                            //if (inventory != null)
-                            //    {
-
                             if (itemDef != null && location != null)
                             {
-                                var station = _repoStation.FindBy(r => r.Id == itemDef.StationId).FirstOrDefault();
-                                if (station != null)
-                                {
-                                    stationNumber = station.StationNumber;
-                                }
-
                                 var ord = new OrderDetail
                                 {
                                     OrderId = order.Id,
@@ -255,7 +234,7 @@ namespace NeutronLoader
                                     TroubleBit = @"0",
                                     TypeCode = @"2",
                                     LineStatusId = 1,
-                                    StationNumber = stationNumber,
+                                    AreaId = location.AreaId,
                                     OrderDetailInfo = hostOrder.NewBin
                                 };
                                 try
@@ -267,12 +246,6 @@ namespace NeutronLoader
                                     _logger.Log($"Error Inserting Order Detail.  {ex.Message} \r\n {ex.InnerException}");
                                 }
                             }
-                            //    }
-                            //    else
-                            //    {
-                            //        _logger.Log($"Invalid Inventory Record.");
-                            //    }
-                            //}
                             else
                             {
                                 _logger.Log($"Invalid Location or Item Definition Record.");

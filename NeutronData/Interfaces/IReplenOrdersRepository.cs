@@ -8,11 +8,11 @@ namespace NeutronData.Interfaces
     public interface IReplenOrdersRepository
     {
         ReplenOrder GetOrder(int id);
-        List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(StationView station, string searchField);
+        List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(WorkstationView station, string searchField);
         IEnumerable<ReplenOrderView> GetReplenOrderViews(string orderStatus, string searchField);
         IEnumerable<ReplenOrderView> GetOrderView();
-        List<AvailableReplenOrdersView> GetAvailableOrders(StationView station);
-        List<AvailableReplenOrdersView> GetAvailableOrders(StationView station, string search, bool serialPicking, bool showSkips = false);
+        List<AvailableReplenOrdersView> GetAvailableOrders(WorkstationView station);
+        List<AvailableReplenOrdersView> GetAvailableOrders(WorkstationView station, string search, bool serialPicking, bool showSkips = false);
         IEnumerable<ReplenOrderView> GetCompletedOrders(string search);
         ReplenOrder GetOrder();
         List<ReplenPickView> GetOrderLines();
@@ -21,6 +21,6 @@ namespace NeutronData.Interfaces
         IEnumerable<ReplenPickView> GetPickViewsByItem(List<BatchPosition> ordersToPick, string partNum);
         IEnumerable<ReplenOrderView> GetRackOrders(string search);
         IEnumerable<RackReplenOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
-        ReplenOrder GetOrderAndOrderDetails(int? orderId, int stationNumber);
+        ReplenOrder GetOrderAndOrderDetails(int? orderId, int workstationId);
     }
 }

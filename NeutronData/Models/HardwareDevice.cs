@@ -8,7 +8,7 @@ namespace NeutronData.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int StationId { get; set; }
+        public int WorkstationId { get; set; }
         public int DeviceNumber { get; set; }
         public int DeviceTypeId { get; set; }
         public int? CommunicationTypeId { get; set; }
@@ -22,10 +22,12 @@ namespace NeutronData.Models
         public int LogLevel { get; set; }
         public bool SimulationMode { get; set; }
 
-        [ForeignKey("StationId")]
-        public virtual Station Station { get; set; }
+        [ForeignKey("WorkstationId")]
+        public virtual Workstation Workstation { get; set; }
+        
         [ForeignKey("DeviceTypeId")]
-        public virtual DeviceType DeviceType { get; set; }
+        public virtual StorageDeviceType DeviceType { get; set; }
+        
         [ForeignKey("CommunicationTypeId")]
         public virtual CommunicationType CommunicationType { get; set; }
         [ForeignKey("TcpConfigurationId")]

@@ -11,37 +11,57 @@ namespace NeutronData.Repositories
 {
     public class ItemDefinitionsRepository : IItemDefinitionsRepository
     {
-        public IEnumerable<ItemDefinitionView> GetAllItemDefinitionViews(string find = "")
-        {
-            List<ItemDefinitionView> recs = null;
-            try
-            {
-                using (var context = new NeutronDb())
-                {
-                    var param = new SqlParameter("@Find", find);
-                    recs = context.Database.SqlQuery<ItemDefinitionView>(sql: "usp_GetItemDefinitionViewFind @Find", parameters: new object[] { param }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
-            }
+        //public IEnumerable<ItemDefinitionView> GetAllItemDefinitionViews(string find = "")
+        //{
+        //    List<ItemDefinitionView> recs = null;
+        //    try
+        //    {
+        //        using (var context = new NeutronDb())
+        //        {
+        //            var param = new SqlParameter("@Find", find);
+        //            recs = context.Database.SqlQuery<ItemDefinitionView>(sql: "usp_GetItemDefinitionViewFind @Find", parameters: new object[] { param }).ToList();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Log("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+        //    }
 
-            return recs;
-        }
-
-        public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByStation(string find = "", int stationId = 0)
+        //    return recs;
+        //}
+        //public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByWorkstation(string find = "", int workstationId = 0)
+        //{
+        //    var recs = new List<ItemDefinitionView>();
+        //    if (workstationId == 0) return recs;
+        //    Logger.Log(msg: "Get All Item Definition Views Start");
+        //    try
+        //    {
+        //        using (var context = new NeutronDb())
+        //        {
+        //            var param = new SqlParameter("@Find", find);
+        //            var paramStation = new SqlParameter("@WorkstationId", workstationId);
+        //            recs = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Workstation @Find, @WorkstationId ", param, paramStation).ToList();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Log("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+        //    }
+        //    Logger.Log("Get All Item Definition Views End: " + recs.Count.ToString());
+        //    return recs;
+        //}
+        public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByArea(string find = "", int areaid = 0)
         {
             var recs = new List<ItemDefinitionView>();
-            if (stationId == 0) return recs;
+            if (areaid == 0) return recs;
             Logger.Log(msg: "Get All Item Definition Views Start");
             try
             {
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter("@Find", find);
-                    var paramStation = new SqlParameter("@StationId", stationId);
-                    recs = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Station @Find, @StationId ", param, paramStation).ToList();
+                    var param = new SqlParameter("@FIND", find);
+                    var paramStation = new SqlParameter("@AREAID", areaid);
+                    recs = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Area @FIND, @AREAID ", param, paramStation).ToList();
                 }
             }
             catch (Exception ex)
@@ -52,10 +72,15 @@ namespace NeutronData.Repositories
             return recs;
         }
 
+
+        /// <summary>
+        /// Get all Item Definition Views for ALL Areas
+        /// </summary>
+        /// <param name="find">Looks at Item and Description for a match</param>
+        /// <returns></returns>
         public IEnumerable<ItemDefinitionView> FindItemDefinitionViews(string find = "")
         {
             var recs = new List<ItemDefinitionView>();
-            
 
                 Logger.Log(msg: "Get All Item Definition Views Start");
                 try

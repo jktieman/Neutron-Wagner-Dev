@@ -51,7 +51,7 @@ namespace NeutronLoader
                 {
                     newDefinition = new Location
                     {
-                        StationId = def.StationId
+                        AreaId = def.AreaId
                         ,
                         Slot = hostOrder.PrimeBin
                         ,
@@ -71,7 +71,7 @@ namespace NeutronLoader
                         ,
                         HeightCodeId = def.HeightCodeId
                         ,
-                        LocationCodeId = def.LocationCodeId
+                        LocationCode = def.LocationCode
                         ,
                         InUse = true
                     };

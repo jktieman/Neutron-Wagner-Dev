@@ -33,7 +33,7 @@ namespace Neutron.Forms
             {
                 var skip = new SkipZero();
                 skip.Action = "Skip Pick";
-                skip.StationNumber = view.StationNumber.ToString();
+                skip.AreaId = view.AreaId.ToString();
                 skip.Ord1 = view.Ord1;
                 skip.Ord2 = view.Ord2;
                 skip.Item = view.Item;
@@ -45,7 +45,7 @@ namespace Neutron.Forms
             {
                 var skip = new SkipZero();
                 skip.Action = "Zero Pick";
-                skip.StationNumber = view.StationNumber.ToString();
+                skip.AreaId = view.AreaId.ToString();
                 skip.Ord1 = view.Ord1;
                 skip.Ord2 = view.Ord2;
                 skip.Item = view.Item;
@@ -64,7 +64,7 @@ namespace Neutron.Forms
         private class SkipZero
         {
             public string Action { get; set; }
-            public string StationNumber { get; set; }
+            public string AreaId { get; set; }
             public string Ord1 { get; set; }
             public string Ord2 { get; set; }
             public string Item { get; set; }
@@ -148,11 +148,11 @@ namespace Neutron.Forms
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationNumber",
-                HeaderText = _gridResourceManager.GetString($"Station"),
+                DataPropertyName = "AreaId",
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
-                Name = "Station"
+                Name = "AreaId"
             };
             DataGridViewSkipZeroSummary.Columns.Add(col);
 
