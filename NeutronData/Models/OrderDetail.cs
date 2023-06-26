@@ -1,7 +1,5 @@
 ﻿using NeutronData.Interfaces;
-using NeutronData.Models.Lookups;
 using System.ComponentModel.DataAnnotations.Schema;
-using NeutronCore.Enums;
 
 namespace NeutronData.Models
 {

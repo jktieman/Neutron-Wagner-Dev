@@ -75,6 +75,7 @@
     <Compile Include="Extensions\FileInfoExtensions.cs" />
     <Compile Include="Extensions\IntegerExtensions.cs" />
     <Compile Include="Extensions\MyExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\StringHelper.cs" />
     <Compile Include="Global\NeutronVariables.cs" />
     <Compile Include="LoaderSettings.cs" />

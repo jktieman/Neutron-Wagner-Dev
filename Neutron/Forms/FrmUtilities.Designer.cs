@@ -505,10 +505,11 @@
             // 
             // LabelRecordCount
             // 
+            this.LabelRecordCount.BackColor = System.Drawing.Color.White;
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 129);
+            this.LabelRecordCount.Location = new System.Drawing.Point(971, 50);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
@@ -523,11 +524,11 @@
             this.tabControl1.Controls.Add(this.Communications);
             this.tabControl1.Controls.Add(this.EmailServer);
             this.tabControl1.Controls.Add(this.EmailAddresses);
-            this.tabControl1.Location = new System.Drawing.Point(22, 173);
+            this.tabControl1.Location = new System.Drawing.Point(22, 84);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 670);
+            this.tabControl1.Size = new System.Drawing.Size(1235, 662);
             this.tabControl1.TabIndex = 0;
             // 
             // Main
@@ -548,7 +549,7 @@
             this.Main.Controls.Add(this.MBOptions);
             this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1147, 644);
+            this.Main.Size = new System.Drawing.Size(1227, 628);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             // 
@@ -575,7 +576,7 @@
             // 
             this.MBUtilitiesClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBUtilitiesClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBUtilitiesClose.Location = new System.Drawing.Point(1010, 10);
+            this.MBUtilitiesClose.Location = new System.Drawing.Point(1098, 4);
             this.MBUtilitiesClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBUtilitiesClose.Name = "MBUtilitiesClose";
             this.MBUtilitiesClose.Size = new System.Drawing.Size(126, 76);
@@ -587,7 +588,7 @@
             // MBEmailServer
             // 
             this.MBEmailServer.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBEmailServer.Location = new System.Drawing.Point(217, 413);
+            this.MBEmailServer.Location = new System.Drawing.Point(217, 377);
             this.MBEmailServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBEmailServer.Name = "MBEmailServer";
             this.MBEmailServer.Size = new System.Drawing.Size(350, 84);
@@ -599,7 +600,7 @@
             // MBManageLookups
             // 
             this.MBManageLookups.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBManageLookups.Location = new System.Drawing.Point(217, 306);
+            this.MBManageLookups.Location = new System.Drawing.Point(217, 270);
             this.MBManageLookups.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBManageLookups.Name = "MBManageLookups";
             this.MBManageLookups.Size = new System.Drawing.Size(350, 84);
@@ -611,7 +612,7 @@
             // MBMaintenance
             // 
             this.MBMaintenance.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMaintenance.Location = new System.Drawing.Point(217, 522);
+            this.MBMaintenance.Location = new System.Drawing.Point(217, 486);
             this.MBMaintenance.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMaintenance.Name = "MBMaintenance";
             this.MBMaintenance.Size = new System.Drawing.Size(350, 84);
@@ -623,7 +624,7 @@
             // MBAbout
             // 
             this.MBAbout.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAbout.Location = new System.Drawing.Point(588, 522);
+            this.MBAbout.Location = new System.Drawing.Point(588, 486);
             this.MBAbout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAbout.Name = "MBAbout";
             this.MBAbout.Size = new System.Drawing.Size(350, 84);
@@ -635,7 +636,7 @@
             // MBEmailAddresses
             // 
             this.MBEmailAddresses.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBEmailAddresses.Location = new System.Drawing.Point(588, 413);
+            this.MBEmailAddresses.Location = new System.Drawing.Point(588, 377);
             this.MBEmailAddresses.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBEmailAddresses.Name = "MBEmailAddresses";
             this.MBEmailAddresses.Size = new System.Drawing.Size(350, 84);
@@ -647,7 +648,7 @@
             // MBPrinterSetup
             // 
             this.MBPrinterSetup.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrinterSetup.Location = new System.Drawing.Point(588, 306);
+            this.MBPrinterSetup.Location = new System.Drawing.Point(588, 270);
             this.MBPrinterSetup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrinterSetup.Name = "MBPrinterSetup";
             this.MBPrinterSetup.Size = new System.Drawing.Size(350, 84);
@@ -659,7 +660,7 @@
             // MBCommunications
             // 
             this.MBCommunications.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCommunications.Location = new System.Drawing.Point(217, 96);
+            this.MBCommunications.Location = new System.Drawing.Point(217, 60);
             this.MBCommunications.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunications.Name = "MBCommunications";
             this.MBCommunications.Size = new System.Drawing.Size(350, 84);
@@ -671,7 +672,7 @@
             // MBDevices
             // 
             this.MBDevices.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDevices.Location = new System.Drawing.Point(588, 96);
+            this.MBDevices.Location = new System.Drawing.Point(588, 60);
             this.MBDevices.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDevices.Name = "MBDevices";
             this.MBDevices.Size = new System.Drawing.Size(350, 84);
@@ -683,7 +684,7 @@
             // MBStations
             // 
             this.MBStations.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStations.Location = new System.Drawing.Point(217, 201);
+            this.MBStations.Location = new System.Drawing.Point(217, 165);
             this.MBStations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStations.Name = "MBStations";
             this.MBStations.Size = new System.Drawing.Size(350, 84);
@@ -695,7 +696,7 @@
             // MBOptions
             // 
             this.MBOptions.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOptions.Location = new System.Drawing.Point(588, 201);
+            this.MBOptions.Location = new System.Drawing.Point(588, 165);
             this.MBOptions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOptions.Name = "MBOptions";
             this.MBOptions.Size = new System.Drawing.Size(350, 84);
@@ -727,7 +728,7 @@
             this.PrintSettings.Controls.Add(this.MBPrintSetUpBack);
             this.PrintSettings.Location = new System.Drawing.Point(4, 22);
             this.PrintSettings.Name = "PrintSettings";
-            this.PrintSettings.Size = new System.Drawing.Size(1147, 644);
+            this.PrintSettings.Size = new System.Drawing.Size(1227, 628);
             this.PrintSettings.TabIndex = 5;
             this.PrintSettings.Text = "Print Settings";
             // 
@@ -1129,7 +1130,7 @@
             this.Settings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Settings.Name = "Settings";
             this.Settings.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Settings.Size = new System.Drawing.Size(1147, 644);
+            this.Settings.Size = new System.Drawing.Size(1227, 628);
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
             // 
@@ -2138,7 +2139,7 @@
             this.HardwareDevices.Location = new System.Drawing.Point(4, 22);
             this.HardwareDevices.Name = "HardwareDevices";
             this.HardwareDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.HardwareDevices.Size = new System.Drawing.Size(1147, 644);
+            this.HardwareDevices.Size = new System.Drawing.Size(1227, 636);
             this.HardwareDevices.TabIndex = 9;
             this.HardwareDevices.Text = "Hardware Devices";
             // 
@@ -2152,7 +2153,7 @@
             this.tabControl2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1141, 638);
+            this.tabControl2.Size = new System.Drawing.Size(1221, 630);
             this.tabControl2.TabIndex = 43;
             // 
             // Listing
@@ -2169,7 +2170,7 @@
             this.Listing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Listing.Name = "Listing";
             this.Listing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Listing.Size = new System.Drawing.Size(1133, 612);
+            this.Listing.Size = new System.Drawing.Size(1213, 604);
             this.Listing.TabIndex = 0;
             this.Listing.Text = "Listing";
             // 
@@ -2177,7 +2178,7 @@
             // 
             this.MBHardwareDevicesBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHardwareDevicesBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHardwareDevicesBack.Location = new System.Drawing.Point(997, 10);
+            this.MBHardwareDevicesBack.Location = new System.Drawing.Point(1081, 8);
             this.MBHardwareDevicesBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHardwareDevicesBack.Name = "MBHardwareDevicesBack";
             this.MBHardwareDevicesBack.Size = new System.Drawing.Size(126, 76);
@@ -2225,7 +2226,7 @@
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
-            this.DataGridView1.Size = new System.Drawing.Size(1113, 505);
+            this.DataGridView1.Size = new System.Drawing.Size(1197, 501);
             this.DataGridView1.TabIndex = 5;
             this.DataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             // 
@@ -3042,7 +3043,7 @@
             this.ManageLookups.Location = new System.Drawing.Point(4, 22);
             this.ManageLookups.Name = "ManageLookups";
             this.ManageLookups.Padding = new System.Windows.Forms.Padding(3);
-            this.ManageLookups.Size = new System.Drawing.Size(1147, 644);
+            this.ManageLookups.Size = new System.Drawing.Size(1227, 636);
             this.ManageLookups.TabIndex = 10;
             this.ManageLookups.Text = "Manage Lookups";
             // 
@@ -3087,7 +3088,7 @@
             this.DataGridViewLookups.Name = "DataGridViewLookups";
             this.DataGridViewLookups.RowTemplate.Height = 28;
             this.DataGridViewLookups.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewLookups.Size = new System.Drawing.Size(798, 504);
+            this.DataGridViewLookups.Size = new System.Drawing.Size(863, 504);
             this.DataGridViewLookups.TabIndex = 3;
             // 
             // MBPrintLookup
@@ -3107,7 +3108,7 @@
             // 
             this.MButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonSave.Location = new System.Drawing.Point(874, 10);
+            this.MButtonSave.Location = new System.Drawing.Point(939, 10);
             this.MButtonSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSave.Name = "MButtonSave";
             this.MButtonSave.Size = new System.Drawing.Size(126, 76);
@@ -3133,7 +3134,7 @@
             // 
             this.MBManageLookupsBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBManageLookupsBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBManageLookupsBack.Location = new System.Drawing.Point(1010, 10);
+            this.MBManageLookupsBack.Location = new System.Drawing.Point(1075, 10);
             this.MBManageLookupsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBManageLookupsBack.Name = "MBManageLookupsBack";
             this.MBManageLookupsBack.Size = new System.Drawing.Size(126, 76);
@@ -3160,7 +3161,7 @@
             this.Stations.Controls.Add(this.TabControl3);
             this.Stations.Location = new System.Drawing.Point(4, 22);
             this.Stations.Name = "Stations";
-            this.Stations.Size = new System.Drawing.Size(1147, 644);
+            this.Stations.Size = new System.Drawing.Size(1227, 636);
             this.Stations.TabIndex = 11;
             this.Stations.Text = "Stations";
             this.Stations.UseVisualStyleBackColor = true;
@@ -3175,7 +3176,7 @@
             this.TabControl3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabControl3.Name = "TabControl3";
             this.TabControl3.SelectedIndex = 0;
-            this.TabControl3.Size = new System.Drawing.Size(1147, 644);
+            this.TabControl3.Size = new System.Drawing.Size(1227, 636);
             this.TabControl3.TabIndex = 44;
             // 
             // StationListing
@@ -3188,7 +3189,7 @@
             this.StationListing.Controls.Add(this.MBStationsViewEdit);
             this.StationListing.Location = new System.Drawing.Point(4, 22);
             this.StationListing.Name = "StationListing";
-            this.StationListing.Size = new System.Drawing.Size(1139, 618);
+            this.StationListing.Size = new System.Drawing.Size(1219, 610);
             this.StationListing.TabIndex = 5;
             this.StationListing.Text = "Listing";
             // 
@@ -3196,7 +3197,7 @@
             // 
             this.MBStationsBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBStationsBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStationsBack.Location = new System.Drawing.Point(997, 10);
+            this.MBStationsBack.Location = new System.Drawing.Point(1090, 10);
             this.MBStationsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsBack.Name = "MBStationsBack";
             this.MBStationsBack.Size = new System.Drawing.Size(126, 76);
@@ -3227,7 +3228,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DataGridViewStations.DefaultCellStyle = dataGridViewCellStyle8;
-            this.DataGridViewStations.Location = new System.Drawing.Point(152, 96);
+            this.DataGridViewStations.Location = new System.Drawing.Point(192, 96);
             this.DataGridViewStations.MultiSelect = false;
             this.DataGridViewStations.Name = "DataGridViewStations";
             this.DataGridViewStations.ReadOnly = true;
@@ -3263,7 +3264,7 @@
             // MBStationsSaveToFile
             // 
             this.MBStationsSaveToFile.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStationsSaveToFile.Location = new System.Drawing.Point(861, 10);
+            this.MBStationsSaveToFile.Location = new System.Drawing.Point(954, 10);
             this.MBStationsSaveToFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStationsSaveToFile.Name = "MBStationsSaveToFile";
             this.MBStationsSaveToFile.Size = new System.Drawing.Size(126, 76);
@@ -3630,7 +3631,7 @@
             this.Communications.Controls.Add(this.TabControlCommunications);
             this.Communications.Location = new System.Drawing.Point(4, 22);
             this.Communications.Name = "Communications";
-            this.Communications.Size = new System.Drawing.Size(1147, 644);
+            this.Communications.Size = new System.Drawing.Size(1227, 636);
             this.Communications.TabIndex = 12;
             this.Communications.Text = "Communications";
             this.Communications.UseVisualStyleBackColor = true;
@@ -3649,7 +3650,7 @@
             this.TabControlCommunications.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabControlCommunications.Name = "TabControlCommunications";
             this.TabControlCommunications.SelectedIndex = 0;
-            this.TabControlCommunications.Size = new System.Drawing.Size(1147, 644);
+            this.TabControlCommunications.Size = new System.Drawing.Size(1227, 636);
             this.TabControlCommunications.TabIndex = 44;
             // 
             // Communication
@@ -3660,14 +3661,14 @@
             this.Communication.Controls.Add(this.MBCommunicationTcp);
             this.Communication.Location = new System.Drawing.Point(4, 22);
             this.Communication.Name = "Communication";
-            this.Communication.Size = new System.Drawing.Size(1139, 618);
+            this.Communication.Size = new System.Drawing.Size(1219, 610);
             this.Communication.TabIndex = 3;
             this.Communication.Text = "Communication";
             // 
             // MBCommunicationSerial
             // 
             this.MBCommunicationSerial.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCommunicationSerial.Location = new System.Drawing.Point(394, 146);
+            this.MBCommunicationSerial.Location = new System.Drawing.Point(434, 146);
             this.MBCommunicationSerial.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunicationSerial.Name = "MBCommunicationSerial";
             this.MBCommunicationSerial.Size = new System.Drawing.Size(350, 100);
@@ -3692,7 +3693,7 @@
             // MBCommunicationTcp
             // 
             this.MBCommunicationTcp.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCommunicationTcp.Location = new System.Drawing.Point(394, 266);
+            this.MBCommunicationTcp.Location = new System.Drawing.Point(434, 266);
             this.MBCommunicationTcp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCommunicationTcp.Name = "MBCommunicationTcp";
             this.MBCommunicationTcp.Size = new System.Drawing.Size(350, 100);
@@ -4982,7 +4983,7 @@
             this.EmailServer.Controls.Add(this.groupBox1);
             this.EmailServer.Location = new System.Drawing.Point(4, 22);
             this.EmailServer.Name = "EmailServer";
-            this.EmailServer.Size = new System.Drawing.Size(1147, 644);
+            this.EmailServer.Size = new System.Drawing.Size(1227, 636);
             this.EmailServer.TabIndex = 13;
             this.EmailServer.Text = "Email Server";
             // 
@@ -4992,7 +4993,7 @@
             this.groupBox4.Controls.Add(this.TextBoxEmailFromAddress);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(268, 365);
+            this.groupBox4.Location = new System.Drawing.Point(308, 365);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(611, 84);
             this.groupBox4.TabIndex = 16;
@@ -5022,7 +5023,7 @@
             this.groupBox3.Controls.Add(this.TextBoxSendToEmailAddress);
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(268, 455);
+            this.groupBox3.Location = new System.Drawing.Point(308, 455);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(611, 116);
             this.groupBox3.TabIndex = 15;
@@ -5059,7 +5060,7 @@
             // 
             this.ButtonCancelEmailServer.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancelEmailServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancelEmailServer.Location = new System.Drawing.Point(565, 587);
+            this.ButtonCancelEmailServer.Location = new System.Drawing.Point(605, 587);
             this.ButtonCancelEmailServer.Name = "ButtonCancelEmailServer";
             this.ButtonCancelEmailServer.Size = new System.Drawing.Size(112, 29);
             this.ButtonCancelEmailServer.TabIndex = 13;
@@ -5070,7 +5071,7 @@
             // ButtonSaveEmailServer
             // 
             this.ButtonSaveEmailServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSaveEmailServer.Location = new System.Drawing.Point(436, 587);
+            this.ButtonSaveEmailServer.Location = new System.Drawing.Point(476, 587);
             this.ButtonSaveEmailServer.Name = "ButtonSaveEmailServer";
             this.ButtonSaveEmailServer.Size = new System.Drawing.Size(112, 29);
             this.ButtonSaveEmailServer.TabIndex = 14;
@@ -5088,7 +5089,7 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(268, 198);
+            this.groupBox2.Location = new System.Drawing.Point(308, 198);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(611, 161);
             this.groupBox2.TabIndex = 12;
@@ -5159,7 +5160,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(268, 28);
+            this.groupBox1.Location = new System.Drawing.Point(308, 28);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -5233,7 +5234,7 @@
             this.EmailAddresses.Controls.Add(this.ButtonSaveEmailAddresses);
             this.EmailAddresses.Location = new System.Drawing.Point(4, 22);
             this.EmailAddresses.Name = "EmailAddresses";
-            this.EmailAddresses.Size = new System.Drawing.Size(1147, 644);
+            this.EmailAddresses.Size = new System.Drawing.Size(1227, 636);
             this.EmailAddresses.TabIndex = 14;
             this.EmailAddresses.Text = "EmailAddresses";
             // 
@@ -5243,7 +5244,7 @@
             this.groupBox5.Controls.Add(this.LabelEmailInfo);
             this.groupBox5.Controls.Add(this.DataGridViewEmailAddresses);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox5.Location = new System.Drawing.Point(320, 122);
+            this.groupBox5.Location = new System.Drawing.Point(360, 122);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(506, 351);
             this.groupBox5.TabIndex = 12;
@@ -5277,7 +5278,7 @@
             // 
             this.ButtonRemoveEmail.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonRemoveEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonRemoveEmail.Location = new System.Drawing.Point(336, 487);
+            this.ButtonRemoveEmail.Location = new System.Drawing.Point(376, 487);
             this.ButtonRemoveEmail.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ButtonRemoveEmail.Name = "ButtonRemoveEmail";
             this.ButtonRemoveEmail.Size = new System.Drawing.Size(147, 36);
@@ -5290,7 +5291,7 @@
             // 
             this.ButtonCancelEmailAddresses.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancelEmailAddresses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancelEmailAddresses.Location = new System.Drawing.Point(663, 487);
+            this.ButtonCancelEmailAddresses.Location = new System.Drawing.Point(703, 487);
             this.ButtonCancelEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ButtonCancelEmailAddresses.Name = "ButtonCancelEmailAddresses";
             this.ButtonCancelEmailAddresses.Size = new System.Drawing.Size(147, 36);
@@ -5302,7 +5303,7 @@
             // ButtonSaveEmailAddresses
             // 
             this.ButtonSaveEmailAddresses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSaveEmailAddresses.Location = new System.Drawing.Point(504, 487);
+            this.ButtonSaveEmailAddresses.Location = new System.Drawing.Point(544, 487);
             this.ButtonSaveEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ButtonSaveEmailAddresses.Name = "ButtonSaveEmailAddresses";
             this.ButtonSaveEmailAddresses.Size = new System.Drawing.Size(147, 36);
@@ -5315,21 +5316,21 @@
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(391, 98);
+            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(418, 66);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "Utilities";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(793, 35);
+            this.mlUserInfo.Location = new System.Drawing.Point(911, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(342, 30);
             this.mlUserInfo.TabIndex = 21;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -5337,12 +5338,12 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 16);
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(5, 9);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(713, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
             this.LabelFormHeaderText.TabIndex = 20;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -5359,7 +5360,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.ControlBox = false;
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
@@ -5369,7 +5370,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmUtilities";
             this.Resizable = false;
-            this.Text = "Utilities";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmUtilities_FormClosing);
             this.tabControl1.ResumeLayout(false);
             this.Main.ResumeLayout(false);

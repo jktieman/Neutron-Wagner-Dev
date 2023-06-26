@@ -58,7 +58,7 @@ namespace Neutron.Forms
             new GenericRepository<NeutronData.Models.Lookups.StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue =
             new GenericRepository<UnitOfIssue>(new NeutronDb());
-        
+
         private readonly IWorkstationRepository _workstationRepository;
 
         private readonly ILocationsRepository _locationsRepository;
@@ -104,7 +104,7 @@ namespace Neutron.Forms
             _akaRepository = akaRepository;
             _lacProcessor = lacProcessor;
             _locationsRepository = locationsRepository;
-            
+
             Init();
         }
 
@@ -119,7 +119,7 @@ namespace Neutron.Forms
             SetupAddDetailForm();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             _logger = CreateLog();
-  
+
             if (_workstationView.StationType.Id == (int)StationType.Supervisor)
             {
                 CheckBoxAllStations.Checked = true;
@@ -158,7 +158,7 @@ namespace Neutron.Forms
                 return parms;
             }
         }
-        
+
         /// <summary>
         /// Loads the inventory by AreaId or All if it is a Supervisor Station
         /// If the Find textbox has any value, it will search for it
@@ -242,7 +242,7 @@ namespace Neutron.Forms
             if (itemDefinition == null) return;
             CurrentItem = itemDefinition;
         }
-        
+
         /// <summary>
         /// Sets the Current Location
         /// </summary>
@@ -253,8 +253,8 @@ namespace Neutron.Forms
             if (location == null) return;
             CurrentLocation = location;
         }
-        
-        
+
+
         public int IndexOf(BindingSource bs, int id)
         {
             var count = bs.Count;
@@ -570,7 +570,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaName",
-                HeaderText = _gridResourceManager.GetString("StationName"),
+                HeaderText = _gridResourceManager.GetString("Area"),
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "AreaName"
@@ -771,11 +771,11 @@ namespace Neutron.Forms
             DataGridViewInventoryLocations.Columns.Add(bCol);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationName",
-                HeaderText = _gridResourceManager.GetString("StationName"),
+                DataPropertyName = "AreaName",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
-                Name = "StationName"
+                Name = "AreaName"
             };
             DataGridViewInventoryLocations.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
@@ -962,8 +962,8 @@ namespace Neutron.Forms
             DataGridViewInventoryNewLocations.Columns.Add(xcol);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "StationName",
-                HeaderText = _gridResourceManager.GetString("StationName"),
+                DataPropertyName = "AreaName",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "StationName",
@@ -1672,6 +1672,7 @@ namespace Neutron.Forms
                 inventory.ReceivedDate = DateTimePickerAddDetailReceivedDate.Value;
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
                 inventory.AreaId = (int)ComboBoxAddDetailArea.SelectedValue;
+                inventory.RFID = TextBoxAddDetailLocationCode.Text;
                 _repoInventory.Insert(inventory);
                 _historyManager.SaveHistory(ActionCode.InventoryAdd, inventory);
             }
@@ -1974,7 +1975,7 @@ namespace Neutron.Forms
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
                 LabelFormTitle.Text = _resourceManager.GetString("Inventory");
                 MBCreateInventoryFile.Text = _resourceManager.GetString("InventoryFile");
-                CheckBoxAllStations.Text = _resourceManager.GetString("AllStations");
+                CheckBoxAllStations.Text = _resourceManager.GetString("AllAreas");
                 MBPrintInventory.Text = _resourceManager.GetString("SaveToFile");
                 LabelFindDescription.Text = _resourceManager.GetString("SearchFor");
                 MButtonNew.Text = _resourceManager.GetString("New");
@@ -2007,7 +2008,7 @@ namespace Neutron.Forms
                 LabelNewLocationMin.Text = _resourceManager.GetString("LocationMin");
                 LabelNewLocationMax.Text = _resourceManager.GetString("LocationMax");
                 LabelNewDescriiption.Text = _resourceManager.GetString("Description");
-                LabelNewArea.Text = _resourceManager.GetString("Station");
+                LabelNewArea.Text = _resourceManager.GetString("Area");
                 LabelActionNewLocations.Text = _resourceManager.GetString("NewLocations");
                 MbNewLocationsListing.Text = _resourceManager.GetString("Listing");
                 MbNewAvailableLocations.Text = _resourceManager.GetString("ShowAll");
@@ -2041,7 +2042,7 @@ namespace Neutron.Forms
                 LabelAddDetailOver.Text = _resourceManager.GetString("Over");
                 LabelAddDetailTray.Text = _resourceManager.GetString("Tray");
                 LabelAddDetailDevice.Text = _resourceManager.GetString("Device");
-                LabelAddDetailArea.Text = _resourceManager.GetString("Station");
+                LabelAddDetailArea.Text = _resourceManager.GetString("Area");
                 LabelSlotInformation.Text = _resourceManager.GetString("EnterSlotDescription");
                 ButtonPositionDevice.Text = _resourceManager.GetString("PositionDevice");
             }
@@ -2062,6 +2063,11 @@ namespace Neutron.Forms
                 _logger.LogDetailAsync(
                     $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
             MoveDevice(deviceNumber, trayNumber, level, part, qty);
+        }
+
+        private void DataGridView1_DoubleClick(object sender, EventArgs e)
+        {
+            LoadViewEdit();
         }
     }
 }

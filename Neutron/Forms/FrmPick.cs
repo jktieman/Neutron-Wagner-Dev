@@ -50,6 +50,7 @@ using Label = System.Windows.Forms.Label;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Panel = System.Windows.Forms.Panel;
 using ScrollBars = System.Windows.Forms.ScrollBars;
+using StorageType = NeutronData.Models.Lookups.StorageType;
 using TextBox = System.Windows.Forms.TextBox;
 using Timer = System.Threading.Timer;
 
@@ -61,6 +62,7 @@ namespace Neutron.Forms
 
 
         private readonly IAreaRepository _areaRepository;
+        private readonly IInventoryRepository _inventoryRepository;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private readonly AkaRepository _repoAka = new AkaRepository();
@@ -68,6 +70,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
+        private readonly GenericRepository<StorageType> _repoStorageTypes = new GenericRepository<StorageType>(new NeutronDb());
 
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
@@ -168,7 +171,7 @@ namespace Neutron.Forms
             , IOrdersRepository ordersRepository, NeutronLicense neutronLicense
             , IItemDefinitionsRepository itemDefinitionsRepository, HistoryManager historyManager
             , ILocationsRepository locationsRepository
-            , IAreaRepository areaRepository)
+            , IAreaRepository areaRepository, IInventoryRepository inventoryRepository)
         {
 
             InitializeComponent();
@@ -189,6 +192,7 @@ namespace Neutron.Forms
             _historyManager = historyManager;
             _locationsRepository = locationsRepository;
             _areaRepository = areaRepository;
+            _inventoryRepository = inventoryRepository;
             // _moveableDeviceTypes = _workstationRepository.GetMoveableDeviceTypeIds();
             _pickStations = _workstationRepository.GetAllPickStations();
 
@@ -225,11 +229,11 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();  //TextBoxPos1;
             //ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
-            if (_neutronVariables.DisplaysEnabled && _neutronVariables.IptiDisplays)
-            {
-                GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
-                GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
-            }
+            //if (_neutronVariables.DisplaysEnabled && _neutronVariables.IptiDisplays)
+            //{
+            //    GlobalVar.Displays.MyDataReceived -= ProcessDataReceived;
+            //    GlobalVar.Displays.MyDataReceived += ProcessDataReceived;
+            //}
             _documentToPrint = new DocumentToPrint();
             MBPrint.Visible = _neutronVariables.PrintPackingListManual;
             // MBFillStarters.Visible = _neutronVariables.SerialPicking;
@@ -2668,7 +2672,8 @@ namespace Neutron.Forms
         private void LoadInventory()
         {
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory START"));
-            var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
+            var pickableLocations = _repoStorageTypes.FindBy(r => r.Pickable == true).Select(r => r.Id).ToList();  // new int[] { 1, 2 };  // 4 is an EBin
+           // var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                 .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory END"));
@@ -3350,25 +3355,25 @@ namespace Neutron.Forms
             NextButtonEnabled();
             //TODO  commented out because I'm not handling something correctly
             // and items are getting stuck in Pick status
-            //UpdateOrdersToAvailableStatus(_ordersToPick);
+            UpdateOrdersToAvailableStatus(_ordersToPick);
 
         }
 
         //TODO  commented out because I'm not handling something correctly
         // and items are getting stuck in Pick status
-        //private void UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
-        //{
-        //    var orderIds = ordersToPick.Where(r => r.OrderId != null && r.OrderComplete == false).ToList();
-        //    foreach (var batchPosition in orderIds)
-        //    {
-        //        var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.StationNumber == _workstationView.StationNumber && r.LineStatusId == (int)LineStatus.Picking);
-        //        foreach (var orderDetail in orderDetails)
-        //        {
-        //            orderDetail.LineStatusId = (int)LineStatus.Available;
-        //            _repoOrderDetails.Update(orderDetail);
-        //        }
-        //    }
-        //}
+        private void UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
+        {
+            var batchPositions = ordersToPick.Where(r => r.OrderId != null && r.OrderComplete == false).ToList();
+            foreach (var batchPosition in batchPositions)
+            {
+                var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking);
+                foreach (var orderDetail in orderDetails)
+                {
+                    orderDetail.LineStatusId = (int)LineStatus.Available;
+                    _repoOrderDetails.Update(orderDetail);
+                }
+            }
+        }
 
         private void MBStart_Click(object sender, EventArgs e)
         {
@@ -7107,7 +7112,7 @@ namespace Neutron.Forms
             ShowAllOrders();
         }
 
-        public void ProcessDataReceived(object sender, IptiController.MySerialDataReceivedEventArgs args)
+        public void ProcessDataReceived(object sender, MyDataReceivedEventArgs args)
         {
             Task.Run(() => _logger.LogDetailAsync($"ProcessDataReceived:  {args.FormText}"));
             var t = args.FormText;
@@ -7358,12 +7363,9 @@ namespace Neutron.Forms
             if (_bindingSourceSkipView.Current != null)
             {
                 var cur = ((ObjectView<SkipView>)_bindingSourceSkipView.Current).Object;
-                List<InventoryView> inventoryViews;
                 var skipInventoryViews = new List<SkipInventoryView>();
-                using (var repo = new InventoryRepository())
-                {
-                    inventoryViews = repo.GetInventoryViewByItem(cur.Item).ToList();
-                }
+
+                var inventoryViews = _inventoryRepository.GetInventoryViewByItem(cur.Item).ToList();
 
                 foreach (var invView in inventoryViews)
                 {

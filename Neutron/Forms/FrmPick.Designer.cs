@@ -30,41 +30,41 @@ namespace Neutron.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPick));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle55 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle56 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle57 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle58 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle59 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle60 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle61 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle62 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle63 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle64 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle65 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle66 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle67 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle68 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
@@ -312,9 +312,9 @@ namespace Neutron.Forms
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
+            this.LabelRecordCount.Location = new System.Drawing.Point(859, 10);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
+            this.LabelRecordCount.Size = new System.Drawing.Size(33, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
@@ -331,11 +331,11 @@ namespace Neutron.Forms
             this.tabControl1.Controls.Add(this.AdjustOrder);
             this.tabControl1.Controls.Add(this.Skip);
             this.tabControl1.Controls.Add(this.SkipInventory);
-            this.tabControl1.Location = new System.Drawing.Point(22, 77);
+            this.tabControl1.Location = new System.Drawing.Point(23, 44);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 760);
+            this.tabControl1.Size = new System.Drawing.Size(1242, 702);
             this.tabControl1.TabIndex = 0;
             // 
             // Main
@@ -351,7 +351,7 @@ namespace Neutron.Forms
             this.Main.Controls.Add(this.MBMainAvailableOrders);
             this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1147, 734);
+            this.Main.Size = new System.Drawing.Size(1234, 667);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             this.Main.Enter += new System.EventHandler(this.Main_Enter);
@@ -359,7 +359,7 @@ namespace Neutron.Forms
             // MBRunUpload
             // 
             this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(398, 649);
+            this.MBRunUpload.Location = new System.Drawing.Point(397, 562);
             this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunUpload.Name = "MBRunUpload";
             this.MBRunUpload.Size = new System.Drawing.Size(350, 53);
@@ -372,7 +372,7 @@ namespace Neutron.Forms
             // MBRunLoader
             // 
             this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunLoader.Location = new System.Drawing.Point(398, 527);
+            this.MBRunLoader.Location = new System.Drawing.Point(397, 440);
             this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunLoader.Name = "MBRunLoader";
             this.MBRunLoader.Size = new System.Drawing.Size(350, 53);
@@ -386,7 +386,7 @@ namespace Neutron.Forms
             // 
             this.MBMainClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBMainClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainClose.Location = new System.Drawing.Point(1006, 10);
+            this.MBMainClose.Location = new System.Drawing.Point(1089, 4);
             this.MBMainClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainClose.Name = "MBMainClose";
             this.MBMainClose.Size = new System.Drawing.Size(135, 79);
@@ -398,7 +398,7 @@ namespace Neutron.Forms
             // MBMainUpload
             // 
             this.MBMainUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainUpload.Location = new System.Drawing.Point(398, 588);
+            this.MBMainUpload.Location = new System.Drawing.Point(397, 501);
             this.MBMainUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainUpload.Name = "MBMainUpload";
             this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
@@ -411,7 +411,7 @@ namespace Neutron.Forms
             // MBMainLoadOrders
             // 
             this.MBMainLoadOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainLoadOrders.Location = new System.Drawing.Point(398, 466);
+            this.MBMainLoadOrders.Location = new System.Drawing.Point(397, 379);
             this.MBMainLoadOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainLoadOrders.Name = "MBMainLoadOrders";
             this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 53);
@@ -424,7 +424,7 @@ namespace Neutron.Forms
             // MBMainNewOrder
             // 
             this.MBMainNewOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainNewOrder.Location = new System.Drawing.Point(398, 347);
+            this.MBMainNewOrder.Location = new System.Drawing.Point(397, 260);
             this.MBMainNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainNewOrder.Name = "MBMainNewOrder";
             this.MBMainNewOrder.Size = new System.Drawing.Size(350, 100);
@@ -436,7 +436,7 @@ namespace Neutron.Forms
             // MBMainOrderManager
             // 
             this.MBMainOrderManager.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainOrderManager.Location = new System.Drawing.Point(398, 229);
+            this.MBMainOrderManager.Location = new System.Drawing.Point(397, 142);
             this.MBMainOrderManager.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainOrderManager.Name = "MBMainOrderManager";
             this.MBMainOrderManager.Size = new System.Drawing.Size(350, 100);
@@ -448,7 +448,7 @@ namespace Neutron.Forms
             // MBMainAvailableOrders
             // 
             this.MBMainAvailableOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainAvailableOrders.Location = new System.Drawing.Point(398, 111);
+            this.MBMainAvailableOrders.Location = new System.Drawing.Point(397, 24);
             this.MBMainAvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainAvailableOrders.Name = "MBMainAvailableOrders";
             this.MBMainAvailableOrders.Size = new System.Drawing.Size(350, 100);
@@ -487,14 +487,14 @@ namespace Neutron.Forms
             this.OrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.OrderListing.Name = "OrderListing";
             this.OrderListing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.OrderListing.Size = new System.Drawing.Size(1147, 734);
+            this.OrderListing.Size = new System.Drawing.Size(1234, 676);
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
             // MBKillOrder
             // 
             this.MBKillOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBKillOrder.Location = new System.Drawing.Point(759, 647);
+            this.MBKillOrder.Location = new System.Drawing.Point(803, 582);
             this.MBKillOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBKillOrder.Name = "MBKillOrder";
             this.MBKillOrder.Size = new System.Drawing.Size(115, 37);
@@ -509,7 +509,7 @@ namespace Neutron.Forms
             this.panel12.Controls.Add(this.ComboBoxAreaNumber);
             this.panel12.Controls.Add(this.MBPrintPick);
             this.panel12.Controls.Add(this.ButtonPrintAO);
-            this.panel12.Location = new System.Drawing.Point(8, 644);
+            this.panel12.Location = new System.Drawing.Point(52, 579);
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(388, 45);
             this.panel12.TabIndex = 25;
@@ -559,7 +559,7 @@ namespace Neutron.Forms
             // MBCompress
             // 
             this.MBCompress.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCompress.Location = new System.Drawing.Point(640, 692);
+            this.MBCompress.Location = new System.Drawing.Point(684, 627);
             this.MBCompress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCompress.Name = "MBCompress";
             this.MBCompress.Size = new System.Drawing.Size(115, 36);
@@ -571,7 +571,7 @@ namespace Neutron.Forms
             // MBPrintOrderListing
             // 
             this.MBPrintOrderListing.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderListing.Location = new System.Drawing.Point(1013, 647);
+            this.MBPrintOrderListing.Location = new System.Drawing.Point(1057, 582);
             this.MBPrintOrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderListing.Name = "MBPrintOrderListing";
             this.MBPrintOrderListing.Size = new System.Drawing.Size(125, 79);
@@ -583,7 +583,7 @@ namespace Neutron.Forms
             // MBJobDetails
             // 
             this.MBJobDetails.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBJobDetails.Location = new System.Drawing.Point(882, 647);
+            this.MBJobDetails.Location = new System.Drawing.Point(926, 582);
             this.MBJobDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBJobDetails.Name = "MBJobDetails";
             this.MBJobDetails.Size = new System.Drawing.Size(125, 79);
@@ -596,7 +596,7 @@ namespace Neutron.Forms
             // MBChangeOrderStatus
             // 
             this.MBChangeOrderStatus.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBChangeOrderStatus.Location = new System.Drawing.Point(521, 692);
+            this.MBChangeOrderStatus.Location = new System.Drawing.Point(565, 627);
             this.MBChangeOrderStatus.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBChangeOrderStatus.Name = "MBChangeOrderStatus";
             this.MBChangeOrderStatus.Size = new System.Drawing.Size(115, 36);
@@ -609,7 +609,7 @@ namespace Neutron.Forms
             // MBPriority
             // 
             this.MBPriority.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPriority.Location = new System.Drawing.Point(402, 692);
+            this.MBPriority.Location = new System.Drawing.Point(446, 627);
             this.MBPriority.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPriority.Name = "MBPriority";
             this.MBPriority.Size = new System.Drawing.Size(115, 36);
@@ -621,7 +621,7 @@ namespace Neutron.Forms
             // MBHold
             // 
             this.MBHold.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHold.Location = new System.Drawing.Point(402, 647);
+            this.MBHold.Location = new System.Drawing.Point(446, 582);
             this.MBHold.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHold.Name = "MBHold";
             this.MBHold.Size = new System.Drawing.Size(115, 37);
@@ -633,7 +633,7 @@ namespace Neutron.Forms
             // MBRelease
             // 
             this.MBRelease.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRelease.Location = new System.Drawing.Point(521, 647);
+            this.MBRelease.Location = new System.Drawing.Point(565, 582);
             this.MBRelease.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRelease.Name = "MBRelease";
             this.MBRelease.Size = new System.Drawing.Size(115, 37);
@@ -728,7 +728,7 @@ namespace Neutron.Forms
             // 
             this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClose.Location = new System.Drawing.Point(1006, 10);
+            this.MButtonClose.Location = new System.Drawing.Point(1093, 10);
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(135, 79);
@@ -740,7 +740,7 @@ namespace Neutron.Forms
             // MBOffCarousel
             // 
             this.MBOffCarousel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOffCarousel.Location = new System.Drawing.Point(201, 692);
+            this.MBOffCarousel.Location = new System.Drawing.Point(245, 627);
             this.MBOffCarousel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOffCarousel.Name = "MBOffCarousel";
             this.MBOffCarousel.Size = new System.Drawing.Size(187, 36);
@@ -753,7 +753,7 @@ namespace Neutron.Forms
             // ButtonPrintPacking
             // 
             this.ButtonPrintPacking.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonPrintPacking.Location = new System.Drawing.Point(8, 692);
+            this.ButtonPrintPacking.Location = new System.Drawing.Point(52, 627);
             this.ButtonPrintPacking.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonPrintPacking.Name = "ButtonPrintPacking";
             this.ButtonPrintPacking.Size = new System.Drawing.Size(187, 36);
@@ -779,48 +779,48 @@ namespace Neutron.Forms
             this.DataGridView1.AllowUserToAddRows = false;
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle35.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle35;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DataGridView1.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle36.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle36;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridView1.Location = new System.Drawing.Point(7, 97);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
-            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle37.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle37;
-            dataGridViewCellStyle38.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridView1.Size = new System.Drawing.Size(1131, 544);
+            this.DataGridView1.Size = new System.Drawing.Size(1221, 475);
             this.DataGridView1.TabIndex = 7;
             // 
             // MBDeleteOrder
             // 
             this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDeleteOrder.Location = new System.Drawing.Point(640, 647);
+            this.MBDeleteOrder.Location = new System.Drawing.Point(684, 582);
             this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBDeleteOrder.Name = "MBDeleteOrder";
             this.MBDeleteOrder.Size = new System.Drawing.Size(115, 37);
@@ -832,7 +832,7 @@ namespace Neutron.Forms
             // MBReturnToStock
             // 
             this.MBReturnToStock.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReturnToStock.Location = new System.Drawing.Point(759, 692);
+            this.MBReturnToStock.Location = new System.Drawing.Point(803, 627);
             this.MBReturnToStock.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReturnToStock.Name = "MBReturnToStock";
             this.MBReturnToStock.Size = new System.Drawing.Size(115, 36);
@@ -863,7 +863,7 @@ namespace Neutron.Forms
             this.AvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.AvailableOrders.Name = "AvailableOrders";
             this.AvailableOrders.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.AvailableOrders.Size = new System.Drawing.Size(1147, 734);
+            this.AvailableOrders.Size = new System.Drawing.Size(1234, 667);
             this.AvailableOrders.TabIndex = 1;
             this.AvailableOrders.Text = "Available Orders";
             this.AvailableOrders.Enter += new System.EventHandler(this.AvailableOrders_Enter);
@@ -873,7 +873,7 @@ namespace Neutron.Forms
             this.TextBoxErrorProvider.BackColor = System.Drawing.Color.RoyalBlue;
             this.TextBoxErrorProvider.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextBoxErrorProvider.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxErrorProvider.Location = new System.Drawing.Point(534, 652);
+            this.TextBoxErrorProvider.Location = new System.Drawing.Point(632, 586);
             this.TextBoxErrorProvider.Multiline = true;
             this.TextBoxErrorProvider.Name = "TextBoxErrorProvider";
             this.TextBoxErrorProvider.Size = new System.Drawing.Size(455, 75);
@@ -884,7 +884,7 @@ namespace Neutron.Forms
             this.MBGo2.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBGo2.Enabled = false;
             this.MBGo2.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBGo2.Location = new System.Drawing.Point(1003, 652);
+            this.MBGo2.Location = new System.Drawing.Point(1093, 584);
             this.MBGo2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBGo2.Name = "MBGo2";
             this.MBGo2.Size = new System.Drawing.Size(135, 76);
@@ -896,7 +896,7 @@ namespace Neutron.Forms
             // MBFillOptimized
             // 
             this.MBFillOptimized.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFillOptimized.Location = new System.Drawing.Point(187, 652);
+            this.MBFillOptimized.Location = new System.Drawing.Point(195, 586);
             this.MBFillOptimized.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBFillOptimized.Name = "MBFillOptimized";
             this.MBFillOptimized.Size = new System.Drawing.Size(155, 76);
@@ -909,7 +909,7 @@ namespace Neutron.Forms
             // MBFillStarters
             // 
             this.MBFillStarters.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFillStarters.Location = new System.Drawing.Point(364, 652);
+            this.MBFillStarters.Location = new System.Drawing.Point(372, 586);
             this.MBFillStarters.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBFillStarters.Name = "MBFillStarters";
             this.MBFillStarters.Size = new System.Drawing.Size(155, 76);
@@ -922,7 +922,7 @@ namespace Neutron.Forms
             // MBFill
             // 
             this.MBFill.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFill.Location = new System.Drawing.Point(10, 652);
+            this.MBFill.Location = new System.Drawing.Point(18, 586);
             this.MBFill.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBFill.Name = "MBFill";
             this.MBFill.Size = new System.Drawing.Size(155, 76);
@@ -935,7 +935,7 @@ namespace Neutron.Forms
             // 
             this.PanelOrderInduction.Location = new System.Drawing.Point(4, 94);
             this.PanelOrderInduction.Name = "PanelOrderInduction";
-            this.PanelOrderInduction.Size = new System.Drawing.Size(1140, 186);
+            this.PanelOrderInduction.Size = new System.Drawing.Size(1224, 186);
             this.PanelOrderInduction.TabIndex = 113;
             // 
             // LabelAvailableOrdersSearchFor
@@ -1001,42 +1001,42 @@ namespace Neutron.Forms
             this.DataGridViewAvailableOrders.AllowUserToDeleteRows = false;
             this.DataGridViewAvailableOrders.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewAvailableOrders.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle39.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.DataGridViewAvailableOrders.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle40.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewAvailableOrders.DefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAvailableOrders.DefaultCellStyle = dataGridViewCellStyle6;
             this.DataGridViewAvailableOrders.Location = new System.Drawing.Point(6, 286);
             this.DataGridViewAvailableOrders.MultiSelect = false;
             this.DataGridViewAvailableOrders.Name = "DataGridViewAvailableOrders";
             this.DataGridViewAvailableOrders.ReadOnly = true;
-            dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle41.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrders.RowHeadersDefaultCellStyle = dataGridViewCellStyle41;
-            dataGridViewCellStyle42.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewAvailableOrders.RowsDefaultCellStyle = dataGridViewCellStyle42;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrders.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewAvailableOrders.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.DataGridViewAvailableOrders.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrders.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrders.RowTemplate.ReadOnly = true;
             this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1136, 360);
+            this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1222, 289);
             this.DataGridViewAvailableOrders.TabIndex = 5;
             this.DataGridViewAvailableOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrders_CellClick);
             // 
@@ -1058,7 +1058,7 @@ namespace Neutron.Forms
             // 
             this.MBAvailableOrdersBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBAvailableOrdersBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAvailableOrdersBack.Location = new System.Drawing.Point(1006, 10);
+            this.MBAvailableOrdersBack.Location = new System.Drawing.Point(1083, 10);
             this.MBAvailableOrdersBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAvailableOrdersBack.Name = "MBAvailableOrdersBack";
             this.MBAvailableOrdersBack.Size = new System.Drawing.Size(135, 76);
@@ -1078,7 +1078,7 @@ namespace Neutron.Forms
             this.PickList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickList.Name = "PickList";
             this.PickList.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickList.Size = new System.Drawing.Size(1147, 734);
+            this.PickList.Size = new System.Drawing.Size(1234, 676);
             this.PickList.TabIndex = 3;
             this.PickList.Text = "Pick List";
             // 
@@ -1088,42 +1088,42 @@ namespace Neutron.Forms
             this.DataGridPickView.AllowUserToDeleteRows = false;
             this.DataGridPickView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridPickView.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle43.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle43.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle43.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle43.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle43.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle43.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridPickView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle43;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridPickView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DataGridPickView.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle44.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle44.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle44.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle44.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridPickView.DefaultCellStyle = dataGridViewCellStyle44;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridPickView.DefaultCellStyle = dataGridViewCellStyle10;
             this.DataGridPickView.Location = new System.Drawing.Point(6, 97);
             this.DataGridPickView.MultiSelect = false;
             this.DataGridPickView.Name = "DataGridPickView";
             this.DataGridPickView.ReadOnly = true;
-            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle45.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle45.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle45.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle45.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle45.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridPickView.RowHeadersDefaultCellStyle = dataGridViewCellStyle45;
-            dataGridViewCellStyle46.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridPickView.RowsDefaultCellStyle = dataGridViewCellStyle46;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridPickView.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridPickView.RowsDefaultCellStyle = dataGridViewCellStyle12;
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
             this.DataGridPickView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridPickView.Size = new System.Drawing.Size(1135, 630);
+            this.DataGridPickView.Size = new System.Drawing.Size(1222, 563);
             this.DataGridPickView.TabIndex = 2;
             this.DataGridPickView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridPickView_DataBindingComplete);
             // 
@@ -1155,7 +1155,7 @@ namespace Neutron.Forms
             // 
             this.MBPickListBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickListBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickListBack.Location = new System.Drawing.Point(964, 10);
+            this.MBPickListBack.Location = new System.Drawing.Point(1051, 10);
             this.MBPickListBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickListBack.Name = "MBPickListBack";
             this.MBPickListBack.Size = new System.Drawing.Size(177, 76);
@@ -1201,7 +1201,7 @@ namespace Neutron.Forms
             this.PickScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickScreen.Name = "PickScreen";
             this.PickScreen.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickScreen.Size = new System.Drawing.Size(1147, 734);
+            this.PickScreen.Size = new System.Drawing.Size(1234, 676);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
@@ -1209,16 +1209,16 @@ namespace Neutron.Forms
             // 
             this.LabelPickMessages.BackColor = System.Drawing.Color.AliceBlue;
             this.LabelPickMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickMessages.Location = new System.Drawing.Point(14, 330);
+            this.LabelPickMessages.Location = new System.Drawing.Point(6, 330);
             this.LabelPickMessages.Name = "LabelPickMessages";
-            this.LabelPickMessages.Size = new System.Drawing.Size(1076, 22);
+            this.LabelPickMessages.Size = new System.Drawing.Size(1165, 22);
             this.LabelPickMessages.TabIndex = 198;
             this.LabelPickMessages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MBShortCut
             // 
             this.MBShortCut.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShortCut.Location = new System.Drawing.Point(1101, 326);
+            this.MBShortCut.Location = new System.Drawing.Point(1192, 326);
             this.MBShortCut.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShortCut.Name = "MBShortCut";
             this.MBShortCut.Size = new System.Drawing.Size(26, 26);
@@ -1231,7 +1231,7 @@ namespace Neutron.Forms
             // 
             this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelNotify.BackColor = System.Drawing.Color.RoyalBlue;
-            this.LabelNotify.Location = new System.Drawing.Point(669, 607);
+            this.LabelNotify.Location = new System.Drawing.Point(648, 471);
             this.LabelNotify.Name = "LabelNotify";
             this.LabelNotify.Size = new System.Drawing.Size(31, 16);
             this.LabelNotify.TabIndex = 196;
@@ -1242,7 +1242,7 @@ namespace Neutron.Forms
             this.GroupBoxMultipleLocations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.GroupBoxMultipleLocations.Controls.Add(this.PanelMultipleLocations);
             this.GroupBoxMultipleLocations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxMultipleLocations.Location = new System.Drawing.Point(657, 464);
+            this.GroupBoxMultipleLocations.Location = new System.Drawing.Point(10, 360);
             this.GroupBoxMultipleLocations.Name = "GroupBoxMultipleLocations";
             this.GroupBoxMultipleLocations.Size = new System.Drawing.Size(173, 48);
             this.GroupBoxMultipleLocations.TabIndex = 195;
@@ -1336,7 +1336,7 @@ namespace Neutron.Forms
             this.panel13.Controls.Add(this.ButtonStopMoveFirst);
             this.panel13.Controls.Add(this.ButtonStopMovePrevious);
             this.panel13.Controls.Add(this.LabelLineOfLines);
-            this.panel13.Location = new System.Drawing.Point(985, 105);
+            this.panel13.Location = new System.Drawing.Point(1059, 105);
             this.panel13.Name = "panel13";
             this.panel13.Size = new System.Drawing.Size(158, 22);
             this.panel13.TabIndex = 119;
@@ -1413,16 +1413,16 @@ namespace Neutron.Forms
             // PanelOrderPositions
             // 
             this.PanelOrderPositions.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.PanelOrderPositions.Location = new System.Drawing.Point(7, 138);
+            this.PanelOrderPositions.Location = new System.Drawing.Point(4, 137);
             this.PanelOrderPositions.Name = "PanelOrderPositions";
-            this.PanelOrderPositions.Size = new System.Drawing.Size(1137, 186);
+            this.PanelOrderPositions.Size = new System.Drawing.Size(1214, 186);
             this.PanelOrderPositions.TabIndex = 112;
             // 
             // TextBoxPickedSoFar
             // 
             this.TextBoxPickedSoFar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TextBoxPickedSoFar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickedSoFar.Location = new System.Drawing.Point(1054, 601);
+            this.TextBoxPickedSoFar.Location = new System.Drawing.Point(762, 552);
             this.TextBoxPickedSoFar.Name = "TextBoxPickedSoFar";
             this.TextBoxPickedSoFar.ReadOnly = true;
             this.TextBoxPickedSoFar.Size = new System.Drawing.Size(78, 22);
@@ -1434,7 +1434,7 @@ namespace Neutron.Forms
             this.LabelPickedSoFar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelPickedSoFar.BackColor = System.Drawing.Color.Transparent;
             this.LabelPickedSoFar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickedSoFar.Location = new System.Drawing.Point(920, 602);
+            this.LabelPickedSoFar.Location = new System.Drawing.Point(628, 553);
             this.LabelPickedSoFar.Name = "LabelPickedSoFar";
             this.LabelPickedSoFar.Size = new System.Drawing.Size(128, 20);
             this.LabelPickedSoFar.TabIndex = 106;
@@ -1445,7 +1445,7 @@ namespace Neutron.Forms
             // 
             this.TextBoxRequestedQty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TextBoxRequestedQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxRequestedQty.Location = new System.Drawing.Point(836, 601);
+            this.TextBoxRequestedQty.Location = new System.Drawing.Point(762, 510);
             this.TextBoxRequestedQty.Name = "TextBoxRequestedQty";
             this.TextBoxRequestedQty.ReadOnly = true;
             this.TextBoxRequestedQty.Size = new System.Drawing.Size(78, 22);
@@ -1458,7 +1458,7 @@ namespace Neutron.Forms
             this.LabelReqQty.AutoSize = true;
             this.LabelReqQty.BackColor = System.Drawing.Color.Transparent;
             this.LabelReqQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelReqQty.Location = new System.Drawing.Point(760, 604);
+            this.LabelReqQty.Location = new System.Drawing.Point(693, 513);
             this.LabelReqQty.Name = "LabelReqQty";
             this.LabelReqQty.Size = new System.Drawing.Size(63, 16);
             this.LabelReqQty.TabIndex = 104;
@@ -1471,9 +1471,9 @@ namespace Neutron.Forms
             this.LabelPickDescription.BackColor = System.Drawing.Color.White;
             this.LabelPickDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickDescription.Location = new System.Drawing.Point(7, 413);
+            this.LabelPickDescription.Location = new System.Drawing.Point(441, 415);
             this.LabelPickDescription.Name = "LabelPickDescription";
-            this.LabelPickDescription.Size = new System.Drawing.Size(1131, 42);
+            this.LabelPickDescription.Size = new System.Drawing.Size(777, 42);
             this.LabelPickDescription.TabIndex = 98;
             this.LabelPickDescription.Text = "Hyper One Drive Centering Kit";
             this.LabelPickDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1484,9 +1484,9 @@ namespace Neutron.Forms
             this.LabelPickQty.BackColor = System.Drawing.Color.White;
             this.LabelPickQty.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickQty.Location = new System.Drawing.Point(836, 464);
+            this.LabelPickQty.Location = new System.Drawing.Point(1031, 471);
             this.LabelPickQty.Name = "LabelPickQty";
-            this.LabelPickQty.Size = new System.Drawing.Size(302, 119);
+            this.LabelPickQty.Size = new System.Drawing.Size(187, 119);
             this.LabelPickQty.TabIndex = 96;
             this.LabelPickQty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1496,7 +1496,7 @@ namespace Neutron.Forms
             this.LabelQty.AutoSize = true;
             this.LabelQty.BackColor = System.Drawing.Color.Transparent;
             this.LabelQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelQty.Location = new System.Drawing.Point(761, 521);
+            this.LabelQty.Location = new System.Drawing.Point(956, 509);
             this.LabelQty.Name = "LabelQty";
             this.LabelQty.Size = new System.Drawing.Size(69, 37);
             this.LabelQty.TabIndex = 95;
@@ -1509,9 +1509,9 @@ namespace Neutron.Forms
             this.LabelPickUOI.BackColor = System.Drawing.Color.White;
             this.LabelPickUOI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickUOI.Location = new System.Drawing.Point(749, 359);
+            this.LabelPickUOI.Location = new System.Drawing.Point(968, 365);
             this.LabelPickUOI.Name = "LabelPickUOI";
-            this.LabelPickUOI.Size = new System.Drawing.Size(389, 42);
+            this.LabelPickUOI.Size = new System.Drawing.Size(250, 42);
             this.LabelPickUOI.TabIndex = 94;
             this.LabelPickUOI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1520,7 +1520,7 @@ namespace Neutron.Forms
             this.LabelUOI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelUOI.AutoSize = true;
             this.LabelUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelUOI.Location = new System.Drawing.Point(536, 359);
+            this.LabelUOI.Location = new System.Drawing.Point(755, 368);
             this.LabelUOI.Name = "LabelUOI";
             this.LabelUOI.Size = new System.Drawing.Size(207, 37);
             this.LabelUOI.TabIndex = 93;
@@ -1533,9 +1533,9 @@ namespace Neutron.Forms
             this.LabelPickItemNumber.BackColor = System.Drawing.Color.White;
             this.LabelPickItemNumber.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickItemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickItemNumber.Location = new System.Drawing.Point(108, 359);
+            this.LabelPickItemNumber.Location = new System.Drawing.Point(441, 365);
             this.LabelPickItemNumber.Name = "LabelPickItemNumber";
-            this.LabelPickItemNumber.Size = new System.Drawing.Size(389, 42);
+            this.LabelPickItemNumber.Size = new System.Drawing.Size(292, 42);
             this.LabelPickItemNumber.TabIndex = 94;
             this.LabelPickItemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1544,7 +1544,7 @@ namespace Neutron.Forms
             this.LabelItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelItem.AutoSize = true;
             this.LabelItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelItem.Location = new System.Drawing.Point(15, 359);
+            this.LabelItem.Location = new System.Drawing.Point(348, 365);
             this.LabelItem.Name = "LabelItem";
             this.LabelItem.Size = new System.Drawing.Size(82, 37);
             this.LabelItem.TabIndex = 93;
@@ -1626,9 +1626,9 @@ namespace Neutron.Forms
             this.GroupBoxLocation.Controls.Add(this.LabelOver);
             this.GroupBoxLocation.Controls.Add(this.LabelTray);
             this.GroupBoxLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxLocation.Location = new System.Drawing.Point(7, 464);
+            this.GroupBoxLocation.Location = new System.Drawing.Point(7, 407);
             this.GroupBoxLocation.Name = "GroupBoxLocation";
-            this.GroupBoxLocation.Size = new System.Drawing.Size(379, 256);
+            this.GroupBoxLocation.Size = new System.Drawing.Size(409, 256);
             this.GroupBoxLocation.TabIndex = 4;
             this.GroupBoxLocation.TabStop = false;
             this.GroupBoxLocation.Text = "Locations";
@@ -1877,7 +1877,7 @@ namespace Neutron.Forms
             this.MBPickChangeQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBPickChangeQuantity.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickChangeQuantity.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickChangeQuantity.Location = new System.Drawing.Point(666, 644);
+            this.MBPickChangeQuantity.Location = new System.Drawing.Point(689, 594);
             this.MBPickChangeQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickChangeQuantity.Name = "MBPickChangeQuantity";
             this.MBPickChangeQuantity.Size = new System.Drawing.Size(150, 76);
@@ -1890,7 +1890,7 @@ namespace Neutron.Forms
             // 
             this.MBShortPick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBShortPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShortPick.Location = new System.Drawing.Point(828, 688);
+            this.MBShortPick.Location = new System.Drawing.Point(851, 638);
             this.MBShortPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShortPick.Name = "MBShortPick";
             this.MBShortPick.Size = new System.Drawing.Size(150, 32);
@@ -1903,7 +1903,7 @@ namespace Neutron.Forms
             // 
             this.MBSkipPick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBSkipPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSkipPick.Location = new System.Drawing.Point(828, 644);
+            this.MBSkipPick.Location = new System.Drawing.Point(851, 594);
             this.MBSkipPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSkipPick.Name = "MBSkipPick";
             this.MBSkipPick.Size = new System.Drawing.Size(150, 32);
@@ -1917,10 +1917,10 @@ namespace Neutron.Forms
             this.MBPickAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBPickAccept.Enabled = false;
             this.MBPickAccept.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickAccept.Location = new System.Drawing.Point(990, 644);
+            this.MBPickAccept.Location = new System.Drawing.Point(1031, 594);
             this.MBPickAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickAccept.Name = "MBPickAccept";
-            this.MBPickAccept.Size = new System.Drawing.Size(150, 76);
+            this.MBPickAccept.Size = new System.Drawing.Size(187, 76);
             this.MBPickAccept.TabIndex = 3;
             this.MBPickAccept.Text = "{Pick}";
             this.MBPickAccept.UseSelectable = true;
@@ -1929,7 +1929,7 @@ namespace Neutron.Forms
             // MBPrint
             // 
             this.MBPrint.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrint.Location = new System.Drawing.Point(964, 68);
+            this.MBPrint.Location = new System.Drawing.Point(1038, 68);
             this.MBPrint.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrint.Name = "MBPrint";
             this.MBPrint.Size = new System.Drawing.Size(180, 30);
@@ -1942,7 +1942,7 @@ namespace Neutron.Forms
             // MBPickNewItem
             // 
             this.MBPickNewItem.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickNewItem.Location = new System.Drawing.Point(964, 35);
+            this.MBPickNewItem.Location = new System.Drawing.Point(1038, 35);
             this.MBPickNewItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickNewItem.Name = "MBPickNewItem";
             this.MBPickNewItem.Size = new System.Drawing.Size(180, 30);
@@ -1957,7 +1957,7 @@ namespace Neutron.Forms
             this.MBPickBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.MBPickBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickBack.Location = new System.Drawing.Point(964, 2);
+            this.MBPickBack.Location = new System.Drawing.Point(1038, 2);
             this.MBPickBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickBack.Name = "MBPickBack";
             this.MBPickBack.Size = new System.Drawing.Size(180, 30);
@@ -1971,9 +1971,9 @@ namespace Neutron.Forms
             this.PictureBoxItemImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.PictureBoxItemImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxItemImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.InitialImage")));
-            this.PictureBoxItemImage.Location = new System.Drawing.Point(395, 464);
+            this.PictureBoxItemImage.Location = new System.Drawing.Point(422, 463);
             this.PictureBoxItemImage.Name = "PictureBoxItemImage";
-            this.PictureBoxItemImage.Size = new System.Drawing.Size(256, 256);
+            this.PictureBoxItemImage.Size = new System.Drawing.Size(200, 200);
             this.PictureBoxItemImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBoxItemImage.TabIndex = 113;
             this.PictureBoxItemImage.TabStop = false;
@@ -1993,7 +1993,7 @@ namespace Neutron.Forms
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
             this.OrderDetails.Location = new System.Drawing.Point(4, 22);
             this.OrderDetails.Name = "OrderDetails";
-            this.OrderDetails.Size = new System.Drawing.Size(1147, 734);
+            this.OrderDetails.Size = new System.Drawing.Size(1234, 673);
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
@@ -2076,40 +2076,40 @@ namespace Neutron.Forms
             this.DataGridViewOrderDetails.AllowUserToDeleteRows = false;
             this.DataGridViewOrderDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewOrderDetails.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle47.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle47.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle47.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle47.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle47.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle47.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewOrderDetails.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle47;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewOrderDetails.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.DataGridViewOrderDetails.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle48.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle48.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle48.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle48.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle48.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle48.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewOrderDetails.DefaultCellStyle = dataGridViewCellStyle48;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewOrderDetails.DefaultCellStyle = dataGridViewCellStyle14;
             this.DataGridViewOrderDetails.Location = new System.Drawing.Point(19, 97);
             this.DataGridViewOrderDetails.Name = "DataGridViewOrderDetails";
-            dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle49.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle49.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle49.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle49.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle49.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle49.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewOrderDetails.RowHeadersDefaultCellStyle = dataGridViewCellStyle49;
-            dataGridViewCellStyle50.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewOrderDetails.RowsDefaultCellStyle = dataGridViewCellStyle50;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewOrderDetails.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewOrderDetails.RowsDefaultCellStyle = dataGridViewCellStyle16;
             this.DataGridViewOrderDetails.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewOrderDetails.RowTemplate.Height = 28;
             this.DataGridViewOrderDetails.RowTemplate.ReadOnly = true;
             this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1106, 631);
+            this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1196, 564);
             this.DataGridViewOrderDetails.TabIndex = 6;
             this.DataGridViewOrderDetails.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellContentClick);
             // 
@@ -2117,7 +2117,7 @@ namespace Neutron.Forms
             // 
             this.MBOrderDetailsBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBOrderDetailsBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOrderDetailsBack.Location = new System.Drawing.Point(989, 10);
+            this.MBOrderDetailsBack.Location = new System.Drawing.Point(1080, 11);
             this.MBOrderDetailsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOrderDetailsBack.Name = "MBOrderDetailsBack";
             this.MBOrderDetailsBack.Size = new System.Drawing.Size(135, 79);
@@ -2139,7 +2139,7 @@ namespace Neutron.Forms
             this.NewOrder.Controls.Add(this.MBNewOrderClose);
             this.NewOrder.Location = new System.Drawing.Point(4, 22);
             this.NewOrder.Name = "NewOrder";
-            this.NewOrder.Size = new System.Drawing.Size(1147, 734);
+            this.NewOrder.Size = new System.Drawing.Size(1234, 673);
             this.NewOrder.TabIndex = 6;
             this.NewOrder.Text = "New Order";
             // 
@@ -2153,13 +2153,13 @@ namespace Neutron.Forms
             this.PanelSearch.Controls.Add(this.DataGridViewNewOrder);
             this.PanelSearch.Location = new System.Drawing.Point(503, 111);
             this.PanelSearch.Name = "PanelSearch";
-            this.PanelSearch.Size = new System.Drawing.Size(631, 616);
+            this.PanelSearch.Size = new System.Drawing.Size(727, 556);
             this.PanelSearch.TabIndex = 1;
             // 
             // MBNewOrderSearch
             // 
             this.MBNewOrderSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBNewOrderSearch.Location = new System.Drawing.Point(427, 13);
+            this.MBNewOrderSearch.Location = new System.Drawing.Point(527, 13);
             this.MBNewOrderSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBNewOrderSearch.Name = "MBNewOrderSearch";
             this.MBNewOrderSearch.Size = new System.Drawing.Size(193, 76);
@@ -2184,7 +2184,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderFind.Location = new System.Drawing.Point(7, 52);
             this.TextBoxNewOrderFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewOrderFind.Name = "TextBoxNewOrderFind";
-            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(375, 37);
+            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(463, 37);
             this.TextBoxNewOrderFind.TabIndex = 0;
             this.TextBoxNewOrderFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewOrderFind.TextChanged += new System.EventHandler(this.TextBoxNewOrderQuantity_TextChanged);
@@ -2193,7 +2193,7 @@ namespace Neutron.Forms
             // ButtonNewOrderClear
             // 
             this.ButtonNewOrderClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonNewOrderClear.Location = new System.Drawing.Point(387, 52);
+            this.ButtonNewOrderClear.Location = new System.Drawing.Point(476, 51);
             this.ButtonNewOrderClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonNewOrderClear.Name = "ButtonNewOrderClear";
             this.ButtonNewOrderClear.Size = new System.Drawing.Size(34, 38);
@@ -2210,43 +2210,43 @@ namespace Neutron.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DataGridViewNewOrder.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewNewOrder.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle51.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle51.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle51.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle51.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle51.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle51.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewNewOrder.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle51;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewNewOrder.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
             this.DataGridViewNewOrder.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle52.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle52.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle52.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle52.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle52.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewNewOrder.DefaultCellStyle = dataGridViewCellStyle52;
-            this.DataGridViewNewOrder.Location = new System.Drawing.Point(3, 97);
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewNewOrder.DefaultCellStyle = dataGridViewCellStyle18;
+            this.DataGridViewNewOrder.Location = new System.Drawing.Point(3, 109);
             this.DataGridViewNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewNewOrder.MultiSelect = false;
             this.DataGridViewNewOrder.Name = "DataGridViewNewOrder";
             this.DataGridViewNewOrder.ReadOnly = true;
-            dataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle53.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle53.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle53.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle53.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle53.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle53.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewNewOrder.RowHeadersDefaultCellStyle = dataGridViewCellStyle53;
-            dataGridViewCellStyle54.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewNewOrder.RowsDefaultCellStyle = dataGridViewCellStyle54;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewNewOrder.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewNewOrder.RowsDefaultCellStyle = dataGridViewCellStyle20;
             this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewNewOrder.RowTemplate.Height = 28;
             this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
             this.DataGridViewNewOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewNewOrder.Size = new System.Drawing.Size(621, 511);
+            this.DataGridViewNewOrder.Size = new System.Drawing.Size(717, 439);
             this.DataGridViewNewOrder.TabIndex = 67;
             this.DataGridViewNewOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewNewOrder_CellContentClick);
             // 
@@ -2255,7 +2255,7 @@ namespace Neutron.Forms
             this.PanelOrderDetail.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PanelOrderDetail.Controls.Add(this.ButtonRemoveLine);
             this.PanelOrderDetail.Controls.Add(this.DataGridViewNewItems);
-            this.PanelOrderDetail.Location = new System.Drawing.Point(19, 461);
+            this.PanelOrderDetail.Location = new System.Drawing.Point(19, 400);
             this.PanelOrderDetail.Name = "PanelOrderDetail";
             this.PanelOrderDetail.Size = new System.Drawing.Size(462, 267);
             this.PanelOrderDetail.TabIndex = 3;
@@ -2264,7 +2264,7 @@ namespace Neutron.Forms
             // 
             this.ButtonRemoveLine.Enabled = false;
             this.ButtonRemoveLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonRemoveLine.Location = new System.Drawing.Point(148, 227);
+            this.ButtonRemoveLine.Location = new System.Drawing.Point(143, 216);
             this.ButtonRemoveLine.Name = "ButtonRemoveLine";
             this.ButtonRemoveLine.Size = new System.Drawing.Size(157, 31);
             this.ButtonRemoveLine.TabIndex = 1;
@@ -2282,7 +2282,7 @@ namespace Neutron.Forms
             this.DataGridViewNewItems.Name = "DataGridViewNewItems";
             this.DataGridViewNewItems.ReadOnly = true;
             this.DataGridViewNewItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewNewItems.Size = new System.Drawing.Size(458, 221);
+            this.DataGridViewNewItems.Size = new System.Drawing.Size(458, 210);
             this.DataGridViewNewItems.TabIndex = 0;
             this.DataGridViewNewItems.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.DataGridViewNewItems_RowsAdded);
             // 
@@ -2324,7 +2324,7 @@ namespace Neutron.Forms
             this.GroupBoxDetailInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GroupBoxDetailInformation.Location = new System.Drawing.Point(19, 163);
             this.GroupBoxDetailInformation.Name = "GroupBoxDetailInformation";
-            this.GroupBoxDetailInformation.Size = new System.Drawing.Size(462, 281);
+            this.GroupBoxDetailInformation.Size = new System.Drawing.Size(462, 222);
             this.GroupBoxDetailInformation.TabIndex = 2;
             this.GroupBoxDetailInformation.TabStop = false;
             this.GroupBoxDetailInformation.Text = "Detail Information";
@@ -2336,20 +2336,22 @@ namespace Neutron.Forms
             this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxCostCenter.FormattingEnabled = true;
-            this.ComboBoxCostCenter.Location = new System.Drawing.Point(150, 141);
+            this.ComboBoxCostCenter.Location = new System.Drawing.Point(308, 103);
             this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
-            this.ComboBoxCostCenter.Size = new System.Drawing.Size(302, 28);
+            this.ComboBoxCostCenter.Size = new System.Drawing.Size(64, 28);
             this.ComboBoxCostCenter.TabIndex = 69;
+            this.ComboBoxCostCenter.Visible = false;
             // 
             // LabelCostCenter
             // 
             this.LabelCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCostCenter.Location = new System.Drawing.Point(13, 141);
+            this.LabelCostCenter.Location = new System.Drawing.Point(244, 103);
             this.LabelCostCenter.Name = "LabelCostCenter";
-            this.LabelCostCenter.Size = new System.Drawing.Size(131, 26);
+            this.LabelCostCenter.Size = new System.Drawing.Size(58, 26);
             this.LabelCostCenter.TabIndex = 68;
             this.LabelCostCenter.Text = "Cost Center";
             this.LabelCostCenter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelCostCenter.Visible = false;
             // 
             // TextBoxNewOrderDescription
             // 
@@ -2372,9 +2374,9 @@ namespace Neutron.Forms
             // 
             this.ButtonAddDetail.Enabled = false;
             this.ButtonAddDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonAddDetail.Location = new System.Drawing.Point(10, 233);
+            this.ButtonAddDetail.Location = new System.Drawing.Point(10, 154);
             this.ButtonAddDetail.Name = "ButtonAddDetail";
-            this.ButtonAddDetail.Size = new System.Drawing.Size(442, 42);
+            this.ButtonAddDetail.Size = new System.Drawing.Size(442, 54);
             this.ButtonAddDetail.TabIndex = 1;
             this.ButtonAddDetail.Text = "Add Detail";
             this.ButtonAddDetail.UseVisualStyleBackColor = true;
@@ -2513,7 +2515,7 @@ namespace Neutron.Forms
             // 
             this.MBNewOrderClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBNewOrderClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBNewOrderClose.Location = new System.Drawing.Point(957, 6);
+            this.MBNewOrderClose.Location = new System.Drawing.Point(1053, 6);
             this.MBNewOrderClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBNewOrderClose.Name = "MBNewOrderClose";
             this.MBNewOrderClose.Size = new System.Drawing.Size(177, 76);
@@ -2541,14 +2543,14 @@ namespace Neutron.Forms
             this.AvailableRack.Controls.Add(this.MBRackBack);
             this.AvailableRack.Location = new System.Drawing.Point(4, 22);
             this.AvailableRack.Name = "AvailableRack";
-            this.AvailableRack.Size = new System.Drawing.Size(1147, 734);
+            this.AvailableRack.Size = new System.Drawing.Size(1234, 676);
             this.AvailableRack.TabIndex = 11;
             this.AvailableRack.Text = "Available Rack";
             // 
             // MBKillOrderRack
             // 
             this.MBKillOrderRack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBKillOrderRack.Location = new System.Drawing.Point(476, 645);
+            this.MBKillOrderRack.Location = new System.Drawing.Point(480, 595);
             this.MBKillOrderRack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBKillOrderRack.Name = "MBKillOrderRack";
             this.MBKillOrderRack.Size = new System.Drawing.Size(190, 76);
@@ -2563,48 +2565,48 @@ namespace Neutron.Forms
             this.DataGridViewAvailableOrdersRack.AllowUserToDeleteRows = false;
             this.DataGridViewAvailableOrdersRack.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewAvailableOrdersRack.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle55.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle55.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle55.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle55.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle55.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle55.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle55.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrdersRack.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle55;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrdersRack.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle21;
             this.DataGridViewAvailableOrdersRack.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle56.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle56.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle56.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle56.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle56.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle56.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle56.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewAvailableOrdersRack.DefaultCellStyle = dataGridViewCellStyle56;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAvailableOrdersRack.DefaultCellStyle = dataGridViewCellStyle22;
             this.DataGridViewAvailableOrdersRack.Location = new System.Drawing.Point(6, 94);
             this.DataGridViewAvailableOrdersRack.Name = "DataGridViewAvailableOrdersRack";
             this.DataGridViewAvailableOrdersRack.ReadOnly = true;
-            dataGridViewCellStyle57.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle57.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle57.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle57.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle57.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle57.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle57.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAvailableOrdersRack.RowHeadersDefaultCellStyle = dataGridViewCellStyle57;
-            dataGridViewCellStyle58.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewAvailableOrdersRack.RowsDefaultCellStyle = dataGridViewCellStyle58;
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAvailableOrdersRack.RowHeadersDefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewAvailableOrdersRack.RowsDefaultCellStyle = dataGridViewCellStyle24;
             this.DataGridViewAvailableOrdersRack.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrdersRack.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrdersRack.RowTemplate.ReadOnly = true;
             this.DataGridViewAvailableOrdersRack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1136, 538);
+            this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1214, 494);
             this.DataGridViewAvailableOrdersRack.TabIndex = 7;
             // 
             // MBPrintToteLabel
             // 
             this.MBPrintToteLabel.Enabled = false;
             this.MBPrintToteLabel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintToteLabel.Location = new System.Drawing.Point(241, 645);
+            this.MBPrintToteLabel.Location = new System.Drawing.Point(245, 595);
             this.MBPrintToteLabel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintToteLabel.Name = "MBPrintToteLabel";
             this.MBPrintToteLabel.Size = new System.Drawing.Size(190, 76);
@@ -2617,7 +2619,7 @@ namespace Neutron.Forms
             // MBPrintDocument
             // 
             this.MBPrintDocument.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintDocument.Location = new System.Drawing.Point(6, 645);
+            this.MBPrintDocument.Location = new System.Drawing.Point(10, 595);
             this.MBPrintDocument.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintDocument.Name = "MBPrintDocument";
             this.MBPrintDocument.Size = new System.Drawing.Size(190, 76);
@@ -2699,7 +2701,7 @@ namespace Neutron.Forms
             // 
             this.MBAdjustOrder.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBAdjustOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAdjustOrder.Location = new System.Drawing.Point(946, 645);
+            this.MBAdjustOrder.Location = new System.Drawing.Point(1030, 595);
             this.MBAdjustOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAdjustOrder.Name = "MBAdjustOrder";
             this.MBAdjustOrder.Size = new System.Drawing.Size(190, 76);
@@ -2713,7 +2715,7 @@ namespace Neutron.Forms
             // 
             this.MBRackOrderComplete.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBRackOrderComplete.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRackOrderComplete.Location = new System.Drawing.Point(711, 645);
+            this.MBRackOrderComplete.Location = new System.Drawing.Point(715, 595);
             this.MBRackOrderComplete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRackOrderComplete.Name = "MBRackOrderComplete";
             this.MBRackOrderComplete.Size = new System.Drawing.Size(190, 76);
@@ -2739,7 +2741,7 @@ namespace Neutron.Forms
             // 
             this.MBRackBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBRackBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRackBack.Location = new System.Drawing.Point(1003, 11);
+            this.MBRackBack.Location = new System.Drawing.Point(1085, 11);
             this.MBRackBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRackBack.Name = "MBRackBack";
             this.MBRackBack.Size = new System.Drawing.Size(135, 76);
@@ -2757,41 +2759,41 @@ namespace Neutron.Forms
             this.AdjustOrder.Location = new System.Drawing.Point(4, 22);
             this.AdjustOrder.Name = "AdjustOrder";
             this.AdjustOrder.Padding = new System.Windows.Forms.Padding(3);
-            this.AdjustOrder.Size = new System.Drawing.Size(1147, 734);
+            this.AdjustOrder.Size = new System.Drawing.Size(1234, 676);
             this.AdjustOrder.TabIndex = 12;
             this.AdjustOrder.Text = "Adjust Order";
             // 
             // DataGridViewAdjust
             // 
             this.DataGridViewAdjust.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle59.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle59.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle59.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle59.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle59.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle59.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle59.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewAdjust.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle59;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewAdjust.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
             this.DataGridViewAdjust.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle60.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle60.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle60.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle60.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle60.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle60.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle60.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewAdjust.DefaultCellStyle = dataGridViewCellStyle60;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle26.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewAdjust.DefaultCellStyle = dataGridViewCellStyle26;
             this.DataGridViewAdjust.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.DataGridViewAdjust.Location = new System.Drawing.Point(149, 108);
+            this.DataGridViewAdjust.Location = new System.Drawing.Point(193, 108);
             this.DataGridViewAdjust.Name = "DataGridViewAdjust";
             this.DataGridViewAdjust.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewAdjust.Size = new System.Drawing.Size(848, 622);
+            this.DataGridViewAdjust.Size = new System.Drawing.Size(848, 542);
             this.DataGridViewAdjust.TabIndex = 0;
             // 
             // MBAdjustOrderSave
             // 
             this.MBAdjustOrderSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAdjustOrderSave.Location = new System.Drawing.Point(840, 11);
+            this.MBAdjustOrderSave.Location = new System.Drawing.Point(942, 7);
             this.MBAdjustOrderSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAdjustOrderSave.Name = "MBAdjustOrderSave";
             this.MBAdjustOrderSave.Size = new System.Drawing.Size(135, 79);
@@ -2804,7 +2806,7 @@ namespace Neutron.Forms
             // 
             this.MBAdjustOrderBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBAdjustOrderBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAdjustOrderBack.Location = new System.Drawing.Point(991, 11);
+            this.MBAdjustOrderBack.Location = new System.Drawing.Point(1093, 7);
             this.MBAdjustOrderBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAdjustOrderBack.Name = "MBAdjustOrderBack";
             this.MBAdjustOrderBack.Size = new System.Drawing.Size(135, 79);
@@ -2827,7 +2829,7 @@ namespace Neutron.Forms
             this.Skip.Location = new System.Drawing.Point(4, 22);
             this.Skip.Name = "Skip";
             this.Skip.Padding = new System.Windows.Forms.Padding(3);
-            this.Skip.Size = new System.Drawing.Size(1147, 734);
+            this.Skip.Size = new System.Drawing.Size(1234, 676);
             this.Skip.TabIndex = 13;
             this.Skip.Text = "Skip";
             // 
@@ -2849,7 +2851,7 @@ namespace Neutron.Forms
             this.panel11.Controls.Add(this.DataGridViewSkip);
             this.panel11.Location = new System.Drawing.Point(21, 105);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(1104, 612);
+            this.panel11.Size = new System.Drawing.Size(1195, 560);
             this.panel11.TabIndex = 56;
             // 
             // DataGridViewSkip
@@ -2857,42 +2859,42 @@ namespace Neutron.Forms
             this.DataGridViewSkip.AllowUserToAddRows = false;
             this.DataGridViewSkip.AllowUserToDeleteRows = false;
             this.DataGridViewSkip.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle61.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle61.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle61.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle61.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle61.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle61.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle61.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkip.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle61;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkip.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle27;
             this.DataGridViewSkip.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle62.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle62.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle62.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle62.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle62.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle62.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewSkip.DefaultCellStyle = dataGridViewCellStyle62;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewSkip.DefaultCellStyle = dataGridViewCellStyle28;
             this.DataGridViewSkip.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataGridViewSkip.Location = new System.Drawing.Point(0, 0);
             this.DataGridViewSkip.Name = "DataGridViewSkip";
             this.DataGridViewSkip.ReadOnly = true;
-            dataGridViewCellStyle63.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle63.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle63.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle63.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle63.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle63.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle63.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkip.RowHeadersDefaultCellStyle = dataGridViewCellStyle63;
-            dataGridViewCellStyle64.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewSkip.RowsDefaultCellStyle = dataGridViewCellStyle64;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkip.RowHeadersDefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewSkip.RowsDefaultCellStyle = dataGridViewCellStyle30;
             this.DataGridViewSkip.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkip.RowTemplate.Height = 28;
             this.DataGridViewSkip.RowTemplate.ReadOnly = true;
             this.DataGridViewSkip.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewSkip.Size = new System.Drawing.Size(1104, 612);
+            this.DataGridViewSkip.Size = new System.Drawing.Size(1195, 560);
             this.DataGridViewSkip.TabIndex = 0;
             // 
             // MBAdjustQuantity
@@ -2961,7 +2963,7 @@ namespace Neutron.Forms
             // 
             this.MBBackSkip.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBBackSkip.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBBackSkip.Location = new System.Drawing.Point(999, 10);
+            this.MBBackSkip.Location = new System.Drawing.Point(1081, 10);
             this.MBBackSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBBackSkip.Name = "MBBackSkip";
             this.MBBackSkip.Size = new System.Drawing.Size(135, 79);
@@ -2988,7 +2990,7 @@ namespace Neutron.Forms
             this.SkipInventory.Location = new System.Drawing.Point(4, 22);
             this.SkipInventory.Name = "SkipInventory";
             this.SkipInventory.Padding = new System.Windows.Forms.Padding(3);
-            this.SkipInventory.Size = new System.Drawing.Size(1147, 734);
+            this.SkipInventory.Size = new System.Drawing.Size(1234, 676);
             this.SkipInventory.TabIndex = 14;
             this.SkipInventory.Text = "Skip Inventory";
             // 
@@ -3102,49 +3104,49 @@ namespace Neutron.Forms
             this.DataGridViewSkipInventory.AllowUserToDeleteRows = false;
             this.DataGridViewSkipInventory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataGridViewSkipInventory.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle65.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle65.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle65.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle65.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle65.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle65.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle65;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkipInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle31;
             this.DataGridViewSkipInventory.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle66.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle66.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle66.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle66.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle66.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle66.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewSkipInventory.DefaultCellStyle = dataGridViewCellStyle66;
+            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle32.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle32.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewSkipInventory.DefaultCellStyle = dataGridViewCellStyle32;
             this.DataGridViewSkipInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.DataGridViewSkipInventory.Location = new System.Drawing.Point(113, 219);
+            this.DataGridViewSkipInventory.Location = new System.Drawing.Point(157, 219);
             this.DataGridViewSkipInventory.MultiSelect = false;
             this.DataGridViewSkipInventory.Name = "DataGridViewSkipInventory";
-            dataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle67.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle67.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle67.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle67.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle67.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle67.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewSkipInventory.RowHeadersDefaultCellStyle = dataGridViewCellStyle67;
-            dataGridViewCellStyle68.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewSkipInventory.RowsDefaultCellStyle = dataGridViewCellStyle68;
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle33.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewSkipInventory.RowHeadersDefaultCellStyle = dataGridViewCellStyle33;
+            dataGridViewCellStyle34.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewSkipInventory.RowsDefaultCellStyle = dataGridViewCellStyle34;
             this.DataGridViewSkipInventory.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkipInventory.RowTemplate.Height = 28;
             this.DataGridViewSkipInventory.RowTemplate.ReadOnly = true;
             this.DataGridViewSkipInventory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewSkipInventory.Size = new System.Drawing.Size(920, 409);
+            this.DataGridViewSkipInventory.Size = new System.Drawing.Size(920, 442);
             this.DataGridViewSkipInventory.TabIndex = 5;
             // 
             // MBSkipInventoryBack
             // 
             this.MBSkipInventoryBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBSkipInventoryBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSkipInventoryBack.Location = new System.Drawing.Point(990, 10);
+            this.MBSkipInventoryBack.Location = new System.Drawing.Point(1093, 10);
             this.MBSkipInventoryBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSkipInventoryBack.Name = "MBSkipInventoryBack";
             this.MBSkipInventoryBack.Size = new System.Drawing.Size(135, 79);
@@ -3157,21 +3159,21 @@ namespace Neutron.Forms
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
             this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "Jobs";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
+            this.mlUserInfo.Location = new System.Drawing.Point(934, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(323, 30);
             this.mlUserInfo.TabIndex = 21;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3179,12 +3181,12 @@ namespace Neutron.Forms
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
             this.LabelFormHeaderText.TabIndex = 20;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -3201,7 +3203,7 @@ namespace Neutron.Forms
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 850);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.LabelFormTitle);
@@ -3212,7 +3214,6 @@ namespace Neutron.Forms
             this.MaximizeBox = false;
             this.Name = "FrmPick";
             this.Resizable = false;
-            this.Text = "Order Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPick_FormClosing);
             this.Load += new System.EventHandler(this.FrmPick_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPick_KeyDown);

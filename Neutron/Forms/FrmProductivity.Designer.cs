@@ -92,7 +92,7 @@
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
+            this.LabelRecordCount.Location = new System.Drawing.Point(986, 40);
             this.LabelRecordCount.Name = "LabelRecordCount";
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 29;
@@ -105,7 +105,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 796);
+            this.tabControl1.Size = new System.Drawing.Size(1247, 665);
             this.tabControl1.TabIndex = 28;
             // 
             // tabPage1
@@ -122,7 +122,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1147, 770);
+            this.tabPage1.Size = new System.Drawing.Size(1239, 639);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
             // 
@@ -149,14 +149,14 @@
             this.splitContainer2.Panel2.Controls.Add(this.ButtonClearAllActions);
             this.splitContainer2.Panel2.Controls.Add(this.ButtonCheckAllActions);
             this.splitContainer2.Panel2.Controls.Add(this.CheckedListBoxActionCodes);
-            this.splitContainer2.Size = new System.Drawing.Size(173, 653);
-            this.splitContainer2.SplitterDistance = 419;
+            this.splitContainer2.Size = new System.Drawing.Size(173, 540);
+            this.splitContainer2.SplitterDistance = 306;
             this.splitContainer2.TabIndex = 27;
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer2_SplitterMoved);
             // 
             // ButtonConfigureUsers
             // 
-            this.ButtonConfigureUsers.Location = new System.Drawing.Point(6, 390);
+            this.ButtonConfigureUsers.Location = new System.Drawing.Point(6, 275);
             this.ButtonConfigureUsers.Name = "ButtonConfigureUsers";
             this.ButtonConfigureUsers.Size = new System.Drawing.Size(160, 23);
             this.ButtonConfigureUsers.TabIndex = 0;
@@ -166,7 +166,7 @@
             // 
             // ButtonClearAllUsers
             // 
-            this.ButtonClearAllUsers.Location = new System.Drawing.Point(90, 362);
+            this.ButtonClearAllUsers.Location = new System.Drawing.Point(90, 247);
             this.ButtonClearAllUsers.Name = "ButtonClearAllUsers";
             this.ButtonClearAllUsers.Size = new System.Drawing.Size(80, 23);
             this.ButtonClearAllUsers.TabIndex = 4;
@@ -176,7 +176,7 @@
             // 
             // ButtonCheckAllUsers
             // 
-            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(3, 362);
+            this.ButtonCheckAllUsers.Location = new System.Drawing.Point(3, 247);
             this.ButtonCheckAllUsers.Name = "ButtonCheckAllUsers";
             this.ButtonCheckAllUsers.Size = new System.Drawing.Size(80, 23);
             this.ButtonCheckAllUsers.TabIndex = 3;
@@ -190,9 +190,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CheckedListBoxGroups.CheckOnClick = true;
             this.CheckedListBoxGroups.FormattingEnabled = true;
-            this.CheckedListBoxGroups.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxGroups.Location = new System.Drawing.Point(0, 3);
             this.CheckedListBoxGroups.Name = "CheckedListBoxGroups";
-            this.CheckedListBoxGroups.Size = new System.Drawing.Size(173, 139);
+            this.CheckedListBoxGroups.Size = new System.Drawing.Size(173, 109);
             this.CheckedListBoxGroups.TabIndex = 2;
             this.CheckedListBoxGroups.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxGroups_ItemCheck);
             // 
@@ -203,15 +203,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CheckedListBoxUsers.CheckOnClick = true;
             this.CheckedListBoxUsers.FormattingEnabled = true;
-            this.CheckedListBoxUsers.Location = new System.Drawing.Point(0, 150);
+            this.CheckedListBoxUsers.Location = new System.Drawing.Point(0, 117);
             this.CheckedListBoxUsers.Name = "CheckedListBoxUsers";
-            this.CheckedListBoxUsers.Size = new System.Drawing.Size(173, 199);
+            this.CheckedListBoxUsers.Size = new System.Drawing.Size(173, 124);
             this.CheckedListBoxUsers.TabIndex = 1;
             this.CheckedListBoxUsers.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxUsers_ItemCheck);
             // 
             // ButtonConfigureActions
             // 
-            this.ButtonConfigureActions.Location = new System.Drawing.Point(6, 203);
+            this.ButtonConfigureActions.Location = new System.Drawing.Point(6, 196);
             this.ButtonConfigureActions.Name = "ButtonConfigureActions";
             this.ButtonConfigureActions.Size = new System.Drawing.Size(160, 23);
             this.ButtonConfigureActions.TabIndex = 0;
@@ -221,7 +221,7 @@
             // 
             // ButtonClearAllActions
             // 
-            this.ButtonClearAllActions.Location = new System.Drawing.Point(90, 175);
+            this.ButtonClearAllActions.Location = new System.Drawing.Point(90, 168);
             this.ButtonClearAllActions.Name = "ButtonClearAllActions";
             this.ButtonClearAllActions.Size = new System.Drawing.Size(80, 23);
             this.ButtonClearAllActions.TabIndex = 3;
@@ -231,7 +231,7 @@
             // 
             // ButtonCheckAllActions
             // 
-            this.ButtonCheckAllActions.Location = new System.Drawing.Point(3, 175);
+            this.ButtonCheckAllActions.Location = new System.Drawing.Point(3, 168);
             this.ButtonCheckAllActions.Name = "ButtonCheckAllActions";
             this.ButtonCheckAllActions.Size = new System.Drawing.Size(80, 23);
             this.ButtonCheckAllActions.TabIndex = 2;
@@ -246,9 +246,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CheckedListBoxActionCodes.CheckOnClick = true;
             this.CheckedListBoxActionCodes.FormattingEnabled = true;
-            this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(0, 0);
+            this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(0, 3);
             this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
-            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(173, 169);
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(173, 154);
             this.CheckedListBoxActionCodes.TabIndex = 1;
             this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
             this.CheckedListBoxActionCodes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxActionCodes_ItemCheck);
@@ -282,8 +282,8 @@
             this.SplitContainer1.Panel2.Controls.Add(this.LabelTotalPiecesDetail);
             this.SplitContainer1.Panel2.Controls.Add(this.LabelTotalLinesDetail);
             this.SplitContainer1.Panel2.Controls.Add(this.DataGridView2);
-            this.SplitContainer1.Size = new System.Drawing.Size(961, 653);
-            this.SplitContainer1.SplitterDistance = 325;
+            this.SplitContainer1.Size = new System.Drawing.Size(1062, 540);
+            this.SplitContainer1.SplitterDistance = 238;
             this.SplitContainer1.TabIndex = 26;
             this.SplitContainer1.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.SplitContainer1_SplitterMoving);
             this.SplitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer1_SplitterMoved);
@@ -291,7 +291,7 @@
             // TextBoxTotalOrdersSummary
             // 
             this.TextBoxTotalOrdersSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalOrdersSummary.Location = new System.Drawing.Point(690, 294);
+            this.TextBoxTotalOrdersSummary.Location = new System.Drawing.Point(744, 204);
             this.TextBoxTotalOrdersSummary.Name = "TextBoxTotalOrdersSummary";
             this.TextBoxTotalOrdersSummary.ReadOnly = true;
             this.TextBoxTotalOrdersSummary.Size = new System.Drawing.Size(100, 22);
@@ -301,7 +301,7 @@
             // TextBoxTotalPiecesSummary
             // 
             this.TextBoxTotalPiecesSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalPiecesSummary.Location = new System.Drawing.Point(423, 294);
+            this.TextBoxTotalPiecesSummary.Location = new System.Drawing.Point(477, 204);
             this.TextBoxTotalPiecesSummary.Name = "TextBoxTotalPiecesSummary";
             this.TextBoxTotalPiecesSummary.ReadOnly = true;
             this.TextBoxTotalPiecesSummary.Size = new System.Drawing.Size(100, 22);
@@ -311,7 +311,7 @@
             // TextBoxTotalLinesSummary
             // 
             this.TextBoxTotalLinesSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalLinesSummary.Location = new System.Drawing.Point(156, 295);
+            this.TextBoxTotalLinesSummary.Location = new System.Drawing.Point(210, 205);
             this.TextBoxTotalLinesSummary.Name = "TextBoxTotalLinesSummary";
             this.TextBoxTotalLinesSummary.ReadOnly = true;
             this.TextBoxTotalLinesSummary.Size = new System.Drawing.Size(100, 22);
@@ -321,7 +321,7 @@
             // ButtonPrintSummary
             // 
             this.ButtonPrintSummary.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintSummary.Location = new System.Drawing.Point(805, 292);
+            this.ButtonPrintSummary.Location = new System.Drawing.Point(859, 202);
             this.ButtonPrintSummary.Name = "ButtonPrintSummary";
             this.ButtonPrintSummary.Size = new System.Drawing.Size(142, 23);
             this.ButtonPrintSummary.TabIndex = 1;
@@ -332,7 +332,7 @@
             // LabelTotalOrders
             // 
             this.LabelTotalOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalOrders.Location = new System.Drawing.Point(539, 297);
+            this.LabelTotalOrders.Location = new System.Drawing.Point(593, 207);
             this.LabelTotalOrders.Name = "LabelTotalOrders";
             this.LabelTotalOrders.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalOrders.TabIndex = 2;
@@ -342,7 +342,7 @@
             // LabelTotalPieces
             // 
             this.LabelTotalPieces.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalPieces.Location = new System.Drawing.Point(272, 297);
+            this.LabelTotalPieces.Location = new System.Drawing.Point(326, 207);
             this.LabelTotalPieces.Name = "LabelTotalPieces";
             this.LabelTotalPieces.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalPieces.TabIndex = 2;
@@ -352,7 +352,7 @@
             // LabelTotalLines
             // 
             this.LabelTotalLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalLines.Location = new System.Drawing.Point(5, 297);
+            this.LabelTotalLines.Location = new System.Drawing.Point(59, 207);
             this.LabelTotalLines.Name = "LabelTotalLines";
             this.LabelTotalLines.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalLines.TabIndex = 2;
@@ -373,7 +373,7 @@
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(961, 284);
+            this.DataGridView1.Size = new System.Drawing.Size(1052, 195);
             this.DataGridView1.TabIndex = 0;
             this.DataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentClick);
             this.DataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_RowEnter);
@@ -381,7 +381,7 @@
             // TextBoxTotalOrdersDetail
             // 
             this.TextBoxTotalOrdersDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalOrdersDetail.Location = new System.Drawing.Point(690, 293);
+            this.TextBoxTotalOrdersDetail.Location = new System.Drawing.Point(744, 252);
             this.TextBoxTotalOrdersDetail.Name = "TextBoxTotalOrdersDetail";
             this.TextBoxTotalOrdersDetail.ReadOnly = true;
             this.TextBoxTotalOrdersDetail.Size = new System.Drawing.Size(100, 22);
@@ -391,7 +391,7 @@
             // TextBoxTotalPiecesDetail
             // 
             this.TextBoxTotalPiecesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalPiecesDetail.Location = new System.Drawing.Point(423, 294);
+            this.TextBoxTotalPiecesDetail.Location = new System.Drawing.Point(477, 253);
             this.TextBoxTotalPiecesDetail.Name = "TextBoxTotalPiecesDetail";
             this.TextBoxTotalPiecesDetail.ReadOnly = true;
             this.TextBoxTotalPiecesDetail.Size = new System.Drawing.Size(100, 22);
@@ -401,7 +401,7 @@
             // TextBoxTotalLinesDetail
             // 
             this.TextBoxTotalLinesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalLinesDetail.Location = new System.Drawing.Point(156, 294);
+            this.TextBoxTotalLinesDetail.Location = new System.Drawing.Point(210, 253);
             this.TextBoxTotalLinesDetail.Name = "TextBoxTotalLinesDetail";
             this.TextBoxTotalLinesDetail.ReadOnly = true;
             this.TextBoxTotalLinesDetail.Size = new System.Drawing.Size(100, 22);
@@ -411,7 +411,7 @@
             // ButtonPrintDetail
             // 
             this.ButtonPrintDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintDetail.Location = new System.Drawing.Point(805, 292);
+            this.ButtonPrintDetail.Location = new System.Drawing.Point(859, 251);
             this.ButtonPrintDetail.Name = "ButtonPrintDetail";
             this.ButtonPrintDetail.Size = new System.Drawing.Size(142, 23);
             this.ButtonPrintDetail.TabIndex = 1;
@@ -422,7 +422,7 @@
             // LabelTotalOrdersDetail
             // 
             this.LabelTotalOrdersDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalOrdersDetail.Location = new System.Drawing.Point(539, 295);
+            this.LabelTotalOrdersDetail.Location = new System.Drawing.Point(593, 254);
             this.LabelTotalOrdersDetail.Name = "LabelTotalOrdersDetail";
             this.LabelTotalOrdersDetail.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalOrdersDetail.TabIndex = 26;
@@ -432,7 +432,7 @@
             // LabelTotalPiecesDetail
             // 
             this.LabelTotalPiecesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalPiecesDetail.Location = new System.Drawing.Point(272, 295);
+            this.LabelTotalPiecesDetail.Location = new System.Drawing.Point(326, 254);
             this.LabelTotalPiecesDetail.Name = "LabelTotalPiecesDetail";
             this.LabelTotalPiecesDetail.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalPiecesDetail.TabIndex = 27;
@@ -442,7 +442,7 @@
             // LabelTotalLinesDetail
             // 
             this.LabelTotalLinesDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalLinesDetail.Location = new System.Drawing.Point(5, 297);
+            this.LabelTotalLinesDetail.Location = new System.Drawing.Point(59, 256);
             this.LabelTotalLinesDetail.Name = "LabelTotalLinesDetail";
             this.LabelTotalLinesDetail.Size = new System.Drawing.Size(135, 16);
             this.LabelTotalLinesDetail.TabIndex = 28;
@@ -459,13 +459,13 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridView2.Location = new System.Drawing.Point(0, 0);
+            this.DataGridView2.Location = new System.Drawing.Point(0, 5);
             this.DataGridView2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView2.MultiSelect = false;
             this.DataGridView2.Name = "DataGridView2";
             this.DataGridView2.ReadOnly = true;
             this.DataGridView2.RowTemplate.Height = 24;
-            this.DataGridView2.Size = new System.Drawing.Size(961, 284);
+            this.DataGridView2.Size = new System.Drawing.Size(1052, 229);
             this.DataGridView2.TabIndex = 0;
             // 
             // PanelDateRanges
@@ -572,7 +572,7 @@
             // 
             this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClose.Location = new System.Drawing.Point(1004, 8);
+            this.MButtonClose.Location = new System.Drawing.Point(1095, 11);
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(136, 80);
@@ -607,7 +607,7 @@
             // MButtonRun
             // 
             this.MButtonRun.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonRun.Location = new System.Drawing.Point(853, 8);
+            this.MButtonRun.Location = new System.Drawing.Point(944, 11);
             this.MButtonRun.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonRun.Name = "MButtonRun";
             this.MButtonRun.Size = new System.Drawing.Size(136, 80);
@@ -620,21 +620,21 @@
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
             this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
             this.LabelFormTitle.TabIndex = 27;
             this.LabelFormTitle.Text = "Productivity";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
+            this.mlUserInfo.Location = new System.Drawing.Point(945, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(312, 30);
             this.mlUserInfo.TabIndex = 26;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -642,12 +642,12 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
             this.LabelFormHeaderText.TabIndex = 25;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -656,14 +656,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.LabelFormTitle);
             this.Controls.Add(this.mlUserInfo);
             this.Controls.Add(this.LabelFormHeaderText);
             this.Name = "FrmProductivity";
-            this.Text = "Productivity";
             this.Load += new System.EventHandler(this.FrmProductivity_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

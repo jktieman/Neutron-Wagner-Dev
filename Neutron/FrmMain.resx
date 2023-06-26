@@ -160,7 +160,7 @@
     <value>Top, Right</value>
   </data>
   <data name="mlUserInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>793, 35</value>
+    <value>873, 35</value>
   </data>
   <data name="mlUserInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>380, 30</value>
@@ -193,13 +193,13 @@
     <value>Top, Bottom, Left, Right</value>
   </data>
   <data name="MtProductivity.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 585</value>
+    <value>15, 488</value>
   </data>
   <data name="MtProductivity.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtProductivity.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 66</value>
+    <value>412, 50</value>
   </data>
   <data name="MtProductivity.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -229,7 +229,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtHotAction.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtHotAction.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -259,7 +259,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtLogOff.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 144</value>
+    <value>342, 114</value>
   </data>
   <data name="MtLogOff.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -283,13 +283,13 @@
     <value>4</value>
   </data>
   <data name="MtStore.Location" type="System.Drawing.Point, System.Drawing">
-    <value>447, 343</value>
+    <value>447, 287</value>
   </data>
   <data name="MtStore.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtStore.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtStore.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -313,13 +313,13 @@
     <value>5</value>
   </data>
   <data name="MtHistory.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 507</value>
+    <value>16, 424</value>
   </data>
   <data name="MtHistory.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtHistory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 66</value>
+    <value>412, 50</value>
   </data>
   <data name="MtHistory.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -343,13 +343,13 @@
     <value>6</value>
   </data>
   <data name="MtPick.Location" type="System.Drawing.Point, System.Drawing">
-    <value>447, 179</value>
+    <value>447, 150</value>
   </data>
   <data name="MtPick.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtPick.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtPick.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -373,13 +373,13 @@
     <value>7</value>
   </data>
   <data name="MtUtilities.Location" type="System.Drawing.Point, System.Drawing">
-    <value>876, 179</value>
+    <value>876, 150</value>
   </data>
   <data name="MtUtilities.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtUtilities.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 144</value>
+    <value>342, 114</value>
   </data>
   <data name="MtUtilities.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -403,13 +403,13 @@
     <value>8</value>
   </data>
   <data name="MtSystem.Location" type="System.Drawing.Point, System.Drawing">
-    <value>876, 343</value>
+    <value>876, 287</value>
   </data>
   <data name="MtSystem.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtSystem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 144</value>
+    <value>342, 114</value>
   </data>
   <data name="MtSystem.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -433,13 +433,13 @@
     <value>9</value>
   </data>
   <data name="MtLac.Location" type="System.Drawing.Point, System.Drawing">
-    <value>876, 507</value>
+    <value>876, 424</value>
   </data>
   <data name="MtLac.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtLac.Size" type="System.Drawing.Size, System.Drawing">
-    <value>260, 144</value>
+    <value>342, 114</value>
   </data>
   <data name="MtLac.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -463,13 +463,13 @@
     <value>10</value>
   </data>
   <data name="MtUsers.Location" type="System.Drawing.Point, System.Drawing">
-    <value>447, 507</value>
+    <value>447, 424</value>
   </data>
   <data name="MtUsers.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtUsers.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtUsers.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -493,13 +493,13 @@
     <value>11</value>
   </data>
   <data name="MtItemDefinitions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 179</value>
+    <value>15, 150</value>
   </data>
   <data name="MtItemDefinitions.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtItemDefinitions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtItemDefinitions.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -523,13 +523,13 @@
     <value>12</value>
   </data>
   <data name="MtLocations.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 343</value>
+    <value>16, 287</value>
   </data>
   <data name="MtLocations.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtLocations.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtLocations.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -559,7 +559,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="MtInventory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>412, 144</value>
+    <value>412, 114</value>
   </data>
   <data name="MtInventory.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -586,7 +586,7 @@
     <value>22, 173</value>
   </data>
   <data name="metroPanelMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1156, 665</value>
+    <value>1236, 554</value>
   </data>
   <data name="metroPanelMain.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -640,7 +640,7 @@
     <value>NoControl</value>
   </data>
   <data name="ButtonPark.Location" type="System.Drawing.Point, System.Drawing">
-    <value>903, 134</value>
+    <value>983, 134</value>
   </data>
   <data name="ButtonPark.Size" type="System.Drawing.Size, System.Drawing">
     <value>135, 33</value>
@@ -673,7 +673,7 @@
     <value>NoControl</value>
   </data>
   <data name="ButtonClose.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1048, 134</value>
+    <value>1128, 134</value>
   </data>
   <data name="ButtonClose.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 33</value>
@@ -695,6 +695,57 @@
   </data>
   <data name="&gt;&gt;ButtonClose.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.Name" xml:space="preserve">
+    <value>RadioButtonFrenchCanadian</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.Parent" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonFrenchCanadian.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.Name" xml:space="preserve">
+    <value>RadioButtonEnglish</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.Parent" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;RadioButtonEnglish.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="GroupBoxLanguage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>533, 20</value>
+  </data>
+  <data name="GroupBoxLanguage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 82</value>
+  </data>
+  <data name="GroupBoxLanguage.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="GroupBoxLanguage.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="RadioButtonFrenchCanadian.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -756,33 +807,6 @@
   <data name="&gt;&gt;RadioButtonEnglish.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="GroupBoxLanguage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>533, 20</value>
-  </data>
-  <data name="GroupBoxLanguage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 82</value>
-  </data>
-  <data name="GroupBoxLanguage.TabIndex" type="System.Int32, mscorlib">
-    <value>32</value>
-  </data>
-  <data name="GroupBoxLanguage.Text" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
-    <value>GroupBoxLanguage</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="PictureBoxLogo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -820,7 +844,7 @@
     <value>NoControl</value>
   </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>694, 134</value>
+    <value>774, 134</value>
   </data>
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
     <value>135, 33</value>
@@ -853,7 +877,7 @@
     <value>34</value>
   </metadata>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1200, 850</value>
+    <value>1280, 750</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8pt</value>
@@ -5069,6 +5093,9 @@
         /////////////////wAAB///////////////////////////////////////wAAP////////////////
         ///////////////////////wAD////////8=
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>19, 30, 19, 20</value>

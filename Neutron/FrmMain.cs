@@ -552,7 +552,7 @@ namespace Neutron
                         {
                             Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
                             // ReSharper disable once UseObjectOrCollectionInitializer
-                            GlobalVar.Displays = new IptiController(_jsonData, _workstationView, _neutronVariables);
+                            GlobalVar.Displays = new TCP_IptiController(_jsonData, _workstationView, _neutronVariables);
                             //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
                             result = GlobalVar.Displays != null;
                         }

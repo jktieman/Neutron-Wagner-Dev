@@ -107,6 +107,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.LabelAvailableLocations = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.TextBoxInventoryNewLocationsRfid = new System.Windows.Forms.TextBox();
+            this.LabelInventoryNewLocationsRfid = new System.Windows.Forms.Label();
             this.CheckBoxInventoryNewLocationsPrimeBin = new System.Windows.Forms.CheckBox();
             this.ComboBoxInventoryNewLocationsStorageType = new System.Windows.Forms.ComboBox();
             this.LabelNewLocationsStorageType = new System.Windows.Forms.Label();
@@ -131,7 +133,9 @@
             this.CheckBoxAddDetailPrimeBin = new System.Windows.Forms.CheckBox();
             this.DateTimePickerAddDetailReceivedDate = new System.Windows.Forms.DateTimePicker();
             this.LabelAddDetailReceivedDate = new System.Windows.Forms.Label();
+            this.TextBoxAddDetailRfid = new System.Windows.Forms.TextBox();
             this.TextBoxAddDetailDescription = new System.Windows.Forms.TextBox();
+            this.LabelAddDetailRfid = new System.Windows.Forms.Label();
             this.TextBoxAddDetailItem = new System.Windows.Forms.TextBox();
             this.LabelAddDetailDescription = new System.Windows.Forms.Label();
             this.LabelAddDetailItem = new System.Windows.Forms.Label();
@@ -171,10 +175,6 @@
             this.TextBoxAddDetailLocationId = new System.Windows.Forms.TextBox();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
-            this.LabelAddDetailRfid = new System.Windows.Forms.Label();
-            this.TextBoxAddDetailRfid = new System.Windows.Forms.TextBox();
-            this.TextBoxInventoryNewLocationsRfid = new System.Windows.Forms.TextBox();
-            this.LabelInventoryNewLocationsRfid = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.GroupBoxInventoryFile.SuspendLayout();
@@ -197,10 +197,10 @@
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(793, 35);
+            this.mlUserInfo.Location = new System.Drawing.Point(901, 16);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(350, 30);
             this.mlUserInfo.TabIndex = 10;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -208,12 +208,12 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 16);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(713, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
             this.LabelFormHeaderText.TabIndex = 9;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -222,11 +222,11 @@
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(367, 98);
+            this.LabelFormTitle.Location = new System.Drawing.Point(465, 16);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(418, 66);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
             this.LabelFormTitle.TabIndex = 17;
             this.LabelFormTitle.Text = "Inventory";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -238,11 +238,11 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Location = new System.Drawing.Point(22, 173);
+            this.tabControl1.Location = new System.Drawing.Point(22, 89);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 670);
+            this.tabControl1.Size = new System.Drawing.Size(1233, 651);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -263,7 +263,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1147, 644);
+            this.tabPage1.Size = new System.Drawing.Size(1225, 625);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
             // 
@@ -273,7 +273,7 @@
             this.GroupBoxInventoryFile.Controls.Add(this.MBCreateInventoryFile);
             this.GroupBoxInventoryFile.Location = new System.Drawing.Point(875, 5);
             this.GroupBoxInventoryFile.Name = "GroupBoxInventoryFile";
-            this.GroupBoxInventoryFile.Size = new System.Drawing.Size(135, 83);
+            this.GroupBoxInventoryFile.Size = new System.Drawing.Size(181, 83);
             this.GroupBoxInventoryFile.TabIndex = 27;
             this.GroupBoxInventoryFile.TabStop = false;
             // 
@@ -292,7 +292,7 @@
             "8"});
             this.ComboBoxAreaNumber.Location = new System.Drawing.Point(6, 15);
             this.ComboBoxAreaNumber.Name = "ComboBoxAreaNumber";
-            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(121, 24);
+            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(154, 24);
             this.ComboBoxAreaNumber.TabIndex = 0;
             // 
             // MBCreateInventoryFile
@@ -301,7 +301,7 @@
             this.MBCreateInventoryFile.Location = new System.Drawing.Point(6, 47);
             this.MBCreateInventoryFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCreateInventoryFile.Name = "MBCreateInventoryFile";
-            this.MBCreateInventoryFile.Size = new System.Drawing.Size(122, 26);
+            this.MBCreateInventoryFile.Size = new System.Drawing.Size(154, 26);
             this.MBCreateInventoryFile.TabIndex = 1;
             this.MBCreateInventoryFile.Text = "Inventory File";
             this.MBCreateInventoryFile.UseSelectable = true;
@@ -313,9 +313,9 @@
             this.CheckBoxAllStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxAllStations.Location = new System.Drawing.Point(532, 69);
             this.CheckBoxAllStations.Name = "CheckBoxAllStations";
-            this.CheckBoxAllStations.Size = new System.Drawing.Size(90, 17);
+            this.CheckBoxAllStations.Size = new System.Drawing.Size(76, 17);
             this.CheckBoxAllStations.TabIndex = 20;
-            this.CheckBoxAllStations.Text = "All Stations";
+            this.CheckBoxAllStations.Text = "All Areas";
             this.CheckBoxAllStations.UseVisualStyleBackColor = true;
             this.CheckBoxAllStations.CheckedChanged += new System.EventHandler(this.CheckBoxAllStations_CheckedChanged);
             // 
@@ -391,7 +391,7 @@
             // 
             this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClose.Location = new System.Drawing.Point(1022, 10);
+            this.MButtonClose.Location = new System.Drawing.Point(1099, 8);
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(120, 76);
@@ -422,9 +422,10 @@
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(1141, 536);
+            this.DataGridView1.Size = new System.Drawing.Size(1216, 524);
             this.DataGridView1.TabIndex = 6;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
+            this.DataGridView1.DoubleClick += new System.EventHandler(this.DataGridView1_DoubleClick);
             // 
             // tabPage2
             // 
@@ -1144,6 +1145,26 @@
             this.panel5.Size = new System.Drawing.Size(1075, 137);
             this.panel5.TabIndex = 89;
             // 
+            // TextBoxInventoryNewLocationsRfid
+            // 
+            this.TextBoxInventoryNewLocationsRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxInventoryNewLocationsRfid.Location = new System.Drawing.Point(613, 89);
+            this.TextBoxInventoryNewLocationsRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxInventoryNewLocationsRfid.Name = "TextBoxInventoryNewLocationsRfid";
+            this.TextBoxInventoryNewLocationsRfid.Size = new System.Drawing.Size(450, 29);
+            this.TextBoxInventoryNewLocationsRfid.TabIndex = 108;
+            this.TextBoxInventoryNewLocationsRfid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelInventoryNewLocationsRfid
+            // 
+            this.LabelInventoryNewLocationsRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelInventoryNewLocationsRfid.Location = new System.Drawing.Point(417, 89);
+            this.LabelInventoryNewLocationsRfid.Name = "LabelInventoryNewLocationsRfid";
+            this.LabelInventoryNewLocationsRfid.Size = new System.Drawing.Size(190, 29);
+            this.LabelInventoryNewLocationsRfid.TabIndex = 109;
+            this.LabelInventoryNewLocationsRfid.Text = "RFID";
+            this.LabelInventoryNewLocationsRfid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // CheckBoxInventoryNewLocationsPrimeBin
             // 
             this.CheckBoxInventoryNewLocationsPrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1419,6 +1440,16 @@
             this.LabelAddDetailReceivedDate.Text = "Received Date";
             this.LabelAddDetailReceivedDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // TextBoxAddDetailRfid
+            // 
+            this.TextBoxAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxAddDetailRfid.Location = new System.Drawing.Point(613, 89);
+            this.TextBoxAddDetailRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxAddDetailRfid.Name = "TextBoxAddDetailRfid";
+            this.TextBoxAddDetailRfid.Size = new System.Drawing.Size(450, 29);
+            this.TextBoxAddDetailRfid.TabIndex = 3;
+            this.TextBoxAddDetailRfid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // TextBoxAddDetailDescription
             // 
             this.TextBoxAddDetailDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1428,6 +1459,16 @@
             this.TextBoxAddDetailDescription.Size = new System.Drawing.Size(450, 29);
             this.TextBoxAddDetailDescription.TabIndex = 3;
             this.TextBoxAddDetailDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelAddDetailRfid
+            // 
+            this.LabelAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAddDetailRfid.Location = new System.Drawing.Point(417, 89);
+            this.LabelAddDetailRfid.Name = "LabelAddDetailRfid";
+            this.LabelAddDetailRfid.Size = new System.Drawing.Size(190, 29);
+            this.LabelAddDetailRfid.TabIndex = 107;
+            this.LabelAddDetailRfid.Text = "RFID";
+            this.LabelAddDetailRfid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxAddDetailItem
             // 
@@ -1853,67 +1894,28 @@
             // 
             // LabelRecordCount
             // 
+            this.LabelRecordCount.BackColor = System.Drawing.Color.White;
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 129);
+            this.LabelRecordCount.Location = new System.Drawing.Point(972, 55);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // LabelStationName
             // 
             this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName.Location = new System.Drawing.Point(26, 129);
+            this.LabelStationName.Location = new System.Drawing.Point(29, 55);
             this.LabelStationName.Name = "LabelStationName";
-            this.LabelStationName.Size = new System.Drawing.Size(279, 35);
+            this.LabelStationName.Size = new System.Drawing.Size(279, 30);
             this.LabelStationName.TabIndex = 21;
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // LabelAddDetailRfid
-            // 
-            this.LabelAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailRfid.Location = new System.Drawing.Point(417, 89);
-            this.LabelAddDetailRfid.Name = "LabelAddDetailRfid";
-            this.LabelAddDetailRfid.Size = new System.Drawing.Size(190, 29);
-            this.LabelAddDetailRfid.TabIndex = 107;
-            this.LabelAddDetailRfid.Text = "RFID";
-            this.LabelAddDetailRfid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TextBoxAddDetailRfid
-            // 
-            this.TextBoxAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailRfid.Location = new System.Drawing.Point(613, 89);
-            this.TextBoxAddDetailRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxAddDetailRfid.Name = "TextBoxAddDetailRfid";
-            this.TextBoxAddDetailRfid.Size = new System.Drawing.Size(450, 29);
-            this.TextBoxAddDetailRfid.TabIndex = 3;
-            this.TextBoxAddDetailRfid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TextBoxInventoryNewLocationsRfid
-            // 
-            this.TextBoxInventoryNewLocationsRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxInventoryNewLocationsRfid.Location = new System.Drawing.Point(613, 89);
-            this.TextBoxInventoryNewLocationsRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxInventoryNewLocationsRfid.Name = "TextBoxInventoryNewLocationsRfid";
-            this.TextBoxInventoryNewLocationsRfid.Size = new System.Drawing.Size(450, 29);
-            this.TextBoxInventoryNewLocationsRfid.TabIndex = 108;
-            this.TextBoxInventoryNewLocationsRfid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelInventoryNewLocationsRfid
-            // 
-            this.LabelInventoryNewLocationsRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelInventoryNewLocationsRfid.Location = new System.Drawing.Point(417, 89);
-            this.LabelInventoryNewLocationsRfid.Name = "LabelInventoryNewLocationsRfid";
-            this.LabelInventoryNewLocationsRfid.Size = new System.Drawing.Size(190, 29);
-            this.LabelInventoryNewLocationsRfid.TabIndex = 109;
-            this.LabelInventoryNewLocationsRfid.Text = "RFID";
-            this.LabelInventoryNewLocationsRfid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FrmInventory
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.Controls.Add(this.LabelStationName);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);

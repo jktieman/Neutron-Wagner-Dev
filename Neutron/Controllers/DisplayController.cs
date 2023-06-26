@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Neutron.Models;
 using NeutronCore.Models;
 using NeutronData.Models.Lookups;
 
@@ -44,8 +45,8 @@ namespace Neutron.Controllers
         List<Hart_BLI> blisOn = new List<Hart_BLI>();
         List<Hart_SHI> shisOn = new List<Hart_SHI>();
         public bool Ready { get; set; }
-        public event EventHandler<IptiController.MySerialDataReceivedEventArgs> MySerialDataReceived;
-
+        public event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
+        
         public DisplayController(IJsonData jsonData, WorkstationView workstationView)
         {
             _workstationView = workstationView;

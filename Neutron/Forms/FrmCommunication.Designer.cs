@@ -41,7 +41,7 @@
             this.ListBoxRequests.FormattingEnabled = true;
             this.ListBoxRequests.Location = new System.Drawing.Point(12, 37);
             this.ListBoxRequests.Name = "ListBoxRequests";
-            this.ListBoxRequests.Size = new System.Drawing.Size(258, 706);
+            this.ListBoxRequests.Size = new System.Drawing.Size(258, 550);
             this.ListBoxRequests.TabIndex = 2;
             // 
             // ButtonClear
@@ -70,7 +70,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.ButtonClose;
-            this.ClientSize = new System.Drawing.Size(282, 759);
+            this.ClientSize = new System.Drawing.Size(282, 611);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.ButtonClear);
             this.Controls.Add(this.ListBoxRequests);

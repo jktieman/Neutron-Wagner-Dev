@@ -78,14 +78,14 @@
             this.PanelHelp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelHelp.Location = new System.Drawing.Point(22, 173);
             this.PanelHelp.Name = "PanelHelp";
-            this.PanelHelp.Size = new System.Drawing.Size(1155, 670);
+            this.PanelHelp.Size = new System.Drawing.Size(1235, 554);
             this.PanelHelp.TabIndex = 26;
             // 
             // MBMainClose
             // 
             this.MBMainClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBMainClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainClose.Location = new System.Drawing.Point(996, 98);
+            this.MBMainClose.Location = new System.Drawing.Point(1080, 98);
             this.MBMainClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainClose.Name = "MBMainClose";
             this.MBMainClose.Size = new System.Drawing.Size(177, 68);
@@ -98,7 +98,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.Controls.Add(this.MBMainClose);
             this.Controls.Add(this.PanelHelp);
             this.Controls.Add(this.LabelFormTitle);

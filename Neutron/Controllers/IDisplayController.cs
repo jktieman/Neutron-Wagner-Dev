@@ -1,11 +1,12 @@
 ﻿using Hart_DisplayControllers;
 using System;
+using Neutron.Models;
 
 namespace Neutron.Controllers
 {
     public interface IDisplayController
     {
-        event EventHandler<IptiController.MySerialDataReceivedEventArgs> MySerialDataReceived;
+        event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         void CloseController();
         bool Ready { get; set; }
 

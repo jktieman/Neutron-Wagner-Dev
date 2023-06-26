@@ -252,8 +252,8 @@ namespace Neutron.Forms
             ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
             if (_neutronVariables.DisplaysEnabled && _neutronVariables.IptiDisplays)
             {
-                GlobalVar.Displays.MySerialDataReceived -= ProcessDataReceived;
-                GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
+                GlobalVar.Displays.MyDataReceived -= ProcessDataReceived;
+                GlobalVar.Displays.MyDataReceived += ProcessDataReceived;
             }
 
             _documentToPrint = new DocumentToPrint();
@@ -467,7 +467,7 @@ namespace Neutron.Forms
         }
 
 
-        public void ProcessDataReceived(object sender, IptiController.MySerialDataReceivedEventArgs args)
+        public void ProcessDataReceived(object sender, MyDataReceivedEventArgs args)
         {
             _logger.LogDetailAsync($"Process Data Received:  {args.FormText} START");
             var t = args.FormText;

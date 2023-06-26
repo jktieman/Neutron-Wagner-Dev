@@ -487,7 +487,7 @@ namespace Neutron.Forms
                                 Loc4 = loc4,
                                 Loc5 = loc5,
                                 Slot = slotName,
-                                PickSequence = TextBoxNewPickSequence.Text.ParseInt(),
+                                PickSequence = TextBoxViewEditPickSequence.Text.ParseInt(),
                                 InUse = CheckBoxInUse.Checked,
                                 SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id,
                                 VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id,
@@ -999,6 +999,14 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
+                DataPropertyName = "PickSequence",
+                HeaderText = _gridResourceManager.GetString("PickSequence"),
+                Visible = true,
+                Name = "PickSequence"
+            };
+            DataGridView1.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
                 DataPropertyName = "SizeCodeName",
                 HeaderText = _gridResourceManager.GetString("SizeCodeName"),
                 Name = "SizeCodeName"
@@ -1081,32 +1089,32 @@ namespace Neutron.Forms
 
         private void SetupNewForm()
         {
-            var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
-            var location = _repoLocation.FindByKey(id);
-            if (location != null)
-            {
-                var device = _repoDevices.FindBy(r => r.StorageDeviceNumber == location.Loc1
-                                                      && r.AreaId == location.AreaId).FirstOrDefault();
-                if (device is null) return;
-                ButtonPositionDeviceNew.Visible = device.IsMoveable;
+            //var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
+            //var location = _repoLocation.FindByKey(id);
+            //if (location != null)
+            //{
+            //    var device = _repoDevices.FindBy(r => r.StorageDeviceNumber == location.Loc1
+            //                                          && r.AreaId == location.AreaId).FirstOrDefault();
+            //    if (device is null) return;
+            //    ButtonPositionDeviceNew.Visible = device.IsMoveable;
 
-                var area = _repoArea.FindBy(r => r.Id == location.AreaId).FirstOrDefault();
-                if (area is null) return;
+            //    var area = _repoArea.FindBy(r => r.Id == location.AreaId).FirstOrDefault();
+            //    if (area is null) return;
 
-                ComboBoxNewArea.DataSource = _repoArea.All();
-                ComboBoxNewArea.DisplayMember = "Name";
-                ComboBoxNewArea.ValueMember = "Id";
+            //    ComboBoxNewArea.DataSource = _repoArea.All();
+            //    ComboBoxNewArea.DisplayMember = "Name";
+            //    ComboBoxNewArea.ValueMember = "Id";
 
-                ComboBoxNewArea.SelectedValue = area.Id;
+            //    ComboBoxNewArea.SelectedValue = area.Id;
 
-                ComboBoxNewDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
-                ComboBoxNewDevice.DisplayMember = "Name";
-                ComboBoxNewDevice.ValueMember = "Id";
+            //    ComboBoxNewDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
+            //    ComboBoxNewDevice.DisplayMember = "Name";
+            //    ComboBoxNewDevice.ValueMember = "Id";
 
-                ComboBoxNewDevice.SelectedValue = device.Id;
-            }
-            else
-            {
+            //    ComboBoxNewDevice.SelectedValue = device.Id;
+            //}
+            //else
+            //{
                 ComboBoxNewArea.DataSource = _repoArea.All();
                 ComboBoxNewArea.DisplayMember = "Name";
                 ComboBoxNewArea.ValueMember = "Id";
@@ -1115,7 +1123,7 @@ namespace Neutron.Forms
                 ComboBoxNewDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == _workstationView.AreaId).ToList();
                 ComboBoxNewDevice.DisplayMember = "Name";
                 ComboBoxNewDevice.ValueMember = "Id";
-            }
+           // }
 
             //LabelFindDescription.Text = "Search any part of Slot field";
             ComboBoxNewSizeCode.DataSource = _repoSizeCode.All();

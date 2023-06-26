@@ -431,7 +431,7 @@ namespace NeutronData.Repositories
 
             var result = new List<Workstation>();
             var stations = _repoWorkstation.All().Where(r => r.StationType.Name == StationType.Carousel.ToString()
-                                                         || r.StationType.Name == StationType.Rack.ToString()
+                                                         || r.StationType.Name == StationType.RackTablet.ToString()
                                                          || r.StationType.Name == StationType.Vertical.ToString())
                 .ToList();
 
@@ -496,7 +496,7 @@ namespace NeutronData.Repositories
 
         public WorkstationView GetRackStationView()
         {
-            var workstation = _repoWorkstation.All().FirstOrDefault(r => r.StationTypeId == (int)StationType.Rack);
+            var workstation = _repoWorkstation.All().FirstOrDefault(r => r.StationTypeId == (int)StationType.RackTablet);
             if (workstation == null) return new WorkstationView();
             var workstationView = new WorkstationView
             {

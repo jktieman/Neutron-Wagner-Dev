@@ -65,7 +65,7 @@
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
+            this.LabelRecordCount.Location = new System.Drawing.Point(974, 43);
             this.LabelRecordCount.Name = "LabelRecordCount";
             this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 24;
@@ -78,7 +78,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 796);
+            this.tabControl1.Size = new System.Drawing.Size(1235, 665);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -99,7 +99,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1147, 770);
+            this.tabPage1.Size = new System.Drawing.Size(1227, 639);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
             // 
@@ -128,7 +128,7 @@
             this.GroupBoxActionCodes.Controls.Add(this.CheckedListBoxActionCodes);
             this.GroupBoxActionCodes.Location = new System.Drawing.Point(11, 126);
             this.GroupBoxActionCodes.Name = "GroupBoxActionCodes";
-            this.GroupBoxActionCodes.Size = new System.Drawing.Size(194, 624);
+            this.GroupBoxActionCodes.Size = new System.Drawing.Size(194, 500);
             this.GroupBoxActionCodes.TabIndex = 3;
             this.GroupBoxActionCodes.TabStop = false;
             this.GroupBoxActionCodes.Text = "Action Codes";
@@ -140,7 +140,7 @@
             this.CheckedListBoxActionCodes.FormattingEnabled = true;
             this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(3, 16);
             this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
-            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 605);
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 481);
             this.CheckedListBoxActionCodes.TabIndex = 0;
             this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
             // 
@@ -259,7 +259,7 @@
             this.TextBoxFind.Location = new System.Drawing.Point(704, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(145, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(220, 29);
             this.TextBoxFind.TabIndex = 5;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -267,7 +267,7 @@
             // 
             this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClose.Location = new System.Drawing.Point(1004, 8);
+            this.MButtonClose.Location = new System.Drawing.Point(1075, 10);
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
             this.MButtonClose.Size = new System.Drawing.Size(136, 76);
@@ -295,7 +295,7 @@
             this.MBSaveHistory.Location = new System.Drawing.Point(704, 47);
             this.MBSaveHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSaveHistory.Name = "MBSaveHistory";
-            this.MBSaveHistory.Size = new System.Drawing.Size(145, 37);
+            this.MBSaveHistory.Size = new System.Drawing.Size(220, 37);
             this.MBSaveHistory.TabIndex = 6;
             this.MBSaveHistory.Text = "Save to File";
             this.MBSaveHistory.UseSelectable = true;
@@ -304,7 +304,7 @@
             // MButtonRun
             // 
             this.MButtonRun.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonRun.Location = new System.Drawing.Point(859, 8);
+            this.MButtonRun.Location = new System.Drawing.Point(930, 10);
             this.MButtonRun.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonRun.Name = "MButtonRun";
             this.MButtonRun.Size = new System.Drawing.Size(136, 76);
@@ -325,25 +325,25 @@
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(930, 624);
+            this.DataGridView1.Size = new System.Drawing.Size(1000, 500);
             this.DataGridView1.TabIndex = 0;
             // 
             // LabelFormTitle
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
+            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(338, 62);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "History";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(846, 10);
+            this.mlUserInfo.Location = new System.Drawing.Point(926, 11);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
             this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
@@ -354,12 +354,12 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(452, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(361, 30);
             this.LabelFormHeaderText.TabIndex = 20;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -367,7 +367,7 @@
             // FrmHistory
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1200, 860);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.LabelFormTitle);
@@ -375,7 +375,6 @@
             this.Controls.Add(this.LabelFormHeaderText);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmHistory";
-            this.Text = "History";
             this.Load += new System.EventHandler(this.FrmHistory_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

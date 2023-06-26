@@ -43,7 +43,8 @@ namespace Neutron.Forms
 
         private void SetupStatusComboBox()
         {
-            var statusTypes = _repoStatus.All().Where(r => _statusNumbers.Contains(r.Id)).ToList();
+            //var statusTypes = _repoStatus.All().Where(r => _statusNumbers.Contains(r.Id)).ToList();
+            var statusTypes = _repoStatus.All().OrderBy(r => r.Name).ToList();
 
             ComboBoxStatus.DataSource = statusTypes;
             ComboBoxStatus.DisplayMember = "Name";
@@ -59,12 +60,14 @@ namespace Neutron.Forms
                 if ((newStatus == (int)LineStatus.Available) || (newStatus == (int)LineStatus.Skipped))
                 {
                     _orderDetail.PickedQuantity = 0;
-                    _orderDetail.LineStatusId = newStatus;
-                    _repoOrderDetails.Update(_orderDetail);
-                    SetOrderAvailable(_orderDetail.Order);
+
                 }
+                _orderDetail.LineStatusId = newStatus;
+                _repoOrderDetails.Update(_orderDetail);
+                SetOrderAvailable(_orderDetail.Order);
+
             }
-            else if (_currentStatus == (int)LineStatus.Available )
+            else if (_currentStatus == (int)LineStatus.Available)
             {
                 if (newStatus == (int)LineStatus.Complete)
                 {
@@ -106,6 +109,12 @@ namespace Neutron.Forms
                     _repoOrderDetails.Update(_orderDetail);
                 }
             }
+            else
+            {
+                _orderDetail.LineStatusId = newStatus;
+                _repoOrderDetails.Update(_orderDetail);
+                SetOrderAvailable(_orderDetail.Order);
+            }
 
             _historyManager.SaveHistory(ActionCode.ChangeLineStatus, _orderDetail);
             Close();
@@ -115,7 +124,7 @@ namespace Neutron.Forms
         {
             var linesNotComplete = _repoOrderDetails.FindBy(r => r.OrderId == order.Id).Where(r => r.LineStatusId != (int)LineStatus.Complete)
                 .ToList();
-            if (linesNotComplete.Any()) return ;
+            if (linesNotComplete.Any()) return;
 
             order.OrderStatusId = (int)NeutronCore.Enums.OrderStatus.Complete;
             _historyManager.SaveHistory(ActionCode.OrderComplete, order, _orderDetail.AreaId);
@@ -124,7 +133,7 @@ namespace Neutron.Forms
 
         private void SetOrderAvailable(Order order)
         {
-            order.OrderStatusId = (int) OrderStatus.Available;
+            order.OrderStatusId = (int)OrderStatus.Available;
             _repoOrders.Update(order);
 
         }

@@ -34,10 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlliedLogger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\AlliedLogger\bin\Release\AlliedLogger.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -294,6 +290,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
+      <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
+      <Name>AlliedLogger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj">
       <Project>{69B6D943-9C4F-417E-9A5E-07F56926E526}</Project>
       <Name>BlastzoneController</Name>

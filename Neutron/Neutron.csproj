@@ -17,7 +17,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>C:\Neutron\EBin Project\Neutron Installation PowerSpec Server\</PublishUrl>
+    <PublishUrl>C:\Neutron\NeutronWagnerInstallation\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -32,7 +32,7 @@
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>488</ApplicationRevision>
+    <ApplicationRevision>491</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -188,12 +188,14 @@
     <Compile Include="Classes\PanelManager.cs" />
     <Compile Include="Controllers\IBlastzoneDisplayController.cs" />
     <Compile Include="Controllers\IProLiteController.cs" />
+    <Compile Include="Controllers\TCP_IPTIController.cs" />
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
     <Compile Include="Extensions\UCExtensions.cs" />
     <Compile Include="Global\IHistoryManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
     <Compile Include="Models\HeaderTextManager.cs" />
+    <Compile Include="Models\MyDataReceivedEventArgs.cs" />
     <Compile Include="Ninject\Bindings.cs" />
     <Compile Include="Builders\BayControllerBuilder.cs" />
     <Compile Include="Builders\InterfaceControllerBuilder.cs" />
@@ -865,6 +867,10 @@
     <ProjectReference Include="..\EBinDisplayManager\EBinDisplay.csproj">
       <Project>{51955251-c665-4f33-b31b-45011e6bab99}</Project>
       <Name>EBinDisplay</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EthernetTransmitter\EthernetTransmitter.csproj">
+      <Project>{cd460f9c-0b52-49ac-a17c-cee7def43220}</Project>
+      <Name>EthernetTransmitter</Name>
     </ProjectReference>
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>

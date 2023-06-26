@@ -1998,6 +1998,7 @@ public void UpdateWorkItMessage(string message)
                         ReceivedDate = DateTime.Now,
                         PrimeBin = _currentInventoryView.PrimeBin,
                         AreaId = _currentInventoryView.AreaId,
+                        RFID = string.Empty
                     };
                     if (inventory.Quantity > 0 || inventory.StorageTypeId == (int)StorageType.Static)
                     {

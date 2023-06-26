@@ -74,8 +74,11 @@
             this.CostCenterFileName = new System.Windows.Forms.TextBox();
             this.CostCenterDirectory = new System.Windows.Forms.TextBox();
             this.MaintenanceFileDirectory = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.ButtonRootDirectory = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.CommonDirectory = new System.Windows.Forms.TextBox();
             this.RootDirectory = new System.Windows.Forms.TextBox();
             this.TextBoxMaintenanceFileFilter = new System.Windows.Forms.TextBox();
             this.TextBoxHostOrderFileFilter = new System.Windows.Forms.TextBox();
@@ -113,9 +116,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CommonDirectory = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -129,9 +129,9 @@
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 129);
+            this.LabelRecordCount.Location = new System.Drawing.Point(974, 51);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 16);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
@@ -140,11 +140,11 @@
             this.tabControl1.Controls.Add(this.Main);
             this.tabControl1.Controls.Add(this.SqlServer);
             this.tabControl1.Controls.Add(this.InterfaceFiles);
-            this.tabControl1.Location = new System.Drawing.Point(23, 168);
+            this.tabControl1.Location = new System.Drawing.Point(23, 71);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1155, 670);
+            this.tabControl1.Size = new System.Drawing.Size(1234, 671);
             this.tabControl1.TabIndex = 4;
             // 
             // Main
@@ -159,7 +159,7 @@
             this.Main.Controls.Add(this.MBMainInterfaceFile);
             this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1147, 644);
+            this.Main.Size = new System.Drawing.Size(1226, 645);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             // 
@@ -167,7 +167,7 @@
             // 
             this.MBMainClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBMainClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainClose.Location = new System.Drawing.Point(1000, 10);
+            this.MBMainClose.Location = new System.Drawing.Point(1088, 4);
             this.MBMainClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainClose.Name = "MBMainClose";
             this.MBMainClose.Size = new System.Drawing.Size(135, 76);
@@ -179,7 +179,7 @@
             // MBRunUpload
             // 
             this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(396, 525);
+            this.MBRunUpload.Location = new System.Drawing.Point(438, 500);
             this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunUpload.Name = "MBRunUpload";
             this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
@@ -191,7 +191,7 @@
             // MBStartUpload
             // 
             this.MBStartUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartUpload.Location = new System.Drawing.Point(396, 430);
+            this.MBStartUpload.Location = new System.Drawing.Point(438, 413);
             this.MBStartUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartUpload.Name = "MBStartUpload";
             this.MBStartUpload.Size = new System.Drawing.Size(350, 70);
@@ -203,7 +203,7 @@
             // MBRunLoaderOnce
             // 
             this.MBRunLoaderOnce.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunLoaderOnce.Location = new System.Drawing.Point(396, 335);
+            this.MBRunLoaderOnce.Location = new System.Drawing.Point(438, 326);
             this.MBRunLoaderOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunLoaderOnce.Name = "MBRunLoaderOnce";
             this.MBRunLoaderOnce.Size = new System.Drawing.Size(350, 70);
@@ -215,7 +215,7 @@
             // MBMainSqlServer
             // 
             this.MBMainSqlServer.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainSqlServer.Location = new System.Drawing.Point(396, 50);
+            this.MBMainSqlServer.Location = new System.Drawing.Point(438, 65);
             this.MBMainSqlServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainSqlServer.Name = "MBMainSqlServer";
             this.MBMainSqlServer.Size = new System.Drawing.Size(350, 70);
@@ -227,7 +227,7 @@
             // MBStartLoader
             // 
             this.MBStartLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBStartLoader.Location = new System.Drawing.Point(396, 240);
+            this.MBStartLoader.Location = new System.Drawing.Point(438, 239);
             this.MBStartLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBStartLoader.Name = "MBStartLoader";
             this.MBStartLoader.Size = new System.Drawing.Size(350, 70);
@@ -239,7 +239,7 @@
             // MBMainInterfaceFile
             // 
             this.MBMainInterfaceFile.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainInterfaceFile.Location = new System.Drawing.Point(396, 145);
+            this.MBMainInterfaceFile.Location = new System.Drawing.Point(438, 152);
             this.MBMainInterfaceFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainInterfaceFile.Name = "MBMainInterfaceFile";
             this.MBMainInterfaceFile.Size = new System.Drawing.Size(350, 70);
@@ -255,7 +255,7 @@
             this.SqlServer.Controls.Add(this.MBSqlServerBack);
             this.SqlServer.Location = new System.Drawing.Point(4, 22);
             this.SqlServer.Name = "SqlServer";
-            this.SqlServer.Size = new System.Drawing.Size(1147, 644);
+            this.SqlServer.Size = new System.Drawing.Size(1226, 645);
             this.SqlServer.TabIndex = 5;
             this.SqlServer.Text = "Sql Server";
             // 
@@ -272,7 +272,7 @@
             this.PanelSql.Controls.Add(this.ButtonSaveConnectionString);
             this.PanelSql.Controls.Add(this.TextBoxDataSource);
             this.PanelSql.Controls.Add(this.LabelSqlServerInterface);
-            this.PanelSql.Location = new System.Drawing.Point(171, 105);
+            this.PanelSql.Location = new System.Drawing.Point(211, 73);
             this.PanelSql.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.PanelSql.Name = "PanelSql";
             this.PanelSql.Size = new System.Drawing.Size(804, 496);
@@ -444,7 +444,7 @@
             // 
             this.MBSqlServerBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBSqlServerBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSqlServerBack.Location = new System.Drawing.Point(1000, 10);
+            this.MBSqlServerBack.Location = new System.Drawing.Point(1088, 4);
             this.MBSqlServerBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSqlServerBack.Name = "MBSqlServerBack";
             this.MBSqlServerBack.Size = new System.Drawing.Size(135, 76);
@@ -464,7 +464,7 @@
             this.InterfaceFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.InterfaceFiles.Name = "InterfaceFiles";
             this.InterfaceFiles.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.InterfaceFiles.Size = new System.Drawing.Size(1147, 644);
+            this.InterfaceFiles.Size = new System.Drawing.Size(1226, 645);
             this.InterfaceFiles.TabIndex = 2;
             this.InterfaceFiles.Text = "InterfaceFiles";
             // 
@@ -662,6 +662,17 @@
             this.MaintenanceFileDirectory.TabIndex = 19;
             this.MaintenanceFileDirectory.Text = "C:\\Neutron\\Maintenance\\";
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(862, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(100, 26);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "&Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.ButtonCommonDirectory_Click);
+            // 
             // ButtonRootDirectory
             // 
             this.ButtonRootDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -673,6 +684,16 @@
             this.ButtonRootDirectory.UseVisualStyleBackColor = true;
             this.ButtonRootDirectory.Click += new System.EventHandler(this.ButtonRootDirectory_Click);
             // 
+            // label16
+            // 
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(138, 12);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(200, 26);
+            this.label16.TabIndex = 96;
+            this.label16.Text = "Common Directory";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // label10
             // 
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -682,6 +703,14 @@
             this.label10.TabIndex = 96;
             this.label10.Text = "Root Directory";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // CommonDirectory
+            // 
+            this.CommonDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommonDirectory.Location = new System.Drawing.Point(351, 12);
+            this.CommonDirectory.Name = "CommonDirectory";
+            this.CommonDirectory.Size = new System.Drawing.Size(505, 26);
+            this.CommonDirectory.TabIndex = 0;
             // 
             // RootDirectory
             // 
@@ -959,7 +988,7 @@
             // 
             this.MBInterfaceFilesBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBInterfaceFilesBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBInterfaceFilesBack.Location = new System.Drawing.Point(1000, 10);
+            this.MBInterfaceFilesBack.Location = new System.Drawing.Point(1085, 10);
             this.MBInterfaceFilesBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBInterfaceFilesBack.Name = "MBInterfaceFilesBack";
             this.MBInterfaceFilesBack.Size = new System.Drawing.Size(135, 76);
@@ -972,7 +1001,7 @@
             // 
             this.LabelInterfaceFiles.AutoSize = true;
             this.LabelInterfaceFiles.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelInterfaceFiles.Location = new System.Drawing.Point(316, 28);
+            this.LabelInterfaceFiles.Location = new System.Drawing.Point(472, 28);
             this.LabelInterfaceFiles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelInterfaceFiles.Name = "LabelInterfaceFiles";
             this.LabelInterfaceFiles.Size = new System.Drawing.Size(283, 45);
@@ -982,7 +1011,7 @@
             // ButtonSave
             // 
             this.ButtonSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSave.Location = new System.Drawing.Point(849, 10);
+            this.ButtonSave.Location = new System.Drawing.Point(934, 10);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(137, 76);
             this.ButtonSave.TabIndex = 0;
@@ -994,18 +1023,18 @@
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
-            this.LabelFormTitle.Location = new System.Drawing.Point(391, 98);
+            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(418, 66);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
             this.LabelFormTitle.TabIndex = 22;
             this.LabelFormTitle.Text = "System";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(793, 35);
+            this.mlUserInfo.Location = new System.Drawing.Point(873, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
             this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
@@ -1016,12 +1045,12 @@
             // LabelFormHeaderText
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 16);
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(10, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(713, 62);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
             this.LabelFormHeaderText.TabIndex = 20;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1034,40 +1063,11 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CommonDirectory
-            // 
-            this.CommonDirectory.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CommonDirectory.Location = new System.Drawing.Point(351, 12);
-            this.CommonDirectory.Name = "CommonDirectory";
-            this.CommonDirectory.Size = new System.Drawing.Size(505, 26);
-            this.CommonDirectory.TabIndex = 0;
-            // 
-            // label16
-            // 
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(138, 12);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(200, 26);
-            this.label16.TabIndex = 96;
-            this.label16.Text = "Common Directory";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(862, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 26);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "&Browse";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.ButtonCommonDirectory_Click);
-            // 
             // FrmSystem
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
-            this.ClientSize = new System.Drawing.Size(1200, 850);
+            this.ClientSize = new System.Drawing.Size(1280, 750);
             this.ControlBox = false;
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
@@ -1077,7 +1077,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmSystem";
             this.Resizable = false;
-            this.Text = "Order Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSystem_FormClosing);
             this.Load += new System.EventHandler(this.FrmSystem_Load);
             this.tabControl1.ResumeLayout(false);

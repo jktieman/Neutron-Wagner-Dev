@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlastzoneController", "Blas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProliteController", "ProLiteController\ProliteController\ProliteController.csproj", "{CC797714-8D01-40AF-8A2F-737B06F133CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthernetTransmitter", "EthernetTransmitter\EthernetTransmitter.csproj", "{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +168,10 @@ Global
 		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
