@@ -34,6 +34,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NeutronEvents">
+      <HintPath>..\NeutronEvents\bin\Release\NeutronEvents.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -50,12 +53,6 @@
     <Compile Include="EmailAddressData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendEmail.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
-      <Project>{fbc827af-2ce9-4d2c-b8a2-f782e27c8078}</Project>
-      <Name>NeutronEvents</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
