@@ -10,7 +10,7 @@ namespace NeutronCore
         private static string _rootDirectory;
         private const string SubDirectory = @"Configuration\";
         private const string FileName = @"ConfigFile.Csv";
-        private static readonly string backSlash = @"\";
+        private const string BackSlash = @"\";
         private static string _imagesDirectory;
         private static string _hostOrderDirectory;
         private static string _hostOrderFile;
@@ -24,10 +24,10 @@ namespace NeutronCore
         private static string _costCenterDirectory;
         private static string _costCenterFile;
         private static string _languageDirectory;
+
         public static bool Initialized { get; set; }
         public static string EnableLogging { get; set; }
         public static string AppendFile { get; set; }
-
 
         static LoaderSettings()
         {
@@ -40,199 +40,113 @@ namespace NeutronCore
 
             Init();
         }
-
-
         public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
-
-        
-
-        public static string GetImagesDirectory()
-        {
-            return PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory;
-        }
-
+        public static string GetImagesDirectory() => PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory;
         public static void SetImagesDirectory(string value)
         {
             _imagesDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _imagesDirectory = string.Concat(_imagesDirectory, backSlash);
+                _imagesDirectory = string.Concat(_imagesDirectory, BackSlash);
             }
         }
-
-        public static string GetHostOrderDirectory()
-        {
-            return PathExists(_hostOrderDirectory) ? _hostOrderDirectory : _rootDirectory;
-        }
-
+        public static string GetHostOrderDirectory() => PathExists(_hostOrderDirectory) ? _hostOrderDirectory : _rootDirectory;
         public static void SetHostOrderDirectory(string value)
         {
             _hostOrderDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _hostOrderDirectory = string.Concat(_hostOrderDirectory, backSlash);
+                _hostOrderDirectory = string.Concat(_hostOrderDirectory, BackSlash);
             }
         }
-
-        public static string GetCommonDirectory()
-        {
-            return PathExists(_commonDirectory) ? _commonDirectory : _rootDirectory;
-        }
-
+        public static string GetCommonDirectory() => PathExists(_commonDirectory) ? _commonDirectory : _rootDirectory;
         public static void SetCommonDirectory(string value)
         {
             _commonDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _commonDirectory = string.Concat(_commonDirectory, backSlash);
+                _commonDirectory = string.Concat(_commonDirectory, BackSlash);
             }
         }
-
-        public static string GetRootDirectory()
-        {
-            return _rootDirectory;
-        }
-
+        public static string GetRootDirectory() => _rootDirectory;
         public static void SetRootDirectory(string value)
         {
             _rootDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _rootDirectory = string.Concat(_rootDirectory, backSlash);
+                _rootDirectory = string.Concat(_rootDirectory, BackSlash);
             }
         }
-
-        public static string GetHostOrderFile()
-        {
-            return _hostOrderFile;
-        }
-
-        public static void SetHostOrderFile(string value)
-        {
-            _hostOrderFile = value;
-        }
-
-        public static string GetHostOrderFileFilter()
-        {
-            return _hostOrderFileFilter;
-        }
-
-        public static void SetHostOrderFileFilter(string value)
-        {
-            _hostOrderFileFilter = value;
-        }
-
-        public static string GetHostUploadDirectory()
-        {
-            return PathExists(_hostUploadDirectory) ? _hostUploadDirectory : _rootDirectory;
-        }
-
+        public static string GetHostOrderFile() => _hostOrderFile;
+        public static void SetHostOrderFile(string value) => _hostOrderFile = value;
+        public static string GetHostOrderFileFilter() => _hostOrderFileFilter;
+        public static void SetHostOrderFileFilter(string value) => _hostOrderFileFilter = value;
+        public static string GetHostUploadDirectory() => PathExists(_hostUploadDirectory) ? _hostUploadDirectory : _rootDirectory;
         public static void SetHostUploadDirectory(string value)
         {
             _hostUploadDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _hostUploadDirectory = string.Concat(_hostUploadDirectory, backSlash);
+                _hostUploadDirectory = string.Concat(_hostUploadDirectory, BackSlash);
             }
         }
-
         public static void SetCostCenterDirectory(string value)
         {
             _costCenterDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _costCenterDirectory = string.Concat(_costCenterDirectory, backSlash);
+                _costCenterDirectory = string.Concat(_costCenterDirectory, BackSlash);
             }
         }
-
-        public static string GetCostCenterPath()
-        {
-            return GetCostCenterDirectory() + GetCostCenterFile();
-        }
-
-        public static string GetHostUploadFile()
-        {
-            return _hostUploadFile;
-        }
-
-        public static void SetHostUploadFile(string value)
-        {
-            _hostUploadFile = value;
-        }
-
-        public static void SetCostCenterFile(string value)
-        {
-            _costCenterFile = value;
-        }
-
-        public static string GetCostCenterFile()
-        {
-            return _costCenterFile;
-        }
-
-        public static string GetMaintenanceFileFilter()
-        {
-            return _maintenanceFileFilter;
-        }
-
-        public static void SetMaintenanceFileFilter(string value)
-        {
-            _maintenanceFileFilter = value;
-        }
-
-        public static string GetLogFileDirectory()
-        {
-            return PathExists(_logFileDirectory) ? _logFileDirectory : _rootDirectory + @"Logs\"; ;
-        }
-
+        public static string GetCostCenterPath() => GetCostCenterDirectory() + GetCostCenterFile();
+        public static string GetHostUploadFile() => _hostUploadFile;
+        public static void SetHostUploadFile(string value) => _hostUploadFile = value;
+        public static void SetCostCenterFile(string value) => _costCenterFile = value;
+        public static string GetCostCenterFile() => _costCenterFile;
+        public static string GetMaintenanceFileFilter() => _maintenanceFileFilter;
+        public static void SetMaintenanceFileFilter(string value) => _maintenanceFileFilter = value;
+        public static string GetLogFileDirectory() => PathExists(_logFileDirectory) ? _logFileDirectory : _rootDirectory + @"Logs\";
         public static void SetLogFileDirectory(string value)
         {
-            _logFileDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (PathExistsCreate(value))
             {
-                _logFileDirectory = string.Concat(_logFileDirectory, backSlash);
+                _logFileDirectory = value;
+                if (value.Length > 0 && !value.EndsWith(BackSlash))
+                {
+                    _logFileDirectory = string.Concat(_logFileDirectory, BackSlash);
+                }
             }
-        }
+            else
+            {
+                MessageBox.Show("Directory does not exists. Cannot create Log directory.");
+            }
 
-        public static string GetDocumentsDirectory()
-        {
-            return PathExists(_documentsDirectory) ? _documentsDirectory : _rootDirectory;
         }
-
+        public static string GetDocumentsDirectory() => PathExists(_documentsDirectory) ? _documentsDirectory : _rootDirectory;
         public static void SetDocumentsDirectory(string value)
         {
             _documentsDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _documentsDirectory = string.Concat(_documentsDirectory, backSlash);
+                _documentsDirectory = string.Concat(_documentsDirectory, BackSlash);
             }
         }
-
-        public static string GetMaintenanceFileDirectory()
-        {
-            return PathExists(_maintenanceFileDirectory) ? _maintenanceFileDirectory : _rootDirectory;
-        }
-
-        public static string GetCostCenterDirectory()
-        {
-            return PathExists(_costCenterDirectory) ? _costCenterDirectory : _rootDirectory;
-        }
-
+        public static string GetMaintenanceFileDirectory() => PathExists(_maintenanceFileDirectory) ? _maintenanceFileDirectory : _rootDirectory;
+        public static string GetCostCenterDirectory() => PathExists(_costCenterDirectory) ? _costCenterDirectory : _rootDirectory;
         public static void SetMaintenanceFileDirectory(string value)
         {
             _maintenanceFileDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _maintenanceFileDirectory = string.Concat(_maintenanceFileDirectory, backSlash);
+                _maintenanceFileDirectory = string.Concat(_maintenanceFileDirectory, BackSlash);
             }
         }
-
         public static string GetLanguageDirectory()
         {
             if (string.IsNullOrEmpty(_languageDirectory))
             {
                 _languageDirectory = @"Language\";
-               // _languageDirectory = _rootDirectory + @"Language\";
+                // _languageDirectory = _rootDirectory + @"Language\";
             }
             return _languageDirectory;
         }
@@ -240,9 +154,9 @@ namespace NeutronCore
         public static void SetLanguageDirectory(string value)
         {
             _languageDirectory = value;
-            if (value.Length > 0 && !value.EndsWith(backSlash))
+            if (value.Length > 0 && !value.EndsWith(BackSlash))
             {
-                _languageDirectory = string.Concat(_languageDirectory, backSlash);
+                _languageDirectory = string.Concat(_languageDirectory, BackSlash);
             }
         }
 

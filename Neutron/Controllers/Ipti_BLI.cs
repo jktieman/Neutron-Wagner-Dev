@@ -2,26 +2,31 @@
 {
     public class Ipti_BLI
     {
-        private string _bayId = "01";
+
+        private string _bayId;
         private string _turnOn = "33";
         private string _turnOff = "14";
         private const string FourSpaces = "    ";
         private const string EndOfLine = "00000000120012000";
 
 
-        public Ipti_BLI(int address, string text)
+        public Ipti_BLI(int bayController, int address, string text)
         {
+            _bayId = bayController.ToString().PadLeft(2, '0');
             BLI_Address = address;
             BLI_Beacon = 0;
             BLI_Text = text;
         }
 
-        public Ipti_BLI(int address, int beacon, string text)
+        public Ipti_BLI(int bayController, int address, int beacon, string text)
         {
+            _bayId = bayController.ToString().PadLeft(2, '0');
             BLI_Address = address;
             BLI_Beacon = beacon;   // No Arrow - 0, Arrow up - 2, Arrow down - 8 
             BLI_Text = text;
         }
+
+        public int BLI_BayController { get; set; }
 
         public int BLI_Address { get; set; }
 

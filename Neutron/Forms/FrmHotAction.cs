@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,11 +35,10 @@ using NeutronData.Repositories;
 using NeutronData.SqlModelViews;
 using NeutronDllu;
 using NeutronTrayLayout;
-using DeviceType = NeutronCore.Enums.DeviceType;
+using DeviceTypeEnum = NeutronCore.Enums.DeviceTypeEnum;
 using StorageType = Neutron.Enums.StorageType;
 using StationType = NeutronCore.Enums;
 using NeutronEvents;
-using static DGVPrinterHelper.DGVPrinter;
 
 namespace Neutron.Forms
 {
@@ -67,7 +64,7 @@ namespace Neutron.Forms
         private readonly HistoryManager _historyManager;
 
         private ILocationsRepository _locationsRepository;
-        private readonly InventoryRepository _repoInv = new InventoryRepository();
+        private InventoryRepository _repoInv;
         //private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
         private BindingSource _bindingSourceCurrent = new BindingSource();
         private BindingSource _bindingSourceItemDefinitions = new BindingSource();
@@ -81,7 +78,7 @@ namespace Neutron.Forms
         private readonly IImageManager _imageManager;
         private readonly IItemDefinitionsRepository _itemDefinitionsRepository;
 
-        private DynamicLogger _logger;
+        private IDynamicLogger _logger;
         readonly WorkstationView _workstationView;
         string _imagesDirectory;
         readonly IAkaRepository _akaRepository;
@@ -148,14 +145,14 @@ namespace Neutron.Forms
             _akaRepository = akaRepository;
             _headerTextManager = new HeaderTextManager();
             SetupLogger();
-            Task.Run(() => _logger.LogDetailAsync("HotAction Constructor Start"));
+            Task.Run(() => _logger.LogDetailAsync($"HotAction Constructor Start"));
             _pickList = pickList;
             _item = item;
             _initialQuantity = quantity;
             _quantityToPick = quantity;
             _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
             InitForm();
-            Task.Run(() => _logger.LogDetailAsync("HotAction Constructor Complete"));
+            Task.Run(() => _logger.LogDetailAsync($"HotAction Constructor Complete"));
 
             Mediator.GetInstance().WorkItMessageChng += FrmHotAction_WorkItMessageChng;
         }
@@ -168,9 +165,9 @@ namespace Neutron.Forms
                 KeyPreview = true;
 
                 SetupGridItemDefinition();
-
+                _repoInv = new InventoryRepository(_logger);
                 _useCostCenter = _neutronVariables.UseCostCenter;
-                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.Text = _resourceManager.GetString($"HotActions");
                 LabelFormTitle.BackColor = Color.Red;
                 HideTabControlTabs();
                 mlUserInfo.Text = GlobalVar.User?.UserInfo;
@@ -189,7 +186,7 @@ namespace Neutron.Forms
                 else
                 {
                     TextBoxScanLocation.Visible = false;
-                    _newLocationButtonText = _resourceManager.GetString("AllLocations");
+                    _newLocationButtonText = _resourceManager.GetString($"AllLocations");
                     MBNewLocations.Text = _newLocationButtonText;
                 }
 
@@ -215,7 +212,7 @@ namespace Neutron.Forms
                         //BuildTrayLayout();
                         break;
                     }
-                    case "Rack":
+                    case "Rack-Tablet":
                     {
                         InitDeviceIndicators();
                             // Just the Tray Layout
@@ -253,7 +250,7 @@ namespace Neutron.Forms
                 SetupGridItemDefinition();
                 InitDeviceIndicators();
                 _useCostCenter = _neutronVariables.UseCostCenter;
-                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.Text = _resourceManager.GetString($"HotActions");
                 LabelFormTitle.BackColor = Color.Green;
                 HideTabControlTabs();
                 mlUserInfo.Text = GlobalVar.User?.UserInfo;
@@ -267,7 +264,7 @@ namespace Neutron.Forms
                 if (_workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Carousel
                     || _workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Vertical) return;
 
-                _newLocationButtonText = _resourceManager.GetString("AllLocations");
+                _newLocationButtonText = _resourceManager.GetString($"AllLocations");
                 MBNewLocations.Text = _newLocationButtonText;
                 MBHotPick.Visible = false;
                 TextBoxFindItem.ReadOnly = true;
@@ -419,7 +416,7 @@ public void UpdateWorkItMessage(string message)
         private void SetupLogger()
         {
             var logFileDir = LoaderSettings.GetLogFileDirectory();
-            const string folderName = @"HotAction";
+            var folderName = $"HotAction";
             var logActivity = LoaderSettings.EnableLogging;
             _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
@@ -436,7 +433,7 @@ public void UpdateWorkItMessage(string message)
             var blv = new BindingListView<SqlInventoryView>(recs);
             _bindingSourceCurrent.DataSource = blv;
             var recordCount = GetRecordCount(recs);
-            MBCurrentLocations.Text = $"{_resourceManager.GetString("CurrentLocations")} ({_bindingSourceCurrent.Count})";
+            MBCurrentLocations.Text = $"{_resourceManager.GetString($"CurrentLocations")} ({_bindingSourceCurrent.Count})";
 
             Task.Run(() => _logger.LogDetailAsync($"Load Current By Item: {_currentItemDefinition.Item}  END"));
         }
@@ -657,7 +654,7 @@ public void UpdateWorkItMessage(string message)
                 var item = _repoItemDefinition.FindBy(r => r.Item == findWhat).FirstOrDefault();
                 if (item != null)
                 {
-                    MessageBox.Show($"{item.Item} {_resourceManager.GetString("Message0")} {item.AreaId}");
+                    MessageBox.Show($"{item.Item} {_resourceManager.GetString($"Message0")} {item.AreaId}");
                 }
                 ClearCurrentAndNew();
             }
@@ -668,7 +665,7 @@ public void UpdateWorkItMessage(string message)
         private void ClearCurrentAndNew()
         {
             //_bindingSourceCurrent.  .Clear();
-            MBCurrentLocations.Text = $"{_resourceManager.GetString("CurrentLocations")} (0)";
+            MBCurrentLocations.Text = $"{_resourceManager.GetString($"CurrentLocations")} (0)";
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
             MBCurrentLocations.Enabled = false;
@@ -694,13 +691,13 @@ public void UpdateWorkItMessage(string message)
         private int GetRecordCount(BindingSource bs)
         {
             var count = bs.Count;
-            LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
+            LabelRecordCount.Text = $"{_resourceManager.GetString($"Records")}: {count.ToString()}";
             return count;
         }
         private int GetRecordCount(IReadOnlyCollection<object> bs)
         {
             var count = bs.Count;
-            LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count.ToString()}";
+            LabelRecordCount.Text = $"{_resourceManager.GetString($"Records")}: {count.ToString()}";
             return count;
         }
         private void SetupGridItemDefinition()
@@ -715,22 +712,22 @@ public void UpdateWorkItMessage(string message)
             _logger.LogDetailAsync($"SetupGridItemDefinition 2");
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "AreaName",
-                HeaderText = _gridResourceManager.GetString("Area"),
+                DataPropertyName = $"AreaName",
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "Area"
+                Name = $"Area"
             };
             DataGridViewHot.Columns.Add(col);
 
             _logger.LogDetailAsync($"SetupGridItemDefinition 3");
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Item",
-                HeaderText = _gridResourceManager.GetString("Item"),
+                DataPropertyName = $"Item",
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "Item"
+                Name = $"Item"
             };
             DataGridViewHot.Columns.Add(col);
 
@@ -738,7 +735,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Description"
@@ -749,7 +746,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UnitOfIssueName",
-                HeaderText = _gridResourceManager.GetString("UnitOfIssueName"),
+                HeaderText = _gridResourceManager.GetString($"UnitOfIssueName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "UnitOfIssueName"
@@ -760,7 +757,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMax",
-                HeaderText = _gridResourceManager.GetString("LocationMax"),
+                HeaderText = _gridResourceManager.GetString($"LocationMax"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationMax"
@@ -771,7 +768,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
-                HeaderText = _gridResourceManager.GetString("SizeCodeName"),
+                HeaderText = _gridResourceManager.GetString($"SizeCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SizeCodeName"
@@ -782,7 +779,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
-                HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
+                HeaderText = _gridResourceManager.GetString($"VelocityCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "VelocityCodeName"
@@ -793,7 +790,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
-                HeaderText = _gridResourceManager.GetString("HeightCodeName"),
+                HeaderText = _gridResourceManager.GetString($"HeightCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "HeightCodeName"
@@ -804,7 +801,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMin",
-                HeaderText = _gridResourceManager.GetString("LocationMin"),
+                HeaderText = _gridResourceManager.GetString($"LocationMin"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LocationMin"
@@ -815,7 +812,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMax",
-                HeaderText = _gridResourceManager.GetString("SystemMax"),
+                HeaderText = _gridResourceManager.GetString($"SystemMax"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "SystemMax"
@@ -826,7 +823,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMin",
-                HeaderText = _gridResourceManager.GetString("SystemMin"),
+                HeaderText = _gridResourceManager.GetString($"SystemMin"),
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 // DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
@@ -838,7 +835,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -866,23 +863,23 @@ public void UpdateWorkItMessage(string message)
             var xcol = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "InUse",
-                HeaderText = _gridResourceManager.GetString("InUse"),
+                HeaderText = _gridResourceManager.GetString($"InUse"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "InUse"
             };
             DataGridViewHot.Columns.Add(xcol);
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "AreaName",
-                HeaderText = _gridResourceManager.GetString("Area"),
+                DataPropertyName = $"AreaName",
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Name = "AreaName"
+                Name = $"AreaName"
             };
             DataGridViewHot.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Slot",
-                HeaderText = _gridResourceManager.GetString("Slot"),
+                DataPropertyName = $"Slot",
+                HeaderText = _gridResourceManager.GetString($"Slot"),
                 Visible = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Slot"
@@ -931,7 +928,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
-                HeaderText = _gridResourceManager.GetString("SizeCodeName"),
+                HeaderText = _gridResourceManager.GetString($"SizeCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "SizeCodeName"
             };
@@ -939,7 +936,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
-                HeaderText = _gridResourceManager.GetString("VelocityCodeName"),
+                HeaderText = _gridResourceManager.GetString($"VelocityCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "VelocityCodeName"
             };
@@ -947,7 +944,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
-                HeaderText = _gridResourceManager.GetString("HeightCodeName"),
+                HeaderText = _gridResourceManager.GetString($"HeightCodeName"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "HeightCodeName"
             };
@@ -955,7 +952,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationCode",
-                HeaderText = _gridResourceManager.GetString("LocationCode"),
+                HeaderText = _gridResourceManager.GetString($"LocationCode"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "LocationCode"
             };
@@ -963,7 +960,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -991,28 +988,28 @@ public void UpdateWorkItMessage(string message)
 
             var col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "AreaName",
-                HeaderText = _gridResourceManager.GetString("Area"),
+                DataPropertyName = $"AreaName",
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "AreaName"
+                Name = $"AreaName"
             };
             DataGridViewHot.Columns.Add(col);
 
 
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Item",
-                HeaderText = _gridResourceManager.GetString("Item"),
+                DataPropertyName = $"Item",
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "Item"
+                Name = $"Item"
             };
             DataGridViewHot.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -1021,7 +1018,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _gridResourceManager.GetString("Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity"
@@ -1030,7 +1027,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-                HeaderText = _gridResourceManager.GetString("Slot"),
+                HeaderText = _gridResourceManager.GetString($"Slot"),
                 Name = "Slot",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
@@ -1039,7 +1036,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMax",
-                HeaderText = _gridResourceManager.GetString("LocationMax"),
+                HeaderText = _gridResourceManager.GetString($"LocationMax"),
                 Name = "LocationMax",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
@@ -1048,7 +1045,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ReceivedDate",
-                HeaderText = _gridResourceManager.GetString("ReceivedDate"),
+                HeaderText = _gridResourceManager.GetString($"ReceivedDate"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
@@ -1058,7 +1055,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageTypeName",
-                HeaderText = _gridResourceManager.GetString("StorageTypeName"),
+                HeaderText = _gridResourceManager.GetString($"StorageTypeName"),
                 Name = "StorageTypeName",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
@@ -1067,7 +1064,7 @@ public void UpdateWorkItMessage(string message)
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -1120,6 +1117,7 @@ public void UpdateWorkItMessage(string message)
                         ClearAllShi();
                         Task.Run(() => _logger.LogDetailAsync($"ShowShi HotAction {loc2} {loc3}"));
                         GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text);
+                        GlobalVar.ProliteManager.TurnOn(loc1, loc3, loc4.ParseInt(), text.ParseInt());
                     }
                 }
             }
@@ -1151,7 +1149,7 @@ public void UpdateWorkItMessage(string message)
                             if (response.Result != DeviceResponse.Success)
                             {
                                 var resp = _enumResourceManager.GetString(response.Result.ToString());
-                                MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: _resourceManager.GetString("DeviceInformation")
+                                MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: _resourceManager.GetString($"DeviceInformation")
                                                                     , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                             }
                         }
@@ -1166,7 +1164,7 @@ public void UpdateWorkItMessage(string message)
                             if (response.Result != DeviceResponse.Success)
                             {
                                 var resp = _enumResourceManager.GetString(response.Result.ToString());
-                                MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: _resourceManager.GetString("DeviceInformation")
+                                MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: _resourceManager.GetString($"DeviceInformation")
                                     , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
                             }
                         }
@@ -1208,16 +1206,16 @@ public void UpdateWorkItMessage(string message)
             }
             catch (Exception ex)
             {
-                MessageBox.Show(_resourceManager.GetString("Message3") + ex.Message);
+                MessageBox.Show(_resourceManager.GetString($"Message3") + ex.Message);
             }
             Task.Run(() => _logger.LogDetailAsync("Find Hot Record: {findWhat} End"));
         }
         private void ButtonHotPickClear_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync("Hot Pick Clear START"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Pick Clear START"));
             Cursor.Current = Cursors.WaitCursor;
             _bindingSourceCurrent.DataSource = null;
-            MBCurrentLocations.Text = $"{_resourceManager.GetString("CurrentLocations")} ({_bindingSourceCurrent.Count})";
+            MBCurrentLocations.Text = $"{_resourceManager.GetString($"CurrentLocations")} ({_bindingSourceCurrent.Count})";
             _bindingSourceNewLocations.DataSource = null;
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
             TextBoxFindItem.Text = string.Empty;
@@ -1229,11 +1227,11 @@ public void UpdateWorkItMessage(string message)
             
             TextBoxFindItem.Focus();
             Cursor.Current = Cursors.Default;
-            Task.Run(() => _logger.LogDetailAsync("Hot Pick Clear END"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Pick Clear END"));
         }
         private async void MBHotPick_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Pressed START"));
+            await Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Pressed START"));
             _hotPickButtonPressed = true;
             _hotStoreButtonPressed = false;
             CloseButtonPressed = false;
@@ -1246,7 +1244,7 @@ public void UpdateWorkItMessage(string message)
                 ComboBoxCostCenter.Visible = true;
                 TextBoxFindCostCenter.Visible = true;
                 RadioButtonCostCenter.Visible = true;
-                RadioButtonPick.Text = $"{_resourceManager.GetString("Pick")}";
+                RadioButtonPick.Text = $"{_resourceManager.GetString($"Pick")}";
                 RadioButtonPick.Tag = "Pick";
             }
             _currentInventoryView = ((ObjectView<SqlInventoryView>)_bindingSourceCurrent.Current).Object;
@@ -1264,21 +1262,21 @@ public void UpdateWorkItMessage(string message)
             {
                 HotAction.BackColor = Color.Red;
                 LabelFormTitle.BackColor = Color.Red;
-                LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-                MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
+                MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
                 await UpdateHotPickScreen(_currentInventoryView);
                 BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                 tabControl1.SelectedTab = HotAction;
             }
-            else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Shuttle)
             {
                 if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                 {
                     BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     HotActionTray.BackColor = Color.LightGray;
                     LabelFormTitle.BackColor = Color.Red;
-                    LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-                    MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                    LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
+                    MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                     PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                     //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                     //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -1291,15 +1289,15 @@ public void UpdateWorkItMessage(string message)
                     MessageBox.Show($"Location Access Denied");
                 }
             }
-            else if (device.DeviceTypeId == (int)DeviceType.Carousel)
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Carousel)
             {
                 if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                 {
                     BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     HotAction.BackColor = Color.Red;
                     LabelFormTitle.BackColor = Color.Red;
-                    LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-                    MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                    LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
+                    MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
                     _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                     // UpdateCurrentDeviceIndicator();
                     PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
@@ -1314,7 +1312,7 @@ public void UpdateWorkItMessage(string message)
                     MessageBox.Show($"Location Access Denied");
                 }
             }
-            else if (device.DeviceTypeId == (int)DeviceType.Hanel12D)
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D)
             {
                 if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                 {
@@ -1322,8 +1320,8 @@ public void UpdateWorkItMessage(string message)
                     BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     HotActionTray.BackColor = Color.LightGray;
                     LabelFormTitle.BackColor = Color.LightGray;
-                    LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-                    MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                    LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
+                    MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                     PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                     //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                     //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
@@ -1336,13 +1334,13 @@ public void UpdateWorkItMessage(string message)
                     MessageBox.Show($"Location Access Denied");
                 }
             }
-            else if (device.DeviceTypeId == (int)DeviceType.Rack)
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Rack)
             {
                 BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                 //HotAction.BackColor = Color.Red;
                 LabelFormTitle.BackColor = Color.Red;
-                LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString("HotPick")}";
-                MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString($"HotPick")}";
+                MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
                 //UpdateCurrentDeviceIndicator();
                 //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                 //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
@@ -1355,19 +1353,19 @@ public void UpdateWorkItMessage(string message)
             {
                 HotAction.BackColor = Color.Red;
                 LabelFormTitle.BackColor = Color.Red;
-                LabelFormTitle.Text = $"{_resourceManager.GetString("HotPick")}";
-                MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
+                MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
                 await UpdateHotPickScreen(_currentInventoryView);
                 // UpdateCurrentDeviceIndicator();
                 _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                 tabControl1.SelectedTab = HotAction;
             }
-            Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Press END"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
         }
 
         private async void MBHotStore_Click(object sender, EventArgs e)
         {
-            _ = Task.Run(() => _logger.LogDetailAsync("Hot Store Button Pressed START"));
+            _ = Task.Run(() => _logger.LogDetailAsync($"Hot Store Button Pressed START"));
             TextBoxHotPickQuantity.Text = _quantityToPick.ToString();
             _hotPickButtonPressed = false;
             _hotStoreButtonPressed = true;
@@ -1375,8 +1373,8 @@ public void UpdateWorkItMessage(string message)
             //Cost Center
             GroupBoxHotActions.Visible = false;
 
-            RadioButtonPick.Text = $"{_resourceManager.GetString("Store")}";
-            RadioButtonPick.Tag = "Store";
+            RadioButtonPick.Text = $"{_resourceManager.GetString($"Store")}";
+            RadioButtonPick.Tag = $"Store";
 
             if (_currentGridDataType == GridDataType.Current)
             {
@@ -1418,8 +1416,8 @@ public void UpdateWorkItMessage(string message)
 
                 HotAction.BackColor = Color.Green;
                 LabelFormTitle.BackColor = Color.Green;
-                LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-                MBHotAccept.Text = _resourceManager.GetString("Accept");
+                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                MBHotAccept.Text = _resourceManager.GetString($"Accept");
                 MBHotAccept.Enabled = true;
 
 
@@ -1429,14 +1427,14 @@ public void UpdateWorkItMessage(string message)
                     await UpdateHotPickScreen(_currentInventoryView);
                     tabControl1.SelectedTab = HotAction;
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Shuttle)
                 {
                     if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                     {
                         HotActionTray.BackColor = Color.LightGray;
                         LabelFormTitle.BackColor = Color.Red;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                        LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                         PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                         //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -1452,7 +1450,7 @@ public void UpdateWorkItMessage(string message)
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Carousel)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Carousel)
                 {
                     if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                     {
@@ -1471,7 +1469,7 @@ public void UpdateWorkItMessage(string message)
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Hanel12D)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D)
                 {
                     if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2))
                     {
@@ -1479,8 +1477,8 @@ public void UpdateWorkItMessage(string message)
                         BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                         HotActionTray.BackColor = Color.LightGray;
                         LabelFormTitle.BackColor = Color.LightGray;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                        LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                         PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                         //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
@@ -1493,13 +1491,13 @@ public void UpdateWorkItMessage(string message)
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Rack)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Rack)
                 {
                     BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                     //HotAction.BackColor = Color.Red;
                     LabelFormTitle.BackColor = Color.Red;
-                    LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString("HotPick")}";
-                    MBHotAccept.Text = $"{_resourceManager.GetString("Accept")}";
+                    LabelFormTitle.Text = "Rack Selection";  // $"{_resourceManager.GetString($"HotPick")}";
+                    MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
                     //UpdateCurrentDeviceIndicator();
                     //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
                     //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
@@ -1516,7 +1514,7 @@ public void UpdateWorkItMessage(string message)
                     _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                     tabControl1.SelectedTab = HotAction;
                 }
-                Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Press END"));
+                Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
 
                 //---------------------------------------------------------------------
 
@@ -1599,8 +1597,8 @@ public void UpdateWorkItMessage(string message)
 
                 HotAction.BackColor = Color.Green;
                 LabelFormTitle.BackColor = Color.Green;
-                LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-                MBHotAccept.Text = _resourceManager.GetString("Accept");
+                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                MBHotAccept.Text = _resourceManager.GetString($"Accept");
                 MBHotAccept.Enabled = true;
 
 
@@ -1611,7 +1609,7 @@ public void UpdateWorkItMessage(string message)
                     await UpdateHotPickScreen(_currentInventoryView);
                     tabControl1.SelectedTab = HotAction;
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Shuttle)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Shuttle)
                 {
                     if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
                     {
@@ -1619,8 +1617,8 @@ public void UpdateWorkItMessage(string message)
                         BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                         HotActionTray.BackColor = Color.LightGray;
                         LabelFormTitle.BackColor = Color.Red;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                        LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                         PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);
                         //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
@@ -1633,7 +1631,7 @@ public void UpdateWorkItMessage(string message)
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Carousel)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Carousel)
                 {
                     if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
                     {
@@ -1651,7 +1649,7 @@ public void UpdateWorkItMessage(string message)
                         MessageBox.Show($"Location Access Denied");
                     }
                 }
-                else if (device.DeviceTypeId == (int)DeviceType.Hanel12D)
+                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D)
                 {
                     if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
                     {
@@ -1659,8 +1657,8 @@ public void UpdateWorkItMessage(string message)
                         BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
                         HotActionTray.BackColor = Color.LightGray;
                         LabelFormTitle.BackColor = Color.LightGray;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString("HotStore")}";
-                        MBHotAcceptTray.Text = $"{_resourceManager.GetString("Accept")}";
+                        LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                        MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                         PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);
                         //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
                         //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
@@ -1680,10 +1678,10 @@ public void UpdateWorkItMessage(string message)
                     _deviceIndicatorManager.UpdateCurrentDeviceIndicator(location.Loc1);
                     tabControl1.SelectedTab = HotAction;
                 }
-                Task.Run(() => _logger.LogDetailAsync("Hot Pick Button Press END"));
+                Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
 
             }
-            Task.Run(() => _logger.LogDetailAsync("Hot Store Button Press END"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Store Button Press END"));
         }
 
         private async Task UpdateHotPickScreen(SqlInventoryView invItem)
@@ -1701,12 +1699,64 @@ public void UpdateWorkItMessage(string message)
                     LabelHotPickDescription.Text = itemDefinition.Description;
                     LabelHotPickItem.Text = itemDefinition.Item;
                     LabelHotPickUOI.Text = itemDefinition.UnitOfIssue.Name;
-                    TextBoxHotPickLoc1.Text = location.Loc1.ToString();
-                    TextBoxHotPickLoc2.Text = location.Loc2.ToString();
-                    TextBoxHotPickLoc3.Text = location.Loc3.ToString();
-                    TextBoxHotPickLoc4.Text = location.Loc4.ToString();
-                    TextBoxHotPickLoc5.Text = location.Loc5.ToString();
-                    LabelSlot.Text = location.Slot;
+                    
+										//TextBoxHotPickLoc1.Text = location.Loc1.ToString();
+                    //TextBoxHotPickLoc2.Text = location.Loc2.ToString();
+                    //TextBoxHotPickLoc3.Text = location.Loc3.ToString();
+                    //TextBoxHotPickLoc4.Text = location.Loc4.ToString();
+                    //TextBoxHotPickLoc5.Text = location.Loc5.ToString();
+                    //LabelSlot.Text = location.Slot;
+                    //----------------------                 
+                    
+                    
+                    
+                     //----------------------
+
+                    if (location.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
+                    {
+                        //show slot
+                        LabelDevice.Visible = false;
+                        LabelTray.Visible = false;
+                        LabelOver.Visible = false;
+                        LabelBack.Visible = false;
+
+                        TextBoxHotPickLoc1.Visible = true;
+                        TextBoxHotPickLoc2.Visible = false;
+                        TextBoxHotPickLoc3.Visible = false;
+                        TextBoxHotPickLoc4.Visible = false;
+                        TextBoxHotPickLoc5.Visible = false;
+
+                        LabelDevice.Text = "Slot";
+                        LabelDevice.Visible = true;
+                        TextBoxHotPickLoc1.Location = new Point(10, 57);
+                        TextBoxHotPickLoc1.Size = new Size(380, 57);
+                        TextBoxHotPickLoc1.Text = location.Slot;
+                    }
+                    else
+                    {
+                        LabelDevice.Visible = true;
+                        LabelTray.Visible = true;
+                        LabelOver.Visible = true;
+                        LabelBack.Visible = true;
+                        TextBoxHotPickLoc1.Visible = true;
+                        TextBoxHotPickLoc2.Visible = true;
+                        TextBoxHotPickLoc3.Visible = true;
+                        TextBoxHotPickLoc4.Visible = true;
+                        TextBoxHotPickLoc5.Visible = true;
+                              
+                        TextBoxHotPickLoc1.Text = location.Loc1.ToString();
+                        TextBoxHotPickLoc2.Text = location.Loc2.ToString();
+                        TextBoxHotPickLoc3.Text = location.Loc3.ToString();
+                        TextBoxHotPickLoc4.Text = location.Loc4.ToString();
+                        TextBoxHotPickLoc5.Text = location.Loc5.ToString();
+                    }
+
+
+
+
+
+                    //----------------------
+                    
                     ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
                     ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
                     ComboBoxHeightCodeItem.SelectedIndex = ComboBoxHeightCodeItem.FindStringExact(itemDefinition.HeightCode.Name);
@@ -1920,7 +1970,7 @@ public void UpdateWorkItMessage(string message)
 
         private void Back()
         {
-            Task.Run(() => _logger.LogDetailAsync("Hot Action Back Button Pressed START"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Action Back Button Pressed START"));
             if (_pickList == null)
             {
                 CloseButtonPressed = false;
@@ -1928,7 +1978,7 @@ public void UpdateWorkItMessage(string message)
                 // ClearAllDeviceIndicators();
                 _deviceIndicatorManager?.ClearAllDeviceIndicators();
                 FindHotRecord(TextBoxFindItem.Text.Trim().ToLower());
-                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.Text = _resourceManager.GetString($"HotActions");
                 LabelFormTitle.BackColor = Color.Red;
                 tabControl1.SelectedTab = HotPick;
                 TextBoxFindCostCenter.Text = string.Empty;
@@ -1937,12 +1987,12 @@ public void UpdateWorkItMessage(string message)
             {
                 CloseButtonPressed = false;
 
-                LabelFormTitle.Text = _resourceManager.GetString("HotActions");
+                LabelFormTitle.Text = _resourceManager.GetString($"HotActions");
                 LabelFormTitle.BackColor = Color.Green;
                 tabControl1.SelectedTab = HotPick;
             }
 
-            Task.Run(() => _logger.LogDetailAsync("Hot Action Back Button Pressed END"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Action Back Button Pressed END"));
         }
 
         private async void MBHotAccept_Click(object sender, EventArgs e)
@@ -1952,7 +2002,7 @@ public void UpdateWorkItMessage(string message)
 
         private async Task Accept()
         {
-            Task.Run(() => _logger.LogDetailAsync("Hot Accept Button Pressed START"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Accept Button Pressed START"));
             ReplenOrderDetail orderDetail = null;
             var pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
             if (CheckForOverPick(pickQty)) return;
@@ -2022,7 +2072,7 @@ public void UpdateWorkItMessage(string message)
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"{_resourceManager.GetString("Message4")}{Environment.NewLine}" +
+                    MessageBox.Show($"{_resourceManager.GetString($"Message4")}{Environment.NewLine}" +
                                     $"{ex.Message} {Environment.NewLine}" +
                                     $"{ex.InnerException}");
                 }
@@ -2071,7 +2121,7 @@ public void UpdateWorkItMessage(string message)
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"{_resourceManager.GetString("Message5")}{Environment.NewLine}" +
+                    MessageBox.Show($"{_resourceManager.GetString($"Message5")}{Environment.NewLine}" +
                                     $"{ex.Message} {Environment.NewLine}" +
                                     $" {ex.InnerException}");
                 }
@@ -2089,7 +2139,7 @@ public void UpdateWorkItMessage(string message)
 
                 await LoadItemDefinitions();
                 await LoadCurrentAndNew();
-                LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
+                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotSearch")}";
                 LabelFormTitle.BackColor = Color.Red;
                 Cursor.Current = Cursors.Default;
                 tabControl1.SelectedTab = HotPick;
@@ -2119,14 +2169,14 @@ public void UpdateWorkItMessage(string message)
                     }
                     await LoadItemDefinitions();
                     await LoadCurrentAndNew();
-                    LabelFormTitle.Text = $"{_resourceManager.GetString("HotSearch")}";
+                    LabelFormTitle.Text = $"{_resourceManager.GetString($"HotSearch")}";
                     LabelFormTitle.BackColor = Color.Green;
                     TextBoxFindCostCenter.Text = string.Empty;
                     Cursor.Current = Cursors.Default;
                     tabControl1.SelectedTab = HotPick;
                 }
             }
-            await Task.Run(() => _logger.LogDetailAsync("Hot Accept Button Press END"));
+            await Task.Run(() => _logger.LogDetailAsync($"Hot Accept Button Press END"));
         }
 
         private bool CheckForOverPick(int pickQty)
@@ -2175,7 +2225,7 @@ public void UpdateWorkItMessage(string message)
                     }
                 }
             }
-            //else if (RadioButtonPick.Text == $"{_resourceManager.GetString("Store")}")
+            //else if (RadioButtonPick.Text == $"{_resourceManager.GetString($"Store")}")
             else if (_hotStoreButtonPressed)
             {
                 result = ActionCode.StoreHot;
@@ -2211,7 +2261,7 @@ public void UpdateWorkItMessage(string message)
         }
         private void MBHotActionClose_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync("Hot Action Close Button Pressed"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Action Close Button Pressed"));
             CloseButtonPressed = true;
         }
         private void PictureBoxItemHotImage_MouseEnter(object sender, EventArgs e)
@@ -2303,7 +2353,8 @@ public void UpdateWorkItMessage(string message)
                     }
                 case Keys.F12:
                     {
-                        using (var frm = DI.Create<FrmInventory>())
+                        Hide();
+                        using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables))
                         {
                             var result = frm.ShowDialog();
                             Show();
@@ -2352,18 +2403,18 @@ public void UpdateWorkItMessage(string message)
             //        Show();
             //    }
             //}
-            Task.Run(() => _logger.LogDetailAsync("Hot Action Key Down END"));
+            Task.Run(() => _logger.LogDetailAsync($"Hot Action Key Down END"));
         }
 
         private void MBCurrentLocations_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync("Current Locations Pressed START"));
+            Task.Run(() => _logger.LogDetailAsync($"Current Locations Pressed START"));
             MBHotPick.Enabled = true;
             MBHotStore.Enabled = true;
             SetupGridCurrent();
             DataGridViewHot.DataSource = _bindingSourceCurrent;
             var recordCount = GetRecordCount(_bindingSourceCurrent);
-            Task.Run(() => _logger.LogDetailAsync("Current Locations Pressed END"));
+            Task.Run(() => _logger.LogDetailAsync($"Current Locations Pressed END"));
         }
         private void MBNewLocations_Click(object sender, EventArgs e)
         {
@@ -2682,50 +2733,50 @@ public void UpdateWorkItMessage(string message)
                 _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders",
                     resourceDir: languageDirectory, usingResourceSet: null);
 
-                HotPick.Text = _resourceManager.GetString("HotPick");
-                CheckBoxAll.Text = _resourceManager.GetString("All");
-                MBHotStore.Text = _resourceManager.GetString("HotStore");
-                MBHotPick.Text = _resourceManager.GetString("HotPick");
-                LabelSearch.Text = _resourceManager.GetString("SearchforanypartofIt");
-                MBHotActionClose.Text = _resourceManager.GetString("Close");
-                MBNewLocations.Text = _resourceManager.GetString("NewLocations");
-                MBCurrentLocations.Text = _resourceManager.GetString("CurrentLocations");
-                MBFindItem.Text = _resourceManager.GetString("Search");
-                HotAction.Text = _resourceManager.GetString("HotAction");
-                ButtonEditItemDefinition.Text = _resourceManager.GetString("Edit");
-                LabelMainHeight.Text = _resourceManager.GetString("Height");
-                LabelMainVelocity.Text = _resourceManager.GetString("Velocity");
-                LabelMainSize.Text = _resourceManager.GetString("Size");
-                LabelMainUnitOfIssue.Text = _resourceManager.GetString("UnitofIssue");
-                GroupBoxHotActions.Text = _resourceManager.GetString("TransactionType");
-                RadioButtonCostCenter.Text = _resourceManager.GetString("CostCenter");
-                RadioButtonOther.Text = _resourceManager.GetString("Other");
-                RadioButtonScrap.Text = _resourceManager.GetString("Scrap");
-                RadioButtonWarranty.Text = _resourceManager.GetString("Warranty");
-                RadioButtonPick.Text = _resourceManager.GetString("Pick");
-                LabelMainQuantity.Text = _resourceManager.GetString("Qty");
-                LabelMainItem.Text = _resourceManager.GetString("Item");
-                LabelMainDescription.Text = _resourceManager.GetString("Desc");
-                GroupBoxHotPickLocation.Text = _resourceManager.GetString("Location");
-                LabelLocationCode.Text = _resourceManager.GetString("LocationCode");
-                ButtonEditLocationDefinition.Text = _resourceManager.GetString("Edit");
-                LabelHeight.Text = _resourceManager.GetString("Height");
-                LabelVelocity.Text = _resourceManager.GetString("Velocity");
-                LabelSize.Text = _resourceManager.GetString("Size");
-                LabelReceivedDate.Text = _resourceManager.GetString("ReceivedDate");
-                LabelStaticRelease.Text = _resourceManager.GetString("StaticLocation");
-                LabelPrimeBin.Text = _resourceManager.GetString("PrimeBin");
-                LabelLocationQuantity.Text = _resourceManager.GetString("LocationQuantity");
-                LabelBack.Text = _resourceManager.GetString("Back");
-                LabelOver.Text = _resourceManager.GetString("Over");
-                LabelTray.Text = _resourceManager.GetString("Tray");
-                LabelDevice.Text = _resourceManager.GetString("Device");
-                MBHotActionCount.Text = _resourceManager.GetString("LocationCount");
-                MBHotAccept.Text = _resourceManager.GetString("Accept");
-                MBHotActionBack.Text = _resourceManager.GetString("Back");
-                LabelFormTitle.Text = _resourceManager.GetString("Jobs");
-                mlUserInfo.Text = _resourceManager.GetString("Login?");
-                LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
+                HotPick.Text = _resourceManager.GetString($"HotPick");
+                CheckBoxAll.Text = _resourceManager.GetString($"All");
+                MBHotStore.Text = _resourceManager.GetString($"HotStore");
+                MBHotPick.Text = _resourceManager.GetString($"HotPick");
+                LabelSearch.Text = _resourceManager.GetString($"SearchforanypartofIt");
+                MBHotActionClose.Text = _resourceManager.GetString($"Close");
+                MBNewLocations.Text = _resourceManager.GetString($"NewLocations");
+                MBCurrentLocations.Text = _resourceManager.GetString($"CurrentLocations");
+                MBFindItem.Text = _resourceManager.GetString($"Search");
+                HotAction.Text = _resourceManager.GetString($"HotAction");
+                ButtonEditItemDefinition.Text = _resourceManager.GetString($"Edit");
+                LabelMainHeight.Text = _resourceManager.GetString($"Height");
+                LabelMainVelocity.Text = _resourceManager.GetString($"Velocity");
+                LabelMainSize.Text = _resourceManager.GetString($"Size");
+                LabelMainUnitOfIssue.Text = _resourceManager.GetString($"UnitofIssue");
+                GroupBoxHotActions.Text = _resourceManager.GetString($"TransactionType");
+                RadioButtonCostCenter.Text = _resourceManager.GetString($"CostCenter");
+                RadioButtonOther.Text = _resourceManager.GetString($"Other");
+                RadioButtonScrap.Text = _resourceManager.GetString($"Scrap");
+                RadioButtonWarranty.Text = _resourceManager.GetString($"Warranty");
+                RadioButtonPick.Text = _resourceManager.GetString($"Pick");
+                LabelMainQuantity.Text = _resourceManager.GetString($"Qty");
+                LabelMainItem.Text = _resourceManager.GetString($"Item");
+                LabelMainDescription.Text = _resourceManager.GetString($"Desc");
+                GroupBoxHotPickLocation.Text = _resourceManager.GetString($"Location");
+                LabelLocationCode.Text = _resourceManager.GetString($"LocationCode");
+                ButtonEditLocationDefinition.Text = _resourceManager.GetString($"Edit");
+                LabelHeight.Text = _resourceManager.GetString($"Height");
+                LabelVelocity.Text = _resourceManager.GetString($"Velocity");
+                LabelSize.Text = _resourceManager.GetString($"Size");
+                LabelReceivedDate.Text = _resourceManager.GetString($"ReceivedDate");
+                LabelStaticRelease.Text = _resourceManager.GetString($"StaticLocation");
+                LabelPrimeBin.Text = _resourceManager.GetString($"PrimeBin");
+                LabelLocationQuantity.Text = _resourceManager.GetString($"LocationQuantity");
+                LabelBack.Text = _resourceManager.GetString($"Back");
+                LabelOver.Text = _resourceManager.GetString($"Over");
+                LabelTray.Text = _resourceManager.GetString($"Tray");
+                LabelDevice.Text = _resourceManager.GetString($"Device");
+                MBHotActionCount.Text = _resourceManager.GetString($"LocationCount");
+                MBHotAccept.Text = _resourceManager.GetString($"Accept");
+                MBHotActionBack.Text = _resourceManager.GetString($"Back");
+                LabelFormTitle.Text = _resourceManager.GetString($"Jobs");
+                mlUserInfo.Text = _resourceManager.GetString($"Login?");
+                LabelFormHeaderText.Text = _resourceManager.GetString($"NeutronWarehouseMana");
             }
             catch (Exception ex)
             {

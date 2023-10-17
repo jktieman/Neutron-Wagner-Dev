@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace BlastzoneController
 {
-    public class Blastzone : IBlastzone
+    public class Blastzone : HardwareDevice, IBlastzone
     {
-        public Blastzone()
+
+        public Blastzone(HardwareDevice hardwareDevice)
         {
             Init();
         }

@@ -8,32 +8,28 @@ using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronCore;
 using NeutronCore.Enums;
+using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
+using Logger = NeutronCore.Global.Logger;
 
 namespace NeutronData.Repositories
 {
 
     public class LocationsRepository : ILocationsRepository
     {
-        const string FolderName = @"Locations";       
+    
         private readonly GenericRepository<Location> _repo = new GenericRepository<Location>(new NeutronDb());
-        private DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
 
         public LocationsRepository()
         {
-            SetupLogger();
+            _logger = Logger.SetupLogger(@"LocationsRepository");
         }
 
-        private void SetupLogger()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
-        }
 
         #region Area Related Querys
 
@@ -68,7 +64,35 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-       public IEnumerable<LocationView> FindLocationViewsByArea(int areaId)
+        public async Task<IEnumerable<LocationView>> GetAllLocationViewsExactByInUse(int areaId, int sizeCodeId,
+            int velocityCodeId, int heightCodeId, int inUse)
+        {
+            var recs = new List<LocationView>();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param1 = new SqlParameter("@AreaId", areaId);
+                    var param2 = new SqlParameter("@SizeCodeId", sizeCodeId);
+                    var param3 = new SqlParameter("@VelocityCodeId", velocityCodeId);
+                    var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
+                    var param5 = new SqlParameter("@InUse", inUse);
+
+                    recs = await context.Database.SqlQuery<LocationView>(
+                        "usp_GetLocationViewsExactByInUse @AreaId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
+                        , param1, param2, param3, param4, param5).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await Task.Run(() =>
+                    _logger.Log($"Get All Location Views Exact Error.  {ex.Message} \r\n {ex.InnerException}"));
+            }
+
+            return recs;
+        }
+
+        public IEnumerable<LocationView> FindLocationViewsByArea(int areaId)
         {
             var recs = new List<LocationView>();
 
@@ -92,6 +116,30 @@ namespace NeutronData.Repositories
             return recs;
         }
 
+       public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse )
+       {
+           var recs = new List<LocationView>();
+
+           Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+           try
+           {
+               using (var context = new NeutronDb())
+               {
+                   var paramAreaId = new SqlParameter("@AREAID", areaId);
+                   var paramInUse = new SqlParameter("@INUSE", inUse);
+                   recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByAreaAndInUse @AREAID, @INUSE", paramAreaId, paramInUse).ToList();
+               }
+           }
+           catch (Exception ex)
+           {
+               Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+           }
+
+           Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+
+
+           return recs;
+       }
         public IEnumerable<LocationView> FindLocationViewsByAreaAndSlot(int areaId, string slot)
         {
             var recs = new List<LocationView>();
@@ -215,7 +263,7 @@ namespace NeutronData.Repositories
         /// <returns>The largest column number on this bin, level or tray</returns>
         public int GetMaxColumns(int areaId, int device, int tray)
         {
-            return 8;
+            //return 8;
             var i = _repo.All().Where(r => r.AreaId == areaId && r.Loc1 == device && r.Loc2 == tray)
                 .Select(s => s.Loc3).Max();
             return i;
@@ -229,7 +277,7 @@ namespace NeutronData.Repositories
         /// <returns>The largest row number on this bin, level or tray</returns>
         public int GetMaxRows(int areaId, int device, int tray)
         {
-            return 4;
+            //return 4;
             var i = _repo.All().Where(r => r.AreaId == areaId && r.Loc1 == device && r.Loc2 == tray)
                 .Select(s => s.Loc4).Max();
             var j = int.Parse(i.ToString().Substring(0, 1));
@@ -246,7 +294,7 @@ namespace NeutronData.Repositories
         public async Task<bool> IsInInventory(int locationId)
         {
             bool result = false;
-            Task.Run(() => _logger.Log(@"Check for Location in Inventory Start"));
+            _ = Task.Run(() => _logger.Log(@"Check for Location in Inventory Start"));
             var parameters = new List<SqlParameter>();
             try
             {

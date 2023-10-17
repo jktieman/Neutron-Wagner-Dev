@@ -122,7 +122,7 @@ namespace NeutronData.ModelViews
             return total;
         }
 
-        public void SetPickViewsComplete(User user, DynamicLogger logger)
+        public void SetPickViewsComplete(User user, IDynamicLogger logger)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"Set Pick Views Complete, Update OrderDetail Record");
@@ -141,9 +141,9 @@ namespace NeutronData.ModelViews
             }
             catch (Exception ex)
             {
-                logger.Log($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
+               _ = logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
             }
-            logger.Log($"{sb.ToString()}");
+            _ = logger.LogDetailAsync($"{sb.ToString()}");
         }
     }
 }

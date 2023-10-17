@@ -149,7 +149,7 @@
             // 
             // Main
             // 
-            this.Main.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Main.Controls.Add(this.MBMainClose);
             this.Main.Controls.Add(this.MBRunUpload);
             this.Main.Controls.Add(this.MBStartUpload);
@@ -250,7 +250,7 @@
             // 
             // SqlServer
             // 
-            this.SqlServer.BackColor = System.Drawing.Color.RoyalBlue;
+            this.SqlServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.SqlServer.Controls.Add(this.PanelSql);
             this.SqlServer.Controls.Add(this.MBSqlServerBack);
             this.SqlServer.Location = new System.Drawing.Point(4, 22);
@@ -455,7 +455,7 @@
             // 
             // InterfaceFiles
             // 
-            this.InterfaceFiles.BackColor = System.Drawing.Color.RoyalBlue;
+            this.InterfaceFiles.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.InterfaceFiles.Controls.Add(this.PanelFile);
             this.InterfaceFiles.Controls.Add(this.MBInterfaceFilesBack);
             this.InterfaceFiles.Controls.Add(this.LabelInterfaceFiles);
@@ -1021,10 +1021,10 @@
             // 
             // LabelFormTitle
             // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
             this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
@@ -1046,7 +1046,7 @@
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormHeaderText.Location = new System.Drawing.Point(10, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";

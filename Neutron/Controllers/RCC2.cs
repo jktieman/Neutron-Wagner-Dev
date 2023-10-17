@@ -357,11 +357,11 @@ namespace Neutron.Controllers
                 switch (item.DeviceTypeId)
                 {
                     //Shuttle
-                    case (int)DeviceType.Shuttle:
+                    case (int)DeviceTypeEnum.Shuttle:
                         response = PositionDevice(item.DeviceNumber, 0);
                         break;
                     //Carousel
-                    case (int)DeviceType.Carousel:
+                    case (int)DeviceTypeEnum.Carousel:
                         response = PositionDevice(item.DeviceNumber, 1);
                         break;
                 }

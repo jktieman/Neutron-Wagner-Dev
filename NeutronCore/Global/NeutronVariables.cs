@@ -58,5 +58,8 @@
         public bool SpecialBackOrder { get; set; }
         public bool EnableEmailNotification { get; set; }
         public int LoaderStation { get; set; }
+        public bool RfidEnabledInventory { get; set; }
+        public bool RfidEnabledPicking { get; set; }
+        public int BliController { get; set; }
     }
 }

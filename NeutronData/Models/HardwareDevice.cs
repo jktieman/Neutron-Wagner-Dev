@@ -1,5 +1,7 @@
 ﻿using NeutronData.Interfaces;
 using NeutronData.Models.Lookups;
+using RJCP.IO.Ports;
+using EthernetTransmitter; 
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NeutronData.Models
@@ -26,7 +28,7 @@ namespace NeutronData.Models
         public virtual Workstation Workstation { get; set; }
         
         [ForeignKey("DeviceTypeId")]
-        public virtual StorageDeviceType DeviceType { get; set; }
+        public virtual DeviceType DeviceType { get; set; }
         
         [ForeignKey("CommunicationTypeId")]
         public virtual CommunicationType CommunicationType { get; set; }

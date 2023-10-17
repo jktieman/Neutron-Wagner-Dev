@@ -29,7 +29,7 @@ namespace Neutron.Controllers
         private Hart_DisplayController _hartDisplayController;
 
         private string _cError = string.Empty;
-        private DynamicLogger _logger;
+        private IDynamicLogger _logger;
         private string _logFileDir = string.Empty;
         private readonly WorkstationView _workstationView;
         private readonly List<Hart_BLI> _bliList = new List<Hart_BLI>();
@@ -82,7 +82,7 @@ namespace Neutron.Controllers
         {
             var result = false;
 
-            var serialConfigurationId = _repoHardwareDevice.All().FirstOrDefault(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceType.RemstarDisplays && r.WorkstationId == _workstationView.WorkstationId)?.SerialConfigurationId;
+            var serialConfigurationId = _repoHardwareDevice.All().FirstOrDefault(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceTypeEnum.RemstarDisplays && r.WorkstationId == _workstationView.WorkstationId)?.SerialConfigurationId;
 
             if (serialConfigurationId == null) return false;
 
@@ -422,10 +422,10 @@ namespace Neutron.Controllers
         //{
         //    if (bliEnabled)
         //    {
-        //        Task.Run(() => logger.Log("BLI Show List Displays."));
+        //        Task.Run(() => _logger.LogDetailAsync("BLI Show List Displays."));
         //        if (!HartDisplayController.Show(blis, ref cError))
         //        {
-        //            Task.Run(() => logger.Log("BLI Show List Display Error."));
+        //            Task.Run(() => _logger.LogDetailAsync("BLI Show List Display Error."));
         //        }
         //    }
         //}
@@ -434,10 +434,10 @@ namespace Neutron.Controllers
         //{
         //    if (shiEnabled)
         //    {
-        //        Task.Run(() => logger.Log("SHI Show List Displays."));
+        //        Task.Run(() => _logger.LogDetailAsync("SHI Show List Displays."));
         //        if (!HartDisplayController.Show(shis, ref cError))
         //        {
-        //            Task.Run(() => logger.Log("SHI Show List Display Error."));
+        //            Task.Run(() => _logger.LogDetailAsync("SHI Show List Display Error."));
         //        }
         //    }
         //}
@@ -446,10 +446,10 @@ namespace Neutron.Controllers
         //{
         //    if (bliEnabled)
         //    {
-        //        Task.Run(() => logger.Log("BLI Clear List Displays."));
+        //        Task.Run(() => _logger.LogDetailAsync("BLI Clear List Displays."));
         //        if (!HartDisplayController.Clear(blis, ref cError))
         //        {
-        //            Task.Run(() => logger.Log("BLI Clear List Display Error."));
+        //            Task.Run(() => _logger.LogDetailAsync("BLI Clear List Display Error."));
         //        }
         //    }
         //}
@@ -458,10 +458,10 @@ namespace Neutron.Controllers
         //{
         //    if (shiEnabled)
         //    {
-        //        Task.Run(() => logger.Log("SHI Clear List Displays."));
+        //        Task.Run(() => _logger.LogDetailAsync("SHI Clear List Displays."));
         //        if (!HartDisplayController.Clear(shis, ref cError))
         //        {
-        //            Task.Run(() => logger.Log("SHI Clear List Display Error."));
+        //            Task.Run(() => _logger.LogDetailAsync("SHI Clear List Display Error."));
         //        }
         //    }
         //}
@@ -472,6 +472,41 @@ namespace Neutron.Controllers
         }
 
         public void ClearBli(Ipti_BLI bli)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowBlastzone(int bayController, int address, int beacon, string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowBli(int bayControllerId, int address, int beacon, string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearBlastzone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowOc(int bayControllerId, int address, int beacon, string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearOc(int bayControllerId, int address)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowBlastzoneOc(int bayController, int address, int beacon, string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
             throw new NotImplementedException();
         }

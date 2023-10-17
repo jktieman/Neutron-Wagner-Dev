@@ -14,7 +14,7 @@ namespace NeutronData.ModelViews
         public string OrderStatus { get; set; }
         public int Lines { get; set; }
         public int Pieces { get; set; }
-        public Station PickStation { get; set; }
+        public Workstation PickStation { get; set; }
         public int PickStationNumber => PickStation.StationNumber;
     }
 }

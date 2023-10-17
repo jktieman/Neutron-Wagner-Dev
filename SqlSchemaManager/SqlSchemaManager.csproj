@@ -53,6 +53,16 @@
   <ItemGroup>
     <Folder Include="SqlScripts\Tables\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
+      <Project>{BA17BDF5-4F6B-4ADA-A7F0-9AE6A51A9816}</Project>
+      <Name>AlliedLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8DFABB4E-0083-4930-9E48-978F4470C61D}</Project>
+      <Name>NeutronCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

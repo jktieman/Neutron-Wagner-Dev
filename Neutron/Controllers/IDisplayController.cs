@@ -9,10 +9,14 @@ namespace Neutron.Controllers
         event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         void CloseController();
         bool Ready { get; set; }
-
         void ClearAllBli();
         void ClearAllShi();
         void ShowBli(int address, int beacon, string text);
+        void ShowBli(int bayControllerId, int address, int beacon, string text);
+        void ShowBlastzone(int bayController, int address, int beacon, string text);
+        void ClearBlastzone();
+        void ShowBlastzoneOc(int bayController, int address, int beacon, string text);
+        void ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text);
         void ShowBli(Hart_BLI bli);
         void ShowShi(int device, int bin, int level, string part, string text);
         void ShowShi(Hart_SHI shi);
@@ -21,7 +25,8 @@ namespace Neutron.Controllers
         void ShowBli(Ipti_BLI bli);
         void ClearBli(Ipti_BLI bli);
         int GetInitStatus();
-        void ShowOc(int address, int beacon, string text);
-        void ClearOc(int address);
+       // void ShowOc(int address, int beacon, string text);
+        void ShowOc(int bayControllerId, int address, int beacon, string text);
+        void ClearOc(int bayControllerId, int address);
     }
 }

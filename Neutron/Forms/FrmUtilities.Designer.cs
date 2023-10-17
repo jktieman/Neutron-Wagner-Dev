@@ -119,6 +119,7 @@
             this.LabelFieldDelimiter = new System.Windows.Forms.Label();
             this.LabelSettingsStoreBatchSize = new System.Windows.Forms.Label();
             this.LabelSettingsPickBatchSize = new System.Windows.Forms.Label();
+            this.CheckBoxRfidEnabledInventory = new System.Windows.Forms.CheckBox();
             this.CheckBoxUsePr1Processor = new System.Windows.Forms.CheckBox();
             this.CheckBoxUsePr1StyleOutputProcessor = new System.Windows.Forms.CheckBox();
             this.CheckBoxUsePr1StyleInputProcessor = new System.Windows.Forms.CheckBox();
@@ -129,6 +130,7 @@
             this.ComboBoxStationNumber = new System.Windows.Forms.ComboBox();
             this.ComboBoxSlotFormat = new System.Windows.Forms.ComboBox();
             this.NumericUpDownLogLevel = new System.Windows.Forms.NumericUpDown();
+            this.CheckBoxRfidEnabledPicking = new System.Windows.Forms.CheckBox();
             this.CheckBoxPinLoginOnly = new System.Windows.Forms.CheckBox();
             this.CheckBoxUpdateItemDefinitionDescription = new System.Windows.Forms.CheckBox();
             this.CheckBoxSpecialBackorder = new System.Windows.Forms.CheckBox();
@@ -445,6 +447,8 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.numericUpDownBliControllerId = new System.Windows.Forms.NumericUpDown();
+            this.LabelBliControllerId = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -501,6 +505,7 @@
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBliControllerId)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -533,7 +538,7 @@
             // 
             // Main
             // 
-            this.Main.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Main.Controls.Add(this.LabelVersionLabel);
             this.Main.Controls.Add(this.LabelVersion);
             this.Main.Controls.Add(this.MBUtilitiesClose);
@@ -549,7 +554,7 @@
             this.Main.Controls.Add(this.MBOptions);
             this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1227, 628);
+            this.Main.Size = new System.Drawing.Size(1227, 636);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             // 
@@ -707,7 +712,7 @@
             // 
             // PrintSettings
             // 
-            this.PrintSettings.BackColor = System.Drawing.Color.RoyalBlue;
+            this.PrintSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.PrintSettings.Controls.Add(this.CheckBoxLandscape);
             this.PrintSettings.Controls.Add(this.MBPrintSetUpSave);
             this.PrintSettings.Controls.Add(this.LabelPrintSettingsUsesTestOrderNumbe);
@@ -728,7 +733,7 @@
             this.PrintSettings.Controls.Add(this.MBPrintSetUpBack);
             this.PrintSettings.Location = new System.Drawing.Point(4, 22);
             this.PrintSettings.Name = "PrintSettings";
-            this.PrintSettings.Size = new System.Drawing.Size(1227, 628);
+            this.PrintSettings.Size = new System.Drawing.Size(1227, 636);
             this.PrintSettings.TabIndex = 5;
             this.PrintSettings.Text = "Print Settings";
             // 
@@ -1045,7 +1050,9 @@
             // 
             // Settings
             // 
-            this.Settings.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Settings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Settings.Controls.Add(this.numericUpDownBliControllerId);
+            this.Settings.Controls.Add(this.LabelBliControllerId);
             this.Settings.Controls.Add(this.ButtonRefreshSlotNames);
             this.Settings.Controls.Add(this.ComboBoxLoaderStation);
             this.Settings.Controls.Add(this.LabelLoaderStation);
@@ -1065,6 +1072,7 @@
             this.Settings.Controls.Add(this.LabelFieldDelimiter);
             this.Settings.Controls.Add(this.LabelSettingsStoreBatchSize);
             this.Settings.Controls.Add(this.LabelSettingsPickBatchSize);
+            this.Settings.Controls.Add(this.CheckBoxRfidEnabledInventory);
             this.Settings.Controls.Add(this.CheckBoxUsePr1Processor);
             this.Settings.Controls.Add(this.CheckBoxUsePr1StyleOutputProcessor);
             this.Settings.Controls.Add(this.CheckBoxUsePr1StyleInputProcessor);
@@ -1075,6 +1083,7 @@
             this.Settings.Controls.Add(this.ComboBoxStationNumber);
             this.Settings.Controls.Add(this.ComboBoxSlotFormat);
             this.Settings.Controls.Add(this.NumericUpDownLogLevel);
+            this.Settings.Controls.Add(this.CheckBoxRfidEnabledPicking);
             this.Settings.Controls.Add(this.CheckBoxPinLoginOnly);
             this.Settings.Controls.Add(this.CheckBoxUpdateItemDefinitionDescription);
             this.Settings.Controls.Add(this.CheckBoxSpecialBackorder);
@@ -1130,7 +1139,7 @@
             this.Settings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Settings.Name = "Settings";
             this.Settings.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Settings.Size = new System.Drawing.Size(1227, 628);
+            this.Settings.Size = new System.Drawing.Size(1227, 636);
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
             // 
@@ -1321,7 +1330,7 @@
             // 
             this.CheckBoxShiEnabled.AutoSize = true;
             this.CheckBoxShiEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxShiEnabled.Location = new System.Drawing.Point(598, 379);
+            this.CheckBoxShiEnabled.Location = new System.Drawing.Point(598, 346);
             this.CheckBoxShiEnabled.Name = "CheckBoxShiEnabled";
             this.CheckBoxShiEnabled.Size = new System.Drawing.Size(213, 20);
             this.CheckBoxShiEnabled.TabIndex = 31;
@@ -1332,7 +1341,7 @@
             // 
             this.CheckBoxBliEnabled.AutoSize = true;
             this.CheckBoxBliEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxBliEnabled.Location = new System.Drawing.Point(598, 343);
+            this.CheckBoxBliEnabled.Location = new System.Drawing.Point(598, 310);
             this.CheckBoxBliEnabled.Name = "CheckBoxBliEnabled";
             this.CheckBoxBliEnabled.Size = new System.Drawing.Size(206, 20);
             this.CheckBoxBliEnabled.TabIndex = 30;
@@ -1439,11 +1448,22 @@
             this.LabelSettingsPickBatchSize.Text = "Pick Batch Positions";
             this.LabelSettingsPickBatchSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // CheckBoxRfidEnabledInventory
+            // 
+            this.CheckBoxRfidEnabledInventory.AutoSize = true;
+            this.CheckBoxRfidEnabledInventory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxRfidEnabledInventory.Location = new System.Drawing.Point(349, 559);
+            this.CheckBoxRfidEnabledInventory.Name = "CheckBoxRfidEnabledInventory";
+            this.CheckBoxRfidEnabledInventory.Size = new System.Drawing.Size(168, 20);
+            this.CheckBoxRfidEnabledInventory.TabIndex = 23;
+            this.CheckBoxRfidEnabledInventory.Text = "RFID Enabled Inventory";
+            this.CheckBoxRfidEnabledInventory.UseVisualStyleBackColor = true;
+            // 
             // CheckBoxUsePr1Processor
             // 
             this.CheckBoxUsePr1Processor.AutoSize = true;
             this.CheckBoxUsePr1Processor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePr1Processor.Location = new System.Drawing.Point(349, 559);
+            this.CheckBoxUsePr1Processor.Location = new System.Drawing.Point(349, 526);
             this.CheckBoxUsePr1Processor.Name = "CheckBoxUsePr1Processor";
             this.CheckBoxUsePr1Processor.Size = new System.Drawing.Size(145, 20);
             this.CheckBoxUsePr1Processor.TabIndex = 23;
@@ -1454,7 +1474,7 @@
             // 
             this.CheckBoxUsePr1StyleOutputProcessor.AutoSize = true;
             this.CheckBoxUsePr1StyleOutputProcessor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePr1StyleOutputProcessor.Location = new System.Drawing.Point(349, 523);
+            this.CheckBoxUsePr1StyleOutputProcessor.Location = new System.Drawing.Point(349, 490);
             this.CheckBoxUsePr1StyleOutputProcessor.Name = "CheckBoxUsePr1StyleOutputProcessor";
             this.CheckBoxUsePr1StyleOutputProcessor.Size = new System.Drawing.Size(179, 20);
             this.CheckBoxUsePr1StyleOutputProcessor.TabIndex = 22;
@@ -1465,7 +1485,7 @@
             // 
             this.CheckBoxUsePr1StyleInputProcessor.AutoSize = true;
             this.CheckBoxUsePr1StyleInputProcessor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePr1StyleInputProcessor.Location = new System.Drawing.Point(349, 487);
+            this.CheckBoxUsePr1StyleInputProcessor.Location = new System.Drawing.Point(349, 454);
             this.CheckBoxUsePr1StyleInputProcessor.Name = "CheckBoxUsePr1StyleInputProcessor";
             this.CheckBoxUsePr1StyleInputProcessor.Size = new System.Drawing.Size(169, 20);
             this.CheckBoxUsePr1StyleInputProcessor.TabIndex = 21;
@@ -1476,7 +1496,7 @@
             // 
             this.CheckBoxParkPositionAfterBatch.AutoSize = true;
             this.CheckBoxParkPositionAfterBatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxParkPositionAfterBatch.Location = new System.Drawing.Point(349, 451);
+            this.CheckBoxParkPositionAfterBatch.Location = new System.Drawing.Point(349, 418);
             this.CheckBoxParkPositionAfterBatch.Name = "CheckBoxParkPositionAfterBatch";
             this.CheckBoxParkPositionAfterBatch.Size = new System.Drawing.Size(172, 20);
             this.CheckBoxParkPositionAfterBatch.TabIndex = 20;
@@ -1487,7 +1507,7 @@
             // 
             this.CheckBoxPrintPreview.AutoSize = true;
             this.CheckBoxPrintPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 415);
+            this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 382);
             this.CheckBoxPrintPreview.Name = "CheckBoxPrintPreview";
             this.CheckBoxPrintPreview.Size = new System.Drawing.Size(192, 20);
             this.CheckBoxPrintPreview.TabIndex = 19;
@@ -1499,7 +1519,7 @@
             this.CheckBoxEnableLabelPrinter.AutoSize = true;
             this.CheckBoxEnableLabelPrinter.Enabled = false;
             this.CheckBoxEnableLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxEnableLabelPrinter.Location = new System.Drawing.Point(349, 379);
+            this.CheckBoxEnableLabelPrinter.Location = new System.Drawing.Point(349, 346);
             this.CheckBoxEnableLabelPrinter.Name = "CheckBoxEnableLabelPrinter";
             this.CheckBoxEnableLabelPrinter.Size = new System.Drawing.Size(147, 20);
             this.CheckBoxEnableLabelPrinter.TabIndex = 18;
@@ -1511,7 +1531,7 @@
             this.CheckBoxEnableDocumentPrinter.AutoSize = true;
             this.CheckBoxEnableDocumentPrinter.Enabled = false;
             this.CheckBoxEnableDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxEnableDocumentPrinter.Location = new System.Drawing.Point(349, 343);
+            this.CheckBoxEnableDocumentPrinter.Location = new System.Drawing.Point(349, 310);
             this.CheckBoxEnableDocumentPrinter.Name = "CheckBoxEnableDocumentPrinter";
             this.CheckBoxEnableDocumentPrinter.Size = new System.Drawing.Size(174, 20);
             this.CheckBoxEnableDocumentPrinter.TabIndex = 17;
@@ -1573,11 +1593,22 @@
             0,
             0});
             // 
+            // CheckBoxRfidEnabledPicking
+            // 
+            this.CheckBoxRfidEnabledPicking.AutoSize = true;
+            this.CheckBoxRfidEnabledPicking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxRfidEnabledPicking.Location = new System.Drawing.Point(601, 559);
+            this.CheckBoxRfidEnabledPicking.Name = "CheckBoxRfidEnabledPicking";
+            this.CheckBoxRfidEnabledPicking.Size = new System.Drawing.Size(158, 20);
+            this.CheckBoxRfidEnabledPicking.TabIndex = 36;
+            this.CheckBoxRfidEnabledPicking.Text = "RFID Enabled Picking";
+            this.CheckBoxRfidEnabledPicking.UseVisualStyleBackColor = true;
+            // 
             // CheckBoxPinLoginOnly
             // 
             this.CheckBoxPinLoginOnly.AutoSize = true;
             this.CheckBoxPinLoginOnly.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPinLoginOnly.Location = new System.Drawing.Point(598, 307);
+            this.CheckBoxPinLoginOnly.Location = new System.Drawing.Point(598, 274);
             this.CheckBoxPinLoginOnly.Name = "CheckBoxPinLoginOnly";
             this.CheckBoxPinLoginOnly.Size = new System.Drawing.Size(111, 20);
             this.CheckBoxPinLoginOnly.TabIndex = 29;
@@ -1590,7 +1621,7 @@
             this.CheckBoxUpdateItemDefinitionDescription.Checked = true;
             this.CheckBoxUpdateItemDefinitionDescription.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxUpdateItemDefinitionDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUpdateItemDefinitionDescription.Location = new System.Drawing.Point(601, 559);
+            this.CheckBoxUpdateItemDefinitionDescription.Location = new System.Drawing.Point(601, 526);
             this.CheckBoxUpdateItemDefinitionDescription.Name = "CheckBoxUpdateItemDefinitionDescription";
             this.CheckBoxUpdateItemDefinitionDescription.Size = new System.Drawing.Size(228, 20);
             this.CheckBoxUpdateItemDefinitionDescription.TabIndex = 36;
@@ -1614,7 +1645,7 @@
             // 
             this.CheckBoxSerialPicking.AutoSize = true;
             this.CheckBoxSerialPicking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxSerialPicking.Location = new System.Drawing.Point(600, 523);
+            this.CheckBoxSerialPicking.Location = new System.Drawing.Point(600, 490);
             this.CheckBoxSerialPicking.Name = "CheckBoxSerialPicking";
             this.CheckBoxSerialPicking.Size = new System.Drawing.Size(108, 20);
             this.CheckBoxSerialPicking.TabIndex = 35;
@@ -1625,7 +1656,7 @@
             // 
             this.CheckBoxLoadRackOrders.AutoSize = true;
             this.CheckBoxLoadRackOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxLoadRackOrders.Location = new System.Drawing.Point(598, 487);
+            this.CheckBoxLoadRackOrders.Location = new System.Drawing.Point(598, 454);
             this.CheckBoxLoadRackOrders.Name = "CheckBoxLoadRackOrders";
             this.CheckBoxLoadRackOrders.Size = new System.Drawing.Size(136, 20);
             this.CheckBoxLoadRackOrders.TabIndex = 34;
@@ -1636,7 +1667,7 @@
             // 
             this.CheckBoxIptiDisplays.AutoSize = true;
             this.CheckBoxIptiDisplays.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxIptiDisplays.Location = new System.Drawing.Point(598, 451);
+            this.CheckBoxIptiDisplays.Location = new System.Drawing.Point(598, 418);
             this.CheckBoxIptiDisplays.Name = "CheckBoxIptiDisplays";
             this.CheckBoxIptiDisplays.Size = new System.Drawing.Size(106, 20);
             this.CheckBoxIptiDisplays.TabIndex = 33;
@@ -1647,7 +1678,7 @@
             // 
             this.CheckBoxAutoEnlargeImage.AutoSize = true;
             this.CheckBoxAutoEnlargeImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAutoEnlargeImage.Location = new System.Drawing.Point(598, 415);
+            this.CheckBoxAutoEnlargeImage.Location = new System.Drawing.Point(598, 382);
             this.CheckBoxAutoEnlargeImage.Name = "CheckBoxAutoEnlargeImage";
             this.CheckBoxAutoEnlargeImage.Size = new System.Drawing.Size(144, 20);
             this.CheckBoxAutoEnlargeImage.TabIndex = 32;
@@ -1658,7 +1689,7 @@
             // 
             this.CheckBoxUseMenuSecurity.AutoSize = true;
             this.CheckBoxUseMenuSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseMenuSecurity.Location = new System.Drawing.Point(598, 271);
+            this.CheckBoxUseMenuSecurity.Location = new System.Drawing.Point(598, 238);
             this.CheckBoxUseMenuSecurity.Name = "CheckBoxUseMenuSecurity";
             this.CheckBoxUseMenuSecurity.Size = new System.Drawing.Size(138, 20);
             this.CheckBoxUseMenuSecurity.TabIndex = 28;
@@ -1887,7 +1918,7 @@
             // 
             this.CheckBoxUseLAC.AutoSize = true;
             this.CheckBoxUseLAC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseLAC.Location = new System.Drawing.Point(349, 307);
+            this.CheckBoxUseLAC.Location = new System.Drawing.Point(349, 274);
             this.CheckBoxUseLAC.Name = "CheckBoxUseLAC";
             this.CheckBoxUseLAC.Size = new System.Drawing.Size(198, 20);
             this.CheckBoxUseLAC.TabIndex = 16;
@@ -1898,7 +1929,7 @@
             // 
             this.CheckBoxUsePrimeBin.AutoSize = true;
             this.CheckBoxUsePrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(598, 94);
+            this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(598, 61);
             this.CheckBoxUsePrimeBin.Name = "CheckBoxUsePrimeBin";
             this.CheckBoxUsePrimeBin.Size = new System.Drawing.Size(204, 20);
             this.CheckBoxUsePrimeBin.TabIndex = 9;
@@ -1909,7 +1940,7 @@
             // 
             this.CheckBoxSendAllPicksToHost.AutoSize = true;
             this.CheckBoxSendAllPicksToHost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxSendAllPicksToHost.Location = new System.Drawing.Point(349, 271);
+            this.CheckBoxSendAllPicksToHost.Location = new System.Drawing.Point(349, 238);
             this.CheckBoxSendAllPicksToHost.Name = "CheckBoxSendAllPicksToHost";
             this.CheckBoxSendAllPicksToHost.Size = new System.Drawing.Size(163, 20);
             this.CheckBoxSendAllPicksToHost.TabIndex = 15;
@@ -1922,7 +1953,7 @@
             this.CheckBoxDisplaysEnabled.Checked = true;
             this.CheckBoxDisplaysEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxDisplaysEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxDisplaysEnabled.Location = new System.Drawing.Point(349, 235);
+            this.CheckBoxDisplaysEnabled.Location = new System.Drawing.Point(349, 202);
             this.CheckBoxDisplaysEnabled.Name = "CheckBoxDisplaysEnabled";
             this.CheckBoxDisplaysEnabled.Size = new System.Drawing.Size(133, 20);
             this.CheckBoxDisplaysEnabled.TabIndex = 14;
@@ -1935,7 +1966,7 @@
             this.CheckBoxShuttleEnabled.Checked = true;
             this.CheckBoxShuttleEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxShuttleEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxShuttleEnabled.Location = new System.Drawing.Point(349, 199);
+            this.CheckBoxShuttleEnabled.Location = new System.Drawing.Point(349, 166);
             this.CheckBoxShuttleEnabled.Name = "CheckBoxShuttleEnabled";
             this.CheckBoxShuttleEnabled.Size = new System.Drawing.Size(130, 20);
             this.CheckBoxShuttleEnabled.TabIndex = 13;
@@ -1946,7 +1977,7 @@
             // 
             this.CheckBoxCreateStoreOrderWithRts.AutoSize = true;
             this.CheckBoxCreateStoreOrderWithRts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxCreateStoreOrderWithRts.Location = new System.Drawing.Point(349, 163);
+            this.CheckBoxCreateStoreOrderWithRts.Location = new System.Drawing.Point(349, 130);
             this.CheckBoxCreateStoreOrderWithRts.Name = "CheckBoxCreateStoreOrderWithRts";
             this.CheckBoxCreateStoreOrderWithRts.Size = new System.Drawing.Size(198, 20);
             this.CheckBoxCreateStoreOrderWithRts.TabIndex = 12;
@@ -2022,7 +2053,7 @@
             // 
             this.CheckBoxRunUploadOnStartup.AutoSize = true;
             this.CheckBoxRunUploadOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 236);
+            this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 203);
             this.CheckBoxRunUploadOnStartup.Name = "CheckBoxRunUploadOnStartup";
             this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(163, 20);
             this.CheckBoxRunUploadOnStartup.TabIndex = 27;
@@ -2033,7 +2064,7 @@
             // 
             this.CheckBoxRunLoaderOnStartup.AutoSize = true;
             this.CheckBoxRunLoaderOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxRunLoaderOnStartup.Location = new System.Drawing.Point(598, 199);
+            this.CheckBoxRunLoaderOnStartup.Location = new System.Drawing.Point(598, 166);
             this.CheckBoxRunLoaderOnStartup.Name = "CheckBoxRunLoaderOnStartup";
             this.CheckBoxRunLoaderOnStartup.Size = new System.Drawing.Size(161, 20);
             this.CheckBoxRunLoaderOnStartup.TabIndex = 26;
@@ -2066,7 +2097,7 @@
             // 
             this.CheckBoxCheckForUsedItem.AutoSize = true;
             this.CheckBoxCheckForUsedItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxCheckForUsedItem.Location = new System.Drawing.Point(598, 163);
+            this.CheckBoxCheckForUsedItem.Location = new System.Drawing.Point(598, 130);
             this.CheckBoxCheckForUsedItem.Name = "CheckBoxCheckForUsedItem";
             this.CheckBoxCheckForUsedItem.Size = new System.Drawing.Size(151, 20);
             this.CheckBoxCheckForUsedItem.TabIndex = 25;
@@ -2077,7 +2108,7 @@
             // 
             this.CheckBoxAutoLogOff.AutoSize = true;
             this.CheckBoxAutoLogOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAutoLogOff.Location = new System.Drawing.Point(598, 127);
+            this.CheckBoxAutoLogOff.Location = new System.Drawing.Point(598, 94);
             this.CheckBoxAutoLogOff.Name = "CheckBoxAutoLogOff";
             this.CheckBoxAutoLogOff.Size = new System.Drawing.Size(165, 20);
             this.CheckBoxAutoLogOff.TabIndex = 24;
@@ -2088,7 +2119,7 @@
             // 
             this.CheckBoxEnableEmailNotification.AutoSize = true;
             this.CheckBoxEnableEmailNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxEnableEmailNotification.Location = new System.Drawing.Point(349, 94);
+            this.CheckBoxEnableEmailNotification.Location = new System.Drawing.Point(349, 61);
             this.CheckBoxEnableEmailNotification.Name = "CheckBoxEnableEmailNotification";
             this.CheckBoxEnableEmailNotification.Size = new System.Drawing.Size(175, 20);
             this.CheckBoxEnableEmailNotification.TabIndex = 11;
@@ -2099,7 +2130,7 @@
             // 
             this.CheckBoxUseReturnToStock.AutoSize = true;
             this.CheckBoxUseReturnToStock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseReturnToStock.Location = new System.Drawing.Point(349, 127);
+            this.CheckBoxUseReturnToStock.Location = new System.Drawing.Point(349, 94);
             this.CheckBoxUseReturnToStock.Name = "CheckBoxUseReturnToStock";
             this.CheckBoxUseReturnToStock.Size = new System.Drawing.Size(150, 20);
             this.CheckBoxUseReturnToStock.TabIndex = 11;
@@ -2134,7 +2165,7 @@
             // 
             // HardwareDevices
             // 
-            this.HardwareDevices.BackColor = System.Drawing.Color.RoyalBlue;
+            this.HardwareDevices.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.HardwareDevices.Controls.Add(this.tabControl2);
             this.HardwareDevices.Location = new System.Drawing.Point(4, 22);
             this.HardwareDevices.Name = "HardwareDevices";
@@ -2158,7 +2189,7 @@
             // 
             // Listing
             // 
-            this.Listing.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Listing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Listing.Controls.Add(this.MBHardwareDevicesBack);
             this.Listing.Controls.Add(this.DataGridView1);
             this.Listing.Controls.Add(this.MBHardwareDevicesNew);
@@ -2292,7 +2323,7 @@
             // 
             // ViewEdit
             // 
-            this.ViewEdit.BackColor = System.Drawing.Color.RoyalBlue;
+            this.ViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.ViewEdit.Controls.Add(this.LabelHardwareDeviceViewEdit);
             this.ViewEdit.Controls.Add(this.MBViewEditDeviceListing);
             this.ViewEdit.Controls.Add(this.MBViewEditDeviceDelete);
@@ -2303,7 +2334,7 @@
             this.ViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ViewEdit.Name = "ViewEdit";
             this.ViewEdit.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ViewEdit.Size = new System.Drawing.Size(1133, 612);
+            this.ViewEdit.Size = new System.Drawing.Size(1213, 604);
             this.ViewEdit.TabIndex = 1;
             this.ViewEdit.Text = "View/Edit";
             // 
@@ -2666,7 +2697,7 @@
             // 
             // New
             // 
-            this.New.BackColor = System.Drawing.Color.RoyalBlue;
+            this.New.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.New.Controls.Add(this.LabelHardwareDeviceNew);
             this.New.Controls.Add(this.MBNewDeviceListing);
             this.New.Controls.Add(this.MBNewDeviceBack);
@@ -2677,7 +2708,7 @@
             this.New.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.New.Name = "New";
             this.New.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.New.Size = new System.Drawing.Size(1133, 612);
+            this.New.Size = new System.Drawing.Size(1213, 604);
             this.New.TabIndex = 2;
             this.New.Text = "New";
             // 
@@ -3032,7 +3063,7 @@
             // 
             // ManageLookups
             // 
-            this.ManageLookups.BackColor = System.Drawing.Color.RoyalBlue;
+            this.ManageLookups.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.ManageLookups.Controls.Add(this.ListBoxCodeNames);
             this.ManageLookups.Controls.Add(this.DataGridViewLookups);
             this.ManageLookups.Controls.Add(this.MBPrintLookup);
@@ -3181,7 +3212,7 @@
             // 
             // StationListing
             // 
-            this.StationListing.BackColor = System.Drawing.Color.RoyalBlue;
+            this.StationListing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.StationListing.Controls.Add(this.MBStationsBack);
             this.StationListing.Controls.Add(this.DataGridViewStations);
             this.StationListing.Controls.Add(this.MBStationsNew);
@@ -3286,7 +3317,7 @@
             // 
             // StationViewEdit
             // 
-            this.StationViewEdit.BackColor = System.Drawing.Color.RoyalBlue;
+            this.StationViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.StationViewEdit.Controls.Add(this.label39);
             this.StationViewEdit.Controls.Add(this.MBStationsViewEditDelete);
             this.StationViewEdit.Controls.Add(this.MBStationsViewEditBack);
@@ -3294,7 +3325,7 @@
             this.StationViewEdit.Controls.Add(this.panel11);
             this.StationViewEdit.Location = new System.Drawing.Point(4, 22);
             this.StationViewEdit.Name = "StationViewEdit";
-            this.StationViewEdit.Size = new System.Drawing.Size(1139, 618);
+            this.StationViewEdit.Size = new System.Drawing.Size(1219, 610);
             this.StationViewEdit.TabIndex = 10;
             this.StationViewEdit.Text = "View/Edit";
             // 
@@ -3464,14 +3495,14 @@
             // 
             // StationNew
             // 
-            this.StationNew.BackColor = System.Drawing.Color.RoyalBlue;
+            this.StationNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.StationNew.Controls.Add(this.panel1);
             this.StationNew.Controls.Add(this.label62);
             this.StationNew.Controls.Add(this.MBStationsNewBack);
             this.StationNew.Controls.Add(this.MBStationsNewSave);
             this.StationNew.Location = new System.Drawing.Point(4, 22);
             this.StationNew.Name = "StationNew";
-            this.StationNew.Size = new System.Drawing.Size(1139, 618);
+            this.StationNew.Size = new System.Drawing.Size(1219, 610);
             this.StationNew.TabIndex = 11;
             this.StationNew.Text = "New";
             // 
@@ -3655,7 +3686,7 @@
             // 
             // Communication
             // 
-            this.Communication.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Communication.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Communication.Controls.Add(this.MBCommunicationSerial);
             this.Communication.Controls.Add(this.MBCommunicationBack);
             this.Communication.Controls.Add(this.MBCommunicationTcp);
@@ -3704,7 +3735,7 @@
             // 
             // Tcp
             // 
-            this.Tcp.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Tcp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Tcp.Controls.Add(this.MBTcpBack);
             this.Tcp.Controls.Add(this.DataGridViewTcp);
             this.Tcp.Controls.Add(this.MBTcpNew);
@@ -3712,7 +3743,7 @@
             this.Tcp.Controls.Add(this.MBTcpViewEdit);
             this.Tcp.Location = new System.Drawing.Point(4, 22);
             this.Tcp.Name = "Tcp";
-            this.Tcp.Size = new System.Drawing.Size(1139, 618);
+            this.Tcp.Size = new System.Drawing.Size(1219, 610);
             this.Tcp.TabIndex = 4;
             this.Tcp.Text = "TCP";
             // 
@@ -3809,7 +3840,7 @@
             // 
             // TcpViewEdit
             // 
-            this.TcpViewEdit.BackColor = System.Drawing.Color.RoyalBlue;
+            this.TcpViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.TcpViewEdit.Controls.Add(this.LabelTcpViewEditTitle);
             this.TcpViewEdit.Controls.Add(this.MBTcpViewEditDelete);
             this.TcpViewEdit.Controls.Add(this.MBTcpViewEditBack);
@@ -3817,7 +3848,7 @@
             this.TcpViewEdit.Controls.Add(this.panel4);
             this.TcpViewEdit.Location = new System.Drawing.Point(4, 22);
             this.TcpViewEdit.Name = "TcpViewEdit";
-            this.TcpViewEdit.Size = new System.Drawing.Size(1139, 618);
+            this.TcpViewEdit.Size = new System.Drawing.Size(1219, 610);
             this.TcpViewEdit.TabIndex = 8;
             this.TcpViewEdit.Text = "TCP ViewEdit";
             // 
@@ -3985,14 +4016,14 @@
             // 
             // TcpNew
             // 
-            this.TcpNew.BackColor = System.Drawing.Color.RoyalBlue;
+            this.TcpNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.TcpNew.Controls.Add(this.panel7);
             this.TcpNew.Controls.Add(this.LabelTcpNewTitle);
             this.TcpNew.Controls.Add(this.TcpNewBack);
             this.TcpNew.Controls.Add(this.TcpNewSave);
             this.TcpNew.Location = new System.Drawing.Point(4, 22);
             this.TcpNew.Name = "TcpNew";
-            this.TcpNew.Size = new System.Drawing.Size(1139, 618);
+            this.TcpNew.Size = new System.Drawing.Size(1219, 610);
             this.TcpNew.TabIndex = 9;
             this.TcpNew.Text = "TCP New";
             // 
@@ -4148,7 +4179,7 @@
             // 
             // Serial
             // 
-            this.Serial.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Serial.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Serial.Controls.Add(this.MBSerialBack);
             this.Serial.Controls.Add(this.DataGridViewSerial);
             this.Serial.Controls.Add(this.MBSerialNew);
@@ -4156,7 +4187,7 @@
             this.Serial.Controls.Add(this.MBSerialViewEdit);
             this.Serial.Location = new System.Drawing.Point(4, 22);
             this.Serial.Name = "Serial";
-            this.Serial.Size = new System.Drawing.Size(1139, 618);
+            this.Serial.Size = new System.Drawing.Size(1219, 610);
             this.Serial.TabIndex = 5;
             this.Serial.Text = "Serial";
             // 
@@ -4253,7 +4284,7 @@
             // 
             // SerialViewEdit
             // 
-            this.SerialViewEdit.BackColor = System.Drawing.Color.RoyalBlue;
+            this.SerialViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.SerialViewEdit.Controls.Add(this.LabelSerialViewEditTitle);
             this.SerialViewEdit.Controls.Add(this.MBSerialViewEditDelete);
             this.SerialViewEdit.Controls.Add(this.MBSerialViewEditBack);
@@ -4261,7 +4292,7 @@
             this.SerialViewEdit.Controls.Add(this.panel5);
             this.SerialViewEdit.Location = new System.Drawing.Point(4, 22);
             this.SerialViewEdit.Name = "SerialViewEdit";
-            this.SerialViewEdit.Size = new System.Drawing.Size(1139, 618);
+            this.SerialViewEdit.Size = new System.Drawing.Size(1219, 610);
             this.SerialViewEdit.TabIndex = 10;
             this.SerialViewEdit.Text = "Serial ViewEdit";
             // 
@@ -4615,14 +4646,14 @@
             // 
             // SerialNew
             // 
-            this.SerialNew.BackColor = System.Drawing.Color.RoyalBlue;
+            this.SerialNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.SerialNew.Controls.Add(this.panel8);
             this.SerialNew.Controls.Add(this.LabelSerialViewNew);
             this.SerialNew.Controls.Add(this.MBSerialNewBack);
             this.SerialNew.Controls.Add(this.MBSerialNewSave);
             this.SerialNew.Location = new System.Drawing.Point(4, 22);
             this.SerialNew.Name = "SerialNew";
-            this.SerialNew.Size = new System.Drawing.Size(1139, 618);
+            this.SerialNew.Size = new System.Drawing.Size(1219, 610);
             this.SerialNew.TabIndex = 11;
             this.SerialNew.Text = "Serial New";
             // 
@@ -4974,7 +5005,7 @@
             // 
             // EmailServer
             // 
-            this.EmailServer.BackColor = System.Drawing.Color.RoyalBlue;
+            this.EmailServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.EmailServer.Controls.Add(this.groupBox4);
             this.EmailServer.Controls.Add(this.groupBox3);
             this.EmailServer.Controls.Add(this.ButtonCancelEmailServer);
@@ -5227,7 +5258,7 @@
             // 
             // EmailAddresses
             // 
-            this.EmailAddresses.BackColor = System.Drawing.Color.RoyalBlue;
+            this.EmailAddresses.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.EmailAddresses.Controls.Add(this.groupBox5);
             this.EmailAddresses.Controls.Add(this.ButtonRemoveEmail);
             this.EmailAddresses.Controls.Add(this.ButtonCancelEmailAddresses);
@@ -5314,10 +5345,10 @@
             // 
             // LabelFormTitle
             // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
             this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
@@ -5339,7 +5370,7 @@
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormHeaderText.Location = new System.Drawing.Point(5, 9);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
@@ -5355,6 +5386,40 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // numericUpDownBliControllerId
+            // 
+            this.numericUpDownBliControllerId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownBliControllerId.Location = new System.Drawing.Point(467, 590);
+            this.numericUpDownBliControllerId.Maximum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.numericUpDownBliControllerId.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownBliControllerId.Name = "numericUpDownBliControllerId";
+            this.numericUpDownBliControllerId.Size = new System.Drawing.Size(54, 22);
+            this.numericUpDownBliControllerId.TabIndex = 53;
+            this.numericUpDownBliControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownBliControllerId.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // LabelBliControllerId
+            // 
+            this.LabelBliControllerId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBliControllerId.Location = new System.Drawing.Point(346, 592);
+            this.LabelBliControllerId.Name = "LabelBliControllerId";
+            this.LabelBliControllerId.Size = new System.Drawing.Size(118, 16);
+            this.LabelBliControllerId.TabIndex = 54;
+            this.LabelBliControllerId.Text = "BLI Controller Id";
+            this.LabelBliControllerId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmUtilities
             // 
@@ -5446,6 +5511,7 @@
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBliControllerId)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -5849,5 +5915,9 @@
         private System.Windows.Forms.ComboBox ComboBoxViewEditArea;
         private System.Windows.Forms.Label LabelNewArea;
         private System.Windows.Forms.ComboBox ComboBoxNewArea;
+        private System.Windows.Forms.CheckBox CheckBoxRfidEnabledInventory;
+        private System.Windows.Forms.CheckBox CheckBoxRfidEnabledPicking;
+        private System.Windows.Forms.NumericUpDown numericUpDownBliControllerId;
+        private System.Windows.Forms.Label LabelBliControllerId;
     }
 }

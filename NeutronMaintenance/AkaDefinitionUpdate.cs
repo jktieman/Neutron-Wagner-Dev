@@ -17,35 +17,37 @@ namespace NeutronMaintenance
 {
     public class AkaDefinitionUpdate
     {
-        readonly NeutronDb db = new NeutronDb();
+        private readonly NeutronDb _db = new NeutronDb();
 
-        public void ProcessAkaDefinitions(List<AkaLoad> akaDefinitions, DynamicLogger logger)
+        public void ProcessAkaDefinitions(List<AkaLoad> akaDefinitions, IDynamicLogger logger)
         {
             try
             {
-                logger.Log($"Process Aka Definitions");
+                logger.LogDetailAsync($"Process Aka Definitions");
                 foreach (var item in akaDefinitions)
                 {
-                    logger.Log($"Aka Definition Start: {item.Item}  {item.AkaSku}");
+                    logger.LogDetailAsync($"Aka Definition Start: {item.Item}  {item.AkaSku}");
 
-                    AkaType rec = db.AkaTypes.Where(r => r.Item == item.Item && r.Aka == item.AkaSku).FirstOrDefault();
+                    var rec = _db.AkaTypes.FirstOrDefault(r => r.Item == item.Item && r.Aka == item.AkaSku);
 
                     if (rec == null)
                     {
-                        var aka = new AkaType();
-                        aka.Aka = item.AkaSku;
-                        aka.Item = item.Item;
+                        var aka = new AkaType
+                        {
+                            Aka = item.AkaSku,
+                            Item = item.Item
+                        };
 
-                        db.AkaTypes.Add(aka);
-                        db.SaveChanges();
+                        _db.AkaTypes.Add(aka);
+                        _db.SaveChanges();
                         
                     }
-                    logger.Log($"Aka Definition End =====>>>  {item.Item}  {item.AkaSku}");
+                    logger.LogDetailAsync($"Aka Definition End =====>>>  {item.Item}  {item.AkaSku}");
                 }
             }
             catch (Exception ex)
             {
-                logger.Log($"Aka Definition Error: {ex.Message} \r\n {ex.InnerException}");
+                logger.LogDetailAsync($"Aka Definition Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
     }

@@ -89,11 +89,12 @@ namespace EthernetTransmitter
 
         private void Events_DataReceived(object sender, DataReceivedEventArgs e)
         {
+            _logger.Log($"Data Received: {e.IpPort}");
             byte[] data = e.Data.ToArray();
             var text = Encoding.UTF8.GetString(data);
            // Mediator.GetInstance().OnIptiButtonPressed(this, new ResponseInfo());
-            _logger.Log($"[{e.IpPort}]: {text}");
-            _logger.Log($"[{e.IpPort}] HEX: {data.ByteArrayToHexString()}{Environment.NewLine}");
+            _logger.Log($"IP Port: [{e.IpPort}]  Data: {text}");
+            _logger.Log($"IP Port: [{e.IpPort}] HEX Data: {data.ByteArrayToHexString()}{Environment.NewLine}");
             if (text.Contains("OC"))
             {
                 var command = text.Substring(1, 4);
@@ -103,14 +104,14 @@ namespace EthernetTransmitter
 
         private void Events_ClientDisconnected(object sender, ConnectionEventArgs e)
         {
-            _logger.Log($"[{e.IpPort}] client disconnected: {e.Reason}");
+            _logger.Log($"IP Port: [{e.IpPort}] client disconnected: {e.Reason}");
             IsClientConnected = false;
         }
 
         private void Events_ClientConnected(object sender, ConnectionEventArgs e)
         {
             ClientIpPort = e.IpPort;
-            _logger.Log($"[{e.IpPort}] Client Connected: {e.Reason}");
+            _logger.Log($"IP Port: [{e.IpPort}] Client Connected Disconnect Reason: {e.Reason}");
             IsClientConnected = true;
         }
 
@@ -121,13 +122,17 @@ namespace EthernetTransmitter
                 if (!_server.IsListening) return;
                 // once a client has connected...
                 var command = new Put2LightCommand().GetCommand(value);
-                _logger.Log($"{value.GetCheckDigit()}");
-                _logger.Log($"Command: {command}{Environment.NewLine}");
-                _server.Send(ClientIpPort, command);
+                _logger.Log($"SendData Check Digit: {value.GetCheckDigit()}");
+                _logger.Log($"SendData Command: {command}{Environment.NewLine}");
+                if (IsClientConnected)
+                {
+                    _server.Send(ClientIpPort, command);
+                }
+                
             }
             catch (Exception ex)
             {
-                _logger.Log($"SendData: {ex.Message}");
+                _logger.Log($"SendData Exception: {ex.Message}");
             }
 
         }

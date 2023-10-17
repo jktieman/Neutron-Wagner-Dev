@@ -314,7 +314,7 @@ namespace Neutron.Forms
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelRecordCount.Location = new System.Drawing.Point(859, 10);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(33, 30);
+            this.LabelRecordCount.Size = new System.Drawing.Size(219, 30);
             this.LabelRecordCount.TabIndex = 24;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
@@ -340,7 +340,7 @@ namespace Neutron.Forms
             // 
             // Main
             // 
-            this.Main.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Main.Controls.Add(this.MBRunUpload);
             this.Main.Controls.Add(this.MBRunLoader);
             this.Main.Controls.Add(this.MBMainClose);
@@ -351,7 +351,7 @@ namespace Neutron.Forms
             this.Main.Controls.Add(this.MBMainAvailableOrders);
             this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1234, 667);
+            this.Main.Size = new System.Drawing.Size(1234, 676);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             this.Main.Enter += new System.EventHandler(this.Main_Enter);
@@ -459,7 +459,7 @@ namespace Neutron.Forms
             // 
             // OrderListing
             // 
-            this.OrderListing.BackColor = System.Drawing.Color.RoyalBlue;
+            this.OrderListing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.OrderListing.Controls.Add(this.MBKillOrder);
             this.OrderListing.Controls.Add(this.panel12);
             this.OrderListing.Controls.Add(this.MBCompress);
@@ -844,7 +844,7 @@ namespace Neutron.Forms
             // 
             // AvailableOrders
             // 
-            this.AvailableOrders.BackColor = System.Drawing.Color.RoyalBlue;
+            this.AvailableOrders.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.AvailableOrders.Controls.Add(this.TextBoxErrorProvider);
             this.AvailableOrders.Controls.Add(this.MBGo2);
             this.AvailableOrders.Controls.Add(this.MBFillOptimized);
@@ -863,14 +863,14 @@ namespace Neutron.Forms
             this.AvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.AvailableOrders.Name = "AvailableOrders";
             this.AvailableOrders.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.AvailableOrders.Size = new System.Drawing.Size(1234, 667);
+            this.AvailableOrders.Size = new System.Drawing.Size(1234, 676);
             this.AvailableOrders.TabIndex = 1;
             this.AvailableOrders.Text = "Available Orders";
             this.AvailableOrders.Enter += new System.EventHandler(this.AvailableOrders_Enter);
             // 
             // TextBoxErrorProvider
             // 
-            this.TextBoxErrorProvider.BackColor = System.Drawing.Color.RoyalBlue;
+            this.TextBoxErrorProvider.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.TextBoxErrorProvider.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextBoxErrorProvider.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxErrorProvider.Location = new System.Drawing.Point(632, 586);
@@ -903,7 +903,6 @@ namespace Neutron.Forms
             this.MBFillOptimized.TabIndex = 7;
             this.MBFillOptimized.Text = "Fill Optimized";
             this.MBFillOptimized.UseSelectable = true;
-            this.MBFillOptimized.Visible = false;
             this.MBFillOptimized.Click += new System.EventHandler(this.MBFillOptimized_Click);
             // 
             // MBFillStarters
@@ -916,7 +915,6 @@ namespace Neutron.Forms
             this.MBFillStarters.TabIndex = 8;
             this.MBFillStarters.Text = "Fill Starters";
             this.MBFillStarters.UseSelectable = true;
-            this.MBFillStarters.Visible = false;
             this.MBFillStarters.Click += new System.EventHandler(this.MBFillStarters_Click);
             // 
             // MBFill
@@ -1069,7 +1067,7 @@ namespace Neutron.Forms
             // 
             // PickList
             // 
-            this.PickList.BackColor = System.Drawing.Color.RoyalBlue;
+            this.PickList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.PickList.Controls.Add(this.DataGridPickView);
             this.PickList.Controls.Add(this.MBPrintPickList);
             this.PickList.Controls.Add(this.MBStart);
@@ -1166,7 +1164,7 @@ namespace Neutron.Forms
             // 
             // PickScreen
             // 
-            this.PickScreen.BackColor = System.Drawing.Color.RoyalBlue;
+            this.PickScreen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.PickScreen.Controls.Add(this.LabelPickMessages);
             this.PickScreen.Controls.Add(this.MBShortCut);
             this.PickScreen.Controls.Add(this.LabelNotify);
@@ -1230,7 +1228,7 @@ namespace Neutron.Forms
             // LabelNotify
             // 
             this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LabelNotify.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelNotify.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelNotify.Location = new System.Drawing.Point(648, 471);
             this.LabelNotify.Name = "LabelNotify";
             this.LabelNotify.Size = new System.Drawing.Size(31, 16);
@@ -1603,7 +1601,7 @@ namespace Neutron.Forms
             // GroupBoxLocation
             // 
             this.GroupBoxLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.GroupBoxLocation.BackColor = System.Drawing.Color.RoyalBlue;
+            this.GroupBoxLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.GroupBoxLocation.Controls.Add(this.LabelStaticRelease);
             this.GroupBoxLocation.Controls.Add(this.LabelPrimeBin);
             this.GroupBoxLocation.Controls.Add(this.LabelDevice);
@@ -1780,7 +1778,7 @@ namespace Neutron.Forms
             // 
             // TextBoxPickLoc5
             // 
-            this.TextBoxPickLoc5.BackColor = System.Drawing.Color.RoyalBlue;
+            this.TextBoxPickLoc5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.TextBoxPickLoc5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextBoxPickLoc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxPickLoc5.Location = new System.Drawing.Point(302, 138);
@@ -1982,7 +1980,7 @@ namespace Neutron.Forms
             // 
             // OrderDetails
             // 
-            this.OrderDetails.BackColor = System.Drawing.Color.RoyalBlue;
+            this.OrderDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.OrderDetails.Controls.Add(this.MBKillLine);
             this.OrderDetails.Controls.Add(this.MBChangeLineStatus);
             this.OrderDetails.Controls.Add(this.MBHoldDetail);
@@ -1993,7 +1991,7 @@ namespace Neutron.Forms
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
             this.OrderDetails.Location = new System.Drawing.Point(4, 22);
             this.OrderDetails.Name = "OrderDetails";
-            this.OrderDetails.Size = new System.Drawing.Size(1234, 673);
+            this.OrderDetails.Size = new System.Drawing.Size(1234, 676);
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
@@ -2128,7 +2126,7 @@ namespace Neutron.Forms
             // 
             // NewOrder
             // 
-            this.NewOrder.BackColor = System.Drawing.Color.RoyalBlue;
+            this.NewOrder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.NewOrder.Controls.Add(this.PanelSearch);
             this.NewOrder.Controls.Add(this.PanelOrderDetail);
             this.NewOrder.Controls.Add(this.LabelNewOrderStationNumber);
@@ -2139,7 +2137,7 @@ namespace Neutron.Forms
             this.NewOrder.Controls.Add(this.MBNewOrderClose);
             this.NewOrder.Location = new System.Drawing.Point(4, 22);
             this.NewOrder.Name = "NewOrder";
-            this.NewOrder.Size = new System.Drawing.Size(1234, 673);
+            this.NewOrder.Size = new System.Drawing.Size(1234, 676);
             this.NewOrder.TabIndex = 6;
             this.NewOrder.Text = "New Order";
             // 
@@ -2526,7 +2524,7 @@ namespace Neutron.Forms
             // 
             // AvailableRack
             // 
-            this.AvailableRack.BackColor = System.Drawing.Color.RoyalBlue;
+            this.AvailableRack.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.AvailableRack.Controls.Add(this.MBKillOrderRack);
             this.AvailableRack.Controls.Add(this.DataGridViewAvailableOrdersRack);
             this.AvailableRack.Controls.Add(this.MBPrintToteLabel);
@@ -2752,7 +2750,7 @@ namespace Neutron.Forms
             // 
             // AdjustOrder
             // 
-            this.AdjustOrder.BackColor = System.Drawing.Color.RoyalBlue;
+            this.AdjustOrder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.AdjustOrder.Controls.Add(this.DataGridViewAdjust);
             this.AdjustOrder.Controls.Add(this.MBAdjustOrderSave);
             this.AdjustOrder.Controls.Add(this.MBAdjustOrderBack);
@@ -2817,7 +2815,7 @@ namespace Neutron.Forms
             // 
             // Skip
             // 
-            this.Skip.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Skip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Skip.Controls.Add(this.MBKillLineSkip);
             this.Skip.Controls.Add(this.panel11);
             this.Skip.Controls.Add(this.MBAdjustQuantity);
@@ -2974,7 +2972,7 @@ namespace Neutron.Forms
             // 
             // SkipInventory
             // 
-            this.SkipInventory.BackColor = System.Drawing.Color.RoyalBlue;
+            this.SkipInventory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.SkipInventory.Controls.Add(this.LabelPickedQuantity);
             this.SkipInventory.Controls.Add(this.LabelSkipInventoryPicked);
             this.SkipInventory.Controls.Add(this.LabelRequiredQuantity);
@@ -3006,7 +3004,7 @@ namespace Neutron.Forms
             // LabelSkipInventoryPicked
             // 
             this.LabelSkipInventoryPicked.AutoSize = true;
-            this.LabelSkipInventoryPicked.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelSkipInventoryPicked.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelSkipInventoryPicked.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSkipInventoryPicked.Location = new System.Drawing.Point(799, 143);
             this.LabelSkipInventoryPicked.Name = "LabelSkipInventoryPicked";
@@ -3026,7 +3024,7 @@ namespace Neutron.Forms
             // LabelSkipInventoryRequired
             // 
             this.LabelSkipInventoryRequired.AutoSize = true;
-            this.LabelSkipInventoryRequired.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelSkipInventoryRequired.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelSkipInventoryRequired.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.LabelSkipInventoryRequired.Location = new System.Drawing.Point(488, 143);
             this.LabelSkipInventoryRequired.Name = "LabelSkipInventoryRequired";
@@ -3157,10 +3155,10 @@ namespace Neutron.Forms
             // 
             // LabelFormTitle
             // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(493, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
             this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
@@ -3170,10 +3168,11 @@ namespace Neutron.Forms
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(934, 10);
+            this.mlUserInfo.FontSize = MetroFramework.MetroLabelSize.Small;
+            this.mlUserInfo.Location = new System.Drawing.Point(1084, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(323, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(173, 30);
             this.mlUserInfo.TabIndex = 21;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3182,7 +3181,7 @@ namespace Neutron.Forms
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";

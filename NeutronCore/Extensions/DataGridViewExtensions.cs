@@ -15,18 +15,24 @@ namespace NeutronCore.Extensions
             // We need to iterate through all the data in the grid and a DataTable supports enumeration.
             var gridTable = targetGrid.Table();
             // Create a graphics object from the target grid. Used for measuring text size.
-            using (var gfx = targetGrid.CreateGraphics())
+            try
             {
-                // Iterate through the columns.
-                for (var ii = 0; ii < gridTable.Columns.Count; ii++)
+                using (var gfx = targetGrid.CreateGraphics())
                 {
-                    // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
-                    var i = ii;
-                    var colStringCollection = gridTable.AsEnumerable()
-                        .Where(r => r.Field<object>(i) != null)
-                        .Select(r => r.Field<object>(i).ToString()).ToArray();
+                    // Iterate through the columns.
+                    for (var ii = 0; ii < gridTable.Columns.Count; ii++)
+                    {
+                        // Leverage Linq enumerator to rapidly collect all the rows into a string array, making sure to exclude null values.
+                        var i = ii;
+                        var colStringCollection = gridTable.AsEnumerable()
+                            .Where(r => r.Field<object>(i) != null)
+                            .Select(r => r.Field<object>(i).ToString()).ToArray();
 
-                    // Sort the string array by string lengths.
+                        // Sort the string array by string lengths.
+                        if (colStringCollection.Length == 0)
+                        {
+                            MessageBox.Show("Grid Development Error: No data in grid.");
+                        }
                         colStringCollection = colStringCollection.OrderBy((x) => x.Length).ToArray();
 
                         // Get the last and longest string in the array.
@@ -35,31 +41,37 @@ namespace NeutronCore.Extensions
                         // Use the graphics object to measure the string size.
                         var colWidth = gfx.MeasureString(longestColString, targetGrid.Font);
 
-                    var headerText = targetGrid.Columns[i].HeaderText;
-                    //var font = targetGrid.Columns[i].HeaderCell.Style.Font;
-                    var font = targetGrid.ColumnHeadersDefaultCellStyle.Font;
-                    //     targetGrid.Columns[i].HeaderCell.Style.Font
-                    var headerWidth = gfx.MeasureString(headerText, font);
+                        var headerText = targetGrid.Columns[i].HeaderText;
+                        //var font = targetGrid.Columns[i].HeaderCell.Style.Font;
+                        var font = targetGrid.ColumnHeadersDefaultCellStyle.Font;
+                        //     targetGrid.Columns[i].HeaderCell.Style.Font
+                        var headerWidth = gfx.MeasureString(headerText, font);
 
-                    if (colWidth.Width > headerWidth.Width)
-                    {
-                        targetGrid.Columns[i].Width = (int)colWidth.Width + 10;
-                    }
-                    else // Otherwise, set the column width to the header width.
-                    {
-                        targetGrid.Columns[i].Width = (int)headerWidth.Width + 10;
-                    }
+                        if (colWidth.Width > headerWidth.Width)
+                        {
+                            targetGrid.Columns[i].Width = (int)colWidth.Width + 10;
+                        }
+                        else // Otherwise, set the column width to the header width.
+                        {
+                            targetGrid.Columns[i].Width = (int)headerWidth.Width + 10;
+                        }
 
-                    // If the calculated width is larger than the column header width, set the new column width.
-                    //if (colWidth.Width > targetGrid.Columns[i].HeaderCell.Size.Width)
-                    //{
-                    //    targetGrid.Columns[i].Width = (int)colWidth.Width;
-                    //}
-                    //else // Otherwise, set the column width to the header width.
-                    //{
-                    //    targetGrid.Columns[i].Width = targetGrid.Columns[i].HeaderCell.Size.Width;
-                    //}
+                        // If the calculated width is larger than the column header width, set the new column width.
+                        //if (colWidth.Width > targetGrid.Columns[i].HeaderCell.Size.Width)
+                        //{
+                        //    targetGrid.Columns[i].Width = (int)colWidth.Width;
+                        //}
+                        //else // Otherwise, set the column width to the header width.
+                        //{
+                        //    targetGrid.Columns[i].Width = targetGrid.Columns[i].HeaderCell.Size.Width;
+                        //}
+                    }
                 }
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Grid Development Error: {ex.Message}");
+                throw;
             }
         }
 

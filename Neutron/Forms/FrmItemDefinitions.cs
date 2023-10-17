@@ -33,7 +33,11 @@ namespace Neutron.Forms
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private ResourceManager _gridResourceManager;
-        private readonly BindingSource _bindingSource = new BindingSource();
+        private BindingSource _bindingSource = new BindingSource();
+        private BindingSource _akaBindingSource = new BindingSource();
+        private BindingSource _existingItemsBindingSource = new BindingSource();
+
+
         private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
         private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
         private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
@@ -217,6 +221,7 @@ namespace Neutron.Forms
             TextBoxViewEditLocationMin.DataBindings.Add("Text", _bindingSource, "LocationMin");
             TextBoxViewEditSystemMax.DataBindings.Add("Text", _bindingSource, "SystemMax");
             TextBoxViewEditSystemMin.DataBindings.Add("Text", _bindingSource, "SystemMin");
+            TextBoxViewEditPickMax.DataBindings.Add("Text", _bindingSource, "PickMax");
             ComboBoxViewEditSizeCode.DataBindings.Add("SelectedValue", _bindingSource, "SizeCodeId");
             ComboBoxViewEditVelocityCode.DataBindings.Add("SelectedValue", _bindingSource, "VelocityCodeId");
             ComboBoxViewEditHeightCode.DataBindings.Add("SelectedValue", _bindingSource, "HeightCodeId");
@@ -275,6 +280,8 @@ namespace Neutron.Forms
             // Check Inventory and OrderDetails for this item
             var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
             if (itemDefinitionView == null) return;
+            var item = itemDefinitionView.Item;
+
             var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id).ToList();
             var msg = $"{recs.Count} {_resourceManager.GetString("Message14")} {Environment.NewLine}";
             var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id && r.LineStatusId != (int)LineStatus.Complete).ToList();
@@ -282,7 +289,7 @@ namespace Neutron.Forms
             if (recs.Count == 0)
             {
                 ComboBoxViewEditArea.Enabled = true;
-                LabelViewEditChangeStationWarning.ForeColor = Color.Green;
+                LabelViewEditChangeStationWarning.ForeColor = Color.Black;
                 msg += _resourceManager.GetString("Message11");
             }
             else
@@ -293,10 +300,18 @@ namespace Neutron.Forms
             }
             PictureBoxViewEditImage.LoadAsync(_imageManager.GetImageFile(itemDefinitionView.Item));
             LabelViewEditChangeStationWarning.Text = msg;
+
+            var existingItems = _itemDefinitionsRepository.FindItemDefinitionViewsByItem(item).ToList();
+            _existingItemsBindingSource.DataSource = existingItems;
+            DataGridViewViewEditExistingItems.DataSource = _existingItemsBindingSource;
+            
+            var akas = _akaRepository.GetAkas(item).ToList();
+            _akaBindingSource.DataSource = akas;
+            ListBoxViewEditAkas.DataSource = _akaBindingSource;
+
+
             tabControl1.SelectedTab = ViewEdit;
         }
-
-
         private void MButtonNew_Click(object sender, EventArgs e)
         {
             NewItem();
@@ -304,7 +319,7 @@ namespace Neutron.Forms
         private void NewItem()
         {
             CheckBoxAllStations.Checked = true;
-
+            RefreshData();
             TextBoxNewItem.Visible = true;
             TextBoxNewDescription.Visible = true;
             LabelNewDescription.Visible = true;
@@ -317,6 +332,8 @@ namespace Neutron.Forms
             TextBoxNewLocationMin.Text = string.IsNullOrEmpty(item.LocationMin.ToString()) ? "0" : item.LocationMin.ToString();
             TextBoxNewSystemMax.Text = string.IsNullOrEmpty(item.SystemMax.ToString()) ? "0" : item.SystemMax.ToString();
             TextBoxNewSystemMin.Text = string.IsNullOrEmpty(item.SystemMin.ToString()) ? "0" : item.SystemMin.ToString();
+            TextBoxNewPickMax.Text = string.IsNullOrEmpty(item.PickMax.ToString()) ? "0" : item.PickMax.ToString();
+
             ComboBoxNewSizeCode.SelectedValue = string.IsNullOrEmpty(item.SizeCodeId.ToString())
                 ? ((SizeCode)ComboBoxNewSizeCode.Items[0]).Id
                 : item.SizeCodeId;
@@ -340,8 +357,6 @@ namespace Neutron.Forms
 
             tabControl1.SelectedTab = New;
         }
-
-
         private void MbViewEditListing_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedTab = Listing;
@@ -379,21 +394,41 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = Listing;
         }
         #endregion
+        /// <summary>
+        /// Save a New Item Definition
+        /// </summary>
         private async void SaveNew()
         {
-            var areaId = ((Area)ComboBoxNewArea.SelectedItem).Id;
-            var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
-            var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
-            var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
-            var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
-            var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
-            if (!string.IsNullOrEmpty(TextBoxNewItem.Text.Trim()))
+
+            if (!string.IsNullOrEmpty(TextBoxNewItem.Text.Trim())) 
             {
                 var item = TextBoxNewItem.Text.Trim();
+                var areaId = ((Area)ComboBoxNewArea.SelectedItem).Id;
+               
+                if(IsDuplicate(item, areaId)) return;
+
+                if ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem == null) return;
+                var unitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id;
+                if ((StorageType)ComboBoxNewStorageType.SelectedItem == null) return;
+                var storageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id;
+                if ((SizeCode)ComboBoxNewSizeCode.SelectedItem == null) return;
+                var sizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id;
+                if ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem == null) return;
+                var velocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id;
+                if ((HeightCode)ComboBoxNewHeightCode.SelectedItem == null) return;
+                var heightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id;
+
+                var weight = string.IsNullOrEmpty(TextBoxNewWeight.Text) ? "0" : TextBoxNewWeight.Text;
+                var locationMax = string.IsNullOrEmpty(TextBoxNewLocationMax.Text) ? "0" : TextBoxNewLocationMax.Text;
+                var locationMin = string.IsNullOrEmpty(TextBoxNewLocationMin.Text) ? "0" : TextBoxNewLocationMin.Text;
+                var systemMax = string.IsNullOrEmpty(TextBoxNewSystemMax.Text) ? "0" : TextBoxNewSystemMax.Text;
+                var systemMin = string.IsNullOrEmpty(TextBoxNewSystemMin.Text) ? "0" : TextBoxNewSystemMin.Text;
+                var pickMax = string.IsNullOrEmpty(TextBoxNewPickMax.Text) ? "0" : TextBoxNewPickMax.Text;
+
                 if (!string.IsNullOrEmpty(TextBoxNewDescription.Text.Trim()))
                 {
                     var description = TextBoxNewDescription.Text.Trim();
-                    var itemDef = _repoItemDefinition.FindBy(f => f.Item == item).FirstOrDefault();
+                    var itemDef = _repoItemDefinition.FindBy(f => f.Item == item && f.AreaId == areaId).FirstOrDefault();
                     if (itemDef == null)
                     {
                         var rec = new ItemDefinition()
@@ -401,21 +436,22 @@ namespace Neutron.Forms
                             AreaId = areaId,
                             Item = item,
                             Description = description,
-                            UnitOfIssueId = ((UnitOfIssue)ComboBoxNewUnitOfIssue.SelectedItem).Id,
-                            SizeCodeId = ((SizeCode)ComboBoxNewSizeCode.SelectedItem).Id,
-                            VelocityCodeId = ((VelocityCode)ComboBoxNewVelocityCode.SelectedItem).Id,
-                            HeightCodeId = ((HeightCode)ComboBoxNewHeightCode.SelectedItem).Id,
+                            UnitOfIssueId = unitOfIssueId,
+                            SizeCodeId = sizeCodeId,
+                            VelocityCodeId = velocityCodeId,
+                            HeightCodeId = heightCodeId,
                             LocationMax = locationMax.ParseInt(),
                             LocationMin = locationMin.ParseInt(),
                             SystemMax = systemMax.ParseInt(),
                             SystemMin = systemMin.ParseInt(),
-                            StorageTypeId = ((StorageType)ComboBoxNewStorageType.SelectedItem).Id,
+                            StorageTypeId = storageTypeId,
+                            PickMax = pickMax.ParseInt(),
                             Weight = float.Parse(weight),
                             Scale = CheckBoxNewScale.Checked
                         };
                         try
                         {
-                            _repoItemDefinition.Insert(rec);
+                            await _repoItemDefinition.InsertAsync(rec);
                             await _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
                         }
                         catch (Exception ex)
@@ -440,7 +476,6 @@ namespace Neutron.Forms
                 MessageBox.Show(_resourceManager.GetString("Message3"));
             }
         }
-
         private void UpdateViewEdit()
         {
 
@@ -450,7 +485,25 @@ namespace Neutron.Forms
             {
                 var areaId = area.Id;
 
-                var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
+               
+                if (!string.IsNullOrEmpty(TextBoxViewEditItem.Text))
+                {
+                    var item = TextBoxViewEditItem.Text;
+
+                    if ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem == null) return;
+                    var unitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
+                    if ((StorageType)ComboBoxViewEditStorageType.SelectedItem == null) return;
+                    var storageTypeId = ((StorageType)ComboBoxViewEditStorageType.SelectedItem).Id;
+                    if ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem == null) return;
+                    var sizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
+                    if ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem == null) return;
+                    var velocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
+                    if ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem == null) return;
+                    var heightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
+
+
+
+                    var weight = string.IsNullOrEmpty(TextBoxViewEditWeight.Text) ? "0" : TextBoxViewEditWeight.Text;
                 var locationMax = string.IsNullOrEmpty(TextBoxViewEditLocationMax.Text)
                     ? "0"
                     : TextBoxViewEditLocationMax.Text;
@@ -459,9 +512,9 @@ namespace Neutron.Forms
                     : TextBoxViewEditLocationMin.Text;
                 var systemMax = string.IsNullOrEmpty(TextBoxViewEditSystemMax.Text) ? "0" : TextBoxViewEditSystemMax.Text;
                 var systemMin = string.IsNullOrEmpty(TextBoxViewEditSystemMin.Text) ? "0" : TextBoxViewEditSystemMin.Text;
-                if (!string.IsNullOrEmpty(TextBoxViewEditItem.Text))
-                {
-                    var item = TextBoxViewEditItem.Text;
+                var pickMax = string.IsNullOrEmpty(TextBoxViewEditPickMax.Text) ? "0" : TextBoxViewEditPickMax.Text;  
+                    
+                    
                     if (!string.IsNullOrEmpty(TextBoxViewEditDescription.Text))
                     {
                         var description = TextBoxViewEditDescription.Text;
@@ -475,11 +528,12 @@ namespace Neutron.Forms
                             itemDef.LocationMin = locationMin.ParseInt();
                             itemDef.SystemMax = systemMax.ParseInt();
                             itemDef.SystemMin = systemMin.ParseInt();
-                            itemDef.SizeCodeId = ((SizeCode)ComboBoxViewEditSizeCode.SelectedItem).Id;
-                            itemDef.VelocityCodeId = ((VelocityCode)ComboBoxViewEditVelocityCode.SelectedItem).Id;
-                            itemDef.HeightCodeId = ((HeightCode)ComboBoxViewEditHeightCode.SelectedItem).Id;
-                            itemDef.StorageTypeId = ((StorageType)ComboBoxViewEditStorageType.SelectedItem).Id;
-                            itemDef.UnitOfIssueId = ((UnitOfIssue)ComboBoxViewEditUnitOfIssue.SelectedItem).Id;
+                            itemDef.SizeCodeId = sizeCodeId;
+                            itemDef.VelocityCodeId = velocityCodeId;
+                            itemDef.HeightCodeId = heightCodeId;
+                            itemDef.StorageTypeId = storageTypeId;
+                            itemDef.UnitOfIssueId = unitOfIssueId;
+                            itemDef.PickMax = pickMax.ParseInt();
                             itemDef.Weight = float.Parse(weight);
                             itemDef.Scale = CheckBoxViewEditScale.Checked;
                             try
@@ -493,8 +547,8 @@ namespace Neutron.Forms
                                 {
                                     rec.AreaId = areaId;
                                     _repoOrderDetails.Update(rec);
-                                    
-                                    
+
+
                                 }
                             }
                             catch (Exception ex)
@@ -594,11 +648,11 @@ namespace Neutron.Forms
         //        return false;
         //    }
         //}
-        private bool IsDuplicate(string item)
+        private bool IsDuplicate(string item, int areaId)
         {
-            var rec = _repoItemDefinition.FindBy(f => f.Item == item).FirstOrDefault();
+            var rec = _repoItemDefinition.FindBy(f => f.Item == item && f.AreaId == areaId).FirstOrDefault();
             if (rec == null) return false;
-            MessageBox.Show($"{_resourceManager.GetString("Message8")}: {rec.AreaId}", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"{_resourceManager.GetString("Message8")}: {rec.Item}  {rec.AreaId}", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return true;
         }
         #region Form Setup
@@ -706,6 +760,15 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
+                DataPropertyName = "PickMax",
+                HeaderText = _gridResourceManager.GetString("PickMax"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "PickMax"
+            };
+            DataGridView1.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
                 DataPropertyName = "Weight",
                 HeaderText = _gridResourceManager.GetString("Weight"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
@@ -738,6 +801,76 @@ namespace Neutron.Forms
             //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             //}
+
+            DataGridViewExistingItems.AutoGenerateColumns = false;
+            DataGridViewExistingItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "AreaId",
+                HeaderText = _gridResourceManager.GetString("Area"),
+                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "AreaId"
+            };
+            DataGridViewExistingItems.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _gridResourceManager.GetString("Item"),
+                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
+            DataGridViewExistingItems.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Name = "Description"
+            };
+            DataGridViewExistingItems.Columns.Add(col);
+            DataGridViewExistingItems.EnableHeadersVisualStyles = false;
+            DataGridViewExistingItems.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewExistingItems.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+
+            DataGridViewViewEditExistingItems.AutoGenerateColumns = false;
+            DataGridViewViewEditExistingItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "AreaId",
+                HeaderText = _gridResourceManager.GetString("Area"),
+                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "AreaId"
+            };
+            DataGridViewViewEditExistingItems.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Item",
+                HeaderText = _gridResourceManager.GetString("Item"),
+                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                Name = "Item"
+            };
+            DataGridViewViewEditExistingItems.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Description",
+                HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                Name = "Description"
+            };
+            DataGridViewViewEditExistingItems.Columns.Add(col);
+            DataGridViewViewEditExistingItems.EnableHeadersVisualStyles = false;
+            DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
         }
         private void SetupTabControl()
         {
@@ -761,7 +894,7 @@ namespace Neutron.Forms
             ComboBoxNewHeightCode.DataSource = _repoHeightCode.All();
             ComboBoxNewHeightCode.DisplayMember = "Name";
             ComboBoxNewHeightCode.ValueMember = "Id";
-            ComboBoxNewArea.DataSource = _areaRepository.GetAllPickableAreas();
+            ComboBoxNewArea.DataSource = _areaRepository.GetAllAreas();
             ComboBoxNewArea.DisplayMember = "Name";
             ComboBoxNewArea.ValueMember = "Id";
             ComboBoxNewStorageType.DataSource = _repoStorageType.All();
@@ -784,7 +917,7 @@ namespace Neutron.Forms
             ComboBoxViewEditHeightCode.DataSource = _repoHeightCode.All();
             ComboBoxViewEditHeightCode.DisplayMember = "Name";
             ComboBoxViewEditHeightCode.ValueMember = "Id";
-            ComboBoxViewEditArea.DataSource = _areaRepository.GetAllPickableAreas();
+            ComboBoxViewEditArea.DataSource = _areaRepository.GetAllAreas();
             ComboBoxViewEditArea.DisplayMember = "Name";
             ComboBoxViewEditArea.ValueMember = "Id";
             ComboBoxViewEditStorageType.DataSource = _repoStorageType.All();
@@ -925,7 +1058,7 @@ namespace Neutron.Forms
             if (CheckForInventory(itemDefinition.Id)) return;
             _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
             _repoItemDefinition.Delete(itemDefinition.Id);
-            
+
             TextBoxFind.Text = string.Empty;
             RefreshData();
             TextBoxFind.Focus();
@@ -938,11 +1071,65 @@ namespace Neutron.Forms
             MessageBox.Show($"{_resourceManager.GetString("Message9")} {recs.Count}");
             return true;
         }
+        /// <summary>
+        /// When the user leaves the new item text box,
+        /// fill in the other fields and
+        /// update the Existing Items Grid
+        /// and the AKA List Box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBoxNewItem_Leave(object sender, EventArgs e)
         {
-            if (!IsDuplicate(TextBoxNewItem.Text)) return;
-            TextBoxNewItem.Focus();
-            TextBoxNewItem.SelectAll();
+            if (string.IsNullOrEmpty(TextBoxNewItem.Text)) return;
+            var item = TextBoxNewItem.Text;
+            // see if the item exists
+            var itemDefinition = _repoItemDefinition.FindBy(r => r.Item == item).FirstOrDefault();
+            
+            // if the item Definition is null, check the AKA table
+            if (itemDefinition is null)
+            {
+                var aka = _akaRepository.Get(item);
+                if (!string.IsNullOrEmpty(aka))
+                {
+                    TextBoxNewItem.Text = aka;
+                    item = aka;
+                    itemDefinition = _repoItemDefinition.FindBy(r => r.Item == aka).FirstOrDefault();
+                }
+            }
+            
+            
+            if (itemDefinition != null)
+            {
+                // if it does, populate the fields
+                TextBoxNewDescription.Text = itemDefinition.Description;
+                ComboBoxNewArea.SelectedValue = itemDefinition.AreaId;
+                TextBoxNewLocationMax.Text = itemDefinition.LocationMax.ToString();
+                TextBoxNewLocationMin.Text = itemDefinition.LocationMin.ToString();
+                TextBoxNewSystemMax.Text = itemDefinition.SystemMax.ToString();
+                ComboBoxNewSizeCode.SelectedValue = itemDefinition.SizeCode;
+                ComboBoxNewVelocityCode.SelectedValue = itemDefinition.VelocityCode;
+                ComboBoxNewHeightCode.SelectedValue = itemDefinition.HeightCode;
+                ComboBoxNewUnitOfIssue.SelectedValue = itemDefinition.UnitOfIssueId;
+                TextBoxNewWeight.Text = itemDefinition.Weight.ToString("F4");
+                TextBoxNewDescription.Focus();
+                TextBoxNewDescription.SelectAll();
+           
+
+            var existingItems = _itemDefinitionsRepository.FindItemDefinitionViewsByItem(item).ToList();
+            _existingItemsBindingSource.DataSource = existingItems;
+            DataGridViewExistingItems.DataSource = _existingItemsBindingSource;
+
+            var akas = _akaRepository.GetAkas(item).ToList();
+            _akaBindingSource.DataSource = akas;
+            ListBoxAkas.DataSource = _akaBindingSource;
+
+ }
+
+
+            //DataGridViewExistingItems.DataSource = _itemDefinitionsRepository.FindItemDefinitionViewsByItem(item).ToList();
+            //// DataGridViewExistingItems.DataSource = _repoItemDefinition.FindBy(r => r.Item == item).ToList(); 
+            //ListBoxAkas.DataSource = _akaRepository.GetAkas(item).ToList();
         }
         private void MBPrintItemDefinitions_Click(object sender, EventArgs e)
         {
@@ -1084,9 +1271,13 @@ namespace Neutron.Forms
                 LabelNewLocationMax.Text = _resourceManager.GetString("LocationMax");
                 LabelNewDescription.Text = _resourceManager.GetString("Description");
                 LabelNewItem.Text = _resourceManager.GetString("Item");
-                LabelNewStation.Text = _resourceManager.GetString("Station");
+                LabelNewArea.Text = _resourceManager.GetString("Area");
                 LabelNewDefaultImage.Text = _resourceManager.GetString("DefaultImage");
                 LabelViewEditDefaultImage.Text = _resourceManager.GetString("DefaultImage");
+                LabelNewPickMax.Text = _resourceManager.GetString("PickMax");
+                LabelViewEditPickMax.Text = _resourceManager.GetString("PickMax");
+                LabelNewPickMaxInfo.Text = _resourceManager.GetString("PickMaxInfo");
+                LabelViewEditPickMaxInfo.Text = _resourceManager.GetString("PickMaxInfo");
                 //_resourceManager.GetString("Message0");
                 //_resourceManager.GetString("Message1");
                 //_resourceManager.GetString("Message2");
@@ -1104,10 +1295,114 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
             }
         }
-
         private void DataGridView1_DoubleClick(object sender, EventArgs e)
         {
             ViewEditItemDefinition();
+        }
+
+        private void DataGridViewViewEditExistingItems_DoubleClick(object sender, EventArgs e)
+        {
+            ShowExistingAreaViewEdit();
+        }
+
+        private void ShowExistingAreaViewEdit()
+        {
+            var itemDef = (ItemDefinitionView)DataGridViewViewEditExistingItems.CurrentRow?.DataBoundItem;
+            if (itemDef == null) return;
+            int id = itemDef.Id;
+            var index = _bindingSource.Find("Id", id);
+
+            _bindingSource.Position = index;
+
+            ViewEditItemDefinition();
+        }
+
+        private void DataGridViewExistingItems_DoubleClick(object sender, EventArgs e)
+        {
+            ShowExistingArea();
+        }
+
+        private void ShowExistingArea()
+        {
+            var itemDef = (ItemDefinitionView)DataGridViewExistingItems.CurrentRow?.DataBoundItem;
+            if (itemDef == null) return;
+            int id = itemDef.Id;
+            var index = _bindingSource.Find("Id", id);
+
+            _bindingSource.Position = index;
+
+            ViewEditItemDefinition();
+        }
+
+        private void TextBoxAka_Enter(object sender, EventArgs e)
+        {
+           // if (TextBoxAka.Text != "Add AKA here...") return;
+            TextBoxAka.ForeColor = Color.Black;
+            TextBoxAka.Text = "";
+        }
+
+        private void TextBoxAka_Leave(object sender, EventArgs e)
+        {
+            //TextBoxAka.ForeColor = Color.Gray;
+            //TextBoxAka.Text = "Add AKA here...";
+        }
+
+        private void MbAddAka_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(TextBoxAka.Text)) return;
+            try
+            {
+                var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
+                if (itemDefinitionView == null) return;
+                var item = itemDefinitionView.Item;
+
+                var aka = new AkaType { Aka = TextBoxAka.Text, Item = item };
+                _akaRepository.Insert(aka);
+                _akaBindingSource.Add(aka.Aka);
+                TextBoxAka.Text = "Add AKA Here";
+                TextBoxAka.ForeColor = Color.Gray;
+                TextBoxAka.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($@"Add AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                throw;
+            }
+        }
+
+       private void ListBoxViewEditAkas_Click(object sender, EventArgs e)
+        {
+            var aka = (string)ListBoxViewEditAkas.SelectedItem;
+            if (aka == null) return;
+            TextBoxAka.Text = aka;
+            TextBoxAka.ForeColor = Color.Black;
+
+        }
+
+        private void MbDeleteAka_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(TextBoxAka.Text)) return;
+            try
+            {
+               
+                var aka = _akaRepository.GetAka(TextBoxAka.Text);
+                if (aka == null) return;
+                _akaRepository.Delete(aka);
+                _akaBindingSource.Remove(aka.Aka);
+                TextBoxAka.Text = "Add AKA Here";
+                TextBoxAka.ForeColor = Color.Gray;
+                TextBoxAka.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($@"Add AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                throw;
+            }
+        }
+
+        private void DataGridViewViewEditExistingItems_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            ShowExistingAreaViewEdit();
         }
     }
 }

@@ -2,6 +2,10 @@
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using System.Data.Entity;
+using NeutronCore.Enums;
+using OrderStatus = NeutronData.Models.Lookups.OrderStatus;
+using StationType = NeutronData.Models.Lookups.StationType;
+using StorageType = NeutronData.Models.Lookups.StorageType;
 
 namespace NeutronData.DataContexts
 {
@@ -22,7 +26,7 @@ namespace NeutronData.DataContexts
         public DbSet<HeightCode> HeightCodes { get; set; }
         public DbSet<ItemImage> ItemImages { get; set; }
         public DbSet<Location> Locations { get; set; }
-       // public DbSet<Station> Stations { get; set; }
+        public DbSet<LocationType> LocationTypes { get; set; }
         public DbSet<Inventory> Inventory { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderStatus> OrderStatus { get; set; }
@@ -52,10 +56,9 @@ namespace NeutronData.DataContexts
         public DbSet<Role> Roles { get; set; }
         public DbSet<Carrier> Carriers { get; set; }
         public DbSet<Workstation> Workstations { get; set; }
-        public DbSet<WorkstationArea> WorkstationAreas { get; set; }
         public DbSet<RFID> RFIDs { get; set; }
         public DbSet<StorageDevice> StorageDevices { get; set; }
-
+        public DbSet<CycleCount> CycleCounts { get; set; }
         public DbSet<PrintJob> PrintJobs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

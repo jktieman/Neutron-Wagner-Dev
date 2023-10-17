@@ -19,13 +19,13 @@ namespace NeutronLoader
     {
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _uploadBusy;
 
         public UploadProcessorTop(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            DynamicLogger logger, WorkstationView workstationView)
+            IDynamicLogger logger, WorkstationView workstationView)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;

@@ -13,6 +13,7 @@
         public int RequestedQuantity { get; set; }
         public int IssuedQuantity { get; set; }
         public int WorkstationId { get; set; }
+        public string WorkstationName { get; set; }
         public int AreaId { get; set; }
         public int Loc1 { get; set; }
         public int Loc2 { get; set; }

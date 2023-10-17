@@ -24,7 +24,7 @@ namespace NeutronMaintenance
         private readonly GenericRepository<Location> repoLocation = new GenericRepository<Location>(new NeutronDb());
         //private readonly HistoryManager historyManager = new HistoryManager();
         private readonly AlliedFileWatcher interfaceWatcher;
-        readonly DynamicLogger logger;
+        private IDynamicLogger _logger;
         string configFilePath;
         readonly bool usePr1Processor = false;
         readonly IJsonData jsonData;
@@ -40,10 +40,10 @@ namespace NeutronMaintenance
             usePr1Processor = neutronVariables.UsePr1Processor;
             LoaderSettings.Init();
 
-            string logFileDir = LoaderSettings.GetLogFileDirectory();
-            string folderName = @"Neutron Maintenance";
-            string logActivity = LoaderSettings.EnableLogging;
-            logger = new DynamicLogger(logFileDir, folderName, logActivity);
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = @"Neutron Maintenance";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
 
             //usePr1Processor = Convert.ToBoolean(LoaderSettings.UsePr1Format);
             //if (usePr1Processor)
@@ -71,7 +71,7 @@ namespace NeutronMaintenance
             //{
             //    fileProcessor = new FileProcessor(files);
             //}
-            logger.Log($"Background Worker Company Code: {neutronLicense.CompanyCode}");
+            _logger.LogDetailAsync($"Background Worker Company Code: {neutronLicense.CompanyCode}");
             switch (neutronLicense.CompanyCode)
             {
                 case "TMG":
@@ -106,7 +106,7 @@ namespace NeutronMaintenance
         //    }
         //    catch (Exception ex)
         //    {
-        //        logger.Log($"Get Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
+        //       _logger.LogDetailAsync($"Get Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
         //    }
         //    return result;
         //}
@@ -134,12 +134,12 @@ namespace NeutronMaintenance
                 e.Cancel = true;
                 return;
             }
-            int i = 0;
+            var i = 0;
             var files = new FileInfo[] { };
             Thread.Sleep(millisecondsTimeout: 1000);
             foreach (var fileInfo in interfaceFileQueue.GetConsumingEnumerable())
             {
-                string filename = fileInfo.FullName;
+                var filename = fileInfo.FullName;
                 if (File.Exists(filename))
                 {
                     files[i] = fileInfo;
@@ -148,7 +148,7 @@ namespace NeutronMaintenance
 
                 }
             }
-            logger.Log($"Form Pick Company Code: {neutronLicense.CompanyCode}");
+            _logger.LogDetailAsync($"Form Pick Company Code: {neutronLicense.CompanyCode}");
             switch (neutronLicense.CompanyCode)
             {
                 case "TMG":
@@ -165,7 +165,7 @@ namespace NeutronMaintenance
 
             foreach (var file in files)
             {
-                ArchiveFile.Archive(file);
+                ArchiveFile.Archive(file, _logger);
             }
         }
 
@@ -178,7 +178,7 @@ namespace NeutronMaintenance
 
             else
             {
-                object result = e.Result;
+                var result = e.Result;
 
             }
         }
@@ -201,7 +201,7 @@ namespace NeutronMaintenance
         //    }
         //    catch (Exception ex)
         //    {
-        //        logger.Log("File Created Error.  \r\n" + ex.Message + "\r\n" + ex.InnerException.Message + "\r\n" + ex.InnerException.InnerException.Message);
+        //        _logger.LogDetailAsync("File Created Error.  \r\n" + ex.Message + "\r\n" + ex.InnerException.Message + "\r\n" + ex.InnerException.InnerException.Message);
         //    }
 
         //    switch (neutronLicense.CompanyCode)
@@ -236,7 +236,7 @@ namespace NeutronMaintenance
         {
             foreach (var msg in fileLockFailure.MessageList)
             {
-                logger.Log("Lock Message " + msg);
+                _logger.LogDetailAsync("Lock Message " + msg);
             }
         }
     }

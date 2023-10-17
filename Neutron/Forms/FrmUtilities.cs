@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -37,16 +36,13 @@ using NeutronData.Models.Lookups;
 using NeutronData.PrintModels;
 using NeutronDllu;
 using NeutronMaintenance;
-using Ninject;
-//using CommunicationType = NeutronCore.Enums.CommunicationType;
+
 using StorageDeviceType = NeutronData.Models.Lookups.StorageDeviceType;
 using StationType = NeutronData.Models.Lookups.StationType;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 using AlliedLogger;
 using NeutronCore;
 
-//using CommunicationType = NeutronCore.Enums.CommunicationType;
-//using DeviceType = NeutronCore.Enums.DeviceType;
 
 namespace Neutron.Forms
 {
@@ -62,7 +58,6 @@ namespace Neutron.Forms
         private readonly AkaRepository _repoAka = new AkaRepository();
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocations = new GenericRepository<Location>(new NeutronDb());
-        private readonly GenericRepository<Station> _repoStations = new GenericRepository<Station>(new NeutronDb());
 
         private readonly GenericRepository<Workstation> _repoWorkstations =
             new GenericRepository<Workstation>(new NeutronDb());
@@ -744,7 +739,7 @@ namespace Neutron.Forms
         private void MBDevices_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Device Listing";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             LoadHardwareDevices();
             tabControl1.SelectedTab = HardwareDevices;
         }
@@ -838,7 +833,10 @@ namespace Neutron.Forms
             _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
             _neutronVariables.EnableEmailNotification = CheckBoxEnableEmailNotification.Checked;
             _neutronVariables.LoaderStation = ((Workstation)ComboBoxLoaderStation.SelectedItem).Id;
-
+            _neutronVariables.RfidEnabledInventory = CheckBoxRfidEnabledInventory.Checked;
+            _neutronVariables.RfidEnabledPicking = CheckBoxRfidEnabledPicking.Checked;
+            _neutronVariables.BliController = Convert.ToInt32(numericUpDownBliControllerId.Value);
+            
             if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
             {
                 _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
@@ -856,7 +854,7 @@ namespace Neutron.Forms
         {
 
             LabelFormTitle.Text = "Options";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = Settings;
 
             CheckBoxCreateStoreOrderWithRts.Checked = _neutronVariables.CreateStoreOrderWithRts;
@@ -923,6 +921,9 @@ namespace Neutron.Forms
             CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
             CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter() != null;
             ComboBoxLoaderStation.SelectedValue = _neutronVariables.LoaderStation;
+            CheckBoxRfidEnabledInventory.Checked = _neutronVariables.RfidEnabledInventory;
+            CheckBoxRfidEnabledPicking.Checked = _neutronVariables.RfidEnabledPicking;
+            numericUpDownBliControllerId.Value = _neutronVariables.BliController == 0 ? 1 : _neutronVariables.BliController;
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -1015,7 +1016,7 @@ namespace Neutron.Forms
         private void MBPrinterSetup_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Printer Settings";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             LoadDocumentPrinterPreferences();
             LoadLabelPrinterPreferences();
             tabControl1.SelectedTab = PrintSettings;
@@ -1136,7 +1137,7 @@ namespace Neutron.Forms
         private void MBLookups_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Lookup Tables";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             SetupLookupGrid();
             LoadLookups();
             tabControl1.SelectedTab = ManageLookups;
@@ -1188,7 +1189,7 @@ namespace Neutron.Forms
         private void BackToMain()
         {
             LabelFormTitle.Text = "Utilities";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = Main;
         }
 
@@ -2161,7 +2162,7 @@ namespace Neutron.Forms
         private void MBCommunications_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Communications";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = Communications;
         }
 
@@ -2478,7 +2479,7 @@ namespace Neutron.Forms
         private void MBStations_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Stations";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             LoadStations();
             tabControl1.SelectedTab = Stations;
         }
@@ -2536,7 +2537,6 @@ namespace Neutron.Forms
             var workstation = new Workstation
             {
                 // Id is an Identity field now
-                Id = int.Parse(TextBoxNewStationNumber.Text),
                 Name = TextBoxNewStationName.Text,
                 StationNumber = int.Parse(TextBoxNewStationNumber.Text),
                 StationTypeId = ((StationType)ComboBoxNewStationType.SelectedItem).Id,
@@ -2550,7 +2550,7 @@ namespace Neutron.Forms
             }
             else
             {
-                MessageBox.Show($"result");
+                MessageBox.Show($"{result}");
             }
 
         }
@@ -2609,22 +2609,22 @@ namespace Neutron.Forms
             _repoWorkstations.Delete(id);
             return result;
         }
-
+        //todo fix AllInclude
         private int LoadStations(int recId = 0)
         {
             var idx = 1;
             Cursor.Current = Cursors.WaitCursor;
 
-            var recs = _repoWorkstations.All().Select(s => new StationViewModel
+            var recs = _repoWorkstations.AllInclude(r => r.StationType).Select(s => new StationViewModel
             {
                 Id = s.Id,
                 Name = s.Name,
                 StationNumber = s.StationNumber,
+                StationTypeId = s.StationTypeId,
                 StationTypeName = s.StationType.Name,
                 AreaId = s.AreaId,
                 AreaName = s.Area.Name,
-                Sequence = s.Sequence,
-                StationTypeId = s.StationTypeId
+                Sequence = s.Sequence
             })
                 .OrderBy(o => o.Sequence)
                 .ToList();
@@ -2895,7 +2895,7 @@ namespace Neutron.Forms
         private void MBEmailAddresses_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Email Addresses";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             InitDataGrid();
             List<EmailAddressData> recs = LoadJsonFile();
             if (recs.Count > 0)
@@ -2910,7 +2910,7 @@ namespace Neutron.Forms
         private void MBEmailServer_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Email Server";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             _settings = _jsonData.LoadFile<EmailSettings>();
             if (_settings != null)
             {

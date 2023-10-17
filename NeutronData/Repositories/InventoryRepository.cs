@@ -14,9 +14,15 @@ namespace NeutronData.Repositories
 {
     public class InventoryRepository : IDisposable, IInventoryRepository
     {
+        private readonly IDynamicLogger _logger;
 
         private readonly GenericRepository<Inventory> _repo = new GenericRepository<Inventory>(new NeutronDb());
 
+
+        public InventoryRepository(IDynamicLogger logger)
+        {
+            _logger = logger;
+        }
         public List<InventoryView> GetInventoryViewAll()
         {
             List<InventoryView> projection;
@@ -46,6 +52,7 @@ namespace NeutronData.Repositories
                     SizeCodeName = r.Location.SizeCode.Name,
                     VelocityCodeName = r.Location.VelocityCode.Name,
                     HeightCodeName = r.Location.HeightCode.Name,
+                    PickMax = r.ItemDefinition.PickMax,
                     LocationCode = r.Location.LocationCode,
                     StorageTypeName = r.StorageType.Name,
                     LocationId = r.LocationId,
@@ -88,6 +95,7 @@ namespace NeutronData.Repositories
                     SizeCodeName = r.Location.SizeCode.Name,
                     VelocityCodeName = r.Location.VelocityCode.Name,
                     HeightCodeName = r.Location.HeightCode.Name,
+                    PickMax = r.ItemDefinition.PickMax,
                     LocationCode = r.Location.LocationCode,
                     StorageTypeName = r.StorageType.Name,
                     LocationId = r.LocationId,
@@ -134,6 +142,7 @@ namespace NeutronData.Repositories
                         SizeCodeName = r.Location.SizeCode.Name,
                         VelocityCodeName = r.Location.VelocityCode.Name,
                         HeightCodeName = r.Location.HeightCode.Name,
+                        PickMax = r.ItemDefinition.PickMax,
                         LocationCode = r.Location.LocationCode,
                         StorageTypeName = r.StorageType.Name,
                         LocationId = r.LocationId,
@@ -173,27 +182,7 @@ namespace NeutronData.Repositories
             return projection;
         }
 
-        public List<SqlInventoryView> FindInventoryViewsByStation(string find, int workstationId)
-        {
-            var recs = new List<SqlInventoryView>();
-            try
-            {
-                using (var context = new NeutronDb())
-                {
-                    var param = new SqlParameter(parameterName: "@Find", value: find);
-                    var paramStation = new SqlParameter(parameterName: "@StationId", value: workstationId);
-                    recs = context.Database.SqlQuery<SqlInventoryView>(sql: "usp_GetInventoryViewFind_Station @Find, @StationId", parameters: new object[] { param, paramStation }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
-            }
-
-            return recs;
-        }
-
-        public List<SqlInventoryView> FindInventoryViewsByArea(string find, int areaId)
+       public List<SqlInventoryView> FindInventoryViewsByArea(string find, int areaId)
         {
             var recs = new List<SqlInventoryView>();
             try
@@ -207,7 +196,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -226,7 +215,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -245,7 +234,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -265,7 +254,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return rec;

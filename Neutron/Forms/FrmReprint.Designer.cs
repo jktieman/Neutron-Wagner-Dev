@@ -128,7 +128,7 @@
             this.AcceptButton = this.MBReprintPrint;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.RoyalBlue;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.CancelButton = this.MBReprintCancel;
             this.ClientSize = new System.Drawing.Size(405, 402);
             this.Controls.Add(this.panel1);

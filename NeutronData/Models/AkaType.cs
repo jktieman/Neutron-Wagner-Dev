@@ -6,9 +6,9 @@ namespace NeutronData.Models
     public class AkaType
     {
         [Key]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Aka { get; set; }
-        [MaxLength(35)]
+        [MaxLength(100)]
         public string Item { get; set; }
     }
 }

@@ -16,10 +16,10 @@ namespace NeutronLoader
     {
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        readonly DynamicLogger _logger;
+        private IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
 
-        public TmgFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData, DynamicLogger logger)
+        public TmgFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData, IDynamicLogger logger)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
@@ -33,18 +33,18 @@ namespace NeutronLoader
             {
                 foreach (var file in files)
                 {
-                    Task.Run(() => _logger.Log($"File Processor - Process File Start."));
+                    Task.Run(() => _logger.LogDetailAsync($"File Processor - Process File Start."));
                     var hostOrderList = ProcessFile(file);
                     if (hostOrderList.Count > 0)
                     {
                         var hostOrderListProcessor = new HostOrderListProcessor(hostOrderList, _jsonData, _logger);
                     }
-                    ArchiveFile.Archive(file);
+                    ArchiveFile.Archive(file, _logger);
                 }
             }
             catch (Exception ex)
             {
-                _logger.Log($"Load Files Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+                _logger.LogDetailAsync($"Load Files Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
                             $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
         }
@@ -132,7 +132,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+                _logger.LogDetailAsync($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
                             $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
             return hostOrderList;

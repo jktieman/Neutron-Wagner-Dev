@@ -1600,7 +1600,7 @@ namespace Neutron.Forms
 
         private int ShowAvailableOrders(int recId = 0, string searchField = "")
         {
-            Task.Run(() => _logger.LogDetailAsync("Show Available Orders START"));
+            Task.Run(() => _logger.LogDetailAsync("ShowAvailableOrders START"));
             var idx = 0;
             if (string.IsNullOrEmpty(searchField))
             {
@@ -1611,7 +1611,7 @@ namespace Neutron.Forms
             {
                 // TODO: Serial Picking Logic Here
 
-                var views = _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreen(_workstationView, searchField);
+                var views = _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreen(_workstationView.AreaId, searchField);
                 //var views = !string.IsNullOrEmpty(findWhat)
                 //    ? _replenOrdersRepository.GetAvailableOrders(_workstationView, findWhat, _neutronVariables.SerialPicking)
                 //    : _replenOrdersRepository.GetAvailableOrders(_workstationView);
@@ -2133,7 +2133,7 @@ namespace Neutron.Forms
         private void Start()
         {
             Task.Run(() => _logger.LogDetailAsync($"Start START"));
-           // InitDeviceIndicators();
+            // InitDeviceIndicators();
             //-------------------------------------
             Task.Run(() => _logger.LogDetailAsync($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -2150,11 +2150,23 @@ namespace Neutron.Forms
 
             var pickViews = (IList<ReplenPickView>)_bindingSourcePickViews.DataSource;
             if (pickViews == null) return;
-
-            pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.Loc1)
-                 .ThenBy(p => p.CurrentInventoryLocation.Location.Loc2)
-                 .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-                 .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4).ToList();
+            // set the sort order based on Location Type
+            // LocationType 3 is a Rack location and 
+            // should be sorted using the PickSequence
+            //var locationType = _workstationView.Area.LocationTypeId;
+            if (_workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
+            {
+                // Sort by PickSequence
+                pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.PickSequence).ToList();
+            }
+            else
+            {
+                // Sort by Location
+                pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.Loc1)
+                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc2)
+                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
+                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4).ToList();
+            }
 
             //TODO SetOrderStatusToPicking(pickViews);
             Task.Run(() => _logger.LogDetailAsync($"Start_Click 1: [{DateTime.Now.ToLongTimeString()}]"));
@@ -2207,7 +2219,10 @@ namespace Neutron.Forms
             }
 
             Task.Run(() => _logger.LogDetailAsync($"Start_Click 2: [{DateTime.Now.ToLongTimeString()}]"));
-            var finalPickSequence = FinalPickSequence(pickStops);
+            //var finalPickSequence = FinalPickSequence(pickStops);
+            var finalPickSequence =
+    _workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack ? FinalPickSequenceRack(pickStops) : FinalPickSequence(pickStops);
+
             _bindingSourcePickStops.DataSource = finalPickSequence;
             Task.Run(() => _logger.LogDetailAsync($"Start_Click 3 Run GetFirstStop?: [{DateTime.Now.ToLongTimeString()}]"));
             // GetFirstStop();
@@ -2226,6 +2241,16 @@ namespace Neutron.Forms
             //feels good to here
             Task.Run(() => _logger.LogDetailAsync($"Start_Click End: [{DateTime.Now.ToLongTimeString()}]"));
         }
+        /// <summary>
+        /// Sorts the PickStops based on the Location's Pick Sequence
+        /// </summary>
+        /// <param name="pickStops">The List of PickStops to be sorted</param>
+        /// <returns></returns>
+        private List<ReplenPickStop> FinalPickSequenceRack(List<ReplenPickStop> pickStops)
+        {
+            return pickStops.OrderBy(r => r.CurrentInventoryLocation.Location.PickSequence).ToList();
+        }
+
 
         private List<ReplenPickView> PickListLoad()
         {
@@ -2331,7 +2356,7 @@ namespace Neutron.Forms
                 var currentOrder = ((ObjectView<AvailableReplenOrdersView>)_bindingSourceAvailableOrders.Current).Object;
                 var firstTime = true;
                 var counter = 0;
-                var orderAndDetails = _replenOrdersRepository.GetOrderAndOrderDetails(bp.OrderId, _workstationView.WorkstationId);
+                var orderAndDetails = _replenOrdersRepository.GetOrderAndOrderDetails(bp.OrderId, _workstationView.AreaId);
                 currentOrder.Order = orderAndDetails;
                 var details = currentOrder.Order.ReplenOrderDetails.OrderBy(o => o.PartNum);
                 foreach (var detail in details)
@@ -2509,11 +2534,10 @@ namespace Neutron.Forms
 
         private void LoadInventory()
         {
-            Task.Run(() => _logger.LogDetailAsync($"Load Inventory START"));
-            //_currentInventory = new List<Inventory>();
-            var pickableLocations = new int[] { 1, 2 };
-            //if (_currentInventory.Count != 0) return;
 
+            Task.Run(() => _logger.LogDetailAsync($"Load Inventory START"));
+            var pickableLocations = _repoStorageTypes.FindBy(r => r.Pickable == true).Select(r => r.Id).ToList();  // new int[] { 1, 2 };  // 4 is an EBin
+                                                                                                                   // var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                 .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory END"));
@@ -2853,14 +2877,40 @@ namespace Neutron.Forms
                     }
                 }
             }
-            Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-            _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
-            for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
+            //Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
+            //_deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
+            //for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
+            //{
+            //    _deviceManager.MoveNext(i);
+            //}
+            //Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
+            //Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
+
+
+            if (_deviceManager != null)
             {
-                _deviceManager.MoveNext(i);
+                Task.Run(() =>
+                    _logger.LogDetailAsync(
+                        $"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
+                _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
+                for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
+                {
+                    _deviceManager.MoveNext(i);
+                }
+
+                Task.Run(() =>
+                    _logger.LogDetailAsync(
+                        $"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
             }
-            Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-            Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
+
+
+
+
+
+
+
+
             return newList;
         }
 
@@ -2899,7 +2949,7 @@ namespace Neutron.Forms
                 _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
 
                 UpdatePickScreen();
-               // UpdateCurrentDeviceIndicator();
+                // UpdateCurrentDeviceIndicator();
                 _deviceIndicatorManager.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
@@ -3148,7 +3198,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void TurnOnOcDisplay(int position, int beacon, string text)
+        private void TurnOnOcDisplay(int bayControllerId, int position, int beacon, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -3156,7 +3206,7 @@ namespace Neutron.Forms
                 {
                     if (_neutronVariables.BliEnabled)
                     {
-                        Task.Run(() => GlobalVar.Displays.ShowOc(position, beacon, text));
+                        Task.Run(() => GlobalVar.Displays.ShowOc(_neutronVariables.BliController , position, beacon, text));
                     }
                 }
             }
@@ -3172,7 +3222,7 @@ namespace Neutron.Forms
             // var font = new Font("Microsoft Sans Serif", 20F, FontStyle.Bold);
             if (_neutronVariables.IptiDisplays)
             {
-                TurnOnOcDisplay(1, 1, _currentPickStop.Item);
+                TurnOnOcDisplay(_neutronVariables.BliController, 1, 1, _currentPickStop.Item);
             }
             foreach (var pickView in _currentPickStop.PickViews)
             {
@@ -3184,7 +3234,7 @@ namespace Neutron.Forms
                     textBox.SizeTextBoxFont(1);
                     textBox.Text = pickView.QuantityToBePicked.ToString();
                 }
-               
+
                 var panel = Controls.Find($"Pos{pos}Display", true).First() as Panel;
                 if (panel != null)
                 {
@@ -3377,8 +3427,8 @@ namespace Neutron.Forms
             // Returns true is process is to continue
             // Return false if the process is canceled
             if (!SelectAction.StoreAccept(_currentPickStop)) return;
-            
-            
+
+
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.LogDetailAsync($"StoreAccept_Click Start : [{DateTime.Now.ToLongTimeString()}]"));
             MBStoreAccept.Enabled = false;
@@ -3392,8 +3442,11 @@ namespace Neutron.Forms
             if (StopComplete())
             {
                 //Getting next location on the current device/ the one that was just picked from.
-                Task.Run(() => _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1));
-                Task.Run(() =>
+                if (_deviceManager != null)
+                {
+                    Task.Run(() => _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1));
+                }
+                    Task.Run(() =>
                     _logger.LogDetailAsync($"PickAccept_Click 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
 
                 UpdateInventoryQuantity(_currentPickStop);
@@ -3412,11 +3465,14 @@ namespace Neutron.Forms
 
 
 
-
                 if (_currentPickStop.Sequence < numberOfStops)
                 {
                     //Use the first carousel location for the movenext in case multiple picks are required for stop
-                    _deviceManager.MoveNext(_currentPickStop.Inventory[0].Location.Loc1);
+                    if (_deviceManager != null)
+                    {
+                        _deviceManager.MoveNext(_currentPickStop.Inventory[0].Location.Loc1);
+                    }
+                    
                     _bindingSourcePickStops.MoveNext();
                     _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
                     UpdatePickScreen();
@@ -3718,7 +3774,7 @@ namespace Neutron.Forms
             ClearOrderPositions();
             ClearBatchPositions();
             Console.WriteLine("Clear All Device Indicators - Close Batch");
-           _deviceIndicatorManager.ClearAllDeviceIndicators();
+            _deviceIndicatorManager.ClearAllDeviceIndicators();
 
             _logger.LogDetailAsync($"Start Upload Processor: {_neutronLicense.CompanyCode}");
             switch (_neutronLicense.CompanyCode)
@@ -5251,7 +5307,7 @@ namespace Neutron.Forms
                 //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor
                 //           , _workstationRepository, _workstationView, _neutronVariables, _historyManager
                 //           , _areaRepository, rfidManager, _locationsRepository))
-                using(var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables))
+                using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables))
                 {
                     DialogResult result = frm.ShowDialog();
                     Show();

@@ -6,19 +6,22 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
+using AlliedLogger;
 using NeutronData.General;
+using Logger = NeutronCore.Global.Logger;
 
 namespace Neutron.Classes
 {
     public class LacProcessor : ILacProcessor
     {
+        private readonly IDynamicLogger _logger;
         public bool UseLacProcessor { get; set; } = false;
 
         public List<Carrier> LacProfile { get; set; }
         
         public LacProcessor()
         {
-            
+            _logger = Logger.SetupLogger(@"LacProcessor");
             LacProfile = new List<Carrier>();
             ReprocessLacSet();
         }

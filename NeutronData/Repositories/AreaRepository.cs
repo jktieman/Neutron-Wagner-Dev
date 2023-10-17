@@ -11,6 +11,8 @@ using NeutronData.Models.Lookups;
 using NeutronCore.Enums;
 using System.Data.SqlClient;
 using StationType = NeutronCore.Enums.StationType;
+using Logger = NeutronCore.Global.Logger;
+using NeutronCore.Global;
 
 namespace NeutronData.Repositories
 {
@@ -25,13 +27,12 @@ namespace NeutronData.Repositories
         private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
 
         private readonly IDynamicLogger _logger;
-        
-        private readonly WorkstationAreaRepository _workstationAreaRepository = new WorkstationAreaRepository();
+
         private readonly GenericRepository<Area> _repoArea = new GenericRepository<Area>(new NeutronDb());
 
-        public AreaRepository(IDynamicLogger dynamicLogger)
+        public AreaRepository()
         {
-            _logger = dynamicLogger;
+            _logger = Logger.SetupLogger("AreaRepository");
         }
 
         public int GetAreaId(int areaNumber)
@@ -51,7 +52,7 @@ namespace NeutronData.Repositories
         }
         public List<Area> Lookup()
         {
-            var areas = _repoArea.All().ToList();
+            var areas = _repoArea.All().OrderBy(o => o.AreaNumber).ToList();
             return areas;
         }
 
@@ -107,8 +108,6 @@ namespace NeutronData.Repositories
         //}
 
 
-
-
         public int[] GetAllAreaIds()
         {
             return _repoArea.All().Select(r => r.Id).ToArray();
@@ -128,6 +127,21 @@ namespace NeutronData.Repositories
 
             return rec;
 
+        }
+
+        public List<Area> GetAllAreas()
+        {
+            var recs = new List<Area>();
+            try
+            {
+                recs = _repoArea.All().ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return recs;
         }
 
         public List<Area> GetAllPickableAreas()
@@ -235,28 +249,28 @@ namespace NeutronData.Repositories
         //    };
         //}
 
-        public List<Station> GetStationsByArea(int areaId)
-        {
-            var recs = new List<Station>();
+        //public List<Station> GetStationsByArea(int areaId)
+        //{
+        //    var recs = new List<Station>();
 
-            Task.Run(() => _logger.Log(@"Get All Stations by AreaId Start"));
-            try
-            {
-                using (var context = new NeutronDb())
-                {
-                    var param = new SqlParameter("@AREAID", areaId);
-                    recs = context.Database.SqlQuery<Station>(sql: "usp_GetStationsByArea @AREAID "
-                        , parameters: new object[] { param }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Task.Run(() => _logger.Log($"Get All Stations by AreaId Error.   {ex.Message} \r\n {ex.InnerException}"));
-            }
+        //    Task.Run(() => _logger.Log(@"Get All Stations by AreaId Start"));
+        //    try
+        //    {
+        //        using (var context = new NeutronDb())
+        //        {
+        //            var param = new SqlParameter("@AREAID", areaId);
+        //            recs = context.Database.SqlQuery<Station>(sql: "usp_GetStationsByArea @AREAID "
+        //                , parameters: new object[] { param }).ToList();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Task.Run(() => _logger.Log($"Get All Stations by AreaId Error.   {ex.Message} \r\n {ex.InnerException}"));
+        //    }
 
-            Task.Run(() => _logger.Log($"Get All Stations by AreaId End:  {recs.Count}"));
+        //    Task.Run(() => _logger.Log($"Get All Stations by AreaId End:  {recs.Count}"));
 
-            return recs;
-        }
+        //    return recs;
+        //}
     }
 }

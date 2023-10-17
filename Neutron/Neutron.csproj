@@ -32,7 +32,7 @@
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>491</ApplicationRevision>
+    <ApplicationRevision>496</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -186,7 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\PanelManager.cs" />
-    <Compile Include="Controllers\IBlastzoneDisplayController.cs" />
+    <Compile Include="Controllers\BlastzoneDisplayController.cs" />
     <Compile Include="Controllers\IProLiteController.cs" />
     <Compile Include="Controllers\TCP_IPTIController.cs" />
     <Compile Include="Controllers\Mp12D.cs" />
@@ -851,10 +851,6 @@
     <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
       <Project>{6ce97d6f-a149-42fe-a858-2272db64897e}</Project>
       <Name>AlliedPostOffice</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj">
-      <Project>{69b6d943-9c4f-417e-9a5e-07f56926e526}</Project>
-      <Name>BlastzoneController</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeviceIndicatorService\DeviceIndicatorService.csproj">
       <Project>{2AEDD746-887B-411D-A2B9-52AB4835ACBF}</Project>

@@ -51,8 +51,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBinDisplay", "EBinDisplayM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDataTests", "NeutronDataTests\NeutronDataTests.csproj", "{A4825200-9451-4D7C-AB6D-830FEABFEDFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlastzoneController", "BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj", "{69B6D943-9C4F-417E-9A5E-07F56926E526}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProliteController", "ProLiteController\ProliteController\ProliteController.csproj", "{CC797714-8D01-40AF-8A2F-737B06F133CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthernetTransmitter", "EthernetTransmitter\EthernetTransmitter.csproj", "{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}"
@@ -160,10 +158,6 @@ Global
 		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4825200-9451-4D7C-AB6D-830FEABFEDFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69B6D943-9C4F-417E-9A5E-07F56926E526}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC797714-8D01-40AF-8A2F-737B06F133CD}.Release|Any CPU.ActiveCfg = Release|Any CPU

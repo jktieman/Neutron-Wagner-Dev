@@ -9,382 +9,472 @@ using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronData.Models.Lookups;
 using System.Data.SqlClient;
-using BlastzoneController;
 using ProliteController;
 using StationType = NeutronCore.Enums.StationType;
-using DeviceType = NeutronCore.Enums.DeviceType;
+using DeviceType = NeutronCore.Enums.DeviceTypeEnum;
+using RJCP.IO.Ports;
+using Logger = NeutronCore.Global.Logger;
+using NeutronCore.Global;
+using NeutronCore.Models;
+
 
 namespace NeutronData.Repositories
 {
     public class WorkstationRepository : IWorkstationRepository
     {
         private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-        
+
         private readonly GenericRepository<Workstation> _repoWorkstation = new GenericRepository<Workstation>(new NeutronDb());
-        
+        private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes = new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
         private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
         private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
         private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
-        
+
         private readonly IDynamicLogger _logger;
-        private readonly IBlastzone _blastzone;
-        private readonly IProlite _prolite;
+        private readonly NeutronVariables _neutronVariables;
 
-        public WorkstationRepository(IDynamicLogger dynamicLogger, IBlastzone blastzone, IProlite prolite)
+
+
+        public WorkstationRepository(NeutronVariables neutronVariables)
         {
-            _logger = dynamicLogger;
-            _blastzone = blastzone;
-            _prolite = prolite;
+            _logger = Logger.SetupLogger("WorkStationRepository");
+            _neutronVariables = neutronVariables;
         }
-
-        public WorkstationView GetStationView(int workstationId) // ws
+        /// <summary>
+        /// Based on the workstationId, get the workstation and all the hardware devices associated with it.
+        /// </summary>
+        /// <param name="workstationId">The Id of the current workstation </param>
+        /// <returns>The Id of an <see cref="WorkstationView"/></returns>
+        public async Task<WorkstationView> GetStationView(int workstationId) // ws
         {
-            _logger.FolderName = $"{nameof(WorkstationRepository)}_{workstationId}";  // ws
+            //_logger.FolderName = $"{nameof(WorkstationRepository)}_{workstationId}";  // ws
             //var logFileDirectory = LoaderSettings.GetLogFileDirectory();
             //var folderName = $"StationView_{workstationId.ToString()}";
             //var logger = new AlliedLogger.DynamicLogger(logFileDirectory, folderName, @"true");
             WorkstationView workstationView = null;
-            Workstation workstation; 
+
+
+
+            // Dictionary of Communication Types
             var dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
+
+
             try
             {
-                workstation = _repoWorkstation.FindByKey(workstationId);
+                var workstation = _repoWorkstation.FindByKey(workstationId);
 
                 if (workstation != null)
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Workstation Name: {workstation.Name}"));
-                    //get all the hardware devices on this workstation carousel, lights scale, etc
-                    workstationView = new WorkstationView();
-                    try
+                    await _logger.LogDetailAsync($"Workstation Name: {workstation.Name}");
+                    // create the WorkstationView object
+                    workstationView = new WorkstationView
                     {
-                        var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == workstation.Id).ToList();
-                        Task.Run(() => _logger.LogDetailAsync($"Workstation Name: " + workstation.Name + " Number of Devices: " + hardwareDevices.Count));
-                        
-                        foreach (var device in hardwareDevices)
-                        {
-                            Task.Run(() => _logger.LogDetailAsync($"Hardware Device: {device.Name}"));
-                            int key;
-                            switch (device.DeviceTypeId)
-                            {
-                                case (int)DeviceType.Shuttle:
-                                    {
-                                        //key = dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
-                                        Task.Run(() => _logger.LogDetailAsync($"This is a Shuttle Device"));
-                                        //if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This is a TCP Device"));
-                                            var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
-                                            Task.Run(() => _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString()));
-                                            if (tcpConfiguration != 0)
-                                            {
-                                                try
-                                                {
-                                                    var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
-                                                    Task.Run(() => _logger.LogDetailAsync($"TCP Name: {tcp.Name}"));
-                                                    device.TcpConfiguration = tcp;
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Task.Run(() => _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                                    device.TcpConfiguration = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                                device.TcpConfiguration = null;
-                                            }
-                                            workstationView.HardwareDevices.Add(device);
-                                        }
-                                        //if (device.CommunicationTypeId == (int) CommunicationType.Serial)
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This is a Serial Device"));
-                                            var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
-                                            Task.Run(() => _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString()));
-                                            if (serialConfiguration != 0)
-                                            {
-                                                try
-                                                {
-                                                    var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
-                                                    Task.Run(() => _logger.LogDetailAsync($"Serial Name: {serial.Name}"));
-                                                    device.SerialConfiguration = serial;
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Task.Run(() => _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                                    device.SerialConfiguration = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                                device.SerialConfiguration = null;
-                                            }
-                                            workstationView.HardwareDevices.Add(device);
-                                        }
-                                        break;
-                                    }
-                                case (int)DeviceType.Carousel:
-                                    {
-                                        Task.Run(() => _logger.LogDetailAsync(@"This is a Carousel Device"));
-                                        //if (device.CommunicationTypeId == (int) CommunicationType.TCP)
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This is a TCP Device"));
-                                            var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
-                                            Task.Run(() => _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString()));
-                                            if (tcpConfiguration != 0)
-                                            {
-                                                try
-                                                {
-                                                    var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
-                                                    Task.Run(() => _logger.LogDetailAsync($"TCP Name: {tcp.Name}"));
-                                                    device.TcpConfiguration = tcp;
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Task.Run(() => _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                                    device.TcpConfiguration = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                                device.TcpConfiguration = null;
-                                            }
-                                            workstationView.HardwareDevices.Add(device);
+                        AreaId = workstation.AreaId,
+                        Area = workstation.Area,
+                        StationTypeId = workstation.StationTypeId,
+                        StationType = workstation.StationType,
+                        WorkstationId = workstation.Id,
+                        WorkstationNumber = workstation.StationNumber,
+                        Name = workstation.Name,
+                        Sequence = workstation.Sequence,
+                        Workstation = workstation
+                    };
 
-                                        }
-                                        //if (device.CommunicationTypeId == (int)CommunicationType.Serial)
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This is a Serial Device"));
-                                            var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
-                                            Task.Run(() => _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString()));
-                                            if (serialConfiguration != 0)
-                                            {
-                                                try
-                                                {
-                                                    var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
-                                                    Task.Run(() => _logger.LogDetailAsync($"Serial Name: {serial.Name}  Port: {serial.PortName}"));
-                                                    device.SerialConfiguration = serial;
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Task.Run(() => _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                                    device.SerialConfiguration = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Task.Run(() => _logger.LogDetailAsync("Configuration set to null")) ;
-                                                device.SerialConfiguration = null;
-                                            }
-                                            workstationView.HardwareDevices.Add(device);
-                                        }
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "None").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This Device is not controlled."));
-                                            Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                            device.SerialConfiguration = null;
-                                            workstationView.HardwareDevices.Add(device);
-                                        }
-                                        break;
-                                    }
-                                case (int)DeviceType.Rack:   //Rack
-                                    {
-                                        workstationView.HardwareDevices.Add(device);
-                                        break;
-                                    }
-                                case (int)DeviceType.IptiDisplays:   //IPTI 
-                                    {
-                                        workstationView.HardwareDevices.Add(device);
-                                        break;
-                                    }
-                                case 5:   //Not Used
-                                    {
-                                        break;
-                                    }
-                                case (int)DeviceType.RemstarDisplays:   //Remstar BPI/SHI
-                                    {
-                                        workstationView.HardwareDevices.Add(device);
-                                        break;
-                                    }
-                                case 7: //Blastzone
-                                {
-                                    workstationView.Blastzone = _blastzone;
-                                    ;
-                                        ////key = dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
-                                        //Task.Run(() => _logger.LogDetailAsync($"This is a Shuttle Device"));
-                                        ////if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
-                                        //key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
-                                        //if (device.CommunicationTypeId == key)
-                                        //{
-                                        //    Task.Run(() => _logger.LogDetailAsync($"This is a TCP Device"));
-                                        //    var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
-                                        //    Task.Run(() => _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString()));
-                                        //    if (tcpConfiguration != 0)
-                                        //    {
-                                        //        try
-                                        //        {
-                                        //            var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
-                                        //            Task.Run(() => _logger.LogDetailAsync($"TCP Name: {tcp.Name}"));
-                                        //            device.TcpConfiguration = tcp;
-                                        //        }
-                                        //        catch (Exception ex)
-                                        //        {
-                                        //            Task.Run(() => _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                        //            device.TcpConfiguration = null;
-                                        //        }
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                        //        device.TcpConfiguration = null;
-                                        //    }
-                                        //    workstationView.HardwareDevices.Add(device);
-                                        //}
-                                        ////if (device.CommunicationTypeId == (int) CommunicationType.Serial)
-                                        //key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
-                                        //if (device.CommunicationTypeId == key)
-                                        //{
-                                        //    Task.Run(() => _logger.LogDetailAsync($"This is a Serial Device"));
-                                        //    var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
-                                        //    Task.Run(() => _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString()));
-                                        //    if (serialConfiguration != 0)
-                                        //    {
-                                        //        try
-                                        //        {
-                                        //            var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
-                                        //            Task.Run(() => _logger.LogDetailAsync($"Serial Name: {serial.Name}"));
-                                        //            device.SerialConfiguration = serial;
-                                        //        }
-                                        //        catch (Exception ex)
-                                        //        {
-                                        //            Task.Run(() => _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                        //            device.SerialConfiguration = null;
-                                        //        }
-                                        //    }
-                                        //    else
-                                        //    {
-                                        //        Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                        //        device.SerialConfiguration = null;
-                                        //    }
-                                        //    workstationView.HardwareDevices.Add(device);
-                                        //}
-                                        break;
-                                    }
-                                case 8:  // (int)DeviceType.Hanel12D:
-                                    {
-                                        //key = dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
-                                        Task.Run(() => _logger.LogDetailAsync($"This is a Hanel 12D Device"));
-                                        //if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This is a TCP Device"));
-                                            var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
-                                            Task.Run(() => _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString()));
-                                            if (tcpConfiguration != 0)
-                                            {
-                                                try
-                                                {
-                                                    var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
-                                                    Task.Run(() => _logger.LogDetailAsync($"TCP Name: {tcp.Name}"));
-                                                    device.TcpConfiguration = tcp;
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Task.Run(() => _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                                    device.TcpConfiguration = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                                device.TcpConfiguration = null;
-                                            }
-                                            workstationView.HardwareDevices.Add(device);
-                                        }
-                                        //if (device.CommunicationTypeId == (int) CommunicationType.Serial)
-                                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
-                                        if (device.CommunicationTypeId == key)
-                                        {
-                                            Task.Run(() => _logger.LogDetailAsync($"This is a Serial Device"));
-                                            var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
-                                            Task.Run(() => _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString()));
-                                            if (serialConfiguration != 0)
-                                            {
-                                                try
-                                                {
-                                                    var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
-                                                    Task.Run(() => _logger.LogDetailAsync($"Serial Name: {serial.Name}"));
-                                                    device.SerialConfiguration = serial;
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Task.Run(() => _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}"));
-                                                    device.SerialConfiguration = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Task.Run(() => _logger.LogDetailAsync("Configuration set to null"));
-                                                device.SerialConfiguration = null;
-                                            }
-                                            workstationView.HardwareDevices.Add(device);
-                                        }
-                                        break;
-                                    }
-                                case 9:  // (int)DeviceType.Hanel12N:
-                                    {
-                                        break;
-                                    }
-                                case 10: // (int)DeviceType.ProLite:
-                                {
-                                    workstationView.Prolite = _prolite;
-                                        break;
-                                    }
-                            }
-                        }
-                        workstationView.AreaId = workstation.AreaId;
-                        workstationView.Area = workstation.Area;
-                        workstationView.StationTypeId = workstation.StationTypeId;
-                        workstationView.StationType = workstation.StationType;
-                        workstationView.WorkstationId = workstation.Id;
-                        workstationView.WorkstationNumber = workstation.StationNumber;
-                        workstationView.Name = workstation.Name;
-                        workstationView.Sequence = workstation.Sequence;
+                    // if the workstation is a supervisor, return the workstationView
+                    if (workstationView.StationTypeId == (int)StationType.Supervisor) return workstationView;
 
-                        //Task.Run(() => _logger.LogDetailAsync(@"WorkstationView Serial Configuration Name " + workstationView.HardwareDevices.First().SerialConfiguration.Name));
-                    }
-                    catch (Exception ex)
-                    {
-                        Task.Run(() => _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}"));
-                    }
+                    #region Hardware Devices Setup Old
+                    // get all the hardware devices on this workstation; carousel, lights scale, etc
+                    //try
+                    //{
+                    //    //get all the hardware devices on this workstation; carousel, lights scale, etc
+                    //    var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == workstation.Id).ToList();
+                    //    await _logger.LogDetailAsync($"Workstation Name: " + workstation.Name + " Number of Devices: " + hardwareDevices.Count);
+
+                    //    // loop through the hardware devices
+                    //    // get the communication type
+                    //    // get the tcp or serial configuration
+                    //    // create the hardware device view object
+                    //    foreach (var device in hardwareDevices)
+                    //    {
+                    //        var duh = device.WorkstationId;
+                    //        var duh2 = device.Workstation;
+
+                    //        //device.Workstation = workstation;
+                    //        // device.WorkstationId = workstation.Id;
+
+                    //        await _logger.LogDetailAsync($"Loading Hardware Device: {device.Name}");
+                    //        int key;
+                    //        // get the device type
+                    //        switch (device.DeviceTypeId)
+                    //        {
+                    //            // DeviceType = 1 or Shuttle
+                    //            case (int)DeviceType.Shuttle:
+                    //                {
+                    //                    //key = dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
+                    //                    await _logger.LogDetailAsync($"This is a Shuttle Device");
+                    //                    //if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
+                    //                    key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
+                    //                    if (device.CommunicationTypeId == key)
+                    //                    {
+                    //                        await _logger.LogDetailAsync($"This is a TCP Device");
+                    //                        var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
+                    //                        await _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString());
+                    //                        if (tcpConfiguration != 0)
+                    //                        {
+                    //                            try
+                    //                            {
+                    //                                var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
+                    //                                await _logger.LogDetailAsync($"TCP Name: {tcp.Name}");
+                    //                                device.TcpConfiguration = tcp;
+                    //                            }
+                    //                            catch (Exception ex)
+                    //                            {
+                    //                                await _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                                device.TcpConfiguration = null;
+                    //                            }
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            await _logger.LogDetailAsync("Configuration set to null");
+                    //                            device.TcpConfiguration = null;
+                    //                        }
+                    //                        workstationView.HardwareDevices.Add(device);
+                    //                    }
+                    //                    //if (device.CommunicationTypeId == (int) CommunicationType.Serial)
+                    //                    key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
+                    //                    if (device.CommunicationTypeId == key)
+                    //                    {
+                    //                        await _logger.LogDetailAsync($"This is a Serial Device");
+                    //                        var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
+                    //                        await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString());
+                    //                        if (serialConfiguration != 0)
+                    //                        {
+                    //                            try
+                    //                            {
+                    //                                var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
+                    //                                await _logger.LogDetailAsync($"Serial Name: {serial.Name}");
+                    //                                device.SerialConfiguration = serial;
+                    //                            }
+                    //                            catch (Exception ex)
+                    //                            {
+                    //                                await _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                                device.SerialConfiguration = null;
+                    //                            }
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            await _logger.LogDetailAsync("Configuration set to null");
+                    //                            device.SerialConfiguration = null;
+                    //                        }
+                    //                        workstationView.HardwareDevices.Add(device);
+                    //                    }
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 2 or Carousel
+                    //            case (int)DeviceType.Carousel:
+                    //                {
+                    //                    await _logger.LogDetailAsync(@"This is a Carousel Device");
+                    //                    //if (device.CommunicationTypeId == (int) CommunicationType.TCP)
+                    //                    key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
+                    //                    if (device.CommunicationTypeId == key)
+                    //                    {
+                    //                        await _logger.LogDetailAsync($"This is a TCP Device");
+                    //                        var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
+                    //                        await _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString());
+                    //                        if (tcpConfiguration != 0)
+                    //                        {
+                    //                            try
+                    //                            {
+                    //                                var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
+                    //                                await _logger.LogDetailAsync($"TCP Name: {tcp.Name}");
+                    //                                device.TcpConfiguration = tcp;
+                    //                            }
+                    //                            catch (Exception ex)
+                    //                            {
+                    //                                await _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                                device.TcpConfiguration = null;
+                    //                            }
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            await _logger.LogDetailAsync("Configuration set to null");
+                    //                            device.TcpConfiguration = null;
+                    //                        }
+                    //                        workstationView.HardwareDevices.Add(device);
+
+                    //                    }
+                    //                    //if (device.CommunicationTypeId == (int)CommunicationType.Serial)
+                    //                    key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
+                    //                    if (device.CommunicationTypeId == key)
+                    //                    {
+                    //                        await _logger.LogDetailAsync($"This is a Serial Device");
+                    //                        var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
+                    //                        await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString());
+                    //                        if (serialConfiguration != 0)
+                    //                        {
+                    //                            try
+                    //                            {
+                    //                                var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
+                    //                                await _logger.LogDetailAsync($"Serial Name: {serial.Name}  Port: {serial.PortName}");
+                    //                                device.SerialConfiguration = serial;
+                    //                            }
+                    //                            catch (Exception ex)
+                    //                            {
+                    //                                await _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                                device.SerialConfiguration = null;
+                    //                            }
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            await _logger.LogDetailAsync("Configuration set to null");
+                    //                            device.SerialConfiguration = null;
+                    //                        }
+                    //                        workstationView.HardwareDevices.Add(device);
+                    //                    }
+                    //                    key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "None").Key;
+                    //                    if (device.CommunicationTypeId == key)
+                    //                    {
+                    //                        await _logger.LogDetailAsync($"This Device is not controlled.");
+                    //                        await _logger.LogDetailAsync("Configuration set to null");
+                    //                        device.SerialConfiguration = null;
+                    //                        workstationView.HardwareDevices.Add(device);
+                    //                    }
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 3 or Rack
+                    //            case (int)DeviceType.Rack:   //Rack
+                    //                {
+                    //                    workstationView.HardwareDevices.Add(device);
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 4 or IPTI
+                    //            case (int)DeviceType.IptiDisplays:   //IPTI 
+                    //                {
+                    //                    // get the communication type
+                    //                    var communicationType = _repoCommunicationTypes.FindBy(c => c.Id == device.CommunicationTypeId).FirstOrDefault();
+                    //                    if (communicationType == null) break;
+
+                    //                    if (communicationType.Name == "TCP")
+                    //                    {
+                    //                        var tcpConfig = _repoTcpConfiguration.FindBy(t => t.Id == device.TcpConfigurationId).FirstOrDefault();
+                    //                        if (tcpConfig == null) break;
+                    //                        device.TcpConfiguration = tcpConfig;
+
+                    //                    }
+                    //                    else if (communicationType.Name == "Serial")
+                    //                    {
+
+                    //                    }
+
+                    //                    workstationView.HardwareDevices.Add(device);
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 5 or Not Used
+                    //            case 5:   //Not Used
+                    //                {
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 6 or Remstar Displays
+                    //            case (int)DeviceType.RemstarDisplays:   //Remstar BPI/SHI
+                    //                {
+                    //                    workstationView.HardwareDevices.Add(device);
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 7 or Blastzone
+                    //            case (int)DeviceType.Blastzone: //Blastzone
+                    //                {
+                    //                    workstationView.Blastzone = _blastzone;
+
+                    //                    ////key = dicCommunicationTypes.FirstOrDefault(d => d.Value =="TCP").Key;
+                    //                    //await _logger.LogDetailAsync($"This is a Shuttle Device");
+                    //                    ////if (device.CommunicationTypeId == _repoCommunicationTypes.FindBy(c => c.Name.Equals("TCP", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id)
+                    //                    //key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
+                    //                    //if (device.CommunicationTypeId == key)
+                    //                    //{
+                    //                    //    await _logger.LogDetailAsync($"This is a TCP Device");
+                    //                    //    var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
+                    //                    //    await _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString()));
+                    //                    //    if (tcpConfiguration != 0)
+                    //                    //    {
+                    //                    //        try
+                    //                    //        {
+                    //                    //            var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
+                    //                    //            await _logger.LogDetailAsync($"TCP Name: {tcp.Name}");
+                    //                    //            device.TcpConfiguration = tcp;
+                    //                    //        }
+                    //                    //        catch (Exception ex)
+                    //                    //        {
+                    //                    //            await _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                    //            device.TcpConfiguration = null;
+                    //                    //        }
+                    //                    //    }
+                    //                    //    else
+                    //                    //    {
+                    //                    //        await _logger.LogDetailAsync("Configuration set to null");
+                    //                    //        device.TcpConfiguration = null;
+                    //                    //    }
+                    //                    //    workstationView.HardwareDevices.Add(device);
+                    //                    //}
+                    //                    ////if (device.CommunicationTypeId == (int) CommunicationType.Serial)
+                    //                    //key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
+                    //                    //if (device.CommunicationTypeId == key)
+                    //                    //{
+                    //                    //    await _logger.LogDetailAsync($"This is a Serial Device");
+                    //                    //    var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
+                    //                    //    await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString()));
+                    //                    //    if (serialConfiguration != 0)
+                    //                    //    {
+                    //                    //        try
+                    //                    //        {
+                    //                    //            var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
+                    //                    //            await _logger.LogDetailAsync($"Serial Name: {serial.Name}");
+                    //                    //            device.SerialConfiguration = serial;
+                    //                    //        }
+                    //                    //        catch (Exception ex)
+                    //                    //        {
+                    //                    //            await _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                    //            device.SerialConfiguration = null;
+                    //                    //        }
+                    //                    //    }
+                    //                    //    else
+                    //                    //    {
+                    //                    //        await _logger.LogDetailAsync("Configuration set to null");
+                    //                    //        device.SerialConfiguration = null;
+                    //                    //    }
+                    //                    //    workstationView.HardwareDevices.Add(device);
+                    //                    //}
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 8 or Hanel12D
+                    //            case (int)DeviceType.Hanel12D:
+                    //                {
+
+                    //                    await _logger.LogDetailAsync($"This is a Hanel 12D Device");
+                    //                    if (device.Enabled)
+                    //                    {
+
+                    //                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "TCP").Key;
+                    //                        if (device.CommunicationTypeId == key)
+                    //                        {
+                    //                            await _logger.LogDetailAsync($"This is a TCP Device");
+                    //                            var tcpConfiguration = device.TcpConfigurationId.GetValueOrDefault();
+                    //                            await _logger.LogDetailAsync(@"TCP Configuration number: " + tcpConfiguration.ToString());
+                    //                            if (tcpConfiguration != 0)
+                    //                            {
+                    //                                try
+                    //                                {
+                    //                                    var tcp = _repoTcpConfiguration.FindByKey(tcpConfiguration);
+                    //                                    await _logger.LogDetailAsync($"TCP Name: {tcp.Name}");
+                    //                                    device.TcpConfiguration = tcp;
+                    //                                }
+                    //                                catch (Exception ex)
+                    //                                {
+                    //                                    await _logger.LogDetailAsync($"Error finding TCP Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                                    device.TcpConfiguration = null;
+                    //                                }
+                    //                            }
+                    //                            else
+                    //                            {
+                    //                                await _logger.LogDetailAsync("Configuration set to null");
+                    //                                device.TcpConfiguration = null;
+                    //                            }
+                    //                            workstationView.HardwareDevices.Add(device);
+                    //                        }
+
+                    //                        key = dicCommunicationTypes.FirstOrDefault(d => d.Value == "Serial").Key;
+                    //                        if (device.CommunicationTypeId == key)
+                    //                        {
+                    //                            await _logger.LogDetailAsync($"This is a Serial Device");
+                    //                            var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
+                    //                            await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString());
+                    //                            if (serialConfiguration != 0)
+                    //                            {
+                    //                                try
+                    //                                {
+                    //                                    var serial = _repoSerialConfiguration.FindByKey(serialConfiguration);
+                    //                                    await _logger.LogDetailAsync($"Serial Name: {serial.Name}");
+                    //                                    device.SerialConfiguration = serial;
+                    //                                }
+                    //                                catch (Exception ex)
+                    //                                {
+                    //                                    await _logger.LogDetailAsync($"Error finding Serial Configuration.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //                                    device.SerialConfiguration = null;
+                    //                                }
+                    //                            }
+                    //                            else
+                    //                            {
+                    //                                await _logger.LogDetailAsync("Configuration set to null");
+                    //                                device.SerialConfiguration = null;
+                    //                            }
+                    //                            workstationView.HardwareDevices.Add(device);
+                    //                        }
+                    //                    }
+
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 9 or Hanel12N
+                    //            case (int)DeviceType.Hanel12N:
+                    //                {
+                    //                    break;
+                    //                }
+                    //            // DeviceType = 10 or ProLite
+                    //            case (int)DeviceType.ProLite:
+                    //                {
+                    //                    await _logger.LogDetailAsync($"This is a ProLite Device");
+
+                    //                    // if the workstationView.ProliteManager is null, create a new ProliteManager
+                    //                    if (workstationView.ProliteManager == null)
+                    //                    {
+                    //                        workstationView.ProliteManager = new ProliteManager(_neutronVariables);
+                    //                    }
+
+                    //                    if (device.DeviceType == null)
+                    //                    {
+                    //                        device.DeviceType = _repoDeviceTypes.FindBy(d => d.Id == device.DeviceTypeId).FirstOrDefault();
+                    //                    }
+
+                    //                    if (device.CommunicationType == null)
+                    //                    {
+                    //                        device.CommunicationType = _repoCommunicationTypes.FindBy(c => c.Id == device.CommunicationTypeId).FirstOrDefault();
+                    //                    }
+
+                    //                    if (device.CommunicationType != null && device.CommunicationType.Name == "Serial")
+                    //                    {
+                    //                        await _logger.LogDetailAsync("This is a Serial Device");
+                    //                        var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
+                    //                        await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString());
+                    //                        device.SerialConfiguration = _repoSerialConfiguration.FindBy(s => s.Id == device.SerialConfigurationId).FirstOrDefault();
+
+                    //                    }
+                    //                    await _logger.LogDetailAsync($"Adding Prolite Device to ProliteManager");
+                    //                    workstationView.ProliteManager.AddProlite(device);
+                    //                    break;
+                    //                }
+                    //        }
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    await _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}");
+                    //} 
+                    #endregion
                 }
                 else  //workstation = null
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Workstation is null"));
+                    await _logger.LogDetailAsync("Workstation is null");
                 }
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Error finding workstation.  {ex.Message}  Inner:  {ex.InnerException}"));
+                await _logger.LogDetailAsync($"Error finding workstation.  {ex.Message}  Inner:  {ex.InnerException}");
             }
             return workstationView;
         }
 
         public int GetStationId(int stationNumber)
         {
-            
+
             var workstationId = 0;
             var result = _repoWorkstation.FindBy(r => r.StationNumber == stationNumber).FirstOrDefault();
             if (result != null)

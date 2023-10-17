@@ -20,7 +20,7 @@ namespace NeutronLoader
     {
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
         private readonly IWorkstationRepository _workstationRepository;
         private Timer _timer;
@@ -28,7 +28,7 @@ namespace NeutronLoader
         private DirectoryInfo _hostUploadDirectory;
 
         public UploadProcessorPr1(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            DynamicLogger logger, WorkstationView workstationView, IWorkstationRepository workstationRepository)
+            IDynamicLogger logger, WorkstationView workstationView, IWorkstationRepository workstationRepository)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
@@ -39,11 +39,14 @@ namespace NeutronLoader
 
         public void RunUploadOnce()
         {
+            _logger.LogDetailAsync("RunUploadOnce Start");
+
             CreateHostFile();
         }
 
         public void StartProcessingUploadFiles()
         {
+            _logger.LogDetailAsync("StartProcessingUploadFiles Start");
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
             _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
@@ -51,6 +54,7 @@ namespace NeutronLoader
 
         public void StopProcessingUploadFiles()
         {
+                _logger.LogDetailAsync("StopProcessingUploadFiles Dispose of Timer");
             _timer.Dispose();
         }
 
@@ -67,6 +71,8 @@ namespace NeutronLoader
 
         public void CreateHostFile()
         {
+            _logger.LogDetailAsync("CreateHostFile Start");
+
             var appendFile = Convert.ToBoolean(LoaderSettings.AppendFile);
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
             if (!Directory.Exists(_hostUploadDirectory.FullName))
@@ -77,12 +83,14 @@ namespace NeutronLoader
             if (!string.IsNullOrEmpty(fileName))
             {
                 var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
+                _logger.LogDetailAsync($"CreateHostFile: {fullName}");
                 if (File.Exists(fullName))
                 {
                     if(!appendFile)
                     {
-                        MessageBox.Show("Upload file exists.", "File Exists", MessageBoxButtons.OK,
+                        MessageBox.Show(@"Upload file exists.  Append file set to False.", @"File Exists", MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
+                        _logger.LogDetailAsync($"Upload file exists: {fullName}    Append file set to False.");
                         return;
                     }
                 }
@@ -117,15 +125,16 @@ namespace NeutronLoader
                         }
                         else
                         {
-                            MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
+                            MessageBox.Show(@"Create Host File Failed, see Log file in UploadManager.");
+                            _logger.LogDetailAsync($"Create Host File Failed, see Log file in UploadManager.");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
-                _logger.Log($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                MessageBox.Show(@"Upload Process Failed, see Log file in UploadManager.");
+                _logger.LogDetailAsync($"Upload Process Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             _uploadBusy = false;

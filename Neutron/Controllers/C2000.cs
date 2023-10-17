@@ -215,31 +215,31 @@ namespace Neutron.Controllers
             //// You may now refer to any components of your UI as below.
             //// formAlias.LabelNotify.Text = "Drive Notification Received";
             //formAlias.ShowMessage("Drive Notification Received");
-            //Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} Notification"));
+            //Task.Run(() => formAlias.logger.LogDetailAsync($"Shuttle {firedNotification.TargetDevice.ToString()} Notification"));
 
             //if (firedNotification.Message.ToString().Length > 0)
             //{
             //    // you should report these messages to the operator or write them to a log that is frequently monitored.
-            //    Task.Run(() => formAlias.logger.Log($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()} returned with a message.  Message: {firedNotification.Message.ToString()}"));
+            //    Task.Run(() => formAlias.logger.LogDetailAsync($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()} returned with a message.  Message: {firedNotification.Message.ToString()}"));
             //}
 
             //if (firedNotification.Expired)
             //{
-            //    Task.Run(() => formAlias.logger.Log($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()}  has timed-out."));
+            //    Task.Run(() => formAlias.logger.LogDetailAsync($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()}  has timed-out."));
             //}
 
             //else if (firedNotification.MotionStatusUponNotification)
             //{
             //    // Note that the current implementation of Notification_Register() does not support notifications
             //    // for devices in motion, so this particular logic will not execute at this time. 
-            //    Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} is in motion."));
+            //    Task.Run(() => formAlias.logger.LogDetailAsync($"Shuttle {firedNotification.TargetDevice.ToString()} is in motion."));
             //    // If this was a horizontal or vertical carousel, NotifyTarget.Current_Tray would describe the shelf/carrier currently in position as it moves past.
             //}
 
             //else
             //{
             //    string alignmentStatus = firedNotification.AlignmentStatusUponNotification ? "in alignment." : "out of alignment.";
-            //    Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} is stationary and tray {firedNotification.TargetTray.ToString()} is {alignmentStatus}"));
+            //    Task.Run(() => formAlias.logger.LogDetailAsync($"Shuttle {firedNotification.TargetDevice.ToString()} is stationary and tray {firedNotification.TargetTray.ToString()} is {alignmentStatus}"));
             //}
         }
 
@@ -382,11 +382,11 @@ namespace Neutron.Controllers
 
                 if (item.Enabled)
                 {
-                    if (item.DeviceTypeId == (int)DeviceType.Shuttle) //Shuttle
+                    if (item.DeviceTypeId == (int)DeviceTypeEnum.Shuttle) //Shuttle
                     {
                         response = PositionDevice(item.DeviceNumber, 0);
                     }
-                    if (item.DeviceTypeId == (int)DeviceType.Carousel) //Carousel
+                    if (item.DeviceTypeId == (int)DeviceTypeEnum.Carousel) //Carousel
                     {
                         response = PositionDevice(item.DeviceNumber, 1);
                     }

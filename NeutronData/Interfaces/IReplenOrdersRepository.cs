@@ -8,7 +8,7 @@ namespace NeutronData.Interfaces
     public interface IReplenOrdersRepository
     {
         ReplenOrder GetOrder(int id);
-        List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(WorkstationView station, string searchField);
+        List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField);
         IEnumerable<ReplenOrderView> GetReplenOrderViews(string orderStatus, string searchField);
         IEnumerable<ReplenOrderView> GetOrderView();
         List<AvailableReplenOrdersView> GetAvailableOrders(WorkstationView station);
@@ -21,6 +21,6 @@ namespace NeutronData.Interfaces
         IEnumerable<ReplenPickView> GetPickViewsByItem(List<BatchPosition> ordersToPick, string partNum);
         IEnumerable<ReplenOrderView> GetRackOrders(string search);
         IEnumerable<RackReplenOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
-        ReplenOrder GetOrderAndOrderDetails(int? orderId, int workstationId);
+        ReplenOrder GetOrderAndOrderDetails(int? orderId, int areaId);
     }
 }

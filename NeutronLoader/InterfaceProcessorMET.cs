@@ -33,11 +33,10 @@ namespace NeutronLoader
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Station> _repoStation = new GenericRepository<Station>(new NeutronDb());
         private readonly GenericRepository<Shipper> _repoShippers = new GenericRepository<Shipper>(new NeutronDb());
         private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
 
-        private DynamicLogger _logger;
+        private IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
@@ -211,7 +210,7 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 string msg = "Get New Orders " + ex.Message + "  " + ex.InnerException;
-                Logger.Log(msg);
+                _logger.Log(msg);
                 ErrorAlert(msg);
             }
             return orderLines;

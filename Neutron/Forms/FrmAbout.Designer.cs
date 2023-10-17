@@ -173,7 +173,7 @@
             // LabelProductName
             // 
             this.LabelProductName.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelProductName.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelProductName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelProductName.Location = new System.Drawing.Point(125, 21);
             this.LabelProductName.Name = "LabelProductName";
             this.LabelProductName.Size = new System.Drawing.Size(404, 39);

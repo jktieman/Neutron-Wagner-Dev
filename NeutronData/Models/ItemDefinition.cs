@@ -19,6 +19,7 @@ namespace NeutronData.Models
         public int SystemMax { get; set; }
         public int SystemMin { get; set; }
         public int StorageTypeId { get; set; }
+        public int PickMax { get; set; }
         public float Weight { get; set; }
         public bool Scale { get; set; }
         [ForeignKey("StorageTypeId")]

@@ -6,9 +6,9 @@ namespace NeutronCore
 {
     public static class ArchiveFile
     {
-        public static void Archive(FileInfo fileInfo)
+        public static void Archive(FileInfo fileInfo, IDynamicLogger logger)
         {
-            string archiveDir = string.Format(@"{0}Archive\{1}", LoaderSettings.GetHostOrderDirectory(), fileInfo.Name);
+            var archiveDir = $@"{LoaderSettings.GetHostOrderDirectory()}Archive\{fileInfo.Name}";
             try
             {
                 if (File.Exists(fileInfo.FullName))
@@ -23,7 +23,7 @@ namespace NeutronCore
             }
             catch (Exception ex)
             {
-                Logger.Log($"Archive File Error:  {ex.Message} \r\n  {ex.InnerException}");
+                logger.LogDetailAsync($"Archive File Error:  {ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
         }
     }

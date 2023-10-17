@@ -277,28 +277,28 @@ namespace Neutron.Forms
         private void MBMainSqlServer_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Sql Server Setup";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = SqlServer;
         }
 
         private void MBMainInterfaceFiles_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "Interface Settings";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = InterfaceFiles;
         }
 
         private void MBSqlServerBack_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = Main;
         }
 
         private void MBInterfaceFilesBack_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "System";
-            LabelFormTitle.BackColor = Color.RoyalBlue;
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = Main;
         }
 

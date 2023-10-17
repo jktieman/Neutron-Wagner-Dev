@@ -38,6 +38,10 @@ using NeutronData.DataContexts;
 using NeutronData.PrintModels;
 using SqlSchemaManager;
 using Timer = System.Timers.Timer;
+using ProliteController;
+using NeutronData.Repositories;
+using NeutronData.Models.Lookups;
+using StationType = NeutronCore.Enums.StationType;
 
 #endregion
 
@@ -61,6 +65,7 @@ namespace Neutron
         private readonly NeutronLicense _neutronLicense;
         private readonly IAreaRepository _areaRepository;
         private readonly ILocationsRepository _locationsRepository;
+        private readonly IBlastzone _blastzone;
         private WorkstationView _workstationView;
         private readonly IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
@@ -71,7 +76,11 @@ namespace Neutron
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
         private HistoryManager _historyManager;
-
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
+        private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes = new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
+        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
+        private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
+        private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
         /// <summary>
         /// Passed from NInject Kernel
         /// </summary>
@@ -85,18 +94,18 @@ namespace Neutron
         /// <param name="replenOrdersRepository"></param>
         /// <param name="enumManager"></param>
         /// <param name="itemDefinitionsRepository"></param>
-        /// <param name="dynamicLogger"></param>
         /// <param name="storedProcedureManager"></param>
         /// <param name="neutronVariables"></param>
         /// <param name="neutronLicense"></param>
         /// <param name="areaRepository"></param>
         /// <param name="locationsRepository"></param>
+
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
             , IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository
             , IEnumManager enumManager, IItemDefinitionsRepository itemDefinitionsRepository
-            , IDynamicLogger dynamicLogger, IStoredProcedureManager storedProcedureManager
+            , IStoredProcedureManager storedProcedureManager
             , NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , IAreaRepository areaRepository
             , ILocationsRepository locationsRepository)
@@ -117,14 +126,12 @@ namespace Neutron
             _enumManager = enumManager;
             _itemDefinitionsRepository = itemDefinitionsRepository;
             _storedProcedureManager = storedProcedureManager;
-            // _neutronVariables = jsonData.LoadFile<NeutronVariables>();
             _neutronVariables = neutronVariables;
-            //_neutronLicense = _jsonData.LoadFile<NeutronLicense>();
             _neutronLicense = neutronLicense;
             _areaRepository = areaRepository;
             _locationsRepository = locationsRepository;
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
-            _logger = dynamicLogger;
+            _logger = NeutronCore.Global.Logger.SetupLogger("Main");
 
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -135,9 +142,12 @@ namespace Neutron
 
             Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
+            //Log on to Neutron
             LogOn();
+            // Set up the workstation
+            var result = Task.Run(InitForm).Result;
 
-            if (!InitForm())
+            if (result == false)
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
                 return;
@@ -146,7 +156,7 @@ namespace Neutron
             var id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmMain thread: " + id);
 
-            if (_workstationView.StationTypeId != (int)StationType.Supervisor) return;
+            if (_workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor) return;
             //todo  Better way to run auto compress
             if (!_neutronVariables.UseAutoCompress) return;
             // Run every RunCompressInterval time 1 hour (3600000)
@@ -323,13 +333,15 @@ namespace Neutron
             }
         }
 
-        private bool InitForm()
+        private async Task<bool> InitForm()
         {
             // var icon = FontAwesome.Sharp.IconChar.BatteryEmpty.ToBitmap( Color.Black);
 
             var result = false;
+
             _enumManager.SaveActionCodesToDatabase();
             _enumManager.SaveLineStatusToDatabase();
+
             try
             {
                 ButtonPark.Visible = _neutronLicense.CompanyCode == "TOP";
@@ -339,85 +351,75 @@ namespace Neutron
                     if (workstationId == 0) workstationId = 1;
                     if (workstationId > 0)
                     {
-                        _workstationView = _workstationRepository.GetStationView(workstationId);
+                        _workstationView = await _workstationRepository.GetStationView(workstationId);
                         if (_workstationView != null)
                         {
-                            if (CreateLog("Main", _workstationView.WorkstationNumber))
+                            SetupEmail();
+
+                            _historyManager = DI.Create<HistoryManager>(_workstationView, _sendEmail);
+
+                            await _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+
+                            if (_neutronVariables.LoaderStation == _workstationView.WorkstationId)
                             {
-                                SetupEmail();
-
-                                _historyManager = DI.Create<HistoryManager>(_workstationView, _sendEmail);
-
-                                Task.Run(() => _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}"));
-                                //var rackStation = _workstationRepository.GetRackStation(8);
-
-                                if (_neutronVariables.LoaderStation == _workstationView.WorkstationId)
+                                _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, _workstationView);
+                                _startStopUploadManager = DI.Create<StartStopUploadManager>(_neutronVariables, _neutronLicense, _workstationView);
+                                if (StartLoader())
                                 {
-                                    _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, _workstationView);
-                                    //_startStopLoaderManager = new StartStopLoaderManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
-                                    _startStopUploadManager = DI.Create<StartStopUploadManager>(_neutronVariables, _neutronLicense, _workstationView);
-                                    //_startStopUploadManager = new StartStopUploadManager(_jsonData, _logger, _neutronVariables, _neutronLicense, rackStation);
-                                    if (StartLoader())
+                                    if (StartUpload())
                                     {
-                                        if (StartUpload())
-                                        {
-                                            result = true;
-                                        }
-                                        else
-                                        {
-                                            MessageBox.Show("Main Form: Auto Upload Initialization Error.");
-                                        }
+                                        result = true;
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Main Form: Auto Loader Initialization Error.");
-                                    }
-
-                                }
-
-
-
-
-                                if (_workstationView != null)
-                                {
-
-                                    if (SetupShuttle())
-                                    {
-                                        if (SetupDisplay())
-                                        {
-                                            if (SetupSlotFactory())
-                                            {
-                                                result = true;
-                                            }
-                                            else
-                                            {
-                                                MessageBox.Show("Main Form: Slot Factory Initialization Error.");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            MessageBox.Show("Main Form: Display Initialization Error.");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("Main Form: Device Initialization Error.");
+                                        MessageBox.Show("Main Form: Auto Upload Initialization Error.");
                                     }
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Main Form: Workstation Initialization Error.");
+                                    MessageBox.Show("Main Form: Auto Loader Initialization Error.");
                                 }
 
+                            }
 
-
-                            }  //-----
-
+                            var setupSlotFactory = SetupSlotFactory();
+                            if (setupSlotFactory == true)
+                            {
+                                result = true;
+                            }
                             else
                             {
-                                MessageBox.Show("Unable to create the log file.   Neutron Exiting.",
-                                    caption: "File Error", buttons: MessageBoxButtons.OK);
+                                MessageBox.Show("Main Form: Slot Factory Initialization Error.");
                             }
+                            // if the workstation is a supervisor, return the workstationView
+                            if (_workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor)
+                            {
+                                await SetupHardwareDevices();
+
+                               // GlobalVar.ProliteManager.TurnOn(1,1,1,1);
+
+                                //var setupShuttle = SetupShuttle();
+                                //if (setupShuttle == true)
+                                //{
+                                //    result = true;
+                                //}
+                                //else
+                                //{
+                                //    MessageBox.Show("Main Form: Device Initialization Error.");
+                                //}
+
+                                //var setupDisplay = SetupDisplay();
+                                //if (setupDisplay == true)
+                                //{
+                                //    result = true;
+                                //}
+                                //else
+                                //{
+                                //    MessageBox.Show("Main Form: Display Initialization Error.");
+                                //}
+                            }
+
+
                         }
                         else  // _workstationView is null
                         {
@@ -442,6 +444,182 @@ namespace Neutron
             }
 
             return result;
+        }
+
+        private async Task SetupHardwareDevices()
+        {
+            // get all the hardware devices on this workstation; carousel, lights scale, etc
+            try
+            {
+                //get all the hardware devices on this workstation; carousel, lights scale, etc
+                var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == _workstationView.WorkstationId).ToList();
+                await _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name + " Number of Devices: " + hardwareDevices.Count);
+
+                // loop through the hardware devices
+                // get the communication type
+                // get the tcp or serial configuration
+                // create the hardware device view object
+                foreach (var device in hardwareDevices)
+                {
+                    await _logger.LogDetailAsync($"Loading Hardware Device: {device.Name}");
+                    int key;
+                    // get the device type
+                    switch (device.DeviceTypeId)
+                    {
+                        // DeviceType = 1 or Shuttle
+                        case (int)DeviceTypeEnum.Shuttle:
+                            {
+                                await _logger.LogDetailAsync($"This is a Shuttle Device");
+                                _workstationView.HardwareDevices.Add(device);
+
+                                break;
+                            }
+                        
+                        // DeviceType = 2 or Carousel
+                        case (int)DeviceTypeEnum.Carousel:
+                            {
+                                await _logger.LogDetailAsync(@"This is a Carousel Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                break;
+                            }
+                        
+                        // DeviceType = 3 or Rack
+                        case (int)DeviceTypeEnum.Rack:   //Rack
+                            {
+                                await _logger.LogDetailAsync(@"This is a Rack Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                break;
+                            }
+                        // DeviceType = 4 or IPTI
+                        case (int)DeviceTypeEnum.IptiDisplays:   //IPTI 
+                            {
+                                await _logger.LogDetailAsync(@"This is a IPTI Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                if (GlobalVar.Displays == null)
+                                {
+                                    if (_neutronVariables.IptiDisplays)
+                                    {
+                                        _ = Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
+                                        // ReSharper disable once UseObjectOrCollectionInitializer
+                                        GlobalVar.Displays =
+                                            new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device);
+                                        //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
+                                         var result = GlobalVar.Displays != null;
+                                    }
+                                }
+
+                                break;
+                            }
+                        
+                        // DeviceType = 5 or Not Used
+                        case 5:   //Not Used
+                            {
+                                break;
+                            }
+                        
+                        // DeviceType = 6 or Remstar Displays
+                        case (int)DeviceTypeEnum.RemstarDisplays:   //Remstar BPI/SHI
+                            {
+                                await _logger.LogDetailAsync(@"This is a Remstar Display Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                break;
+                            }
+                        
+                        // DeviceType = 7 or Blastzone
+                        case (int)DeviceTypeEnum.Blastzone: //Blastzone
+                            {
+                                await _logger.LogDetailAsync(@"This is a Blastzone Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                if (GlobalVar.Displays == null)
+                                {
+                                    if (_neutronVariables.IptiDisplays)
+                                    {
+                                        _ = Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
+                                        GlobalVar.Displays =
+                                            new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device );
+                                        var result = GlobalVar.Displays != null;
+                                    }
+                                }
+
+                                break;
+                            }
+                        // DeviceType = 8 or Hanel12D
+                        case (int)DeviceTypeEnum.Hanel12D:
+                            {
+                                await _logger.LogDetailAsync($"This is a Hanel 12D Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                if (device.Enabled)
+                                {
+                                    if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
+                                    {
+                                        await _logger.LogDetailAsync("Mp12D Controller.");
+                                        GlobalVar.Hanel = new Mp12D(this, _workstationView);
+                                        GlobalVar.Hanel.InitStatus();
+                                        var result = GlobalVar.Hanel != null;
+                                    }
+
+                                }
+                                break;
+                            }
+                        // DeviceType = 9 or Hanel12N
+                        case (int)DeviceTypeEnum.Hanel12N:
+                            {
+                                await _logger.LogDetailAsync($"This is a Hanel 12N Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                if (device.Enabled)
+                                {
+                                    if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
+                                    {
+                                        await _logger.LogDetailAsync("MP12N Controller.");
+                                        GlobalVar.Hanel = new Mp12N(this, _workstationView);
+                                        GlobalVar.Hanel.InitStatus();
+                                        var result = GlobalVar.Hanel != null;
+                                    }
+
+                                }
+                                break;
+                            }
+                       
+                        // DeviceType = 10 or ProLite
+                        case (int)DeviceTypeEnum.ProLite:
+                            {
+                                await _logger.LogDetailAsync($"This is a ProLite Device");
+                                _workstationView.HardwareDevices.Add(device);
+                                // if the GlobalVar.ProliteManager is null, create a new ProliteManager
+                                if (GlobalVar.ProliteManager == null)
+                                {
+                                    GlobalVar.ProliteManager = new ProliteManager(device, _neutronVariables);
+                                }
+
+                                //if (device.DeviceType == null)
+                                //{
+                                //    device.DeviceType = _repoDeviceTypes.FindBy(d => d.Id == device.DeviceTypeId).FirstOrDefault();
+                                //}
+
+                                //if (device.CommunicationType == null)
+                                //{
+                                //    device.CommunicationType = _repoCommunicationTypes.FindBy(c => c.Id == device.CommunicationTypeId).FirstOrDefault();
+                                //}
+
+                                //if (device.CommunicationType != null && device.CommunicationType.Name == "Serial")
+                                //{
+                                //    await _logger.LogDetailAsync("This is a Serial Device");
+                                //    var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
+                                //    await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString());
+                                //    device.SerialConfiguration = _repoSerialConfiguration.FindBy(s => s.Id == device.SerialConfigurationId).FirstOrDefault();
+
+                                //}
+                                await _logger.LogDetailAsync($"Adding Prolite Device to ProliteManager");
+                                GlobalVar.ProliteManager.AddProlite(device);
+                                break;
+                            }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}");
+            }
         }
 
         private void SetupEmail()
@@ -540,139 +718,169 @@ namespace Neutron
 
         private bool SetupDisplay()
         {
-            if (_workstationView.StationTypeId == (int)StationType.Supervisor) return true;
-            bool result;
-            try
+
+
+            if (_workstationView.StationTypeId == (int)StationType.Carousel ||
+                _workstationView.StationTypeId == (int)StationType.Vertical ||
+                _workstationView.StationTypeId == (int)StationType.Blastzone)
             {
-                if (_neutronVariables.DisplaysEnabled)
+                bool result;
+                try
                 {
-                    if (GlobalVar.Displays == null)
+                    if (_neutronVariables.DisplaysEnabled)
                     {
-                        if (_neutronVariables.IptiDisplays)
+                        if (GlobalVar.Displays == null)
                         {
-                            Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
-                            // ReSharper disable once UseObjectOrCollectionInitializer
-                            GlobalVar.Displays = new TCP_IptiController(_jsonData, _workstationView, _neutronVariables);
-                            //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
-                            result = GlobalVar.Displays != null;
+                            if (_neutronVariables.IptiDisplays)
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
+                                // ReSharper disable once UseObjectOrCollectionInitializer
+                                GlobalVar.Displays =
+                                    new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, null);
+                                //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
+                                result = GlobalVar.Displays != null;
+                            }
+                            else
+                            {
+
+                                Task.Run(() => _logger.LogDetailAsync("Remstar Displays are being used."));
+                                GlobalVar.Displays = new DisplayController(_jsonData, _workstationView);
+                                result = GlobalVar.Displays != null;
+                                if (!GlobalVar.Displays.Ready)
+                                {
+                                    MessageBox.Show($"Error creating Display Controller.");
+                                    Task.Run(() => _logger.LogDetailAsync("Error creating Display Controller."));
+                                }
+
+                                //initialize the controller
+                                var counter = 1;
+                                while (GlobalVar.Displays.GetInitStatus() != 0)
+                                {
+                                    var seconds = 250 * counter / 1000;
+                                    Task.Run(() =>
+                                        _logger.LogDetailAsync(
+                                            $"Unable to initialize display controller for {seconds} seconds."));
+                                    if (counter >= 20)
+                                    {
+                                        MessageBox.Show(
+                                            $"Unable to initialize display controller after {seconds} seconds.");
+
+                                        Task.Run(() =>
+                                            _logger.LogDetailAsync(
+                                                $"Unable to initialize display controller after {seconds} seconds."));
+                                        break;
+                                    }
+
+                                    Thread.Sleep(250);
+                                    counter += 1;
+                                }
+
+                                Task.Run(() =>
+                                    _logger.LogDetailAsync(
+                                        $"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
+
+                            }
                         }
                         else
                         {
-
-                            Task.Run(() => _logger.LogDetailAsync("Remstar Displays are being used."));
-                            GlobalVar.Displays = new DisplayController(_jsonData, _workstationView);
-                            result = GlobalVar.Displays != null;
-                            if (!GlobalVar.Displays.Ready)
-                            {
-                                MessageBox.Show($"Error creating Display Controller.");
-                                Task.Run(() => _logger.LogDetailAsync("Error creating Display Controller."));
-                            }
-                            //initialize the controller
-                            var counter = 1;
-                            while (GlobalVar.Displays.GetInitStatus() != 0)
-                            {
-                                var seconds = 250 * counter / 1000;
-                                Task.Run(() => _logger.LogDetailAsync($"Unable to initialize display controller for {seconds} seconds."));
-                                if (counter >= 20)
-                                {
-                                    MessageBox.Show($"Unable to initialize display controller after {seconds} seconds.");
-
-                                    Task.Run(() => _logger.LogDetailAsync($"Unable to initialize display controller after {seconds} seconds."));
-                                    break;
-                                }
-                                Thread.Sleep(250);
-                                counter += 1;
-                            }
-                            Task.Run(() => _logger.LogDetailAsync($"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
-
+                            //Displays already exist
+                            result = true;
                         }
                     }
                     else
                     {
-                        //Displays already exist
+                        // no displays enabled, return true
                         result = true;
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // no displays enabled, return true
-                    result = true;
+                    MessageBox.Show(
+                        $"Error setting up display controller.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    result = false;
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error setting up display controller.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                result = false;
+
+                return result;
             }
 
-            return result;
+            return true;
         }
 
         private bool SetupShuttle()
         {
-            if (_workstationView.StationTypeId == (int)StationType.Supervisor) return true;
             var result = false;
-            try
+            if (_workstationView.StationTypeId == (int)StationType.Carousel ||
+                _workstationView.StationTypeId == (int)StationType.Vertical)
             {
-                if (_neutronVariables.ShuttleEnabled)
+                try
                 {
-                    Task.Run(() => _logger.LogDetailAsync("Shuttle Enabled - Setup."));
-                    if (_workstationView.HardwareDevices.Count > 0)
+                    if (_neutronVariables.ShuttleEnabled)
                     {
-                        if (_neutronVariables.DeviceDriver == DeviceDriverName.C3000() && GlobalVar.Shuttle == null)
+                        Task.Run(() => _logger.LogDetailAsync("Shuttle Enabled - Setup."));
+                        if (_workstationView.HardwareDevices.Count > 0)
                         {
-                            Task.Run(() => _logger.LogDetailAsync("C3000 Controller."));
-                            GlobalVar.Shuttle = new C3000(this, _workstationView);
-                            GlobalVar.Shuttle.InitStatus();
-                            result = GlobalVar.Shuttle != null;
-                        }
+                            if (_neutronVariables.DeviceDriver == DeviceDriverName.C3000() && GlobalVar.Shuttle == null)
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("C3000 Controller."));
+                                GlobalVar.Shuttle = new C3000(this, _workstationView);
+                                GlobalVar.Shuttle.InitStatus();
+                                result = GlobalVar.Shuttle != null;
+                            }
 
-                        if (_neutronVariables.DeviceDriver == DeviceDriverName.C2000() && GlobalVar.Shuttle == null)
-                        {
-                            Task.Run(() => _logger.LogDetailAsync("C2000 Controller."));
-                            GlobalVar.Shuttle = new C2000(this, _workstationView);
-                            GlobalVar.Shuttle.InitStatus();
-                            result = GlobalVar.Shuttle != null;
-                        }
+                            if (_neutronVariables.DeviceDriver == DeviceDriverName.C2000() && GlobalVar.Shuttle == null)
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("C2000 Controller."));
+                                GlobalVar.Shuttle = new C2000(this, _workstationView);
+                                GlobalVar.Shuttle.InitStatus();
+                                result = GlobalVar.Shuttle != null;
+                            }
 
-                        if (_neutronVariables.DeviceDriver == DeviceDriverName.RCC2() && GlobalVar.Shuttle == null)
-                        {
-                            Task.Run(() => _logger.LogDetailAsync("RCC2 Controller."));
-                            GlobalVar.Shuttle = new RCC2(this, _workstationView);
-                            GlobalVar.Shuttle.InitStatus();
-                            result = GlobalVar.Shuttle != null;
+                            if (_neutronVariables.DeviceDriver == DeviceDriverName.RCC2() && GlobalVar.Shuttle == null)
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("RCC2 Controller."));
+                                GlobalVar.Shuttle = new RCC2(this, _workstationView);
+                                GlobalVar.Shuttle.InitStatus();
+                                result = GlobalVar.Shuttle != null;
+                            }
+
+                            if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("Mp12D Controller."));
+                                GlobalVar.Hanel = new Mp12D(this, _workstationView);
+                                GlobalVar.Hanel.InitStatus();
+                                result = GlobalVar.Hanel != null;
+                            }
+
+                            if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("MP12N Controller."));
+                                GlobalVar.Hanel = new Mp12N(this, _workstationView);
+                                GlobalVar.Hanel.InitStatus();
+                                result = GlobalVar.Hanel != null;
+                            }
                         }
-                        if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D () && GlobalVar.Hanel == null)
+                        else
                         {
-                            Task.Run(() => _logger.LogDetailAsync("Mp12D Controller."));
-                            GlobalVar.Hanel = new Mp12D(this, _workstationView);
-                            GlobalVar.Hanel.InitStatus();
-                            result = GlobalVar.Hanel != null;
-                        }
-                        if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
-                        {
-                            Task.Run(() => _logger.LogDetailAsync("MP12N Controller."));
-                            GlobalVar.Hanel = new Mp12N(this, _workstationView);
-                            GlobalVar.Hanel.InitStatus();
-                            result = GlobalVar.Hanel != null;
+                            MessageBox.Show("Main Form Init: Hardware device count error.");
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Main Form Init: Hardware device count error.");
+                        // no shuttle enabled, return true
+                        result = true;
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // no shuttle enabled, return true
-                    result = true;
+                    MessageBox.Show(
+                        $"Error setting up device controller.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    result = false;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(
-                    $"Error setting up device controller.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                result = false;
+                // not a carousel or vertical, return true
+                result = true;
             }
 
             return result;
@@ -956,58 +1164,39 @@ namespace Neutron
 
         private void MtLocations_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations]) return;
+            Hide();
+            using (MetroForm frm = new FrmLocations(_jsonData, _workstationRepository, _workstationView, _neutronVariables, _lacProcessor, _historyManager))
             {
-                Hide();
-                using (MetroForm frm = new FrmLocations(_jsonData, _workstationRepository, _workstationView, _neutronVariables, _lacProcessor, _historyManager))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void MtInventory_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory]) return;
+            var main = this;
+            using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables))
             {
-                var main = this;
-                using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables))
-                {
-                    main.Hide();
-                    frm.ShowDialog();
-                    main.Show();
-                }
+                main.Hide();
+                frm.ShowDialog();
+                main.Show();
             }
         }
-
         private void MtHotAction_Click(object sender, EventArgs e)
         {
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
             Task.Run(() => _logger.LogDetailAsync("FrmMain HotAction button Pressed"));
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions])
+            Hide();
+            using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
+                       , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
             {
-                Hide();
-                //using (MetroForm frm = new FrmHotAction(_workstationView, _jsonData, _akaRepository
-                //    , _neutronVariables, _neutronLicense, _lacProcessor, _imageManager, _itemDefinitionsRepository, _workstationRepository, _historyManager))
-                //using (var frm = DI.Create<FrmHotAction>(
-                //           _neutronVariables
-                //           , _neutronLicense
-                //           , _workstationView
-                //           , _historyManager))
-                ////, item))
-                ////, quantity))
-                ////, pickList))
-                using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                           , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
-                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
             Task.Run(() => _logger.LogDetailAsync("FrmMain HotAction Exit"));
         }
-
         private void MtSystem_Click(object sender, EventArgs e)
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
@@ -1018,16 +1207,10 @@ namespace Neutron
                 Show();
             }
         }
-
         private void MtPick_Click(object sender, EventArgs e)
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
             Hide();
-            //using (MetroForm frm = new FrmPick(_jsonData,
-            //    _workstationView, _akaRepository, _neutronVariables
-            //                                    , _securityProcessor, _lacProcessor, _imageManager
-            //                                    , _workstationRepository, _ordersRepository, _neutronLicense
-            //                                    , _itemDefinitionsRepository, _historyManager))
             using (var frm = DI.Create<FrmPick>(
                        _neutronVariables
                        , _neutronLicense
@@ -1040,93 +1223,73 @@ namespace Neutron
                 {
                     SetMtLogOffText();
                 }
-
                 Show();
             }
         }
-
         private void MtUtilities_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities]) return;
+            Hide();
+            using (MetroForm frm = new FrmUtilities(_jsonData, _neutronVariables, _neutronLicense))
             {
-                Hide();
-                using (MetroForm frm = new FrmUtilities(_jsonData, _neutronVariables, _neutronLicense))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void MtHistory_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ViewHistory])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ViewHistory]) return;
+            Hide();
+            using (MetroForm frm = new FrmHistory(_akaRepository, _historyManager, _workstationView))
             {
-                Hide();
-                using (MetroForm frm = new FrmHistory(_akaRepository, _historyManager, _workstationView))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void MtProductivity_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers]) return;
+            Hide();
+            using (MetroForm frm = new FrmProductivity(_jsonData))
             {
-                Hide();
-                using (MetroForm frm = new FrmProductivity(_jsonData))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void MtStore_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.StoreItemsandOrders])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.StoreItemsandOrders]) return;
+            Hide();
+            using (var frm = DI.Create<FrmReplen>(
+                       _neutronVariables
+                       , _neutronLicense
+                       , _workstationView
+                       , _historyManager))
             {
-                Hide();
-                using (var frm = DI.Create<FrmReplen>(
-                           _neutronVariables
-                           , _neutronLicense
-                           , _workstationView
-                           , _historyManager))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void MtUsers_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers]) return;
+            Hide();
+            using (Form frm = new FrmSecurity(_neutronVariables, _historyManager))
             {
-                Hide();
-                using (Form frm = new FrmSecurity(_neutronVariables, _historyManager))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void MtLac_Click(object sender, EventArgs e)
         {
-            if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLac])
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLac]) return;
+            Hide();
+            using (Form frm = new FrmLAC(_workstationRepository, _neutronVariables))
             {
-                Hide();
-                using (Form frm = new FrmLAC(_workstationRepository, _neutronVariables))
-                {
-                    frm.ShowDialog();
-                    Show();
-                }
+                frm.ShowDialog();
+                Show();
             }
         }
-
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (GlobalVar.Shuttle != null)
@@ -1184,23 +1347,10 @@ namespace Neutron
                     frm.ShowDialog();
                     Show();
                 }
-
-                //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor, _stationVienew FrmPickw))
-                //{
-                //    frm.ShowDialog();
-                //    Show();
-                //}
             }
 
             if (e.KeyCode == Keys.F5 || e.KeyCode == Keys.F6)
             {
-                //using (var frm = DI.Create<FrmHotAction>(
-                //           _neutronVariables
-                //           , _neutronLicense
-                //           , _workstationView
-                //           , _historyManager))
-                ////, 1
-                ////, null))
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                            , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
                            , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
@@ -1212,12 +1362,6 @@ namespace Neutron
 
             if (e.KeyCode == Keys.F7 || e.KeyCode == Keys.F8)
             {
-
-
-                //using (MetroForm frm = new FrmPick(_jsonData, _workstationView, _akaRepository, _neutronVariables,
-                //    _securityProcessor, _lacProcessor, _imageManager, _workstationRepository
-                //    , _ordersRepository, _neutronLicense, _itemDefinitionsRepository))
-                //{
                 using (var frm = DI.Create<FrmPick>(
                            _neutronVariables
                            , _neutronLicense
@@ -1229,7 +1373,6 @@ namespace Neutron
                 }
             }
         }
-
         private void SetCulture(string lang)
         {
             try
@@ -1261,7 +1404,6 @@ namespace Neutron
                 MessageBox.Show($"Error loading languages.  FrmMain  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
-
         private void RadioButtonLanguage_CheckedChanged(object sender, EventArgs e)
         {
             if (RadioButtonEnglish.Checked)
@@ -1279,7 +1421,6 @@ namespace Neutron
             SetCulture(_cultureInfo.Name);
             mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
         }
-
         private void ButtonRemstar_Click(object sender, EventArgs e)
         {
             using (Form frm = new FrmRemstar())
@@ -1287,16 +1428,6 @@ namespace Neutron
                 frm.ShowDialog();
                 Show();
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //using (Form frm = new FrmEBin(_jsonData, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
-            //           , _neutronLicense, _workstationView, _historyManager))
-            //{
-            //    frm.ShowDialog();
-            //    Show();
-            //}
         }
     }
 }

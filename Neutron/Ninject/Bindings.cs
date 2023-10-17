@@ -14,7 +14,6 @@ using NeutronData.Repositories;
 using NeutronLoader;
 using NeutronMaintenance;
 using SqlSchemaManager;
-using BlastzoneController;
 using ProliteController;
 
 
@@ -66,7 +65,7 @@ namespace Neutron.Ninject
                 .WithConstructorArgument("historyManager");
 
             Bind<StartStopLoaderManager>().To<StartStopLoaderManager>();
-            Bind<StartStopUploadManager>().ToSelf();
+            Bind<StartStopUploadManager>().To<StartStopUploadManager>();
 
             Bind<IEnumManager>().To<EnumManager>().InSingletonScope();
             Bind<IItemDefinitionsRepository>().To<ItemDefinitionsRepository>();
@@ -82,12 +81,11 @@ namespace Neutron.Ninject
                 .WithConstructorArgument("logActivity", "false");
 
             Bind<IWorkstationRepository>().To<WorkstationRepository>().InSingletonScope();
-            Bind<IWorkstationAreaRepository>().To<WorkstationAreaRepository>().InSingletonScope();
             Bind<IAreaRepository>().To<AreaRepository>().InSingletonScope();
             Bind<IRFIDManager>().To<RFIDManager>().InSingletonScope();
             Bind<ILocationsRepository>().To<LocationsRepository>().InSingletonScope();
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
-            Bind<IProlite>().To<Prolite>().InSingletonScope();
+            Bind<IProliteManager>().To<ProliteManager>().InSingletonScope();
         }
     }
 }

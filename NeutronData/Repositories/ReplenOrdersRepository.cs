@@ -28,10 +28,11 @@ namespace NeutronData.Repositories
         private readonly IAreaRepository _areaRepository;
         private static int _totalOrderDetailCount;
         private static int _runningOrderDetailCount;
-        private int[] _moveablePickStationIds;
-        private Workstation _rackStation;
+       // private int[] _moveablePickStationIds;
+       // private Workstation _rackStation;
         private List<Workstation> _pickStations;
         private int[] _allPickableAreaIds;
+        private IDynamicLogger _logger;
 
         public ReplenOrdersRepository(WorkstationView workstationView
             , IWorkstationRepository workstationRepository
@@ -45,9 +46,9 @@ namespace NeutronData.Repositories
 
         private void Init()
         {
-           
-            _moveablePickStationIds = _workstationRepository.GetMoveablePickStationIds();
-            _rackStation = _workstationRepository.GetRackStation(8);
+            _logger = NeutronCore.Global.Logger.SetupLogger(@"LocationsRepository");
+            //_moveablePickStationIds = _workstationRepository.GetMoveablePickStationIds();
+            //_rackStation = _workstationRepository.GetRackStation(8);
             _pickStations = _workstationRepository.GetAllPickStations();
             _allPickableAreaIds = _areaRepository.GetAllAreaIds(); // .GetAllPickStationIds();
             _totalOrderDetailCount = 0;
@@ -84,7 +85,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
             return recs;
         }
@@ -568,7 +569,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Available Replen Orders Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get Available Replen Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -913,38 +914,38 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        ReplenOrder IReplenOrdersRepository.GetOrderAndOrderDetails(int? orderId, int areaId)
-        {
-            var ord = new ReplenOrder();
-            var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
+        //ReplenOrder IReplenOrdersRepository.GetOrderAndOrderDetails(int? orderId, int areaId)
+        //{
+        //    var ord = new ReplenOrder();
+        //    var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
 
-            if (orderId == null) return ord;
-            ord = _repoReplenOrders.FindByKey(orderId);
+        //    if (orderId == null) return ord;
+        //    ord = _repoReplenOrders.FindByKey(orderId);
 
-            //using (var db = new NeutronDb())
-            //{
-            //    ord = db.ReplenOrders.FirstOrDefault(x => x.Id == orderId);
+        //    //using (var db = new NeutronDb())
+        //    //{
+        //    //    ord = db.ReplenOrders.FirstOrDefault(x => x.Id == orderId);
 
-            //    if (ord != null)
-            //    {
-            //        var q2 = ord.ReplenOrderDetails.Include("ItemDefinition").Where(d => d.StationNumber == stationNumber
-            //                    && availableSkip.Contains(d.LineStatusId)).ToList();
-            //        ord.ReplenOrderDetails = q2.ToList(); 
-            //    }
-            //}
+        //    //    if (ord != null)
+        //    //    {
+        //    //        var q2 = ord.ReplenOrderDetails.Include("ItemDefinition").Where(d => d.StationNumber == stationNumber
+        //    //                    && availableSkip.Contains(d.LineStatusId)).ToList();
+        //    //        ord.ReplenOrderDetails = q2.ToList(); 
+        //    //    }
+        //    //}
 
-            if (ord != null)
-            {
-                //ord.OrderDetails = null;
+        //    if (ord != null)
+        //    {
+        //        //ord.OrderDetails = null;
 
-                // var details = _repoOrderDetails.All()
-                ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
-                //ord.OrderDetails = details;
-            }
+        //        // var details = _repoOrderDetails.All()
+        //        ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
+        //        //ord.OrderDetails = details;
+        //    }
 
-            //}
-            return ord;
-        }
+        //    //}
+        //    return ord;
+        //}
 
 
 
@@ -992,8 +993,9 @@ namespace NeutronData.Repositories
             return result;
         }
 
-        public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(WorkstationView workstationView, string searchField)
+        public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField)
         {
+            _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}");
             var recs = new List<AvailableReplenOrdersView>();
 
             try
@@ -1001,17 +1003,17 @@ namespace NeutronData.Repositories
                 var parameters = new List<object>();
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter(parameterName: "@WORKSTATIONID", value: workstationView.WorkstationId);
+                    var param = new SqlParameter(parameterName: "@AREAID", value: areaId);
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SEARCHFIELD", value: searchField);
                     parameters.Add(param);
 
-                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersForInductionScreen @WORKSTATIONID, @SEARCHFIELD", parameters.ToArray()).ToList();
+                    recs = context.Database.SqlQuery<AvailableReplenOrdersView>("usp_GetAvailableReplenOrdersForInductionScreen @AREAID, @SEARCHFIELD", parameters.ToArray()).ToList();
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;

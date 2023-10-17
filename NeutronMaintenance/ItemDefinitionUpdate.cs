@@ -19,15 +19,15 @@ namespace NeutronMaintenance
     {
         readonly NeutronDb db = new NeutronDb();
 
-        public void ProcessItemDefinitions(List<ItemDefinitionLoad> itemDefinitions, DynamicLogger logger)
+        public void ProcessItemDefinitions(List<ItemDefinitionLoad> itemDefinitions, IDynamicLogger logger)
         {
             try
             {
-                logger.Log($"ProcessItemDefinitions");
+                logger.LogDetailAsync($"ProcessItemDefinitions");
                 ItemDefinition itemDefinition;
                 foreach (var item in itemDefinitions)
                 {
-                    logger.Log($"Item Definition Start: {item.Item}  {item.Description}");
+                    logger.LogDetailAsync($"Item Definition Start: {item.Item}  {item.Description}");
                     if (string.IsNullOrEmpty(item.Id))
                     {
                         //No id new or from host
@@ -97,12 +97,12 @@ namespace NeutronMaintenance
                             }
                         }
                     }
-                    logger.Log($"Item Definition End =====>>>  {item.Item}  {item.Description}");
+                    logger.LogDetailAsync($"Item Definition End =====>>>  {item.Item}  {item.Description}");
                 }
             }
             catch (Exception ex)
             {
-                logger.Log($"Item Definition Error: {ex.Message} \r\n {ex.InnerException}");
+                logger.LogDetailAsync($"Item Definition Error: {ex.Message} \r\n {ex.InnerException}");
             }
         }
 

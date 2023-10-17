@@ -62,9 +62,10 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Enums\ActionCode.cs" />
-    <Compile Include="Enums\DeviceType.cs" />
+    <Compile Include="Enums\DeviceTypeEnum.cs" />
     <Compile Include="Enums\EnumModel.cs" />
     <Compile Include="Enums\LineStatus.cs" />
+    <Compile Include="Enums\LocationTypeEnum.cs" />
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\StationType.cs" />
     <Compile Include="Enums\StorageType.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Extensions\MyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\StringHelper.cs" />
+    <Compile Include="Global\Logger.cs" />
     <Compile Include="Global\NeutronVariables.cs" />
     <Compile Include="LoaderSettings.cs" />
     <Compile Include="Models\DeviceDriverName.cs" />

@@ -26,8 +26,15 @@ namespace AlliedLogger
 
         public DynamicLogger(string logFileDir = "", string folderName = @"General", string logActivity = "true")
         {
-            LogFileDir = logFileDir;
-            FolderName = folderName;
+            // Send all logs to the same file
+            LogFileDir = null;
+            FolderName = @"SingleLogFile\";
+            
+            // Use these to create separate log files by file name
+            //LogFileDir = logFileDir;
+           // FolderName = folderName;
+            
+            
             //_baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
             //_baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
             // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
@@ -174,7 +181,9 @@ namespace AlliedLogger
         }
             private bool _inProcess = false;
         
-            public async void LogDetailAsync(string msg = ""
+            public async         
+            Task
+LogDetailAsync(string msg = ""
             , [CallerMemberName] string origin = ""
             , [CallerFilePath] string filePath = ""
             , [CallerLineNumber] int lineNumber = 0)

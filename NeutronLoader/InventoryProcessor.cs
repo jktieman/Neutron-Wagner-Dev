@@ -1,6 +1,8 @@
 ﻿using AlliedLogger;
+using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;
+using NeutronData.ModelViews;
 using NeutronData.Repositories;
 using System;
 using System.Linq;
@@ -11,7 +13,27 @@ namespace NeutronLoader
     public class InventoryProcessor
     {
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        
+
+
+        private IDynamicLogger _logger;
+
+        public InventoryProcessor()
+        {
+            CreateLog();
+        }
+
+        /// <summary>
+        /// Creates a new Dynamic Logger
+        /// </summary>
+        /// <returns></returns>
+        private void CreateLog()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = $"InventoryProcessor";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+        }
+
         public Inventory GetOrCreate(ItemDefinition itemDef, Location location)
         {
             var inventory = new Inventory();
@@ -26,7 +48,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                Logger.Log($"Error Finding Inventory Item - {itemDef.Item}  Location - {location.Slot}.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Error Finding Inventory Item - {itemDef.Item}  Location - {location.Slot}.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
 
             }
             return inventory;
@@ -61,12 +83,12 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log($"Error Inserting Inventory Item - {itemDef.Item}  Location - {location.Slot}.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                        _logger.LogDetailAsync($"Error Inserting Inventory Item - {itemDef.Item}  Location - {location.Slot}.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     }
                 }
                 else
                 {
-                    Logger.Log(msg: "No Default Inventory.  Create Inventory Failed.");
+                    _logger.LogDetailAsync(msg: "No Default Inventory.  Create Inventory Failed.");
                     var msg = "A default Inventory must be set up in ";
                     msg += "order to create definitions during the Order Load process.";
                     msg += "The Slot number MUST be called, DEFAULT .";
@@ -75,7 +97,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                Logger.Log($"Unable to create New Inventory.  {ex.Message} {Environment.NewLine} {ex.InnerException.Message}");
+                _logger.LogDetailAsync($"Unable to create New Inventory.  {ex.Message} {Environment.NewLine} {ex.InnerException.Message}");
             }
             return newDefinition;
         }

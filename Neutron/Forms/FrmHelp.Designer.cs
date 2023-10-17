@@ -41,7 +41,7 @@
             this.LabelFormTitle.BackColor = System.Drawing.Color.DodgerBlue;
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(367, 98);
             this.LabelFormTitle.Name = "LabelFormTitle";
             this.LabelFormTitle.Size = new System.Drawing.Size(418, 66);

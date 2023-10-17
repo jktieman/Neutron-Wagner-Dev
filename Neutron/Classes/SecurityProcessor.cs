@@ -6,16 +6,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using AlliedLogger;
 using NeutronData.General;
+using Logger = NeutronCore.Global.Logger;
 
 namespace Neutron.Classes
 {
     public class SecurityProcessor : ISecurityProcessor
     {
         readonly int _neutronSecurityLength = 0;
+        private readonly IDynamicLogger _logger;
 
         public SecurityProcessor()
         {
+            _logger = Logger.SetupLogger(@"SecurityProcessor");
             _neutronSecurityLength = Enum.GetNames(typeof(NeutronSecurity)).Length + 1;
             SecurityProfile = new bool[_neutronSecurityLength];
             ReprocessSecuritySet();
@@ -25,6 +29,8 @@ namespace Neutron.Classes
 
         public void ReprocessSecuritySet(string id = "")
         {
+            _logger.LogDetailAsync($"Reprocessing security set for {id}");
+
             if (string.IsNullOrEmpty(id))
             {
                 for (var i = 0; i < _neutronSecurityLength; i++)

@@ -46,10 +46,6 @@
       <HintPath>..\packages\log4net.2.0.13\lib\net45\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NeutronCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NeutronCore\bin\Release\NeutronCore.dll</HintPath>
-    </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -58,11 +54,15 @@
       <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RJCP.SerialPortStream, Version=2.4.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
@@ -78,11 +78,11 @@
     <Compile Include="BaseClasses\LookupData.cs" />
     <Compile Include="DataContexts\SecureDb.cs" />
     <Compile Include="General\EnumManager.cs" />
+    <Compile Include="Interfaces\IBlastzone.cs" />
     <Compile Include="Interfaces\IEnumManager.cs" />
     <Compile Include="Interfaces\IAkaRepository.cs" />
     <Compile Include="Interfaces\IReplenOrdersRepository.cs" />
     <Compile Include="Interfaces\ISqlServer.cs" />
-    <Compile Include="Interfaces\IWorkstationAreaRepository.cs" />
     <Compile Include="Interfaces\IWorkstationRepository.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.cs" />
     <Compile Include="Migrations\201902271513321_PickLocationSkip.Designer.cs">
@@ -119,8 +119,12 @@
     <Compile Include="Models\ActionCodeItem.cs" />
     <Compile Include="Models\AkaType.cs" />
     <Compile Include="Models\Area.cs" />
+    <Compile Include="Models\Blastzone.cs" />
     <Compile Include="Models\Carrier.cs" />
+    <Compile Include="Models\CycleCount.cs" />
+    <Compile Include="Models\LookUp.cs" />
     <Compile Include="Models\Lookups\DeviceType.cs" />
+    <Compile Include="Models\LocationType.cs" />
     <Compile Include="Models\StorageDevice.cs" />
     <Compile Include="Models\GroupUser.cs" />
     <Compile Include="Models\HostOrderLine.cs" />
@@ -191,7 +195,6 @@
     <Compile Include="Models\UserRoles.cs" />
     <Compile Include="Models\RFIDManager.cs" />
     <Compile Include="Models\Workstation.cs" />
-    <Compile Include="Models\WorkstationArea.cs" />
     <Compile Include="ModelViews\AvailableOrdersView.cs" />
     <Compile Include="ModelViews\AvailableReplenOrdersView.cs" />
     <Compile Include="ModelViews\HardwareDeviceView.cs" />
@@ -246,11 +249,9 @@
     <Compile Include="Repositories\ReplenOrderDetailsRepository.cs" />
     <Compile Include="Repositories\ReplenOrdersRepository.cs" />
     <Compile Include="Repositories\OrdersRepository.cs" />
-    <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\SerialConfigurationsRepository.cs" />
     <Compile Include="Repositories\WorkstationRepository.cs" />
     <Compile Include="Repositories\AreaRepository.cs" />
-    <Compile Include="Repositories\WorkstationAreaRepository.cs" />
     <Compile Include="SqlModelViews\SqlInventoryView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -294,9 +295,13 @@
       <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
       <Name>AlliedLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BlastzoneController\BlastzoneController\BlastzoneController\BlastzoneController.csproj">
-      <Project>{69B6D943-9C4F-417E-9A5E-07F56926E526}</Project>
-      <Name>BlastzoneController</Name>
+    <ProjectReference Include="..\EthernetTransmitter\EthernetTransmitter.csproj">
+      <Project>{cd460f9c-0b52-49ac-a17c-cee7def43220}</Project>
+      <Name>EthernetTransmitter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
+      <Name>NeutronCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
       <Project>{CC797714-8D01-40AF-8A2F-737B06F133CD}</Project>

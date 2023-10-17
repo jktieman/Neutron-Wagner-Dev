@@ -28,7 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmItemDefinitions));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.LabelFormTitle = new System.Windows.Forms.Label();
@@ -50,7 +59,16 @@
             this.MbViewEditDelete = new MetroFramework.Controls.MetroButton();
             this.MbViewEditClose = new MetroFramework.Controls.MetroButton();
             this.MbViewEditSave = new MetroFramework.Controls.MetroButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.PanelViewEdit = new System.Windows.Forms.Panel();
+            this.MbDeleteAka = new MetroFramework.Controls.MetroButton();
+            this.MbAddAka = new MetroFramework.Controls.MetroButton();
+            this.TextBoxAka = new System.Windows.Forms.TextBox();
+            this.PanelViewEditAkas = new System.Windows.Forms.Panel();
+            this.ListBoxViewEditAkas = new System.Windows.Forms.ListBox();
+            this.PanelViewEditExistingItems = new System.Windows.Forms.Panel();
+            this.DataGridViewViewEditExistingItems = new System.Windows.Forms.DataGridView();
+            this.LabelViewEditAkas = new System.Windows.Forms.Label();
+            this.LabelViewEditExistingItems = new System.Windows.Forms.Label();
             this.LabelViewEditDefaultImage = new System.Windows.Forms.Label();
             this.LabelViewEditChangeStationWarning = new System.Windows.Forms.Label();
             this.PictureBoxViewEditImage = new System.Windows.Forms.PictureBox();
@@ -70,12 +88,15 @@
             this.LabelViewEditSize = new System.Windows.Forms.Label();
             this.ComboBoxViewEditArea = new System.Windows.Forms.ComboBox();
             this.TextBoxViewEditSystemMax = new System.Windows.Forms.TextBox();
+            this.TextBoxViewEditPickMax = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditLocationMin = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditLocationMax = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditDescription = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditSystemMin = new System.Windows.Forms.TextBox();
             this.TextBoxViewEditItem = new System.Windows.Forms.TextBox();
             this.LabelViewEditSystemMax = new System.Windows.Forms.Label();
+            this.LabelViewEditPickMaxInfo = new System.Windows.Forms.Label();
+            this.LabelViewEditPickMax = new System.Windows.Forms.Label();
             this.LabelViewEditLocationMin = new System.Windows.Forms.Label();
             this.LabelViewEditLocationMax = new System.Windows.Forms.Label();
             this.LabelViewEditDexcription = new System.Windows.Forms.Label();
@@ -90,6 +111,13 @@
             this.MbNewClose = new MetroFramework.Controls.MetroButton();
             this.MbNewSave = new MetroFramework.Controls.MetroButton();
             this.PanelNew = new System.Windows.Forms.Panel();
+            this.TextBoxNewPickMax = new System.Windows.Forms.TextBox();
+            this.LabelNewPickMaxInfo = new System.Windows.Forms.Label();
+            this.LabelNewPickMax = new System.Windows.Forms.Label();
+            this.PanelAkas = new System.Windows.Forms.Panel();
+            this.ListBoxAkas = new System.Windows.Forms.ListBox();
+            this.PanelExistingItems = new System.Windows.Forms.Panel();
+            this.DataGridViewExistingItems = new System.Windows.Forms.DataGridView();
             this.LabelNewDefaultImage = new System.Windows.Forms.Label();
             this.PictureBoxNewImage = new System.Windows.Forms.PictureBox();
             this.ComboBoxNewUnitOfIssue = new System.Windows.Forms.ComboBox();
@@ -102,6 +130,8 @@
             this.TextBoxNewSystemMin = new System.Windows.Forms.TextBox();
             this.LabelNewSystemMin = new System.Windows.Forms.Label();
             this.ComboBoxNewHeightCode = new System.Windows.Forms.ComboBox();
+            this.LabelAkas = new System.Windows.Forms.Label();
+            this.LabelExistingItems = new System.Windows.Forms.Label();
             this.LabelNewHeight = new System.Windows.Forms.Label();
             this.ComboBoxNewVelocityCode = new System.Windows.Forms.ComboBox();
             this.LabelNewVelocity = new System.Windows.Forms.Label();
@@ -118,17 +148,23 @@
             this.LabelNewLocationMax = new System.Windows.Forms.Label();
             this.LabelNewDescription = new System.Windows.Forms.Label();
             this.LabelNewItem = new System.Windows.Forms.Label();
-            this.LabelNewStation = new System.Windows.Forms.Label();
+            this.LabelNewArea = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Listing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
             this.ViewEdit.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.PanelViewEdit.SuspendLayout();
+            this.PanelViewEditAkas.SuspendLayout();
+            this.PanelViewEditExistingItems.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewViewEditExistingItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxViewEditImage)).BeginInit();
             this.New.SuspendLayout();
             this.PanelNew.SuspendLayout();
+            this.PanelAkas.SuspendLayout();
+            this.PanelExistingItems.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewExistingItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxNewImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -146,7 +182,7 @@
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
@@ -157,10 +193,10 @@
             // 
             // LabelFormTitle
             // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
             this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
@@ -183,7 +219,7 @@
             // 
             // Listing
             // 
-            this.Listing.BackColor = System.Drawing.Color.RoyalBlue;
+            this.Listing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Listing.Controls.Add(this.CheckBoxAllStations);
             this.Listing.Controls.Add(this.LabelFindDescription);
             this.Listing.Controls.Add(this.TextBoxFind);
@@ -206,6 +242,7 @@
             // 
             this.CheckBoxAllStations.AutoSize = true;
             this.CheckBoxAllStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxAllStations.ForeColor = System.Drawing.Color.White;
             this.CheckBoxAllStations.Location = new System.Drawing.Point(530, 73);
             this.CheckBoxAllStations.Name = "CheckBoxAllStations";
             this.CheckBoxAllStations.Size = new System.Drawing.Size(76, 17);
@@ -216,6 +253,7 @@
             // 
             // LabelFindDescription
             // 
+            this.LabelFindDescription.ForeColor = System.Drawing.Color.White;
             this.LabelFindDescription.Location = new System.Drawing.Point(433, 43);
             this.LabelFindDescription.Name = "LabelFindDescription";
             this.LabelFindDescription.Size = new System.Drawing.Size(278, 20);
@@ -312,11 +350,36 @@
             this.DataGridView1.AllowUserToAddRows = false;
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.AllowUserToOrderColumns = true;
+            this.DataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle11;
             this.DataGridView1.Location = new System.Drawing.Point(3, 97);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.Size = new System.Drawing.Size(1223, 533);
             this.DataGridView1.TabIndex = 6;
@@ -325,13 +388,13 @@
             // 
             // ViewEdit
             // 
-            this.ViewEdit.BackColor = System.Drawing.Color.RoyalBlue;
+            this.ViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.ViewEdit.Controls.Add(this.LabelAction);
             this.ViewEdit.Controls.Add(this.MbViewEditListing);
             this.ViewEdit.Controls.Add(this.MbViewEditDelete);
             this.ViewEdit.Controls.Add(this.MbViewEditClose);
             this.ViewEdit.Controls.Add(this.MbViewEditSave);
-            this.ViewEdit.Controls.Add(this.panel1);
+            this.ViewEdit.Controls.Add(this.PanelViewEdit);
             this.ViewEdit.Location = new System.Drawing.Point(4, 22);
             this.ViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ViewEdit.Name = "ViewEdit";
@@ -343,6 +406,7 @@
             // LabelAction
             // 
             this.LabelAction.Font = new System.Drawing.Font("Comic Sans MS", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAction.ForeColor = System.Drawing.Color.White;
             this.LabelAction.Location = new System.Drawing.Point(393, 18);
             this.LabelAction.Name = "LabelAction";
             this.LabelAction.Size = new System.Drawing.Size(360, 65);
@@ -378,7 +442,7 @@
             // 
             this.MbViewEditClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MbViewEditClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MbViewEditClose.Location = new System.Drawing.Point(1091, 13);
+            this.MbViewEditClose.Location = new System.Drawing.Point(1091, 8);
             this.MbViewEditClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditClose.Name = "MbViewEditClose";
             this.MbViewEditClose.Size = new System.Drawing.Size(135, 76);
@@ -390,7 +454,7 @@
             // MbViewEditSave
             // 
             this.MbViewEditSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MbViewEditSave.Location = new System.Drawing.Point(950, 13);
+            this.MbViewEditSave.Location = new System.Drawing.Point(950, 8);
             this.MbViewEditSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbViewEditSave.Name = "MbViewEditSave";
             this.MbViewEditSave.Size = new System.Drawing.Size(135, 76);
@@ -399,49 +463,185 @@
             this.MbViewEditSave.UseSelectable = true;
             this.MbViewEditSave.Click += new System.EventHandler(this.MbViewEditSave_Click);
             // 
-            // panel1
+            // PanelViewEdit
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.panel1.Controls.Add(this.LabelViewEditDefaultImage);
-            this.panel1.Controls.Add(this.LabelViewEditChangeStationWarning);
-            this.panel1.Controls.Add(this.PictureBoxViewEditImage);
-            this.panel1.Controls.Add(this.TextBoxViewEditWeight);
-            this.panel1.Controls.Add(this.LabelViewEditWeight);
-            this.panel1.Controls.Add(this.CheckBoxViewEditScale);
-            this.panel1.Controls.Add(this.ComboBoxViewEditUnitOfIssue);
-            this.panel1.Controls.Add(this.LabelViewEditUnitOfIssue);
-            this.panel1.Controls.Add(this.ComboBoxViewEditStorageType);
-            this.panel1.Controls.Add(this.LabelViewEditStorageType);
-            this.panel1.Controls.Add(this.ComboBoxViewEditHeightCode);
-            this.panel1.Controls.Add(this.LabelViewEditHeight);
-            this.panel1.Controls.Add(this.ComboBoxViewEditVelocityCode);
-            this.panel1.Controls.Add(this.LabelViewEditVelocity);
-            this.panel1.Controls.Add(this.LabelViewEditSystemMin);
-            this.panel1.Controls.Add(this.ComboBoxViewEditSizeCode);
-            this.panel1.Controls.Add(this.LabelViewEditSize);
-            this.panel1.Controls.Add(this.ComboBoxViewEditArea);
-            this.panel1.Controls.Add(this.TextBoxViewEditSystemMax);
-            this.panel1.Controls.Add(this.TextBoxViewEditLocationMin);
-            this.panel1.Controls.Add(this.TextBoxViewEditLocationMax);
-            this.panel1.Controls.Add(this.TextBoxViewEditDescription);
-            this.panel1.Controls.Add(this.TextBoxViewEditSystemMin);
-            this.panel1.Controls.Add(this.TextBoxViewEditItem);
-            this.panel1.Controls.Add(this.LabelViewEditSystemMax);
-            this.panel1.Controls.Add(this.LabelViewEditLocationMin);
-            this.panel1.Controls.Add(this.LabelViewEditLocationMax);
-            this.panel1.Controls.Add(this.LabelViewEditDexcription);
-            this.panel1.Controls.Add(this.LabelViewEditItem);
-            this.panel1.Controls.Add(this.LabelViewEditArea);
-            this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(3, 97);
-            this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1223, 529);
-            this.panel1.TabIndex = 0;
+            this.PanelViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.PanelViewEdit.Controls.Add(this.MbDeleteAka);
+            this.PanelViewEdit.Controls.Add(this.MbAddAka);
+            this.PanelViewEdit.Controls.Add(this.TextBoxAka);
+            this.PanelViewEdit.Controls.Add(this.PanelViewEditAkas);
+            this.PanelViewEdit.Controls.Add(this.PanelViewEditExistingItems);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditAkas);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditExistingItems);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditDefaultImage);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditChangeStationWarning);
+            this.PanelViewEdit.Controls.Add(this.PictureBoxViewEditImage);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditWeight);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditWeight);
+            this.PanelViewEdit.Controls.Add(this.CheckBoxViewEditScale);
+            this.PanelViewEdit.Controls.Add(this.ComboBoxViewEditUnitOfIssue);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditUnitOfIssue);
+            this.PanelViewEdit.Controls.Add(this.ComboBoxViewEditStorageType);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditStorageType);
+            this.PanelViewEdit.Controls.Add(this.ComboBoxViewEditHeightCode);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditHeight);
+            this.PanelViewEdit.Controls.Add(this.ComboBoxViewEditVelocityCode);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditVelocity);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditSystemMin);
+            this.PanelViewEdit.Controls.Add(this.ComboBoxViewEditSizeCode);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditSize);
+            this.PanelViewEdit.Controls.Add(this.ComboBoxViewEditArea);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditSystemMax);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditPickMax);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditLocationMin);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditLocationMax);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditDescription);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditSystemMin);
+            this.PanelViewEdit.Controls.Add(this.TextBoxViewEditItem);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditSystemMax);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditPickMaxInfo);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditPickMax);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditLocationMin);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditLocationMax);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditDexcription);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditItem);
+            this.PanelViewEdit.Controls.Add(this.LabelViewEditArea);
+            this.PanelViewEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PanelViewEdit.Location = new System.Drawing.Point(3, 97);
+            this.PanelViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.PanelViewEdit.Name = "PanelViewEdit";
+            this.PanelViewEdit.Size = new System.Drawing.Size(1223, 529);
+            this.PanelViewEdit.TabIndex = 0;
+            // 
+            // MbDeleteAka
+            // 
+            this.MbDeleteAka.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MbDeleteAka.Location = new System.Drawing.Point(1163, 339);
+            this.MbDeleteAka.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MbDeleteAka.Name = "MbDeleteAka";
+            this.MbDeleteAka.Size = new System.Drawing.Size(28, 28);
+            this.MbDeleteAka.TabIndex = 45;
+            this.MbDeleteAka.Text = "-";
+            this.MbDeleteAka.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.MbDeleteAka.UseSelectable = true;
+            this.MbDeleteAka.Click += new System.EventHandler(this.MbDeleteAka_Click);
+            // 
+            // MbAddAka
+            // 
+            this.MbAddAka.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MbAddAka.Location = new System.Drawing.Point(1129, 339);
+            this.MbAddAka.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MbAddAka.Name = "MbAddAka";
+            this.MbAddAka.Size = new System.Drawing.Size(28, 28);
+            this.MbAddAka.TabIndex = 45;
+            this.MbAddAka.Text = "+";
+            this.MbAddAka.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.MbAddAka.UseSelectable = true;
+            this.MbAddAka.Click += new System.EventHandler(this.MbAddAka_Click);
+            // 
+            // TextBoxAka
+            // 
+            this.TextBoxAka.ForeColor = System.Drawing.Color.Gray;
+            this.TextBoxAka.Location = new System.Drawing.Point(837, 339);
+            this.TextBoxAka.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxAka.Name = "TextBoxAka";
+            this.TextBoxAka.Size = new System.Drawing.Size(276, 28);
+            this.TextBoxAka.TabIndex = 44;
+            this.TextBoxAka.Text = "Add AKA here...";
+            this.TextBoxAka.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxAka.Enter += new System.EventHandler(this.TextBoxAka_Enter);
+            this.TextBoxAka.Leave += new System.EventHandler(this.TextBoxAka_Leave);
+            // 
+            // PanelViewEditAkas
+            // 
+            this.PanelViewEditAkas.Controls.Add(this.ListBoxViewEditAkas);
+            this.PanelViewEditAkas.Location = new System.Drawing.Point(633, 371);
+            this.PanelViewEditAkas.Name = "PanelViewEditAkas";
+            this.PanelViewEditAkas.Size = new System.Drawing.Size(560, 140);
+            this.PanelViewEditAkas.TabIndex = 43;
+            // 
+            // ListBoxViewEditAkas
+            // 
+            this.ListBoxViewEditAkas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            this.ListBoxViewEditAkas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListBoxViewEditAkas.FormattingEnabled = true;
+            this.ListBoxViewEditAkas.ItemHeight = 22;
+            this.ListBoxViewEditAkas.Location = new System.Drawing.Point(0, 0);
+            this.ListBoxViewEditAkas.Name = "ListBoxViewEditAkas";
+            this.ListBoxViewEditAkas.Size = new System.Drawing.Size(560, 140);
+            this.ListBoxViewEditAkas.TabIndex = 0;
+            this.ListBoxViewEditAkas.Click += new System.EventHandler(this.ListBoxViewEditAkas_Click);
+            // 
+            // PanelViewEditExistingItems
+            // 
+            this.PanelViewEditExistingItems.Controls.Add(this.DataGridViewViewEditExistingItems);
+            this.PanelViewEditExistingItems.Location = new System.Drawing.Point(32, 371);
+            this.PanelViewEditExistingItems.Name = "PanelViewEditExistingItems";
+            this.PanelViewEditExistingItems.Size = new System.Drawing.Size(560, 140);
+            this.PanelViewEditExistingItems.TabIndex = 42;
+            // 
+            // DataGridViewViewEditExistingItems
+            // 
+            this.DataGridViewViewEditExistingItems.AllowUserToAddRows = false;
+            this.DataGridViewViewEditExistingItems.AllowUserToDeleteRows = false;
+            this.DataGridViewViewEditExistingItems.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            this.DataGridViewViewEditExistingItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewViewEditExistingItems.DefaultCellStyle = dataGridViewCellStyle14;
+            this.DataGridViewViewEditExistingItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridViewViewEditExistingItems.Location = new System.Drawing.Point(0, 0);
+            this.DataGridViewViewEditExistingItems.Name = "DataGridViewViewEditExistingItems";
+            this.DataGridViewViewEditExistingItems.ReadOnly = true;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewViewEditExistingItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
+            this.DataGridViewViewEditExistingItems.Size = new System.Drawing.Size(560, 140);
+            this.DataGridViewViewEditExistingItems.TabIndex = 0;
+            this.DataGridViewViewEditExistingItems.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewViewEditExistingItems_CellClick);
+            this.DataGridViewViewEditExistingItems.DoubleClick += new System.EventHandler(this.DataGridViewViewEditExistingItems_DoubleClick);
+            // 
+            // LabelViewEditAkas
+            // 
+            this.LabelViewEditAkas.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditAkas.Location = new System.Drawing.Point(636, 340);
+            this.LabelViewEditAkas.Name = "LabelViewEditAkas";
+            this.LabelViewEditAkas.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditAkas.TabIndex = 40;
+            this.LabelViewEditAkas.Text = "Also Known As (AKA)";
+            this.LabelViewEditAkas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelViewEditExistingItems
+            // 
+            this.LabelViewEditExistingItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditExistingItems.Location = new System.Drawing.Point(28, 339);
+            this.LabelViewEditExistingItems.Name = "LabelViewEditExistingItems";
+            this.LabelViewEditExistingItems.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditExistingItems.TabIndex = 41;
+            this.LabelViewEditExistingItems.Text = "Existing Items";
+            this.LabelViewEditExistingItems.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelViewEditDefaultImage
             // 
-            this.LabelViewEditDefaultImage.Location = new System.Drawing.Point(896, 139);
+            this.LabelViewEditDefaultImage.Location = new System.Drawing.Point(896, 30);
             this.LabelViewEditDefaultImage.Name = "LabelViewEditDefaultImage";
             this.LabelViewEditDefaultImage.Size = new System.Drawing.Size(250, 29);
             this.LabelViewEditDefaultImage.TabIndex = 39;
@@ -450,16 +650,17 @@
             // 
             // LabelViewEditChangeStationWarning
             // 
-            this.LabelViewEditChangeStationWarning.Location = new System.Drawing.Point(526, 11);
+            this.LabelViewEditChangeStationWarning.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelViewEditChangeStationWarning.Location = new System.Drawing.Point(602, 11);
             this.LabelViewEditChangeStationWarning.Name = "LabelViewEditChangeStationWarning";
-            this.LabelViewEditChangeStationWarning.Size = new System.Drawing.Size(576, 90);
+            this.LabelViewEditChangeStationWarning.Size = new System.Drawing.Size(288, 78);
             this.LabelViewEditChangeStationWarning.TabIndex = 38;
             // 
             // PictureBoxViewEditImage
             // 
             this.PictureBoxViewEditImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxViewEditImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxViewEditImage.InitialImage")));
-            this.PictureBoxViewEditImage.Location = new System.Drawing.Point(896, 181);
+            this.PictureBoxViewEditImage.Location = new System.Drawing.Point(896, 72);
             this.PictureBoxViewEditImage.Name = "PictureBoxViewEditImage";
             this.PictureBoxViewEditImage.Size = new System.Drawing.Size(250, 250);
             this.PictureBoxViewEditImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -468,7 +669,7 @@
             // 
             // TextBoxViewEditWeight
             // 
-            this.TextBoxViewEditWeight.Location = new System.Drawing.Point(631, 402);
+            this.TextBoxViewEditWeight.Location = new System.Drawing.Point(596, 293);
             this.TextBoxViewEditWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditWeight.Name = "TextBoxViewEditWeight";
             this.TextBoxViewEditWeight.Size = new System.Drawing.Size(100, 28);
@@ -477,16 +678,16 @@
             // 
             // LabelViewEditWeight
             // 
-            this.LabelViewEditWeight.Location = new System.Drawing.Point(435, 402);
+            this.LabelViewEditWeight.Location = new System.Drawing.Point(440, 293);
             this.LabelViewEditWeight.Name = "LabelViewEditWeight";
-            this.LabelViewEditWeight.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditWeight.Size = new System.Drawing.Size(150, 29);
             this.LabelViewEditWeight.TabIndex = 14;
             this.LabelViewEditWeight.Text = "Weight";
             this.LabelViewEditWeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CheckBoxViewEditScale
             // 
-            this.CheckBoxViewEditScale.Location = new System.Drawing.Point(749, 403);
+            this.CheckBoxViewEditScale.Location = new System.Drawing.Point(716, 294);
             this.CheckBoxViewEditScale.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.CheckBoxViewEditScale.Name = "CheckBoxViewEditScale";
             this.CheckBoxViewEditScale.Size = new System.Drawing.Size(132, 29);
@@ -498,7 +699,7 @@
             // 
             this.ComboBoxViewEditUnitOfIssue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditUnitOfIssue.FormattingEnabled = true;
-            this.ComboBoxViewEditUnitOfIssue.Location = new System.Drawing.Point(631, 362);
+            this.ComboBoxViewEditUnitOfIssue.Location = new System.Drawing.Point(596, 253);
             this.ComboBoxViewEditUnitOfIssue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditUnitOfIssue.Name = "ComboBoxViewEditUnitOfIssue";
             this.ComboBoxViewEditUnitOfIssue.Size = new System.Drawing.Size(190, 30);
@@ -506,9 +707,9 @@
             // 
             // LabelViewEditUnitOfIssue
             // 
-            this.LabelViewEditUnitOfIssue.Location = new System.Drawing.Point(435, 362);
+            this.LabelViewEditUnitOfIssue.Location = new System.Drawing.Point(440, 253);
             this.LabelViewEditUnitOfIssue.Name = "LabelViewEditUnitOfIssue";
-            this.LabelViewEditUnitOfIssue.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditUnitOfIssue.Size = new System.Drawing.Size(150, 29);
             this.LabelViewEditUnitOfIssue.TabIndex = 10;
             this.LabelViewEditUnitOfIssue.Text = "Unit Of Issue";
             this.LabelViewEditUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -517,7 +718,7 @@
             // 
             this.ComboBoxViewEditStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditStorageType.FormattingEnabled = true;
-            this.ComboBoxViewEditStorageType.Location = new System.Drawing.Point(631, 322);
+            this.ComboBoxViewEditStorageType.Location = new System.Drawing.Point(596, 213);
             this.ComboBoxViewEditStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditStorageType.Name = "ComboBoxViewEditStorageType";
             this.ComboBoxViewEditStorageType.Size = new System.Drawing.Size(190, 30);
@@ -525,9 +726,9 @@
             // 
             // LabelViewEditStorageType
             // 
-            this.LabelViewEditStorageType.Location = new System.Drawing.Point(435, 322);
+            this.LabelViewEditStorageType.Location = new System.Drawing.Point(440, 213);
             this.LabelViewEditStorageType.Name = "LabelViewEditStorageType";
-            this.LabelViewEditStorageType.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditStorageType.Size = new System.Drawing.Size(150, 29);
             this.LabelViewEditStorageType.TabIndex = 9;
             this.LabelViewEditStorageType.Text = "Storage Type";
             this.LabelViewEditStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -536,7 +737,7 @@
             // 
             this.ComboBoxViewEditHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditHeightCode.FormattingEnabled = true;
-            this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(216, 402);
+            this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(216, 293);
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(190, 30);
@@ -544,7 +745,7 @@
             // 
             // LabelViewEditHeight
             // 
-            this.LabelViewEditHeight.Location = new System.Drawing.Point(20, 402);
+            this.LabelViewEditHeight.Location = new System.Drawing.Point(20, 293);
             this.LabelViewEditHeight.Name = "LabelViewEditHeight";
             this.LabelViewEditHeight.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditHeight.TabIndex = 7;
@@ -555,7 +756,7 @@
             // 
             this.ComboBoxViewEditVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditVelocityCode.FormattingEnabled = true;
-            this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(216, 362);
+            this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(216, 253);
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditVelocityCode.Name = "ComboBoxViewEditVelocityCode";
             this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(190, 30);
@@ -564,7 +765,7 @@
             // 
             // LabelViewEditVelocity
             // 
-            this.LabelViewEditVelocity.Location = new System.Drawing.Point(20, 362);
+            this.LabelViewEditVelocity.Location = new System.Drawing.Point(20, 253);
             this.LabelViewEditVelocity.Name = "LabelViewEditVelocity";
             this.LabelViewEditVelocity.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditVelocity.TabIndex = 5;
@@ -573,9 +774,9 @@
             // 
             // LabelViewEditSystemMin
             // 
-            this.LabelViewEditSystemMin.Location = new System.Drawing.Point(435, 282);
+            this.LabelViewEditSystemMin.Location = new System.Drawing.Point(440, 173);
             this.LabelViewEditSystemMin.Name = "LabelViewEditSystemMin";
-            this.LabelViewEditSystemMin.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditSystemMin.Size = new System.Drawing.Size(150, 29);
             this.LabelViewEditSystemMin.TabIndex = 3;
             this.LabelViewEditSystemMin.Text = "System Min";
             this.LabelViewEditSystemMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -584,7 +785,7 @@
             // 
             this.ComboBoxViewEditSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditSizeCode.FormattingEnabled = true;
-            this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(216, 322);
+            this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(216, 213);
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditSizeCode.Name = "ComboBoxViewEditSizeCode";
             this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(190, 30);
@@ -593,7 +794,7 @@
             // 
             // LabelViewEditSize
             // 
-            this.LabelViewEditSize.Location = new System.Drawing.Point(20, 322);
+            this.LabelViewEditSize.Location = new System.Drawing.Point(20, 213);
             this.LabelViewEditSize.Name = "LabelViewEditSize";
             this.LabelViewEditSize.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditSize.TabIndex = 3;
@@ -605,7 +806,7 @@
             this.ComboBoxViewEditArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditArea.Enabled = false;
             this.ComboBoxViewEditArea.FormattingEnabled = true;
-            this.ComboBoxViewEditArea.Location = new System.Drawing.Point(216, 202);
+            this.ComboBoxViewEditArea.Location = new System.Drawing.Point(216, 93);
             this.ComboBoxViewEditArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditArea.Name = "ComboBoxViewEditArea";
             this.ComboBoxViewEditArea.Size = new System.Drawing.Size(190, 30);
@@ -613,7 +814,7 @@
             // 
             // TextBoxViewEditSystemMax
             // 
-            this.TextBoxViewEditSystemMax.Location = new System.Drawing.Point(216, 282);
+            this.TextBoxViewEditSystemMax.Location = new System.Drawing.Point(216, 173);
             this.TextBoxViewEditSystemMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditSystemMax.Name = "TextBoxViewEditSystemMax";
             this.TextBoxViewEditSystemMax.Size = new System.Drawing.Size(100, 28);
@@ -621,9 +822,19 @@
             this.TextBoxViewEditSystemMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditSystemMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditSystemMax_KeyDown);
             // 
+            // TextBoxViewEditPickMax
+            // 
+            this.TextBoxViewEditPickMax.Location = new System.Drawing.Point(596, 94);
+            this.TextBoxViewEditPickMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxViewEditPickMax.Name = "TextBoxViewEditPickMax";
+            this.TextBoxViewEditPickMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditPickMax.TabIndex = 9;
+            this.TextBoxViewEditPickMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxViewEditPickMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditLocationMin_KeyDown);
+            // 
             // TextBoxViewEditLocationMin
             // 
-            this.TextBoxViewEditLocationMin.Location = new System.Drawing.Point(631, 242);
+            this.TextBoxViewEditLocationMin.Location = new System.Drawing.Point(596, 133);
             this.TextBoxViewEditLocationMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLocationMin.Name = "TextBoxViewEditLocationMin";
             this.TextBoxViewEditLocationMin.Size = new System.Drawing.Size(100, 28);
@@ -633,7 +844,7 @@
             // 
             // TextBoxViewEditLocationMax
             // 
-            this.TextBoxViewEditLocationMax.Location = new System.Drawing.Point(216, 242);
+            this.TextBoxViewEditLocationMax.Location = new System.Drawing.Point(216, 133);
             this.TextBoxViewEditLocationMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLocationMax.Name = "TextBoxViewEditLocationMax";
             this.TextBoxViewEditLocationMax.Size = new System.Drawing.Size(100, 28);
@@ -643,17 +854,17 @@
             // 
             // TextBoxViewEditDescription
             // 
-            this.TextBoxViewEditDescription.Location = new System.Drawing.Point(216, 162);
+            this.TextBoxViewEditDescription.Location = new System.Drawing.Point(216, 53);
             this.TextBoxViewEditDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditDescription.Name = "TextBoxViewEditDescription";
-            this.TextBoxViewEditDescription.Size = new System.Drawing.Size(450, 28);
+            this.TextBoxViewEditDescription.Size = new System.Drawing.Size(370, 28);
             this.TextBoxViewEditDescription.TabIndex = 1;
             this.TextBoxViewEditDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditDescription.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditDescription_KeyDown);
             // 
             // TextBoxViewEditSystemMin
             // 
-            this.TextBoxViewEditSystemMin.Location = new System.Drawing.Point(631, 283);
+            this.TextBoxViewEditSystemMin.Location = new System.Drawing.Point(596, 174);
             this.TextBoxViewEditSystemMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditSystemMin.Name = "TextBoxViewEditSystemMin";
             this.TextBoxViewEditSystemMin.Size = new System.Drawing.Size(100, 28);
@@ -662,7 +873,7 @@
             // 
             // TextBoxViewEditItem
             // 
-            this.TextBoxViewEditItem.Location = new System.Drawing.Point(216, 126);
+            this.TextBoxViewEditItem.Location = new System.Drawing.Point(216, 17);
             this.TextBoxViewEditItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditItem.Name = "TextBoxViewEditItem";
             this.TextBoxViewEditItem.ReadOnly = true;
@@ -673,25 +884,43 @@
             // 
             // LabelViewEditSystemMax
             // 
-            this.LabelViewEditSystemMax.Location = new System.Drawing.Point(20, 282);
+            this.LabelViewEditSystemMax.Location = new System.Drawing.Point(20, 173);
             this.LabelViewEditSystemMax.Name = "LabelViewEditSystemMax";
             this.LabelViewEditSystemMax.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditSystemMax.TabIndex = 0;
             this.LabelViewEditSystemMax.Text = "System Max";
             this.LabelViewEditSystemMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // LabelViewEditPickMaxInfo
+            // 
+            this.LabelViewEditPickMaxInfo.Location = new System.Drawing.Point(709, 94);
+            this.LabelViewEditPickMaxInfo.Name = "LabelViewEditPickMaxInfo";
+            this.LabelViewEditPickMaxInfo.Size = new System.Drawing.Size(136, 29);
+            this.LabelViewEditPickMaxInfo.TabIndex = 0;
+            this.LabelViewEditPickMaxInfo.Text = "0 = Unlimited";
+            this.LabelViewEditPickMaxInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelViewEditPickMax
+            // 
+            this.LabelViewEditPickMax.Location = new System.Drawing.Point(440, 94);
+            this.LabelViewEditPickMax.Name = "LabelViewEditPickMax";
+            this.LabelViewEditPickMax.Size = new System.Drawing.Size(150, 29);
+            this.LabelViewEditPickMax.TabIndex = 0;
+            this.LabelViewEditPickMax.Text = "Pick Max";
+            this.LabelViewEditPickMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // LabelViewEditLocationMin
             // 
-            this.LabelViewEditLocationMin.Location = new System.Drawing.Point(435, 242);
+            this.LabelViewEditLocationMin.Location = new System.Drawing.Point(440, 133);
             this.LabelViewEditLocationMin.Name = "LabelViewEditLocationMin";
-            this.LabelViewEditLocationMin.Size = new System.Drawing.Size(190, 29);
+            this.LabelViewEditLocationMin.Size = new System.Drawing.Size(150, 29);
             this.LabelViewEditLocationMin.TabIndex = 0;
             this.LabelViewEditLocationMin.Text = "Location Min";
             this.LabelViewEditLocationMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelViewEditLocationMax
             // 
-            this.LabelViewEditLocationMax.Location = new System.Drawing.Point(20, 242);
+            this.LabelViewEditLocationMax.Location = new System.Drawing.Point(20, 133);
             this.LabelViewEditLocationMax.Name = "LabelViewEditLocationMax";
             this.LabelViewEditLocationMax.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditLocationMax.TabIndex = 0;
@@ -700,7 +929,7 @@
             // 
             // LabelViewEditDexcription
             // 
-            this.LabelViewEditDexcription.Location = new System.Drawing.Point(20, 162);
+            this.LabelViewEditDexcription.Location = new System.Drawing.Point(20, 53);
             this.LabelViewEditDexcription.Name = "LabelViewEditDexcription";
             this.LabelViewEditDexcription.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditDexcription.TabIndex = 0;
@@ -709,7 +938,7 @@
             // 
             // LabelViewEditItem
             // 
-            this.LabelViewEditItem.Location = new System.Drawing.Point(20, 126);
+            this.LabelViewEditItem.Location = new System.Drawing.Point(20, 17);
             this.LabelViewEditItem.Name = "LabelViewEditItem";
             this.LabelViewEditItem.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditItem.TabIndex = 0;
@@ -718,7 +947,7 @@
             // 
             // LabelViewEditArea
             // 
-            this.LabelViewEditArea.Location = new System.Drawing.Point(20, 202);
+            this.LabelViewEditArea.Location = new System.Drawing.Point(20, 93);
             this.LabelViewEditArea.Name = "LabelViewEditArea";
             this.LabelViewEditArea.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditArea.TabIndex = 0;
@@ -727,7 +956,7 @@
             // 
             // New
             // 
-            this.New.BackColor = System.Drawing.Color.RoyalBlue;
+            this.New.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.New.Controls.Add(this.LabelActionNew);
             this.New.Controls.Add(this.MbNewListing);
             this.New.Controls.Add(this.MbLoadDefault);
@@ -748,6 +977,7 @@
             // LabelActionNew
             // 
             this.LabelActionNew.Font = new System.Drawing.Font("Comic Sans MS", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelActionNew.ForeColor = System.Drawing.Color.White;
             this.LabelActionNew.Location = new System.Drawing.Point(506, 16);
             this.LabelActionNew.Name = "LabelActionNew";
             this.LabelActionNew.Size = new System.Drawing.Size(135, 65);
@@ -831,7 +1061,12 @@
             // 
             // PanelNew
             // 
-            this.PanelNew.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.PanelNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.PanelNew.Controls.Add(this.TextBoxNewPickMax);
+            this.PanelNew.Controls.Add(this.LabelNewPickMaxInfo);
+            this.PanelNew.Controls.Add(this.LabelNewPickMax);
+            this.PanelNew.Controls.Add(this.PanelAkas);
+            this.PanelNew.Controls.Add(this.PanelExistingItems);
             this.PanelNew.Controls.Add(this.LabelNewDefaultImage);
             this.PanelNew.Controls.Add(this.PictureBoxNewImage);
             this.PanelNew.Controls.Add(this.ComboBoxNewUnitOfIssue);
@@ -844,6 +1079,8 @@
             this.PanelNew.Controls.Add(this.TextBoxNewSystemMin);
             this.PanelNew.Controls.Add(this.LabelNewSystemMin);
             this.PanelNew.Controls.Add(this.ComboBoxNewHeightCode);
+            this.PanelNew.Controls.Add(this.LabelAkas);
+            this.PanelNew.Controls.Add(this.LabelExistingItems);
             this.PanelNew.Controls.Add(this.LabelNewHeight);
             this.PanelNew.Controls.Add(this.ComboBoxNewVelocityCode);
             this.PanelNew.Controls.Add(this.LabelNewVelocity);
@@ -860,7 +1097,7 @@
             this.PanelNew.Controls.Add(this.LabelNewLocationMax);
             this.PanelNew.Controls.Add(this.LabelNewDescription);
             this.PanelNew.Controls.Add(this.LabelNewItem);
-            this.PanelNew.Controls.Add(this.LabelNewStation);
+            this.PanelNew.Controls.Add(this.LabelNewArea);
             this.PanelNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PanelNew.Location = new System.Drawing.Point(3, 97);
             this.PanelNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -868,9 +1105,101 @@
             this.PanelNew.Size = new System.Drawing.Size(1223, 529);
             this.PanelNew.TabIndex = 21;
             // 
+            // TextBoxNewPickMax
+            // 
+            this.TextBoxNewPickMax.Location = new System.Drawing.Point(596, 94);
+            this.TextBoxNewPickMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewPickMax.Name = "TextBoxNewPickMax";
+            this.TextBoxNewPickMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewPickMax.TabIndex = 42;
+            this.TextBoxNewPickMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelNewPickMaxInfo
+            // 
+            this.LabelNewPickMaxInfo.Location = new System.Drawing.Point(709, 94);
+            this.LabelNewPickMaxInfo.Name = "LabelNewPickMaxInfo";
+            this.LabelNewPickMaxInfo.Size = new System.Drawing.Size(136, 29);
+            this.LabelNewPickMaxInfo.TabIndex = 40;
+            this.LabelNewPickMaxInfo.Text = "0 = Unlimited";
+            this.LabelNewPickMaxInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelNewPickMax
+            // 
+            this.LabelNewPickMax.Location = new System.Drawing.Point(440, 94);
+            this.LabelNewPickMax.Name = "LabelNewPickMax";
+            this.LabelNewPickMax.Size = new System.Drawing.Size(150, 29);
+            this.LabelNewPickMax.TabIndex = 41;
+            this.LabelNewPickMax.Text = "Pick Max";
+            this.LabelNewPickMax.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // PanelAkas
+            // 
+            this.PanelAkas.Controls.Add(this.ListBoxAkas);
+            this.PanelAkas.Location = new System.Drawing.Point(633, 371);
+            this.PanelAkas.Name = "PanelAkas";
+            this.PanelAkas.Size = new System.Drawing.Size(560, 140);
+            this.PanelAkas.TabIndex = 39;
+            // 
+            // ListBoxAkas
+            // 
+            this.ListBoxAkas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            this.ListBoxAkas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListBoxAkas.FormattingEnabled = true;
+            this.ListBoxAkas.ItemHeight = 22;
+            this.ListBoxAkas.Location = new System.Drawing.Point(0, 0);
+            this.ListBoxAkas.Name = "ListBoxAkas";
+            this.ListBoxAkas.Size = new System.Drawing.Size(560, 140);
+            this.ListBoxAkas.TabIndex = 0;
+            // 
+            // PanelExistingItems
+            // 
+            this.PanelExistingItems.Controls.Add(this.DataGridViewExistingItems);
+            this.PanelExistingItems.Location = new System.Drawing.Point(32, 371);
+            this.PanelExistingItems.Name = "PanelExistingItems";
+            this.PanelExistingItems.Size = new System.Drawing.Size(560, 140);
+            this.PanelExistingItems.TabIndex = 38;
+            // 
+            // DataGridViewExistingItems
+            // 
+            this.DataGridViewExistingItems.AllowUserToAddRows = false;
+            this.DataGridViewExistingItems.AllowUserToDeleteRows = false;
+            this.DataGridViewExistingItems.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewExistingItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle16;
+            this.DataGridViewExistingItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewExistingItems.DefaultCellStyle = dataGridViewCellStyle17;
+            this.DataGridViewExistingItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridViewExistingItems.Location = new System.Drawing.Point(0, 0);
+            this.DataGridViewExistingItems.Name = "DataGridViewExistingItems";
+            this.DataGridViewExistingItems.ReadOnly = true;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewExistingItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle18;
+            this.DataGridViewExistingItems.Size = new System.Drawing.Size(560, 140);
+            this.DataGridViewExistingItems.TabIndex = 0;
+            this.DataGridViewExistingItems.DoubleClick += new System.EventHandler(this.DataGridViewExistingItems_DoubleClick);
+            // 
             // LabelNewDefaultImage
             // 
-            this.LabelNewDefaultImage.Location = new System.Drawing.Point(896, 137);
+            this.LabelNewDefaultImage.Location = new System.Drawing.Point(896, 30);
             this.LabelNewDefaultImage.Name = "LabelNewDefaultImage";
             this.LabelNewDefaultImage.Size = new System.Drawing.Size(250, 29);
             this.LabelNewDefaultImage.TabIndex = 37;
@@ -879,9 +1208,10 @@
             // 
             // PictureBoxNewImage
             // 
+            this.PictureBoxNewImage.BackColor = System.Drawing.Color.Transparent;
             this.PictureBoxNewImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxNewImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxNewImage.InitialImage")));
-            this.PictureBoxNewImage.Location = new System.Drawing.Point(896, 181);
+            this.PictureBoxNewImage.Location = new System.Drawing.Point(896, 72);
             this.PictureBoxNewImage.Name = "PictureBoxNewImage";
             this.PictureBoxNewImage.Size = new System.Drawing.Size(250, 250);
             this.PictureBoxNewImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -892,7 +1222,7 @@
             // 
             this.ComboBoxNewUnitOfIssue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewUnitOfIssue.FormattingEnabled = true;
-            this.ComboBoxNewUnitOfIssue.Location = new System.Drawing.Point(631, 362);
+            this.ComboBoxNewUnitOfIssue.Location = new System.Drawing.Point(596, 253);
             this.ComboBoxNewUnitOfIssue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewUnitOfIssue.Name = "ComboBoxNewUnitOfIssue";
             this.ComboBoxNewUnitOfIssue.Size = new System.Drawing.Size(190, 30);
@@ -900,9 +1230,9 @@
             // 
             // LabelNewUnitOfIssue
             // 
-            this.LabelNewUnitOfIssue.Location = new System.Drawing.Point(435, 362);
+            this.LabelNewUnitOfIssue.Location = new System.Drawing.Point(440, 253);
             this.LabelNewUnitOfIssue.Name = "LabelNewUnitOfIssue";
-            this.LabelNewUnitOfIssue.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewUnitOfIssue.Size = new System.Drawing.Size(150, 29);
             this.LabelNewUnitOfIssue.TabIndex = 33;
             this.LabelNewUnitOfIssue.Text = "Unit Of Issue";
             this.LabelNewUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -911,7 +1241,7 @@
             // 
             this.ComboBoxNewStorageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewStorageType.FormattingEnabled = true;
-            this.ComboBoxNewStorageType.Location = new System.Drawing.Point(631, 322);
+            this.ComboBoxNewStorageType.Location = new System.Drawing.Point(596, 213);
             this.ComboBoxNewStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewStorageType.Name = "ComboBoxNewStorageType";
             this.ComboBoxNewStorageType.Size = new System.Drawing.Size(190, 30);
@@ -919,16 +1249,16 @@
             // 
             // LabelNewStorageType
             // 
-            this.LabelNewStorageType.Location = new System.Drawing.Point(435, 322);
+            this.LabelNewStorageType.Location = new System.Drawing.Point(440, 213);
             this.LabelNewStorageType.Name = "LabelNewStorageType";
-            this.LabelNewStorageType.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewStorageType.Size = new System.Drawing.Size(150, 29);
             this.LabelNewStorageType.TabIndex = 32;
             this.LabelNewStorageType.Text = "Storage Type";
             this.LabelNewStorageType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxNewWeight
             // 
-            this.TextBoxNewWeight.Location = new System.Drawing.Point(631, 402);
+            this.TextBoxNewWeight.Location = new System.Drawing.Point(596, 293);
             this.TextBoxNewWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewWeight.Name = "TextBoxNewWeight";
             this.TextBoxNewWeight.Size = new System.Drawing.Size(100, 28);
@@ -937,9 +1267,9 @@
             // 
             // LabelNewWeight
             // 
-            this.LabelNewWeight.Location = new System.Drawing.Point(435, 402);
+            this.LabelNewWeight.Location = new System.Drawing.Point(440, 293);
             this.LabelNewWeight.Name = "LabelNewWeight";
-            this.LabelNewWeight.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewWeight.Size = new System.Drawing.Size(150, 29);
             this.LabelNewWeight.TabIndex = 30;
             this.LabelNewWeight.Text = "Weight";
             this.LabelNewWeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -947,7 +1277,7 @@
             // CheckBoxNewScale
             // 
             this.CheckBoxNewScale.AutoSize = true;
-            this.CheckBoxNewScale.Location = new System.Drawing.Point(631, 442);
+            this.CheckBoxNewScale.Location = new System.Drawing.Point(716, 294);
             this.CheckBoxNewScale.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.CheckBoxNewScale.Name = "CheckBoxNewScale";
             this.CheckBoxNewScale.Size = new System.Drawing.Size(114, 28);
@@ -957,7 +1287,7 @@
             // 
             // TextBoxNewSystemMin
             // 
-            this.TextBoxNewSystemMin.Location = new System.Drawing.Point(631, 282);
+            this.TextBoxNewSystemMin.Location = new System.Drawing.Point(596, 174);
             this.TextBoxNewSystemMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSystemMin.Name = "TextBoxNewSystemMin";
             this.TextBoxNewSystemMin.Size = new System.Drawing.Size(100, 28);
@@ -966,9 +1296,9 @@
             // 
             // LabelNewSystemMin
             // 
-            this.LabelNewSystemMin.Location = new System.Drawing.Point(435, 282);
+            this.LabelNewSystemMin.Location = new System.Drawing.Point(440, 173);
             this.LabelNewSystemMin.Name = "LabelNewSystemMin";
-            this.LabelNewSystemMin.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewSystemMin.Size = new System.Drawing.Size(150, 29);
             this.LabelNewSystemMin.TabIndex = 27;
             this.LabelNewSystemMin.Text = "System Min";
             this.LabelNewSystemMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -977,15 +1307,35 @@
             // 
             this.ComboBoxNewHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewHeightCode.FormattingEnabled = true;
-            this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(216, 402);
+            this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(216, 293);
             this.ComboBoxNewHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewHeightCode.Name = "ComboBoxNewHeightCode";
             this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewHeightCode.TabIndex = 7;
             // 
+            // LabelAkas
+            // 
+            this.LabelAkas.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAkas.Location = new System.Drawing.Point(636, 339);
+            this.LabelAkas.Name = "LabelAkas";
+            this.LabelAkas.Size = new System.Drawing.Size(190, 29);
+            this.LabelAkas.TabIndex = 25;
+            this.LabelAkas.Text = "Also Known As (AKA)";
+            this.LabelAkas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelExistingItems
+            // 
+            this.LabelExistingItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelExistingItems.Location = new System.Drawing.Point(28, 339);
+            this.LabelExistingItems.Name = "LabelExistingItems";
+            this.LabelExistingItems.Size = new System.Drawing.Size(190, 29);
+            this.LabelExistingItems.TabIndex = 25;
+            this.LabelExistingItems.Text = "Existing Items";
+            this.LabelExistingItems.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // LabelNewHeight
             // 
-            this.LabelNewHeight.Location = new System.Drawing.Point(20, 402);
+            this.LabelNewHeight.Location = new System.Drawing.Point(20, 293);
             this.LabelNewHeight.Name = "LabelNewHeight";
             this.LabelNewHeight.Size = new System.Drawing.Size(190, 29);
             this.LabelNewHeight.TabIndex = 25;
@@ -996,7 +1346,7 @@
             // 
             this.ComboBoxNewVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewVelocityCode.FormattingEnabled = true;
-            this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(216, 362);
+            this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(216, 253);
             this.ComboBoxNewVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewVelocityCode.Name = "ComboBoxNewVelocityCode";
             this.ComboBoxNewVelocityCode.Size = new System.Drawing.Size(190, 30);
@@ -1005,7 +1355,7 @@
             // 
             // LabelNewVelocity
             // 
-            this.LabelNewVelocity.Location = new System.Drawing.Point(20, 362);
+            this.LabelNewVelocity.Location = new System.Drawing.Point(20, 253);
             this.LabelNewVelocity.Name = "LabelNewVelocity";
             this.LabelNewVelocity.Size = new System.Drawing.Size(190, 29);
             this.LabelNewVelocity.TabIndex = 23;
@@ -1016,7 +1366,7 @@
             // 
             this.ComboBoxNewSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewSizeCode.FormattingEnabled = true;
-            this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(216, 322);
+            this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(216, 213);
             this.ComboBoxNewSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewSizeCode.Name = "ComboBoxNewSizeCode";
             this.ComboBoxNewSizeCode.Size = new System.Drawing.Size(190, 30);
@@ -1025,7 +1375,7 @@
             // 
             // LabelNewSize
             // 
-            this.LabelNewSize.Location = new System.Drawing.Point(20, 322);
+            this.LabelNewSize.Location = new System.Drawing.Point(20, 213);
             this.LabelNewSize.Name = "LabelNewSize";
             this.LabelNewSize.Size = new System.Drawing.Size(190, 29);
             this.LabelNewSize.TabIndex = 21;
@@ -1036,7 +1386,7 @@
             // 
             this.ComboBoxNewArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewArea.FormattingEnabled = true;
-            this.ComboBoxNewArea.Location = new System.Drawing.Point(216, 202);
+            this.ComboBoxNewArea.Location = new System.Drawing.Point(216, 93);
             this.ComboBoxNewArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewArea.Name = "ComboBoxNewArea";
             this.ComboBoxNewArea.Size = new System.Drawing.Size(189, 30);
@@ -1044,7 +1394,7 @@
             // 
             // TextBoxNewSystemMax
             // 
-            this.TextBoxNewSystemMax.Location = new System.Drawing.Point(216, 282);
+            this.TextBoxNewSystemMax.Location = new System.Drawing.Point(216, 173);
             this.TextBoxNewSystemMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSystemMax.Name = "TextBoxNewSystemMax";
             this.TextBoxNewSystemMax.Size = new System.Drawing.Size(100, 28);
@@ -1054,7 +1404,7 @@
             // 
             // TextBoxNewLocationMin
             // 
-            this.TextBoxNewLocationMin.Location = new System.Drawing.Point(631, 242);
+            this.TextBoxNewLocationMin.Location = new System.Drawing.Point(596, 133);
             this.TextBoxNewLocationMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewLocationMin.Name = "TextBoxNewLocationMin";
             this.TextBoxNewLocationMin.Size = new System.Drawing.Size(100, 28);
@@ -1064,7 +1414,7 @@
             // 
             // TextBoxNewLocationMax
             // 
-            this.TextBoxNewLocationMax.Location = new System.Drawing.Point(216, 242);
+            this.TextBoxNewLocationMax.Location = new System.Drawing.Point(216, 133);
             this.TextBoxNewLocationMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewLocationMax.Name = "TextBoxNewLocationMax";
             this.TextBoxNewLocationMax.Size = new System.Drawing.Size(100, 28);
@@ -1074,17 +1424,17 @@
             // 
             // TextBoxNewDescription
             // 
-            this.TextBoxNewDescription.Location = new System.Drawing.Point(216, 162);
+            this.TextBoxNewDescription.Location = new System.Drawing.Point(216, 53);
             this.TextBoxNewDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewDescription.Name = "TextBoxNewDescription";
-            this.TextBoxNewDescription.Size = new System.Drawing.Size(450, 28);
+            this.TextBoxNewDescription.Size = new System.Drawing.Size(370, 28);
             this.TextBoxNewDescription.TabIndex = 1;
             this.TextBoxNewDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewDescription.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewDescription_KeyDown);
             // 
             // TextBoxNewItem
             // 
-            this.TextBoxNewItem.Location = new System.Drawing.Point(216, 126);
+            this.TextBoxNewItem.Location = new System.Drawing.Point(216, 17);
             this.TextBoxNewItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewItem.Name = "TextBoxNewItem";
             this.TextBoxNewItem.Size = new System.Drawing.Size(190, 28);
@@ -1095,7 +1445,7 @@
             // 
             // LabelNewSystemMax
             // 
-            this.LabelNewSystemMax.Location = new System.Drawing.Point(20, 282);
+            this.LabelNewSystemMax.Location = new System.Drawing.Point(20, 173);
             this.LabelNewSystemMax.Name = "LabelNewSystemMax";
             this.LabelNewSystemMax.Size = new System.Drawing.Size(190, 29);
             this.LabelNewSystemMax.TabIndex = 13;
@@ -1104,16 +1454,16 @@
             // 
             // LabelNewLocationMin
             // 
-            this.LabelNewLocationMin.Location = new System.Drawing.Point(435, 242);
+            this.LabelNewLocationMin.Location = new System.Drawing.Point(440, 133);
             this.LabelNewLocationMin.Name = "LabelNewLocationMin";
-            this.LabelNewLocationMin.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewLocationMin.Size = new System.Drawing.Size(150, 29);
             this.LabelNewLocationMin.TabIndex = 12;
             this.LabelNewLocationMin.Text = "Location Min";
             this.LabelNewLocationMin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelNewLocationMax
             // 
-            this.LabelNewLocationMax.Location = new System.Drawing.Point(20, 242);
+            this.LabelNewLocationMax.Location = new System.Drawing.Point(20, 133);
             this.LabelNewLocationMax.Name = "LabelNewLocationMax";
             this.LabelNewLocationMax.Size = new System.Drawing.Size(190, 29);
             this.LabelNewLocationMax.TabIndex = 11;
@@ -1122,7 +1472,7 @@
             // 
             // LabelNewDescription
             // 
-            this.LabelNewDescription.Location = new System.Drawing.Point(20, 162);
+            this.LabelNewDescription.Location = new System.Drawing.Point(20, 53);
             this.LabelNewDescription.Name = "LabelNewDescription";
             this.LabelNewDescription.Size = new System.Drawing.Size(190, 29);
             this.LabelNewDescription.TabIndex = 10;
@@ -1131,21 +1481,21 @@
             // 
             // LabelNewItem
             // 
-            this.LabelNewItem.Location = new System.Drawing.Point(20, 126);
+            this.LabelNewItem.Location = new System.Drawing.Point(20, 17);
             this.LabelNewItem.Name = "LabelNewItem";
             this.LabelNewItem.Size = new System.Drawing.Size(190, 29);
             this.LabelNewItem.TabIndex = 14;
             this.LabelNewItem.Text = "Item";
             this.LabelNewItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelNewStation
+            // LabelNewArea
             // 
-            this.LabelNewStation.Location = new System.Drawing.Point(20, 202);
-            this.LabelNewStation.Name = "LabelNewStation";
-            this.LabelNewStation.Size = new System.Drawing.Size(190, 29);
-            this.LabelNewStation.TabIndex = 9;
-            this.LabelNewStation.Text = "Area";
-            this.LabelNewStation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewArea.Location = new System.Drawing.Point(20, 93);
+            this.LabelNewArea.Name = "LabelNewArea";
+            this.LabelNewArea.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewArea.TabIndex = 9;
+            this.LabelNewArea.Text = "Area";
+            this.LabelNewArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelRecordCount
             // 
@@ -1187,12 +1537,18 @@
             this.Listing.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
             this.ViewEdit.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.PanelViewEdit.ResumeLayout(false);
+            this.PanelViewEdit.PerformLayout();
+            this.PanelViewEditAkas.ResumeLayout(false);
+            this.PanelViewEditExistingItems.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewViewEditExistingItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxViewEditImage)).EndInit();
             this.New.ResumeLayout(false);
             this.PanelNew.ResumeLayout(false);
             this.PanelNew.PerformLayout();
+            this.PanelAkas.ResumeLayout(false);
+            this.PanelExistingItems.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewExistingItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxNewImage)).EndInit();
             this.ResumeLayout(false);
 
@@ -1213,7 +1569,7 @@
         private MetroFramework.Controls.MetroButton MButtonSearch;
         private MetroFramework.Controls.MetroButton MButtonClose;
         private System.Windows.Forms.TextBox TextBoxFind;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel PanelViewEdit;
         private System.Windows.Forms.TabPage New;
         private System.Windows.Forms.TextBox TextBoxViewEditItem;
         private System.Windows.Forms.Label LabelViewEditArea;
@@ -1263,7 +1619,7 @@
         private System.Windows.Forms.Label LabelNewLocationMax;
         private System.Windows.Forms.Label LabelNewDescription;
         private System.Windows.Forms.Label LabelNewItem;
-        private System.Windows.Forms.Label LabelNewStation;
+        private System.Windows.Forms.Label LabelNewArea;
         private System.Windows.Forms.Label LabelViewEditSystemMin;
         private System.Windows.Forms.TextBox TextBoxViewEditSystemMin;
         private System.Windows.Forms.TextBox TextBoxNewSystemMin;
@@ -1292,5 +1648,26 @@
         private System.Windows.Forms.Label LabelNewDefaultImage;
         private System.Windows.Forms.Label LabelViewEditDefaultImage;
         private System.Windows.Forms.Label LabelStationName;
+        private System.Windows.Forms.Panel PanelExistingItems;
+        private System.Windows.Forms.DataGridView DataGridViewExistingItems;
+        private System.Windows.Forms.Panel PanelAkas;
+        private System.Windows.Forms.Label LabelAkas;
+        private System.Windows.Forms.Label LabelExistingItems;
+        private System.Windows.Forms.ListBox ListBoxAkas;
+        private System.Windows.Forms.Panel PanelViewEditAkas;
+        private System.Windows.Forms.ListBox ListBoxViewEditAkas;
+        private System.Windows.Forms.Panel PanelViewEditExistingItems;
+        private System.Windows.Forms.DataGridView DataGridViewViewEditExistingItems;
+        private System.Windows.Forms.Label LabelViewEditAkas;
+        private System.Windows.Forms.Label LabelViewEditExistingItems;
+        private System.Windows.Forms.TextBox TextBoxViewEditPickMax;
+        private System.Windows.Forms.Label LabelViewEditPickMax;
+        private System.Windows.Forms.Label LabelViewEditPickMaxInfo;
+        private System.Windows.Forms.TextBox TextBoxNewPickMax;
+        private System.Windows.Forms.Label LabelNewPickMaxInfo;
+        private System.Windows.Forms.Label LabelNewPickMax;
+        private MetroFramework.Controls.MetroButton MbAddAka;
+        private System.Windows.Forms.TextBox TextBoxAka;
+        private MetroFramework.Controls.MetroButton MbDeleteAka;
     }
 }

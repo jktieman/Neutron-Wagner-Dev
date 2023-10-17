@@ -60,7 +60,6 @@ namespace Neutron
             this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.metroPanelMain.SuspendLayout();
             this.GroupBoxLanguage.SuspendLayout();
@@ -83,7 +82,7 @@ namespace Neutron
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             resources.ApplyResources(this.LabelFormHeaderText, "LabelFormHeaderText");
-            this.LabelFormHeaderText.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
             // 
             // mlUserInfo
@@ -271,7 +270,7 @@ namespace Neutron
             // LabelWarehouseManagement
             // 
             resources.ApplyResources(this.LabelWarehouseManagement, "LabelWarehouseManagement");
-            this.LabelWarehouseManagement.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.LabelWarehouseManagement.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelWarehouseManagement.Name = "LabelWarehouseManagement";
             // 
             // ButtonPark
@@ -320,13 +319,6 @@ namespace Neutron
             this.PictureBoxLogo.Name = "PictureBoxLogo";
             this.PictureBoxLogo.TabStop = false;
             // 
-            // button1
-            // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -334,7 +326,6 @@ namespace Neutron
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.GroupBoxLanguage);
             this.Controls.Add(this.ButtonClose);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.ButtonPark);
             this.Controls.Add(this.PictureBoxLogo);
             this.Controls.Add(this.metroPanelMain);
@@ -388,7 +379,6 @@ namespace Neutron
         private System.Windows.Forms.GroupBox GroupBoxLanguage;
         private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;
         private System.Windows.Forms.RadioButton RadioButtonEnglish;
-        private System.Windows.Forms.Button button1;
     }
 }
 

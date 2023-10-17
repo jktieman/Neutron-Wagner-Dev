@@ -12,6 +12,7 @@ using System.Drawing;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronData.Models;
+using Logger = NeutronCore.Global.Logger;
 
 namespace DeviceIndicatorService
 {
@@ -26,32 +27,34 @@ namespace DeviceIndicatorService
         private List<HardwareDevice> _hardwareDevices;
         private int _numDevices;
         private int _flashRate;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
 
         public Panel DeviceIndicatorPanel { get; set; }
 
 
         public DeviceIndicatorManager(WorkstationView workstationView, Point panelLocation, Size panelSize, NeutronVariables neutronVariables)
         {
-            SetupLogger();
+          
+           // SetupLogger();
             _workstationView = workstationView;
             _panelLocation = panelLocation;
             _panelSize = panelSize;
             _neutronVariables = neutronVariables;
-            Init();
+             _logger = Logger.SetupLogger(@"DeviceIndicators");
+            Task.Run(Init);
         }
 
-        private void SetupLogger()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"DeviceIndicators";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-        }
+        //private void SetupLogger()
+        //{
+        //    var logFileDir = LoaderSettings.GetLogFileDirectory();
+        //    var folderName = @"DeviceIndicators";
+        //    var logActivity = LoaderSettings.EnableLogging;
+        //    _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+        //}
 
-        private void Init()
+        private async Task Init()
         {
-            _logger.LogDetail("Initialize Device Indicators - InitDeviceIndicators");
+            await _logger.LogDetailAsync("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new List<DeviceIndicator>();
             _hardwareDevices = _workstationView.HardwareDevices.ToList();
             _flashRate = _neutronVariables.DeviceFlashRate;
@@ -128,25 +131,25 @@ namespace DeviceIndicatorService
             }
         }
 
-        public void UpdateCurrentDeviceIndicator(int loc)
+        public async void UpdateCurrentDeviceIndicator(int loc)
         {
-            _logger.LogDetail($"Set Current Device Indicator BLINK ON -- {loc}");
+            await _logger.LogDetailAsync($"Set Current Device Indicator BLINK ON -- {loc}");
 
             RemovePanelControls();
             AddDeviceIndicatorsToPanel(loc);
         }
 
-        public void ClearActiveDeviceIndicators()
+        public async void ClearActiveDeviceIndicators()
         {
-            _logger.LogDetail("Clear Active Device Indicators START");
+            await _logger.LogDetailAsync("Clear Active Device Indicators START");
 
             RemovePanelControls();
             AddDeviceIndicatorsToPanel();
         }
 
-        public void ClearAllDeviceIndicators()
+        public async void ClearAllDeviceIndicators()
         {
-            _logger.LogDetail("Clear ALL Active Device Indicators START");
+            await _logger.LogDetailAsync("Clear ALL Active Device Indicators START");
 
             RemovePanelControls();
             AddDeviceIndicatorsToPanel();

@@ -29,14 +29,14 @@ namespace NeutronLoader
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
 
-        readonly NeutronVariables _neutronVariables;
-        readonly NeutronLicense _neutronLicense;
-        DynamicLogger _logger;
+        private readonly NeutronVariables _neutronVariables;
+        private readonly NeutronLicense _neutronLicense;
+        private IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
 
         public VidirFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , DynamicLogger logger, IJsonData jsonData, WorkstationView workstationView)
+            , IDynamicLogger logger, IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -55,7 +55,7 @@ namespace NeutronLoader
             {
                 orders = ProcessInterfaceFile(fileInfo);
                 Thread.Sleep(millisecondsTimeout: 100);
-                ArchiveFile.Archive(fileInfo);
+                ArchiveFile.Archive(fileInfo, _logger);
             }
             else
             {
@@ -87,7 +87,7 @@ namespace NeutronLoader
                     }
 
                     Thread.Sleep(millisecondsTimeout: 100);
-                    ArchiveFile.Archive(fileInfo);
+                    ArchiveFile.Archive(fileInfo, _logger);
                 }
                 else
                 {

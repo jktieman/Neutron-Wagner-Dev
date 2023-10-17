@@ -28,6 +28,7 @@ namespace NeutronData.ModelViews
         public string VelocityCodeName { get; set; }
         public string HeightCodeName { get; set; }
         public string LocationCode { get; set; }
+        public int PickMax { get; set; }
         public int ItemDefinitionId { get; set; }
         public int LocationId { get; set; }
         public string RFID { get; set; }

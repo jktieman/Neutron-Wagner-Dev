@@ -51,7 +51,7 @@ namespace Neutron.Forms
             _stations = _workstationRepository.GetMovablePickStations();
             _currentStation = _stations.FirstOrDefault(r => r.Id == _neutronVariables.WorkstationId);
             if(_currentStation != null) _currentStationNumber = _currentStation.StationNumber;
-            if(_stations != null) InitCarriers();
+            if(_stations.Count > 0) InitCarriers();
         }
 
         protected override CreateParams CreateParams

@@ -10,6 +10,8 @@ using NeutronData.ModelViews;
 using Ninject;
 using Ninject.Parameters;
 using AlliedPostOffice;
+using JsonManager;
+using NeutronData.Interfaces;
 using NeutronData.PrintModels;
 
 namespace Neutron.Ninject
@@ -54,38 +56,25 @@ namespace Neutron.Ninject
                 , new ConstructorArgument("historyManager", historyManager));
         }
 
-        //// FrmHotAction
-        //public static T Create<T>(
-        //    NeutronVariables neutronVariables
-        //    , NeutronLicense neutronLicense
-        //    , WorkstationView workstationView
-        //    , HistoryManager historyManager)
-        //    //, string item)
-        //    //, int quantity)
-        //    //, PickList pickList)
-        //{
+        public static T Create<T>(IJsonData jsonData, NeutronVariables neutronVariables
+            , NeutronLicense neutronLicense
+            , WorkstationView workstationView, IWorkstationRepository workstationRepository)
+        {
+            return _kernel.Get<T>(
+                new ConstructorArgument("jsonData", jsonData)
+                ,new ConstructorArgument("neutronVariables", neutronVariables)
+                , new ConstructorArgument("neutronLicense", neutronLicense)
+                , new ConstructorArgument("workstationView",workstationView));
+        }
 
-        //    var result = _kernel.Get<T>(
-        //        new ConstructorArgument("neutronVariables", neutronVariables)
-        //        , new ConstructorArgument("neutronLicense", neutronLicense)
-        //        , new ConstructorArgument("workstationView", workstationView)
-        //        , new ConstructorArgument("historyManager", historyManager));
-        //        //, new ConstructorArgument("item", item));
-        //        //, new ConstructorArgument("quantity", quantity));
-        //        //, new ConstructorArgument("pickList", pickList));
-
-        //        return result;
-        //}
-
-        public static T Create<T>(
-            NeutronVariables neutronVariables
+        public static T Create<T>(NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
             , WorkstationView workstationView)
         {
             return _kernel.Get<T>(
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense)
-                , new ConstructorArgument("workstationView",workstationView));
+                , new ConstructorArgument("workstationView", workstationView));
         }
 
         public static T Create<T>(

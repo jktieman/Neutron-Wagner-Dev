@@ -18,13 +18,13 @@ namespace NeutronLoader
     {
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _uploadBusy;
 
         public UploadProcessorSfh(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            DynamicLogger logger, WorkstationView workstationView)
+            IDynamicLogger logger, WorkstationView workstationView)
         {
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
@@ -51,7 +51,7 @@ namespace NeutronLoader
 
         public void CreateHostFile()
         {
-            _logger.Log($"Upload Processor - Creating Host File.");
+            _logger.LogDetailAsync($"Upload Processor - Creating Host File.");
             var counter = 0;
             while (_uploadBusy)
             {
@@ -102,7 +102,7 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 MessageBox.Show(@"Upload Process Exception, see Log file in HostFile.");
-                _logger.Log($"Create Host File Failed: {ex.Message} {Environment.NewLine} " +
+                _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} " +
                             $"{ex.InnerException.Message} {Environment.NewLine}{ex.StackTrace}");
             }
 
@@ -118,7 +118,7 @@ namespace NeutronLoader
                     var recs = db.Database.ExecuteSqlCommand("usp_RemoveDuplicateRecordsFromHistory");
                     //if (! string.IsNullOrEmpty(recs))
                     //{
-                    //     _logger.Log($"Remove Duplicate History Files Count: {recs} ");
+                    //     _logger.LogDetailAsync($"Remove Duplicate History Files Count: {recs} ");
                     //}
 
                 }
@@ -126,7 +126,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
     }

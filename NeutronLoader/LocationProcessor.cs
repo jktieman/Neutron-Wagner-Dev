@@ -1,5 +1,6 @@
 ﻿using AlliedLogger;
 using JsonManager;
+using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
@@ -16,10 +17,24 @@ namespace NeutronLoader
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
         private ISlotNameFactory _slotNameFactory;
         private readonly IJsonData _jsonData;
+        private IDynamicLogger _logger;
 
         public LocationProcessor(IJsonData jsonData)
         {
             _jsonData = jsonData;
+            CreateLog();
+        }
+
+        /// <summary>
+        /// Creates a new Dynamic Logger
+        /// </summary>
+        /// <returns></returns>
+        private void CreateLog()
+        {
+            var logFileDir = LoaderSettings.GetLogFileDirectory();
+            var folderName = $"LocationProcessor";
+            var logActivity = LoaderSettings.EnableLogging;
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
 
         public Location GetOrCreate(HostOrder hostOrder)
@@ -31,7 +46,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                Logger.Log($"Error Finding Location - {hostOrder.PrimeBin}.  {ex.Message}{Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Error Finding Location - {hostOrder.PrimeBin}.  {ex.Message}{Environment.NewLine} {ex.InnerException}");
 
             }
             return itemDef;
@@ -79,7 +94,7 @@ namespace NeutronLoader
                 }
                 else
                 {
-                    Logger.Log(msg: "No Default Location.  Create Location Failed.");
+                    _logger.LogDetailAsync(msg: "No Default Location.  Create Location Failed.");
                     string msg = "A default Location must be set up in ";
                     msg += "order to create definitions during the Order Load process.";
                     msg += "The Slot number MUST be called, DEFAULT .";
@@ -88,7 +103,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                Logger.Log($"Unable to create New Location.  {ex.Message} {Environment.NewLine}{ex.InnerException.Message}");
+                _logger.LogDetailAsync($"Unable to create New Location.  {ex.Message} {Environment.NewLine}{ex.InnerException.Message}");
             }
             return newDefinition;
         }

@@ -2,7 +2,7 @@
 
 namespace NeutronCore.Enums
 {
-    public enum DeviceType
+    public enum DeviceTypeEnum
     {
         [Description("None")] None = 0,
         [Description("Shuttle")] Shuttle = 1,

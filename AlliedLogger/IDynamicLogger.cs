@@ -21,7 +21,7 @@ namespace AlliedLogger
             , [CallerFilePath] string filePath = ""
             , [CallerLineNumber] int lineNumber = 0);
 
-        void LogDetailAsync(string msg = ""
+        Task LogDetailAsync(string msg = ""
             , [CallerMemberName] string origin = ""
             , [CallerFilePath] string filePath = ""
             , [CallerLineNumber] int lineNumber = 0);

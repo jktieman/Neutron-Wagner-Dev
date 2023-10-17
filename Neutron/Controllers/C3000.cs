@@ -30,7 +30,7 @@ namespace Neutron.Controllers
         readonly int Device_Stationary = -1;
         readonly int Device_Alignment_DontCare = 0;
 
-        readonly DynamicLogger logger;
+        private IDynamicLogger _logger;
         private readonly WorkstationView workstation;
         Form currentForm;
         private readonly Object locker = new Object();
@@ -43,20 +43,20 @@ namespace Neutron.Controllers
             var logFileDir = LoaderSettings.GetLogFileDirectory();
             var folderName = string.Format(format: @"C3000_Station_{0}", arg0: workstation.WorkstationNumber.ToString());
             var logActivity = LoaderSettings.EnableLogging;
-            logger = new DynamicLogger(logFileDir, folderName, logActivity);
+            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             currentForm = frm;
-            Task.Run(() => logger.Log($"C3000 Constructor - {frm.Name}"));
+            Task.Run(() => _logger.LogDetailAsync($"C3000 Constructor - {frm.Name}"));
             CallBackHandler_Init = new SendOrPostCallback(MyInitProgressDelegate);
             var hartLog = ($"{logFileDir}Hart");
             Shuttle_1 = new Hart_DeviceController(Hart_DeviceController.Controller_Type_Kardex_C3000(), hartLog);
             if (Shuttle_1 != null)
             {
-                Task.Run(() => logger.Log(@"Shuttle has been created: "));
+                Task.Run(() => _logger.LogDetailAsync(@"Shuttle has been created: "));
                 C3000Init();
             }
             else
             {
-                Task.Run(() => logger.Log("Shuttle has NOT been created:  Exiting "));
+                Task.Run(() => _logger.LogDetailAsync("Shuttle has NOT been created:  Exiting "));
             }
 
         }
@@ -66,7 +66,7 @@ namespace Neutron.Controllers
             set
             {
                 currentForm = value;
-                Task.Run(() => logger.Log($"Changed Form - {currentForm}"));
+                Task.Run(() => _logger.LogDetailAsync($"Changed Form - {currentForm}"));
             }
         }
 
@@ -74,14 +74,14 @@ namespace Neutron.Controllers
         {
             if (workstation == null)
             {
-                Task.Run(() => logger.Log("Workstation is null "));
+                Task.Run(() => _logger.LogDetailAsync("Workstation is null "));
                 return;
             }
 
             var firstHardwareDevice = workstation.HardwareDevices.FirstOrDefault();
             if (firstHardwareDevice == null)
             {
-                Task.Run(() => logger.Log("Hardware not defined."));
+                Task.Run(() => _logger.LogDetailAsync("Hardware not defined."));
                 return;
             }
 
@@ -89,7 +89,7 @@ namespace Neutron.Controllers
 
             if (tcpConfiguration == null)
             {
-                Task.Run(() => logger.Log("TcpConfiguration is null "));
+                Task.Run(() => _logger.LogDetailAsync("TcpConfiguration is null "));
                 return;
             }
 
@@ -100,16 +100,16 @@ namespace Neutron.Controllers
             var logLevel = firstHardwareDevice.LogLevel;
             var enabledUnitNumbers = workstation.HardwareDevices.Where(r => r.Enabled).Select(s => s.DeviceNumber).ToList();
 
-            Task.Run(() => logger.Log($"IP Address: {tcpConfiguration.IPAddress} Port: {tcpConfiguration.Port} Enabled Unit Numbers: {enabledUnitNumbers}"));
+            Task.Run(() => _logger.LogDetailAsync($"IP Address: {tcpConfiguration.IPAddress} Port: {tcpConfiguration.Port} Enabled Unit Numbers: {enabledUnitNumbers}"));
 
             if (Shuttle_1.Init_Controller(tcpConfiguration.IPAddress, tcpConfiguration.Port
                 , simulationMode, logLevel, enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
             {
-                Task.Run(() => logger.Log("Initialization Requested"));
+                Task.Run(() => _logger.LogDetailAsync("Initialization Requested"));
             }
             else
             {
-                Task.Run(() => logger.Log("Problem requesting initialization. " + cError));
+                Task.Run(() => _logger.LogDetailAsync("Problem requesting initialization. " + cError));
             }
         }
 
@@ -119,20 +119,20 @@ namespace Neutron.Controllers
             var success = Shuttle_1.Init_Success;
             var initCode = Shuttle_1.LastStatus_Code;
             var initMsg = Shuttle_1.LastStatus_Message;
-            Task.Run(() => logger.Log($"InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
+            Task.Run(() => _logger.LogDetailAsync($"InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
             if (success)
             {
                 // life is good, you can drive the device
-                Task.Run(() => logger.Log($"InitStatus: success is {success}"));
+                Task.Run(() => _logger.LogDetailAsync($"InitStatus: success is {success}"));
                 if (initCode == 0)
                 {
                     // life is good, no warning messages
-                    Task.Run(() => logger.Log($"Initialization is complete and was successful initCode is {initCode}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Initialization is complete and was successful initCode is {initCode}"));
                 }
                 else
                 {
                     // You need to report the warning to the operator or to a log that is monitored frequently
-                    Task.Run(() => logger.Log($"Kardex Controller Warning - Initialization was successful but there is a warning." + Environment.NewLine +
+                    Task.Run(() => _logger.LogDetailAsync($"Kardex Controller Warning - Initialization was successful but there is a warning." + Environment.NewLine +
                     "Please provide the following information to your IT support." + Environment.NewLine +
                     "Code is: " + initCode.ToString() + Environment.NewLine +
                     "Message is: " + initMsg));
@@ -143,16 +143,16 @@ namespace Neutron.Controllers
                 // Darn, cannot drive the device at this time
                 if (Shuttle_1.Get_Init_PercentageComplete() == 0)
                 {
-                    Task.Run(() => logger.Log($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
                 }
                 else if (Shuttle_1.Get_Init_PercentageComplete() < 100)
                 {
-                    Task.Run(() => logger.Log($"Initialization is in progress.  Init {Shuttle_1.Get_Init_PercentageComplete().ToString()}% complete..."));
-                    Task.Run(() => logger.Log($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Initialization is in progress.  Init {Shuttle_1.Get_Init_PercentageComplete().ToString()}% complete..."));
+                    Task.Run(() => _logger.LogDetailAsync($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
                 }
                 else
                 {
-                    Task.Run(() => logger.Log($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
                 }
             }
             return initCode;
@@ -186,38 +186,38 @@ namespace Neutron.Controllers
             //// You may now refer to any components of your UI as below.
             //// formAlias.LabelNotify.Text = "Drive Notification Received";
             //formAlias.ShowMessage("Drive Notification Received");
-            //Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} Notification"));
+            //Task.Run(() => formAlias._logger.LogDetailAsync($"Shuttle {firedNotification.TargetDevice.ToString()} Notification"));
 
             //if (firedNotification.Message.ToString().Length > 0)
             //{
             //    // you should report these messages to the operator or write them to a log that is frequently monitored.
-            //    Task.Run(() => formAlias.logger.Log($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()} returned with a message.  Message: {firedNotification.Message.ToString()}"));
+            //    Task.Run(() => formAlias._logger.LogDetailAsync($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()} returned with a message.  Message: {firedNotification.Message.ToString()}"));
             //}
 
             //if (firedNotification.Expired)
             //{
-            //    Task.Run(() => formAlias.logger.Log($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()}  has timed-out."));
+            //    Task.Run(() => formAlias._logger.LogDetailAsync($"Notification request for tray {firedNotification.TargetTray.ToString()} on shuttle {firedNotification.TargetDevice.ToString()}  has timed-out."));
             //}
 
             //else if (firedNotification.MotionStatusUponNotification)
             //{
             //    // Note that the current implementation of Notification_Register() does not support notifications
             //    // for devices in motion, so this particular logic will not execute at this time. 
-            //    Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} is in motion."));
+            //    Task.Run(() => formAlias._logger.LogDetailAsync($"Shuttle {firedNotification.TargetDevice.ToString()} is in motion."));
             //    // If this was a horizontal or vertical carousel, NotifyTarget.Current_Tray would describe the shelf/carrier currently in position as it moves past.
             //}
 
             //else
             //{
             //    string alignmentStatus = firedNotification.AlignmentStatusUponNotification ? "in alignment." : "out of alignment.";
-            //    Task.Run(() => formAlias.logger.Log($"Shuttle {firedNotification.TargetDevice.ToString()} is stationary and tray {firedNotification.TargetTray.ToString()} is {alignmentStatus}"));
+            //    Task.Run(() => formAlias._logger.LogDetailAsync($"Shuttle {firedNotification.TargetDevice.ToString()} is stationary and tray {firedNotification.TargetTray.ToString()} is {alignmentStatus}"));
             //}
         }
 
         public DeviceResponse PositionDevice(int deviceNumber, int trayNumber, int facing = 0, int depth = 0, int quantity = 0, string display = "")
         {
             var deviceResponse = DeviceResponse.UnknownFailure;
-            Task.Run(() => logger.Log($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
+            Task.Run(() => _logger.LogDetailAsync($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
             var continueLoop = true;
             var loopCounter = 0;
             var device = workstation.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
@@ -229,7 +229,7 @@ namespace Neutron.Controllers
                     {
                         while (continueLoop)
                         {
-                            Task.Run(() => logger.Log($"SimulationMode: {device.SimulationMode.ToString()}"));
+                            Task.Run(() => _logger.LogDetailAsync($"SimulationMode: {device.SimulationMode.ToString()}"));
                             var status = GetDeviceStatus(deviceNumber);
 
                             if (status.Good_Status)
@@ -243,9 +243,9 @@ namespace Neutron.Controllers
                                         {
                                             if (status.Current_Tray != previousTray[deviceNumber])
                                             {
-                                                Task.Run(() => logger.Log($"Tray did NOT arrive."));
-                                                Task.Run(() => logger.Log($"Status.Current_Tray: {status.Current_Tray.ToString()}  Tray Number: {trayNumber.ToString()}"));
-                                                Task.Run(() => logger.Log($"PreviousTray: {previousTray[deviceNumber].ToString()}"));
+                                                Task.Run(() => _logger.LogDetailAsync($"Tray did NOT arrive."));
+                                                Task.Run(() => _logger.LogDetailAsync($"Status.Current_Tray: {status.Current_Tray.ToString()}  Tray Number: {trayNumber.ToString()}"));
+                                                Task.Run(() => _logger.LogDetailAsync($"PreviousTray: {previousTray[deviceNumber].ToString()}"));
                                                 deviceResponse = DeviceResponse.TrayDidNotArrive;
                                                 previousTray[deviceNumber] = 0;
                                                 break;
@@ -255,15 +255,15 @@ namespace Neutron.Controllers
                                         var cError = "";
                                         if (Shuttle_1.Drive_Device(deviceNumber, trayNumber, ref cError))
                                         {
-                                            Task.Run(() => logger.Log($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}"));
+                                            Task.Run(() => _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}"));
                                             continueLoop = false;
                                             deviceResponse = DeviceResponse.Success;
                                             previousTray[deviceNumber] = trayNumber;
-                                            Task.Run(() => logger.Log($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}"));
+                                            Task.Run(() => _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}"));
                                         }
                                         else
                                         {
-                                            Task.Run(() => logger.Log($"Problem submitting drive request.  {cError}"));
+                                            Task.Run(() => _logger.LogDetailAsync($"Problem submitting drive request.  {cError}"));
                                             continueLoop = false;
                                         }
                                     }
@@ -271,7 +271,7 @@ namespace Neutron.Controllers
                                     {
                                         continueLoop = false;
                                         deviceResponse = DeviceResponse.Success;
-                                        Task.Run(() => logger.Log($"Pick is on the same tray: Current Tray:  {status.Current_Tray.ToString()}  Tray Number:  {trayNumber.ToString()}"));
+                                        Task.Run(() => _logger.LogDetailAsync($"Pick is on the same tray: Current Tray:  {status.Current_Tray.ToString()}  Tray Number:  {trayNumber.ToString()}"));
                                     }
                                 }
                                 else //InMotion = true
@@ -286,7 +286,7 @@ namespace Neutron.Controllers
                                         loopCounter += 1;
                                         Thread.Sleep(millisecondsTimeout: 100);
                                         var counter = loopCounter;
-                                        Task.Run(() => logger.Log($"Postition Device: Waiting for tray to be in position to send new command.  Current Tray: "
+                                        Task.Run(() => _logger.LogDetailAsync($"Postition Device: Waiting for tray to be in position to send new command.  Current Tray: "
                                                                   + status.Current_Tray.ToString() + "  In Motion is " + status.In_Motion.ToString() + "Loop Count: " + counter.ToString()));
                                     }
                                 }
@@ -303,26 +303,26 @@ namespace Neutron.Controllers
                                     loopCounter += 1;
                                     Thread.Sleep(millisecondsTimeout: 100);
                                     var counter = loopCounter;
-                                    Task.Run(() => logger.Log(msg: "Device Response was Bad Status  LoopCounter: " + counter.ToString()));
+                                    Task.Run(() => _logger.LogDetailAsync(msg: "Device Response was Bad Status  LoopCounter: " + counter.ToString()));
                                 }
                             }
                         }
                     }
                     else
                     {
-                        Task.Run(() => logger.Log($"Device Not Initialized.  Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()} Code is: {Shuttle_1.LastStatus_Code.ToString()}  Message is: {Shuttle_1.LastStatus_Message}"));
+                        Task.Run(() => _logger.LogDetailAsync($"Device Not Initialized.  Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()} Code is: {Shuttle_1.LastStatus_Code.ToString()}  Message is: {Shuttle_1.LastStatus_Message}"));
                         deviceResponse = DeviceResponse.DeviceNotInitialized;
                     }
                 }
                 else
                 {
-                    Task.Run(() => logger.Log($"Position Device: Device not Enabled."));
+                    Task.Run(() => _logger.LogDetailAsync($"Position Device: Device not Enabled."));
                     deviceResponse = DeviceResponse.DeviceNotEnabled;
                 }
             }
             else
             {
-                Task.Run(() => logger.Log($"Position Device: Device not Found."));
+                Task.Run(() => _logger.LogDetailAsync($"Position Device: Device not Found."));
                 deviceResponse = DeviceResponse.DeviceNotFound;
             }
 
@@ -333,14 +333,14 @@ namespace Neutron.Controllers
         {
             if (!Shuttle_1.Init_Success)
             {
-                Task.Run(() => logger.Log($"Not Initialized.  Code is: {Shuttle_1.LastStatus_Code.ToString()}  Message is: {Shuttle_1.LastStatus_Message}"));
+                Task.Run(() => _logger.LogDetailAsync($"Not Initialized.  Code is: {Shuttle_1.LastStatus_Code.ToString()}  Message is: {Shuttle_1.LastStatus_Message}"));
                 return;
             }
             cError = "";
             if (Shuttle_1.Notification_DeRegister(MyNotificationHandle, ref cError))
-                Task.Run(() => logger.Log($"Notification aborted successfully..."));
+                Task.Run(() => _logger.LogDetailAsync($"Notification aborted successfully..."));
             else
-                Task.Run(() => logger.Log($"De-registration Error...  {cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"De-registration Error...  {cError}"));
         }
 
         public DeviceResponse Park()
@@ -351,11 +351,11 @@ namespace Neutron.Controllers
 
                 if (item.Enabled)
                 {
-                    if (item.DeviceTypeId == (int) DeviceType.Shuttle) //Shuttle
+                    if (item.DeviceTypeId == (int) DeviceTypeEnum.Shuttle) //Shuttle
                     {
                         response = PositionDevice(item.DeviceNumber, 0);
                     }
-                    if (item.DeviceTypeId == (int) DeviceType.Carousel) //Carousel
+                    if (item.DeviceTypeId == (int) DeviceTypeEnum.Carousel) //Carousel
                     {
                         response = PositionDevice(item.DeviceNumber, 1);
                     }
@@ -367,18 +367,18 @@ namespace Neutron.Controllers
         public void CloseController()
         {
             Shuttle_1.Close_Controller(ref cError);
-            Task.Run(() => logger.Log($"Close Controller - cError  {cError}"));
+            Task.Run(() => _logger.LogDetailAsync($"Close Controller - cError  {cError}"));
         }
 
         public Hart_DeviceStatusType GetDeviceStatus(int deviceNumber)
         {
             var msg = string.Empty;
             var deviceStatus = new Hart_DeviceStatusType();
-            logger.Log($"Device Number Status: {deviceNumber}");
+            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!Shuttle_1.Init_Success)
             {
-                logger.Log($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
-                logger.Log("Problem getting device status." + "\n\n" + cError);
+                _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
+                _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
@@ -389,7 +389,7 @@ namespace Neutron.Controllers
                 if (Shuttle_1.Get_Device_Status(ref myDeviceStatusList, ref cError))
                 {
                     // At this point, you have current status for every device in your list
-                    logger.Log($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {workstation.EnabledDevices.Count}");
+                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {workstation.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)
@@ -407,12 +407,12 @@ namespace Neutron.Controllers
                         }
                     }
 
-                    logger.Log(msg);
+                    _logger.LogDetailAsync(msg);
                     //ShowMessage(msg);
                 }
                 else
                 {
-                    logger.Log("Get Device Status request aborted...");
+                    _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
             return deviceStatus;

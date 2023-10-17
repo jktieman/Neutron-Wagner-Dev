@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLocations));
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
@@ -143,7 +146,7 @@
             // 
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
             this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
@@ -154,10 +157,10 @@
             // 
             // LabelFormTitle
             // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.RoyalBlue;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.Black;
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
             this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
@@ -180,7 +183,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.RoyalBlue;
+            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.tabPage1.Controls.Add(this.ComboBoxAreaNumber);
             this.tabPage1.Controls.Add(this.CheckBoxAllAreas);
             this.tabPage1.Controls.Add(this.LabelFindDescription);
@@ -194,6 +197,7 @@
             this.tabPage1.Controls.Add(this.MButtonClose);
             this.tabPage1.Controls.Add(this.MButtonSearch);
             this.tabPage1.Controls.Add(this.DataGridView1);
+            this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage1.Name = "tabPage1";
@@ -215,10 +219,11 @@
             // CheckBoxAllAreas
             // 
             this.CheckBoxAllAreas.AutoSize = true;
-            this.CheckBoxAllAreas.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxAllAreas.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxAllAreas.ForeColor = System.Drawing.Color.White;
             this.CheckBoxAllAreas.Location = new System.Drawing.Point(778, 69);
             this.CheckBoxAllAreas.Name = "CheckBoxAllAreas";
-            this.CheckBoxAllAreas.Size = new System.Drawing.Size(76, 17);
+            this.CheckBoxAllAreas.Size = new System.Drawing.Size(89, 20);
             this.CheckBoxAllAreas.TabIndex = 9;
             this.CheckBoxAllAreas.Text = "All Areas";
             this.CheckBoxAllAreas.UseVisualStyleBackColor = true;
@@ -347,11 +352,35 @@
             this.DataGridView1.AllowUserToAddRows = false;
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridView1.Location = new System.Drawing.Point(3, 97);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.Size = new System.Drawing.Size(1216, 514);
             this.DataGridView1.TabIndex = 10;
@@ -359,7 +388,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.RoyalBlue;
+            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.tabPage2.Controls.Add(this.LabelAction);
             this.tabPage2.Controls.Add(this.MbViewEditListing);
             this.tabPage2.Controls.Add(this.MbViewEditDelete);
@@ -377,6 +406,7 @@
             // LabelAction
             // 
             this.LabelAction.Font = new System.Drawing.Font("Comic Sans MS", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAction.ForeColor = System.Drawing.Color.White;
             this.LabelAction.Location = new System.Drawing.Point(393, 18);
             this.LabelAction.Name = "LabelAction";
             this.LabelAction.Size = new System.Drawing.Size(360, 65);
@@ -435,7 +465,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.panel1.Controls.Add(this.ButtonPositionDevice);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -492,7 +522,7 @@
             // TextBoxViewEditPickSequence
             // 
             this.TextBoxViewEditPickSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditPickSequence.Location = new System.Drawing.Point(683, 86);
+            this.TextBoxViewEditPickSequence.Location = new System.Drawing.Point(683, 81);
             this.TextBoxViewEditPickSequence.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditPickSequence.Name = "TextBoxViewEditPickSequence";
             this.TextBoxViewEditPickSequence.Size = new System.Drawing.Size(190, 29);
@@ -503,7 +533,7 @@
             // LabelViewEditPickSequence
             // 
             this.LabelViewEditPickSequence.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditPickSequence.Location = new System.Drawing.Point(487, 86);
+            this.LabelViewEditPickSequence.Location = new System.Drawing.Point(487, 81);
             this.LabelViewEditPickSequence.Name = "LabelViewEditPickSequence";
             this.LabelViewEditPickSequence.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditPickSequence.TabIndex = 60;
@@ -525,7 +555,7 @@
             // LabelViewEditLocationCode
             // 
             this.LabelViewEditLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditLocationCode.Location = new System.Drawing.Point(487, 306);
+            this.LabelViewEditLocationCode.Location = new System.Drawing.Point(487, 301);
             this.LabelViewEditLocationCode.Name = "LabelViewEditLocationCode";
             this.LabelViewEditLocationCode.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditLocationCode.TabIndex = 29;
@@ -537,7 +567,7 @@
             this.ComboBoxViewEditHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditHeightCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxViewEditHeightCode.FormattingEnabled = true;
-            this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(683, 261);
+            this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(683, 256);
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
             this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(190, 32);
@@ -546,7 +576,7 @@
             // LabelViewEditHeight
             // 
             this.LabelViewEditHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditHeight.Location = new System.Drawing.Point(487, 262);
+            this.LabelViewEditHeight.Location = new System.Drawing.Point(487, 257);
             this.LabelViewEditHeight.Name = "LabelViewEditHeight";
             this.LabelViewEditHeight.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditHeight.TabIndex = 28;
@@ -558,7 +588,7 @@
             this.ComboBoxViewEditVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditVelocityCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxViewEditVelocityCode.FormattingEnabled = true;
-            this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(683, 217);
+            this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(683, 212);
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditVelocityCode.Name = "ComboBoxViewEditVelocityCode";
             this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(190, 32);
@@ -567,7 +597,7 @@
             // LabelViewEditVelocity
             // 
             this.LabelViewEditVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditVelocity.Location = new System.Drawing.Point(487, 218);
+            this.LabelViewEditVelocity.Location = new System.Drawing.Point(487, 213);
             this.LabelViewEditVelocity.Name = "LabelViewEditVelocity";
             this.LabelViewEditVelocity.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditVelocity.TabIndex = 24;
@@ -577,7 +607,7 @@
             // LabelViewEditSlot
             // 
             this.LabelViewEditSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditSlot.Location = new System.Drawing.Point(487, 128);
+            this.LabelViewEditSlot.Location = new System.Drawing.Point(487, 123);
             this.LabelViewEditSlot.Name = "LabelViewEditSlot";
             this.LabelViewEditSlot.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditSlot.TabIndex = 22;
@@ -589,7 +619,7 @@
             this.ComboBoxViewEditSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditSizeCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxViewEditSizeCode.FormattingEnabled = true;
-            this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(683, 170);
+            this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(683, 165);
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditSizeCode.Name = "ComboBoxViewEditSizeCode";
             this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(190, 32);
@@ -598,7 +628,7 @@
             // LabelViewEditSize
             // 
             this.LabelViewEditSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditSize.Location = new System.Drawing.Point(487, 174);
+            this.LabelViewEditSize.Location = new System.Drawing.Point(487, 169);
             this.LabelViewEditSize.Name = "LabelViewEditSize";
             this.LabelViewEditSize.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditSize.TabIndex = 20;
@@ -610,7 +640,7 @@
             this.ComboBoxViewEditDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxViewEditDevice.FormattingEnabled = true;
-            this.ComboBoxViewEditDevice.Location = new System.Drawing.Point(287, 127);
+            this.ComboBoxViewEditDevice.Location = new System.Drawing.Point(287, 124);
             this.ComboBoxViewEditDevice.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditDevice.Name = "ComboBoxViewEditDevice";
             this.ComboBoxViewEditDevice.Size = new System.Drawing.Size(177, 32);
@@ -622,7 +652,7 @@
             this.ComboBoxViewEditArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxViewEditArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxViewEditArea.FormattingEnabled = true;
-            this.ComboBoxViewEditArea.Location = new System.Drawing.Point(287, 83);
+            this.ComboBoxViewEditArea.Location = new System.Drawing.Point(287, 78);
             this.ComboBoxViewEditArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditArea.Name = "ComboBoxViewEditArea";
             this.ComboBoxViewEditArea.Size = new System.Drawing.Size(177, 32);
@@ -632,7 +662,7 @@
             // TextBoxViewEditLocationCode
             // 
             this.TextBoxViewEditLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditLocationCode.Location = new System.Drawing.Point(684, 306);
+            this.TextBoxViewEditLocationCode.Location = new System.Drawing.Point(684, 301);
             this.TextBoxViewEditLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLocationCode.Name = "TextBoxViewEditLocationCode";
             this.TextBoxViewEditLocationCode.Size = new System.Drawing.Size(190, 29);
@@ -642,7 +672,7 @@
             // TextBoxViewEditLoc5
             // 
             this.TextBoxViewEditLoc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditLoc5.Location = new System.Drawing.Point(287, 305);
+            this.TextBoxViewEditLoc5.Location = new System.Drawing.Point(287, 302);
             this.TextBoxViewEditLoc5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLoc5.Name = "TextBoxViewEditLoc5";
             this.TextBoxViewEditLoc5.Size = new System.Drawing.Size(98, 29);
@@ -654,7 +684,7 @@
             // TextBoxViewEditLoc4
             // 
             this.TextBoxViewEditLoc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditLoc4.Location = new System.Drawing.Point(287, 261);
+            this.TextBoxViewEditLoc4.Location = new System.Drawing.Point(287, 258);
             this.TextBoxViewEditLoc4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLoc4.Name = "TextBoxViewEditLoc4";
             this.TextBoxViewEditLoc4.Size = new System.Drawing.Size(98, 29);
@@ -665,7 +695,7 @@
             // TextBoxViewEditLoc3
             // 
             this.TextBoxViewEditLoc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditLoc3.Location = new System.Drawing.Point(287, 217);
+            this.TextBoxViewEditLoc3.Location = new System.Drawing.Point(287, 214);
             this.TextBoxViewEditLoc3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLoc3.Name = "TextBoxViewEditLoc3";
             this.TextBoxViewEditLoc3.Size = new System.Drawing.Size(98, 29);
@@ -676,7 +706,7 @@
             // TextBoxViewEditLoc2
             // 
             this.TextBoxViewEditLoc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditLoc2.Location = new System.Drawing.Point(287, 173);
+            this.TextBoxViewEditLoc2.Location = new System.Drawing.Point(287, 170);
             this.TextBoxViewEditLoc2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLoc2.Name = "TextBoxViewEditLoc2";
             this.TextBoxViewEditLoc2.Size = new System.Drawing.Size(98, 29);
@@ -686,11 +716,11 @@
             // 
             // TextBoxViewEditSlot
             // 
+            this.TextBoxViewEditSlot.BackColor = System.Drawing.SystemColors.Window;
             this.TextBoxViewEditSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxViewEditSlot.Location = new System.Drawing.Point(683, 127);
+            this.TextBoxViewEditSlot.Location = new System.Drawing.Point(683, 122);
             this.TextBoxViewEditSlot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditSlot.Name = "TextBoxViewEditSlot";
-            this.TextBoxViewEditSlot.ReadOnly = true;
             this.TextBoxViewEditSlot.Size = new System.Drawing.Size(190, 29);
             this.TextBoxViewEditSlot.TabIndex = 7;
             this.TextBoxViewEditSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -698,7 +728,7 @@
             // LabelViewEditTag
             // 
             this.LabelViewEditTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditTag.Location = new System.Drawing.Point(91, 306);
+            this.LabelViewEditTag.Location = new System.Drawing.Point(91, 303);
             this.LabelViewEditTag.Name = "LabelViewEditTag";
             this.LabelViewEditTag.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditTag.TabIndex = 14;
@@ -708,7 +738,7 @@
             // LabelViewEditBack
             // 
             this.LabelViewEditBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditBack.Location = new System.Drawing.Point(91, 262);
+            this.LabelViewEditBack.Location = new System.Drawing.Point(91, 259);
             this.LabelViewEditBack.Name = "LabelViewEditBack";
             this.LabelViewEditBack.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditBack.TabIndex = 13;
@@ -718,7 +748,7 @@
             // LabelViewEditOver
             // 
             this.LabelViewEditOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditOver.Location = new System.Drawing.Point(91, 218);
+            this.LabelViewEditOver.Location = new System.Drawing.Point(91, 215);
             this.LabelViewEditOver.Name = "LabelViewEditOver";
             this.LabelViewEditOver.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditOver.TabIndex = 12;
@@ -728,7 +758,7 @@
             // LabelViewEditTray
             // 
             this.LabelViewEditTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditTray.Location = new System.Drawing.Point(91, 173);
+            this.LabelViewEditTray.Location = new System.Drawing.Point(91, 170);
             this.LabelViewEditTray.Name = "LabelViewEditTray";
             this.LabelViewEditTray.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditTray.TabIndex = 11;
@@ -738,7 +768,7 @@
             // LabelViewEditDevice
             // 
             this.LabelViewEditDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditDevice.Location = new System.Drawing.Point(91, 128);
+            this.LabelViewEditDevice.Location = new System.Drawing.Point(91, 125);
             this.LabelViewEditDevice.Name = "LabelViewEditDevice";
             this.LabelViewEditDevice.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditDevice.TabIndex = 15;
@@ -748,7 +778,7 @@
             // LabelViewEditArea
             // 
             this.LabelViewEditArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelViewEditArea.Location = new System.Drawing.Point(91, 84);
+            this.LabelViewEditArea.Location = new System.Drawing.Point(91, 79);
             this.LabelViewEditArea.Name = "LabelViewEditArea";
             this.LabelViewEditArea.Size = new System.Drawing.Size(190, 29);
             this.LabelViewEditArea.TabIndex = 17;
@@ -757,7 +787,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.BackColor = System.Drawing.Color.RoyalBlue;
+            this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.tabPage3.Controls.Add(this.MbLoadDefault);
             this.tabPage3.Controls.Add(this.MbSaveAsDefault);
             this.tabPage3.Controls.Add(this.LabelActionNew);
@@ -801,6 +831,7 @@
             // LabelActionNew
             // 
             this.LabelActionNew.Font = new System.Drawing.Font("Comic Sans MS", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelActionNew.ForeColor = System.Drawing.Color.White;
             this.LabelActionNew.Location = new System.Drawing.Point(371, 16);
             this.LabelActionNew.Name = "LabelActionNew";
             this.LabelActionNew.Size = new System.Drawing.Size(405, 65);
@@ -824,7 +855,7 @@
             // 
             this.MbNewClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MbNewClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MbNewClose.Location = new System.Drawing.Point(1006, 8);
+            this.MbNewClose.Location = new System.Drawing.Point(1084, 8);
             this.MbNewClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewClose.Name = "MbNewClose";
             this.MbNewClose.Size = new System.Drawing.Size(135, 76);
@@ -836,7 +867,7 @@
             // MbNewSave
             // 
             this.MbNewSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MbNewSave.Location = new System.Drawing.Point(865, 8);
+            this.MbNewSave.Location = new System.Drawing.Point(943, 8);
             this.MbNewSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewSave.Name = "MbNewSave";
             this.MbNewSave.Size = new System.Drawing.Size(135, 76);
@@ -847,7 +878,7 @@
             // 
             // PanelNew
             // 
-            this.PanelNew.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.PanelNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.PanelNew.Controls.Add(this.ButtonPositionDeviceNew);
             this.PanelNew.Controls.Add(this.panel3);
             this.PanelNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -859,7 +890,7 @@
             // 
             // ButtonPositionDeviceNew
             // 
-            this.ButtonPositionDeviceNew.Location = new System.Drawing.Point(423, 443);
+            this.ButtonPositionDeviceNew.Location = new System.Drawing.Point(465, 438);
             this.ButtonPositionDeviceNew.Name = "ButtonPositionDeviceNew";
             this.ButtonPositionDeviceNew.Size = new System.Drawing.Size(286, 32);
             this.ButtonPositionDeviceNew.TabIndex = 106;
@@ -904,7 +935,7 @@
             // TextBoxNewLocationCode
             // 
             this.TextBoxNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxNewLocationCode.Location = new System.Drawing.Point(684, 303);
+            this.TextBoxNewLocationCode.Location = new System.Drawing.Point(684, 301);
             this.TextBoxNewLocationCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewLocationCode.Name = "TextBoxNewLocationCode";
             this.TextBoxNewLocationCode.ReadOnly = true;
@@ -938,7 +969,7 @@
             this.LabelNewArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelNewArea.Location = new System.Drawing.Point(91, 79);
             this.LabelNewArea.Name = "LabelNewArea";
-            this.LabelNewArea.Size = new System.Drawing.Size(187, 29);
+            this.LabelNewArea.Size = new System.Drawing.Size(190, 29);
             this.LabelNewArea.TabIndex = 56;
             this.LabelNewArea.Text = "Area";
             this.LabelNewArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -959,7 +990,7 @@
             // 
             this.CheckBoxInUseNew.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxInUseNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxInUseNew.Location = new System.Drawing.Point(684, 45);
+            this.CheckBoxInUseNew.Location = new System.Drawing.Point(683, 41);
             this.CheckBoxInUseNew.Name = "CheckBoxInUseNew";
             this.CheckBoxInUseNew.Size = new System.Drawing.Size(189, 29);
             this.CheckBoxInUseNew.TabIndex = 6;
@@ -970,7 +1001,7 @@
             // LabelNewLocationCode
             // 
             this.LabelNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewLocationCode.Location = new System.Drawing.Point(487, 303);
+            this.LabelNewLocationCode.Location = new System.Drawing.Point(487, 301);
             this.LabelNewLocationCode.Name = "LabelNewLocationCode";
             this.LabelNewLocationCode.Size = new System.Drawing.Size(190, 29);
             this.LabelNewLocationCode.TabIndex = 53;
@@ -979,18 +1010,18 @@
             // 
             // TextBoxNewSlot
             // 
+            this.TextBoxNewSlot.BackColor = System.Drawing.SystemColors.Window;
             this.TextBoxNewSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxNewSlot.Location = new System.Drawing.Point(683, 124);
+            this.TextBoxNewSlot.Location = new System.Drawing.Point(683, 122);
             this.TextBoxNewSlot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSlot.Name = "TextBoxNewSlot";
-            this.TextBoxNewSlot.ReadOnly = true;
             this.TextBoxNewSlot.Size = new System.Drawing.Size(190, 29);
             this.TextBoxNewSlot.TabIndex = 7;
             // 
             // LabelNewSlot
             // 
             this.LabelNewSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewSlot.Location = new System.Drawing.Point(487, 125);
+            this.LabelNewSlot.Location = new System.Drawing.Point(487, 123);
             this.LabelNewSlot.Name = "LabelNewSlot";
             this.LabelNewSlot.Size = new System.Drawing.Size(190, 29);
             this.LabelNewSlot.TabIndex = 51;
@@ -1002,7 +1033,7 @@
             this.ComboBoxNewHeightCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewHeightCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewHeightCode.FormattingEnabled = true;
-            this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(683, 258);
+            this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(683, 256);
             this.ComboBoxNewHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewHeightCode.Name = "ComboBoxNewHeightCode";
             this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 32);
@@ -1011,7 +1042,7 @@
             // LabelNewHeight
             // 
             this.LabelNewHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewHeight.Location = new System.Drawing.Point(487, 259);
+            this.LabelNewHeight.Location = new System.Drawing.Point(487, 257);
             this.LabelNewHeight.Name = "LabelNewHeight";
             this.LabelNewHeight.Size = new System.Drawing.Size(190, 29);
             this.LabelNewHeight.TabIndex = 50;
@@ -1023,7 +1054,7 @@
             this.ComboBoxNewVelocityCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewVelocityCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewVelocityCode.FormattingEnabled = true;
-            this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(683, 214);
+            this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(683, 212);
             this.ComboBoxNewVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewVelocityCode.Name = "ComboBoxNewVelocityCode";
             this.ComboBoxNewVelocityCode.Size = new System.Drawing.Size(190, 32);
@@ -1032,7 +1063,7 @@
             // LabelNewVelocity
             // 
             this.LabelNewVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewVelocity.Location = new System.Drawing.Point(487, 215);
+            this.LabelNewVelocity.Location = new System.Drawing.Point(487, 213);
             this.LabelNewVelocity.Name = "LabelNewVelocity";
             this.LabelNewVelocity.Size = new System.Drawing.Size(190, 29);
             this.LabelNewVelocity.TabIndex = 49;
@@ -1044,7 +1075,7 @@
             this.ComboBoxNewSizeCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewSizeCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewSizeCode.FormattingEnabled = true;
-            this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(683, 167);
+            this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(683, 165);
             this.ComboBoxNewSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewSizeCode.Name = "ComboBoxNewSizeCode";
             this.ComboBoxNewSizeCode.Size = new System.Drawing.Size(190, 32);
@@ -1053,7 +1084,7 @@
             // LabelNewSize
             // 
             this.LabelNewSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewSize.Location = new System.Drawing.Point(487, 171);
+            this.LabelNewSize.Location = new System.Drawing.Point(487, 169);
             this.LabelNewSize.Name = "LabelNewSize";
             this.LabelNewSize.Size = new System.Drawing.Size(190, 29);
             this.LabelNewSize.TabIndex = 48;
@@ -1124,6 +1155,7 @@
             this.LabelNewTag.Name = "LabelNewTag";
             this.LabelNewTag.Size = new System.Drawing.Size(190, 29);
             this.LabelNewTag.TabIndex = 46;
+            this.LabelNewTag.Tag = "Loc5";
             this.LabelNewTag.Text = "Tag";
             this.LabelNewTag.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1134,6 +1166,7 @@
             this.LabelNewBack.Name = "LabelNewBack";
             this.LabelNewBack.Size = new System.Drawing.Size(190, 29);
             this.LabelNewBack.TabIndex = 45;
+            this.LabelNewBack.Tag = "Loc4";
             this.LabelNewBack.Text = "Back";
             this.LabelNewBack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1144,6 +1177,7 @@
             this.LabelNewOver.Name = "LabelNewOver";
             this.LabelNewOver.Size = new System.Drawing.Size(190, 29);
             this.LabelNewOver.TabIndex = 44;
+            this.LabelNewOver.Tag = "Loc3";
             this.LabelNewOver.Text = "Over";
             this.LabelNewOver.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1154,6 +1188,7 @@
             this.LabelNewTray.Name = "LabelNewTray";
             this.LabelNewTray.Size = new System.Drawing.Size(190, 29);
             this.LabelNewTray.TabIndex = 43;
+            this.LabelNewTray.Tag = "Loc2";
             this.LabelNewTray.Text = "Tray";
             this.LabelNewTray.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -1164,6 +1199,7 @@
             this.LabelNewDevice.Name = "LabelNewDevice";
             this.LabelNewDevice.Size = new System.Drawing.Size(190, 29);
             this.LabelNewDevice.TabIndex = 47;
+            this.LabelNewDevice.Tag = "Loc1";
             this.LabelNewDevice.Text = "Device";
             this.LabelNewDevice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 

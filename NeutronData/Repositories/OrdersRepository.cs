@@ -11,7 +11,9 @@ using System.Windows.Forms;
 using AlliedLogger;
 using NeutronCore.Enums;
 using NeutronCore.Extensions;
+using NeutronCore.Global;
 using NeutronData.Interfaces;
+using Logger = NeutronCore.Global.Logger;
 
 
 namespace NeutronData.Repositories
@@ -30,6 +32,7 @@ namespace NeutronData.Repositories
         private int[] _moveablePickStationIds;
         //private List<Station> _pickStations;
         private int[] _pickStationIds;
+        private IDynamicLogger _logger;
 
         public OrdersRepository(IWorkstationRepository workstationRepository)
         {
@@ -39,6 +42,7 @@ namespace NeutronData.Repositories
 
         private void Init()
         {
+            _logger = Logger.SetupLogger("OrdersRepository");
             _moveablePickStationIds = _workstationRepository.GetMoveablePickStationIds();
             //_pickStations = _workstationRepository.GetPickStations();
             //_pickStationIds = _workstationRepository.GetPickStationIds();
@@ -77,7 +81,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
 
@@ -158,7 +162,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
 
@@ -242,7 +246,7 @@ namespace NeutronData.Repositories
             //}
             //catch (Exception ex)
             //{
-            //    Logger.Log("Get AvailableOrders View Error. " + ex.Message + " " + ex.InnerException);
+            //    _logger.LogDetailAsync("Get AvailableOrders View Error. " + ex.Message + " " + ex.InnerException);
             //}
 
             return recs;
@@ -340,7 +344,7 @@ namespace NeutronData.Repositories
         //    }
         //    catch (Exception ex)
         //    {
-        //        Logger.Log("Get Available Orders View Error. " + ex.Message + " " + ex.InnerException);
+        //        _logger.LogDetailAsync("Get Available Orders View Error. " + ex.Message + " " + ex.InnerException);
         //    }
         //    var re = recs.Where(r => r.Ord2.Trim() == "2408782").FirstOrDefault();
         //    return recs;
@@ -1356,7 +1360,7 @@ namespace NeutronData.Repositories
             return ord;
         }
 
-        public List<AvailableOrdersView> GetAvailableOrdersForInductionScreen(WorkstationView workstation, string searchField)
+        public List<AvailableOrdersView> GetAvailableOrdersForInductionScreen(int areaId, string searchField, bool serialPicking)
         {
             var recs = new List<AvailableOrdersView>();
 
@@ -1365,17 +1369,19 @@ namespace NeutronData.Repositories
                 var parameters = new List<object>();
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter(parameterName: "@STATIONID", value: workstation.WorkstationId);
+                    var param = new SqlParameter(parameterName: "@AREAID", value: areaId);
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SEARCHFIELD", value: searchField);
                     parameters.Add(param);
-
-                    recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreen @STATIONID, @SEARCHFIELD", parameters.ToArray()).ToList();
+                    param = new SqlParameter(parameterName: "@SERIALPICKING", value: serialPicking);
+                    parameters.Add(param);
+                    _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreen. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
+                    recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreen @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
+                _logger.LogDetailAsync("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
 

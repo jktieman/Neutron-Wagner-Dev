@@ -25,8 +25,9 @@ namespace NeutronData.Interfaces
         int[] GetAllAreaIds();
         int[] GetAllPickableAreaIds();
         List<Area> GetAllPickableAreas();
-        List<Station> GetStationsByArea(int areaId);
+       // List<Station> GetStationsByArea(int areaId);
         List<int> GetAllPickableAreaNumbers();
         List<string> GetAllPickableAreaNumbersAsString();
+        List<Area> GetAllAreas();
     }
 }
