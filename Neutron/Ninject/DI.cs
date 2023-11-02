@@ -56,16 +56,16 @@ namespace Neutron.Ninject
                 , new ConstructorArgument("historyManager", historyManager));
         }
 
-        public static T Create<T>(IJsonData jsonData, NeutronVariables neutronVariables
-            , NeutronLicense neutronLicense
-            , WorkstationView workstationView, IWorkstationRepository workstationRepository)
-        {
-            return _kernel.Get<T>(
-                new ConstructorArgument("jsonData", jsonData)
-                ,new ConstructorArgument("neutronVariables", neutronVariables)
-                , new ConstructorArgument("neutronLicense", neutronLicense)
-                , new ConstructorArgument("workstationView",workstationView));
-        }
+        //public static T Create<T>(IJsonData jsonData, NeutronVariables neutronVariables
+        //    , NeutronLicense neutronLicense
+        //    , WorkstationView workstationView, IWorkstationRepository workstationRepository)
+        //{
+        //    return _kernel.Get<T>(
+        //        new ConstructorArgument("jsonData", jsonData)
+        //        ,new ConstructorArgument("neutronVariables", neutronVariables)
+        //        , new ConstructorArgument("neutronLicense", neutronLicense)
+        //        , new ConstructorArgument("workstationView",workstationView));
+        //}
 
         public static T Create<T>(NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
@@ -77,11 +77,14 @@ namespace Neutron.Ninject
                 , new ConstructorArgument("workstationView", workstationView));
         }
 
-        public static T Create<T>(
-            bool standAlone)
+        public static T Create<T>(NeutronVariables neutronVariables
+            , NeutronLicense neutronLicense
+            , bool standAlone)
         {
             return _kernel.Get<T>(
-                new ConstructorArgument("standAlone", standAlone));
+                new ConstructorArgument("neutronVariables", neutronVariables)
+                , new ConstructorArgument("neutronLicense", neutronLicense)
+                , new ConstructorArgument("standAlone", standAlone));
         }
 
         public static T Create<T>(
@@ -101,21 +104,20 @@ namespace Neutron.Ninject
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense));
         }
+        //public static T Create<T>(
+        //    NeutronVariables neutronVariables)
+        //{
+        //    return _kernel.Get<T>(
+        //        new ConstructorArgument("neutronVariables", neutronVariables)
+        //        , new ConstructorArgument("neutronLicense", neutronLicense));
+        //}
+
 
         public static T Create<T>(
             WorkstationView workstationView)
         {
             return _kernel.Get<T>(
                 new ConstructorArgument("workstationView", workstationView));
-        }
-
-        public static T Create<T>(
-            WorkstationView workstationView
-            ,SendEmail sendEmail)
-        {
-            return _kernel.Get<T>(
-                new ConstructorArgument("workstationView", workstationView)
-                , new ConstructorArgument("sendEmail", sendEmail));
         }
 
         public static T Create<T>(int value)

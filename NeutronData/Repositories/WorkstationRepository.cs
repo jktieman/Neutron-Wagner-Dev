@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronData.Models.Lookups;
 using System.Data.SqlClient;
-using ProliteController;
 using StationType = NeutronCore.Enums.StationType;
 using DeviceType = NeutronCore.Enums.DeviceTypeEnum;
 using RJCP.IO.Ports;

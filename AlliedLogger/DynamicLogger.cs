@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AlliedLogger
@@ -27,14 +28,14 @@ namespace AlliedLogger
         public DynamicLogger(string logFileDir = "", string folderName = @"General", string logActivity = "true")
         {
             // Send all logs to the same file
-            LogFileDir = null;
-            FolderName = @"SingleLogFile\";
-            
+            //LogFileDir = null;
+            //FolderName = @"SingleLogFile\";
+
             // Use these to create separate log files by file name
-            //LogFileDir = logFileDir;
-           // FolderName = folderName;
-            
-            
+            LogFileDir = logFileDir;
+            FolderName = folderName;
+
+
             //_baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
             //_baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
             // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
@@ -235,24 +236,40 @@ LogDetailAsync(string msg = ""
             return string.Concat(new[] { date, ".Log" });
         }
 
-        public List<string> LastLogLines(int numLines = 10)
+        //public List<string> LastLogLines(int numLines = 10)
+        //{
+        //    CreateTempLog();
+        //    if (!File.Exists(TempFilePath)) return new List<string>();
+
+
+        //    var allLines = File.ReadLines(TempFilePath).ToArray();
+        //    var numLinesCount = allLines.Count();
+        //    var lines = new List<string>();
+        //    var linesToRead = numLinesCount > numLines ? numLines : numLinesCount;
+        //    if (linesToRead == 0) return lines;
+
+        //    for (var i = numLinesCount - linesToRead; i < numLinesCount; i++)
+        //    {
+        //        lines.Add($"{allLines[i]}{Environment.NewLine}");
+        //    }
+
+        //    return lines;
+        //}
+
+        public StringBuilder LastLogLines(int lines = 10)
         {
-            CreateTempLog();
-            if (!File.Exists(TempFilePath)) return new List<string>();
-
-
-            var allLines = File.ReadLines(TempFilePath).ToArray();
+            var allLines = File.ReadLines(FilePath).ToArray();
             var numLinesCount = allLines.Count();
-            var lines = new List<string>();
-            var linesToRead = numLinesCount > numLines ? numLines : numLinesCount;
-            if (linesToRead == 0) return lines;
+            var sb = new StringBuilder();
+            var linesToRead = numLinesCount > lines ? lines : numLinesCount;
+            if (linesToRead == 0) return sb;
 
             for (var i = numLinesCount - linesToRead; i < numLinesCount; i++)
             {
-                lines.Add($"{allLines[i]}{Environment.NewLine}");
+                sb.AppendLine(allLines[i]);
             }
 
-            return lines;
+            return sb;
         }
 
         //public string TempFilePath

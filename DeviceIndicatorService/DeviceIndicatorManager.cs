@@ -10,6 +10,7 @@ using AlliedLogger;
 using System.Windows.Forms;
 using System.Drawing;
 using NeutronCore;
+using NeutronCore.Enums;
 using NeutronCore.Global;
 using NeutronData.Models;
 using Logger = NeutronCore.Global.Logger;
@@ -118,6 +119,11 @@ namespace DeviceIndicatorService
         {
             foreach (var hardwareDevice in _hardwareDevices)
             {
+                if (hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12D &&
+                    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12N &&
+                    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Carousel &&
+                    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Shuttle) continue;
+                
                 var device = new DeviceIndicator(hardwareDevice.DeviceNumber, _flashRate, Color.Yellow
                     , Color.Transparent);
                 device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";

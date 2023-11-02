@@ -34,7 +34,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
-            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunUploadOnce = new MetroFramework.Controls.MetroButton();
             this.MBStartUpload = new MetroFramework.Controls.MetroButton();
             this.MBRunLoaderOnce = new MetroFramework.Controls.MetroButton();
             this.MBMainSqlServer = new MetroFramework.Controls.MetroButton();
@@ -151,7 +151,7 @@
             // 
             this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Main.Controls.Add(this.MBMainClose);
-            this.Main.Controls.Add(this.MBRunUpload);
+            this.Main.Controls.Add(this.MBRunUploadOnce);
             this.Main.Controls.Add(this.MBStartUpload);
             this.Main.Controls.Add(this.MBRunLoaderOnce);
             this.Main.Controls.Add(this.MBMainSqlServer);
@@ -176,17 +176,17 @@
             this.MBMainClose.UseSelectable = true;
             this.MBMainClose.Click += new System.EventHandler(this.MBMainClose_Click);
             // 
-            // MBRunUpload
+            // MBRunUploadOnce
             // 
-            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(438, 500);
-            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRunUpload.Name = "MBRunUpload";
-            this.MBRunUpload.Size = new System.Drawing.Size(350, 70);
-            this.MBRunUpload.TabIndex = 4;
-            this.MBRunUpload.Text = "Run Upload Once";
-            this.MBRunUpload.UseSelectable = true;
-            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
+            this.MBRunUploadOnce.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunUploadOnce.Location = new System.Drawing.Point(438, 500);
+            this.MBRunUploadOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunUploadOnce.Name = "MBRunUploadOnce";
+            this.MBRunUploadOnce.Size = new System.Drawing.Size(350, 70);
+            this.MBRunUploadOnce.TabIndex = 4;
+            this.MBRunUploadOnce.Text = "Run Upload Once";
+            this.MBRunUploadOnce.UseSelectable = true;
+            this.MBRunUploadOnce.Click += new System.EventHandler(this.MBRunUploadOnce_Click);
             // 
             // MBStartUpload
             // 
@@ -1176,7 +1176,7 @@
         private System.Windows.Forms.Button ButtonLanguageDirectory;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox LanguageDirectory;
-        private MetroFramework.Controls.MetroButton MBRunUpload;
+        private MetroFramework.Controls.MetroButton MBRunUploadOnce;
         private MetroFramework.Controls.MetroButton MBRunLoaderOnce;
         private System.Windows.Forms.Label LabelAppendFile;
         private System.Windows.Forms.CheckBox CheckBoxAppendFile;

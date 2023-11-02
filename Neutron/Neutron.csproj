@@ -185,9 +185,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CompressService.cs" />
+    <Compile Include="Classes\ICompressService.cs" />
     <Compile Include="Classes\PanelManager.cs" />
     <Compile Include="Controllers\BlastzoneDisplayController.cs" />
-    <Compile Include="Controllers\IProLiteController.cs" />
     <Compile Include="Controllers\TCP_IPTIController.cs" />
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
@@ -513,9 +514,9 @@
     <AdditionalFiles Include="Hart_LV_BPISHI_LogLevel.Dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
-    <AdditionalFiles Include="PublicKey.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </AdditionalFiles>
+    <Content Include="PublicKey.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Forms\FrmAbout.resx">
       <DependentUpon>FrmAbout.cs</DependentUpon>
     </EmbeddedResource>
@@ -526,9 +527,9 @@
       <DependentUpon>InductionPosition.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Allied Inc.txt.pfx" />
-    <AdditionalFiles Include="License.lic">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </AdditionalFiles>
+    <None Include="License.lic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="NeutronKeyFile.pfx" />
     <None Include="Neutron_3_TemporaryKey.pfx" />
     <None Include="Resources\Pick_1.png" />
@@ -896,9 +897,9 @@
       <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
       <Name>NeutronMaintenance</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
-      <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
-      <Name>ProliteController</Name>
+    <ProjectReference Include="..\SAPServer\SAPServer.csproj">
+      <Project>{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}</Project>
+      <Name>SAPServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -233,6 +235,11 @@
     <Compile Include="PrintModels\PackingList.cs" />
     <Compile Include="PrintModels\PickList.cs" />
     <Compile Include="PrintModels\ShortReport.cs" />
+    <Compile Include="ProliteManager\IProlite.cs" />
+    <Compile Include="ProliteManager\IProLiteController.cs" />
+    <Compile Include="ProliteManager\IProliteManager.cs" />
+    <Compile Include="ProliteManager\Prolite.cs" />
+    <Compile Include="ProliteManager\ProliteManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AkaRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -303,11 +310,8 @@
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
-      <Project>{CC797714-8D01-40AF-8A2F-737B06F133CD}</Project>
-      <Name>ProliteController</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

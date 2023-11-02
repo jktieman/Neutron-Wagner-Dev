@@ -32,6 +32,7 @@ namespace ProliteController
         private readonly IDynamicLogger _logger;
         private SerialPort _serialPort;
         private readonly IList<Prolite> _prolites;
+
         public int Id { get; }
         public string Name { get; private set; }
         public int WorkstationId { get; private set; }

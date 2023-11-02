@@ -23,10 +23,14 @@ using NeutronEvents;
 
 namespace Neutron.Controllers
 {
+    // ReSharper disable once InconsistentNaming
     public class TCP_IptiController : IDisplayController
     {
         private const string Bayid = "01";
         private const string DisplayOc = "27";
+        private const string TurnAllOff = "03";
+        private const string TurnAllOn = "02";
+
         public CancellationTokenSource Token = new CancellationTokenSource();
         private static readonly BlockingCollection<byte[]>
             ResponseBlockingCollection = new BlockingCollection<byte[]>();
@@ -37,7 +41,8 @@ namespace Neutron.Controllers
         private static readonly BlockingCollection<byte[]>
             ReceivedBlockingCollection = new BlockingCollection<byte[]>();
 
-        private List<int> _bayControllers = new List<int> { 1, 2, 3 };
+        private readonly List<int> _blastzoneControllers = new List<int> { 1, 2, 3 };
+        private string _bliController = "04";
 
         private readonly List<Ipti_BLI> _bliList = new List<Ipti_BLI>();
         private readonly NeutronVariables _neutronVariables;
@@ -73,9 +78,9 @@ namespace Neutron.Controllers
             _neutronVariables = neutronVariables;
             _hardwareDevice = hardwareDevice;
 
-            _bliEnabled = _hardwareDevice.Enabled;    // _neutronVariables.BliEnabled;
+            _bliEnabled = _hardwareDevice.Enabled;    
             _shiEnabled = _neutronVariables.ShiEnabled;
-
+            _bliController = _neutronVariables.BliController.ToString().PadLeft(2, '0');
             CreateLog();
 
             if (_bliEnabled) FillBliList();
@@ -110,22 +115,34 @@ namespace Neutron.Controllers
                 Task.Run(() => _logger.LogDetailAsync($"Close TCP Port Exception: {ex.Message} \r\n {ex.InnerException} "));
             }
         }
-        public void ClearAllBli()
+
+        public async Task TurnOnAllBli()
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");
+            await _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - START");
+
+            await _transmitter.SendData($"{_bliController}{TurnAllOn}");
+
+           await _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END");
+        }
+        public async Task ClearAllBli()
+        {
+            await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");
             if (!_bliEnabled)
             {
-                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI NOT Enabled");
+                await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI NOT Enabled");
                 return;
             }
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI Enabled");
-            foreach (var bli in _bliList)
-            {
-                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off: BayController: {bli.BLI_BayController} Address: {bli.BLI_Address}");
-                _transmitter.SendData(bli.TurnOff);
-                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
-            }
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
+            
+            await _transmitter.SendData($"{_bliController}{TurnAllOff}");
+
+
+            //foreach (var bli in _bliList)
+            //{
+            //    _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off: BayController: {bli.BLI_BayController} Address: {bli.BLI_Address}");
+            //    _transmitter.SendData(bli.TurnOff);
+            //    _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
+            //}
+            await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
         }
         public void ClearAllShi()
         {
@@ -162,13 +179,16 @@ namespace Neutron.Controllers
         public void ClearBlastzone()
         {
             if (!_bliEnabled) return;
-            foreach (var bayController in _bayControllers)
+            foreach (var bayController in _blastzoneControllers)
             {
-                for (var i = 1; i <= 2; i++)
-                {
-                    var bli = new Ipti_BLI(bayController, i, 0, i.ToString());
-                    _transmitter.SendData(bli.TurnOff);
-                }
+                //for (var i = 1; i <= 2; i++)
+                //{
+                //    var bli = new Ipti_BLI(bayController, i, 0, i.ToString());
+                //    _transmitter.SendData(bli.TurnOff);
+                //}
+
+                var bli = new Ipti_BLI(bayController, 1, 0, 1.ToString());
+                _transmitter.SendData(bli.TurnAllOff);
             }
         }
 
@@ -279,7 +299,7 @@ namespace Neutron.Controllers
         }
         private void StartTransmission()
         {
-            _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
+            _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
             while (Transmit)
             {
                 try
@@ -290,11 +310,11 @@ namespace Neutron.Controllers
                         {
                             if (Token.IsCancellationRequested)
                             {
-                                _logger.LogDetailAsync($"Start Transmission Cancellation Requested.");
+                                _ = _logger.LogDetailAsync($"Start Transmission Cancellation Requested.");
                                 return;
                             }
 
-                            _logger.LogDetailAsync($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
+                            _ = _logger.LogDetailAsync($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
 
                             //for (var i = 1; i <= 100; i++)
                             //{
@@ -304,7 +324,7 @@ namespace Neutron.Controllers
                             var trans = _responseManager.Transmitting;
 
                             Mediator.GetInstance().OnSerialPortWrite(this, $"Write Command:  {trans.ToString()} - {request.ByteArrayToStringX2()}");
-                            _logger.LogDetailAsync($"IPTI Controller - StartTransmission - TCP Transmitter Write {request}");
+                            _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - TCP Transmitter Write {request}");
                             _transmitter.SendData(request.ByteArrayToString());
                             _responseManager.Transmitting = true;
                             Thread.Sleep(50);
@@ -315,7 +335,7 @@ namespace Neutron.Controllers
                             //    Thread.Sleep(i * 20);
                             //    if (i != 100) continue;
                             //    Mediator.GetInstance().OnSerialPortWrite(this, "Serial Timeout.");
-                            //    _logger.LogDetailAsync("SerialPort Write Request Time Out.");
+                            //    _ = _logger.LogDetailAsync("SerialPort Write Request Time Out.");
                             //}
 
 
@@ -325,14 +345,14 @@ namespace Neutron.Controllers
                 }
                 catch (OperationCanceledException)
                 {
-                    _logger.LogDetailAsync($"CATCH - Start Transmission Operation Canceled Requested.");
+                    _ = _logger.LogDetailAsync($"CATCH - Start Transmission Operation Canceled Requested.");
                     return;
                 }
 
                 Thread.Sleep(50);
             }
 
-            _logger.LogDetailAsync($"EXITING Start Transmission.");
+            _ = _logger.LogDetailAsync($"EXITING Start Transmission.");
         }
         public void IptiControllerInit()
         {

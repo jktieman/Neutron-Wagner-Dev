@@ -51,6 +51,7 @@
     <Compile Include="Concrete\EmailProcessor.cs" />
     <Compile Include="Concrete\EmailSettings.cs" />
     <Compile Include="EmailAddressData.cs" />
+    <Compile Include="ISendEmail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendEmail.cs" />
   </ItemGroup>

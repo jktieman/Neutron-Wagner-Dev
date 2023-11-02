@@ -54,6 +54,7 @@ using ScrollBars = System.Windows.Forms.ScrollBars;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 using TextBox = System.Windows.Forms.TextBox;
 using Timer = System.Threading.Timer;
+using AlliedPostOffice;
 
 namespace Neutron.Forms
 {
@@ -210,13 +211,13 @@ namespace Neutron.Forms
             _logger = Logger.SetupLogger("PickModule");
 
             Task.Run(() => _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
-            //if (_workstationView.StationType.Id == (int)StationType.Supervisor)
-            // {
-            //MBMainLoadOrders.Visible = true;
-            //MBMainUpload.Visible = true;
-            //MBRunLoader.Visible = true;
-            //MBRunUpload.Visible = true;
-            // }
+            if (_workstationView.WorkstationId == _neutronVariables.LoaderStation)
+            {
+                MBMainLoadOrders.Visible = true;
+                MBMainUpload.Visible = true;
+                MBRunLoader.Visible = true;
+                MBRunUploadOnce.Visible = true;
+            }
             SetupPrinters();
 
             InitGrids();
@@ -514,10 +515,12 @@ namespace Neutron.Forms
             if (GlobalVar.LoaderRunning)
             {
                 MBMainLoadOrders.Text = _resourceManager.GetString($"StopLoader");
+                MBRunLoader.Enabled = false;
             }
             else
             {
-                MBMainLoadOrders.Text = _resourceManager.GetString($"StartLoader");
+                MBMainLoadOrders.Text = _resourceManager.GetString($"RunLoaderContinuously");
+                MBRunLoader.Enabled = true;
             }
         }
 
@@ -526,10 +529,12 @@ namespace Neutron.Forms
             if (GlobalVar.UploadRunning)
             {
                 MBMainUpload.Text = _resourceManager.GetString($"StopUpload");
+                MBRunUploadOnce.Enabled = false;
             }
             else
             {
-                MBMainUpload.Text = _resourceManager.GetString($"StartUpload");
+                MBMainUpload.Text = _resourceManager.GetString($"RunUploadContinuously");
+                MBRunUploadOnce.Enabled = true;
             }
         }
 
@@ -546,11 +551,13 @@ namespace Neutron.Forms
             if (startStop == "Start")
             {
                 MBMainLoadOrders.Text = _resourceManager.GetString($"StopLoader");
+                MBRunLoader.Enabled = false;
                 GlobalVar.LoaderRunning = true;
             }
             else
             {
-                MBMainLoadOrders.Text = _resourceManager.GetString($"StartLoader");
+                MBMainLoadOrders.Text = _resourceManager.GetString($"RunLoaderContinuously");
+                MBRunLoader.Enabled = true;
                 GlobalVar.LoaderRunning = false;
             }
         }
@@ -560,23 +567,43 @@ namespace Neutron.Forms
             if (startStop == "Start")
             {
                 MBMainUpload.Text = _resourceManager.GetString($"StopUpload");
+                MBRunUploadOnce.Enabled = false;
                 GlobalVar.UploadRunning = true;
             }
             else
             {
-                MBMainUpload.Text = _resourceManager.GetString($"StartUpload");
+                MBMainUpload.Text = _resourceManager.GetString($"RunUploadContinuously");
+                MBRunUploadOnce.Enabled = true;
                 GlobalVar.UploadRunning = false;
             }
         }
 
         private void MBMainLoadOrders_Click(object sender, EventArgs e)
         {
-            Mediator.GetInstance().OnStartStopLoader(this, !GlobalVar.LoaderRunning ? "Start" : "Stop");
+            if (!GlobalVar.LoaderRunning)
+            {
+                GlobalVar.LoaderRunning = true;
+                Mediator.GetInstance().OnStartStopLoader(this, "Start");
+            }
+            else
+            {
+                GlobalVar.LoaderRunning = false;
+                Mediator.GetInstance().OnStartStopLoader(this, "Stop");
+            }
         }
 
         private void MBMainUpload_Click(object sender, EventArgs e)
         {
-            Mediator.GetInstance().OnStartStopUpload(this, !GlobalVar.UploadRunning ? "Start" : "Stop");
+            if (!GlobalVar.UploadRunning)
+            {
+                GlobalVar.UploadRunning = true;
+                Mediator.GetInstance().OnStartStopUpload(this, "Start");
+            }
+            else
+            {
+                GlobalVar.UploadRunning = false;
+                Mediator.GetInstance().OnStartStopUpload(this, "Stop");
+            }
         }
 
         private void MBRunLoader_Click(object sender, EventArgs e)
@@ -584,7 +611,22 @@ namespace Neutron.Forms
             RunLoaderOnce();
         }
 
-        private void MBRunUpload_Click(object sender, EventArgs e)
+        private void RunLoaderOnce()
+        {
+            if (GlobalVar.LoaderRunning)
+            {
+                MessageBox.Show("Loader is already running.", "Loader Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                GlobalVar.LoaderRunning = true;
+                Mediator.GetInstance().OnRunLoaderOnce(this);
+                GlobalVar.LoaderRunning = false;
+            }
+        }
+
+        private void MBRunUploadOnce_Click(object sender, EventArgs e)
         {
             RunUploadOnce();
         }
@@ -604,20 +646,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void RunLoaderOnce()
-        {
-            if (GlobalVar.LoaderRunning)
-            {
-                MessageBox.Show("Loader is already running.", "Loader Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-            }
-            else
-            {
-                GlobalVar.LoaderRunning = true;
-                Mediator.GetInstance().OnRunLoaderOnce(this);
-                GlobalVar.LoaderRunning = false;
-            }
-        }
+
 
         //private void SetupLogger()
         //{
@@ -3347,7 +3376,7 @@ namespace Neutron.Forms
                 {
                     var d = item.Ord2.PadLeft(4, ' ');
                     var displayText = d.Substring(d.Length - 4, 4);
-                    TurnOnBatchPositionDisplay( bayControllerId: _neutronVariables.BliController, item.PositionNumber, beacon: 2, text: displayText);
+                    TurnOnBatchPositionDisplay(bayControllerId: _neutronVariables.BliController, item.PositionNumber, beacon: 2, text: displayText);
                 }
             }
             Task.Run(() => _logger.LogDetailAsync($"ShowOrdersToPick End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -3387,6 +3416,7 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = PickList;
             ClearAllShi();
             ClearAllBli();
+            ClearBlastzone();
             Console.WriteLine("Clear Active Device Indicator  PickBack");
             _deviceIndicatorManager.ClearActiveDeviceIndicators();
             NextButtonEnabled();
@@ -4145,7 +4175,7 @@ namespace Neutron.Forms
                 TurnOnBatchPositionDisplay(bayControllerId: _neutronVariables.BliController, position: pos, beacon: 2, text: pickView.QuantityToBePicked.ToString());
             }
 
-            
+
 
             if (_neutronVariables.IptiDisplays && _isBlastzone)
             {
@@ -4318,7 +4348,7 @@ namespace Neutron.Forms
                 var numberOfStops = _bindingSourcePickStops.Count;
                 if (_currentPickStop.Sequence < numberOfStops)
                 {
-                    Console.WriteLine("Clear Active Device Indicator - SkipPick");
+                    Task.Run(() => _logger.LogDetailAsync("Clear Active Device Indicator - SkipPick"));
 
                     _bindingSourcePickStops.MoveNext();
                     _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
@@ -4494,7 +4524,8 @@ namespace Neutron.Forms
                     Task.Run(() => _logger.LogDetailAsync($"PickAccept Stop Complete End "));
 
                     var numberOfStops = _bindingSourcePickStops.Count;
-                    var position = _bindingSourcePickStops.Position;
+                 
+                    //var position = _bindingSourcePickStops.Position;
                     if (_currentPickStop.Sequence < numberOfStops)
                     {
                         // if multiple locations were required to complete this stop
@@ -5401,7 +5432,7 @@ namespace Neutron.Forms
 
         private void UpdateCurrentPickStopQuantities(int pos, int newQty)
         {
-            var pickView = _currentPickStop.PickViews.Where(p => p.PickPosition == pos).FirstOrDefault();
+            var pickView = _currentPickStop.PickViews.FirstOrDefault(p => p.PickPosition == pos);
             if (pickView == null) return;
             if (newQty <= pickView.GetQuantityToBePicked())
             {
@@ -5409,6 +5440,17 @@ namespace Neutron.Forms
                 _currentPickStop.QuantityToBePicked = _currentPickStop.GetTotalQuantityToBePicked();
                 LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
                 UpdatePickScreenAfterChangeQuantity();
+            }
+            else
+            {
+                var result = MessageBox.Show(_resourceManager.GetString($"OverPickItem"), "Change Quantity", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    pickView.QuantityToBePicked = newQty;
+                    _currentPickStop.QuantityToBePicked = _currentPickStop.GetTotalQuantityToBePicked();
+                    LabelPickQty.Text = _currentPickStop.QuantityToBePicked.ToString();
+                    UpdatePickScreenAfterChangeQuantity();
+                }
             }
         }
 
@@ -7889,10 +7931,11 @@ namespace Neutron.Forms
                 MBMainAvailableOrders.Text = _resourceManager.GetString($"MBMainAvailableOrders");
                 MBMainOrderManager.Text = _resourceManager.GetString($"MBMainOrderManager");
                 MBMainNewOrder.Text = _resourceManager.GetString($"MBMainNewOrder");
-                MBMainLoadOrders.Text = _resourceManager.GetString($"MBMainLoadOrders");
-                MBMainUpload.Text = _resourceManager.GetString($"MBMainUpload");
-                MBRunLoader.Text = _resourceManager.GetString($"MBRunLoader");
-                MBRunUpload.Text = _resourceManager.GetString($"MBRunUpload");
+                // Order Loading and Uploading
+                MBMainLoadOrders.Text = _resourceManager.GetString($"RunLoaderContinuously");
+                MBMainUpload.Text = _resourceManager.GetString($"RunUploadContinuously");
+                MBRunLoader.Text = _resourceManager.GetString($"RunLoaderOnce");
+                MBRunUploadOnce.Text = _resourceManager.GetString($"RunUploadOnce");
                 //Order Listing Panel
                 MBSkipped.Text = _resourceManager.GetString($"MBSkipped");
                 MBShowAvailable.Text = _resourceManager.GetString($"MBShowAvailable");

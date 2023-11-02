@@ -1,4 +1,5 @@
 ﻿using AlliedLogger;
+using AlliedPostOffice;
 using Ninject.Modules;
 using JsonManager;
 using Neutron.Interfaces;
@@ -14,7 +15,8 @@ using NeutronData.Repositories;
 using NeutronLoader;
 using NeutronMaintenance;
 using SqlSchemaManager;
-using ProliteController;
+using NeutronData.ProliteManager;
+using SAPServer;
 
 
 namespace Neutron.Ninject
@@ -24,19 +26,21 @@ namespace Neutron.Ninject
         public override void Load()
         {
            // Bind<DbContext>().To<NeutronDb>().InThreadScope();
-            Bind<IJsonData>().To<JsonData>();
+            Bind<IJsonData>().To<JsonData>().InSingletonScope();
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();
             Bind<ILacProcessor>().To<LacProcessor>().InSingletonScope();
             Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
             Bind<IImageManager>().To<ImageManager>().InSingletonScope();
-            Bind<IOrdersRepository>().To<OrdersRepository>();
-            Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>();
-            Bind<IInventoryManager>().To<InventoryManager>();
-            Bind<IInventoryRepository>().To<InventoryRepository>();
+            Bind<IOrdersRepository>().To<OrdersRepository>().InSingletonScope();
+            Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>().InSingletonScope();
+            Bind<IInventoryManager>().To<InventoryManager>().InSingletonScope();
+            Bind<IInventoryRepository>().To<InventoryRepository>().InSingletonScope();
             Bind<FrmMain>().To<FrmMain>().InSingletonScope();
             Bind<FrmSystem>().To<FrmSystem>()
-                .WithConstructorArgument("rackStation")
+                //.WithConstructorArgument("rackStation")
+                .WithConstructorArgument("workstationView")
+                .WithConstructorArgument("neutronVariables")
                 .WithConstructorArgument("standAlone");
 
             Bind<FrmInventory>().To<FrmInventory>()
@@ -64,12 +68,12 @@ namespace Neutron.Ninject
                 .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("historyManager");
 
-            Bind<StartStopLoaderManager>().To<StartStopLoaderManager>();
-            Bind<StartStopUploadManager>().To<StartStopUploadManager>();
+            Bind<StartStopLoaderManager>().To<StartStopLoaderManager>().InSingletonScope();
+            Bind<StartStopUploadManager>().To<StartStopUploadManager>().InSingletonScope();
 
             Bind<IEnumManager>().To<EnumManager>().InSingletonScope();
-            Bind<IItemDefinitionsRepository>().To<ItemDefinitionsRepository>();
-            Bind<IStoredProcedureManager>().To<StoredProcedureManager>();
+            Bind<IItemDefinitionsRepository>().To<ItemDefinitionsRepository>().InSingletonScope();
+            Bind<IStoredProcedureManager>().To<StoredProcedureManager>().InSingletonScope();
 
             Bind<ILocationManager>().To<RandomLocationManager>().InSingletonScope();
             Bind<IVelocityCodeManager>().To<VelocityCodeManager>().InSingletonScope();
@@ -86,6 +90,8 @@ namespace Neutron.Ninject
             Bind<ILocationsRepository>().To<LocationsRepository>().InSingletonScope();
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProliteManager>().To<ProliteManager>().InSingletonScope();
+            Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
+            Bind<ISAPService>().To<SAPService>().InSingletonScope();
         }
     }
 }

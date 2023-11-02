@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AlliedLogger
@@ -26,6 +27,7 @@ namespace AlliedLogger
             , [CallerFilePath] string filePath = ""
             , [CallerLineNumber] int lineNumber = 0);
 
-        List<string> LastLogLines(int numLines = 10);
+       // List<string> LastLogLines(int numLines = 10);
+       StringBuilder LastLogLines(int lines = 10);
     }
 }

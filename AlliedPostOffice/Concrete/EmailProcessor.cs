@@ -12,6 +12,10 @@ namespace AlliedPostOffice.Concrete
     {
         private readonly EmailSettings _emailSettings;
 
+        public EmailProcessor()
+        {
+            
+        }
         public EmailProcessor(EmailSettings emailSettings)
         {
             _emailSettings = emailSettings;

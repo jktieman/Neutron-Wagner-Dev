@@ -36,7 +36,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="NeutronData">
-      <HintPath>..\NeutronData\bin\Debug\NeutronData.dll</HintPath>
+      <HintPath>..\NeutronData\bin\Release\NeutronData.dll</HintPath>
     </Reference>
     <Reference Include="Remotion, Version=1.18.0.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>

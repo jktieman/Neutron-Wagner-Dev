@@ -72,15 +72,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HostFileWAG.cs" />
     <Compile Include="HostFilePr1.cs" />
     <Compile Include="HostFileSfh.cs" />
     <Compile Include="InterfaceProcessor.cs" />
+    <Compile Include="InterfaceProcessorWAG.cs" />
     <Compile Include="InterfaceProcessorMET.cs" />
     <Compile Include="InterfaceProcessorPr1.cs" />
     <Compile Include="InterfaceProcessorTop.cs" />
     <Compile Include="InterfaceProcessorVidir.cs" />
     <Compile Include="IUploadProcessor.cs" />
     <Compile Include="METFileProcessor.cs" />
+    <Compile Include="WAGFileProcessor.cs" />
     <Compile Include="SfhFileProcessor.cs" />
     <Compile Include="StartStopUploadManager.cs" />
     <Compile Include="TmgFileProcessor.cs" />
@@ -104,6 +107,7 @@
     <Compile Include="StartStopLoaderManager.cs" />
     <Compile Include="TopFileProcessor.cs" />
     <Compile Include="UploadProcessorMet.cs" />
+    <Compile Include="UploadProcessorWag.cs" />
     <Compile Include="UploadProcessorSfh.cs" />
     <Compile Include="UploadProcessorTop.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
@@ -148,9 +152,9 @@
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProLiteController\ProliteController\ProliteController.csproj">
-      <Project>{CC797714-8D01-40AF-8A2F-737B06F133CD}</Project>
-      <Name>ProliteController</Name>
+    <ProjectReference Include="..\SAPServer\SAPServer.csproj">
+      <Project>{0a3daa53-e7ff-4ea6-8ba1-2f671e341f09}</Project>
+      <Name>SAPServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

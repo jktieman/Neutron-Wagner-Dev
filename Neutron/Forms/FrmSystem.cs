@@ -4,17 +4,13 @@ using Neutron.Global;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronLoader;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Resources;
 using System.Threading;
 using System.Windows.Forms;
@@ -22,9 +18,9 @@ using AlliedLogger;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
 using Neutron.Models;
-using NeutronData.Models;
 using NeutronEvents;
 using SqlSchemaManager;
+//using Syncfusion.Windows.Forms;
 
 namespace Neutron.Forms
 {
@@ -38,21 +34,23 @@ namespace Neutron.Forms
         private readonly NeutronLicense _neutronLicense;
         private string _rootDirectory;
         private readonly IDynamicLogger _logger;
-        private SendEmail _sendEmail;
+        private ISendEmail _sendEmail;
         private readonly IStoredProcedureManager _storedProcedureManager;
         private readonly bool _standAlone;
         private readonly bool _emailEnabled;
 
-        public FrmSystem(IJsonData jsonData, IDynamicLogger logger, IStoredProcedureManager storedProcedureManager, bool standAlone = false)
+        public FrmSystem(IJsonData jsonData, IStoredProcedureManager storedProcedureManager
+            , NeutronVariables neutronVariables, NeutronLicense neutronLicense, ISendEmail sendEmail, bool standAlone = false)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            // SetCulture(_cultureInfo.Name);
+            SetCulture(_cultureInfo.Name);
             _jsonData = jsonData;
-            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            _neutronLicense = jsonData.LoadFile<NeutronLicense>();
-            _logger = logger;
-            SetupEmail();
+            _neutronVariables = neutronVariables;
+            _neutronLicense = neutronLicense;
+            _sendEmail = sendEmail;
+            _logger = NeutronCore.Global.Logger.SetupLogger("System");
+           // SetupEmail();
             _storedProcedureManager = storedProcedureManager;
             _standAlone = standAlone;
             _emailEnabled = _neutronVariables.EnableEmailNotification;
@@ -64,26 +62,6 @@ namespace Neutron.Forms
             SetUploadButtonText();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
-        }
-
-        private void SetupEmail()
-        {
-            _sendEmail = null;
-            if (_neutronVariables.EnableEmailNotification)
-            {
-                try
-                {
-                    var emailServerSettings = _jsonData.LoadFile<EmailSettings>();
-                    var emailListing = _jsonData.LoadFile<List<EmailAddressData>>();
-                    var emailProcessor = new EmailProcessor(emailServerSettings);
-
-                    _sendEmail = new SendEmail(emailProcessor, emailListing);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Unable to setup Email Notification. {Environment.NewLine}{ex.Message}");
-                }
-            }
         }
 
         protected override CreateParams CreateParams
@@ -101,11 +79,15 @@ namespace Neutron.Forms
         {
             if (GlobalVar.LoaderRunning)
             {
-                MBStartLoader.Text = "Stop Loader";
+                // Stop the Loader
+                MBStartLoader.Text = _resourceManager.GetString($"StopLoader"); 
+                MBRunLoaderOnce.Enabled = false;
             }
             else
             {
-                MBStartLoader.Text = "Start Loader";
+                // Start the Loader
+                MBStartLoader.Text = _resourceManager.GetString($"RunLoaderContinuously");
+                MBRunLoaderOnce.Enabled = true;
             }
         }
 
@@ -113,11 +95,13 @@ namespace Neutron.Forms
         {
             if (GlobalVar.UploadRunning)
             {
-                MBStartUpload.Text = "Stop Upload";
+                MBStartUpload.Text = _resourceManager.GetString($"StopUpload");
+                MBRunUploadOnce.Enabled = false;
             }
             else
             {
-                MBStartUpload.Text = "Start Upload";
+                MBStartUpload.Text = _resourceManager.GetString($"RunUploadContinuously");
+                MBRunUploadOnce.Enabled = true;
             }
         }
 
@@ -125,12 +109,15 @@ namespace Neutron.Forms
         {
             if (startStop == "Start")
             {
-                MBStartLoader.Text = "Stop Loader";
+                MBStartLoader.Text = _resourceManager.GetString($"StopLoader");
+                MBRunLoaderOnce.Enabled = false;
                 GlobalVar.LoaderRunning = true;
             }
             else
             {
-                MBStartLoader.Text = "Start Loader";
+                //MBStartLoader.Text = "Start Loader";
+                MBStartLoader.Text = _resourceManager.GetString($"RunLoaderContinuously");
+                MBRunLoaderOnce.Enabled = true;
                 GlobalVar.LoaderRunning = false;
             }
         }
@@ -139,12 +126,14 @@ namespace Neutron.Forms
         {
             if (startStop == "Start")
             {
-                MBStartUpload.Text = "Stop Upload";
+                MBStartUpload.Text = _resourceManager.GetString($"StopUpload");
+                MBRunUploadOnce.Enabled = false;
                 GlobalVar.LoaderRunning = true;
             }
             else
             {
-                MBStartUpload.Text = "Start Upload";
+                MBStartUpload.Text = MBStartUpload.Text = _resourceManager.GetString($"RunUploadContinuously");
+                MBRunUploadOnce.Enabled = true;
                 GlobalVar.LoaderRunning = false;
             }
         }
@@ -153,26 +142,29 @@ namespace Neutron.Forms
         {
             if (!GlobalVar.LoaderRunning)
             {
+                GlobalVar.LoaderRunning = true;
+                Mediator.GetInstance().OnStartStopLoader(this, "Start");
+            }
+            else
+            {
+                GlobalVar.LoaderRunning = false;
+                Mediator.GetInstance().OnStartStopLoader(this, "Stop");
+            }
+        }
+        private void MBStartUpload_Click(object sender, EventArgs e)
+        {
+            if (!GlobalVar.UploadRunning)
+            {
                 GlobalVar.UploadRunning = true;
-                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-                {
-                    _sendEmail.StartUp();
-                }
-
-                MBRunLoaderOnce.Enabled = false;
+                MBRunUploadOnce.Enabled = false;
+                Mediator.GetInstance().OnStartStopUpload(this, "Start");
             }
             else
             {
                 GlobalVar.UploadRunning = false;
-                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-                {
-                    _sendEmail.ShutDown();
-                }
-
-                MBRunLoaderOnce.Enabled = true;
+                MBRunUploadOnce.Enabled = true;
+                Mediator.GetInstance().OnStartStopUpload(this, "Stop");
             }
-
-            Mediator.GetInstance().OnStartStopLoader(this, !GlobalVar.LoaderRunning ? "Start" : "Stop");
         }
 
         private void MBRunLoaderOnce_Click(object sender, EventArgs e)
@@ -184,57 +176,40 @@ namespace Neutron.Forms
 
         private void RunLoaderOnce()
         {
-            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            if (GlobalVar.LoaderRunning)
             {
-                _sendEmail.StartUpSingleRun(new List<string>());
-            }
-
-            Mediator.GetInstance().OnRunLoaderOnce(this);
-        }
-
-        private void MBStartUpload_Click(object sender, EventArgs e)
-        {
-            if (!GlobalVar.UploadRunning)
-            {
-                GlobalVar.UploadRunning = true;
-                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-                {
-                    _sendEmail.StartUp();
-                }
-
-                MBRunUpload.Enabled = false;
-                Mediator.GetInstance().OnStartStopUpload(this, "Start");
+                MessageBox.Show("Loader is already running.", "Loader Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
-                GlobalVar.UploadRunning = false;
-                if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-                {
-                    _sendEmail.ShutDown();
-                }
-
-                MBRunUpload.Enabled = true;
-                Mediator.GetInstance().OnStartStopUpload(this, "Stop");
+                GlobalVar.LoaderRunning = true;
+                Mediator.GetInstance().OnRunLoaderOnce(this);
+                GlobalVar.LoaderRunning = false;
             }
-
-            // Mediator.GetInstance().OnStartStopUpload(this, !GlobalVar.UploadRunning ? "Start" : "Stop");
         }
 
-        private void MBRunUpload_Click(object sender, EventArgs e)
+
+        private void MBRunUploadOnce_Click(object sender, EventArgs e)
         {
-            MBRunUpload.Enabled = false;
+            MBRunUploadOnce.Enabled = false;
             RunUploadOnce();
-            MBRunUpload.Enabled = true;
+            MBRunUploadOnce.Enabled = true;
         }
 
         private void RunUploadOnce()
         {
-            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            if (GlobalVar.UploadRunning)
             {
-                _sendEmail.StartUpSingleRunUpload(new List<string>());
+                MessageBox.Show("Upload is already running.", "Upload Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
-
-            Mediator.GetInstance().OnRunUploadOnce(this);
+            else
+            {
+                GlobalVar.UploadRunning = true;
+                Mediator.GetInstance().OnRunUploadOnce(this);
+                GlobalVar.UploadRunning = false;
+            }
         }
 
         private void MBMainClose_Click(object sender, EventArgs e)
@@ -680,6 +655,39 @@ namespace Neutron.Forms
         {
             _storedProcedureManager.Connection = new SqlConnection(GetConnectionString().ConnectionString);
             _storedProcedureManager.Execute();
+        }
+
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmSystem",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+                MBMainSqlServer.Text = _resourceManager.GetString("SQLServer");
+                MBMainInterfaceFile.Text = _resourceManager.GetString("InterfaceInformation");
+                MBStartLoader.Text = _resourceManager.GetString("RunLoaderContinuously");
+                MBRunLoaderOnce.Text = _resourceManager.GetString("RunLoaderOnce");
+                MBStartUpload.Text = _resourceManager.GetString("RunUploadContinuously");
+                MBRunUploadOnce.Text = _resourceManager.GetString("RunUploadOnce");
+
+                //MtHotAction.Text = _resourceManager.GetString("HotAction");
+                //MtPick.Text = _resourceManager.GetString("Pick");
+                //MtStore.Text = _resourceManager.GetString("Store");
+                //MtUsers.Text = _resourceManager.GetString("Users");
+                //MtLogOff.Text = _resourceManager.GetString("LogOff");
+                //MtUtilities.Text = _resourceManager.GetString("Utilities");
+                //MtSystem.Text = _resourceManager.GetString("System");
+                //MtLac.Text = _resourceManager.GetString("LocationAccessControl");
+                //ButtonPark.Text = _resourceManager.GetString("Park");
+                //ButtonClose.Text = _resourceManager.GetString("Close");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading languages.  FrmSystem  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+            }
         }
     }
 }

@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProliteController", "ProLit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthernetTransmitter", "EthernetTransmitter\EthernetTransmitter.csproj", "{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAPServer", "SAPServer\SAPServer.csproj", "{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -166,6 +168,10 @@ Global
 		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

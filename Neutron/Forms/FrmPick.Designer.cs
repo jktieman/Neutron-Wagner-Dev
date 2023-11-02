@@ -68,7 +68,7 @@ namespace Neutron.Forms
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
-            this.MBRunUpload = new MetroFramework.Controls.MetroButton();
+            this.MBRunUploadOnce = new MetroFramework.Controls.MetroButton();
             this.MBRunLoader = new MetroFramework.Controls.MetroButton();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
             this.MBMainUpload = new MetroFramework.Controls.MetroButton();
@@ -341,7 +341,7 @@ namespace Neutron.Forms
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.Main.Controls.Add(this.MBRunUpload);
+            this.Main.Controls.Add(this.MBRunUploadOnce);
             this.Main.Controls.Add(this.MBRunLoader);
             this.Main.Controls.Add(this.MBMainClose);
             this.Main.Controls.Add(this.MBMainUpload);
@@ -356,18 +356,18 @@ namespace Neutron.Forms
             this.Main.Text = "Main";
             this.Main.Enter += new System.EventHandler(this.Main_Enter);
             // 
-            // MBRunUpload
+            // MBRunUploadOnce
             // 
-            this.MBRunUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUpload.Location = new System.Drawing.Point(397, 562);
-            this.MBRunUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBRunUpload.Name = "MBRunUpload";
-            this.MBRunUpload.Size = new System.Drawing.Size(350, 53);
-            this.MBRunUpload.TabIndex = 6;
-            this.MBRunUpload.Text = "Run Upload Once";
-            this.MBRunUpload.UseSelectable = true;
-            this.MBRunUpload.Visible = false;
-            this.MBRunUpload.Click += new System.EventHandler(this.MBRunUpload_Click);
+            this.MBRunUploadOnce.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBRunUploadOnce.Location = new System.Drawing.Point(397, 562);
+            this.MBRunUploadOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBRunUploadOnce.Name = "MBRunUploadOnce";
+            this.MBRunUploadOnce.Size = new System.Drawing.Size(350, 53);
+            this.MBRunUploadOnce.TabIndex = 6;
+            this.MBRunUploadOnce.Text = "Run Upload Once";
+            this.MBRunUploadOnce.UseSelectable = true;
+            this.MBRunUploadOnce.Visible = false;
+            this.MBRunUploadOnce.Click += new System.EventHandler(this.MBRunUploadOnce_Click);
             // 
             // MBRunLoader
             // 
@@ -403,7 +403,7 @@ namespace Neutron.Forms
             this.MBMainUpload.Name = "MBMainUpload";
             this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
             this.MBMainUpload.TabIndex = 5;
-            this.MBMainUpload.Text = "Start upload";
+            this.MBMainUpload.Text = "Run Loader Continuously";
             this.MBMainUpload.UseSelectable = true;
             this.MBMainUpload.Visible = false;
             this.MBMainUpload.Click += new System.EventHandler(this.MBMainUpload_Click);
@@ -416,7 +416,7 @@ namespace Neutron.Forms
             this.MBMainLoadOrders.Name = "MBMainLoadOrders";
             this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 53);
             this.MBMainLoadOrders.TabIndex = 3;
-            this.MBMainLoadOrders.Text = "Start Loader";
+            this.MBMainLoadOrders.Text = "Run Loader Continuously";
             this.MBMainLoadOrders.UseSelectable = true;
             this.MBMainLoadOrders.Visible = false;
             this.MBMainLoadOrders.Click += new System.EventHandler(this.MBMainLoadOrders_Click);
@@ -3447,7 +3447,7 @@ namespace Neutron.Forms
         private System.Windows.Forms.DataGridView DataGridViewNewOrder;
         private MetroFramework.Controls.MetroButton MBFillOptimized;
         private MetroFramework.Controls.MetroButton MBMainUpload;
-        private MetroFramework.Controls.MetroButton MBRunUpload;
+        private MetroFramework.Controls.MetroButton MBRunUploadOnce;
         private MetroFramework.Controls.MetroButton MBRunLoader;
         private System.Windows.Forms.Panel panel13;
         private System.Windows.Forms.Button ButtonStopMoveNext;

@@ -234,7 +234,7 @@ namespace Neutron.Forms
             //    MBMainLoadOrders.Visible = true;
             //    MBMainUpload.Visible = true;
             //    MBRunLoader.Visible = true;
-            //    MBRunUpload.Visible = true;
+            //    MBRunUploadOnce.Visible = true;
             //}
             SetupPrinters();
             _synchronizationContext = SynchronizationContext.Current;
@@ -271,8 +271,6 @@ namespace Neutron.Forms
             _tempAllocatedLocations = new List<Location>();
 
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
-            // Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
-            // Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
         }
 

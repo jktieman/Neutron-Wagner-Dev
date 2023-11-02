@@ -13,15 +13,18 @@ using MetroFramework.Forms;
 using AlliedLicenseGenerator.Core;
 using AlliedLicenseGenerator.Core.Extensions;
 using AlliedLicenseVerifier;
+using AlliedLogger;
 
 namespace Neutron.Forms
 {
     public partial class FrmAbout : MetroForm
     {
+        private readonly IDynamicLogger _logger;
 
         public FrmAbout()
         {
             InitializeComponent();
+            _logger = NeutronCore.Global.Logger.SetupLogger("About");
         }
 
         private void ButtonTest_Click(object sender, EventArgs e)
@@ -32,7 +35,7 @@ namespace Neutron.Forms
             var publicKeyFile = Path.Combine(currentPath, @"PublicKey.xml");
             var licenseManager = new AlliedLicenseManager();
             var result = licenseManager.ExamineLicense(licenseFile, assembly.GetName(), publicKeyFile);
-
+            _logger.LogDetailAsync("{result.LicenseStatus.GetDescription()}");
             MessageBox.Show($"{result.LicenseStatus.GetDescription()}");
         }
 
@@ -65,7 +68,7 @@ namespace Neutron.Forms
                 LabelRackStations.Visible = false;
             }
 
-
+            _logger.LogDetailAsync($"License Status: {LabelLicensee.Text}");
 
         }
 

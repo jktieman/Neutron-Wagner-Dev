@@ -47,11 +47,13 @@ namespace Neutron.Controllers
         public bool Ready { get; set; }
         public event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         
-        public DisplayController(IJsonData jsonData, WorkstationView workstationView)
+        public DisplayController(IJsonData jsonData, WorkstationView workstationView
+        , NeutronVariables neutronVariables
+        , NeutronLicense neutronLicense)
         {
             _workstationView = workstationView;
-            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            _neutronLicense = jsonData.LoadFile<NeutronLicense>();
+            _neutronVariables = neutronVariables;
+            _neutronLicense = neutronLicense;
             _bliEnabled = _neutronVariables.BliEnabled;
             _shiEnabled = _neutronVariables.ShiEnabled;
             Global_Module = new Hart_SHI(0, 0, 0, "", "");
@@ -78,6 +80,10 @@ namespace Neutron.Controllers
             }
         }
 
+        public async Task TurnOnAllBli()
+        {
+
+        }
         private bool HartDisplayControllerInit()
         {
             var result = false;
@@ -221,13 +227,13 @@ namespace Neutron.Controllers
 
         }
 
-        public void ClearAllBli()
+        public async Task ClearAllBli()
         {
-            Task.Run(() => _logger.LogDetailAsync($"BLI Clear All Displays."));
+            await _logger.LogDetailAsync($"BLI Clear All Displays.");
 
             if (!_hartDisplayController.Clear(_bliList, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"BLI Clear All Display Error. \r\n  {_cError}"));
+                await _logger.LogDetailAsync($"BLI Clear All Display Error. \r\n  {_cError}");
             }
 
         }

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Text;
 using AlliedPostOffice.Concrete;
 using NeutronEvents;
 
 
 namespace AlliedPostOffice
 {
-    public class SendEmail
+    public class SendEmail : ISendEmail
     {
         private readonly EmailProcessor _emailProcessor;
         private readonly List<string> _people;
@@ -145,6 +146,32 @@ namespace AlliedPostOffice
             {
                 Mediator.GetInstance().OnGeneralError(this, $"{subject} {ex.Message}");
             }
+        }
+
+        public void StartUpSap()
+        {
+            var subject = "SAP Console Startup";
+            var body = "SAP Console has just started processing.";
+            var attachment = GetAttachment();
+            _emailProcessor.ProcessEmail(subject, body, _people, attachment);
+
+        }
+
+        public void ShutDownSap()
+        {
+            var subject = "SAP Console Normal ShutDown";
+            var body = @"SAP Console has shut down normally.";
+            var attachment = GetAttachment();
+            _emailProcessor.ProcessEmail(subject, body, _people, attachment);
+        }
+
+        public void Message(string subject, StringBuilder body)
+        {
+            var attachment = GetAttachment();
+            //var attachments = new string[] { _logger.CurrentLog };
+            _emailProcessor.ProcessEmail(subject, body.ToString(), _people
+                , attachment);
+
         }
     }
 }

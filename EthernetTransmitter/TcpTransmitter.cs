@@ -40,6 +40,7 @@ namespace EthernetTransmitter
         public TcpTransmitter(string ipAddress, int port, IDynamicLogger logger)
         {
             _logger = logger;
+            _ = _logger.LogDetailAsync($"Startup: {ipAddress}:{port}");
 
             if (string.IsNullOrWhiteSpace(ipAddress) || port == 0) return;
             try
@@ -51,10 +52,11 @@ namespace EthernetTransmitter
                 _server.Events.DataReceived += Events_DataReceived;
                 _server.Events.DataSent += Events_DataSent;
                 _server.Start();
+                _ = _logger.LogDetailAsync($"Startup Server Is Listening: {_server.IsListening}");
             }
             catch (Exception ex)
             {
-                _logger.LogAsync($"Startup: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Startup: {ex.Message}");
             }
         }
 
@@ -66,6 +68,7 @@ namespace EthernetTransmitter
 
         public void CloseConnection()
         {
+            _ = _logger.LogDetailAsync($"CloseConnection");
             try
             {
                 _server.Events.ClientConnected -= Events_ClientConnected;
@@ -74,75 +77,84 @@ namespace EthernetTransmitter
                 _server.Events.DataSent -= Events_DataSent;
                 _server.Stop();
                 _server.Dispose();
+                _ = _logger.LogDetailAsync($"CloseConnection Server Is Listening: {_server.IsListening}");
 
             }
             catch (Exception ex)
             {
-                _logger.LogAsync($"{ex.Message}");
+                _ = _logger.LogDetailAsync($"{ex.Message}");
             }
         }
 
         private void Events_DataSent(object sender, DataSentEventArgs e)
         {
-            _logger.Log($"Data Sent: {e.BytesSent}");
+            _ = _logger.LogDetailAsync($"Data Sent: {e.BytesSent}");
         }
 
-        private void Events_DataReceived(object sender, DataReceivedEventArgs e)
+        private async void Events_DataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Log($"Data Received: {e.IpPort}");
+            await _logger.LogDetailAsync($"Data Received: {e.IpPort}");
             byte[] data = e.Data.ToArray();
             var text = Encoding.UTF8.GetString(data);
            // Mediator.GetInstance().OnIptiButtonPressed(this, new ResponseInfo());
-            _logger.Log($"IP Port: [{e.IpPort}]  Data: {text}");
-            _logger.Log($"IP Port: [{e.IpPort}] HEX Data: {data.ByteArrayToHexString()}{Environment.NewLine}");
+            await _logger.LogDetailAsync($"IP Port: [{e.IpPort}]  Data: {text}");
+            await _logger.LogDetailAsync($"IP Port: [{e.IpPort}] HEX Data: {data.ByteArrayToHexString()}{Environment.NewLine}");
             if (text.Contains("OC"))
             {
                 var command = text.Substring(1, 4);
-                SendAck(command);
+                await _logger.LogDetailAsync($"Text Contains OC Send Response Command: {command}");
+                await SendAck(command);
             }
         }
 
         private void Events_ClientDisconnected(object sender, ConnectionEventArgs e)
         {
-            _logger.Log($"IP Port: [{e.IpPort}] client disconnected: {e.Reason}");
+            _ = _logger.LogDetailAsync("Events_ClientDisconnected");
+            _ = _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Disconnected Reason: {e.Reason}");
             IsClientConnected = false;
         }
 
         private void Events_ClientConnected(object sender, ConnectionEventArgs e)
         {
+            _ = _logger.LogDetailAsync("Events_ClientConnected");
             ClientIpPort = e.IpPort;
-            _logger.Log($"IP Port: [{e.IpPort}] Client Connected Disconnect Reason: {e.Reason}");
+            _ = _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Connected -- Disconnect Reason: {e.Reason}");
             IsClientConnected = true;
         }
 
-        public void SendData(string value)
+        public async Task SendData(string value)
         {
+            await _logger.LogDetailAsync($"SendData: {value}");
             try
             {
                 if (!_server.IsListening) return;
                 // once a client has connected...
                 var command = new Put2LightCommand().GetCommand(value);
-                _logger.Log($"SendData Check Digit: {value.GetCheckDigit()}");
-                _logger.Log($"SendData Command: {command}{Environment.NewLine}");
+                
+                await _logger.LogDetailAsync($"SendData Command: {command}{Environment.NewLine}");
                 if (IsClientConnected)
                 {
-                    _server.Send(ClientIpPort, command);
+                   await _server.SendAsync(ClientIpPort, command);
+                   // await Task to let the displays turn on before sending the next command
+                   await Task.Delay(100);
+                    await _logger.LogDetailAsync($"SendData Command: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}"); 
                 }
                 
             }
             catch (Exception ex)
             {
-                _logger.Log($"SendData Exception: {ex.Message}");
+                await _logger.LogDetailAsync($"SendData Exception: {ex.Message}");
             }
 
         }
 
-        private void SendAck(string cmd)
+        private async Task SendAck(string cmd)
         {
+            await _logger.LogDetailAsync($"Send ACK: {cmd}");
             var command = new Put2LightCommand().GetAck(cmd);
-            _logger.Log($"Send ACK: {command}{Environment.NewLine}");
-            _logger.Log($"Send ACK: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}");
-            _server.Send(ClientIpPort, command);
+            await _logger.LogDetailAsync($"Send ACK: {command}{Environment.NewLine}");
+            await _server.SendAsync(ClientIpPort, command);
+            await _logger.LogDetailAsync($"Send ACK: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}");
         }
 
     }

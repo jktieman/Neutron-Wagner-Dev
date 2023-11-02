@@ -6,6 +6,7 @@
         private string _bayId;
         private string _turnOn = "33";
         private string _turnOff = "14";
+        private string _turnAllOff = "03";
         private const string FourSpaces = "    ";
         private const string EndOfLine = "00000000120012000";
 
@@ -26,7 +27,7 @@
             BLI_Text = text;
         }
 
-        public int BLI_BayController { get; set; }
+        public string BLI_BayController => _bayId;
 
         public int BLI_Address { get; set; }
 
@@ -39,6 +40,7 @@
         public string TurnOn => _bayId + _turnOn + BLI_Address.ToString().PadLeft(2, '0') 
                    + BLI_Text.PadLeft(4, ' ') 
                    + FourSpaces + EndOfLine;
-        
+        public string TurnAllOff => _bayId + _turnAllOff;
+
     }
 }

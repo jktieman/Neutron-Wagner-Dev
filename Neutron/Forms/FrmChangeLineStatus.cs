@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Neutron.Global;
 using NeutronCore.Enums;
@@ -25,7 +19,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<LineStatusLookup> _repoStatus = new GenericRepository<LineStatusLookup>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly List<int> _statusNumbers = new List<int> { 1, 6, 9 };
+       // private readonly List<int> _statusNumbers = new List<int> { 1, 6, 9 };
         private readonly int _currentStatus;
 
         public FrmChangeLineStatus(OrderDetail orderDetail, HistoryManager historyManager)
@@ -126,7 +120,7 @@ namespace Neutron.Forms
                 .ToList();
             if (linesNotComplete.Any()) return;
 
-            order.OrderStatusId = (int)NeutronCore.Enums.OrderStatus.Complete;
+            order.OrderStatusId = (int)OrderStatus.Complete;
             _historyManager.SaveHistory(ActionCode.OrderComplete, order, _orderDetail.AreaId);
             _repoOrders.Update(order);
         }

@@ -1,5 +1,6 @@
 ﻿using Hart_DisplayControllers;
 using System;
+using System.Threading.Tasks;
 using Neutron.Models;
 
 namespace Neutron.Controllers
@@ -9,8 +10,9 @@ namespace Neutron.Controllers
         event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         void CloseController();
         bool Ready { get; set; }
-        void ClearAllBli();
+        Task ClearAllBli();
         void ClearAllShi();
+        Task TurnOnAllBli();
         void ShowBli(int address, int beacon, string text);
         void ShowBli(int bayControllerId, int address, int beacon, string text);
         void ShowBlastzone(int bayController, int address, int beacon, string text);

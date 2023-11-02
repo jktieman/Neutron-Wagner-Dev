@@ -7,6 +7,7 @@ using Neutron.Interfaces;
 using System.Threading;
 using NeutronCore.Models;
 using System.Globalization;
+using System.IO;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
 using Neutron.Forms;
@@ -15,6 +16,10 @@ using NeutronCore;
 using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.General;
+using AlliedLicenseVerifier;
+using System.Reflection;
+using AlliedLicenseGenerator.Core;
+using AlliedLicenseGenerator.Core.Extensions;
 
 namespace Neutron
 {
@@ -25,17 +30,45 @@ namespace Neutron
         /// </summary>
         /// 
         public static NeutronLicense NeutronLicense = new NeutronLicense();
+
+
+
+
+
+
+
         private static Mutex _mutex = null;
 
         [STAThread]
 
         static void Main()
         {
-
+            NeutronLicense neutronLicense = null;
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
 
             const string appName = "Neutron";
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            var licenseFile = Path.Combine(currentPath, @"License.lic");
+            var publicKeyFile = Path.Combine(currentPath, @"PublicKey.xml");
+            var licenseManager = new AlliedLicenseManager();
+            var result = licenseManager.ExamineLicense(licenseFile, assembly.GetName(), publicKeyFile);
+
+            if (!result.LicenseStatus.Equals(LicenseStatus.ValidLicense))
+            {
+                MessageBox.Show($"{result.LicenseStatus.GetDescription()}");
+                neutronLicense = null;
+                // exit the application
+                return;
+            }
+
+            neutronLicense = new NeutronLicense
+            {
+                CompanyCode = result.Code
+            };
+
 
             _mutex = new Mutex(initiallyOwned: true, name: appName, createdNew: out var createdNew);
             if (!createdNew)
@@ -67,7 +100,7 @@ namespace Neutron
             }
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            var neutronLicense = jsonData.LoadFile<NeutronLicense>();
+            // var neutronLicense = jsonData.LoadFile<NeutronLicense>();
 
             var cultureInfo = neutronVariables.DefaultLanguage;
 
@@ -89,7 +122,7 @@ namespace Neutron
             }
             else
             {
-                var frmSystem = DI.Create<FrmSystem>(true);
+                var frmSystem = DI.Create<FrmSystem>(neutronVariables, neutronLicense, true);
                 Application.Run(frmSystem);
             }
         }

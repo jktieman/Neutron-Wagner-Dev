@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <License>
-  <Product>Neutron</Product>
-  <Licensee>Milwaukee Tool</Licensee>
-  <Code>MET</Code>
-  <LicenseDate>3/6/2022</LicenseDate>
+  <Product>Neutron Warehouse Manager</Product>
+  <Licensee>Wagner</Licensee>
+  <Code>WAG</Code>
+  <LicenseDate>10/29/2023</LicenseDate>
   <ExpireDate>12/31/2999</ExpireDate>
   <CoveredVersion>*.*.*.*</CoveredVersion>
-  <SerialNumber>11215401</SerialNumber>
+  <SerialNumber>11215402</SerialNumber>
   <SupervisorStations>2</SupervisorStations>
   <WorkStations>4</WorkStations>
-  <RackStations>0</RackStations>
+  <RackStations>6</RackStations>
   <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
     <SignedInfo>
       <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
-      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
       <Reference URI="">
         <Transforms>
           <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
         </Transforms>
-        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <DigestValue>a6wqapmN0ggLu/bYcPZEL9iGeYo=</DigestValue>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>PCpo0RFW4jYh1lzsuOi6Y31KRe2xbT65bqCjYfz+kv0=</DigestValue>
       </Reference>
     </SignedInfo>
-    <SignatureValue>BryiQlXMyu6BGdKTZCxeIvaupmDi/d0JH/dI3xPFcKxEU4TJlhs177MPcHeoCChkbeqsw3j+H5f/tJ5t9Pr5T4Mb1vWO00ZT1wxTWlGlUCZ7KgdClLVQ+yi2MTqn6gz0or3IxNkcsxnZyY8RJ6VkrxXFZFAqzKFKQWCGMykljaQ=</SignatureValue>
+    <SignatureValue>l14eVSh6M+ZxVepH4JdB76BqYR6Qq0eNDBqkkOIscyLQvjjviz948DwmxNuDIaWqlczYnOYscgkoldmQxusTvYyuNwO7HhdisxZ5KK4skkWLtg/Hm98OHsPxnB/GegSPNrn4IPNcOYeuM/hnjJsGOEfHAIN2kY8aN3mLjxeKhnc=</SignatureValue>
   </Signature>
 </License>

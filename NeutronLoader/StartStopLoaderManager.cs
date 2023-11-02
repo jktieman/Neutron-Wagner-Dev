@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using AlliedLogger;
-using AlliedPostOffice.Concrete;
+﻿using AlliedLogger;
+using AlliedPostOffice;
 using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronEvents;
 
@@ -18,6 +16,7 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
+       // private readonly ISendEmail _sendEmail;
 
         public StartStopLoaderManager(IJsonData jsonData, NeutronVariables neutronVariables,
             NeutronLicense neutronLicense, WorkstationView workstationView)
@@ -26,6 +25,7 @@ namespace NeutronLoader
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
+          //  _sendEmail = sendEmail;
             _logger = NeutronCore.Global.Logger.SetupLogger("LoaderManager");
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
@@ -35,7 +35,7 @@ namespace NeutronLoader
 
         private void InitInterfaceFile()
         {
-            _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}");
+            _ = _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}");
             switch (_neutronLicense.CompanyCode)
             {
                 case "SFH":
@@ -66,7 +66,7 @@ namespace NeutronLoader
                 case "WAG":
                     {
                         _logger.LogDetailAsync($"WAG - InterfaceProcessorPr1");
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
                 default:

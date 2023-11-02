@@ -29,6 +29,10 @@ namespace Neutron.Controllers
     {
         private const string Bayid = "01";
         private const string DisplayOc = "27";
+        private const string TurnAllOff = "03";
+        private const string TurnAllOn = "02";
+        private readonly string _bliController = "04";
+
         public CancellationTokenSource Token = new CancellationTokenSource();
         private static readonly BlockingCollection<byte[]>
             ResponseBlockingCollection = new BlockingCollection<byte[]>();
@@ -92,7 +96,11 @@ namespace Neutron.Controllers
             Transmit = value;
             _responseManager.Transmit = value;
         }
-
+        public Task TurnOnAllBli()
+        {
+           SendData($"{_bliController}{TurnAllOn}");
+           return Task.CompletedTask;
+        }
 
         public void CloseController()
         {
@@ -112,18 +120,18 @@ namespace Neutron.Controllers
             }
         }
 
-        public void ClearAllBli()
+        public async Task ClearAllBli()
         {
-            _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");
+            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");
             if (!_bliEnabled) return;
-            _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI Enabled");
+            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI Enabled");
             foreach (var bli in _bliList)
             {
-                _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off:  {bli.BLI_Address}");
+                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off:  {bli.BLI_Address}");
                 SendData(bli.TurnOff);
-                _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
+                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
             }
-            _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
+            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
         }
         public void ShowBlastzone(int bayControllerId, int address, int beacon, string text)
         {
@@ -140,7 +148,7 @@ namespace Neutron.Controllers
                 SendData(cmd);
             }
         }
-
+         
         public void ShowBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
@@ -297,7 +305,7 @@ namespace Neutron.Controllers
         }
         private void StartTransmission()
         {
-            _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
+            _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
             while (Transmit)
             {
                 try
@@ -308,11 +316,11 @@ namespace Neutron.Controllers
                         {
                             if (Token.IsCancellationRequested)
                             {
-                                _logger.LogDetailAsync($"Start Transmission Cancellation Requested.");
+                                _ = _logger.LogDetailAsync($"Start Transmission Cancellation Requested.");
                                 return;
                             }
 
-                            _logger.LogDetailAsync($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
+                            _ = _logger.LogDetailAsync($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
 
                             //for (var i = 1; i <= 100; i++)
                             //{
@@ -322,7 +330,7 @@ namespace Neutron.Controllers
                             var trans = _responseManager.Transmitting;
 
                             Mediator.GetInstance().OnSerialPortWrite(this, $"Write Command:  {trans.ToString()} - {request.ByteArrayToStringX2()}");
-                            _logger.LogDetailAsync($"IPTI Controller - StartTransmission - SerialPort Write {request}");
+                            _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - SerialPort Write {request}");
                             _serialPort.Write(request, 0, request.Length);
                             _responseManager.Transmitting = true;
                             Thread.Sleep(50);
@@ -333,7 +341,7 @@ namespace Neutron.Controllers
                             //    Thread.Sleep(i * 20);
                             //    if (i != 100) continue;
                             //    Mediator.GetInstance().OnSerialPortWrite(this, "Serial Timeout.");
-                            //    _logger.LogDetailAsync("SerialPort Write Request Time Out.");
+                            //    _ = _logger.LogDetailAsync("SerialPort Write Request Time Out.");
                             //}
 
 
@@ -343,14 +351,14 @@ namespace Neutron.Controllers
                 }
                 catch (OperationCanceledException)
                 {
-                    _logger.LogDetailAsync($"CATCH - Start Transmission Operation Canceled Requested.");
+                    _ = _logger.LogDetailAsync($"CATCH - Start Transmission Operation Canceled Requested.");
                     return;
                 }
 
                 Thread.Sleep(50);
             }
 
-            _logger.LogDetailAsync($"EXITING Start Transmission.");
+            _ = _logger.LogDetailAsync($"EXITING Start Transmission.");
         }
         public void IptiControllerInit()
         {
@@ -386,11 +394,11 @@ namespace Neutron.Controllers
                         Action startListen = null;
 
                         var onResult = new AsyncCallback(result => OnResult(result, startListen, _serialPort, buffer));
-                        _logger.LogDetailAsync("ButtonOpenSerialPort_Click - Task.Run(() => consumer.Start())");
+                        _ = _logger.LogDetailAsync("ButtonOpenSerialPort_Click - Task.Run(() => consumer.Start())");
                         // Task.Run(() => _responseManager.Start());
 
                         startListen = () => _serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, onResult, null);
-                        _logger.LogDetailAsync("ButtonOpenSerialPort_Click - StartListen() ");
+                        _ = _logger.LogDetailAsync("ButtonOpenSerialPort_Click - StartListen() ");
 
                         startListen();
                     }
@@ -398,7 +406,7 @@ namespace Neutron.Controllers
                     {
                         MessageBox.Show($"Error Initializing Serial Port. {ex.Message}");
 
-                        _logger.LogDetailAsync($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
+                        _ = _logger.LogDetailAsync($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
                         _serialPort.Close();
                         ReceivedBlockingCollection.CompleteAdding();
                     }
@@ -433,7 +441,7 @@ namespace Neutron.Controllers
                         //                        return;
                         //                    }
 
-                        //                    _logger.LogDetailAsync(
+                        //                    _ = _logger.LogDetailAsync(
                         //                        $"Start Transmission - RequestBlockingCollection Loop: {broadcast.ByteArrayToStringX2()}");
                         //                    _serialPort.Write(broadcast, 0, broadcast.Length);
                         //                }
@@ -446,7 +454,7 @@ namespace Neutron.Controllers
 
                         //            //while (RequestBlockingCollection.TryTake(out request, 100))
                         //            //{
-                        //            //    _logger.LogDetailAsync(
+                        //            //    _ = _logger.LogDetailAsync(
                         //            //        $"Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
                         //            //    //UpdateTextBox($"Start Transmitting: {request.ByteArrayToStringX2()}");
                         //            //    _serialPort.Write(request, 0, request.Length);
@@ -489,7 +497,7 @@ namespace Neutron.Controllers
                 MessageBox.Show("Display device not found in Hardware Devices.");
             }
 
-            //_logger.LogDetailAsync($"OnResult - startListen()");
+            //_ = _logger.LogDetailAsync($"OnResult - startListen()");
             //startListen();
         }
         private void OnResult(IAsyncResult result, Action startListen, SerialPort serialPort, byte[] buffer)
@@ -503,13 +511,13 @@ namespace Neutron.Controllers
                 var actualLength = _serialPort.BaseStream.EndRead(result);
                 var received = new byte[actualLength];
                 Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
-                _logger.LogDetailAsync($"OnResult: {received.ByteArrayToStringX2()}");
+                _ = _logger.LogDetailAsync($"OnResult: {received.ByteArrayToStringX2()}");
                  Mediator.GetInstance().OnSerialPortWrite(this, $"OnResult False  {received.ByteArrayToStringX2()}");
                 ReceivedBlockingCollection.Add(received);
             }
             catch (IOException ex)
             {
-                _logger.LogDetailAsync($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
+                _ = _logger.LogDetailAsync($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
 
                 Debug.Print($@"IO Exception: {ex.Message}");
                 _serialPort.Close();
@@ -517,7 +525,7 @@ namespace Neutron.Controllers
                 return;
             }
 
-            _logger.LogDetailAsync("OnResult - startListen()");
+            _ = _logger.LogDetailAsync("OnResult - startListen()");
             startListen();
         }
         private bool ValidatePort(string port)
@@ -558,22 +566,22 @@ namespace Neutron.Controllers
         }
         public void SendData(string baseCommand)
         {
-            _logger.LogDetailAsync($"IPTI Controller - SendData - Start");
+            _ = _logger.LogDetailAsync($"IPTI Controller - SendData - Start");
             try
             {
                 var portOpen = false;
                 // Thread.Sleep(100);
                 if (!_serialPort.IsOpen)
                 {
-                    _logger.LogDetailAsync($"IPTI Controller - SendData - Serial Port Is Not Open");
+                    _ = _logger.LogDetailAsync($"IPTI Controller - SendData - Serial Port Is Not Open");
                     if (ConnectToComPort())
                     {
-                        _logger.LogDetailAsync($"IPTI Controller - SendData - Connect to ComPort is TRUE");
+                        _ = _logger.LogDetailAsync($"IPTI Controller - SendData - Connect to ComPort is TRUE");
                         portOpen = true;
                     }
                     else
                     {
-                        _logger.LogDetailAsync($"IPTI Controller - SendData - Com Port Error");
+                        _ = _logger.LogDetailAsync($"IPTI Controller - SendData - Com Port Error");
                         MessageBox.Show("Com Port Error");
                     }
                 }
@@ -581,14 +589,14 @@ namespace Neutron.Controllers
                 {
                     portOpen = true;
                 }
-                _logger.LogDetailAsync($"IPTI Controller - SendData - portOpen is {portOpen}");
+                _ = _logger.LogDetailAsync($"IPTI Controller - SendData - portOpen is {portOpen}");
                 if (portOpen)
                 {
-                    _logger.LogDetailAsync($"IPTI Controller - SendData - portOpen is Open/true");
+                    _ = _logger.LogDetailAsync($"IPTI Controller - SendData - portOpen is Open/true");
                     var command = Models.Global.SOH + baseCommand + ToHex(baseCommand) + Models.Global.ETX;
-                    _logger.LogDetailAsync($"IPTI Controller - SendData - Command: {command}");
+                    _ = _logger.LogDetailAsync($"IPTI Controller - SendData - Command: {command}");
                     var bytes = command.StringToByteArray();
-                    _logger.LogDetailAsync($"IPTI Controller - SendData - Add Command to RequestBlockingCollection");
+                    _ = _logger.LogDetailAsync($"IPTI Controller - SendData - Add Command to RequestBlockingCollection");
                     RequestBlockingCollection.TryAdd(bytes);
                     Mediator.GetInstance().OnSerialPortWrite(this, "Command to Queue - " + command);
                     //_serialPort.Write(command);

@@ -4,9 +4,7 @@ using NeutronData.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using AlliedLogger;
-using Logger = NeutronCore.Global.Logger;
 
 namespace NeutronData.Repositories
 {
@@ -17,7 +15,7 @@ namespace NeutronData.Repositories
 
         public AkaRepository()
         {
-            _logger = Logger.SetupLogger(@"AKARepository");
+            _logger = NeutronCore.Global.Logger.SetupLogger(@"AKARepository");
         }
         
         
@@ -28,7 +26,7 @@ namespace NeutronData.Repositories
         /// <returns>Item or an Empty String</returns>
         public string Get(string aka)
         {
-            _logger.LogDetailAsync($@"AKA Get: {aka}");
+            _ = _logger.LogDetailAsync($@"AKA Get: {aka}");
             var item = string.Empty;
             try
             {
@@ -40,7 +38,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-               _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             return item;
@@ -54,7 +52,7 @@ namespace NeutronData.Repositories
         /// <returns>first AKA or an Empty String</returns>
         public string GetUpc(string item)
         {
-            _logger.LogDetailAsync($@"AKA GetUPC: {item}");
+            _ = _logger.LogDetailAsync($@"AKA GetUPC: {item}");
             var upc = string.Empty;
             try
             {
@@ -69,7 +67,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             return upc;
@@ -82,7 +80,7 @@ namespace NeutronData.Repositories
         /// <returns>List of AKA's</returns>
         public List<string> GetAkas(string item)
         {
-            _logger.LogDetailAsync($@"AKA GetAKAs: {item}");
+            _ = _logger.LogDetailAsync($@"AKA GetAKAs: {item}");
             var list = new List<string>();
             try
             {
@@ -97,7 +95,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             return list;
@@ -107,7 +105,7 @@ namespace NeutronData.Repositories
         // Get an AKA record
         public AkaType GetAka(string aka)
         {
-            _logger.LogDetailAsync($@"AKA GetAka: {aka}");
+            _ = _logger.LogDetailAsync($@"AKA GetAka: {aka}");
             AkaType rec = null;
             try
             {
@@ -118,7 +116,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             return rec;
@@ -128,7 +126,7 @@ namespace NeutronData.Repositories
 
         public void Insert(AkaType aka)
         {
-            _logger.LogDetailAsync($@"AKA Insert Item: {aka.Item}  AKA: {aka.Aka}");   
+            _ = _logger.LogDetailAsync($@"AKA Insert Item: {aka.Item}  AKA: {aka.Aka}");   
             if (aka == null) return;
             try
             {
@@ -137,14 +135,14 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
        // delete aka
        public void Delete(AkaType aka)
        {
-           _logger.LogDetailAsync($@"AKA Delete: {aka}");
+           _ = _logger.LogDetailAsync($@"AKA Delete: {aka}");
            try
            {
                var rec = _context.AkaTypes.Find(aka.Aka);
@@ -156,7 +154,7 @@ namespace NeutronData.Repositories
            }
            catch (Exception ex)
            {
-               _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+               _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
@@ -173,7 +171,7 @@ namespace NeutronData.Repositories
            }
            catch (Exception ex)
            {
-               _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+               _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
@@ -185,7 +183,7 @@ namespace NeutronData.Repositories
            }
            catch (Exception ex)
            {
-               _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+               _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 

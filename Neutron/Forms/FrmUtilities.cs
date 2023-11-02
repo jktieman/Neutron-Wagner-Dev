@@ -20,6 +20,7 @@ using System.Drawing.Printing;
 using System.Globalization;
 using System.IO.Ports;
 using System.Resources;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,8 +114,9 @@ namespace Neutron.Forms
         private readonly Random _randomNumber = new Random();
         private EmailSettings _settings;
         private IDynamicLogger _logger;
+        private readonly ISendEmail _sendEmail;
 
-        public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense)
+        public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense, ISendEmail sendEmail)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -147,6 +149,7 @@ namespace Neutron.Forms
             ComboBoxLoaderStation.DataSource = _repoWorkstations.All();
             ComboBoxLoaderStation.DisplayMember = "Name";
             ComboBoxLoaderStation.ValueMember = "Id";
+            _sendEmail = sendEmail;
         }
 
         private void SetupDeviceForms()
@@ -2876,13 +2879,7 @@ namespace Neutron.Forms
 
         private void ButtonSendTestEmail_Click(object sender, EventArgs e)
         {
-            var emailListing = new List<EmailAddressData>();
-            var email = new EmailAddressData { EmailAddress = TextBoxSendToEmailAddress.Text, Id = 0 };
-            emailListing.Add(email);
-            var emailProcessor = new EmailProcessor(_settings);
-
-            var sendEmail = new SendEmail(emailProcessor, emailListing);
-            sendEmail.Message("This is a test.", new List<string>());
+            _sendEmail.Message(@"Test Message", new StringBuilder("This is a test message."));
         }
 
         private void ButtonCancelEmailServer_Click(object sender, EventArgs e)
