@@ -83,6 +83,8 @@ namespace Neutron.Forms
 
         private readonly GenericRepository<Language> _repoLanguages =
             new GenericRepository<Language>(new NeutronDb());
+        private readonly GenericRepository<LookupTable> _repoLookupTables =
+            new GenericRepository<LookupTable>(new NeutronDb());
 
         private BindingSource _bindingSourceHardwareDevices = new BindingSource();
         private BindingSource _bindingSourceTcp = new BindingSource();
@@ -782,6 +784,12 @@ namespace Neutron.Forms
 
         private void MBSaveVariables_Click(object sender, EventArgs e)
         {
+            SaveVariables();
+            BackToMain();
+        }
+
+        private void SaveVariables()
+        {
             _neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
             _neutronVariables.ShuttleEnabled = CheckBoxShuttleEnabled.Checked;
             _neutronVariables.SendAllPicksToHost = CheckBoxSendAllPicksToHost.Checked;
@@ -839,7 +847,7 @@ namespace Neutron.Forms
             _neutronVariables.RfidEnabledInventory = CheckBoxRfidEnabledInventory.Checked;
             _neutronVariables.RfidEnabledPicking = CheckBoxRfidEnabledPicking.Checked;
             _neutronVariables.BliController = Convert.ToInt32(numericUpDownBliControllerId.Value);
-            
+
             if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
             {
                 _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
@@ -930,6 +938,12 @@ namespace Neutron.Forms
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
+        {
+            SavePrinterSettings();
+            BackToMain();
+        }
+
+        private void SavePrinterSettings()
         {
             DocumentPrinter = new DocumentPrinterPreferences
             {
@@ -1236,10 +1250,7 @@ namespace Neutron.Forms
         {
             try
             {
-                using (var context = new NeutronDb())
-                {
-                    _lookupTables = context.LookupTables.ToList();
-                }
+                _lookupTables = _repoLookupTables.All().ToList();
             }
             catch (Exception ex)
             {
@@ -1771,28 +1782,28 @@ namespace Neutron.Forms
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(_resourceManager.GetString("Message3") + ex.Message + "\n\r" +
+                                MessageBox.Show(_resourceManager.GetString($"Message3") + ex.Message + "\n\r" +
                                                 ex.InnerException);
                             }
                         }
                         else
                         {
-                            MessageBox.Show(_resourceManager.GetString("Message5"));
+                            MessageBox.Show(_resourceManager.GetString($"Message5"));
                         }
                     }
                     else
                     {
-                        MessageBox.Show(_resourceManager.GetString("Message6"));
+                        MessageBox.Show(_resourceManager.GetString($"Message6"));
                     }
                 }
                 else
                 {
-                    MessageBox.Show(_resourceManager.GetString("Message7"));
+                    MessageBox.Show(_resourceManager.GetString($"Message7"));
                 }
             }
             else
             {
-                MessageBox.Show(_resourceManager.GetString("Message8"));
+                MessageBox.Show(_resourceManager.GetString($"Message8"));
             }
         }
 
@@ -1804,7 +1815,7 @@ namespace Neutron.Forms
             {
                 if (input <= 0)
                 {
-                    MessageBox.Show(_resourceManager.GetString("Message14"));
+                    MessageBox.Show(_resourceManager.GetString($"Message14"));
                     return false;
                 }
 
@@ -2713,6 +2724,7 @@ namespace Neutron.Forms
         private void ButtonSaveEmailAddresses_Click(object sender, EventArgs e)
         {
             SaveData();
+            BackToMain();
         }
 
         private void SaveData()
@@ -2840,14 +2852,15 @@ namespace Neutron.Forms
         private void ButtonSaveEmailServer_Click(object sender, EventArgs e)
         {
             SaveSettings();
+            BackToMain();
         }
 
         private void SaveSettings()
         {
             _settings = new EmailSettings
             {
-                WriteAsFile = false,
-                ServerName = TextbBoxServerName.Text,
+                WriteAsFile = true,
+                ServerName = TextBoxServerName.Text,
                 Username = TextBoxUsername.Text,
                 Password = TextBoxPassword.Text,
                 MailToAddress = string.Empty,
@@ -2856,7 +2869,7 @@ namespace Neutron.Forms
                 UseSsl = CheckBoxUseSsl.Checked,
                 ServerPort = Int32.Parse(TextBoxPort.Text),
                 DefaultReplyToAddress = string.Empty,
-                FileLocation = string.Empty,
+                FileLocation = @"C:\Neutron\Email\TestEmail.eml",
                 IsBodyHtml = true
             };
 
@@ -2911,7 +2924,7 @@ namespace Neutron.Forms
             _settings = _jsonData.LoadFile<EmailSettings>();
             if (_settings != null)
             {
-                TextbBoxServerName.Text = _settings.ServerName;
+                TextBoxServerName.Text = _settings.ServerName;
                 TextBoxUsername.Text = _settings.Username;
                 TextBoxPassword.Text = _settings.Password;
                 TextBoxEmailFromAddress.Text = _settings.MailFromAddress;

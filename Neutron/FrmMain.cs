@@ -233,11 +233,16 @@ namespace Neutron
 
         private void LogGeneralError(string message)
         {
-            Task.Run(() => _logger.LogDetailAsync($"Unknown Error: {message}"));
+            Task.Run(() => _logger.LogDetailAsync($"Unknown General Error: {message}"));
+            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            {
+                _sendEmail.Message(message, _logger.LastLogLines());
+            }
         }
 
         private void EmailLoaderError(string message)
         {
+            Task.Run(() => _logger.LogDetailAsync($"Unknown Loader Error: {message}"));
             if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
             {
                 _sendEmail.Message(message, _logger.LastLogLines());

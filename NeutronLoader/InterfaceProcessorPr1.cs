@@ -13,6 +13,7 @@ using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.Models;
 using NeutronData.ModelViews;
+using NeutronEvents;
 using Timer = System.Threading.Timer;
 
 
@@ -56,6 +57,10 @@ namespace NeutronLoader
             _fileProcessor = new Pr1FileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView);
         }
 
+        public void ErrorAlert(string err)
+        {
+            Mediator.GetInstance().OnLoaderError(this, err);
+        }
         public void StartProcessingInterfaceFiles()
         {
             InitBackgroundWorker();

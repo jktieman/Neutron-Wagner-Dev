@@ -28,18 +28,18 @@ namespace NeutronLoader
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
 
-        public WAGFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IDynamicLogger logger,
+        public WAGFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
-            _logger = logger;
             _jsonData = jsonData;
             _workstationView = workstationView;
+            _logger = NeutronCore.Global.Logger.SetupLogger("FileProcessor");
         }
 
         public void LoadFiles(List<FileInfo> files)

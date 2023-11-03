@@ -9,13 +9,13 @@ using SAPServer.Models;
 
 namespace SAPServer
 {
-    public class SapToNovaGoodsIssue
+    public class SapToNeutronGoodsIssue
     {
        // private readonly ISendEmail _sendEmail;
         private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
 
-        public SapToNovaGoodsIssue( IJsonData jsonData, IDynamicLogger logger)
+        public SapToNeutronGoodsIssue( IJsonData jsonData, IDynamicLogger logger)
         {
            // _sendEmail = sendEmail;
             _jsonData = jsonData;
@@ -29,13 +29,13 @@ namespace SAPServer
             try
             {
                 RfcRepository repo = destination.Repository;
-                IRfcFunction sapToNovaList = repo.CreateFunction("ZWM_SAP_TO_NOVA_GOODS_ISSUE");
+                IRfcFunction sapToNeutronList = repo.CreateFunction("ZWM_SAP_TO_NOVA_GOODS_ISSUE");
 
                 var goodsIssueList = new List<GoodsIssue>();
 
-                IRfcTable goodsIssueTable = sapToNovaList.GetTable("LT_SAPNOVA_G");
+                IRfcTable goodsIssueTable = sapToNeutronList.GetTable("LT_SAPNOVA_G");
 
-                sapToNovaList.Invoke(destination);
+                sapToNeutronList.Invoke(destination);
 
                 for (int cuIndex = 0; cuIndex < goodsIssueTable.RowCount; cuIndex++)
                 {

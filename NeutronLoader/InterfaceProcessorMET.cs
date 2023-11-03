@@ -242,7 +242,7 @@ namespace NeutronLoader
             }
         }
 
-        private void ErrorAlert(string err)
+        public void ErrorAlert(string err)
         {
             Mediator.GetInstance().OnLoaderError(this, err);
         }

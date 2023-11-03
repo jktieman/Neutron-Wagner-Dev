@@ -5,20 +5,29 @@ using System.Text;
 using AlliedPostOffice.Abstract;
 using System.Net.Mail;
 using System.Net;
+using System.Windows.Forms;
+using AlliedLogger;
 
 namespace AlliedPostOffice.Concrete
 {
     public class EmailProcessor : IEmailProcessor
     {
         private readonly EmailSettings _emailSettings;
+        private IDynamicLogger _logger;
 
         public EmailProcessor()
         {
-            
+            Init();
         }
         public EmailProcessor(EmailSettings emailSettings)
         {
             _emailSettings = emailSettings;
+            Init();
+        }
+        // initialize with settings
+        private void Init()
+        {
+            _logger = NeutronCore.Global.Logger.SetupLogger("EmailProcessor");
         }
 
         public void ProcessEmail(string subject, string body, List<string> people, Attachment attachment = null)
@@ -69,7 +78,7 @@ namespace AlliedPostOffice.Concrete
                         {
                             mailMessage.Attachments.Add(attachment);
                         }
-                    
+
 
                         //if (attachments != null)
                         //{
@@ -84,19 +93,26 @@ namespace AlliedPostOffice.Concrete
                         //        }
                         //    }
                         //}
-
-                        if (_emailSettings.WriteAsFile)
-                        {
-                            mailMessage.BodyEncoding = Encoding.ASCII;
-                        }
-
                         try
                         {
-                            smtpClient.Send(mailMessage);
-                            System.Threading.Thread.Sleep(500);
+
+                            if (_emailSettings.WriteAsFile)
+                            {
+                                MessageBox.Show($"Email written to file: {_emailSettings.FileLocation}" +
+                                                $"{Environment.NewLine}{mailMessage.Body}");
+                                mailMessage.BodyEncoding = Encoding.ASCII;
+                                //_emailSettings.FileLocation = @"C:\Temp\TestEmail.eml";
+                                File.WriteAllText(_emailSettings.FileLocation, mailMessage.Body);
+
+                            }
+                            else
+                            {
+                                smtpClient.Send(mailMessage);
+                            }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            _logger.LogDetailAsync($"Error Sending Email: {ex.Message}");
                             throw;
                         }
                     }

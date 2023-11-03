@@ -33,18 +33,18 @@ namespace SAPServer
             }
         }
 
-        public SapSystemConnect(SapNovaVariables sapNovaVariables, IDynamicLogger logger)
+        public SapSystemConnect(SapVariables sapVariables, IDynamicLogger logger)
         {
-            _sapServer = sapNovaVariables.SapServer;
-            _username = sapNovaVariables.Username;
-            _password = sapNovaVariables.Password;
-            _appServerHost = sapNovaVariables.AppServerHost;
-            _systemNumber = sapNovaVariables.SystemNumber;
-            _client = sapNovaVariables.Client;
-            _language = sapNovaVariables.Language;
-            _poolSize = sapNovaVariables.PoolSize;
-            _peakConnectionsLimit = sapNovaVariables.PeakConnectionsLimit;
-            _connectionIdleTimeout = sapNovaVariables.ConnectionIdleTimeout;
+            _sapServer = sapVariables.SapServer;
+            _username = sapVariables.Username;
+            _password = sapVariables.Password;
+            _appServerHost = sapVariables.AppServerHost;
+            _systemNumber = sapVariables.SystemNumber;
+            _client = sapVariables.Client;
+            _language = sapVariables.Language;
+            _poolSize = sapVariables.PoolSize;
+            _peakConnectionsLimit = sapVariables.PeakConnectionsLimit;
+            _connectionIdleTimeout = sapVariables.ConnectionIdleTimeout;
             _logger = logger;
         }
 

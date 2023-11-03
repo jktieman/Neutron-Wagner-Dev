@@ -14,6 +14,7 @@ using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.Models;
 using NeutronData.ModelViews;
+using NeutronEvents;
 
 #endregion
 
@@ -57,6 +58,10 @@ namespace NeutronLoader
             _fileProcessor = new TopFileProcessor(_neutronVariables, _neutronLicense,_logger,_jsonData, _workstationView);
         }
 
+        public void ErrorAlert(string err)
+        {
+            Mediator.GetInstance().OnLoaderError(this, err);
+        }
         public void StartProcessingInterfaceFiles()
         {
             InitBackgroundWorker();

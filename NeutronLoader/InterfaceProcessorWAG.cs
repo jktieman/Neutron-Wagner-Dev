@@ -49,27 +49,25 @@ namespace NeutronLoader
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
-       // private readonly ISendEmail _sendEmail;
+        // private readonly ISendEmail _sendEmail;
 
 
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
+            Initialize();
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
-           // _sendEmail = sendEmail;
-            Initialize();
+            // _sendEmail = sendEmail;
+
         }
 
         private void Initialize()
         {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
-            _fileProcessor = new WAGFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView);
-
+            _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
+            // _fileProcessor = new WAGFileProcessor(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
         }
 
         public void StartProcessingInterfaceFiles()
@@ -82,16 +80,29 @@ namespace NeutronLoader
         private async Task LoadOrders()
         {
             if (_loadOrdersBusy) return;
-            _loadOrdersBusy = true;
-           await _logger.LogDetailAsync("Load Orders Testing Waiting 2 Seconds");
 
-            var hostOrderLines = await GetNewOrdersFromSap();
-            if (hostOrderLines.Any())
+            try
             {
-                UpdateNeutronOrders(hostOrderLines);
-            }
+                _loadOrdersBusy = true;
+                await _logger.LogDetailAsync("Load Orders Testing Waiting 2 Seconds");
 
-            _loadOrdersBusy = false;
+                var hostOrderLines = await GetNewOrdersFromSap();
+
+                if (hostOrderLines.Any())
+                {
+                    UpdateNeutronOrders(hostOrderLines);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await _logger.LogDetailAsync($"Load Orders Error. {Environment.NewLine}{ex.Message}");
+                throw new Exception($"Load Orders Error. {Environment.NewLine}{ex.Message}");
+            }
+            finally
+            {
+                _loadOrdersBusy = false;
+            }
         }
 
         private void UpdateNeutronOrders(List<HostOrderLine> hostOrderLines)
@@ -166,7 +177,7 @@ namespace NeutronLoader
             try
             {
                 // get records from SAP Server
-               // var sapService = new SAPService(_sendEmail);
+
                 var sapService = new SAPService(_jsonData);
 
             }
@@ -181,60 +192,60 @@ namespace NeutronLoader
 
         //private List<HostOrderLine> GetNewOrdersSql()
         //{
-            //try
-            //{
-            //    using (var context = new HighJumpContext())
-            //    {
-            //        //try 3 times to get equal count
-            //        for (var i = 0; i < 3; i++)
-            //        {
-            //            _logger.Log("Try Number " + i + " to get equal counts.");
-            //            var newRecords = context.t_al_host_carousel_outbound.Where(o => o.status == "N")
-            //                .OrderBy(o => o.container_label).ToList();
-            //            Thread.Sleep(1000);
-            //            var newRecordsSecondPass = context.t_al_host_carousel_outbound.Where(o => o.status == "N").ToList();
+        //try
+        //{
+        //    using (var context = new HighJumpContext())
+        //    {
+        //        //try 3 times to get equal count
+        //        for (var i = 0; i < 3; i++)
+        //        {
+        //            _logger.Log("Try Number " + i + " to get equal counts.");
+        //            var newRecords = context.t_al_host_carousel_outbound.Where(o => o.status == "N")
+        //                .OrderBy(o => o.container_label).ToList();
+        //            Thread.Sleep(1000);
+        //            var newRecordsSecondPass = context.t_al_host_carousel_outbound.Where(o => o.status == "N").ToList();
 
-            //            // if there are zero records return an empty list
-            //            if (!newRecords.Any() && !newRecordsSecondPass.Any())
-            //            {
-            //                _logger.Log("No records in HighJump.");
-            //                return orderLines;
-            //            }
+        //            // if there are zero records return an empty list
+        //            if (!newRecords.Any() && !newRecordsSecondPass.Any())
+        //            {
+        //                _logger.Log("No records in HighJump.");
+        //                return orderLines;
+        //            }
 
-            //            if (newRecords.Count() != 0 && newRecords.Count() == newRecordsSecondPass.Count())
-            //            {
+        //            if (newRecords.Count() != 0 && newRecords.Count() == newRecordsSecondPass.Count())
+        //            {
 
-            //                _logger.Log("Counts Match.  " + newRecords.Count + " Records to Process.");
-            //                foreach (var rec in newRecords)
-            //                {
-            //                    // Check for existing order
-            //                    var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.container_label.Substring(10, 10)).FirstOrDefault();
+        //                _logger.Log("Counts Match.  " + newRecords.Count + " Records to Process.");
+        //                foreach (var rec in newRecords)
+        //                {
+        //                    // Check for existing order
+        //                    var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.container_label.Substring(10, 10)).FirstOrDefault();
 
-            //                    if (existingOrder != null) continue;
+        //                    if (existingOrder != null) continue;
 
-            //                    var h = new HostOrderLine();
-            //                    h.OrderNumber = rec.container_label;
-            //                    h.Sku = rec.item_number;
-            //                    h.Quantity = rec.pick_quantity;
-            //                    h.Description = rec.item_description;
-            //                    h.CountryOfOrigin = rec.country_of_origin;
-            //                    h.Priority = "00";
-            //                    orderLines.Add(h);
-            //                }
-            //                UpdateOutboundToComplete(newRecords);
-            //                break;
-            //            }
-            //        }
-            //    }
+        //                    var h = new HostOrderLine();
+        //                    h.OrderNumber = rec.container_label;
+        //                    h.Sku = rec.item_number;
+        //                    h.Quantity = rec.pick_quantity;
+        //                    h.Description = rec.item_description;
+        //                    h.CountryOfOrigin = rec.country_of_origin;
+        //                    h.Priority = "00";
+        //                    orderLines.Add(h);
+        //                }
+        //                UpdateOutboundToComplete(newRecords);
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    var msg = "Get New Orders " + ex.Message + "  " + ex.InnerException;
-            //    _logger.Log(msg);
-            //    ErrorAlert(msg);
-            //}
-            //return orderLines;
+        //}
+        //catch (Exception ex)
+        //{
+        //    var msg = "Get New Orders " + ex.Message + "  " + ex.InnerException;
+        //    _logger.Log(msg);
+        //    ErrorAlert(msg);
+        //}
+        //return orderLines;
         //}
 
         private void UpdateOutboundToComplete(List<t_al_host_carousel_outbound> newRecords)
@@ -263,18 +274,17 @@ namespace NeutronLoader
             }
         }
 
-        private void ErrorAlert(string err)
+        public void ErrorAlert(string err)
         {
             Mediator.GetInstance().OnLoaderError(this, err);
         }
 
         public void StopProcessingInterfaceFiles()
         {
-            if (_timer != null) _timer.Dispose();
-
+            _timer?.Dispose();
         }
 
-        public void RunLoaderOnce() => LoadOrders();
+        public void RunLoaderOnce() => _ = LoadOrders();
 
         //public FileInfo[] GetFiles()
         //{

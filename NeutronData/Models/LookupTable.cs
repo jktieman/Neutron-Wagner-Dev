@@ -1,6 +1,8 @@
-﻿namespace NeutronData.Models
+﻿using NeutronData.Interfaces;
+
+namespace NeutronData.Models
 {
-    public class LookupTable
+    public class LookupTable : IEntity
     { 
         public int Id { get; set; }
         public string Name { get; set; }

@@ -15,5 +15,6 @@ namespace AlliedPostOffice
         void StartUpSingleRunUpload(List<string> logLastLines);
         void StartUpSap();
         void ShutDownSap();
+        void ErrorAlert(string err);
     }
 }

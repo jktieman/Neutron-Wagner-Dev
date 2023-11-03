@@ -2,15 +2,7 @@
 {
     public class SapVariables
     {
-
-        private string _sapServer = "WAQ";
-
-        public string SapServer
-        {
-            get => _sapServer;
-            set => _sapServer = value;
-        }
-
+        public string SapServer { get; set; } = "WAQ";
         public string Email1 { get; set; }
         public string Email2 { get; set; }
         public string Email3 { get; set; }

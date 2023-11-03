@@ -173,5 +173,9 @@ namespace AlliedPostOffice
                 , attachment);
 
         }
+        public void ErrorAlert(string err)
+        {
+            Mediator.GetInstance().OnLoaderError(this, err);
+        }
     }
 }

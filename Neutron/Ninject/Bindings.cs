@@ -91,7 +91,7 @@ namespace Neutron.Ninject
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProliteManager>().To<ProliteManager>().InSingletonScope();
             Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
-            Bind<ISAPService>().To<SAPService>().InSingletonScope();
+            Bind<ISapService>().To<SAPService>().InSingletonScope();
         }
     }
 }

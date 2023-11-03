@@ -1,6 +1,6 @@
 ﻿namespace SAPServer.Models
 {
-    public class SapNovaVariables
+    public class zzSapVariables
     {
 
         private string _sapServer = "WAQ";
@@ -22,7 +22,7 @@
         public string Username { get; set; }
         public string Password { get; set; }
         public string LogFileFolder { get; set; }
-        public string NovaBusyFile { get; set; }
+        public string NeutronBusyFile { get; set; }
         public string SapBusyFile { get; set; }
         public string AppName { get; set; }
         public string AppServerHost { get; set; }

@@ -1,11 +1,11 @@
-﻿using AlliedLogger;
-using SAPServer.Models;
+﻿using SAPServer.Models;
 
 namespace SAPServer
 {
-    public interface ISAPService
+    public interface ISapService
     {
         void Init();
-        void ProcessRecords(SapNovaVariables sapNovaVariables);
+        void ProcessRecords(SapVariables sapVariables);
+        void ErrorAlert(string err);
     }
 }

@@ -96,6 +96,8 @@
             this.LabelCheckPrinter = new System.Windows.Forms.Label();
             this.MBPrintSetUpBack = new MetroFramework.Controls.MetroButton();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.numericUpDownBliControllerId = new System.Windows.Forms.NumericUpDown();
+            this.LabelBliControllerId = new System.Windows.Forms.Label();
             this.ButtonRefreshSlotNames = new System.Windows.Forms.Button();
             this.ComboBoxLoaderStation = new System.Windows.Forms.ComboBox();
             this.LabelLoaderStation = new System.Windows.Forms.Label();
@@ -429,7 +431,7 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.TextBoxPort = new System.Windows.Forms.TextBox();
-            this.TextbBoxServerName = new System.Windows.Forms.TextBox();
+            this.TextBoxServerName = new System.Windows.Forms.TextBox();
             this.TextBoxDescription = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -447,14 +449,13 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.numericUpDownBliControllerId = new System.Windows.Forms.NumericUpDown();
-            this.LabelBliControllerId = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
             this.GroupBoxLabelMargins.SuspendLayout();
             this.GroupBoxDocumentMargins.SuspendLayout();
             this.Settings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBliControllerId)).BeginInit();
             this.GroupBoxPickMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).BeginInit();
             this.HardwareDevices.SuspendLayout();
@@ -505,7 +506,6 @@
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBliControllerId)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -1142,6 +1142,40 @@
             this.Settings.Size = new System.Drawing.Size(1227, 636);
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
+            // 
+            // numericUpDownBliControllerId
+            // 
+            this.numericUpDownBliControllerId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDownBliControllerId.Location = new System.Drawing.Point(467, 590);
+            this.numericUpDownBliControllerId.Maximum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.numericUpDownBliControllerId.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownBliControllerId.Name = "numericUpDownBliControllerId";
+            this.numericUpDownBliControllerId.Size = new System.Drawing.Size(54, 22);
+            this.numericUpDownBliControllerId.TabIndex = 53;
+            this.numericUpDownBliControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericUpDownBliControllerId.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // LabelBliControllerId
+            // 
+            this.LabelBliControllerId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBliControllerId.Location = new System.Drawing.Point(346, 592);
+            this.LabelBliControllerId.Name = "LabelBliControllerId";
+            this.LabelBliControllerId.Size = new System.Drawing.Size(118, 16);
+            this.LabelBliControllerId.TabIndex = 54;
+            this.LabelBliControllerId.Text = "BLI Controller Id";
+            this.LabelBliControllerId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ButtonRefreshSlotNames
             // 
@@ -3126,7 +3160,7 @@
             // 
             this.MBPrintLookup.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPrintLookup.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintLookup.Location = new System.Drawing.Point(146, 10);
+            this.MBPrintLookup.Location = new System.Drawing.Point(34, 10);
             this.MBPrintLookup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintLookup.Name = "MBPrintLookup";
             this.MBPrintLookup.Size = new System.Drawing.Size(126, 76);
@@ -3178,13 +3212,14 @@
             // 
             this.MBAddNew.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBAddNew.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBAddNew.Location = new System.Drawing.Point(10, 10);
+            this.MBAddNew.Location = new System.Drawing.Point(179, 10);
             this.MBAddNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBAddNew.Name = "MBAddNew";
             this.MBAddNew.Size = new System.Drawing.Size(126, 76);
             this.MBAddNew.TabIndex = 0;
             this.MBAddNew.Text = "New";
             this.MBAddNew.UseSelectable = true;
+            this.MBAddNew.Visible = false;
             this.MBAddNew.Click += new System.EventHandler(this.MBAddNew_Click);
             // 
             // Stations
@@ -5185,7 +5220,7 @@
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox1.Controls.Add(this.TextBoxPort);
-            this.groupBox1.Controls.Add(this.TextbBoxServerName);
+            this.groupBox1.Controls.Add(this.TextBoxServerName);
             this.groupBox1.Controls.Add(this.TextBoxDescription);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -5209,13 +5244,13 @@
             this.TextBoxPort.TabIndex = 1;
             this.TextBoxPort.Text = "587";
             // 
-            // TextbBoxServerName
+            // TextBoxServerName
             // 
-            this.TextbBoxServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.TextbBoxServerName.Location = new System.Drawing.Point(236, 88);
-            this.TextbBoxServerName.Name = "TextbBoxServerName";
-            this.TextbBoxServerName.Size = new System.Drawing.Size(359, 26);
-            this.TextbBoxServerName.TabIndex = 1;
+            this.TextBoxServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TextBoxServerName.Location = new System.Drawing.Point(236, 88);
+            this.TextBoxServerName.Name = "TextBoxServerName";
+            this.TextBoxServerName.Size = new System.Drawing.Size(359, 26);
+            this.TextBoxServerName.TabIndex = 1;
             // 
             // TextBoxDescription
             // 
@@ -5387,40 +5422,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // numericUpDownBliControllerId
-            // 
-            this.numericUpDownBliControllerId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDownBliControllerId.Location = new System.Drawing.Point(467, 590);
-            this.numericUpDownBliControllerId.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.numericUpDownBliControllerId.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownBliControllerId.Name = "numericUpDownBliControllerId";
-            this.numericUpDownBliControllerId.Size = new System.Drawing.Size(54, 22);
-            this.numericUpDownBliControllerId.TabIndex = 53;
-            this.numericUpDownBliControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericUpDownBliControllerId.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // LabelBliControllerId
-            // 
-            this.LabelBliControllerId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBliControllerId.Location = new System.Drawing.Point(346, 592);
-            this.LabelBliControllerId.Name = "LabelBliControllerId";
-            this.LabelBliControllerId.Size = new System.Drawing.Size(118, 16);
-            this.LabelBliControllerId.TabIndex = 54;
-            this.LabelBliControllerId.Text = "BLI Controller Id";
-            this.LabelBliControllerId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -5447,6 +5448,7 @@
             this.GroupBoxDocumentMargins.PerformLayout();
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBliControllerId)).EndInit();
             this.GroupBoxPickMethod.ResumeLayout(false);
             this.GroupBoxPickMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownLogLevel)).EndInit();
@@ -5511,7 +5513,6 @@
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBliControllerId)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -5887,7 +5888,7 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox TextBoxPort;
-        private System.Windows.Forms.TextBox TextbBoxServerName;
+        private System.Windows.Forms.TextBox TextBoxServerName;
         private System.Windows.Forms.TextBox TextBoxDescription;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;

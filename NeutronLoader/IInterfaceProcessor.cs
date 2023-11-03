@@ -5,5 +5,6 @@
         void StartProcessingInterfaceFiles();
         void StopProcessingInterfaceFiles();
         void RunLoaderOnce();
+        void ErrorAlert(string err);
     }
 }
