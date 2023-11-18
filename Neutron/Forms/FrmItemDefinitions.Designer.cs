@@ -43,11 +43,10 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Listing = new System.Windows.Forms.TabPage();
-            this.CheckBoxAllStations = new System.Windows.Forms.CheckBox();
             this.LabelFindDescription = new System.Windows.Forms.Label();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
             this.MButtonNew = new MetroFramework.Controls.MetroButton();
-            this.MBPrintItemDefinitions = new MetroFramework.Controls.MetroButton();
+            this.ButtonSaveToExcel = new MetroFramework.Controls.MetroButton();
             this.MButtonViewEdit = new MetroFramework.Controls.MetroButton();
             this.ButtonClear = new System.Windows.Forms.Button();
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
@@ -151,6 +150,12 @@
             this.LabelNewArea = new System.Windows.Forms.Label();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
+            this.ProgressBarItemDefinitions = new System.Windows.Forms.ProgressBar();
+            this.ComboBoxAreaNumber = new System.Windows.Forms.ComboBox();
+            this.ButtonLoadFromExcel = new MetroFramework.Controls.MetroButton();
+            this.LabelSelectArea = new System.Windows.Forms.Label();
+            this.BackgroundWorkerItemDefinitions = new System.ComponentModel.BackgroundWorker();
+            this.CheckBoxUseSelectedItems = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Listing.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -170,10 +175,10 @@
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(913, 10);
+            this.mlUserInfo.Location = new System.Drawing.Point(878, 10);
             this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(345, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(380, 30);
             this.mlUserInfo.TabIndex = 10;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -220,11 +225,15 @@
             // Listing
             // 
             this.Listing.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.Listing.Controls.Add(this.CheckBoxAllStations);
+            this.Listing.Controls.Add(this.CheckBoxUseSelectedItems);
+            this.Listing.Controls.Add(this.LabelSelectArea);
+            this.Listing.Controls.Add(this.ButtonLoadFromExcel);
+            this.Listing.Controls.Add(this.ComboBoxAreaNumber);
+            this.Listing.Controls.Add(this.ProgressBarItemDefinitions);
             this.Listing.Controls.Add(this.LabelFindDescription);
             this.Listing.Controls.Add(this.TextBoxFind);
             this.Listing.Controls.Add(this.MButtonNew);
-            this.Listing.Controls.Add(this.MBPrintItemDefinitions);
+            this.Listing.Controls.Add(this.ButtonSaveToExcel);
             this.Listing.Controls.Add(this.MButtonViewEdit);
             this.Listing.Controls.Add(this.ButtonClear);
             this.Listing.Controls.Add(this.MButtonClose);
@@ -238,25 +247,13 @@
             this.Listing.TabIndex = 0;
             this.Listing.Text = "Listing";
             // 
-            // CheckBoxAllStations
-            // 
-            this.CheckBoxAllStations.AutoSize = true;
-            this.CheckBoxAllStations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxAllStations.ForeColor = System.Drawing.Color.White;
-            this.CheckBoxAllStations.Location = new System.Drawing.Point(530, 73);
-            this.CheckBoxAllStations.Name = "CheckBoxAllStations";
-            this.CheckBoxAllStations.Size = new System.Drawing.Size(76, 17);
-            this.CheckBoxAllStations.TabIndex = 21;
-            this.CheckBoxAllStations.Text = "All Areas";
-            this.CheckBoxAllStations.UseVisualStyleBackColor = true;
-            this.CheckBoxAllStations.CheckedChanged += new System.EventHandler(this.CheckBoxAllStations_CheckedChanged);
-            // 
             // LabelFindDescription
             // 
+            this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFindDescription.ForeColor = System.Drawing.Color.White;
-            this.LabelFindDescription.Location = new System.Drawing.Point(433, 43);
+            this.LabelFindDescription.Location = new System.Drawing.Point(647, 43);
             this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(278, 20);
+            this.LabelFindDescription.Size = new System.Drawing.Size(271, 20);
             this.LabelFindDescription.TabIndex = 18;
             this.LabelFindDescription.Text = "Search For";
             this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -264,10 +261,10 @@
             // TextBoxFind
             // 
             this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(433, 10);
+            this.TextBoxFind.Location = new System.Drawing.Point(645, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(278, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(221, 29);
             this.TextBoxFind.TabIndex = 3;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
@@ -275,34 +272,34 @@
             // MButtonNew
             // 
             this.MButtonNew.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonNew.Location = new System.Drawing.Point(6, 10);
+            this.MButtonNew.Location = new System.Drawing.Point(11, 10);
             this.MButtonNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonNew.Name = "MButtonNew";
-            this.MButtonNew.Size = new System.Drawing.Size(135, 76);
+            this.MButtonNew.Size = new System.Drawing.Size(125, 76);
             this.MButtonNew.TabIndex = 0;
             this.MButtonNew.Text = "New";
             this.MButtonNew.UseSelectable = true;
             this.MButtonNew.Click += new System.EventHandler(this.MButtonNew_Click);
             // 
-            // MBPrintItemDefinitions
+            // ButtonSaveToExcel
             // 
-            this.MBPrintItemDefinitions.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintItemDefinitions.Location = new System.Drawing.Point(288, 10);
-            this.MBPrintItemDefinitions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBPrintItemDefinitions.Name = "MBPrintItemDefinitions";
-            this.MBPrintItemDefinitions.Size = new System.Drawing.Size(135, 76);
-            this.MBPrintItemDefinitions.TabIndex = 2;
-            this.MBPrintItemDefinitions.Text = "Save To File";
-            this.MBPrintItemDefinitions.UseSelectable = true;
-            this.MBPrintItemDefinitions.Click += new System.EventHandler(this.MBPrintItemDefinitions_Click);
+            this.ButtonSaveToExcel.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.ButtonSaveToExcel.Location = new System.Drawing.Point(456, 10);
+            this.ButtonSaveToExcel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ButtonSaveToExcel.Name = "ButtonSaveToExcel";
+            this.ButtonSaveToExcel.Size = new System.Drawing.Size(153, 26);
+            this.ButtonSaveToExcel.TabIndex = 2;
+            this.ButtonSaveToExcel.Text = "Save To Excel";
+            this.ButtonSaveToExcel.UseSelectable = true;
+            this.ButtonSaveToExcel.Click += new System.EventHandler(this.ButtonSaveToExcel_Click);
             // 
             // MButtonViewEdit
             // 
             this.MButtonViewEdit.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonViewEdit.Location = new System.Drawing.Point(147, 10);
+            this.MButtonViewEdit.Location = new System.Drawing.Point(142, 10);
             this.MButtonViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonViewEdit.Name = "MButtonViewEdit";
-            this.MButtonViewEdit.Size = new System.Drawing.Size(135, 76);
+            this.MButtonViewEdit.Size = new System.Drawing.Size(125, 76);
             this.MButtonViewEdit.TabIndex = 1;
             this.MButtonViewEdit.Text = "View/Edit";
             this.MButtonViewEdit.UseSelectable = true;
@@ -311,10 +308,10 @@
             // ButtonClear
             // 
             this.ButtonClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClear.Location = new System.Drawing.Point(717, 12);
+            this.ButtonClear.Location = new System.Drawing.Point(884, 10);
             this.ButtonClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClear.Name = "ButtonClear";
-            this.ButtonClear.Size = new System.Drawing.Size(34, 38);
+            this.ButtonClear.Size = new System.Drawing.Size(34, 29);
             this.ButtonClear.TabIndex = 4;
             this.ButtonClear.Text = "X";
             this.ButtonClear.UseVisualStyleBackColor = true;
@@ -324,10 +321,10 @@
             // 
             this.MButtonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MButtonClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonClose.Location = new System.Drawing.Point(1091, 8);
+            this.MButtonClose.Location = new System.Drawing.Point(1094, 8);
             this.MButtonClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonClose.Name = "MButtonClose";
-            this.MButtonClose.Size = new System.Drawing.Size(135, 76);
+            this.MButtonClose.Size = new System.Drawing.Size(125, 76);
             this.MButtonClose.TabIndex = 7;
             this.MButtonClose.Text = "Home";
             this.MButtonClose.UseSelectable = true;
@@ -336,10 +333,10 @@
             // MButtonSearch
             // 
             this.MButtonSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonSearch.Location = new System.Drawing.Point(758, 10);
+            this.MButtonSearch.Location = new System.Drawing.Point(963, 8);
             this.MButtonSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSearch.Name = "MButtonSearch";
-            this.MButtonSearch.Size = new System.Drawing.Size(135, 76);
+            this.MButtonSearch.Size = new System.Drawing.Size(125, 76);
             this.MButtonSearch.TabIndex = 5;
             this.MButtonSearch.Text = "Search";
             this.MButtonSearch.UseSelectable = true;
@@ -381,7 +378,7 @@
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(1223, 533);
+            this.DataGridView1.Size = new System.Drawing.Size(1225, 514);
             this.DataGridView1.TabIndex = 6;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             this.DataGridView1.DoubleClick += new System.EventHandler(this.DataGridView1_DoubleClick);
@@ -1500,20 +1497,81 @@
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(976, 44);
+            this.LabelRecordCount.Location = new System.Drawing.Point(973, 46);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 35);
+            this.LabelRecordCount.Size = new System.Drawing.Size(279, 30);
             this.LabelRecordCount.TabIndex = 19;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // LabelStationName
             // 
             this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName.Location = new System.Drawing.Point(29, 54);
+            this.LabelStationName.Location = new System.Drawing.Point(29, 46);
             this.LabelStationName.Name = "LabelStationName";
             this.LabelStationName.Size = new System.Drawing.Size(279, 30);
             this.LabelStationName.TabIndex = 21;
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ProgressBarItemDefinitions
+            // 
+            this.ProgressBarItemDefinitions.Location = new System.Drawing.Point(4, 611);
+            this.ProgressBarItemDefinitions.Name = "ProgressBarItemDefinitions";
+            this.ProgressBarItemDefinitions.Size = new System.Drawing.Size(1225, 23);
+            this.ProgressBarItemDefinitions.TabIndex = 22;
+            // 
+            // ComboBoxAreaNumber
+            // 
+            this.ComboBoxAreaNumber.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBoxAreaNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxAreaNumber.FormattingEnabled = true;
+            this.ComboBoxAreaNumber.Location = new System.Drawing.Point(273, 11);
+            this.ComboBoxAreaNumber.Name = "ComboBoxAreaNumber";
+            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(177, 32);
+            this.ComboBoxAreaNumber.TabIndex = 24;
+            this.ComboBoxAreaNumber.SelectedIndexChanged += new System.EventHandler(this.ComboBoxAreaNumber_SelectedIndexChanged);
+            // 
+            // ButtonLoadFromExcel
+            // 
+            this.ButtonLoadFromExcel.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.ButtonLoadFromExcel.Location = new System.Drawing.Point(456, 61);
+            this.ButtonLoadFromExcel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ButtonLoadFromExcel.Name = "ButtonLoadFromExcel";
+            this.ButtonLoadFromExcel.Size = new System.Drawing.Size(153, 26);
+            this.ButtonLoadFromExcel.TabIndex = 25;
+            this.ButtonLoadFromExcel.Text = "Load From Excel";
+            this.ButtonLoadFromExcel.UseSelectable = true;
+            this.ButtonLoadFromExcel.Click += new System.EventHandler(this.ButtonLoadFromExcel_Click);
+            // 
+            // LabelSelectArea
+            // 
+            this.LabelSelectArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSelectArea.ForeColor = System.Drawing.Color.White;
+            this.LabelSelectArea.Location = new System.Drawing.Point(284, 47);
+            this.LabelSelectArea.Name = "LabelSelectArea";
+            this.LabelSelectArea.Size = new System.Drawing.Size(149, 20);
+            this.LabelSelectArea.TabIndex = 26;
+            this.LabelSelectArea.Text = "Select Area";
+            this.LabelSelectArea.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // BackgroundWorkerItemDefinitions
+            // 
+            this.BackgroundWorkerItemDefinitions.WorkerReportsProgress = true;
+            this.BackgroundWorkerItemDefinitions.WorkerSupportsCancellation = true;
+            this.BackgroundWorkerItemDefinitions.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerItemDefinitions_DoWork);
+            this.BackgroundWorkerItemDefinitions.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorkerItemDefinitions_ProgressChanged);
+            this.BackgroundWorkerItemDefinitions.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerItemDefinitions_RunWorkerCompleted);
+            // 
+            // CheckBoxUseSelectedItems
+            // 
+            this.CheckBoxUseSelectedItems.AutoSize = true;
+            this.CheckBoxUseSelectedItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseSelectedItems.ForeColor = System.Drawing.Color.White;
+            this.CheckBoxUseSelectedItems.Location = new System.Drawing.Point(466, 38);
+            this.CheckBoxUseSelectedItems.Name = "CheckBoxUseSelectedItems";
+            this.CheckBoxUseSelectedItems.Size = new System.Drawing.Size(143, 20);
+            this.CheckBoxUseSelectedItems.TabIndex = 27;
+            this.CheckBoxUseSelectedItems.Text = "Use Selected Items";
+            this.CheckBoxUseSelectedItems.UseVisualStyleBackColor = true;
             // 
             // FrmItemDefinitions
             // 
@@ -1640,10 +1698,9 @@
         private System.Windows.Forms.Label LabelNewStorageType;
         private System.Windows.Forms.PictureBox PictureBoxNewImage;
         private System.Windows.Forms.PictureBox PictureBoxViewEditImage;
-        private MetroFramework.Controls.MetroButton MBPrintItemDefinitions;
+        private MetroFramework.Controls.MetroButton ButtonSaveToExcel;
         private MetroFramework.Controls.MetroButton MbSaveAsDefault;
         private MetroFramework.Controls.MetroButton MbLoadDefault;
-        private System.Windows.Forms.CheckBox CheckBoxAllStations;
         private System.Windows.Forms.Label LabelViewEditChangeStationWarning;
         private System.Windows.Forms.Label LabelNewDefaultImage;
         private System.Windows.Forms.Label LabelViewEditDefaultImage;
@@ -1669,5 +1726,11 @@
         private MetroFramework.Controls.MetroButton MbAddAka;
         private System.Windows.Forms.TextBox TextBoxAka;
         private MetroFramework.Controls.MetroButton MbDeleteAka;
+        private System.Windows.Forms.ProgressBar ProgressBarItemDefinitions;
+        private System.Windows.Forms.ComboBox ComboBoxAreaNumber;
+        private MetroFramework.Controls.MetroButton ButtonLoadFromExcel;
+        private System.Windows.Forms.Label LabelSelectArea;
+        private System.ComponentModel.BackgroundWorker BackgroundWorkerItemDefinitions;
+        private System.Windows.Forms.CheckBox CheckBoxUseSelectedItems;
     }
 }

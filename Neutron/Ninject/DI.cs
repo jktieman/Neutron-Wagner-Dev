@@ -11,6 +11,7 @@ using Ninject;
 using Ninject.Parameters;
 using AlliedPostOffice;
 using JsonManager;
+using Neutron.Forms;
 using NeutronData.Interfaces;
 using NeutronData.PrintModels;
 
@@ -104,13 +105,17 @@ namespace Neutron.Ninject
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense));
         }
-        //public static T Create<T>(
-        //    NeutronVariables neutronVariables)
-        //{
-        //    return _kernel.Get<T>(
-        //        new ConstructorArgument("neutronVariables", neutronVariables)
-        //        , new ConstructorArgument("neutronLicense", neutronLicense));
-        //}
+
+        public static FrmUtilities CreateUtilitiesForm(
+            NeutronVariables neutronVariables
+            , NeutronLicense neutronLicense
+            , SendEmail sendEmail)
+        {
+            return _kernel.Get<FrmUtilities>(
+                new ConstructorArgument("neutronVariables", neutronVariables)
+                , new ConstructorArgument("neutronLicense", neutronLicense)
+                , new ConstructorArgument("sendEmail", sendEmail));
+        }
 
 
         public static T Create<T>(

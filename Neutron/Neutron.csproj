@@ -39,7 +39,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -833,10 +833,6 @@
       <Project>{e5c92f26-e834-4913-9482-c8af45f358ea}</Project>
       <Name>HanelCommands</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\VS2019\Projects\Hanel\Hanel_DC\Hanel_DC.csproj">
-      <Project>{156add50-d792-4d9b-897d-f4b38aed9234}</Project>
-      <Name>Hanel_DC</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
       <Project>{b600904b-1b59-47bf-8884-5a4982d8b2fe}</Project>
       <Name>HighJump</Name>
@@ -868,6 +864,14 @@
     <ProjectReference Include="..\EthernetTransmitter\EthernetTransmitter.csproj">
       <Project>{cd460f9c-0b52-49ac-a17c-cee7def43220}</Project>
       <Name>EthernetTransmitter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExcelManager\ExcelManager.csproj">
+      <Project>{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}</Project>
+      <Name>ExcelManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanel_DC\Hanel_DC.csproj">
+      <Project>{156add50-d792-4d9b-897d-f4b38aed9234}</Project>
+      <Name>Hanel_DC</Name>
     </ProjectReference>
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>

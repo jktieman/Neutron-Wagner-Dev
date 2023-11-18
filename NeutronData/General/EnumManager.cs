@@ -28,7 +28,7 @@ namespace NeutronData.General
         {
             //Run this one time at startup
             //break down the ActionCode Enum into a List and save to the database.
-            _logger.LogDetailAsync("Save Action Codes to Database Started");
+         _ = _logger.LogDetailAsync("Save Action Codes to Database Started");
 
             var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode)))
                 .Select(r => new ActionCodeItem { Id = (int)r, Name = r.GetEnumDescription() }).ToList();
@@ -67,14 +67,14 @@ namespace NeutronData.General
             }
             catch (Exception ex)
             {
-               _logger.LogDetailAsync($"Save Action Codes to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
+            _ = _logger.LogDetailAsync($"Save Action Codes to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
                                 $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
             }
         }
 
         public void SaveLineStatusToDatabase()
         {
-            _logger.LogDetailAsync("Save Line Status to Database Started");
+         _ = _logger.LogDetailAsync("Save Line Status to Database Started");
 
             //Run this one time at startup
             //break down the ActionCode Enum into a List and save to the database.
@@ -114,14 +114,14 @@ namespace NeutronData.General
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($@"Save Line Status to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
+             _ = _logger.LogDetailAsync($@"Save Line Status to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
                                        $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
             }
         }
 
         //public void SaveLocationTypesToDatabase()
         //{
-        //    _logger.LogDetailAsync("Save Location Types Enum to Database Started");
+        // _ = _logger.LogDetailAsync("Save Location Types Enum to Database Started");
 
         //    //Run this one time at startup
         //    //break down the LocationType Enum into a List and save to the database.
@@ -161,7 +161,7 @@ namespace NeutronData.General
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.LogDetailAsync($@"Save LocationTypeEnum to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
+        //     _ = _logger.LogDetailAsync($@"Save LocationTypeEnum to Database Failed.  {Environment.NewLine} {ex.Message}{Environment.NewLine}" +
         //                               $"{ex.InnerException}{Environment.NewLine} {ex.StackTrace}");
         //    }
 

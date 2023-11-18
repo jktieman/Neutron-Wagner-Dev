@@ -85,7 +85,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
             return recs;
         }
@@ -569,7 +569,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get Available Replen Orders Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get Available Replen Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -995,7 +995,7 @@ namespace NeutronData.Repositories
 
         public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField)
         {
-            _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}");
+         _ = _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}");
             var recs = new List<AvailableReplenOrdersView>();
 
             try
@@ -1013,7 +1013,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;

@@ -92,7 +92,7 @@ namespace Neutron.Builders.Rules.BayControllerRules
             if (result.ReturnValue.Length >= 3)
             {
                 string s = result.ReturnValue.Substring(0, 1) == "1" ? "Present" : "Absent or Not Responding";
-                result.Message = ($"Status of the main control OC: {s}\r\n OC modules: {result.ReturnValue.Substring(1)}");
+                result.Message = ($"Status of the main control OC: {s}{Environment.NewLine} OC modules: {result.ReturnValue.Substring(1)}");
             }
             else
             {

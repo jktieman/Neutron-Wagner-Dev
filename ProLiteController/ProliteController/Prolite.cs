@@ -67,7 +67,7 @@ namespace ProliteController
 
             var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
 
-            _logger.LogDetailAsync($"TurnOn: {cmd}");
+         _ = _logger.LogDetailAsync($"TurnOn: {cmd}");
 
             return cmd;
         }
@@ -79,7 +79,7 @@ namespace ProliteController
         public string Clear()
         {
             var cmd = string.Empty;
-            _logger.LogDetailAsync($"Clear");
+         _ = _logger.LogDetailAsync($"Clear");
            
             if (Enabled)
             {
@@ -96,7 +96,7 @@ namespace ProliteController
 
             var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
 
-            _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
+         _ = _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
 
             return cmd;
         }
@@ -108,7 +108,7 @@ namespace ProliteController
 
             var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
 
-            _logger.LogDetailAsync($"TurnOn HOT: {cmd}");
+         _ = _logger.LogDetailAsync($"TurnOn HOT: {cmd}");
 
             return cmd;
         }

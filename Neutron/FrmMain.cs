@@ -73,10 +73,10 @@ namespace Neutron
         private readonly IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
-        
+
         private CompressService _compressService;
 
-        private ISendEmail _sendEmail = null;
+        private SendEmail _sendEmail;
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
         private HistoryManager _historyManager;
@@ -146,6 +146,8 @@ namespace Neutron
 
             Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
+            Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
+
             //Log on to Neutron
             LogOn();
 
@@ -153,7 +155,7 @@ namespace Neutron
 
             // Set up the workstation
             //var result = Task.Run(InitForm).Result;
-           // var result = Task.Run(InitForm);
+            // var result = Task.Run(InitForm);
             //if (result == false)
             //{
             //    MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
@@ -184,7 +186,7 @@ namespace Neutron
             await _logger.LogDetailAsync("Init Started");
             var result = await InitForm();
             await _logger.LogDetailAsync($"Init Result: {result}");
-
+            GlobalVar.Testing = true;
             if (result == false)
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
@@ -198,26 +200,6 @@ namespace Neutron
                 _compressService.StartCompressService();
                 await _logger.LogDetailAsync("Compress Service Started");
             }
-
-
-            
-            
-            //var id = Thread.CurrentThread.ManagedThreadId;
-            //Trace.WriteLine("FrmMain thread: " + id);
-
-            //if (_workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor) return;
-            ////todo  Better way to run auto compress
-            //if (!_neutronVariables.UseAutoCompress) return;
-            //// Run every RunCompressInterval time 1 hour (3600000)
-            //var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
-            //var compressTimer = new Timer(interval);
-
-            //compressTimer.Elapsed += OnRunCompress;
-            //compressTimer.AutoReset = true;
-            //compressTimer.Enabled = true;
-
-            //_compressTimer = compressTimer;
-
         }
 
         protected override CreateParams CreateParams
@@ -233,16 +215,29 @@ namespace Neutron
 
         private void LogGeneralError(string message)
         {
-            Task.Run(() => _logger.LogDetailAsync($"Unknown General Error: {message}"));
-            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-            {
-                _sendEmail.Message(message, _logger.LastLogLines());
-            }
+            Task.Run(() => _logger.LogDetailAsync($"General Error: {message}"));
+            MessageBox.Show($"Alert: {message}", "Error Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            
+            //if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            //{
+            //    _sendEmail.Message(message, _logger.LastLogLines());
+            //}
+        }
+
+        private void DisplayMessage(string message)
+        {
+            //Task.Run(() => _logger.LogDetailAsync($"Display Message: {message}"));
+            MessageBox.Show($"{message}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            //if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            //{
+            //    _sendEmail.Message(message, _logger.LastLogLines());
+            //}
         }
 
         private void EmailLoaderError(string message)
         {
-            Task.Run(() => _logger.LogDetailAsync($"Unknown Loader Error: {message}"));
+            Task.Run(() => _logger.LogDetailAsync($"Loader Error: {message}"));
             if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
             {
                 _sendEmail.Message(message, _logger.LastLogLines());
@@ -419,7 +414,7 @@ namespace Neutron
                             if (_neutronVariables.LoaderStation == _workstationView.WorkstationId)
                             {
                                 _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, _workstationView);
-                                
+
                                 _startStopUploadManager = DI.Create<StartStopUploadManager>(_neutronVariables, _neutronLicense, _workstationView);
                                 if (StartLoader())
                                 {
@@ -453,7 +448,7 @@ namespace Neutron
                             {
                                 await SetupHardwareDevices();
 
-                               // GlobalVar.ProliteManager.TurnOn(1,1,1,1);
+                                // GlobalVar.ProliteManager.TurnOn(1,1,1,1);
 
                                 //var setupShuttle = SetupShuttle();
                                 //if (setupShuttle == true)
@@ -519,7 +514,7 @@ namespace Neutron
                 foreach (var device in hardwareDevices)
                 {
                     await _logger.LogDetailAsync($"Loading Hardware Device: {device.Name}");
-                    int key;
+
                     // get the device type
                     switch (device.DeviceTypeId)
                     {
@@ -531,7 +526,7 @@ namespace Neutron
 
                                 break;
                             }
-                        
+
                         // DeviceType = 2 or Carousel
                         case (int)DeviceTypeEnum.Carousel:
                             {
@@ -539,7 +534,7 @@ namespace Neutron
                                 _workstationView.HardwareDevices.Add(device);
                                 break;
                             }
-                        
+
                         // DeviceType = 3 or Rack
                         case (int)DeviceTypeEnum.Rack:   //Rack
                             {
@@ -561,29 +556,34 @@ namespace Neutron
                                         GlobalVar.Displays =
                                             new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device);
                                         //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
-                                         var result = GlobalVar.Displays != null;
+                                        var result = GlobalVar.Displays != null;
 
-                                         TestBli();
-                                         await Task.Delay(3000);
+                                        if (GlobalVar.Testing)
+                                        {
+                                            Mediator.GetInstance().OnDisplayMessage(this, $"Display Testing");
+                                        
+                                            await TestBli();
+                                        await Task.Delay(3000);
                                         //await _logger.LogDetailAsync($"IPTI Displays Result: {result}");
                                         await GlobalVar.Displays.TurnOnAllBli();
                                         //await _logger.LogDetailAsync($"IPTI Displays Turned On");
                                         await Task.Delay(5000);
-                                       // await _logger.LogDetailAsync($"IPTI Displays Turn Off");
+                                        // await _logger.LogDetailAsync($"IPTI Displays Turn Off");
                                         await GlobalVar.Displays.ClearAllBli();
-                                       // await _logger.LogDetailAsync($"IPTI Displays Turned Off");
+                                        // await _logger.LogDetailAsync($"IPTI Displays Turned Off");
+                                        }
                                     }
                                 }
 
                                 break;
                             }
-                        
+
                         // DeviceType = 5 or Not Used
                         case 5:   //Not Used
                             {
                                 break;
                             }
-                        
+
                         // DeviceType = 6 or Remstar Displays
                         case (int)DeviceTypeEnum.RemstarDisplays:   //Remstar BPI/SHI
                             {
@@ -591,7 +591,7 @@ namespace Neutron
                                 _workstationView.HardwareDevices.Add(device);
                                 break;
                             }
-                        
+
                         // DeviceType = 7 or Blastzone
                         case (int)DeviceTypeEnum.Blastzone: //Blastzone
                             {
@@ -603,7 +603,7 @@ namespace Neutron
                                     {
                                         _ = Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
                                         GlobalVar.Displays =
-                                            new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device );
+                                            new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device);
                                         var result = GlobalVar.Displays != null;
                                     }
                                 }
@@ -646,7 +646,7 @@ namespace Neutron
                                 }
                                 break;
                             }
-                       
+
                         // DeviceType = 10 or ProLite
                         case (int)DeviceTypeEnum.ProLite:
                             {
@@ -657,7 +657,7 @@ namespace Neutron
                                 {
                                     _workstationView.ProliteManager = new ProliteManager(device, _neutronVariables);
                                 }
-                                
+
                                 //if (GlobalVar.ProliteManager == null)
                                 //{
                                 //    GlobalVar.ProliteManager = new ProliteManager(device, _neutronVariables);
@@ -698,7 +698,6 @@ namespace Neutron
 
         private void SetupEmail()
         {
-            _sendEmail = null;
             if (_neutronVariables.EnableEmailNotification)
             {
                 try
@@ -706,12 +705,11 @@ namespace Neutron
                     var emailServerSettings = _jsonData.LoadFile<EmailSettings>();
                     var emailListing = _jsonData.LoadFile<List<EmailAddressData>>();
                     var emailProcessor = new EmailProcessor(emailServerSettings);
-
                     _sendEmail = new SendEmail(emailProcessor, emailListing);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Unable to setup Email Notification. {Environment.NewLine}{ex.Message}");
+                    LogGeneralError($"Unable to setup Email Notification. {Environment.NewLine}{ex.Message}");
                 }
             }
         }
@@ -832,7 +830,7 @@ namespace Neutron
                                 {
                                     var seconds = 250 * counter / 1000;
                                     Task.Run(() =>
-                                        _logger.LogDetailAsync(
+                                     _ = _logger.LogDetailAsync(
                                             $"Unable to initialize display controller for {seconds} seconds."));
                                     if (counter >= 20)
                                     {
@@ -840,7 +838,7 @@ namespace Neutron
                                             $"Unable to initialize display controller after {seconds} seconds.");
 
                                         Task.Run(() =>
-                                            _logger.LogDetailAsync(
+                                         _ = _logger.LogDetailAsync(
                                                 $"Unable to initialize display controller after {seconds} seconds."));
                                         break;
                                     }
@@ -850,7 +848,7 @@ namespace Neutron
                                 }
 
                                 Task.Run(() =>
-                                    _logger.LogDetailAsync(
+                                 _ = _logger.LogDetailAsync(
                                         $"Display Controller Initialized. Status Code: {GlobalVar.Displays.GetInitStatus()}"));
 
                             }
@@ -1304,7 +1302,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities]) return;
             Hide();
-            using (var frm = DI.Create<FrmUtilities>(_neutronVariables, _neutronLicense))
+            using (var frm = DI.CreateUtilitiesForm(_neutronVariables, _neutronLicense, _sendEmail))
             {
                 frm.ShowDialog();
                 Show();
@@ -1329,7 +1327,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers]) return;
             Hide();
-            using (MetroForm frm = new FrmProductivity(_jsonData))
+            using (MetroForm frm = new FrmProductivity(_jsonData, _neutronVariables))
             {
                 frm.ShowDialog();
                 Show();
@@ -1411,9 +1409,12 @@ namespace Neutron
             }
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e)
+        private async void ButtonClose_Click(object sender, EventArgs e)
         {
-           _compressService.ExitFlag = true;
+            if (_compressService != null)
+            {
+                await _compressService.StopCompressService();
+            }
             Close();
         }
 
@@ -1511,10 +1512,10 @@ namespace Neutron
 
         private async void button1_Click(object sender, EventArgs e)
         {
-           TestBli();
+            await TestBli();
         }
 
-        private async void TestBli()
+        private async Task TestBli()
         {
             await _logger.LogDetailAsync($"button1_Click IPTI Displays ");
             await GlobalVar.Displays.TurnOnAllBli();

@@ -32,13 +32,6 @@ namespace Neutron.Classes
         private IDynamicLogger _logger;
         private static System.Timers.Timer _compressTimer = new System.Timers.Timer();
         static int alarmCounter = 1;
-        
-        /// <summary>
-        /// Controls the CompressService from running.
-        /// Set to false to stop the CompressService from running.
-        /// </summary>        
-        public bool ExitFlag = false;
-
 
         public bool CompressRunning { get; private set; }
 
@@ -56,8 +49,14 @@ namespace Neutron.Classes
 
         public void StartCompressService()
         {
-            // Run every RunCompressInterval time 1 hour (3600000)
-           // var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
+            // Set up a timer that triggers every 
+            // The RunCompressInterval is in hours, so the
+            // calculation is hours * 60 minutes * 60 seconds * 1000 milliseconds   
+            // Testing
+            // interval is set to seconds for testing
+            // set back to hours for production
+
+            // var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
             var interval = _neutronVariables.RunCompressInterval * 1000;
 
             _compressTimer.Interval = interval;
@@ -67,45 +66,55 @@ namespace Neutron.Classes
             _compressTimer.Start();
         }
 
+        /// <summary>
+        /// Stop the CompressService.
+        /// </summary>
+        /// <returns></returns>
+        public async Task StopCompressService()
+        {
+            await _logger.LogDetailAsync("Stop Compress Service");
+            _compressTimer.Stop();
+            _compressTimer.Enabled = false;
+            _compressTimer.Dispose();
+        }
+
         private async Task OnRunCompress()
         {
-            while (!ExitFlag)
+            await _logger.LogDetailAsync($"On Run Compress: {_compressTimer.Interval}");
+            // Do not run if already running
+            if (CompressRunning) return;
+
+            try
             {
-                try
+                await _logger.LogDetailAsync("Compress Started");
+                CompressRunning = true;
+                var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
+                var days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
+                //Run once each day
+                if (days > 0)
                 {
-                    // Do not run if already running
-                    if (CompressRunning) return;
-                    await _logger.LogDetailAsync("Compress Started");
-                    CompressRunning = true;
-                    var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
-                    var days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
-                    //Run once each day
-                    if (days >= 0)
-                    {
-                        var daysToKeep = _neutronVariables.CompressDays * -1;
-                        var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
+                    var daysToKeep = _neutronVariables.CompressDays * -1;
+                    var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
 
-                        await CompressOrders(compressBefore);
+                    await CompressOrders(compressBefore);
 
-                        Thread.Sleep(2000);
-                        await CompressReplenOrders(compressBefore);
+                    Thread.Sleep(2000);
+                    await CompressReplenOrders(compressBefore);
 
-                        compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
-                        _jsonData.SaveFile(compressLastRunDate);
+                    compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
+                    _jsonData.SaveFile(compressLastRunDate);
 
-                    }
-                    CompressRunning = false;
                 }
-                catch (Exception ex)
-                {
-                    await _logger.LogDetailAsync($"Error Running Compress {ex.Message}");
-                }
-                finally
-                {
-                    await _logger.LogDetailAsync("Compress Finished");
-                    CompressRunning = false;
-                }
-                Thread.Sleep(1000);
+                CompressRunning = false;
+            }
+            catch (Exception ex)
+            {
+                await _logger.LogDetailAsync($"Error Running Compress {ex.Message}");
+            }
+            finally
+            {
+                await _logger.LogDetailAsync("Compress Finished");
+                CompressRunning = false;
             }
         }
 
@@ -113,7 +122,7 @@ namespace Neutron.Classes
         {
             CompressRunning = true;
             // Compress Normal Orders
-             await _logger.LogDetailAsync($"Compress Orders Before: {compressBefore}");
+            await _logger.LogDetailAsync($"Compress Orders Before: {compressBefore}");
             var completedOrders = _ordersRepository.GetOrderViews("6", "").ToList();
             var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
             await _logger.LogDetailAsync($"Orders to Compress: {ordersToCompress.Count}");
@@ -194,7 +203,7 @@ namespace Neutron.Classes
             try
             {
 
-               await ArchiveReplenOrders(replenOrdersToCompress);
+                await ArchiveReplenOrders(replenOrdersToCompress);
 
                 using (var context = new NeutronDb())
                 {

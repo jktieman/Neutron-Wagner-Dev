@@ -31,7 +31,7 @@ namespace NeutronData.Repositories
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+        //     _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
         //    }
 
         //    return recs;
@@ -40,7 +40,7 @@ namespace NeutronData.Repositories
         //{
         //    var recs = new List<ItemDefinitionView>();
         //    if (workstationId == 0) return recs;
-        //    _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
+        // _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
         //    try
         //    {
         //        using (var context = new NeutronDb())
@@ -52,9 +52,9 @@ namespace NeutronData.Repositories
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+        //     _ = _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
         //    }
-        //    _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
+        // _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
         //    return recs;
         //}
 
@@ -62,7 +62,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<ItemDefinitionView>();
             if (string.IsNullOrEmpty(item)) return recs;
-            _logger.LogDetailAsync(msg: "Get All Item Definition Views by Item -- Start");
+         _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views by Item -- Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -73,16 +73,16 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All Item Definition Views By Item Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All Item Definition Views By Item Error. " + ex.Message + " " + ex.InnerException);
             }
-            _logger.LogDetailAsync("Get All Item Definition Views By Item -- End: " + recs.Count.ToString());
+         _ = _logger.LogDetailAsync("Get All Item Definition Views By Item -- End: " + recs.Count.ToString());
             return recs;
         }
         public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByArea(string find = "", int areaid = 0)
         {
             var recs = new List<ItemDefinitionView>();
             if (areaid == 0) return recs;
-            _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
+         _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -94,9 +94,9 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
             }
-            _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
+         _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
             return recs;
         }
 
@@ -110,7 +110,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<ItemDefinitionView>();
 
-                _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
+             _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
                 try
                 {
                     using (var context = new NeutronDb())
@@ -123,9 +123,9 @@ namespace NeutronData.Repositories
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+                 _ = _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
                 }
-                _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
+             _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
             
             return recs;
         }
@@ -135,7 +135,7 @@ namespace NeutronData.Repositories
             var recs = new List<NewItemView>();
 
 
-            _logger.LogDetailAsync(msg: "Get All New Item Views Start");
+         _ = _logger.LogDetailAsync(msg: "Get All New Item Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -148,9 +148,9 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All New Item Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All New Item Views Error. " + ex.Message + " " + ex.InnerException);
             }
-            _logger.LogDetailAsync("Get All New Item Views End: " + recs.Count.ToString());
+         _ = _logger.LogDetailAsync("Get All New Item Views End: " + recs.Count.ToString());
 
             return recs;
         }

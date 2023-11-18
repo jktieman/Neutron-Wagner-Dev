@@ -28,7 +28,7 @@ namespace NeutronLoader
        // private readonly IWorkstationAreaRepository _workstationAreaRepository;
         private readonly Workstation _rackStation;
         private readonly int _rackStationId;
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
 
         public HostFileWAG(NeutronLicense neutronLicense, NeutronVariables neutronVariables
             , IWorkstationRepository workstationRepository , Workstation rackStation = null)
@@ -40,12 +40,7 @@ namespace NeutronLoader
             _rackStation = rackStation;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
-
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"HostFile";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-            
+            _logger = NeutronCore.Global.Logger.SetupLogger("HostFile");
             var rackStationIsNull = true;
             // SAP requires a 9 for the Off Carousel station number
             if (_rackStation == null)
@@ -59,18 +54,18 @@ namespace NeutronLoader
             }
             //_workstationRepository = new WorkstationRepository(_logger, _workstationAreaRepository, _blastzone, _prolite);
 
-            _logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
+            _ = _logger.LogDetailAsync($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 
         public bool CreateHostFile(List<History> historyRecs)
         {
-            _logger.Log($"49 CreateHostFile with HistoryRecs");
+            _ = _logger.LogDetailAsync($"49 CreateHostFile with HistoryRecs");
             _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
 
             if (_hostUploadDirectory == null) return false;
             if (_usePr1Processor)
             {
-                _logger.Log($"61 HostFile List<History> Calling SaveUploadDatFile HistoryRecs");
+                _ = _logger.LogDetailAsync($"61 HostFile List<History> Calling SaveUploadDatFile HistoryRecs");
                 if (SaveUploadDatFile(historyRecs))
                 {
                     return true;
@@ -78,7 +73,7 @@ namespace NeutronLoader
             }
             else
             {
-                _logger.Log($"66 HostFile List<HostOrder> Calling SaveFile groups");
+                _ = _logger.LogDetailAsync($"66 HostFile List<HostOrder> Calling SaveFile groups");
                 SaveFile(historyRecs);
                 return true;
             }
@@ -90,14 +85,14 @@ namespace NeutronLoader
         {
             historyRecs = historyRecs.OrderBy(o => o.Ord1).ThenBy(o => o.Item).ToList();
             var groups = historyRecs.GroupBy(g => g.Ord1).ToList();
-            _logger.Log("76 SaveFile History Groups");
+            _ = _logger.LogDetailAsync("76 SaveFile History Groups");
             if (!Directory.Exists(_hostUploadDirectory.FullName))
             {
                 Directory.CreateDirectory(_hostUploadDirectory.FullName);
             }
 
             var fullName = $"{_hostUploadDirectory.FullName}{GetFileName(string.Empty)}";
-            _logger.Log($"83 SaveFile History Groups: {fullName}");
+            _ = _logger.LogDetailAsync($"83 SaveFile History Groups: {fullName}");
             try
             {
                 using (var tw = new StreamWriter(fullName, true))
@@ -117,7 +112,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"103 Save History Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"103 Save History Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
         }
@@ -125,8 +120,8 @@ namespace NeutronLoader
 
         private string GetCsvString(History item)
         {
-            _logger.Log($"111 GetCsvString history: {item.Ord1}");
-            _logger.Log($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
+            _ = _logger.LogDetailAsync($"111 GetCsvString history: {item.Ord1}");
+            _ = _logger.LogDetailAsync($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
             var costcenter = "";
             var sb = new StringBuilder();
 
@@ -175,20 +170,20 @@ namespace NeutronLoader
             //sb.Insert(index: 118, value: loc);
 
 
-            _logger.Log($"173 GetCsvString History result: {sb.ToString()}");
+            _ = _logger.LogDetailAsync($"173 GetCsvString History result: {sb.ToString()}");
             return sb.ToString();
         }
 
         //private string GetCsvString(History item)
         //{
-        //    _logger.Log($"111 GetCsvString history: {item.Ord1}");
-        //    _logger.Log($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
+        //    _ = _logger.LogDetailAsync($"111 GetCsvString history: {item.Ord1}");
+        //    _ = _logger.LogDetailAsync($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
 
         //    var sb = new StringBuilder();
 
         //    if (_neutronVariables.UsePr1StyleOutputProcessor)
         //    {
-        //        _logger.Log($"119  UsePr1Processor: true");
+        //        _ = _logger.LogDetailAsync($"119  UsePr1Processor: true");
 
         //        var loc = @"        ";
         //        if (item.OrderDetailInfo.Length >= 8)
@@ -213,7 +208,7 @@ namespace NeutronLoader
         //        sb.Insert(index: 118, value: loc);
         //    }
 
-        //    _logger.Log($"173 GetCsvString History result: {sb.ToString()}");
+        //    _ = _logger.LogDetailAsync($"173 GetCsvString History result: {sb.ToString()}");
         //    return sb.ToString();
         //}
 
@@ -228,7 +223,7 @@ namespace NeutronLoader
             if (!string.IsNullOrEmpty(fileName))
             {
                 var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
-                _logger.Log($"187 FullName: {fullName}");
+                _ = _logger.LogDetailAsync($"187 FullName: {fullName}");
                 try
                 {
                     using (var tw = new StreamWriter(fullName, append: true))
@@ -242,12 +237,12 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"211 Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    _ = _logger.LogDetailAsync($"211 Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             else
             {
-                _logger.Log($"221 Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync($"221 Go to Options and enter an upload file name.");
             }
 
             return result;
@@ -255,7 +250,7 @@ namespace NeutronLoader
 
         private string GetUploadDatRecord(History history)
         {
-            _logger.Log($"179 History Record- Item: {history.Item}");
+            _ = _logger.LogDetailAsync($"179 History Record- Item: {history.Item}");
             var result = string.Empty;
             try
             {
@@ -265,45 +260,45 @@ namespace NeutronLoader
                 string info;
                 string empName;
 
-                _logger.Log($"Get Upload Dat Record - Begin Try");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - Begin Try");
                 var stat = _workstationRepository.GetStation(history.AreaId);
-                _logger.Log($"Get Upload Dat Record - 1");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - 1");
                 // if the workstationId is the same as the Rack Station Id (8 is the normal Rack Id)
                 // then change the StationId that goes back to Saint Francis to 9 instead of 8
                 // otherwise just use the workstationId
                 var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
-                _logger.Log($"Get Upload Dat Record - 2");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - 2");
                 order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
 
-                _logger.Log($"Get Upload Dat Record Order: {order} - 3");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Order: {order} - 3");
                 invoice = history.Ord2 == null ? string.Empty.PadRight(10) : history.Ord2.PadRight(10);
-                _logger.Log($"Get Upload Dat Record Invoice: {invoice} - 3");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Invoice: {invoice} - 3");
                 costCenter = history.CostCenter ?? string.Empty;
-                _logger.Log($"Get Upload Dat Record CostCenter {costCenter} - 4");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record CostCenter {costCenter} - 4");
                 var orderDetailInfo = string.Empty;
                 // Rightmost 24 characters of the OrderDetailInfo field
                 info = history.OrderDetailInfo ?? string.Empty;
-                _logger.Log($"Get Upload Dat Record Info {info} - 5");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Info {info} - 5");
                 if (!string.IsNullOrEmpty(info))
                 {
-                    _logger.Log($"Get Upload Dat Record - 6");
+                    _ = _logger.LogDetailAsync($"Get Upload Dat Record - 6");
                     if (info.Length >= 24)
                     {
-                        _logger.Log($"Get Upload Dat Record - 7");
+                        _ = _logger.LogDetailAsync($"Get Upload Dat Record - 7");
                         orderDetailInfo = info.Substring(info.Length - 24);
-                        _logger.Log($"Get Upload Dat Record - 8");
+                        _ = _logger.LogDetailAsync($"Get Upload Dat Record - 8");
                     }
-                    _logger.Log($"Get Upload Dat Record OrderDetailInfo {orderDetailInfo} - 9");
+                    _ = _logger.LogDetailAsync($"Get Upload Dat Record OrderDetailInfo {orderDetailInfo} - 9");
                 }
-                _logger.Log($"Get Upload Dat Record - 10");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - 10");
                 empName = string.Empty;
                 if (history.EmpId != null)
                 {
                     var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
-                    _logger.Log($"Get Upload Dat Record - 11");
+                    _ = _logger.LogDetailAsync($"Get Upload Dat Record - 11");
                     if (emp != null)
                     {
-                        _logger.Log($"Get Upload Dat Record - 12");
+                        _ = _logger.LogDetailAsync($"Get Upload Dat Record - 12");
                         empName = emp.Firstname.PadRight(10);
                     }
                 }
@@ -327,11 +322,11 @@ namespace NeutronLoader
                 sb.Length = 154;
 
                 result = sb.ToString();
-                _logger.Log($"{result}");
+                _ = _logger.LogDetailAsync($"{result}");
             }
             catch (Exception ex)
             {
-                _logger.Log($"227 Get Upload Dat Record - Item: {history.Item}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                _ = _logger.LogDetailAsync($"227 Get Upload Dat Record - Item: {history.Item}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
 
             return result;
@@ -351,7 +346,7 @@ namespace NeutronLoader
         //TMG
         private string GetFileName(string hostOrderTypeCode)
         {
-            _logger.Log($"419 Get File Name Company Code: {_neutronLicense.CompanyCode}");
+            _ = _logger.LogDetailAsync($"419 Get File Name Company Code: {_neutronLicense.CompanyCode}");
             string result = string.Empty;
             if (_neutronLicense.CompanyCode == "TOP")
             {

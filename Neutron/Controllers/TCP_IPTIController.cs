@@ -58,7 +58,7 @@ namespace Neutron.Controllers
 
         private readonly WorkstationView _workstation;
 
-        private DynamicLogger _logger;
+        private IDynamicLogger _logger;
 
         private TcpTransmitter _transmitter;
 
@@ -88,7 +88,7 @@ namespace Neutron.Controllers
             if (_shiEnabled) GetTowerLevelInfoList();
 
             _responseManager = new ResponseManager(ResponseBlockingCollection, RequestBlockingCollection,
-                ReceivedBlockingCollection, _logger)
+                ReceivedBlockingCollection)
             { Transmit = false };
 
             IptiControllerInit();

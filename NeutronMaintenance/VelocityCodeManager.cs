@@ -8,30 +8,31 @@ namespace NeutronMaintenance
 {
     public class VelocityCodeManager : IVelocityCodeManager
     {
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode;
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
 
         /// <summary>
         /// Constructor
         /// </summary>
         public VelocityCodeManager()
         {
-            _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
         }
 
         /// <summary>
         /// Get a VelocityCode by the Name property
         /// </summary>
         /// <param name="name">The name of the <see cref="VelocityCode"/></param>
-        /// <returns>VelocityCode or null</returns>
+        /// <returns>VelocityCode or First VelocityCode in Table</returns>
         public VelocityCode Get(string name)
         {
             var rec = string.IsNullOrEmpty(name) ? null : _repoVelocityCode.All().FirstOrDefault(r => r.Name == name);
-            if (rec == null)
+            if (rec != null) return rec;
             {
-
-                // return the default VelocityCode
+                var seq = _repoVelocityCode.All().Select(r => r.Sequence).Max();
+                var newRec = new VelocityCode { Name = name, Sequence = (seq + 10)};
+                _repoVelocityCode.Insert(newRec);
+                rec = newRec;
             }
-            return null;
+            return rec;
         }
 
         /// <summary>

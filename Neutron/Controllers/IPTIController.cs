@@ -58,7 +58,7 @@ namespace Neutron.Controllers
 
         private readonly WorkstationView _workstation;
 
-        private DynamicLogger _logger;
+        private IDynamicLogger _logger;
 
         private SerialPort _serialPort;
         public bool Transmit { get; set; }
@@ -85,7 +85,7 @@ namespace Neutron.Controllers
             if (_shiEnabled) GetTowerLevelInfoList();
 
             _responseManager = new ResponseManager(ResponseBlockingCollection, RequestBlockingCollection,
-                ReceivedBlockingCollection, _logger)
+                ReceivedBlockingCollection)
             { Transmit = false };
 
             IptiControllerInit();
@@ -116,22 +116,22 @@ namespace Neutron.Controllers
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Close Serial Port Exception: {ex.Message} \r\n {ex.InnerException} "));
+              _ =  Task.Run(() => _logger.LogDetailAsync($"Close Serial Port Exception: {ex.Message} {Environment.NewLine} {ex.InnerException} "));
             }
         }
 
         public async Task ClearAllBli()
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");
+            await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");
             if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI Enabled");
+            await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI Enabled");
             foreach (var bli in _bliList)
             {
-                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off:  {bli.BLI_Address}");
+                await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off:  {bli.BLI_Address}");
                 SendData(bli.TurnOff);
-                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
+                await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - SendData Turn Off Return");
             }
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
+            await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
         }
         public void ShowBlastzone(int bayControllerId, int address, int beacon, string text)
         {
@@ -406,7 +406,7 @@ namespace Neutron.Controllers
                     {
                         MessageBox.Show($"Error Initializing Serial Port. {ex.Message}");
 
-                        _ = _logger.LogDetailAsync($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
+                        _ = _logger.LogDetailAsync($"OnResult IOException : {ex.Message} {Environment.NewLine} {ex.InnerException?.Message}");
                         _serialPort.Close();
                         ReceivedBlockingCollection.CompleteAdding();
                     }
@@ -517,7 +517,7 @@ namespace Neutron.Controllers
             }
             catch (IOException ex)
             {
-                _ = _logger.LogDetailAsync($"OnResult IOException : {ex.Message} \r\n {ex.InnerException?.Message}");
+                _ = _logger.LogDetailAsync($"OnResult IOException : {ex.Message} {Environment.NewLine} {ex.InnerException?.Message}");
 
                 Debug.Print($@"IO Exception: {ex.Message}");
                 _serialPort.Close();

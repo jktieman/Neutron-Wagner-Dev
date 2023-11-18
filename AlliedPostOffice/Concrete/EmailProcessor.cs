@@ -32,6 +32,7 @@ namespace AlliedPostOffice.Concrete
 
         public void ProcessEmail(string subject, string body, List<string> people, Attachment attachment = null)
         {
+
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.EnableSsl = _emailSettings.UseSsl;
@@ -56,7 +57,8 @@ namespace AlliedPostOffice.Concrete
                             _emailSettings.MailFromAddress
                             , email
                             , subject
-                            , body) {IsBodyHtml = _emailSettings.IsBodyHtml};
+                            , body)
+                        { IsBodyHtml = _emailSettings.IsBodyHtml };
 
 
                         //Reply to Supervisor
@@ -100,20 +102,24 @@ namespace AlliedPostOffice.Concrete
                             {
                                 MessageBox.Show($"Email written to file: {_emailSettings.FileLocation}" +
                                                 $"{Environment.NewLine}{mailMessage.Body}");
+                             _ = _logger.LogDetailAsync($"Email written to file: {_emailSettings.FileLocation}{Environment.NewLine}{mailMessage.Body}");
                                 mailMessage.BodyEncoding = Encoding.ASCII;
-                                //_emailSettings.FileLocation = @"C:\Temp\TestEmail.eml";
                                 File.WriteAllText(_emailSettings.FileLocation, mailMessage.Body);
-
                             }
                             else
                             {
                                 smtpClient.Send(mailMessage);
                             }
                         }
+                        catch (SmtpException ex)
+                        {
+                         _ = _logger.LogDetailAsync($"Error Sending Email: {ex.Message}");
+                            throw new SmtpException($"SMTP Error Sending Email: {ex.Message}");
+                        }
                         catch (Exception ex)
                         {
-                            _logger.LogDetailAsync($"Error Sending Email: {ex.Message}");
-                            throw;
+                         _ = _logger.LogDetailAsync($"Error Sending Email: {ex.Message}");
+                            throw new Exception($"Error Sending Email: {ex.Message}");
                         }
                     }
                 }

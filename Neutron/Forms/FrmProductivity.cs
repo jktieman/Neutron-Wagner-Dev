@@ -37,6 +37,7 @@ namespace Neutron.Forms
         private DateTime _fromDate;
         private DateTime _toDate;
         private readonly IJsonData _jsonData;
+        private readonly NeutronVariables _neutronVariables;
         private DocumentPrinterPreferences _documentPrinter;
         private ProductivityGroup _currentGroup = null;
         private bool _formInitialized;
@@ -55,9 +56,10 @@ namespace Neutron.Forms
         private bool _checkAllUsers = false;
         private bool _clearAllUsers = false;
 
-        public FrmProductivity(IJsonData jsonData)
+        public FrmProductivity(IJsonData jsonData, NeutronVariables neutronVariables)
         {
             _jsonData = jsonData;
+            _neutronVariables = neutronVariables;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
@@ -740,7 +742,7 @@ namespace Neutron.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} \r\n {ex.InnerException}");
+                    MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             return details;
@@ -767,7 +769,7 @@ namespace Neutron.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} \r\n {ex.InnerException}");
+                    MessageBox.Show($"Error Connecting to SQL Server (ALL).  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             return summary;
@@ -921,7 +923,6 @@ namespace Neutron.Forms
             var totalOrders = TextBoxTotalOrdersSummary.Text.ParseInt();
             var summaryList = new List<ProductivitySummary>();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
-            var neutronVariables = _jsonData.LoadFile<NeutronVariables>();
             foreach (var item in _bindingSourceSummary)
             {
                 var rec = ((ObjectView<ProductivitySummary>)item).Object;
@@ -930,7 +931,7 @@ namespace Neutron.Forms
                 rec.TotalOrders = totalOrders;
                 summaryList.Add(rec);
             }
-            _documentToPrint.PrintSummary(summaryList, _documentPrinter, neutronVariables.PrintPreview);
+            _documentToPrint.PrintSummary(summaryList, _documentPrinter, _neutronVariables.PrintPreview);
         }
         private void ButtonPrintDetail_Click(object sender, EventArgs e)
         {
@@ -946,7 +947,6 @@ namespace Neutron.Forms
                 _bindingSourceDetail = new BindingSource { DataSource = blv };
                 var detailList = new List<ProductivityDetail>();
                 _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
-                var neutronVariables = _jsonData.LoadFile<NeutronVariables>();
                 foreach (var det in _bindingSourceDetail)
                 {
                     var rec = ((ObjectView<ProductivityDetail>)det).Object;
@@ -955,7 +955,7 @@ namespace Neutron.Forms
                     rec.TotalOrders = totalOrders;
                     detailList.Add(rec);
                 }
-                _documentToPrint.PrintDetail(detailList, _documentPrinter, neutronVariables.PrintPreview);
+                _documentToPrint.PrintDetail(detailList, _documentPrinter, _neutronVariables.PrintPreview);
             }
         }
         private void DateTimePicker_Enter(object sender, EventArgs e)

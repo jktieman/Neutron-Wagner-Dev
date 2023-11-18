@@ -50,7 +50,7 @@ namespace SAPServer
                     goodsReceiptList.Add(goodsReceipt);
                 }
 
-                _logger.Log($"Goods Receipt Records Retrieved From SAP: {goodsReceiptList.Count}");
+                _ = _logger.LogDetailAsync($"Goods Receipt Records Retrieved From SAP: {goodsReceiptList.Count}");
                 Console.WriteLine($"Goods Receipt Records Retrieved From SAP: {goodsReceiptList.Count}");
 
                 //------------------
@@ -58,7 +58,7 @@ namespace SAPServer
                 var recs = _jsonData.LoadFile<List<GoodsReceipt>>();
                 if (recs.Count > 0)
                 {
-                    _logger.Log($"Goods Receipts Records Retrieved From Backup: {recs.Count}");
+                    _ = _logger.LogDetailAsync($"Goods Receipts Records Retrieved From Backup: {recs.Count}");
                     Console.WriteLine($"Goods Receipts Records Retrieved From Backup: {recs.Count}");
                     foreach (var rec in recs)
                     {
@@ -96,11 +96,11 @@ namespace SAPServer
                                 context.SaveChanges();
                                 row.Processed = true;
                                 Console.WriteLine($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
-                                _logger.Log($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
+                                _ = _logger.LogDetailAsync($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
                             }
                             catch (Exception e)
                             {
-                                _logger.Log($"Error writing Goods Receipt TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
+                                _ = _logger.LogDetailAsync($"Error writing Goods Receipt TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
                                 Console.WriteLine($"Error writing Goods Receipt TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
                                 // _sendEmail.Message($"Error writing Single Goods Receipt to INPUT Table", _logger.LastLogLines());
 
@@ -117,12 +117,12 @@ namespace SAPServer
                     }
                     _jsonData.SaveFile(unProcessedGoods);
 
-                    _logger.Log($"UnProcessed Goods Receipt Record Count: {unProcessedGoods.Count}");
+                    _ = _logger.LogDetailAsync($"UnProcessed Goods Receipt Record Count: {unProcessedGoods.Count}");
                     Console.WriteLine($"UnProcessed Goods Receipt Record Count: {unProcessedGoods.Count}");
                 }
                 catch (Exception e)
                 {
-                    _logger.Log($"Error writing Receipt to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
+                    _ = _logger.LogDetailAsync($"Error writing Receipt to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
                     Console.WriteLine($"Error writing Receipt to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
                     // _sendEmail.Message("Error writing Receipt to INPUT Table", _logger.LastLogLines());
                 }
@@ -133,25 +133,25 @@ namespace SAPServer
             }
             catch (RfcCommunicationException e)
             {
-                _logger.Log($"Goods Receipt RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Receipt RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Receipt RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
             }
             catch (RfcLogonException e)
             {
-                _logger.Log($"Goods Receipt RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Receipt RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Receipt RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
             }
             catch (RfcAbapRuntimeException e)
             {
-                _logger.Log($"Goods Receipt RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Receipt RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Receipt RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
             }
             catch (RfcAbapBaseException e)
             {
-                _logger.Log($"Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
             }
@@ -175,7 +175,7 @@ namespace SAPServer
             }
             catch (Exception e)
             {
-                _logger.Log($"Invalid Receipt SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
+                _ = _logger.LogDetailAsync($"Invalid Receipt SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
                 Console.WriteLine($"Invalid Receipt SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
             }
             return result;

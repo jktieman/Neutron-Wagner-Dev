@@ -40,7 +40,7 @@ namespace NeutronLoader
             {
                 case "SFH":
                     {
-                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _logger);
+                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
                 case "TOP":
@@ -65,7 +65,7 @@ namespace NeutronLoader
                     }
                 case "WAG":
                     {
-                        _logger.LogDetailAsync($"WAG - InterfaceProcessorPr1");
+                     _ = _logger.LogDetailAsync($"WAG - InterfaceProcessorPr1");
                         _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
                         break;
                     }
@@ -80,36 +80,36 @@ namespace NeutronLoader
 
         private void RunLoaderOnce()
         {
-            _logger.Log("Run Loader Once");
+            _ = _logger.LogDetailAsync("Run Loader Once");
             _interfaceProcessor.RunLoaderOnce();
         }
 
         private void StartStopLoaderAction(string startStop)
         {
-            _logger.LogDetailAsync($"StartStopLoaderAction: {startStop}");
+         _ = _logger.LogDetailAsync($"StartStopLoaderAction: {startStop}");
 
             if (startStop == "Start")
             {
-                _logger.LogDetailAsync("Start Processing Interface Files");
+             _ = _logger.LogDetailAsync("Start Processing Interface Files");
                 StartProcessingInterfaceFiles();
             }
             else
             {
-                _logger.LogDetailAsync("Stop Processing Interface Files");
+             _ = _logger.LogDetailAsync("Stop Processing Interface Files");
                 StopProcessingInterfaceFiles();
             }
         }
 
         private void StartProcessingInterfaceFiles()
         {
-            _logger.LogDetailAsync("Start ProcessingInterfaceFiles");
+         _ = _logger.LogDetailAsync("Start ProcessingInterfaceFiles");
 
             _interfaceProcessor.StartProcessingInterfaceFiles();
         }
 
         private void StopProcessingInterfaceFiles()
         {
-            _logger.LogDetailAsync("Stop ProcessingInterfaceFiles");
+         _ = _logger.LogDetailAsync("Stop ProcessingInterfaceFiles");
             _interfaceProcessor?.StopProcessingInterfaceFiles();
         }
     }

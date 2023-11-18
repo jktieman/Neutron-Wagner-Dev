@@ -1,15 +1,11 @@
 ﻿
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using AlliedLogger;
 using HighJump;
 using JsonManager;
-using NeutronCore;
 using NeutronCore.Enums;
 using NeutronCore.Global;
 using NeutronCore.Models;
@@ -23,7 +19,6 @@ using NovaLoader.Models;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Timer = System.Threading.Timer;
 
-
 namespace NeutronLoader
 {
     public class InterfaceProcessorMET : IInterfaceProcessor
@@ -36,7 +31,7 @@ namespace NeutronLoader
         private readonly GenericRepository<Shipper> _repoShippers = new GenericRepository<Shipper>(new NeutronDb());
         private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
 
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
@@ -46,25 +41,20 @@ namespace NeutronLoader
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
 
-        private bool _emailEnabled = false;
-
         public InterfaceProcessorMET(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
+            Initialize();           
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
-            Initialize();
+            _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
         }
 
         private void Initialize()
         {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, FolderName, logActivity);
             _fileProcessor = new METFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView);
-
         }
 
         public void StartProcessingInterfaceFiles()
@@ -78,7 +68,7 @@ namespace NeutronLoader
         {
             if (_loadOrdersBusy) return;
             _loadOrdersBusy = true;
-            _logger.Log("Load Orders");
+            _ = _logger.LogDetailAsync("Load Orders");
 
             var hostOrderLines = GetNewOrdersSql();
             if (hostOrderLines.Any())
@@ -158,7 +148,7 @@ namespace NeutronLoader
         {
 
 
-            _logger.Log("Get New Orders Sql");
+            _ = _logger.LogDetailAsync("Get New Orders Sql");
             List<HostOrderLine> orderLines = new List<HostOrderLine>();
             try
             {
@@ -167,7 +157,7 @@ namespace NeutronLoader
                     //try 3 times to get equal count
                     for (int i = 0; i < 3; i++)
                     {
-                        _logger.Log("Try Number " + i + " to get equal counts.");
+                        _ = _logger.LogDetailAsync("Try Number " + i + " to get equal counts.");
                         var newRecords = context.t_al_host_carousel_outbound.Where(o => o.status == "N")
                             .OrderBy(o => o.container_label).ToList();
                         Thread.Sleep(1000);
@@ -176,14 +166,14 @@ namespace NeutronLoader
                         // if there are zero records return an empty list
                         if (!newRecords.Any() && !newRecordsSecondPass.Any())
                         {
-                            _logger.Log("No records in HighJump.");
+                            _ = _logger.LogDetailAsync("No records in HighJump.");
                             return orderLines;
                         }
 
                         if (newRecords.Count() != 0 && newRecords.Count() == newRecordsSecondPass.Count())
                         {
 
-                            _logger.Log("Counts Match.  " + newRecords.Count + " Records to Process.");
+                            _ = _logger.LogDetailAsync("Counts Match.  " + newRecords.Count + " Records to Process.");
                             foreach (var rec in newRecords)
                             {
                                 // Check for existing order
@@ -210,7 +200,7 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 string msg = "Get New Orders " + ex.Message + "  " + ex.InnerException;
-                _logger.Log(msg);
+                _ = _logger.LogDetailAsync(msg);
                 ErrorAlert(msg);
             }
             return orderLines;
@@ -218,7 +208,7 @@ namespace NeutronLoader
 
         private void UpdateOutboundToComplete(List<t_al_host_carousel_outbound> newRecords)
         {
-            _logger.Log("Update Outbound to Processing.");
+            _ = _logger.LogDetailAsync("Update Outbound to Processing.");
             try
             {
                 using (var context = new HighJumpContext())
@@ -231,13 +221,13 @@ namespace NeutronLoader
                         outBound.updated_date = DateTime.Now;
                     }
                     context.SaveChanges();
-                    _logger.Log("Update Outbound to (C)omplete was Successful.");
+                    _ = _logger.LogDetailAsync("Update Outbound to (C)omplete was Successful.");
                 }
             }
             catch (Exception ex)
             {
-                string msg = "Update Outbound To Complete Error. " + ex.Message + "  " + ex.InnerException;
-                _logger.Log(msg);
+                var msg = "Update Outbound To Complete Error. " + ex.Message + "  " + ex.InnerException;
+                _ = _logger.LogDetailAsync(msg);
                 ErrorAlert(msg);
             }
         }
@@ -260,7 +250,7 @@ namespace NeutronLoader
 
         //public FileInfo[] GetFiles()
         //{
-        //    _logger.Log("Call to Get Files Function.");
+        //    _ = _logger.LogDetailAsync("Call to Get Files Function.");
         //    var result = new FileInfo[] { };
         //    try
         //    {
@@ -268,7 +258,7 @@ namespace NeutronLoader
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.Log(
+        //        _ = _logger.LogDetailAsync(
         //            $"Get Files Error.  {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException?.Message} {Environment.NewLine}  {ex.InnerException?.InnerException?.Message}");
         //    }
 
@@ -294,10 +284,10 @@ namespace NeutronLoader
 
         //private void BackgroundWorkerDoWork(object sender, DoWorkEventArgs e)
         //{
-        //    _logger.Log("Queue Processor Do Work");
+        //    _ = _logger.LogDetailAsync("Queue Processor Do Work");
         //    if (_backgroundWorker.CancellationPending)
         //    {
-        //        _logger.Log($"BackgroundWorker Cancel.");
+        //        _ = _logger.LogDetailAsync($"BackgroundWorker Cancel.");
         //        e.Cancel = true;
         //        return;
         //    }
@@ -305,12 +295,12 @@ namespace NeutronLoader
         //    Thread.Sleep(millisecondsTimeout: 100);
         //    foreach (var fileInfo in _interfaceFileQueue.GetConsumingEnumerable())
         //    {
-        //        _logger.Log($"Queue Processor Do Work: {fileInfo.FullName} License: {_neutronLicense.CompanyCode} ");
+        //        _ = _logger.LogDetailAsync($"Queue Processor Do Work: {fileInfo.FullName} License: {_neutronLicense.CompanyCode} ");
         //        var files = new List<FileInfo>();
         //        if (!File.Exists(fileInfo.FullName)) continue;
         //        files.Add(fileInfo);
         //        Thread.Sleep(millisecondsTimeout: 100);
-        //        _logger.Log($"METFileProcessor: Number of Files: {files.Count}");
+        //        _ = _logger.LogDetailAsync($"METFileProcessor: Number of Files: {files.Count}");
         //        _fileProcessor.LoadFiles(files);
         //    }
         //}

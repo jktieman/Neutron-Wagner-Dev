@@ -167,10 +167,17 @@ namespace AlliedPostOffice
 
         public void Message(string subject, StringBuilder body)
         {
-            var attachment = GetAttachment();
-            //var attachments = new string[] { _logger.CurrentLog };
-            _emailProcessor.ProcessEmail(subject, body.ToString(), _people
-                , attachment);
+            try
+            {
+                var attachment = GetAttachment();
+                //var attachments = new string[] { _logger.CurrentLog };
+                _emailProcessor.ProcessEmail(subject, body.ToString(), _people
+                    , attachment);
+            }
+            catch (Exception ex)
+            {
+                ErrorAlert($"Message Error: {ex.Message}");
+            }
 
         }
         public void ErrorAlert(string err)

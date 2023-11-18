@@ -185,5 +185,11 @@ namespace NeutronEvents
         {
             StartStopUpload?.Invoke(this, new StartStopEventArgs { StartStop = startStop });
         }
+        public event EventHandler<DisplayMessageEventArgs> DisplayMessage;
+
+        public void OnDisplayMessage(object sender, string message)
+        {
+            DisplayMessage?.Invoke(this, new DisplayMessageEventArgs() { Message = message });
+        }
     }
 }

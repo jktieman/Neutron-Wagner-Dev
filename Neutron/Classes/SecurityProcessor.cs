@@ -29,7 +29,7 @@ namespace Neutron.Classes
 
         public void ReprocessSecuritySet(string id = "")
         {
-            _logger.LogDetailAsync($"Reprocessing security set for {id}");
+         _ = _logger.LogDetailAsync($"Reprocessing security set for {id}");
 
             if (string.IsNullOrEmpty(id))
             {

@@ -42,7 +42,7 @@ namespace Neutron.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Cost Center File Error.  {ex.Message} \r\n {ex.InnerException}");
+                MessageBox.Show($"Cost Center File Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
             return _costCenterList;
         }

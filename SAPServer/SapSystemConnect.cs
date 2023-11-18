@@ -69,15 +69,15 @@ namespace SAPServer
                 parms.Add(RfcConfigParameters.PeakConnectionsLimit, _peakConnectionsLimit);
                 parms.Add(RfcConfigParameters.ConnectionIdleTimeout, _connectionIdleTimeout);
 
-                _logger.Log($"parms.Add(RfcConfigParameters.AppServerHost, _appServerHost)");
-                _logger.Log($"parms.Add(RfcConfigParameters.SystemNumber, _systemNumber)");
-                _logger.Log($"parms.Add(RfcConfigParameters.User, _username)");
-                _logger.Log($"parms.Add(RfcConfigParameters.Password, _password)");
-                _logger.Log($"parms.Add(RfcConfigParameters.Client, _client)");
-                _logger.Log($"parms.Add(RfcConfigParameters.Language, _language)");
-                _logger.Log($"parms.Add(RfcConfigParameters.PoolSize, _poolSize)");
-                _logger.Log($"parms.Add(RfcConfigParameters.PeakConnectionsLimit, _peakConnectionsLimit)");
-                _logger.Log($"parms.Add(RfcConfigParameters.ConnectionIdleTimeout, _connectionIdleTimeout)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.AppServerHost, _appServerHost)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.SystemNumber, _systemNumber)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.User, _username)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.Password, _password)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.Client, _client)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.Language, _language)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.PoolSize, _poolSize)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.PeakConnectionsLimit, _peakConnectionsLimit)");
+                _ = _logger.LogDetailAsync($"parms.Add(RfcConfigParameters.ConnectionIdleTimeout, _connectionIdleTimeout)");
 
             }
             return parms;

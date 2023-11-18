@@ -196,7 +196,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -215,7 +215,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -234,7 +234,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -254,7 +254,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return rec;

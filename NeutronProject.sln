@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDllu", "..\NeutronDl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neutron_Test", "Neutron_Test\Neutron_Test.csproj", "{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanel_DC", "..\..\..\VS2019\Projects\Hanel\Hanel_DC\Hanel_DC.csproj", "{156ADD50-D792-4D9B-897D-F4B38AED9234}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HanelCommands", "..\..\..\VS2019\Projects\HanelCommands\HanelCommands\HanelCommands.csproj", "{E5C92F26-E834-4913-9482-C8AF45F358EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBinDisplay", "EBinDisplayManager\EBinDisplay.csproj", "{51955251-C665-4F33-B31B-45011E6BAB99}"
@@ -56,6 +54,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthernetTransmitter", "EthernetTransmitter\EthernetTransmitter.csproj", "{CD460F9C-0B52-49AC-A17C-CEE7DEF43220}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAPServer", "SAPServer\SAPServer.csproj", "{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelManager", "ExcelManager\ExcelManager.csproj", "{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronTestForm", "NeutronTestForm\NeutronTestForm.csproj", "{EB46A4BD-ACB0-40E6-9472-7B9D8A40812D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanel_DC", "Hanel_DC\Hanel_DC.csproj", "{156ADD50-D792-4D9B-897D-F4B38AED9234}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,10 +148,6 @@ Global
 		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -172,6 +172,18 @@ Global
 		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB46A4BD-ACB0-40E6-9472-7B9D8A40812D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB46A4BD-ACB0-40E6-9472-7B9D8A40812D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB46A4BD-ACB0-40E6-9472-7B9D8A40812D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB46A4BD-ACB0-40E6-9472-7B9D8A40812D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156ADD50-D792-4D9B-897D-F4B38AED9234}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

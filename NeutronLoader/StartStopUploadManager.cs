@@ -36,7 +36,7 @@ namespace NeutronLoader
 
         private void InitInterfaceFile()
         {
-            _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}");
+         _ = _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}");
             switch (_neutronLicense.CompanyCode)
             {
                 case "SFH":
@@ -65,7 +65,7 @@ namespace NeutronLoader
                     }
                 case "WAG":
                 {
-                    _logger.LogDetailAsync($"WAG - UploadProcessorWAG");
+                 _ = _logger.LogDetailAsync($"WAG - UploadProcessorWAG");
                     _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _neutronLicense, _logger, _workstationView, _workstationRepository);
                     break;
                 }
@@ -88,12 +88,12 @@ namespace NeutronLoader
             if (startStop == "Start")
             {
                 
-                _logger.Log("Start Processing Upload Files");
+                _ = _logger.LogDetailAsync("Start Processing Upload Files");
                 StartProcessingUploadFiles();
             }
             else
             {
-                _logger.Log("Stop Processing Upload Files");
+                _ = _logger.LogDetailAsync("Stop Processing Upload Files");
                 StopProcessingUploadFiles();
             }
         }

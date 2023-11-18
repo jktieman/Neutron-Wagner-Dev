@@ -816,6 +816,7 @@ namespace Neutron.Forms
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1221, 475);
             this.DataGridView1.TabIndex = 7;
+            this.DataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
             // 
             // MBDeleteOrder
             // 

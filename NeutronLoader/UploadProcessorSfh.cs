@@ -51,7 +51,7 @@ namespace NeutronLoader
 
         public void CreateHostFile()
         {
-            _logger.LogDetailAsync($"Upload Processor - Creating Host File.");
+         _ = _logger.LogDetailAsync($"Upload Processor - Creating Host File.");
             var counter = 0;
             while (_uploadBusy)
             {
@@ -102,7 +102,7 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 MessageBox.Show(@"Upload Process Exception, see Log file in HostFile.");
-                _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} " +
+             _ = _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} " +
                             $"{ex.InnerException.Message} {Environment.NewLine}{ex.StackTrace}");
             }
 
@@ -118,7 +118,7 @@ namespace NeutronLoader
                     var recs = db.Database.ExecuteSqlCommand("usp_RemoveDuplicateRecordsFromHistory");
                     //if (! string.IsNullOrEmpty(recs))
                     //{
-                    //     _logger.LogDetailAsync($"Remove Duplicate History Files Count: {recs} ");
+                    //  _ = _logger.LogDetailAsync($"Remove Duplicate History Files Count: {recs} ");
                     //}
 
                 }
@@ -126,7 +126,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
     }

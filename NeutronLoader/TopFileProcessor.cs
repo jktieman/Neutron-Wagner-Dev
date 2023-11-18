@@ -32,23 +32,22 @@ namespace NeutronLoader
 
         readonly NeutronVariables _neutronVariables;
         readonly NeutronLicense _neutronLicense;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
 
-        public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, DynamicLogger logger,
+        public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
-            _logger = logger;
+            _logger = NeutronCore.Global.Logger.SetupLogger("FileProcessor");
             _jsonData = jsonData;
             _workstationView = workstationView;
         }
 
         public void LoadFile(FileInfo fileInfo)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.WorkstationId);
             var orders = new List<HostOrder>();
 
             var filename = fileInfo.FullName;
@@ -71,7 +70,6 @@ namespace NeutronLoader
 
         public void LoadFiles(List<FileInfo> files)
         {
-            CreateLog(name: "File Processor", stationNumber: _neutronVariables.WorkstationId);
             var orders = new List<HostOrder>();
             Thread.Sleep(millisecondsTimeout: 100);
             foreach (var fileInfo in files)
@@ -99,14 +97,6 @@ namespace NeutronLoader
             {
                 ProcessOrdersToNeutron(orders);
             }
-        }
-
-        private void CreateLog(string name, int stationNumber)
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = ($"{name}_{stationNumber.ToString()}");
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
 
         public List<HostOrder> ProcessInterfaceFile(FileInfo fileInfo)
@@ -164,7 +154,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+             _ = _logger.LogDetailAsync($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
                             $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
             return hostOrderList;
@@ -238,7 +228,7 @@ namespace NeutronLoader
                                && r.Location.Slot == hostOrder.PrimeBin).FirstOrDefault();
                     if (inventoryItem != null)
                     {
-                        _logger.LogDetailAsync($"216 Inventory Adjust From {inventoryItem.Quantity} To {hostOrder.Qty}");
+                     _ = _logger.LogDetailAsync($"216 Inventory Adjust From {inventoryItem.Quantity} To {hostOrder.Qty}");
                         inventoryItem.Quantity = (hostOrder.Qty).ParseInt();
                         _repoInventory.Update(inventoryItem);
                     }
@@ -254,7 +244,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"231 Inventory Adjust Error:  {ex.Message} \r\n  {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"231 Inventory Adjust Error:  {ex.Message} \r\n  {ex.InnerException}");
             }
         }
 
@@ -310,7 +300,7 @@ namespace NeutronLoader
                                 }
                                 catch (Exception ex)
                                 {
-                                    _logger.LogDetailAsync("267 Insert Store Item Error " + ex.Message);
+                                 _ = _logger.LogDetailAsync("267 Insert Store Item Error " + ex.Message);
                                 }
                             }
                             else
@@ -347,13 +337,13 @@ namespace NeutronLoader
                                         }
                                         catch (Exception ex)
                                         {
-                                            _logger.LogDetailAsync("300 Insert Store Item in new location Error " + ex.Message);
+                                         _ = _logger.LogDetailAsync("300 Insert Store Item in new location Error " + ex.Message);
                                         }
                                     }
                                 }
                                 else   //location is null
                                 {
-                                    _logger.LogDetailAsync($"{hostOrder.PrimeBin} is not set up in Locations. ");
+                                 _ = _logger.LogDetailAsync($"{hostOrder.PrimeBin} is not set up in Locations. ");
                                     hostOrder.TroubleBit = "1";
                                     hostOrder.EmpId = ($"EmpId:--- Note: Location is not set up in Neutron");
                                     var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
@@ -363,7 +353,7 @@ namespace NeutronLoader
                         }
                         else
                         {
-                            _logger.LogDetailAsync($"{hostOrder.PartNum} is not set up in the System.");
+                         _ = _logger.LogDetailAsync($"{hostOrder.PartNum} is not set up in the System.");
                             hostOrder.TroubleBit = "1";
                             hostOrder.EmpId = ($"EmpId:--- Note: Item Not Defined in Shuttle");
                             var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
@@ -374,7 +364,7 @@ namespace NeutronLoader
             }
             if (!orderHasRecords)
             {
-                _logger.LogDetailAsync($"Order has no records. Deleting Order: {orderId}");
+             _ = _logger.LogDetailAsync($"Order has no records. Deleting Order: {orderId}");
                 DeleteReplenOrderRecord(orderId);
             }
         }
@@ -399,7 +389,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"291 Error Inserting new Inventory record.  {ex.Message} \r\n {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"291 Error Inserting new Inventory record.  {ex.Message} \r\n {ex.InnerException}");
             }
 
             return result;
@@ -427,7 +417,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"Create Replen Order Error. OrderId: {hostOrder.Id}) " + ex.Message);
+                 _ = _logger.LogDetailAsync($"Create Replen Order Error. OrderId: {hostOrder.Id}) " + ex.Message);
                 }
 
             }
@@ -452,7 +442,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Delete Replen Order Error.  Order Id: {id} ." + ex.Message);
+             _ = _logger.LogDetailAsync($"Delete Replen Order Error.  Order Id: {id} ." + ex.Message);
             }
         }
 
@@ -486,7 +476,7 @@ namespace NeutronLoader
                         }
                         if (!pickUsedItem)
                         {
-                            _logger.LogDetailAsync($"384 Used Item Failed.  Start New Item Load. ");
+                         _ = _logger.LogDetailAsync($"384 Used Item Failed.  Start New Item Load. ");
                             var newItemExists = NewItemExists(hostOrder.PartNum);
                             if (newItemExists != null)
                             {
@@ -501,7 +491,7 @@ namespace NeutronLoader
                                     var pickNewItemWithAlternateLocation = PickNewItemWithAlternateLocation(newItemExists, orderId, hostOrder);
                                     if (!pickNewItemWithAlternateLocation)
                                     {
-                                        _logger.LogDetailAsync($"457 Item Definition found but Inventory Not found anywhere");
+                                     _ = _logger.LogDetailAsync($"457 Item Definition found but Inventory Not found anywhere");
                                         hostOrder.TroubleBit = "1";  //RTS
                                         hostOrder.EmpId = ($"EmpId:{empId} Note: Item Definition found, but Inventory Not found anywhere");
 
@@ -521,7 +511,7 @@ namespace NeutronLoader
                             }
                             else
                             {
-                                _logger.LogDetailAsync($"378 Item Definition Not Found");
+                             _ = _logger.LogDetailAsync($"378 Item Definition Not Found");
                                 hostOrder.TroubleBit = "1";  //RTS
                                 hostOrder.EmpId = ($"EmpId:{empId} Note: Item Definition Not Found");
                                 hostFile.CreateHostFile(hostOrder);
@@ -544,13 +534,13 @@ namespace NeutronLoader
                     var count = _repoOrderDetail.FindBy(r => r.OrderId == orderId).Count();
                     if (count <= 0)
                     {
-                        _logger.LogDetailAsync($" 497 Order ID: {orderId}  Order Number: {hostOrder.JobNum}  Part Number: {hostOrder.PartNum} Deleted.");
+                     _ = _logger.LogDetailAsync($" 497 Order ID: {orderId}  Order Number: {hostOrder.JobNum}  Part Number: {hostOrder.PartNum} Deleted.");
                         _repoOrder.Delete(orderId);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"415 Unable to delete Empty Order Id: {orderId}. \r\n {ex.Message} \r\n {ex.InnerException}");
+                 _ = _logger.LogDetailAsync($"415 Unable to delete Empty Order Id: {orderId}. \r\n {ex.Message} \r\n {ex.InnerException}");
                 }
             }
         }
@@ -561,7 +551,7 @@ namespace NeutronLoader
             var altInventory = _repoInventory.FindBy(r => r.ItemDefinitionId == itemDef.Id).ToList();
             if (altInventory.Count > 0)
             {
-                _logger.LogDetailAsync($"424 In Alternate Locations of New Items");
+             _ = _logger.LogDetailAsync($"424 In Alternate Locations of New Items");
                 var qty = hostOrder.Qty.ParseInt();
                 var inv = altInventory.FirstOrDefault(s => s.Quantity > qty);
                 if (inv == null)
@@ -594,7 +584,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync("449 Insert Alternate Order Detail Item Error " + ex.Message);
+                     _ = _logger.LogDetailAsync("449 Insert Alternate Order Detail Item Error " + ex.Message);
                     }
                     result = true;
                 }
@@ -620,7 +610,7 @@ namespace NeutronLoader
 
             if (inv != null)
             {
-                _logger.LogDetailAsync($"471 Has Prime Bin");
+             _ = _logger.LogDetailAsync($"471 Has Prime Bin");
                 var orderDetail = new OrderDetail()
                 {
                     OrderId = orderId,
@@ -645,7 +635,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"611 Pick New Item With Prime Bin Insert Order Detail Item Error \r\n {ex.Message}\r\n {ex.InnerException}");
+                 _ = _logger.LogDetailAsync($"611 Pick New Item With Prime Bin Insert Order Detail Item Error \r\n {ex.Message}\r\n {ex.InnerException}");
                 }
                 result = true;
             }
@@ -663,7 +653,7 @@ namespace NeutronLoader
 
             if (inv != null)
             {
-                _logger.LogDetailAsync($"509 Picking Used Item Prime Bin Last.");
+             _ = _logger.LogDetailAsync($"509 Picking Used Item Prime Bin Last.");
                 var orderDetail = new OrderDetail()
                 {
                     OrderId = orderId,
@@ -688,7 +678,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"529 Pick New Item With Prime Bin Insert Order Detail Item Error \r\n {ex.Message}\r\n {ex.InnerException}");
+                 _ = _logger.LogDetailAsync($"529 Pick New Item With Prime Bin Insert Order Detail Item Error \r\n {ex.Message}\r\n {ex.InnerException}");
                 }
                 result = true;
             }
@@ -702,7 +692,7 @@ namespace NeutronLoader
             var altInventory = _repoInventory.FindBy(r => r.ItemDefinitionId == itemDef.Id).ToList();
             if (altInventory.Count > 0)
             {
-                _logger.LogDetailAsync($"543 In Alternate Locations of Used Items");
+             _ = _logger.LogDetailAsync($"543 In Alternate Locations of Used Items");
                 var qty = hostOrder.Qty.ParseInt();
                 var inv = altInventory.FirstOrDefault(s => s.Quantity > qty);
                 if (inv == null)
@@ -735,7 +725,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync("576 Insert Alternate Order Detail Item Error " + ex.Message);
+                     _ = _logger.LogDetailAsync("576 Insert Alternate Order Detail Item Error " + ex.Message);
                     }
                     result = true;
                 }
@@ -758,19 +748,19 @@ namespace NeutronLoader
                 result = pickUsedItemWithPrimeBin;
                 if (!pickUsedItemWithPrimeBin)
                 {
-                    _logger.LogDetailAsync($"599 Used Item Defined, but Not In Prime Bin");
+                 _ = _logger.LogDetailAsync($"599 Used Item Defined, but Not In Prime Bin");
 
                     var pickUsedItemWithAlternateLocation = PickUsedItemWithAlternateLocation(usedItemDefinition, orderId, hostOrder);
                     result = pickUsedItemWithAlternateLocation;
                     if (!pickUsedItemWithAlternateLocation)
                     {
-                        _logger.LogDetailAsync($"605 Used Item Definition found but Inventory Not found anywhere");
+                     _ = _logger.LogDetailAsync($"605 Used Item Definition found but Inventory Not found anywhere");
                     }
                 }
             }
             else
             {
-                _logger.LogDetailAsync($"623 Used Item Not Defined");
+             _ = _logger.LogDetailAsync($"623 Used Item Not Defined");
             }
             return result;
         }
@@ -797,7 +787,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync("Insert Order Error " + ex.Message);
+                 _ = _logger.LogDetailAsync("Insert Order Error " + ex.Message);
                 }
 
             }
@@ -856,7 +846,7 @@ namespace NeutronLoader
                 }
                 else
                 {
-                    _logger.LogDetailAsync($"Inventory Location exists.  Can't create new Inventory Item for: {hostOrder.PartNum} Prime: {hostOrder.PrimeBin}");
+                 _ = _logger.LogDetailAsync($"Inventory Location exists.  Can't create new Inventory Item for: {hostOrder.PartNum} Prime: {hostOrder.PrimeBin}");
                 }
             }
             return inv;
@@ -866,7 +856,7 @@ namespace NeutronLoader
         {
             foreach (var msg in fileLockFailure.MessageList)
             {
-                _logger.LogDetailAsync("Lock Message " + msg);
+             _ = _logger.LogDetailAsync("Lock Message " + msg);
             }
         }
     }

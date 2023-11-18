@@ -1,11 +1,14 @@
-﻿using System;
+﻿using NeutronEvents;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AlliedLogger
@@ -87,9 +90,10 @@ namespace AlliedLogger
                 }
                 _validLocation = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _validLocation = false;
+                ErrorAlert($"Error Testing for a Valid Directory: {filePath}: {ex.Message}");
             }
         }
 
@@ -180,14 +184,12 @@ namespace AlliedLogger
                 Log($"Detail Error: {ex.Message}");
             }
         }
-            private bool _inProcess = false;
-        
-            public async         
-            Task
-LogDetailAsync(string msg = ""
-            , [CallerMemberName] string origin = ""
-            , [CallerFilePath] string filePath = ""
-            , [CallerLineNumber] int lineNumber = 0)
+        private bool _inProcess = false;
+
+        public async Task LogDetailAsync(string msg = ""
+        , [CallerMemberName] string origin = ""
+        , [CallerFilePath] string filePath = ""
+        , [CallerLineNumber] int lineNumber = 0)
         {
 
             var ci = CultureInfo.InvariantCulture;
@@ -199,33 +201,89 @@ LogDetailAsync(string msg = ""
 
             var message =
                 $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
-            
+
             _messages.Enqueue(message);
 
             try
             {
                 if (!_inProcess)
                 {
-                    _inProcess = true;
-
-                    using (var sw = File.AppendText(FilePath))
+                    if (!IsFileLocked(FilePath, 5))
                     {
-                        while (!_messages.IsEmpty)
+                        _inProcess = true;
+                        // using (var sw = File.AppendText(FilePath))
+                        using (var sw = new StreamWriter(FilePath, true))
                         {
-                            _messages.TryDequeue(out msg);
 
-                        await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
-                        await sw.FlushAsync();
+                            try
+                            {
+                                while (!_messages.IsEmpty)
+                                {
+                                    _messages.TryDequeue(out msg);
+
+                                    await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
+                                    await sw.FlushAsync();
+                                }
+                                //  break;
+
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception($"Detail Async Error: {ex.Message}");
+                            }
                         }
                     }
+                    else
+                    {
+                        throw new Exception("File is locked");
+                    }
+
+
+                    //using (var sw = File.AppendText(FilePath))
+                    //{
+                    //    while (!_messages.IsEmpty)
+                    //    {
+                    //        _messages.TryDequeue(out msg);
+
+                    //    await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
+                    //    await sw.FlushAsync();
+                    //    }
+                    //}
                     _inProcess = false;
                 }
             }
             catch (Exception ex)
             {
-                Log($"Detail Async Error: {ex.Message}");
-                //silent fail
+                //ErrorAlert($"Detail Async Error: {ex.Message}");
+                _messages.Enqueue($"Detail Async Error: {ex.Message}");
+               // throw new Exception($"Detail Async Error: {ex.Message}");
             }
+        }
+
+        public bool IsFileLocked(string filePath, int secondsToWait)
+        {
+            bool isLocked = true;
+            int i = 0;
+
+            while (isLocked && ((i < secondsToWait) || (secondsToWait == 0)))
+            {
+                try
+                {
+                    using (File.Open(filePath, FileMode.Open)) { }
+                    return false;
+                }
+                catch (IOException e)
+                {
+                    var errorCode = Marshal.GetHRForException(e) & ((1 << 16) - 1);
+                    isLocked = errorCode == 32 || errorCode == 33;
+                    i++;
+
+                    if (secondsToWait != 0)
+                        new System.Threading.ManualResetEvent(false).WaitOne(1000);
+                }
+            }
+
+            return isLocked;
         }
 
         private string GetFileName()
@@ -258,18 +316,66 @@ LogDetailAsync(string msg = ""
 
         public StringBuilder LastLogLines(int lines = 10)
         {
-            var allLines = File.ReadLines(FilePath).ToArray();
-            var numLinesCount = allLines.Count();
             var sb = new StringBuilder();
-            var linesToRead = numLinesCount > lines ? lines : numLinesCount;
-            if (linesToRead == 0) return sb;
-
-            for (var i = numLinesCount - linesToRead; i < numLinesCount; i++)
+            var counter = 0;
+            try
             {
-                sb.AppendLine(allLines[i]);
+                // check to see if file is open
+                while (IsFileOpen(FilePath))
+                {
+                    Thread.Sleep(100);
+                    counter += 1;
+                }
+
+
+                var allLines = File.ReadLines(FilePath).ToArray();
+                var numLinesCount = allLines.Count();
+
+                var linesToRead = numLinesCount > lines ? lines : numLinesCount;
+                if (linesToRead == 0) return sb;
+
+                for (var i = numLinesCount - linesToRead; i < numLinesCount; i++)
+                {
+                    sb.AppendLine(allLines[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorAlert($"Last Log Lines Error: {ex.Message}");
+                throw;
             }
 
             return sb;
+        }
+        private bool IsFileOpen(string filePath)
+        {
+            try
+            {
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
+                {
+                    // The file is not open
+                    return false;
+                }
+            }
+            catch (IOException)
+            {
+                // The file is open
+                return true;
+            }
+        }
+        
+        private void CloseFile(string filePath)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))
+            {
+                // Do something with the file
+            }
+
+            // The file is now closed
+        }
+        public void ErrorAlert(string err)
+        {
+            Mediator.GetInstance().OnLoaderError(this, err);
         }
 
         //public string TempFilePath

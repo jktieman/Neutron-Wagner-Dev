@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -33,6 +34,9 @@ using NeutronDllu;
 using SlotNameFactory;
 using NeutronData.Interfaces;
 using StationType = NeutronCore.Enums.StationType;
+using ExcelManager;
+using System.Reflection;
+using NeutronEvents;
 
 namespace Neutron.Forms
 {
@@ -50,7 +54,7 @@ namespace Neutron.Forms
         private LabelPrinterPreferences _labelPrinter;
         private readonly BindingSource _bindingSource = new BindingSource();
         private LocationsRepository _locationRepository;
-        private DynamicLogger _logger;
+        private IDynamicLogger _logger;
 
         private readonly GenericRepository<HeightCode> _repoHeightCode =
             new GenericRepository<HeightCode>(new NeutronDb());
@@ -59,7 +63,7 @@ namespace Neutron.Forms
             _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
 
         private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
-       
+
         private readonly GenericRepository<StorageDevice> _repoDevices =
             new GenericRepository<StorageDevice>(new NeutronDb());
 
@@ -74,8 +78,9 @@ namespace Neutron.Forms
             new GenericRepository<Area>(new NeutronDb());
 
         private ISlot _slotName;
-        private DocumentToPrint _documentToPrint;
         private HeaderTextManager _headerTextManager;
+        private List<LocationView> _currentList;
+        private bool _startup = true;
 
         public FrmLocations(IJsonData jsonData, IWorkstationRepository workstationRepository,
             WorkstationView workstationView, NeutronVariables neutronVariables, ILacProcessor lacProcessor,
@@ -95,7 +100,8 @@ namespace Neutron.Forms
 
         private void InitForm()
         {
-            _logger = CreateLog();
+            _logger = NeutronCore.Global.Logger.SetupLogger("Locations");
+
             KeyPreview = true;
             CloseButtonPressed = false;
             _headerTextManager = new HeaderTextManager();
@@ -117,24 +123,26 @@ namespace Neutron.Forms
 
             if (_workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
             {
-                CheckBoxAllAreas.Checked = true;
+                ComboBoxAreaNumber.SelectedIndex = ComboBoxAreaNumber.FindStringExact("All Areas");
             }
-
-            SetupViewEditBindings();
-            _documentToPrint = new DocumentToPrint();
+            else
+            {
+                ComboBoxAreaNumber.SelectedValue = _workstationView.AreaId;
+            }
+          
+            _startup = false;
             RefreshData();
         }
 
         public bool CloseButtonPressed { get; set; }
 
-        private DynamicLogger CreateLog()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = $"Remstar_Bpi_Shi_{_workstationView.WorkstationId.ToString()}";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-            return _logger;
-        }
+        //private void CreateLog()
+        //{
+        //    var logFileDir = LoaderSettings.GetLogFileDirectory();
+        //    var folderName = $"Locations_{_workstationView.WorkstationId.ToString()}";
+        //    var logActivity = LoaderSettings.EnableLogging;
+        //    _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+        //}
 
         private void SetupPrinters()
         {
@@ -161,52 +169,60 @@ namespace Neutron.Forms
         private void RefreshData(int recId = 0)
         {
             Cursor.Current = Cursors.WaitCursor;
-            List<LocationView> views;
-            List<LocationView> views1;
-            List<LocationView> views2;
-            List<LocationView> recs;
             var idx = 0;
             var find = TextBoxFind.Text.ToLower().Trim();
 
-            if (_workstationView != null)
+            try
             {
-                if (CheckBoxAllAreas.Checked)
+                if (_workstationView != null)
                 {
-                    views = _locationRepository.FindLocationViewsBySlot(find).ToList();
-                }
-                else
-                {
-                    var areaId = _workstationView.AreaId;
-                    views = _locationRepository.FindLocationViewsByAreaAndSlot(areaId, find).ToList();
-                    // views2 = _locationRepository.FindLocationViewsByAreaAndSlot(2, find).ToList();
-                    // views = Concat(views1, views2);
+                    var area = ((Area)ComboBoxAreaNumber.SelectedItem);
 
-                }
+                    var views = area.Name == "All Areas"
+                        ? _locationRepository.FindLocationViewsBySlot(find).ToList()
+                        : _locationRepository.FindLocationViewsByAreaAndSlot(area.Id, find).ToList();
 
-                if (MButtonAllLocations.Text == _resourceManager.GetString("Available"))
-                {
-                    recs = views;
-                }
-                else
-                {
-                    recs = views.Where(v => v.InUse == false).ToList();
-                }
+                    List<LocationView> recs;
+                    if (MButtonAllLocations.Text == _resourceManager.GetString("Available"))
+                    {
+                        recs = views;
+                        // Create DataTable from List<LocationView>
+                        _currentList = recs;
+                    }
+                    else
+                    {
+                        recs = views.Where(v => v.InUse == false).ToList();
+                        // Create DataTable from List<LocationView>
+                        _currentList = recs;
+                    }
+                    // convert List<LocationView> into a BindingSource
 
-                var blv = new BindingListView<LocationView>(recs.ToList());
-                _bindingSource.DataSource = blv;
-                DataGridView1.AutoGenerateColumns = false;
-                DataGridView1.DataSource = _bindingSource;
-                if (GetRecordCount() > 0)
-                {
-                    if (recId != 0) idx = IndexOf(recId);
-                    DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
-                    DataGridView1.Refresh();
-                    DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
-                    DataGridView1.Rows[idx].Selected = true;
-                }
+                    var blv = new BindingListView<LocationView>(recs.ToList());
+                    _bindingSource.DataSource = blv;
+                    DataGridView1.AutoGenerateColumns = false;
+                    DataGridView1.DataSource = _bindingSource;
+                    if (GetRecordCount(_bindingSource) > 0)
+                    {
+                        if (recId != 0) idx = IndexOf(recId);
+                        DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+                        DataGridView1.Refresh();
+                        DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
+                        DataGridView1.Rows[idx].Selected = true;
+                    }
 
-                DataGridView1.ClearSelection();
-                if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                    DataGridView1.ClearSelection();
+                    if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                    Cursor.Current = Cursors.Default;
+                }
+            }
+            catch (Exception ex)
+            {
+                var message = $"Error Loading Data: {Environment.NewLine}{ex.Message}";
+                _logger.LogDetailAsync(message);
+                Mediator.GetInstance().OnGeneralError(this, message);
+            }
+            finally
+            {
                 Cursor.Current = Cursors.Default;
             }
         }
@@ -234,24 +250,7 @@ namespace Neutron.Forms
 
             return itemIndex;
         }
-
-        private void SetupViewEditBindings()
-        {
-            //TextBoxViewEditId.DataBindings.Add("Text", _bindingSource, "Id");
-            //ComboBoxViewEditArea.DataBindings.Add("SelectedValue", _bindingSource, "AreaId");
-            //ComboBoxViewEditDevice.DataBindings.Add("SelectedValue", _bindingSource, "Loc1");
-            //TextBoxViewEditLoc2.DataBindings.Add("Text", _bindingSource, "Loc2");
-            //TextBoxViewEditLoc3.DataBindings.Add("Text", _bindingSource, "Loc3");
-            //TextBoxViewEditLoc4.DataBindings.Add("Text", _bindingSource, "Loc4");
-            //TextBoxViewEditLoc5.DataBindings.Add("Text", _bindingSource, "Loc5");
-            //TextBoxViewEditSlot.DataBindings.Add("Text", _bindingSource, "Slot");
-            //ComboBoxViewEditSizeCode.DataBindings.Add("SelectedValue", _bindingSource, "SizeCodeId");
-            //ComboBoxViewEditVelocityCode.DataBindings.Add("SelectedValue", _bindingSource, "VelocityCodeId");
-            //ComboBoxViewEditHeightCode.DataBindings.Add("SelectedValue", _bindingSource, "HeightCodeId");
-            //CheckBoxInUse.DataBindings.Add("Checked", _bindingSource, "InUse");
-        }
-
-        private int GetRecordCount()
+        private int GetRecordCount(BindingSource bindingSource)
         {
             var count = _bindingSource.Count;
             LabelRecordCount.Text = $"{_resourceManager.GetString("Records")}: {count}";
@@ -270,9 +269,9 @@ namespace Neutron.Forms
             var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
             var partition = grid["Loc4", e.RowIndex].Value.ToString();
             var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
-            _logger.LogDetailAsync(
-                $"Storage Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
-            _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
+            _ = _logger.LogDetailAsync(
+                   $"Storage Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
+            _ = _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
             MoveDevice(deviceNumber, trayNumber, level, part);
             TurnOnShi(deviceNumber, trayNumber, level, partition);
         }
@@ -721,12 +720,6 @@ namespace Neutron.Forms
         {
             e.Cancel = !CloseButtonPressed;
         }
-
-        private void MBPrintLocations_Click(object sender, EventArgs e)
-        {
-            CsvUtility.SaveToCsv(DataGridView1);
-        }
-
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
             var area = ((Area)ComboBoxNewArea.SelectedItem);
@@ -790,23 +783,6 @@ namespace Neutron.Forms
             ButtonPositionDevice.Visible = WorkstationCanPositionDevice();
         }
 
-        private void CheckBoxAllAreas_CheckedChanged(object sender, EventArgs e)
-        {
-            RefreshData();
-        }
-
-        private void ButtonAvailableLocations_Click(object sender, EventArgs e)
-        {
-            PrintAvailableLocations();
-        }
-
-        private void PrintAvailableLocations()
-        {
-            if (!_neutronVariables.EnableDocumentPrinter) return;
-            var locations = GetAvailableLocations();
-            _documentToPrint.PrintAvailableLocations(locations, _documentPrinter, _neutronVariables.PrintPreview);
-        }
-
         private List<Location> GetAvailableLocations()
         {
             var areaId = ((Area)ComboBoxAreaNumber.SelectedItem).Id;
@@ -833,11 +809,11 @@ namespace Neutron.Forms
             ComboBoxNewDevice.ValueMember = "Id";
             ComboBoxNewDevice.Refresh();
 
-            LabelNewDevice.Text =area.LocationType.Loc1Label;
+            LabelNewDevice.Text = area.LocationType.Loc1Label;
             LabelNewTray.Text = area.LocationType.Loc2Label;
             LabelNewOver.Text = area.LocationType.Loc3Label;
             LabelNewBack.Text = area.LocationType.Loc4Label;
-            LabelNewTag.Text =  area.LocationType.Loc5Label;
+            LabelNewTag.Text = area.LocationType.Loc5Label;
 
             if (ComboBoxNewDevice.Items.Count <= 0) return;
             var device = (StorageDevice)ComboBoxNewDevice.Items[0];
@@ -850,22 +826,22 @@ namespace Neutron.Forms
             var area = ((Area)ComboBoxViewEditArea.SelectedItem);
             if (area == null) return;
 
-                var devices = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
-                ComboBoxViewEditDevice.DataSource = devices;
+            var devices = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
+            ComboBoxViewEditDevice.DataSource = devices;
 
-                ComboBoxViewEditDevice.DisplayMember = "Name";
-                ComboBoxViewEditDevice.ValueMember = "Id";
-                ComboBoxViewEditDevice.Refresh();
+            ComboBoxViewEditDevice.DisplayMember = "Name";
+            ComboBoxViewEditDevice.ValueMember = "Id";
+            ComboBoxViewEditDevice.Refresh();
 
-                LabelViewEditDevice.Text = area.LocationType.Loc1Label;
-                LabelViewEditTray.Text = area.LocationType.Loc2Label;
-                LabelViewEditOver.Text = area.LocationType.Loc3Label;
-                LabelViewEditBack.Text = area.LocationType.Loc4Label;
-                LabelViewEditTag.Text = area.LocationType.Loc5Label;
+            LabelViewEditDevice.Text = area.LocationType.Loc1Label;
+            LabelViewEditTray.Text = area.LocationType.Loc2Label;
+            LabelViewEditOver.Text = area.LocationType.Loc3Label;
+            LabelViewEditBack.Text = area.LocationType.Loc4Label;
+            LabelViewEditTag.Text = area.LocationType.Loc5Label;
 
             if (ComboBoxViewEditDevice.Items.Count <= 0) return;
-                var device = (StorageDevice)ComboBoxViewEditDevice.Items[0];
-                ButtonPositionDevice.Visible = WorkstationCanPositionDevice();
+            var device = (StorageDevice)ComboBoxViewEditDevice.Items[0];
+            ButtonPositionDevice.Visible = WorkstationCanPositionDevice();
 
         }
         /// <summary>
@@ -923,7 +899,7 @@ namespace Neutron.Forms
         {
             if (DataGridView1.RowCount <= 0) return;
             SetupViewEditForm();
-           // LoadViewEditData();
+            // LoadViewEditData();
             //var grid = (LocationView)DataGridView1;
             //if (grid.CurrentRow != null)
             //{
@@ -1250,34 +1226,34 @@ namespace Neutron.Forms
             var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
             var location = _repoLocation.FindByKey(id);
             if (location == null) return;
-             var area = _repoArea.FindBy(r => r.Id == location.AreaId).FirstOrDefault();
-                if (area is null) return;
+            var area = _repoArea.FindBy(r => r.Id == location.AreaId).FirstOrDefault();
+            if (area is null) return;
             //if (location != null)
             //{
-                var device = _repoDevices.FindBy(r => r.StorageDeviceNumber == location.Loc1
-                                                      && r.AreaId == location.AreaId).FirstOrDefault();
-                if (device is null) return;
+            var device = _repoDevices.FindBy(r => r.StorageDeviceNumber == location.Loc1
+                                                  && r.AreaId == location.AreaId).FirstOrDefault();
+            if (device is null) return;
 
-               
 
-                ComboBoxViewEditArea.DataSource = _repoArea.All();
-                ComboBoxViewEditArea.DisplayMember = "Name";
-                ComboBoxViewEditArea.ValueMember = "Id";
 
-                ComboBoxViewEditArea.SelectedValue = area.Id;
+            ComboBoxViewEditArea.DataSource = _repoArea.All();
+            ComboBoxViewEditArea.DisplayMember = "Name";
+            ComboBoxViewEditArea.ValueMember = "Id";
 
-                ComboBoxViewEditDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
-                ComboBoxViewEditDevice.DisplayMember = "Name";
-                ComboBoxViewEditDevice.ValueMember = "Id";
+            ComboBoxViewEditArea.SelectedValue = area.Id;
 
-                ComboBoxViewEditDevice.SelectedValue = device.Id;
+            ComboBoxViewEditDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
+            ComboBoxViewEditDevice.DisplayMember = "Name";
+            ComboBoxViewEditDevice.ValueMember = "Id";
 
-                TextBoxViewEditLoc2.Text = location.Loc2.ToString();
-                TextBoxViewEditLoc3.Text = location.Loc3.ToString();
-                TextBoxViewEditLoc4.Text = location.Loc4.ToString();
-                TextBoxViewEditLoc5.Text = location.Loc5.ToString();
-                TextBoxViewEditSlot.Text = location.Slot;
-                TextBoxViewEditPickSequence.Text = location.PickSequence.ToString();
+            ComboBoxViewEditDevice.SelectedValue = device.Id;
+
+            TextBoxViewEditLoc2.Text = location.Loc2.ToString();
+            TextBoxViewEditLoc3.Text = location.Loc3.ToString();
+            TextBoxViewEditLoc4.Text = location.Loc4.ToString();
+            TextBoxViewEditLoc5.Text = location.Loc5.ToString();
+            TextBoxViewEditSlot.Text = location.Slot;
+            TextBoxViewEditPickSequence.Text = location.PickSequence.ToString();
 
             ComboBoxViewEditSizeCode.DataSource = _repoSizeCode.All();
             ComboBoxViewEditSizeCode.DisplayMember = "Name";
@@ -1394,11 +1370,9 @@ namespace Neutron.Forms
                     resourceDir: languageDirectory, usingResourceSet: null);
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
                 LabelFormTitle.Text = _resourceManager.GetString("AvailableLocations");
-                CheckBoxAllAreas.Text = _resourceManager.GetString("AllAreas");
-                LabelFindDescription.Text = _resourceManager.GetString("SearchFor");
                 MButtonNew.Text = _resourceManager.GetString("New");
-                ButtonAvailableLocations.Text = _resourceManager.GetString("AvailableLocations");
-                MBPrintLocations.Text = _resourceManager.GetString("SaveToFile");
+                ButtonLoadFromExcel.Text = _resourceManager.GetString("LoadFromExcel");
+                ButtonSaveToExcel.Text = _resourceManager.GetString("SaveToExcel");
                 MButtonAllLocations.Text = _resourceManager.GetString("Available");
                 MButtonViewEdit.Text = _resourceManager.GetString("View/Edit");
                 MButtonClose.Text = _resourceManager.GetString("Home");
@@ -1439,6 +1413,7 @@ namespace Neutron.Forms
                 LabelNewOver.Text = _resourceManager.GetString("Over");
                 LabelNewTray.Text = _resourceManager.GetString("Tray");
                 LabelNewDevice.Text = _resourceManager.GetString("Device");
+                LabelFindDescription.Text = _resourceManager.GetString("SearchAnyPartOfSlot");
                 ButtonPositionDevice.Text = _resourceManager.GetString("PositionDevice");
                 ButtonPositionDeviceNew.Text = _resourceManager.GetString("PositionDevice");
             }
@@ -1451,7 +1426,7 @@ namespace Neutron.Forms
 
         private void ButtonPositionDevice_Click(object sender, EventArgs e)
         {
-            var device = ((StorageDevice)ComboBoxViewEditDevice.SelectedItem);
+            var device = (StorageDevice)ComboBoxViewEditDevice.SelectedItem;
             if (device == null) return;
             var deviceNumber = device.StorageDeviceNumber;
             if (!IntegerValidator(TextBoxViewEditLoc2.Text.ParseInt())) return;
@@ -1460,9 +1435,7 @@ namespace Neutron.Forms
             var level = TextBoxViewEditLoc3.Text.ParseInt();
             if (!IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt())) return;
             var part = TextBoxViewEditLoc4.Text.ParseInt();
-            Task.Run(() =>
-                _logger.LogDetailAsync(
-                    $"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+             _ = _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
             MoveDevice(deviceNumber, trayNumber, level, part);
         }
 
@@ -1480,9 +1453,7 @@ namespace Neutron.Forms
             if (string.IsNullOrEmpty(TextBoxNewLoc4.Text) || TextBoxNewLoc4.Text == "0") return;
             if (!IntegerValidator(TextBoxNewLoc4.Text.ParseInt())) return;
             var part = TextBoxNewLoc4.Text.ParseInt();
-            Task.Run(() =>
-                _logger.LogDetailAsync(
-                    $"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+             _ = _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
             MoveDevice(deviceNumber, trayNumber, level, part);
         }
 
@@ -1627,6 +1598,252 @@ namespace Neutron.Forms
         private void TextBoxViewEditLoc5_Leave(object sender, EventArgs e)
         {
             //GetSlotString(TextBoxViewEditSlot, false);
+        }
+        private List<LocationView> GetSelectedItems(DataGridView dataGridView)
+        {
+            // Create a list of LocationView
+            var selectedList = new List<LocationView>();
+            // Loop through the selected rows
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
+            {
+                // Get the LocationView from the row  ((ObjectView<LocationView>)_bindingSource.Current).Object;
+                var locationView = ((ObjectView<LocationView>)row.DataBoundItem).Object;
+                // Add the LocationView to the list
+                selectedList.Add(locationView);
+            }
+            return selectedList;
+        }
+
+        private void ButtonSaveToExcel_Click(object sender, EventArgs e)
+        {
+            ButtonLoadFromExcel.Enabled = false;
+            ButtonSaveToExcel.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+            SaveToExcel();
+        }
+
+        private void SaveToExcel()
+        {
+            _ = _logger.LogDetailAsync("Saving records to Excel spreadsheet");
+
+            DataTable dataTable;
+            // Initialize the Excel Service
+            var excelService = new ExcelService();
+            if (CheckBoxUseSelectedItems.Checked)
+            {
+                var selectedList = GetSelectedItems(DataGridView1);
+                // Create a DataTable from the List(Of T) (LocationView)
+                dataTable = ToDataTable<LocationView>(selectedList);
+            }
+            else
+            {
+                // Create a DataTable from the List(Of T) (LocationView)
+                dataTable = ToDataTable<LocationView>(_currentList);
+            }
+
+            // Generate the Excel file
+            excelService.Generate(dataTable);
+            _ = _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet");
+            ButtonLoadFromExcel.Enabled = true;
+            ButtonSaveToExcel.Enabled = true;
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void ButtonLoadFromExcel_Click(object sender, EventArgs e)
+        {
+            ButtonLoadFromExcel.Enabled = false;
+            ButtonSaveToExcel.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+            LoadFromExcel();
+        }
+
+        private void LoadFromExcel()
+        {
+            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet");
+            var excelService = new ExcelService();
+            var dataTable = excelService.Update();
+            BackgroundWorkerLocations.RunWorkerAsync(dataTable);
+        }
+
+        public DataTable ToDataTable<T>(List<T> items)
+        {
+            var dataTable = new DataTable(typeof(T).Name);
+
+            //Get all the properties
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            // the first column is the Action column
+            // by default all records are saved with a [M]odify action
+            // the user can change the action to [D]elete or [A]dd
+            // the action is not saved to the database
+            // it is used to determine what to do with the record
+            // before adding the List(Of T) to the database
+            // the Action is not displayed in the DataGridView
+            // the Action is displayed in the Excel spreadsheet
+            // so we need to add it first, before the other columns
+            var action = new DataColumn("Action", typeof(string));
+            dataTable.Columns.Add(action);
+            
+            foreach (var prop in props)
+            {
+                //Setting column names as Property names
+                var col = new DataColumn(prop.Name, prop.PropertyType);
+                dataTable.Columns.Add(prop.Name, prop.PropertyType);
+            }
+            // by default all records are saved with a [M]odify action
+            // the user can change the action to [D]elete or [A]dd
+            // the action is not saved to the database
+            // it is used to determine what to do with the record
+
+            foreach (var item in items)
+            {
+                // add 1 to the props.Length to account for the Action column
+                var values = new object[props.Length + 1];
+                // set the default action to [M]odify
+                values[0] = "M";
+                // starting at 1 to skip the Action column
+                for (var i = 0; i < props.Length; i++)
+                {
+                    //inserting property values to dataTable rows
+                    values[i + 1] = props[i].GetValue(item, null);
+                }
+                dataTable.Rows.Add(values);
+            }
+            //put a breakpoint here and check dataTable
+            return dataTable;
+        }
+
+        private void ComboBoxAreaNumber_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_startup)
+            {
+                RefreshData();
+            }
+        }
+
+        private void BackgroundWorkerLocations_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+
+            if (!(sender is BackgroundWorker worker)) return;
+            if (!(e.Argument is DataTable dataTable)) return;
+            var rowCount = dataTable.Rows.Count;
+            var processedCount = 0;
+            // loop over the rows in the DataTable
+
+            _ = _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet");
+            try
+            {
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    // get the values from the row
+                    var action = row["Action"].ToString();
+                    var id = row["Id"].ToString();
+                    // Check to see if this row contains the header record
+                    // if so, skip it
+                    // Id is the first column in the spreadsheet
+                    //if (id.Equals("Id")) continue;
+                    var areaId = row["AreaId"].ToString();
+                    var loc1 = row["Loc1"].ToString();
+                    var loc2 = row["Loc2"].ToString();
+                    var loc3 = row["Loc3"].ToString();
+                    var loc4 = row["Loc4"].ToString();
+                    var loc5 = row["Loc5"].ToString();
+                    var slot = row["Slot"].ToString();
+                    var pickSequence = row["PickSequence"].ToString();
+                    var sizeCodeId = row["SizeCodeId"].ToString();
+                    var velocityCodeId = row["VelocityCodeId"].ToString();
+                    var heightCodeId = row["HeightCodeId"].ToString();
+                    var locationCode = row["LocationCode"].ToString();
+                    var inUse = row["InUse"].ToString().ToBoolean();
+
+                    // if the Id is empty, this is a new row
+                    // create a new Location object
+                    if (action.Equals("A", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var location = new Location
+                        {
+                            AreaId = areaId.ParseInt(),
+                            Loc1 = loc1.ParseInt(),
+                            Loc2 = loc2.ParseInt(),
+                            Loc3 = loc3.ParseInt(),
+                            Loc4 = loc4.ParseInt(),
+                            Loc5 = loc5.ParseInt(),
+                            Slot = slot,
+                            PickSequence = pickSequence.ParseInt(),
+                            SizeCodeId = sizeCodeId.ParseInt(),
+                            VelocityCodeId = velocityCodeId.ParseInt(),
+                            HeightCodeId = heightCodeId.ParseInt(),
+                            LocationCode = locationCode,
+                            InUse = inUse
+                        };
+                        _repoLocation.Insert(location);
+                    }
+                    else if (action.Equals("D", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        // get the existing Location object
+                        var location = _repoLocation.FindByKey(id.ParseInt());
+                        if (location == null) continue;
+                        // delete the record
+                        _repoLocation.Delete(location.Id);
+                    }
+                    else if (action.Equals("M", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        // get the existing Location object
+                        var location = _repoLocation.FindByKey(id.ParseInt());
+                        if (location == null) continue;
+
+                        // update the values
+                        location.AreaId = areaId.ParseInt();
+                        location.Loc1 = loc1.ParseInt();
+                        location.Loc2 = loc2.ParseInt();
+                        location.Loc3 = loc3.ParseInt();
+                        location.Loc4 = loc4.ParseInt();
+                        location.Loc5 = loc5.ParseInt();
+                        location.Slot = slot;
+                        location.PickSequence = pickSequence.ParseInt();
+                        location.SizeCodeId = sizeCodeId.ParseInt();
+                        location.VelocityCodeId = velocityCodeId.ParseInt();
+                        location.HeightCodeId = heightCodeId.ParseInt();
+                        location.LocationCode = locationCode;
+                        location.InUse = inUse;
+
+                        // update the database
+                        _repoLocation.Update(location);
+                    }
+
+
+
+                    // Update the progress
+                    processedCount++;
+                    var progressPercentage = (int)((double)processedCount / rowCount * 100);
+                    if (progressPercentage % 25 == 0)
+                    {
+                        _ = _logger.LogDetailAsync($"Loading {progressPercentage}% complete");
+                        worker.ReportProgress(progressPercentage);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Mediator.GetInstance().OnGeneralError(this, $"Error Adding/Updating Records{Environment.NewLine}{ex.Message}");
+            }
+            Mediator.GetInstance().OnDisplayMessage(this, $"Load complete");
+        }
+
+        private void BackgroundWorkerLocations_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            ProgressBarLocations.Value = e.ProgressPercentage;
+        }
+
+        private void BackgroundWorkerLocations_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            RefreshData();
+            ProgressBarLocations.Value = 0;
+            Cursor.Current = Cursors.Default;
+            ButtonLoadFromExcel.Enabled = true;
+            ButtonSaveToExcel.Enabled = true;
+            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet complete");
         }
     }
 }

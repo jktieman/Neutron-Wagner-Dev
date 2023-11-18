@@ -56,7 +56,7 @@ namespace SAPServer
                         {
                             neutronToSapList.Invoke(destination);
 
-                            _logger.LogDetailAsync($"Goods Issue Record Sent To SAP: TASK: {good.TANUM} -- SKU: {good.MATNR}");
+                         _ = _logger.LogDetailAsync($"Goods Issue Record Sent To SAP: TASK: {good.TANUM} -- SKU: {good.MATNR}");
 
                             using (var db = new WagnerDb())
                             {
@@ -67,27 +67,27 @@ namespace SAPServer
                                 rec.EXPLANATION = string.Empty;
                                 db.SaveChanges();
 
-                                _logger.LogDetailAsync($"NOVA_OUTPUT Set to Processed: TASK: {good.TANUM} -- SKU: {good.MATNR}");
+                             _ = _logger.LogDetailAsync($"NOVA_OUTPUT Set to Processed: TASK: {good.TANUM} -- SKU: {good.MATNR}");
                             }
                         }
                         catch (RfcCommunicationException e)
                         {
-                            _logger.LogDetailAsync($"Single Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                         _ = _logger.LogDetailAsync($"Single Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
                             // _sendEmail.Message("Single Goods Issue RfcCommunicationException Error", _logger.LastLogLines());
                         }
                         catch (RfcLogonException e)
                         {
-                            _logger.LogDetailAsync($"Single Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                         _ = _logger.LogDetailAsync($"Single Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
                             // _sendEmail.Message("Single Goods Issue RfcLogonException Error", _logger.LastLogLines());
                         }
                         catch (RfcAbapRuntimeException e)
                         {
-                            _logger.LogDetailAsync($"Single Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                         _ = _logger.LogDetailAsync($"Single Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
                             // _sendEmail.Message("Single Goods Issue RfcAbapRuntimeException Error", _logger.LastLogLines());
                         }
                         catch (RfcAbapBaseException e)
                         {
-                            _logger.LogDetailAsync($"Single Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                         _ = _logger.LogDetailAsync($"Single Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                             // _sendEmail.Message("Single Goods Issue RfcAbapBaseException Error", _logger.LastLogLines());
                             using (var db = new WagnerDb())
                             {
@@ -98,14 +98,14 @@ namespace SAPServer
                                 rec.EXPLANATION = string.Empty;
                                 db.SaveChanges();
 
-                                _logger.LogDetailAsync($"BLOCKED NOVA_OUTPUT Set to Processed: TASK: {good.TANUM} -- SKU: {good.MATNR}");
+                             _ = _logger.LogDetailAsync($"BLOCKED NOVA_OUTPUT Set to Processed: TASK: {good.TANUM} -- SKU: {good.MATNR}");
                                 break;
                             }
 
                         }
                         catch (Exception e)
                         {
-                            _logger.LogDetailAsync($"Single Goods Issue Exception {e.Message}{Environment.NewLine}{e.InnerException} ");
+                         _ = _logger.LogDetailAsync($"Single Goods Issue Exception {e.Message}{Environment.NewLine}{e.InnerException} ");
                             // _sendEmail.Message("Single Goods Issue General Exception Error", _logger.LastLogLines());
                         }
                     }
@@ -113,27 +113,27 @@ namespace SAPServer
             }
             catch (RfcCommunicationException e)
             {
-                _logger.LogDetailAsync($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
+             _ = _logger.LogDetailAsync($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("Goods Issue RfcCommunicationException Error", _logger.LastLogLines());
             }
             catch (RfcLogonException e)
             {
-                _logger.LogDetailAsync($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
+             _ = _logger.LogDetailAsync($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("Goods Issue RfcLogonException Error", _logger.LastLogLines());
             }
             catch (RfcAbapRuntimeException e)
             {
-                _logger.LogDetailAsync($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
+             _ = _logger.LogDetailAsync($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("Goods Issue RfcAbapRuntimeException Error", _logger.LastLogLines());
             }
             catch (RfcAbapBaseException e)
             {
-                _logger.LogDetailAsync($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
+             _ = _logger.LogDetailAsync($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("Goods Issue RfcAbapBaseException Error", _logger.LastLogLines());
             }
             catch (Exception e)
             {
-                _logger.LogDetailAsync($"Goods Issue Exception {e.Message}{Environment.NewLine}{e.InnerException} ");
+             _ = _logger.LogDetailAsync($"Goods Issue Exception {e.Message}{Environment.NewLine}{e.InnerException} ");
                 // _sendEmail.Message("Goods Issue General Exception Error", _logger.LastLogLines());
             }
         }
@@ -163,7 +163,7 @@ namespace SAPServer
                         g.EAN11 = item.BOXID;
                         g.MEINS = item.BP;
 
-                        _logger.LogDetailAsync($"Goods Issue - Output to SAP.  TASKNO: {g.TANUM}  SKU: {g.MATNR} REQ QTY: {g.NSOLM} ISS QTY: {g.NISTA}");
+                     _ = _logger.LogDetailAsync($"Goods Issue - Output to SAP.  TASKNO: {g.TANUM}  SKU: {g.MATNR} REQ QTY: {g.NSOLM} ISS QTY: {g.NISTA}");
 
                         goodsIssues.Add(g);
                     }
@@ -172,7 +172,7 @@ namespace SAPServer
             catch (Exception e)
             {
                 // _sendEmail.Message("Get Goods Issues From Output Communication Error", _logger.LastLogLines());
-                _logger.LogDetailAsync($"GetGoodsIssuesFromOutput {e.Message}{Environment.NewLine}{e.InnerException} ");
+             _ = _logger.LogDetailAsync($"GetGoodsIssuesFromOutput {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
 
             return goodsIssues;

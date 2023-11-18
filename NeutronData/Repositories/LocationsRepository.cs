@@ -57,8 +57,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                await Task.Run(() =>
-                    _logger.Log($"Get All Location Views Exact Error.  {ex.Message} \r\n {ex.InnerException}"));
+                await _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
             }
 
             return recs;
@@ -85,8 +84,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                await Task.Run(() =>
-                    _logger.Log($"Get All Location Views Exact Error.  {ex.Message} \r\n {ex.InnerException}"));
+                await _logger.LogDetailAsync($"Get All Location Views Exact By InUse Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
             }
 
             return recs;
@@ -96,7 +94,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<LocationView>();
 
-            Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -107,10 +105,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
-            Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
 
 
             return recs;
@@ -120,7 +118,7 @@ namespace NeutronData.Repositories
        {
            var recs = new List<LocationView>();
 
-           Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+           _ = _logger.LogDetailAsync(@"Get All Location Views Start");
            try
            {
                using (var context = new NeutronDb())
@@ -132,10 +130,10 @@ namespace NeutronData.Repositories
            }
            catch (Exception ex)
            {
-               Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+               _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
            }
 
-           Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+           _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
 
 
            return recs;
@@ -144,7 +142,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<LocationView>();
 
-            Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -156,10 +154,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
-            Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
 
             return recs;
         }
@@ -172,7 +170,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<LocationView>();
 
-            Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -183,10 +181,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
-            Task.Run(() => _logger.Log($"Get All Location Views End: {recs.Count}"));
+            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
 
             return recs;  //.Where(r => r.Slot.Contains(find));
         }
@@ -195,7 +193,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<LocationView>();
 
-            Task.Run(() => _logger.Log(@"Get All Location Views Start"));
+            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -207,10 +205,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Get All Location Views Error.   {ex.Message} \r\n {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Get All Location Views Error.   {ex.Message} \r\n {ex.InnerException}");
             }
 
-            Task.Run(() => _logger.Log($"Get All Location Views End:  {recs.Count}"));
+            _ = _logger.LogDetailAsync($"Get All Location Views End:  {recs.Count}");
 
             return recs;
         }
@@ -231,7 +229,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Set Location In Use Error.   {ex.Message} \r\n {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Set Location In Use Error.   {ex.Message} \r\n {ex.InnerException}");
             }
         }
         /// <summary>
@@ -250,7 +248,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Set Location Code Error.   {ex.Message} \r\n {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Set Location Code Error.   {ex.Message} \r\n {ex.InnerException}");
             }
         }
 
@@ -293,8 +291,8 @@ namespace NeutronData.Repositories
         /// <returns></returns>
         public async Task<bool> IsInInventory(int locationId)
         {
-            bool result = false;
-            _ = Task.Run(() => _logger.Log(@"Check for Location in Inventory Start"));
+            var result = false;
+            await _logger.LogDetailAsync(@"Check for Location in Inventory Start");
             var parameters = new List<SqlParameter>();
             try
             {
@@ -315,10 +313,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Check for Location in Inventory Error.   {ex.Message} \r\n {ex.InnerException}"));
+                await _logger.LogDetailAsync($"Check for Location in Inventory Error.   {ex.Message} \r\n {ex.InnerException}");
             }
 
-            Task.Run(() => _logger.Log($"Check for Location in Inventory End True or False:  {result}"));
+            await _logger.LogDetailAsync($"Check for Location in Inventory End True or False:  {result}");
 
             return result;
         }
@@ -353,8 +351,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                await Task.Run(() =>
-                    _logger.Log($"Get All Location Views Exact Error.  {ex.Message} \r\n {ex.InnerException}"));
+                await _logger.LogDetailAsync($"Get All Location Views Exact By Areas Error.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
 
             return recs;

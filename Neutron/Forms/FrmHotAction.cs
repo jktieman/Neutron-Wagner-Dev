@@ -197,33 +197,33 @@ namespace Neutron.Forms
                 switch (_workstationView.StationType.Name)
                 {
                     case "Carousel":
-                    {
-                        // Display the Device Indicator
-                        // And the Tray Layout
-                        InitDeviceIndicators();
-                        //BuildTrayLayout();
-                        break;
-                    }
+                        {
+                            // Display the Device Indicator
+                            // And the Tray Layout
+                            InitDeviceIndicators();
+                            //BuildTrayLayout();
+                            break;
+                        }
                     case "Vertical":
-                    {
-                        // Display the Device Indicator
-                        // And the Tray Layout
-                        InitDeviceIndicators();
-                        //BuildTrayLayout();
-                        break;
-                    }
+                        {
+                            // Display the Device Indicator
+                            // And the Tray Layout
+                            InitDeviceIndicators();
+                            //BuildTrayLayout();
+                            break;
+                        }
                     case "Rack-Tablet":
-                    {
-                        InitDeviceIndicators();
+                        {
+                            InitDeviceIndicators();
                             // Just the Tray Layout
                             break;
-                    }
+                        }
                     case "Blastzone":
-                    {
-                        InitDeviceIndicators();
+                        {
+                            InitDeviceIndicators();
                             // Just the Tray Layout
                             break;
-                    }
+                        }
                         //case "EBin":
                         //{
                         //    // Display the Device Indicator
@@ -277,7 +277,7 @@ namespace Neutron.Forms
 
         private void BuildTrayLayout(int maxColumns, int maxRows, int loc3, int loc4, int columnSpan = 1, int rowSpan = 1)
         {
-            
+
             if (HotAction.Controls.ContainsKey("TrayLayout"))
             {
                 HotAction.Controls.RemoveByKey("TrayLayout");
@@ -300,18 +300,18 @@ namespace Neutron.Forms
             UpdateWorkItMessage(msg);
         }
 
-public void UpdateWorkItMessage(string message)
-{
-    if (InvokeRequired)
-    {
-        BeginInvoke(new Action<string>(UpdateWorkItMessage), message);
-    }
-    else
-    {
-        MessageBox.Show(message);
-        //TextBoxCurrentTray.Text = message;
-    }
-}
+        public void UpdateWorkItMessage(string message)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action<string>(UpdateWorkItMessage), message);
+            }
+            else
+            {
+                MessageBox.Show(message);
+                //TextBoxCurrentTray.Text = message;
+            }
+        }
 
         protected override CreateParams CreateParams
         {
@@ -488,7 +488,7 @@ public void UpdateWorkItMessage(string message)
             {
                 var views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExact(areaId,
                      sizeCodeId, velocityCodeId, heightCodeId, inUse));
-                
+
                 var locationViews = views.ToList();
                 var blv = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blv;
@@ -498,12 +498,12 @@ public void UpdateWorkItMessage(string message)
             //_bindingSourceNewLocations.DataSource = blv;
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
 
-            Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Item: {_currentItemDefinition.Item}  END"));
+            await Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Item: {_currentItemDefinition.Item}  END"));
         }
         private void LoadNewLocationsBySlot(string slot)
         {
-            Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Slot: {slot}  START"));
-            IEnumerable<LocationView> views = null;  
+            _ = Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Slot: {slot}  START"));
+            IEnumerable<LocationView> views = null;
 
             // Sending an areaId of -1 returns ALL LocationViews
             var areaId = -1;
@@ -518,7 +518,7 @@ public void UpdateWorkItMessage(string message)
                 CheckBoxAll.Visible = true;
                 areaId = _workstationView.AreaId;
             }
-            
+
             if (CheckBoxAll.Checked)
             {
 
@@ -557,89 +557,89 @@ public void UpdateWorkItMessage(string message)
 
         private async Task LoadItemDefinitions(string find = @"", int recId = 0)
         {
-            Task.Run(() => _logger.LogDetailAsync($"Load Item Definitions Find: {find}  START"));
+            await Task.Run(() => _logger.LogDetailAsync($"Load Item Definitions Find: {find}  START"));
             BindingListView<ItemDefinitionView> blv = null;
             Cursor.Current = Cursors.WaitCursor;
-            _logger.LogDetailAsync($"Load Item Definitions SetupGridItemDefinition Start ");
+            await _logger.LogDetailAsync($"Load Item Definitions SetupGridItemDefinition Start ");
             SetupGridItemDefinition();
-            _logger.LogDetailAsync($"Load Item Definitions SetupGridItemDefinition End");
+            await _logger.LogDetailAsync($"Load Item Definitions SetupGridItemDefinition End");
             MBHotPick.Enabled = false;
             MBHotStore.Enabled = false;
             var idx = 0;
             var findWhat = string.IsNullOrEmpty(find) ? TextBoxFindItem.Text.ToLower().Trim() : find;
 
             IEnumerable<ItemDefinitionView> views;
-            _logger.LogDetailAsync($"Load Item Definitions Check Workstation Type ");
+            await _logger.LogDetailAsync($"Load Item Definitions Check Workstation Type ");
             // if its a Supervisor workstation, load the Rack items
             if (_workstationView.StationType.Id == (int)StationType.StationType.Supervisor)
             {
-                _logger.LogDetailAsync($"Load Item Definitions Workstation Type Is Supervisor ");
-                
-                    _logger.LogDetailAsync($"Load Item Definitions Rack Workstation is NOT null ");
-                    _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByArea  ");
-                    _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and AreaId: {_workstationView.AreaId} ");
-                    views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(findWhat, _workstationView.AreaId);
-                    _logger.LogDetailAsync($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
-                    blv = new BindingListView<ItemDefinitionView>(views.ToList());
-                    _logger.LogDetailAsync($"Load Item Definitions BLV created ");
-                
+                await _logger.LogDetailAsync($"Load Item Definitions Workstation Type Is Supervisor ");
+
+                await _logger.LogDetailAsync($"Load Item Definitions Rack Workstation is NOT null ");
+                await _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByArea  ");
+                await _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and AreaId: {_workstationView.AreaId} ");
+                views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(findWhat, _workstationView.AreaId);
+                await _logger.LogDetailAsync($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
+                blv = new BindingListView<ItemDefinitionView>(views.ToList());
+                await _logger.LogDetailAsync($"Load Item Definitions BLV created ");
+
             }
             else
             {
-                _logger.LogDetailAsync($"Load Item Definitions NOT a Supervisor Workstation ");
-                _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByArea  ");
-                _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and Area: {_workstationView.AreaId} ");
+                await _logger.LogDetailAsync($"Load Item Definitions NOT a Supervisor Workstation ");
+                await _logger.LogDetailAsync($"Load Item Definitions Call FindItemDefinitionViewsByArea  ");
+                await _logger.LogDetailAsync($"Load Item Definitions Passing in findWhat: {findWhat}  and Area: {_workstationView.AreaId} ");
                 views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(findWhat, _workstationView.AreaId).ToList();
-                _logger.LogDetailAsync($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
+                await _logger.LogDetailAsync($"Load Item Definitions Back with Views.  Setting them to BindingListView ");
 
                 if (!views.Any() && !string.IsNullOrEmpty(findWhat))
                 {
                     var akaFind = _akaRepository.Get(findWhat);
                     TextBoxFindItem.Text = akaFind;
                     views = _itemDefinitionsRepository.FindItemDefinitionViewsByArea(akaFind, _workstationView.AreaId).ToList();
-                    _logger.LogDetailAsync($"Load Item Definitions Back with Views Using AKA Find.  Setting them to BindingListView ");
+                    await _logger.LogDetailAsync($"Load Item Definitions Back with Views Using AKA Find.  Setting them to BindingListView ");
                 }
 
                 blv = new BindingListView<ItemDefinitionView>(views.ToList());
-                _logger.LogDetailAsync($"Load Item Definitions BLV created ");
+                await _logger.LogDetailAsync($"Load Item Definitions BLV created ");
             }
 
 
 
 
-            _logger.LogDetailAsync($"Load Item Definitions Create a new BindingSource using BLV as DataSource ");
-            _logger.LogDetailAsync($"Load Item Definitions called _bindingSourceItemDefinitions");
+            await _logger.LogDetailAsync($"Load Item Definitions Create a new BindingSource using BLV as DataSource ");
+            await _logger.LogDetailAsync($"Load Item Definitions called _bindingSourceItemDefinitions");
             _bindingSourceItemDefinitions = new BindingSource { DataSource = blv };
-            _logger.LogDetailAsync($"Load Item Definitions New BindingSource has been created");
-            _logger.LogDetailAsync($"Load Item Definitions Now set the DataGridViewHot.DataSource = to the new Bindingsource, _bindingSourceItemDefinitions ");
+            await _logger.LogDetailAsync($"Load Item Definitions New BindingSource has been created");
+            await _logger.LogDetailAsync($"Load Item Definitions Now set the DataGridViewHot.DataSource = to the new Bindingsource, _bindingSourceItemDefinitions ");
             DataGridViewHot.DataSource = _bindingSourceItemDefinitions;
             DataGridViewHot.Update();
-            _logger.LogDetailAsync($"Load Item Definitions Update the Grid ");
+            await _logger.LogDetailAsync($"Load Item Definitions Update the Grid ");
             //UpdateDataGrid(_bindingSourceItemDefinitions);
-            _logger.LogDetailAsync($"Load Item Definitions Get the Record Count");
+            await _logger.LogDetailAsync($"Load Item Definitions Get the Record Count");
             var recordCount = GetRecordCount(_bindingSourceItemDefinitions);
             if (recordCount > 0)
             {
-                _logger.LogDetailAsync($"Load Item Definitions Record count is greater that zero ");
+                await _logger.LogDetailAsync($"Load Item Definitions Record count is greater that zero ");
                 if (recId != 0)
                 {
-                    _logger.LogDetailAsync($"Load Item Definitions if passed in recId is not zero ");
-                    _logger.LogDetailAsync($"Load Item Definitions Set the bindingSource to the recId ");
+                    await _logger.LogDetailAsync($"Load Item Definitions if passed in recId is not zero ");
+                    await _logger.LogDetailAsync($"Load Item Definitions Set the bindingSource to the recId ");
                     idx = IndexOf(_bindingSourceItemDefinitions, recId);
                 }
                 try
                 {
-                    _logger.LogDetailAsync($"Load Item Definitions Set the row index to {idx} ");
+                    await _logger.LogDetailAsync($"Load Item Definitions Set the row index to {idx} ");
                     DataGridViewHot.FirstDisplayedScrollingRowIndex = idx;
                     DataGridViewHot.Update();
                     DataGridViewHot.CurrentCell = DataGridViewHot.Rows[idx].Cells[1];
                     DataGridViewHot.Rows[idx].Selected = true;
-                    _logger.LogDetailAsync($"Load Item Definitions Row set and highlight complete ");
-                    _logger.LogDetailAsync($"Load Item Definitions Set the Current Item Definition ");
+                    await _logger.LogDetailAsync($"Load Item Definitions Row set and highlight complete ");
+                    await _logger.LogDetailAsync($"Load Item Definitions Set the Current Item Definition ");
                     _currentItemDefinition =
                          ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
-                    _logger.LogDetailAsync($"Load Item Definitions Current Item: {_currentItemDefinition.Item} ");
-                    _logger.LogDetailAsync($"Load Item Definitions If record count = 1 then call LoadCurrentAndNew ");
+                    await _logger.LogDetailAsync($"Load Item Definitions Current Item: {_currentItemDefinition.Item} ");
+                    await _logger.LogDetailAsync($"Load Item Definitions If record count = 1 then call LoadCurrentAndNew ");
                     if (recordCount == 1) await LoadCurrentAndNew();
                 }
                 catch (Exception ex)
@@ -660,7 +660,7 @@ public void UpdateWorkItMessage(string message)
             }
             DataGridViewHot.ClearSelection();
             Cursor.Current = Cursors.Default;
-            Task.Run(() => _logger.LogDetailAsync($"Load Item Definitions Find: {find}  END"));
+            await Task.Run(() => _logger.LogDetailAsync($"Load Item Definitions Find: {find}  END"));
         }
         private void ClearCurrentAndNew()
         {
@@ -702,14 +702,14 @@ public void UpdateWorkItMessage(string message)
         }
         private void SetupGridItemDefinition()
         {
-            _logger.LogDetailAsync($"SetupGridItemDefinition 1");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 1");
             //if (_currentGridDataType == GridDataType.Item) return;
             DataGridViewHot.Columns.Clear();
             _currentGridDataType = GridDataType.Item;
             DataGridViewHot.AutoGenerateColumns = false;
             DataGridViewHot.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 2");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 2");
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = $"AreaName",
@@ -720,7 +720,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 3");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 3");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = $"Item",
@@ -731,7 +731,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 4");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 4");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
@@ -742,7 +742,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 5");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 5");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UnitOfIssueName",
@@ -753,7 +753,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 6");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 6");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMax",
@@ -764,7 +764,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 7");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 7");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SizeCodeName",
@@ -775,7 +775,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 8");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 8");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "VelocityCodeName",
@@ -786,7 +786,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 9");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 9");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "HeightCodeName",
@@ -797,7 +797,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 10");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 10");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMin",
@@ -808,7 +808,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 11");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 11");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMax",
@@ -819,7 +819,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 12");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 12");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "SystemMin",
@@ -831,7 +831,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition 13");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition 13");
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
@@ -841,7 +841,7 @@ public void UpdateWorkItMessage(string message)
             };
             DataGridViewHot.Columns.Add(col);
 
-            _logger.LogDetailAsync($"SetupGridItemDefinition Start Column Formatting");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition Start Column Formatting");
 
             DataGridViewHot.EnableHeadersVisualStyles = false;
             DataGridViewHot.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -851,7 +851,7 @@ public void UpdateWorkItMessage(string message)
             //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             //}
-            _logger.LogDetailAsync($"SetupGridItemDefinition End Column Formatting");
+            _ = _logger.LogDetailAsync($"SetupGridItemDefinition End Column Formatting");
         }
         private void SetupGridNew()
         {
@@ -1202,7 +1202,7 @@ public void UpdateWorkItMessage(string message)
                 //{
                 //    TextBoxFindItem.Text = findWhat;
                 //}
-                LoadItemDefinitions();
+                _ = LoadItemDefinitions();
             }
             catch (Exception ex)
             {
@@ -1223,8 +1223,8 @@ public void UpdateWorkItMessage(string message)
             //{
             //    LoadItemDefinitions();
             //}
-            LoadItemDefinitions();
-            
+            _ = LoadItemDefinitions();
+
             TextBoxFindItem.Focus();
             Cursor.Current = Cursors.Default;
             Task.Run(() => _logger.LogDetailAsync($"Hot Pick Clear END"));
@@ -1360,7 +1360,7 @@ public void UpdateWorkItMessage(string message)
                 _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                 tabControl1.SelectedTab = HotAction;
             }
-            Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
+            await Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
         }
 
         private async void MBHotStore_Click(object sender, EventArgs e)
@@ -1514,7 +1514,7 @@ public void UpdateWorkItMessage(string message)
                     _deviceIndicatorManager.UpdateCurrentDeviceIndicator(loc1);
                     tabControl1.SelectedTab = HotAction;
                 }
-                Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
+                _ = Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
 
                 //---------------------------------------------------------------------
 
@@ -1678,15 +1678,15 @@ public void UpdateWorkItMessage(string message)
                     _deviceIndicatorManager.UpdateCurrentDeviceIndicator(location.Loc1);
                     tabControl1.SelectedTab = HotAction;
                 }
-                Task.Run(() => _logger.LogDetailAsync($"Hot Pick Button Press END"));
+                await _logger.LogDetailAsync($"Hot Pick Button Press END");
 
             }
-            Task.Run(() => _logger.LogDetailAsync($"Hot Store Button Press END"));
+            await _logger.LogDetailAsync($"Hot Store Button Press END");
         }
 
         private async Task UpdateHotPickScreen(SqlInventoryView invItem)
         {
-            Task.Run(() => _logger.LogDetailAsync("Update Hot Pick Screen START"));
+            await _logger.LogDetailAsync("Update Hot Pick Screen START");
             try
             {
                 using (var db = new NeutronDb())
@@ -1699,18 +1699,18 @@ public void UpdateWorkItMessage(string message)
                     LabelHotPickDescription.Text = itemDefinition.Description;
                     LabelHotPickItem.Text = itemDefinition.Item;
                     LabelHotPickUOI.Text = itemDefinition.UnitOfIssue.Name;
-                    
-										//TextBoxHotPickLoc1.Text = location.Loc1.ToString();
+
+                    //TextBoxHotPickLoc1.Text = location.Loc1.ToString();
                     //TextBoxHotPickLoc2.Text = location.Loc2.ToString();
                     //TextBoxHotPickLoc3.Text = location.Loc3.ToString();
                     //TextBoxHotPickLoc4.Text = location.Loc4.ToString();
                     //TextBoxHotPickLoc5.Text = location.Loc5.ToString();
                     //LabelSlot.Text = location.Slot;
                     //----------------------                 
-                    
-                    
-                    
-                     //----------------------
+
+
+
+                    //----------------------
 
                     if (location.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
                     {
@@ -1743,7 +1743,7 @@ public void UpdateWorkItMessage(string message)
                         TextBoxHotPickLoc3.Visible = true;
                         TextBoxHotPickLoc4.Visible = true;
                         TextBoxHotPickLoc5.Visible = true;
-                              
+
                         TextBoxHotPickLoc1.Text = location.Loc1.ToString();
                         TextBoxHotPickLoc2.Text = location.Loc2.ToString();
                         TextBoxHotPickLoc3.Text = location.Loc3.ToString();
@@ -1756,7 +1756,7 @@ public void UpdateWorkItMessage(string message)
 
 
                     //----------------------
-                    
+
                     ComboBoxSizeCodeItem.SelectedIndex = ComboBoxSizeCodeItem.FindStringExact(itemDefinition.SizeCode.Name);
                     ComboBoxVelocityCodeItem.SelectedIndex = ComboBoxVelocityCodeItem.FindStringExact(itemDefinition.VelocityCode.Name);
                     ComboBoxHeightCodeItem.SelectedIndex = ComboBoxHeightCodeItem.FindStringExact(itemDefinition.HeightCode.Name);
@@ -1779,12 +1779,12 @@ public void UpdateWorkItMessage(string message)
             {
                 Console.WriteLine(ex.ToString());
             }
-            Task.Run(() => _logger.LogDetailAsync("Update Hot Pick Screen END"));
+            await _logger.LogDetailAsync("Update Hot Pick Screen END");
         }
 
         private async Task UpdateHotPickScreenTray(SqlInventoryView invItem)
         {
-            Task.Run(() => _logger.LogDetailAsync("Update Hot Pick Screen Tray START"));
+            await _logger.LogDetailAsync("Update Hot Pick Screen Tray START");
             try
             {
                 using (var db = new NeutronDb())
@@ -1844,7 +1844,7 @@ public void UpdateWorkItMessage(string message)
             {
                 Console.WriteLine(ex.ToString());
             }
-            Task.Run(() => _logger.LogDetailAsync("Update Hot Pick Screen Tray END"));
+            await _logger.LogDetailAsync("Update Hot Pick Screen Tray END");
         }
 
         private void RadioButtonHotAction(object sender, EventArgs e)
@@ -1872,7 +1872,7 @@ public void UpdateWorkItMessage(string message)
         }
         private async void DataGridViewHot_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync("DataGrid View Hot Cell Click START"));
+            await _logger.LogDetailAsync("DataGrid View Hot Cell Click START");
             Cursor.Current = Cursors.WaitCursor;
             switch (_currentGridDataType)
             {
@@ -1886,12 +1886,12 @@ public void UpdateWorkItMessage(string message)
                     break;
             }
             Cursor.Current = Cursors.Default;
-            Task.Run(() => _logger.LogDetailAsync("DataGrid View Hot Cell Click END"));
+            await _logger.LogDetailAsync("DataGrid View Hot Cell Click END");
         }
 
         private async Task LoadCurrentAndNew()
         {
-            Task.Run(() => _logger.LogDetailAsync("Load Current And New START"));
+            await _logger.LogDetailAsync("Load Current And New START");
             if (_currentGridDataType == GridDataType.Item)
             {
                 if (_bindingSourceItemDefinitions.Count > 0)
@@ -1927,7 +1927,7 @@ public void UpdateWorkItMessage(string message)
                     SetHotButtonStatus();
                 }
             }
-            Task.Run(() => _logger.LogDetailAsync("Load Current And New END"));
+            await _logger.LogDetailAsync("Load Current And New END");
         }
 
         private void SetHotButtonStatus()
@@ -1963,7 +1963,7 @@ public void UpdateWorkItMessage(string message)
             }
         }
 
-        private async void MBHotActionBack_Click(object sender, EventArgs e)
+        private void MBHotActionBack_Click(object sender, EventArgs e)
         {
             Back();
         }
@@ -2002,7 +2002,7 @@ public void UpdateWorkItMessage(string message)
 
         private async Task Accept()
         {
-            Task.Run(() => _logger.LogDetailAsync($"Hot Accept Button Pressed START"));
+            await _logger.LogDetailAsync($"Hot Accept Button Pressed START");
             ReplenOrderDetail orderDetail = null;
             var pickQty = (TextBoxHotPickQuantity.Text).ParseInt();
             if (CheckForOverPick(pickQty)) return;
@@ -2127,7 +2127,7 @@ public void UpdateWorkItMessage(string message)
                 }
             }
 
-            
+
 
             if (_pickList == null)
             {
@@ -2284,7 +2284,7 @@ public void UpdateWorkItMessage(string message)
         }
         private async void FrmHotAction_KeyDown(object sender, KeyEventArgs e)
         {
-            Task.Run(() => _logger.LogDetailAsync($"Hot Action Key Down Key Pressed: {e.KeyCode} START"));
+            await _logger.LogDetailAsync($"Hot Action Key Down Key Pressed: {e.KeyCode} START");
 
             switch (e.KeyCode)
             {
@@ -2297,8 +2297,8 @@ public void UpdateWorkItMessage(string message)
                         else if (TextBoxScanLocation.Focused)
                         {
                             var slot = TextBoxScanLocation.Text;
-                           // var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
-                           // TextBoxScanLocation.Text = searchSlot;
+                            // var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+                            // TextBoxScanLocation.Text = searchSlot;
                             LoadNewLocationsBySlot(slot);
                         }
                         else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
@@ -2312,28 +2312,28 @@ public void UpdateWorkItMessage(string message)
                         break;
                     }
                 case Keys.Tab:
-                {
-                    if (TextBoxFindItem.Focused)
                     {
-                        FindItem();
+                        if (TextBoxFindItem.Focused)
+                        {
+                            FindItem();
+                        }
+                        else if (TextBoxScanLocation.Focused)
+                        {
+                            var slot = TextBoxScanLocation.Text;
+                            // var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
+                            // TextBoxScanLocation.Text = searchSlot;
+                            LoadNewLocationsBySlot(slot);
+                        }
+                        else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
+                        {
+                            await Accept();
+                        }
+                        else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && TextBoxHotPickQuantity.Focused)
+                        {
+                            MBHotAccept.Focus();
+                        }
+                        break;
                     }
-                    else if (TextBoxScanLocation.Focused)
-                    {
-                        var slot = TextBoxScanLocation.Text;
-                        // var searchSlot = GlobalVar.SlotNameFactory.CreateSearchString(slot);
-                        // TextBoxScanLocation.Text = searchSlot;
-                        LoadNewLocationsBySlot(slot);
-                    }
-                    else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && MBHotAccept.Focused)
-                    {
-                        await Accept();
-                    }
-                    else if (TextBoxHotPickQuantity.Text.ParseInt() > 0 && TextBoxHotPickQuantity.Focused)
-                    {
-                        MBHotAccept.Focus();
-                    }
-                    break;
-                }
                 case Keys.Escape:
                     {
                         TextBoxFindItem.Text = "";
@@ -2403,7 +2403,7 @@ public void UpdateWorkItMessage(string message)
             //        Show();
             //    }
             //}
-            Task.Run(() => _logger.LogDetailAsync($"Hot Action Key Down END"));
+            await _logger.LogDetailAsync($"Hot Action Key Down END");
         }
 
         private void MBCurrentLocations_Click(object sender, EventArgs e)
@@ -2498,7 +2498,7 @@ public void UpdateWorkItMessage(string message)
                 await UpdateHotPickScreen(_currentInventoryView);
             }
         }
-      
+
         private async void ComboBoxSizeCodeLocation_SelectionChangeCommitted(object sender, EventArgs e)
         {
             var box = (ComboBox)sender;
@@ -2648,7 +2648,7 @@ public void UpdateWorkItMessage(string message)
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error reading Cost Center Text Changed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Error reading Cost Center Text Changed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 MBHotAccept.Enabled = true;
             }
         }

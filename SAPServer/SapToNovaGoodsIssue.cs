@@ -28,7 +28,14 @@ namespace SAPServer
 
             try
             {
+                _ = _logger.LogDetailAsync($"Testing: SAP to Nova Goods Issue Stopped EARLY.  UnComment so processing can continue normally.");
+
                 RfcRepository repo = destination.Repository;
+
+                // Testing
+                return;
+
+
                 IRfcFunction sapToNeutronList = repo.CreateFunction("ZWM_SAP_TO_NOVA_GOODS_ISSUE");
 
                 var goodsIssueList = new List<GoodsIssue>();
@@ -64,13 +71,13 @@ namespace SAPServer
                 }
 
                 Console.WriteLine($"Goods Issue Records Retrieved From SAP: {goodsIssueList.Count}");
-                _logger.Log($"Goods Issue Records Retrieved From SAP: {goodsIssueList.Count}");
+                _ = _logger.LogDetailAsync($"Goods Issue Records Retrieved From SAP: {goodsIssueList.Count}");
                 //------------------
                 // Create backup Json file in case the Wagner Database is unavailable
                 var recs = _jsonData.LoadFile<List<GoodsIssue>>();
                 if (recs.Count > 0)
                 {
-                    _logger.Log($"Goods Issue Records Retrieved From Backup: {recs.Count}");
+                    _ = _logger.LogDetailAsync($"Goods Issue Records Retrieved From Backup: {recs.Count}");
                     Console.WriteLine($"Goods Issue Records Retrieved From Backup: {recs.Count}");
                     foreach (var rec in recs)
                     {
@@ -112,11 +119,11 @@ namespace SAPServer
                                 context.SaveChanges();
                                 row.Processed = true;
                                 Console.WriteLine($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
-                                _logger.Log($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
+                                _ = _logger.LogDetailAsync($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
                             }
                             catch (Exception e)
                             {
-                                _logger.Log($"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
+                                _ = _logger.LogDetailAsync($"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
                                 Console.WriteLine($"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
                                // _sendEmail.Message($"Error writing Single Goods Issue to INPUT Table", _logger.LastLogLines());
 
@@ -132,13 +139,13 @@ namespace SAPServer
                         }
                     }
                     _jsonData.SaveFile(unProcessedGoods);
-                    _logger.Log($"UnProcessed Goods Issue Record Count: {unProcessedGoods.Count}");
+                    _ = _logger.LogDetailAsync($"UnProcessed Goods Issue Record Count: {unProcessedGoods.Count}");
                     Console.WriteLine($"UnProcessed Goods Issue Record Count: {unProcessedGoods.Count}");
 
                 }
                 catch (Exception e)
                 {
-                    _logger.Log($"Error writing Goods Issue to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
+                    _ = _logger.LogDetailAsync($"Error writing Goods Issue to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
                     Console.WriteLine($"Error writing Goods Issue to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
                     //_sendEmail.Message($"Error writing Goods Issue to INPUT Table", _logger.LastLogLines());
                 }
@@ -146,25 +153,25 @@ namespace SAPServer
             }
             catch (RfcCommunicationException e)
             {
-                _logger.Log($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
             }
             catch (RfcLogonException e)
             {
-                _logger.Log($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
             }
             catch (RfcAbapRuntimeException e)
             {
-                _logger.Log($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
             }
             catch (RfcAbapBaseException e)
             {
-                _logger.Log($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
+                _ = _logger.LogDetailAsync($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 Console.WriteLine($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                 //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
             }
@@ -191,7 +198,7 @@ namespace SAPServer
             }
             catch (Exception e)
             {
-                _logger.Log($"Invalid Issue SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
+                _ = _logger.LogDetailAsync($"Invalid Issue SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
                 Console.WriteLine($"Invalid Issue SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
             }
             return result;

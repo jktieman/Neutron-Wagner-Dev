@@ -133,7 +133,7 @@ public class ProliteManager : IProliteManager
     /// <param name="hardwareDevice"></param>
     public void AddProlite(HardwareDevice hardwareDevice)
     {
-        _logger.LogDetailAsync($"Add Prolite: {hardwareDevice.Name}");
+     _ = _logger.LogDetailAsync($"Add Prolite: {hardwareDevice.Name}");
         try
         {
             var pro = _prolites.FirstOrDefault(p => p.DeviceNumber == hardwareDevice.DeviceNumber);
@@ -146,13 +146,13 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Add Prolite Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Add Prolite Error: {ex.Message}");
         }
     }
 
     public void RemoveProlite(int deviceNumber)
     {
-        _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}");
+     _ = _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}");
         try
         {
             var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -164,13 +164,13 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}");
         }
     }
 
     public void TurnOn(int deviceNumber, int level, int part, int quantity)
     {
-        _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
+     _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
         try
         {
             var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -184,13 +184,13 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
         }
     }
 
     public void TurnOnHot(int deviceNumber)
     {
-        _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT");
+     _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT");
         try
         {
             var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -202,13 +202,13 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
         }
     }
 
     public void TurnOnBlindCycle(int deviceNumber, int level, int part)
     {
-        _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle");
+     _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle");
         try
         {
             var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -220,14 +220,14 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
         }
     }
 
     // clear the prolite display
     public void ClearProlite(int deviceNumber)
     {
-        _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}");
+     _ = _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}");
         try
         {
             var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -236,14 +236,14 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}");
         }
     }
 
     // turn off the all prolite displays
     public void ClearAllProlites()
     {
-        _logger.LogDetailAsync($"Turn OFF ALL Prolites");
+     _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites");
         try
         {
             foreach (var prolite in _prolites)
@@ -254,7 +254,7 @@ public class ProliteManager : IProliteManager
         }
         catch (Exception ex)
         {
-            _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
+         _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
         }
     }
 
@@ -279,7 +279,7 @@ public class ProliteManager : IProliteManager
 
     private void InitSerialPort()
     {
-        _logger.LogDetailAsync($"Init Serial Port");
+     _ = _logger.LogDetailAsync($"Init Serial Port");
 
         var serialConfig = SerialConfiguration;
 
@@ -298,7 +298,7 @@ public class ProliteManager : IProliteManager
                 _serialPort?.Open();
                 if (_serialPort != null && _serialPort.IsOpen)
                 {
-                    _logger.LogDetailAsync("Startup Success");
+                 _ = _logger.LogDetailAsync("Startup Success");
                     //ShowData("Startup Success");
                     //_readMp12DThread = new Thread(ReadMp12D);
                     //RaiseSerialDataEvent += ProcessMp12DData;
@@ -314,19 +314,19 @@ public class ProliteManager : IProliteManager
                 }
                 catch (Exception e)
                 {
-                    _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}");
+                 _ = _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}");
                 }
 
                 Thread.Sleep(500);
 
                 var error = $"SerialPort Open Exception Number {i}: {ex.Message}";
-                _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
+             _ = _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
             }
         }
 
         if (!IsPortOpen)
         {
-            _logger.LogDetailAsync($"Port is NOT Open.  Number of fails: {i}");
+         _ = _logger.LogDetailAsync($"Port is NOT Open.  Number of fails: {i}");
         }
     }
 
@@ -334,7 +334,7 @@ public class ProliteManager : IProliteManager
     {
         var serialPort = (SerialPort)sender;
         var data = serialPort.ReadExisting();
-        _logger.LogDetailAsync($"Serial Data Received: {data}");
+     _ = _logger.LogDetailAsync($"Serial Data Received: {data}");
     }
 
     public bool IsPortOpen => _serialPort?.IsOpen ?? false;

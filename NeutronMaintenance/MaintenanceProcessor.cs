@@ -24,7 +24,7 @@ namespace NeutronMaintenance
         private readonly GenericRepository<Location> repoLocation = new GenericRepository<Location>(new NeutronDb());
         //private readonly HistoryManager historyManager = new HistoryManager();
         private readonly AlliedFileWatcher interfaceWatcher;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         string configFilePath;
         readonly bool usePr1Processor = false;
         readonly IJsonData jsonData;
@@ -40,20 +40,7 @@ namespace NeutronMaintenance
             usePr1Processor = neutronVariables.UsePr1Processor;
             LoaderSettings.Init();
 
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"Neutron Maintenance";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-
-            //usePr1Processor = Convert.ToBoolean(LoaderSettings.UsePr1Format);
-            //if (usePr1Processor)
-            //{
-            //    var masterProcessor = new MasterMaintenanceProcessor();
-            //    masterProcessor.ProcessMasterMaintenanceFiles();
-
-            //}
-
-
+            _logger = NeutronCore.Global.Logger.SetupLogger("MaintenanceProcessor");
         }
 
 
@@ -71,7 +58,7 @@ namespace NeutronMaintenance
             //{
             //    fileProcessor = new FileProcessor(files);
             //}
-            _logger.LogDetailAsync($"Background Worker Company Code: {neutronLicense.CompanyCode}");
+         _ = _logger.LogDetailAsync($"Background Worker Company Code: {neutronLicense.CompanyCode}");
             switch (neutronLicense.CompanyCode)
             {
                 case "TMG":
@@ -106,7 +93,7 @@ namespace NeutronMaintenance
         //    }
         //    catch (Exception ex)
         //    {
-        //       _logger.LogDetailAsync($"Get Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
+        //    _ = _logger.LogDetailAsync($"Get Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
         //    }
         //    return result;
         //}
@@ -148,7 +135,7 @@ namespace NeutronMaintenance
 
                 }
             }
-            _logger.LogDetailAsync($"Form Pick Company Code: {neutronLicense.CompanyCode}");
+         _ = _logger.LogDetailAsync($"Form Pick Company Code: {neutronLicense.CompanyCode}");
             switch (neutronLicense.CompanyCode)
             {
                 case "TMG":
@@ -201,7 +188,7 @@ namespace NeutronMaintenance
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.LogDetailAsync("File Created Error.  \r\n" + ex.Message + "\r\n" + ex.InnerException.Message + "\r\n" + ex.InnerException.InnerException.Message);
+        //     _ = _logger.LogDetailAsync("File Created Error.  \r\n" + ex.Message + "\r\n" + ex.InnerException.Message + "\r\n" + ex.InnerException.InnerException.Message);
         //    }
 
         //    switch (neutronLicense.CompanyCode)
@@ -236,7 +223,7 @@ namespace NeutronMaintenance
         {
             foreach (var msg in fileLockFailure.MessageList)
             {
-                _logger.LogDetailAsync("Lock Message " + msg);
+             _ = _logger.LogDetailAsync("Lock Message " + msg);
             }
         }
     }

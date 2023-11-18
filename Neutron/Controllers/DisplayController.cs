@@ -82,7 +82,7 @@ namespace Neutron.Controllers
 
         public async Task TurnOnAllBli()
         {
-
+            await _logger.LogDetailAsync("BLI Turn On All Displays NOT WORKING.");
         }
         private bool HartDisplayControllerInit()
         {
@@ -173,7 +173,7 @@ namespace Neutron.Controllers
             _logFileDir = LoaderSettings.GetLogFileDirectory();
             var folderName = string.Format(format: @"Display Controller_{0}", arg0: _workstationView.WorkstationId.ToString());
             var logActivity = LoaderSettings.EnableLogging;
-            Task.Run(() => _logger = new DynamicLogger(_logFileDir, folderName, logActivity));
+            _logger = new DynamicLogger(_logFileDir, folderName, logActivity);
         }
 
         public void CloseController()
@@ -233,7 +233,7 @@ namespace Neutron.Controllers
 
             if (!_hartDisplayController.Clear(_bliList, ref _cError))
             {
-                await _logger.LogDetailAsync($"BLI Clear All Display Error. \r\n  {_cError}");
+                await _logger.LogDetailAsync($"BLI Clear All Display Error. {Environment.NewLine}  {_cError}");
             }
 
         }
@@ -257,7 +257,7 @@ namespace Neutron.Controllers
 
             if (!_hartDisplayController.Show(shi, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"SHI Show Single Display Error.  {shi.SHI_Address}\r\n {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"SHI Show Single Display Error.  {shi.SHI_Address}{Environment.NewLine} {_cError}"));
             }
         }
 
@@ -285,7 +285,7 @@ namespace Neutron.Controllers
                 Thread.Sleep(10);
                 if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
+                    Task.Run(() => _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}{Environment.NewLine} {_cError}"));
                 }
             }
         }
@@ -302,7 +302,7 @@ namespace Neutron.Controllers
                 Thread.Sleep(10);
                 if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Hart BLI Show Single Display Error.  { bli.BLI_Address}\r\n {_cError}"));
+                    Task.Run(() => _logger.LogDetailAsync($"Hart BLI Show Single Display Error.  { bli.BLI_Address}{Environment.NewLine} {_cError}"));
                 }
             }
         }
@@ -313,7 +313,7 @@ namespace Neutron.Controllers
             Thread.Sleep(10);
             if (!_hartDisplayController.Show(shi, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"Hart SHI Show Single Display Error 2.  {shi.SHI_Address}\r\n {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"Hart SHI Show Single Display Error 2.  {shi.SHI_Address}{Environment.NewLine} {_cError}"));
             }
         }
 
@@ -322,7 +322,7 @@ namespace Neutron.Controllers
             Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display. {bli.BLI_Address}"));
             if (!_hartDisplayController.Clear(bli, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display Error.  {bli.BLI_Address}\r\n {_cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display Error.  {bli.BLI_Address}{Environment.NewLine} {_cError}"));
             }
         }
 
@@ -331,7 +331,7 @@ namespace Neutron.Controllers
             Task.Run(() => _logger.LogDetailAsync($"SHI Clear Single Display.  {shi.SHI_Address}"));
             if (!_hartDisplayController.Clear(shi, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"SHI Clear Single Display Error.   {shi.SHI_Address} \r\n { _cError}"));
+                Task.Run(() => _logger.LogDetailAsync($"SHI Clear Single Display Error.   {shi.SHI_Address} {Environment.NewLine} { _cError}"));
             }
         }
 

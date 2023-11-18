@@ -15,7 +15,7 @@ namespace Neutron.Classes
     public static class CsvUtility
     {
         private static readonly GenericRepository<Inventory> RepoInventory = new GenericRepository<Inventory>(new NeutronDb());
-
+        private static readonly char quote = '"';
         public static void SaveToCsv(DataGridView dgv)
         {
 
@@ -114,7 +114,7 @@ namespace Neutron.Classes
                     var sb = new StringBuilder();
 
                     sb.Append(inv.ItemDefinition.Item + ",");
-                    sb.Append(inv.ItemDefinition.Description + ",");
+                    sb.Append($"{quote}{inv.ItemDefinition.Description}{quote},");
                     sb.Append(inv.ItemDefinition.UnitOfIssue.Name + ",");
                     sb.Append(inv.Location.Loc1.ToString() + ",");
                     sb.Append(inv.Location.Loc2.ToString() + ",");

@@ -15,6 +15,8 @@ namespace NeutronMaintenance
 {
     public class RandomLocationManager : ILocationManager
     {
+        private readonly ISizeCodeManager _sizeCodeManager;
+        private readonly IHeightCodeManager _heightCodeManager;
         private readonly IVelocityCodeManager _velocityCodeManager;
         private readonly GenericRepository<Location> _repoLocation;
 
@@ -25,8 +27,10 @@ namespace NeutronMaintenance
         //private readonly GenericRepository<LocationCode> _repoLocationCode;
         //private readonly GenericRepository<Inventory> _repoInventory;
 
-        public RandomLocationManager(IVelocityCodeManager velocityCodeManager)
+        public RandomLocationManager(ISizeCodeManager sizeCodeManager, IHeightCodeManager heightCodeManager,  IVelocityCodeManager velocityCodeManager)
         {
+            _sizeCodeManager = sizeCodeManager;
+            _heightCodeManager = heightCodeManager;
             _velocityCodeManager = velocityCodeManager;
             _repoLocation = new GenericRepository<Location>(new NeutronDb());
 
@@ -72,32 +76,48 @@ namespace NeutronMaintenance
                 rec.Loc2 = novaRandomLocation.Bin.ParseInt();
                 rec.Loc3 = novaRandomLocation.Lvl.ParseInt();
                 rec.Loc4 = novaRandomLocation.Prt.ParseInt();
+                rec.Loc5 = 1;
+                rec.Slot = string.Empty;
+                rec.LocationCode = string.Empty;    
+                rec.SizeCodeId = _sizeCodeManager.Get(novaRandomLocation.Size).Id;
                 rec.VelocityCodeId = _velocityCodeManager.Get(novaRandomLocation.Velocity).Id;
-            }
-            else
-            {
+                rec.HeightCodeId = _heightCodeManager.Get(novaRandomLocation.Height).Id;
+                rec.InUse = false;
 
+                _repoLocation.Insert(rec);
             }
         }
 
         private void Modify(NovaRandomLocation novaRandomLocation)
         {
             var rec = Get(novaRandomLocation);
-            if(rec == null) return;
-            var velocity = _velocityCodeManager.Get(novaRandomLocation.Velocity);
-           // rec.VelocityCode = novaRandomLocation.Velocity
+            if (rec != null)
+            {
+                rec.AreaId = novaRandomLocation.SystemNumber.ParseInt();
+                rec.Loc1 = novaRandomLocation.Car.ParseInt();
+                rec.Loc2 = novaRandomLocation.Bin.ParseInt();
+                rec.Loc3 = novaRandomLocation.Lvl.ParseInt();
+                rec.Loc4 = novaRandomLocation.Prt.ParseInt();
+                rec.SizeCodeId = _sizeCodeManager.Get(novaRandomLocation.Size).Id;
+                rec.VelocityCodeId = _velocityCodeManager.Get(novaRandomLocation.Velocity).Id;
+                rec.HeightCodeId = _heightCodeManager.Get(novaRandomLocation.Height).Id;
+                rec.InUse = false;
 
+                _repoLocation.Update(rec);
+            }
         }
 
         private void Delete(NovaRandomLocation novaRandomLocation)
         {
             var rec = Get(novaRandomLocation);
+            _repoLocation.Delete(rec.Id);
         }
 
 
         private Location Get(NovaRandomLocation novaRandomLocation)
         {
-            return _repoLocation.All().FirstOrDefault(r => r.AreaId == novaRandomLocation.SystemNumber.ParseInt() && r.Loc1 == novaRandomLocation.Car.ParseInt() && r.Loc2 == novaRandomLocation.Bin.ParseInt() && r.Loc3 == novaRandomLocation.Lvl.ParseInt() && r.Loc4 == novaRandomLocation.Prt.ParseInt());
+            var rec = _repoLocation.All().FirstOrDefault(r => r.AreaId == novaRandomLocation.SystemNumber.ParseInt() && r.Loc1 == novaRandomLocation.Car.ParseInt() && r.Loc2 == novaRandomLocation.Bin.ParseInt() && r.Loc3 == novaRandomLocation.Lvl.ParseInt() && r.Loc4 == novaRandomLocation.Prt.ParseInt());
+            return rec;
         }
     }
 }

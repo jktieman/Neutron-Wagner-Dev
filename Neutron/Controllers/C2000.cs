@@ -31,7 +31,7 @@ namespace Neutron.Controllers
         readonly int Device_Stationary = -1;
         readonly int Device_Alignment_DontCare = 0;
 
-        readonly DynamicLogger _logger;
+        readonly IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
         private Form _currentForm;
         private readonly Object locker = new Object();
@@ -92,7 +92,7 @@ namespace Neutron.Controllers
                         var enabledUnitNumbers = _workstationView.HardwareDevices.Where(r => r.Enabled).Select(s => s.DeviceNumber).ToList();
 
                         Task.Run(() =>
-                            _logger.LogDetailAsync(
+                         _ = _logger.LogDetailAsync(
                                 $"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()} Parity: {serialConfiguration.Parity.ToString()}  Device Count: {serialConfiguration.DeviceCount}"));
 
                         if (Shuttle_1.Init_Controller(serialConfiguration.PortNumber, serialConfiguration.BaudRate,
@@ -316,7 +316,7 @@ namespace Neutron.Controllers
                                         Thread.Sleep(millisecondsTimeout: 100);
                                         var counter = loopCounter;
                                         Task.Run(() =>
-                                            _logger.LogDetailAsync(
+                                         _ = _logger.LogDetailAsync(
                                                 $"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.Current_Tray.ToString()}  In Motion is {status.In_Motion.ToString()}  Loop Count: {counter.ToString()}"));
                                   
                                     }
@@ -401,11 +401,11 @@ namespace Neutron.Controllers
             {
                 Shuttle_1.Close_Controller(ref cError);
 
-                _logger.LogDetailAsync($"Close 2000 Controller - Success {cError}");
+             _ = _logger.LogDetailAsync($"Close 2000 Controller - Success {cError}");
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Close 2000 Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Close 2000 Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}");
             }
         }
 
@@ -413,11 +413,11 @@ namespace Neutron.Controllers
         {
             string msg = string.Empty;
             var deviceStatus = new Hart_DeviceStatusType();
-            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+         _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!Shuttle_1.Init_Success)
             {
-                _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
-                _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+             _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
+             _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
@@ -428,7 +428,7 @@ namespace Neutron.Controllers
                 if (Shuttle_1.Get_Device_Status(ref myDeviceStatusList, ref cError))
                 {
                     // At this point, you have current status for every device in your list
-                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
+                 _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)
@@ -446,12 +446,12 @@ namespace Neutron.Controllers
                         }
                     }
 
-                    _logger.LogDetailAsync(msg);
+                 _ = _logger.LogDetailAsync(msg);
                     //ShowMessage(msg);
                 }
                 else
                 {
-                    _logger.LogDetailAsync("Get Device Status request aborted...");
+                 _ = _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
             return deviceStatus;

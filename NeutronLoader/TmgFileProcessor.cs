@@ -44,7 +44,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Load Files Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+             _ = _logger.LogDetailAsync($"Load Files Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
                             $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
         }
@@ -132,7 +132,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
+             _ = _logger.LogDetailAsync($"Process Interface File Error.{Environment.NewLine}{ex.Message}{Environment.NewLine}" +
                             $"{ex.InnerException?.Message}{Environment.NewLine}{ex.InnerException?.InnerException?.Message}");
             }
             return hostOrderList;

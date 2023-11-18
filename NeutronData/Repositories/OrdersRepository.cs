@@ -81,7 +81,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
 
@@ -162,7 +162,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
 
@@ -246,7 +246,7 @@ namespace NeutronData.Repositories
             //}
             //catch (Exception ex)
             //{
-            //    _logger.LogDetailAsync("Get AvailableOrders View Error. " + ex.Message + " " + ex.InnerException);
+            // _ = _logger.LogDetailAsync("Get AvailableOrders View Error. " + ex.Message + " " + ex.InnerException);
             //}
 
             return recs;
@@ -344,7 +344,7 @@ namespace NeutronData.Repositories
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.LogDetailAsync("Get Available Orders View Error. " + ex.Message + " " + ex.InnerException);
+        //     _ = _logger.LogDetailAsync("Get Available Orders View Error. " + ex.Message + " " + ex.InnerException);
         //    }
         //    var re = recs.Where(r => r.Ord2.Trim() == "2408782").FirstOrDefault();
         //    return recs;
@@ -1355,7 +1355,10 @@ namespace NeutronData.Repositories
 
             if (ord != null)
             {
-                ord.OrderDetails = ord.OrderDetails.Where(x => x.OrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
+                var orderDetails = _repoOrderDetails.FindBy(x => x.OrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
+                ord.OrderDetails = orderDetails;
+
+                //ord.OrderDetails = ord.OrderDetails.Where(x => x.OrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
             }
             return ord;
         }
@@ -1375,13 +1378,13 @@ namespace NeutronData.Repositories
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SERIALPICKING", value: serialPicking);
                     parameters.Add(param);
-                    _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreen. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
+                 _ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreen. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
                     recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreen @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
+             _ = _logger.LogDetailAsync("Get Available Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
 

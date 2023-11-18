@@ -46,12 +46,12 @@ namespace NeutronLoader
 
         public void StartProcessingUploadFiles()
         {
-            _logger.LogDetailAsync($"Start Processing Upload Files");
+         _ = _logger.LogDetailAsync($"Start Processing Upload Files");
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
             _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
 
-            _logger.LogDetailAsync($"Start Processing Skip Replenishment");
+         _ = _logger.LogDetailAsync($"Start Processing Skip Replenishment");
             startTimeSpan = TimeSpan.Zero;
             periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
             _replenTimer = new Timer(t => { CreateReplenFile(); }, null, startTimeSpan, periodTimeSpan);
@@ -80,7 +80,7 @@ namespace NeutronLoader
 
             UploadBusy = true;
 
-            _logger.LogDetailAsync($"Process Upload Records");
+         _ = _logger.LogDetailAsync($"Process Upload Records");
 
             var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             try
@@ -89,7 +89,7 @@ namespace NeutronLoader
                 {
                     var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
                         .ToList();
-                    _logger.LogDetailAsync($"History Record Count: {recs.Count}");
+                 _ = _logger.LogDetailAsync($"History Record Count: {recs.Count}");
                     if (recs.Count <= 0) return;
                     var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                     hostFile.CreateMetHostFile(recs);
@@ -97,7 +97,7 @@ namespace NeutronLoader
                     foreach (var rec in recs)
                     {
                         rec.TransmitDateTime = DateTime.Now;
-                        _logger.LogDetailAsync($"Update the Transmit DateTime of History Record: {rec.TransmitDateTime}");
+                     _ = _logger.LogDetailAsync($"Update the Transmit DateTime of History Record: {rec.TransmitDateTime}");
                     }
 
                     db.SaveChanges();
@@ -107,13 +107,13 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
-                _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
             finally
             {
                 UploadBusy = false;
             }
-            _logger.LogDetailAsync($"Set Upload Busy False");
+         _ = _logger.LogDetailAsync($"Set Upload Busy False");
             UploadBusy = false;
         }
 
@@ -135,7 +135,7 @@ namespace NeutronLoader
 
             ReplenBusy = true;
 
-            _logger.LogDetailAsync($"Processing Highlight/Skip Records");
+         _ = _logger.LogDetailAsync($"Processing Highlight/Skip Records");
             try
             {
                 using (var db = new NeutronDb())
@@ -143,7 +143,7 @@ namespace NeutronLoader
                     var recs = db.Database.SqlQuery<ReplenMilwaukeeTool>("usp_GetReplenishments").ToList();
 
                     // var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && h.ActionCode == 45).ToList();
-                    _logger.LogDetailAsync($"Replen Highlight Record Count: {recs.Count}");
+                 _ = _logger.LogDetailAsync($"Replen Highlight Record Count: {recs.Count}");
                     if (recs.Count <= 0) return;
                     var directoryInfo = new DirectoryInfo(@"N:\REPLEN");
                     if (!Directory.Exists(directoryInfo.FullName))
@@ -172,7 +172,7 @@ namespace NeutronLoader
                         var history = db.History.Find(rec.Id);
                         if (history == null) continue;
                         history.TransmitDateTime = DateTime.Now;
-                        _logger.LogDetailAsync($"Update the Transmit DateTime of History Record: {history.TransmitDateTime}");
+                     _ = _logger.LogDetailAsync($"Update the Transmit DateTime of History Record: {history.TransmitDateTime}");
                     }
 
                     db.SaveChanges();
@@ -182,13 +182,13 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 MessageBox.Show(@"Replen Process Failed, see Log file in HostFile.");
-                _logger.LogDetailAsync($"Create Replen File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Create Replen File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
             finally
             {
                 ReplenBusy = false;
             }
-            _logger.LogDetailAsync($"Set Replen Busy False");
+         _ = _logger.LogDetailAsync($"Set Replen Busy False");
             ReplenBusy = false;
         }
 

@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using NeutronData.Interfaces;
 using NeutronData.ModelViews;
 
 namespace NeutronLoader
@@ -25,8 +24,7 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly WorkstationView _workstationView;
-        private readonly DynamicLogger _logger;
-        private readonly int _rackStationId;
+        private readonly IDynamicLogger _logger;
 
         public HostFileSfh( NeutronLicense neutronLicense, NeutronVariables neutronVariables
             , WorkstationView workstationView)
@@ -36,12 +34,8 @@ namespace NeutronLoader
             _workstationView = workstationView;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"HostFile";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-
-           // var rackStationIsNull = true;
+            _logger = NeutronCore.Global.Logger.SetupLogger("HostFile");
+            // var rackStationIsNull = true;
             // SAP requires a 9 for the Off Carousel area number 8
             //if (_rackStation == null)
             //{
@@ -52,20 +46,20 @@ namespace NeutronLoader
             //    rackStationIsNull = false;
             //    _rackStationId = _rackStation.Id;
             //}
-            //_logger.Log($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
+            //_ = _logger.LogDetailAsync($"Rack Station is NULL: {rackStationIsNull}  Rack Station Id: {_rackStationId}");
         }
 
         public bool CreateHostFile(List<History> historyRecs)
         {
-            _logger.Log($"Create SFH HostFile with HistoryRecs");
+            _ = _logger.LogDetailAsync($"Create SFH HostFile with HistoryRecs");
             if (_hostUploadDirectory == null) return false;
-            _logger.Log($"HostFile List<History> Calling SaveUploadDatFile HistoryRecs");
+            _ = _logger.LogDetailAsync($"HostFile List<History> Calling SaveUploadDatFile HistoryRecs");
             return SaveUploadDatFile(historyRecs);
         }
 
         private bool SaveUploadDatFile(List<History> historyRecs)
         {
-            _logger.Log($"History Record Count: {historyRecs.Count}");
+            _ = _logger.LogDetailAsync($"History Record Count: {historyRecs.Count}");
             var result = false;
             if (!Directory.Exists(_hostUploadDirectory.FullName))
             {
@@ -75,17 +69,17 @@ namespace NeutronLoader
             if (!string.IsNullOrEmpty(fileName))
             {
                 var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
-                _logger.Log($"FullName: {fullName}");
+                _ = _logger.LogDetailAsync($"FullName: {fullName}");
                 try
                 {
                     using (var tw = new StreamWriter(fullName, append: true))
                     {
-                        _logger.Log($"Stream Writer: {tw.ToString()}");
+                        _ = _logger.LogDetailAsync($"Stream Writer: {tw.ToString()}");
                         foreach (var history in historyRecs)
                         {
-                            _logger.Log($"Stream Writer - Starting For Loop: {tw.ToString()}");
+                            _ = _logger.LogDetailAsync($"Stream Writer - Starting For Loop: {tw.ToString()}");
                             var rec = GetUploadDatRecord(history);
-                            _logger.Log($"Rec = {rec}");
+                            _ = _logger.LogDetailAsync($"Rec = {rec}");
                             if (rec != null) tw.WriteLine(rec);
                         }
                     }
@@ -95,13 +89,13 @@ namespace NeutronLoader
                 {
                     MessageBox.Show($"Save Upload Dat File Error: {ex.Message}{Environment.NewLine}" +
                                     $"{ex.InnerException.Message}{Environment.NewLine}{ex.StackTrace}");
-                    _logger.Log($"Save Upload Dat File Error: {ex.Message}{Environment.NewLine}" +
+                    _ = _logger.LogDetailAsync($"Save Upload Dat File Error: {ex.Message}{Environment.NewLine}" +
                                 $"{ex.InnerException.Message}{Environment.NewLine}{ex.StackTrace}");
                 }
             }
             else
             {
-                _logger.Log($"File Name is Empty.  Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync($"File Name is Empty.  Go to Options and enter an upload file name.");
             }
 
             return result;
@@ -110,11 +104,11 @@ namespace NeutronLoader
         // Saint Francis Upload Format
         public string GetUploadDatRecord(History history)
         {
-            _logger.Log($"Get Upload Dat Record - START");
+            _ = _logger.LogDetailAsync($"Get Upload Dat Record - START");
             var result = string.Empty;
             if (history == null)
             {
-                _logger.Log($"Get Upload Dat Error: History is NULL");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Error: History is NULL");
                 return result;
             }
             try
@@ -125,59 +119,59 @@ namespace NeutronLoader
                 string info;
                 string empName;
 
-                _logger.Log($"Get Upload Dat Record - Begin Try");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - Begin Try");
                 //var stat = _workstationRepository.GetStation(history.AreaId);
                 var areaId = history.AreaId;
-                _logger.Log($"Get Upload Dat Record - 1");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - 1");
                // var station = stat.Id == _rackStationId ? "9" : stat.StationNumber.ToString();
-                _logger.Log($"Get Upload Dat Record - Station Number: {areaId}");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - Station Number: {areaId}");
 
                 order = history.Ord1 == null ? string.Empty.PadRight(10) : history.Ord1.PadRight(10);
-                _logger.Log($"Get Upload Dat Record - Order - Check For Hot Pick");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - Order - Check For Hot Pick");
                 order = CheckForHot(order);
-                _logger.Log($"Get Upload Dat Record Order: {order} - 3");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Order: {order} - 3");
 
                 invoice = history.Ord2 == null ? string.Empty.PadRight(10) : history.Ord2.PadRight(10);
-                _logger.Log($"Get Upload Dat Record - Invoice - Check For Hot Pick");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - Invoice - Check For Hot Pick");
                 invoice = CheckForHot(invoice);
-                _logger.Log($"Get Upload Dat Record Invoice: {invoice} - 3");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Invoice: {invoice} - 3");
 
 
                 costCenter = history.CostCenter ?? string.Empty;
-                _logger.Log($"Get Upload Dat Record CostCenter {costCenter} - 4");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record CostCenter {costCenter} - 4");
                 var orderDetailInfo = string.Empty;
                 // Rightmost 24 characters of the OrderDetailInfo field
                 info = history.OrderDetailInfo ?? string.Empty;
-                _logger.Log($"Get Upload Dat Record Info {info} - 5");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Info {info} - 5");
                 if (!string.IsNullOrEmpty(info))
                 {
-                    _logger.Log($"Get Upload Dat Record - 6");
+                    _ = _logger.LogDetailAsync($"Get Upload Dat Record - 6");
                     if (info.Length >= 24)
                     {
-                        _logger.Log($"Get Upload Dat Record - 7");
+                        _ = _logger.LogDetailAsync($"Get Upload Dat Record - 7");
                         orderDetailInfo = info.Substring(info.Length - 24);
-                        _logger.Log($"Get Upload Dat Record - 8");
+                        _ = _logger.LogDetailAsync($"Get Upload Dat Record - 8");
                     }
-                    _logger.Log($"Get Upload Dat Record OrderDetailInfo {orderDetailInfo} - 9");
+                    _ = _logger.LogDetailAsync($"Get Upload Dat Record OrderDetailInfo {orderDetailInfo} - 9");
                 }
-                _logger.Log($"Get Upload Dat Record - 10");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - 10");
                 empName = string.Empty;
                 if (history.EmpId != null)
                 {
                     var emp = _repoUser.FindBy(u => u.EmpId == history.EmpId).FirstOrDefault();
-                    _logger.Log($"Get Upload Dat Record - 11");
+                    _ = _logger.LogDetailAsync($"Get Upload Dat Record - 11");
                     if (emp != null)
                     {
-                        _logger.Log($"Get Upload Dat Record - 12");
+                        _ = _logger.LogDetailAsync($"Get Upload Dat Record - 12");
                         empName = emp.Firstname.PadRight(10);
                     }
                 }
 
-                _logger.Log($"Get Upload Dat Record - 13");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - 13");
                 var upCode = ($"02");
                 var time = DateTime.Now.ToString(format: "HH:mm");
 
-                _logger.Log($"Get Upload Dat Record - Begin StringBuilder 14");
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record - Begin StringBuilder 14");
                 var sb = new StringBuilder(new string(' ', 170));
                 sb.Insert(0, $"{areaId}O");
                 sb.Insert(2, order);
@@ -200,10 +194,10 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"Get Upload Dat Record Error: {ex.Message}{Environment.NewLine}" +
+                _ = _logger.LogDetailAsync($"Get Upload Dat Record Error: {ex.Message}{Environment.NewLine}" +
                             $"{ex.InnerException.Message}{Environment.NewLine}{ex.StackTrace}");
             }
-            _logger.Log($"Get Upload Dat Record - END  Result:{result}");
+            _ = _logger.LogDetailAsync($"Get Upload Dat Record - END  Result:{result}");
             return result;
         }
 

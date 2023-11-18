@@ -49,8 +49,6 @@ namespace Neutron.Models
                                 return gridResourceManager.GetString("Rack_Loc1");
                                 }
                         }
-
-                        break;
                     }
                 case "Loc2":
                     {
@@ -81,7 +79,6 @@ namespace Neutron.Models
                                 return gridResourceManager.GetString("Rack_Loc2");
                             }
                         }
-                        break;
                     }
                 case "Loc3":
                     {
@@ -112,7 +109,6 @@ namespace Neutron.Models
                                 return gridResourceManager.GetString("Rack_Loc3");
                             }
                         }
-                        break;
                     }
                 case "Loc4":
                     {
@@ -143,7 +139,6 @@ namespace Neutron.Models
                                 return gridResourceManager.GetString("Rack_Loc4");
                             }
                         }
-                        break;
                     }
                 case "Loc5":
                     {
@@ -174,7 +169,6 @@ namespace Neutron.Models
                                 return gridResourceManager.GetString("Rack_Loc5");
                             }
                         }
-                        break;
                     }
             }
             return string.Empty;

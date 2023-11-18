@@ -45,7 +45,7 @@ namespace NeutronLoader
                 foreach (var hostOrder in hostOrderlist)
                 {
                     counter++;
-                    _logger.LogDetailAsync($"Update Inventory: Line: {counter}  hostOrder: Job: {hostOrder.JobNum}  Part: {hostOrder.PartNum}  Bin: {hostOrder.PrimeBin}");
+                 _ = _logger.LogDetailAsync($"Update Inventory: Line: {counter}  hostOrder: Job: {hostOrder.JobNum}  Part: {hostOrder.PartNum}  Bin: {hostOrder.PrimeBin}");
                     UpdateInventory(hostOrder);
                 }
             }
@@ -65,7 +65,7 @@ namespace NeutronLoader
                 //has to have a primebin we can work with
                 if (hostOrder.PrimeBin.Length == 5)
                 {
-                    _logger.LogDetailAsync($"Start Inventory Update. PrimeBin: {hostOrder.PrimeBin}");
+                 _ = _logger.LogDetailAsync($"Start Inventory Update. PrimeBin: {hostOrder.PrimeBin}");
                     //Get the Location and Delete it
                     var loc1 = Convert.ToInt32(hostOrder.PrimeBin.Substring(1, 1));
                     var loc2 = Convert.ToInt32(hostOrder.PrimeBin.Substring(2, 3));
@@ -75,7 +75,7 @@ namespace NeutronLoader
                     var heightCodeId = _repoHeightCode.All().FirstOrDefault().Id;
                     var unitOfIssue = _repoUnitOfIssue.All().FirstOrDefault().Id;
 
-                    _logger.LogDetailAsync($"Area Id: {areaId}");
+                 _ = _logger.LogDetailAsync($"Area Id: {areaId}");
                     var location = _repoLocation.FindBy(r => r.Loc1 == loc1 && r.Loc2 == loc2).FirstOrDefault();
                     if (location == null)
                     {
@@ -94,15 +94,15 @@ namespace NeutronLoader
                             LocationCode = string.Empty,
                             InUse = true
                         };
-                        _logger.LogDetailAsync($"Before Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCode}-{loc.InUse}");
+                     _ = _logger.LogDetailAsync($"Before Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCode}-{loc.InUse}");
                         _repoLocation.Insert(loc);
-                        _logger.LogDetailAsync($"After Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCode}-{loc.InUse}");
+                     _ = _logger.LogDetailAsync($"After Inserting new Location Record.{loc.Loc1}-{loc.Loc2}-{loc.Loc3}-{loc.Loc4}-{loc.Loc5}-{loc.Slot}-{loc.SizeCodeId}-{loc.VelocityCodeId}-{loc.HeightCodeId}-{loc.LocationCode}-{loc.InUse}");
                         location = loc;
 
                     }
                     else
                     {
-                        _logger.LogDetailAsync($"Location is NOT null.  LocationId: {location.Id}");
+                     _ = _logger.LogDetailAsync($"Location is NOT null.  LocationId: {location.Id}");
                     }
 
                     var itemDefinition = _repoItemDefinition.FindBy(r => r.Item == hostOrder.PartNum).FirstOrDefault();
@@ -125,14 +125,14 @@ namespace NeutronLoader
                             Weight = 0,
                             Scale = false
                         };
-                        _logger.LogDetailAsync($"Inserting new Item Definition Record. Station Id:  {itemDef.AreaId}");
+                     _ = _logger.LogDetailAsync($"Inserting new Item Definition Record. Station Id:  {itemDef.AreaId}");
                         _repoItemDefinition.Insert(itemDef);
                         itemDefinition = itemDef;
                     }
 
                     else
                     {
-                        _logger.LogDetailAsync($"Item Definition is NOT null.  ItemDefinitionId: {itemDefinition.Id}");
+                     _ = _logger.LogDetailAsync($"Item Definition is NOT null.  ItemDefinitionId: {itemDefinition.Id}");
                     }
 
 
@@ -144,12 +144,12 @@ namespace NeutronLoader
                         {
                             if (inv.LocationId == location.Id)
                             {
-                                _logger.LogDetailAsync($"Loop Inventory Record Exists.  InventoryId: {inv.Id}");
+                             _ = _logger.LogDetailAsync($"Loop Inventory Record Exists.  InventoryId: {inv.Id}");
                                 inventoryItemExists = true;
                             }
                             else
                             {
-                                _logger.LogDetailAsync($"Inventory Record to be Deleted.  InventoryId: {inv.Id}");
+                             _ = _logger.LogDetailAsync($"Inventory Record to be Deleted.  InventoryId: {inv.Id}");
                                 _repoInventory.Delete(inv.Id);
                             }
                         }
@@ -157,7 +157,7 @@ namespace NeutronLoader
 
                     if (inventoryItemExists) return;
                     // create a new inventory item
-                    _logger.LogDetailAsync($"Inventory Record DOESN'T Exists. ");
+                 _ = _logger.LogDetailAsync($"Inventory Record DOESN'T Exists. ");
                     var inventory = new Inventory()
                     {
                         ItemDefinitionId = itemDefinition.Id,
@@ -168,7 +168,7 @@ namespace NeutronLoader
                         PrimeBin = true,
                         AreaId = areaId
                     };
-                    _logger.LogDetailAsync($"Inserting new Inventory Record. Area Id:  {inventory.AreaId}");
+                 _ = _logger.LogDetailAsync($"Inserting new Inventory Record. Area Id:  {inventory.AreaId}");
                     _repoInventory.Insert(inventory);
                 }
             }
@@ -181,7 +181,6 @@ namespace NeutronLoader
 
         private void InsertOrUpdateOrderDetail(HostOrder hostOrder)
         {
-            var stationNumber = 1;
             try
             {
                 var orderDetail = _repoOrderDetail.FindBy(r => r.JobNum == hostOrder.JobNum
@@ -199,7 +198,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync($"Error Updating Order Detail.  {ex.Message} \r\n {ex.InnerException}");
+                     _ = _logger.LogDetailAsync($"Error Updating Order Detail.  {ex.Message} \r\n {ex.InnerException}");
                     }
                 }
                 else
@@ -242,25 +241,25 @@ namespace NeutronLoader
                                 }
                                 catch (Exception ex)
                                 {
-                                    _logger.LogDetailAsync($"Error Inserting Order Detail.  {ex.Message} \r\n {ex.InnerException}");
+                                 _ = _logger.LogDetailAsync($"Error Inserting Order Detail.  {ex.Message} \r\n {ex.InnerException}");
                                 }
                             }
                             else
                             {
-                                _logger.LogDetailAsync($"Invalid Location or Item Definition Record.");
+                             _ = _logger.LogDetailAsync($"Invalid Location or Item Definition Record.");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync(
+                     _ = _logger.LogDetailAsync(
                             $"Error Finding Item Definition - {hostOrder.PartNum}.  {ex.Message} \r\n {ex.InnerException}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error Finding Existing Order Detail.  {ex.Message} \r\n {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Error Finding Existing Order Detail.  {ex.Message} \r\n {ex.InnerException}");
             }
         }
 
@@ -292,7 +291,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync($"Error Inserting Order.  {ex.Message} \r\n {ex.InnerException}");
+                     _ = _logger.LogDetailAsync($"Error Inserting Order.  {ex.Message} \r\n {ex.InnerException}");
                     }
                 }
                 else
@@ -303,7 +302,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error Finding Existing Order.  {ex.Message} \r\n {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Error Finding Existing Order.  {ex.Message} \r\n {ex.InnerException}");
             }
             return result;
         }

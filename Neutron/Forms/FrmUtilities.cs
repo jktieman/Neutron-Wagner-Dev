@@ -42,6 +42,7 @@ using StorageDeviceType = NeutronData.Models.Lookups.StorageDeviceType;
 using StationType = NeutronData.Models.Lookups.StationType;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 using AlliedLogger;
+using Neutron.Ninject;
 using NeutronCore;
 
 
@@ -2957,7 +2958,12 @@ namespace Neutron.Forms
 
         private void MBMaintenance_Click(object sender, EventArgs e)
         {
-            var locationManager = new RandomLocationManager(new VelocityCodeManager());
+            var velocityCodeManager = DI.Create<VelocityCodeManager>();
+            var sizeCodeManager = DI.Create<SizeCodeManager>();
+            var heightCodeManager = DI.Create<HeightCodeManager>();
+
+
+            var locationManager = new RandomLocationManager(sizeCodeManager, heightCodeManager, velocityCodeManager );
             var maintenance = new MasterMaintenanceProcessor(locationManager);
             maintenance.ProcessFiles();
         }

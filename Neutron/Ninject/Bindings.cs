@@ -68,6 +68,11 @@ namespace Neutron.Ninject
                 .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("historyManager");
 
+            Bind<FrmUtilities>().ToSelf()
+                .WithConstructorArgument("neutronVariables")
+                .WithConstructorArgument("neutronLicense")
+                .WithConstructorArgument("sendEmail");
+
             Bind<StartStopLoaderManager>().To<StartStopLoaderManager>().InSingletonScope();
             Bind<StartStopUploadManager>().To<StartStopUploadManager>().InSingletonScope();
 
@@ -77,6 +82,10 @@ namespace Neutron.Ninject
 
             Bind<ILocationManager>().To<RandomLocationManager>().InSingletonScope();
             Bind<IVelocityCodeManager>().To<VelocityCodeManager>().InSingletonScope();
+            Bind<ISizeCodeManager>().To<SizeCodeManager>().InSingletonScope();
+            Bind<IHeightCodeManager>().To<HeightCodeManager>().InSingletonScope();
+
+
             Bind<IMasterMaintenanceProcessor>().To<MasterMaintenanceProcessor>().InSingletonScope();
             Bind<IHistoryManager>().To<HistoryManager>().WithConstructorArgument("workstationView");
             Bind<IDynamicLogger>().To<DynamicLogger>()

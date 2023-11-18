@@ -89,7 +89,7 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
-                _logger.Log($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
             _uploadBusy = false;
@@ -160,7 +160,7 @@ namespace NeutronLoader
 
         public void CreateHostFile(BindingSource bindingSourcePickStops)
         {
-            _logger.Log("CreateHostFile BindingSource bindingSourcePickStops");
+            _ = _logger.LogDetailAsync("CreateHostFile BindingSource bindingSourcePickStops");
 
             var date = DateTime.MinValue;
             var hostOrders = new List<HostOrder>();
@@ -194,14 +194,14 @@ namespace NeutronLoader
             }
 
             if (!hostOrders.Any()) return;
-            _logger.Log("Calling HostFile");
+            _ = _logger.LogDetailAsync("Calling HostFile");
             var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
             hostFile.CreateHostFile(hostOrders);
         }
 
         public void CreateHostFileRack(List<Order> orders)
         {
-            _logger.Log("CreateHostFile Rack orders");
+            _ = _logger.LogDetailAsync("CreateHostFile Rack orders");
 
             var date = DateTime.Now;
             var hostOrders = new List<HostOrder>();
@@ -229,7 +229,7 @@ namespace NeutronLoader
             }
 
             if (!hostOrders.Any()) return;
-            _logger.Log("Calling HostFile");
+            _ = _logger.LogDetailAsync("Calling HostFile");
             var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
             hostFile.CreateHostFile(hostOrders);
         }
@@ -262,7 +262,7 @@ namespace NeutronLoader
             }
 
             if (!hostOrders.Any()) return;
-            _logger.Log("Calling HostFile");
+            _ = _logger.LogDetailAsync("Calling HostFile");
             var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
             hostFile.CreateHostFile(hostOrders);
         }
@@ -275,7 +275,7 @@ namespace NeutronLoader
 
             //}
             //// Picked Used
-            _logger.Log("CreateHostFile(PickStop pickStop)");
+            _ = _logger.LogDetailAsync("CreateHostFile(PickStop pickStop)");
             foreach (var pickView in pickStop.PickViews)
             {
                 // var ord = new HostOrder();
@@ -297,7 +297,7 @@ namespace NeutronLoader
                     OrderDetail = pickView.OrderDetail
                 };
 
-                _logger.Log("CreateHostFile(PickStop pickStop) Call HostFile");
+                _ = _logger.LogDetailAsync("CreateHostFile(PickStop pickStop) Call HostFile");
                 var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
                 hostFile.CreateHostFile(ord);
                 // Didn't pick from PrimeBin and it IS a new item
@@ -366,7 +366,7 @@ namespace NeutronLoader
             }
 
             if (!hostOrders.Any()) return;
-            _logger.Log("Calling HostFile");
+            _ = _logger.LogDetailAsync("Calling HostFile");
             var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
             hostFile.CreateHostFile(hostOrders);
         }

@@ -16,24 +16,12 @@ namespace NeutronLoader
     {
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly IJsonData _jsonData;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
 
         public ItemDefinitionProcessor(IJsonData jsonData)
         {
             _jsonData = jsonData;
-            CreateLog();
-        }
-
-        /// <summary>
-        /// Creates a new Dynamic Logger
-        /// </summary>
-        /// <returns></returns>
-        private void CreateLog()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = $"ItemDefinitionProcessor";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+            _logger = NeutronCore.Global.Logger.SetupLogger("ItemDefinitionProcessor");
         }
 
         public ItemDefinition GetOrCreate(HostOrder hostOrder)
@@ -49,7 +37,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error Finding Item Definition - {hostOrder.PartNum}.  {ex.Message} \r\n {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Error Finding Item Definition - {hostOrder.PartNum}.  {ex.Message} \r\n {ex.InnerException}");
 
             }
             return itemDef;
@@ -68,7 +56,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error Finding Item Definition - {partNum}.  {ex.Message} \r\n {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Error Finding Item Definition - {partNum}.  {ex.Message} \r\n {ex.InnerException}");
 
             }
             return itemDef;
@@ -89,7 +77,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error Finding Item Definition - {partNum}.  {ex.Message} \r\n {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Error Finding Item Definition - {partNum}.  {ex.Message} \r\n {ex.InnerException}");
 
             }
             return itemDef;
@@ -256,7 +244,7 @@ namespace NeutronLoader
                 }
                 else
                 {
-                    _logger.LogDetailAsync(msg: "No Default Item Definition.  Create Item Definition Failed.");
+                 _ = _logger.LogDetailAsync(msg: "No Default Item Definition.  Create Item Definition Failed.");
                     var msg = "A default Item Definition must be set up in ";
                     msg += "order to create definitions during the Order Load process.";
                     msg += "The Item Number MUST be called, DEFAULT .";
@@ -266,7 +254,7 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 if (ex.InnerException != null)
-                    _logger.LogDetailAsync("Unable to create New Item Definition. " + ex.Message + ex.InnerException.Message);
+                 _ = _logger.LogDetailAsync("Unable to create New Item Definition. " + ex.Message + ex.InnerException.Message);
             }
             return newDefinition;
         }
@@ -316,7 +304,7 @@ namespace NeutronLoader
                 }
                 else
                 {
-                    _logger.LogDetailAsync(msg: "No Default Item Definition.  Create Item Definition Failed.");
+                 _ = _logger.LogDetailAsync(msg: "No Default Item Definition.  Create Item Definition Failed.");
                     var msg = "A default Item Definition must be set up in ";
                     msg += "order to create definitions during the Order Load process.";
                     msg += "The Item Number MUST be called, DEFAULT .";
@@ -325,7 +313,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync("Unable to create New Item Definition. " + ex.Message + ex.InnerException.Message);
+             _ = _logger.LogDetailAsync("Unable to create New Item Definition. " + ex.Message + ex.InnerException.Message);
             }
             return newDefinition;
         }

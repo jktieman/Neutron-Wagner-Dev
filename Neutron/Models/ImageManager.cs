@@ -16,7 +16,7 @@ namespace Neutron.Models
         }
         public string GetImageFile(string item = @"")
         {
-            _logger.LogDetailAsync($"GetImageFile: {item}");
+         _ = _logger.LogDetailAsync($"GetImageFile: {item}");
 
             var localItem = item.ToLower().Trim();
             string imageFile = null;
@@ -39,7 +39,7 @@ namespace Neutron.Models
                 var file = Path.Combine(imagesDirectory, $"no-image.png");
                 if (File.Exists(file)) imageFile = file;
             }
-            _logger.LogDetailAsync($"Return ImageFile: {imageFile}");
+         _ = _logger.LogDetailAsync($"Return ImageFile: {imageFile}");
             return imageFile;
         }
 

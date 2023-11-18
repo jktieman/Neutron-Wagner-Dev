@@ -27,16 +27,17 @@ namespace NeutronLoader
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
 
-        public Pr1FileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IDynamicLogger logger,
+        public Pr1FileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
+
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
-            _logger = logger;
+            _logger = NeutronCore.Global.Logger.SetupLogger("FileProcessor");
             _jsonData = jsonData;
             _workstationView = workstationView;
         }
@@ -45,22 +46,22 @@ namespace NeutronLoader
         {
             foreach (var file in files)
             {
-                _logger.LogDetailAsync($"File To Process: {file.FullName}");
+             _ = _logger.LogDetailAsync($"File To Process: {file.FullName}");
 
                 try
                 {
                     var allLines = File.ReadAllLines(file.FullName);
                     if (allLines.Length > 0)
                     {
-                        _logger.LogDetailAsync($"Lines in File: {allLines.Count()}");
+                     _ = _logger.LogDetailAsync($"Lines in File: {allLines.Count()}");
                         if (allLines.First().Contains("REPLENOPRP"))
                         {
-                            _logger.LogDetailAsync($"First Line Contains: REPLENOPRP");
+                         _ = _logger.LogDetailAsync($"First Line Contains: REPLENOPRP");
                             ProcessReplenOrder(allLines);
                         }
                         else
                         {
-                            _logger.LogDetailAsync($"Normal Order");
+                         _ = _logger.LogDetailAsync($"Normal Order");
                             ProcessNormalOrder(allLines);
                         }
                     }
@@ -68,15 +69,15 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"Error Reading All Order Lines.  File Name: {file.FullName} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                 _ = _logger.LogDetailAsync($"Error Reading All Order Lines.  File Name: {file.FullName} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
-            _logger.LogDetailAsync($"Pr1FileProcessor --- Done");
+         _ = _logger.LogDetailAsync($"Pr1FileProcessor --- Done");
         }
 
         public void ProcessNormalOrder(string[] allLines)
         {
-            _logger.LogDetailAsync($"In ProcessNormalOrder - Line Count: {allLines.Length} ");
+         _ = _logger.LogDetailAsync($"In ProcessNormalOrder - Line Count: {allLines.Length} ");
             Order order = null;
             var orderId = 0;
             OrderDetail detail = null;
@@ -98,7 +99,7 @@ namespace NeutronLoader
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogDetailAsync($"Error Inserting Order Line. {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                         _ = _logger.LogDetailAsync($"Error Inserting Order Line. {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                         }
                     }
                 }
@@ -128,7 +129,7 @@ namespace NeutronLoader
                             }
                             catch (Exception ex)
                             {
-                                _logger.LogDetailAsync($"Error Inserting Order Detail Line.  {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                             _ = _logger.LogDetailAsync($"Error Inserting Order Detail Line.  {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                             }
                         }
 
@@ -179,7 +180,7 @@ namespace NeutronLoader
                                 description = itemDef.Description;
                             }
 
-                            _logger.LogDetailAsync($"Station Id: {itemDef.AreaId}");
+                         _ = _logger.LogDetailAsync($"Station Id: {itemDef.AreaId}");
 
                             var areaId = itemDef.AreaId;
                             var primeBin = GetPrimeBin(areaId, line.Substring(55, 11));
@@ -238,7 +239,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync($"Error Saving Order Detail Line.  {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                     _ = _logger.LogDetailAsync($"Error Saving Order Detail Line.  {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     }
                 }
             }
@@ -246,7 +247,7 @@ namespace NeutronLoader
 
         public void ProcessReplenOrder(string[] allLines)
         {
-            _logger.LogDetailAsync($"Process Replen Order Line Count: {allLines.Length} ");
+         _ = _logger.LogDetailAsync($"Process Replen Order Line Count: {allLines.Length} ");
             ReplenOrder order = null;
             int orderId = 0;
             ReplenOrderDetail replenDetail = null;
@@ -270,7 +271,7 @@ namespace NeutronLoader
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogDetailAsync($"Error Inserting Order Line: {line} {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                         _ = _logger.LogDetailAsync($"Error Inserting Order Line: {line} {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                         }
                     }
                     //string oc = line.Substring(48, 1);
@@ -303,7 +304,7 @@ namespace NeutronLoader
                             }
                             catch (Exception ex)
                             {
-                                _logger.LogDetailAsync($"Error Inserting Order replenDetail Line. {line} {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                             _ = _logger.LogDetailAsync($"Error Inserting Order replenDetail Line. {line} {Environment.NewLine}  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                             }
                         }
                         if (line.Substring(48, 1) == "O")
@@ -374,7 +375,7 @@ namespace NeutronLoader
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync($"Error Saving Order replenDetail Line. {line} {Environment.NewLine}   {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                     _ = _logger.LogDetailAsync($"Error Saving Order replenDetail Line. {line} {Environment.NewLine}   {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     }
                 }
             }
@@ -382,7 +383,7 @@ namespace NeutronLoader
 
         private void ProcessReplenOrderNewNotUsed(string[] allLines)
         {
-            _logger.LogDetailAsync($"Process Replen Order Line Count: {allLines.Length} ");
+         _ = _logger.LogDetailAsync($"Process Replen Order Line Count: {allLines.Length} ");
             var orders = new List<ReplenOrder>();
             var order = new ReplenOrder();
             var orderDetail = new ReplenOrderDetail();
@@ -534,7 +535,7 @@ namespace NeutronLoader
             ItemDefinition item = null;
             if (oc == "O")  //force to Off Carousel Station 8 at Dexter
             {
-                _logger.LogDetailAsync(msg: "GetItemDefinition oc = 0  ");
+             _ = _logger.LogDetailAsync(msg: "GetItemDefinition oc = 0  ");
                 try
                 {
                     int areaId = _workstationView.AreaId;
@@ -544,7 +545,7 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"Error Finding Item Definition 1. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                 _ = _logger.LogDetailAsync($"Error Finding Item Definition 1. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             else
@@ -604,7 +605,7 @@ namespace NeutronLoader
 
         //        if (station != null)
         //        {
-        //            _logger.LogDetailAsync($"Get Station Number: {station.StationNumber}  WorkstationId: {workstationId} ");
+        //         _ = _logger.LogDetailAsync($"Get Station Number: {station.StationNumber}  WorkstationId: {workstationId} ");
         //            stationNum = station.StationNumber;
         //        }
         //    }
@@ -612,7 +613,7 @@ namespace NeutronLoader
         //    {
         //        MessageBox.Show($"Error Returning Station Number. {ex.Message} {Environment.NewLine} {ex.InnerException}");
         //    }
-        //    _logger.LogDetailAsync($"Get Station Number Return: {stationNum}  WorkstationId: {workstationId} ");
+        // _ = _logger.LogDetailAsync($"Get Station Number Return: {stationNum}  WorkstationId: {workstationId} ");
         //    return stationNum;
         //}
 

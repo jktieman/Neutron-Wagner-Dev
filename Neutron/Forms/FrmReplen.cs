@@ -227,7 +227,7 @@ namespace Neutron.Forms
         {
             KeyPreview = true;
             
-            _logger.LogDetailAsync($"Form Replen Company Code: {_neutronLicense.CompanyCode}");
+         _ = _logger.LogDetailAsync($"Form Replen Company Code: {_neutronLicense.CompanyCode}");
             // No Loader Control from Replen
             //if (_workstationView.StationType.Id == (int)StationType.Supervisor)
             //{
@@ -305,7 +305,7 @@ namespace Neutron.Forms
 
         public void IptiButtonPickAccept(ResponseInfo responseInfo)
         {
-            _logger.LogDetailAsync($"IptiButtonPickAccept Display Number:  {responseInfo.DisplayNumber}");
+         _ = _logger.LogDetailAsync($"IptiButtonPickAccept Display Number:  {responseInfo.DisplayNumber}");
             StoreAccept();
         }
 
@@ -467,7 +467,7 @@ namespace Neutron.Forms
 
         public void ProcessDataReceived(object sender, MyDataReceivedEventArgs args)
         {
-            _logger.LogDetailAsync($"Process Data Received:  {args.FormText} START");
+         _ = _logger.LogDetailAsync($"Process Data Received:  {args.FormText} START");
             var t = args.FormText;
             var response = new IptiButtonResponse();
             if (t.Length > 14)
@@ -481,11 +481,11 @@ namespace Neutron.Forms
                     Quantity = cmd.Substring(6, 4),
                     Text = cmd.Substring(10, 4)
                 };
-                _logger.LogDetailAsync($"Store Accept in Data Received: {t}");
-                _logger.LogDetailAsync("Hitting the Store Accept button from ProcessDataReceived.");
+             _ = _logger.LogDetailAsync($"Store Accept in Data Received: {t}");
+             _ = _logger.LogDetailAsync("Hitting the Store Accept button from ProcessDataReceived.");
                 StoreAccept();
             }
-            _logger.LogDetailAsync($"Process Data Received:  {args.FormText} END");
+         _ = _logger.LogDetailAsync($"Process Data Received:  {args.FormText} END");
         }
 
         private Point GetLocation(int sizeWidth, int numDevices, int deviceNumber)
@@ -714,7 +714,6 @@ namespace Neutron.Forms
 
         private void SetupPickViewGrid(object state)
         {
-            var result = false;
 
             DataGridPickView.AutoGenerateColumns = false;
             DataGridPickView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -1552,7 +1551,7 @@ namespace Neutron.Forms
         private int ShowAllOrders(int recId = 0)
         {
             Task.Run(() =>
-                _logger.LogDetailAsync($"ShowAllOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
+             _ = _logger.LogDetailAsync($"ShowAllOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
             var idx = 0;
             var searchField = TextBoxFind.Text.Trim().ToLower();
             var orderStatus = "1,2,3,4,5,6,7,8,9";
@@ -1621,7 +1620,7 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 Task.Run(() =>
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
@@ -2888,7 +2887,7 @@ namespace Neutron.Forms
             if (_deviceManager != null)
             {
                 Task.Run(() =>
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
                 _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
                 for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
@@ -2897,7 +2896,7 @@ namespace Neutron.Forms
                 }
 
                 Task.Run(() =>
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
                 Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
             }
@@ -2920,14 +2919,14 @@ namespace Neutron.Forms
                 Task.Run(() => _logger.LogDetailAsync($"4056 PositionDevice"));
                 if (GlobalVar.Shuttle != null)
                 {
-                    _logger.LogDetailAsync($"4061 Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}");
+                 _ = _logger.LogDetailAsync($"4061 Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}");
 
                     Task.Run(() => _logger.LogDetailAsync($"4063 PositionDevice"));
                     GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4);
                 }
                 if (GlobalVar.Hanel != null)
                 {
-                    _logger.LogDetailAsync($"Hanel Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}");
+                 _ = _logger.LogDetailAsync($"Hanel Position Device Tray:{loc1} Bin:{loc2} Level:{loc3} Partition:{loc4}");
 
                     Task.Run(() => _logger.LogDetailAsync($"Hanel PositionDevice"));
                     GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
@@ -2957,7 +2956,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                _logger.LogDetailAsync($"3012 GetFirstStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
+             _ = _logger.LogDetailAsync($"3012 GetFirstStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
             Task.Run(() => _logger.LogDetailAsync($"GetFirstStop End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -2984,7 +2983,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                _logger.LogDetailAsync($"3445 GetNextStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
+             _ = _logger.LogDetailAsync($"3445 GetNextStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
 
             }
@@ -3010,7 +3009,7 @@ namespace Neutron.Forms
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                _logger.LogDetailAsync($"3470 GetPreviousStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
+             _ = _logger.LogDetailAsync($"3470 GetPreviousStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
             Task.Run(() => _logger.LogDetailAsync($"Get Prev Stop END "));
@@ -3035,7 +3034,7 @@ namespace Neutron.Forms
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                 UpdateTowerDisplay();
-                _logger.LogDetailAsync($"3494 GetLastStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
+             _ = _logger.LogDetailAsync($"3494 GetLastStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
             Task.Run(() => _logger.LogDetailAsync($"GetLastStop Return"));
@@ -3157,7 +3156,7 @@ namespace Neutron.Forms
                     {
                         ClearAllShi();
                         Task.Run(() =>
-                            _logger.LogDetailAsync(
+                         _ = _logger.LogDetailAsync(
                                 $"Frm Replen Show SHI {loc1}-{loc2}-{loc3}-{loc4}{Environment.NewLine}-{text}"));
                         GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text);
                     }
@@ -3336,7 +3335,7 @@ namespace Neutron.Forms
                 if (c != null)
                 {
                     var panel = ((Panel)c);
-                    panel.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
+                    panel.BackColor = bp.OrderComplete ? Color.Black : Color.Transparent;
                 }
             }
         }
@@ -3445,7 +3444,7 @@ namespace Neutron.Forms
                     Task.Run(() => _deviceManager.MoveNext(_currentPickStop.CurrentInventoryLocation.Location.Loc1));
                 }
                     Task.Run(() =>
-                    _logger.LogDetailAsync($"PickAccept_Click 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
+                 _ = _logger.LogDetailAsync($"PickAccept_Click 2 Stop Complete Start : [{DateTime.Now.ToLongTimeString()}]"));
 
                 UpdateInventoryQuantity(_currentPickStop);
 
@@ -3692,7 +3691,7 @@ namespace Neutron.Forms
                 _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[idx];
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-                _logger.LogDetailAsync($"Get Next Picking Location: {loc1}-{loc2}");
+             _ = _logger.LogDetailAsync($"Get Next Picking Location: {loc1}-{loc2}");
                 result = true;
             }
 
@@ -3774,7 +3773,7 @@ namespace Neutron.Forms
             Console.WriteLine("Clear All Device Indicators - Close Batch");
             _deviceIndicatorManager.ClearAllDeviceIndicators();
 
-            _logger.LogDetailAsync($"Start Upload Processor: {_neutronLicense.CompanyCode}");
+         _ = _logger.LogDetailAsync($"Start Upload Processor: {_neutronLicense.CompanyCode}");
             switch (_neutronLicense.CompanyCode)
             {
                 case "TMG":
@@ -3783,7 +3782,7 @@ namespace Neutron.Forms
                     break;
                 case "SFH":
                     // Mediator.GetInstance().OnBatchComplete(this);
-                    _logger.LogDetailAsync("Choosing the SFH case.");
+                 _ = _logger.LogDetailAsync("Choosing the SFH case.");
                     //uploadProcessor = new UploadProcessor(_neutronLicense, _neutronVariables, _logger);
                     //uploadProcessor.CreateHostFile(_bindingSourcePickStops);
                     break;
@@ -4250,7 +4249,7 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 Task.Run(() =>
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"ShowAvailableOrdersRack Replen Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
@@ -4497,7 +4496,7 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 Task.Run(() =>
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"Select All Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
         }
@@ -4506,7 +4505,7 @@ namespace Neutron.Forms
         private void ShowCompleted(int recId = 0)
         {
             Task.Run(() =>
-                _logger.LogDetailAsync(
+             _ = _logger.LogDetailAsync(
                     $"ShowCompletedOrders Replen Start: [{DateTime.Now.ToString(CultureInfo.InvariantCulture)}]"));
             var idx = 0;
 

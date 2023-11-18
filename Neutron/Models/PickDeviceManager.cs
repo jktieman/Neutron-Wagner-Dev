@@ -17,12 +17,13 @@ namespace Neutron.Models
     {
         private readonly List<DeviceMover> _deviceMovers = new List<DeviceMover>();
         private readonly bool _shuttleEnabled;
-        private DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly Dictionary<int, NeutronData.Models.Location> _currentLocations = new Dictionary<int, NeutronData.Models.Location>();
 
         public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled)
         {
-            SetupLogger();
+            _logger = NeutronCore.Global.Logger.SetupLogger(@"PickDeviceManager");
+
             for (var i = 0; i < carList.Count; i++)
             {
                 var mover = CreateDeviceMover(i + 1, carList[i]);
@@ -33,17 +34,9 @@ namespace Neutron.Models
 
         }
 
-        private void SetupLogger()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"PickDeviceManager";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-        }
-
         private DeviceMover CreateDeviceMover(int deviceNumber, IEnumerable<PickStop> carList)
         {
-            _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
+         _ = _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
             var firstLocation = true;
             var locs = new List<NeutronData.Models.Location>();
             foreach (var pickStop in carList)
@@ -58,12 +51,12 @@ namespace Neutron.Models
 
         public void MoveNext(int deviceNumber)
         {
-            _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}");
+         _ = _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}");
             var deviceMover = _deviceMovers.FirstOrDefault(r => r.MoverNumber == deviceNumber);
             if (deviceMover != null)
             {
                 var location = deviceMover.MoveNext();
-                _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}");
+             _ = _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}");
                 _currentLocations[deviceNumber] = location;
                 if (location != null)
                 {
@@ -77,12 +70,12 @@ namespace Neutron.Models
                     {
                         if (GlobalVar.Shuttle != null)
                         {
-                            _logger.LogDetailAsync($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}");
+                         _ = _logger.LogDetailAsync($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}");
                             GlobalVar.Shuttle.PositionDevice(loc1, loc2);
                         }
                         if (GlobalVar.Hanel != null)
                         {
-                            _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
+                         _ = _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
                             GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4 );
                         }
                     }
@@ -104,7 +97,7 @@ namespace Neutron.Models
 
         public void Reset()
         {
-            _logger.LogDetailAsync($"Reset:");
+         _ = _logger.LogDetailAsync($"Reset:");
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
@@ -115,7 +108,7 @@ namespace Neutron.Models
                     var loc4 = kvp.Value.Loc4;
                     var loc5 = kvp.Value.Loc5;
 
-                    _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                 _ = _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
@@ -130,7 +123,7 @@ namespace Neutron.Models
                         }
                         if (GlobalVar.Hanel != null)
                         {
-                            _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
+                         _ = _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
                             GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
                         }
                     }
@@ -140,7 +133,7 @@ namespace Neutron.Models
 
         public void ResetMoveNext(int moveNext = default(int))
         {
-            _logger.LogDetailAsync($"Reset MoveNext: {moveNext}");
+         _ = _logger.LogDetailAsync($"Reset MoveNext: {moveNext}");
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
@@ -153,11 +146,11 @@ namespace Neutron.Models
 
                     if (loc1 == moveNext)
                     {
-                        _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
+                     _ = _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
                         continue;
                     }
 
-                    _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                 _ = _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
@@ -174,7 +167,7 @@ namespace Neutron.Models
 
             if (moveNext != default(int))
             {
-                _logger.LogDetailAsync($"Reset MoveNext Device: {moveNext}");
+             _ = _logger.LogDetailAsync($"Reset MoveNext Device: {moveNext}");
                 MoveNext(moveNext);
             }
         }

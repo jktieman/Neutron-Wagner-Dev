@@ -31,7 +31,7 @@ namespace Neutron.Controllers
         private readonly int _deviceStationary = -1;
         private readonly int _deviceAlignmentDontCare = 0;
 
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
         private Form _currentForm;
         private readonly Object _locker = new Object();
@@ -391,11 +391,11 @@ namespace Neutron.Controllers
         {
             var msg = string.Empty;
             var deviceStatus = new HanelDeviceStatus();
-            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+         _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!_hanel.Init_Success)
             {
-                _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
-                _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+             _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
+             _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
@@ -406,7 +406,7 @@ namespace Neutron.Controllers
                 if (_hanel.Get_Device_Status(ref myDeviceStatusList, ref cError))
                 {
                     // At this point, you have current status for every device in your list
-                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
+                 _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)
@@ -428,12 +428,12 @@ namespace Neutron.Controllers
                         }
                     }
 
-                    _logger.LogDetailAsync(msg);
+                 _ = _logger.LogDetailAsync(msg);
                     //ShowMessage(msg);
                 }
                 else
                 {
-                    _logger.LogDetailAsync("Get Device Status request aborted...");
+                 _ = _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
             return deviceStatus;

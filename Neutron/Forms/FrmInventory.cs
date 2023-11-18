@@ -34,6 +34,12 @@ using NeutronCore.Enums;
 using IntegerExtensions = NeutronCore.Extensions.IntegerExtensions;
 using StationType = NeutronCore.Enums.StationType;
 using StorageType = Neutron.Enums.StorageType;
+using ExcelManager;
+using System.ComponentModel;
+using System.Data;
+using System.Reflection;
+using NeutronEvents;
+
 namespace Neutron.Forms
 {
     public partial class FrmInventory : MetroForm
@@ -58,6 +64,8 @@ namespace Neutron.Forms
             new GenericRepository<NeutronData.Models.Lookups.StorageType>(new NeutronDb());
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue =
             new GenericRepository<UnitOfIssue>(new NeutronDb());
+        private readonly GenericRepository<Area> _repoArea =
+            new GenericRepository<Area>(new NeutronDb());
 
         private readonly IWorkstationRepository _workstationRepository;
 
@@ -83,6 +91,8 @@ namespace Neutron.Forms
 
         private IDynamicLogger _logger;
         private HeaderTextManager _headerTextManager;
+        private List<SqlInventoryView> _currentList;
+        private bool _startup = true;
 
         public FrmInventory(IJsonData jsonData, IAkaRepository akaRepository,
             ILacProcessor lacProcessor, IWorkstationRepository workstationRepository
@@ -120,37 +130,37 @@ namespace Neutron.Forms
             SetupViewEditForm();
             SetupAddDetailForm();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
-            CreateLog();
+            _logger = NeutronCore.Global.Logger.SetupLogger("Inventory");
             _inventoryRepository = new InventoryRepository(_logger);
-            if (_workstationView.StationType.Id == (int)StationType.Supervisor)
-            {
-                CheckBoxAllStations.Checked = true;
-            }
 
             LabelInventoryNewLocationsRfid.Visible = _neutronVariables.RfidEnabledInventory;
             TextBoxInventoryNewLocationsRfid.Visible = _neutronVariables.RfidEnabledInventory;
             LabelAddDetailRfid.Visible = _neutronVariables.RfidEnabledInventory;
             TextBoxAddDetailRfid.Visible = _neutronVariables.RfidEnabledInventory;
-
-            ComboBoxAreaNumber.DataSource = _areaRepository.GetAllAreas();
+            
+            var areas = _repoArea.All();
+            ComboBoxAreaNumber.DataSource = areas;
             ComboBoxAreaNumber.ValueMember = "Id";
             ComboBoxAreaNumber.DisplayMember = "Name";
+            ComboBoxAreaNumber.SelectedIndex = 0;
+
+            if (_workstationView.StationType.Id == (int)NeutronCore.Enums.StationType.Supervisor)
+            {
+                ComboBoxAreaNumber.SelectedIndex = ComboBoxAreaNumber.FindStringExact("All Areas");
+            }
+            else
+            {
+                ComboBoxAreaNumber.SelectedValue = _workstationView.AreaId;
+            }
+
             _firstTime = false;
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-            LoadInventory();
+            _startup = false;            
+            _ = RefreshData();
+
         }
-        /// <summary>
-        /// Creates a new Dynamic Logger
-        /// </summary>
-        /// <returns></returns>
-        private void CreateLog()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = $"Inventory_{_workstationView.WorkstationNumber.ToString()}";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-        }
+
         /// <summary>
         /// CreateParams
         /// </summary>
@@ -172,65 +182,73 @@ namespace Neutron.Forms
         /// If a Record id is passed is the focus is on that record
         /// </summary>
         /// <param name="recId">Record Id to set the focus</param>
-        private async Task LoadInventory(int recId = 0)
+        private async Task RefreshData(int recId = 0)
         {
             Cursor.Current = Cursors.WaitCursor;
-            var find = string.Empty;
+            var aka = string.Empty;
             var findWhat = TextBoxFind.Text.ToLower().Trim();
-            // If the findWhat is not empty, then look in the AKA file first
-            if (!string.IsNullOrEmpty(findWhat))
+            try
             {
-                find = _akaRepository.Get(findWhat);
-                // If the find is empty, then look in the inventory
-                if (string.IsNullOrEmpty(find))
+
+
+                // If the findWhat is not empty, then look in the AKA file first
+                if (!string.IsNullOrEmpty(findWhat))
                 {
-                    find = findWhat;
+                    aka = _akaRepository.Get(findWhat);
                 }
+
+                var find = string.IsNullOrWhiteSpace(aka) ? findWhat : aka;
                 TextBoxFind.Text = find;
-            }
 
-
-
-            if (_workstationView != null)
-            {
-                if (_workstationView.StationType.Id == (int)StationType.Supervisor)
+                if (_workstationView != null)
                 {
-                    CheckBoxAllStations.Checked = true;
-                }
+                    var area = ((Area)ComboBoxAreaNumber.SelectedItem);
+                    var views = area.Name == "All Areas"
+                        ? _inventoryRepository.FindInventoryViews(find).ToList()
+                        : _inventoryRepository.FindInventoryViewsByArea(find, area.Id).ToList();
 
-                IEnumerable<SqlInventoryView> views = CheckBoxAllStations.Checked
-                    ? _inventoryRepository.FindInventoryViews(find)
-                    : _inventoryRepository.FindInventoryViewsByArea(find, _workstationView.AreaId);
+                    _currentList = views;
 
-                var blv = new BindingListView<SqlInventoryView>(views.ToList());
-                await _logger.LogDetailAsync($"Inventory Count: {blv.Count}");
-                _bindingSource.DataSource = blv;
-                DataGridView1.DataSource = _bindingSource;
 
-                await _logger.LogDetailAsync($"Inventory Count: Grid Done");
-                if (GetRecordCount(_bindingSource) > 0)
-                {
-                    if (recId != 0)
+                    var blv = new BindingListView<SqlInventoryView>(views.ToList());
+                    await _logger.LogDetailAsync($"Inventory Count: {blv.Count}");
+                    _bindingSource.DataSource = blv;
+                    DataGridView1.DataSource = _bindingSource;
+
+                    await _logger.LogDetailAsync($"Inventory Count: Grid Done");
+                    if (GetRecordCount(_bindingSource) > 0)
                     {
-                        var idx = IndexOf(_bindingSource, recId);
-                        DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
-                        DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
-                        DataGridView1.Rows[idx].Selected = true;
+                        if (recId != 0)
+                        {
+                            var idx = IndexOf(_bindingSource, recId);
+                            DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+                            DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
+                            DataGridView1.Rows[idx].Selected = true;
+                        }
+                        SetCurrentInventoryItem();
+                        DataGridView1.Refresh();
+                        DataGridView1.ClearSelection();
+                        if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
                     }
-                    SetCurrentInventoryItem();
-                    DataGridView1.Refresh();
-                    DataGridView1.ClearSelection();
-                    if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                    else
+                    {
+                        CurrentItem = null;
+                        CurrentLocation = null;
+                        CurrentInventoryItem = null;
+                    }
                 }
-                else
-                {
-                    CurrentItem = null;
-                    CurrentLocation = null;
-                    CurrentInventoryItem = null;
-                }
+
             }
-            Cursor.Current = Cursors.Default;
-            await _logger.LogDetailAsync($"Inventory Count: Done");
+            catch (Exception ex)
+            {
+                var message = $"Error Loading Data: {Environment.NewLine}{ex.Message}";
+                await _logger.LogDetailAsync(message);
+                Mediator.GetInstance().OnGeneralError(this, message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         /// <summary>
@@ -306,13 +324,13 @@ namespace Neutron.Forms
         private void MButtonFind_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
         }
         private void FindRecord()
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
         }
         private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
@@ -320,7 +338,7 @@ namespace Neutron.Forms
             if (e.KeyCode == Keys.Return)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                LoadInventory();
+                _ = RefreshData();
                 Cursor.Current = Cursors.Default;
             }
             if (e.KeyCode == Keys.Escape)
@@ -334,7 +352,7 @@ namespace Neutron.Forms
         {
             TextBoxFind.Text = string.Empty;
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             TextBoxFind.Focus();
         }
@@ -383,7 +401,7 @@ namespace Neutron.Forms
         private void MbViewEditListing_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -398,7 +416,7 @@ namespace Neutron.Forms
         private void MbViewEditClose_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -483,7 +501,7 @@ namespace Neutron.Forms
         private void MbNewListing_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -498,7 +516,7 @@ namespace Neutron.Forms
         private void MbNewClose_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -524,7 +542,7 @@ namespace Neutron.Forms
                 }
                 _repoInventory.Insert(rec);
                 _historyManager.SaveHistory(ActionCode.InventoryAdd, rec);
-                LoadInventory(rec.Id);
+                _ = RefreshData(rec.Id);
                 tabControl1.SelectedTab = tabPage1;
             }
             catch (Exception ex)
@@ -548,7 +566,7 @@ namespace Neutron.Forms
             }
             _repoInventory.Update(rec);
             _historyManager.SaveHistory(ActionCode.InventoryModify, rec);
-            LoadInventory(rec.Id);
+            _ = RefreshData(rec.Id);
             tabControl1.SelectedTab = tabPage1;
         }
         private bool ValidateFields(Inventory rec)
@@ -784,7 +802,7 @@ namespace Neutron.Forms
                 Name = "StorageTypeName"
             };
             DataGridView1.Columns.Add(col);
-           
+
 
             col = new DataGridViewTextBoxColumn
             {
@@ -985,7 +1003,7 @@ namespace Neutron.Forms
             DataGridViewInventoryLocations.Columns.Add(col);
 
 
-            
+
 
             col = new DataGridViewTextBoxColumn
             {
@@ -1172,7 +1190,7 @@ namespace Neutron.Forms
             };
             DataGridViewInventoryNewLocations.Columns.Add(col);
 
-            
+
 
             col = new DataGridViewTextBoxColumn
             {
@@ -1383,10 +1401,10 @@ namespace Neutron.Forms
                 {
                     // var invId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).Id;
                     DeleteInventoryItem(locView.Id, false);
-                    // LoadInventory();
+                    // _ = RefreshData();
                     LoadViewEdit();
                     tabControl1.SelectedTab = tabPage2;
-                    //LoadInventory();
+                    //_ = RefreshData();
                     //tabControl1.SelectedTab = tabPage1; 
                 }
             }
@@ -1451,7 +1469,7 @@ namespace Neutron.Forms
                 TextBoxInventoryNewLocationsQuantity.Text = "0";
                 ComboBoxInventoryNewLocationsStorageType.SelectedIndex = 1;
                 // Get the available locations for the current item
-                GetAvailableLocations(CurrentItem, inUse);
+                _ = GetAvailableLocations(CurrentItem, inUse);
             }
             tabControl1.SelectedTab = tabPage4;
         }
@@ -1514,7 +1532,7 @@ namespace Neutron.Forms
                 DataGridViewInventoryNewLocations.CurrentCell =
                     DataGridViewInventoryNewLocations.Rows[idx].Cells[1];
                 DataGridViewInventoryNewLocations.Rows[idx].Selected = true;
-                _logger.LogDetailAsync($"GetAvailableLocations END");
+                _ = _logger.LogDetailAsync($"GetAvailableLocations END");
             }
         }
         private List<InventoryView> GetSelectedInventoryViews(DataGridView dataGridView)
@@ -1644,7 +1662,7 @@ namespace Neutron.Forms
         /// <returns></returns>
         private int GetInUse()
         {
-            _logger.LogDetailAsync("GetInUse");
+            _ = _logger.LogDetailAsync("GetInUse");
             // check to see which radio button is selected
             var inUse = 0;
             if (RadioButtonInUse.Checked)
@@ -1810,7 +1828,7 @@ namespace Neutron.Forms
         private void MbNewLocationsListing_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -1967,7 +1985,7 @@ namespace Neutron.Forms
         }
         private void MbAddDetailClose_Click(object sender, EventArgs e)
         {
-            //LoadInventory();
+            //_ = RefreshData();
             //SetCurrentItemDefinition();
             LoadViewEdit();
             tabControl1.SelectedTab = tabPage2;
@@ -1975,7 +1993,7 @@ namespace Neutron.Forms
         private void MbAddDetailListing_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            LoadInventory();
+            _ = RefreshData();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -2171,47 +2189,7 @@ namespace Neutron.Forms
         {
             if (!_firstTime) FindRecord();
         }
-        private void MBCreateInventoryFile_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            MBCreateInventoryFile.Enabled = false;
-            var areaId = ((Area)ComboBoxAreaNumber.SelectedItem).Id;
-            CreateInventoryFileByArea(areaId);
-            Cursor.Current = Cursors.Default;
-            MBCreateInventoryFile.Enabled = true;
-        }
-        private void CreateInventoryFileByArea(int areaId)
-        {
-            var fileName = GetFileName();
-            //Task.Run(() => CsvUtility.SaveToCsv(fileName, stationNumber));
-            CsvUtility.SaveToCsv(fileName, areaId);
-        }
-        private string GetFileName()
-        {
-            var rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\CSV\");
-            if (!Directory.Exists(rootDirectory))
-            {
-                Directory.CreateDirectory(rootDirectory);
-            }
-            var sfd = new SaveFileDialog
-            {
-                InitialDirectory = rootDirectory,
-                Filter = "CSV (*.csv)|*.csv",
-                FileName = "Output.csv"
-            };
-            if (sfd.ShowDialog() != DialogResult.OK) return sfd.FileName;
-            MessageBox.Show(_resourceManager.GetString("Message14"));
-            if (!File.Exists(sfd.FileName)) return sfd.FileName;
-            try
-            {
-                File.Delete(sfd.FileName);
-            }
-            catch (IOException ex)
-            {
-                MessageBox.Show(_resourceManager.GetString("Message15") + ex.Message);
-            }
-            return sfd.FileName;
-        }
+
         private void SetCulture(string lang)
         {
             try
@@ -2224,9 +2202,7 @@ namespace Neutron.Forms
                     resourceDir: languageDirectory, usingResourceSet: null);
                 LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseMana");
                 LabelFormTitle.Text = _resourceManager.GetString("Inventory");
-                MBCreateInventoryFile.Text = _resourceManager.GetString("InventoryFile");
-                CheckBoxAllStations.Text = _resourceManager.GetString("AllAreas");
-                MBPrintInventory.Text = _resourceManager.GetString("SaveToFile");
+                ButtonSaveToExcel.Text = _resourceManager.GetString("SaveToFile");
                 LabelFindDescription.Text = _resourceManager.GetString("SearchFor");
                 MButtonNew.Text = _resourceManager.GetString("New");
                 MButtonViewEdit.Text = _resourceManager.GetString("View/Edit");
@@ -2307,9 +2283,7 @@ namespace Neutron.Forms
             var level = TextBoxAddDetailLoc3.Text.ParseInt();
             var part = TextBoxAddDetailLoc4.Text.ParseInt();
             var qty = TextBoxAddDetailQuantity.Text.ParseInt();
-            Task.Run(() =>
-                _logger.LogDetailAsync(
-                    $"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+             _ = _logger.LogDetailAsync($"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
             MoveDevice(deviceNumber, trayNumber, level, part, qty);
         }
         private void DataGridView1_DoubleClick(object sender, EventArgs e)
@@ -2448,6 +2422,228 @@ namespace Neutron.Forms
                 _processing = false;
             }
             await _logger.LogDetailAsync($"RadioButtonNotInUse_CheckedChanged END");
+        }
+
+        private List<SqlInventoryView> GetSelectedItems(DataGridView dataGridView)
+        {
+            // Create a list of SqlInventoryView
+            var selectedList = new List<SqlInventoryView>();
+            // Loop through the selected rows
+            foreach (DataGridViewRow row in dataGridView.SelectedRows)
+            {
+                // Get the SqlInventoryView from the row  ((ObjectView<SqlInventoryView>)_bindingSource.Current).Object;
+                var sqlInventoryView = ((ObjectView<SqlInventoryView>)row.DataBoundItem).Object;
+                // Add the SqlInventoryView to the list
+                selectedList.Add(sqlInventoryView);
+            }
+            return selectedList;
+        }
+
+        private void ButtonSaveToExcel_Click(object sender, EventArgs e)
+        {
+            ButtonLoadFromExcel.Enabled = false;
+            ButtonSaveToExcel.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+            SaveToExcel();
+        }
+
+        private void SaveToExcel()
+        {
+            _ = _logger.LogDetailAsync("Saving records to Excel spreadsheet");
+
+            DataTable dataTable;
+            // Initialize the Excel Service
+            var excelService = new ExcelService();
+            if (CheckBoxUseSelectedItems.Checked)
+            {
+                var selectedList = GetSelectedItems(DataGridView1);
+                // Create a DataTable from the List(Of T) (SqlInventoryView)
+                dataTable = ToDataTable<SqlInventoryView>(selectedList);
+            }
+            else
+            {
+                // Create a DataTable from the List(Of T) (SqlInventoryView)
+                dataTable = ToDataTable<SqlInventoryView>(_currentList);
+
+            }
+
+            // Generate the Excel file
+            excelService.Generate(dataTable);
+            _ = _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet");
+            ButtonLoadFromExcel.Enabled = true;
+            ButtonSaveToExcel.Enabled = true;
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void ButtonLoadFromExcel_Click(object sender, EventArgs e)
+        {
+            ButtonLoadFromExcel.Enabled = false;
+            ButtonSaveToExcel.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+            LoadFromExcel();
+        }
+
+        private void LoadFromExcel()
+        {
+            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet");
+            var excelService = new ExcelService();
+            var dataTable = excelService.Update();
+            BackgroundWorkerInventory.RunWorkerAsync(dataTable);
+        }
+        public DataTable ToDataTable<T>(List<T> items)
+        {
+            var dataTable = new DataTable(typeof(T).Name);
+
+            //Get all the properties
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            var action = new DataColumn("Action", typeof(string));
+            dataTable.Columns.Add(action);
+
+
+            foreach (var prop in props)
+            {
+                //Setting column names as Property names
+                var col = new DataColumn(prop.Name, prop.PropertyType);
+                dataTable.Columns.Add(prop.Name, prop.PropertyType);
+            }
+            foreach (var item in items)
+            {
+                // add 1 to the props.Length to account for the Action column
+                var values = new object[props.Length + 1];
+                // set the default action to [M]odify
+                values[0] = "M";
+                // starting at 1 to skip the Action column
+                for (var i = 0; i < props.Length; i++)
+                {
+                    //inserting property values to dataTable rows
+                    values[i + 1] = props[i].GetValue(item, null);
+                }
+                dataTable.Rows.Add(values);
+            }
+            //put a breakpoint here and check dataTable
+            return dataTable;
+        }
+
+        private void ComboBoxAreaNumber_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_startup)
+            {
+                _ = RefreshData();
+            }
+        }
+
+        private void BackgroundWorkerItemDefinitions_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            if (!(sender is BackgroundWorker worker)) return;
+            if (!(e.Argument is DataTable dataTable)) return;
+            var rowCount = dataTable.Rows.Count;
+            var processedCount = 0;
+            // loop over the rows in the DataTable
+            _ = _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet");
+
+            try
+            {
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    // get the values from the row
+                    var id = row["Id"].ToString();
+                    // Check to see if this row contains the header record
+                    // if so, skip it
+                    // Id is the first column in the spreadsheet
+                    if (id.Equals("Id")) continue;
+                    var item = row["Item"].ToString();
+                    var description = row["Description"].ToString();
+                    var quantity = row["Quantity"].ToString();
+                    var primeBin = row["PrimeBin"].ToString();
+                    var loc1 = row["Loc1"].ToString();
+                    var loc2 = row["Loc2"].ToString();
+                    var loc3 = row["Loc3"].ToString();
+                    var loc4 = row["Loc4"].ToString();
+                    var loc5 = row["Loc5"].ToString();
+                    var slot = row["Slot"].ToString();
+                    var pickSequence = row["PickSequence"].ToString();
+                    var inUse = row["InUse"].ToString();
+                    var receivedDate = row["ReceivedDate"].ToString();
+                    var areaId = row["AreaId"].ToString();
+                    var areaName = row["AreaName"].ToString();
+                    var storageTypeId = row["StorageTypeId"].ToString();
+                    var storageTypeName = row["StorageTypeName"].ToString();
+                    var sizeCodeId = row["SizeCodeId"].ToString();
+                    var sizeCodeName = row["SizeCodeName"].ToString();
+                    var velocityCodeId = row["VelocityCodeId"].ToString();
+                    var velocityCodeName = row["VelocityCodeName"].ToString();
+                    var heightCodeId = row["HeightCodeId"].ToString();
+                    var heightCodeName = row["HeightCodeName"].ToString();
+                    var locationCode = row["LocationCode"].ToString();
+                    var itemDefinitionId = row["ItemDefinitionId"].ToString();
+                    var locationId = row["LocationId"].ToString();
+                    var unitOfIssueId = row["UnitOfIssueId"].ToString();
+                    var unitOfIssueName = row["UnitOfIssueName"].ToString();
+                    var locationMax = row["LocationMax"].ToString();
+                    var rfid = row["RFID"].ToString();
+
+
+                    // if the Id is empty, this is a new row
+                    // create a new Inventory object
+                    if (string.IsNullOrWhiteSpace(id))
+                    {
+                        var inventory = new Inventory
+                        {
+                            ItemDefinitionId = id.ParseInt(),
+                            LocationId = locationId.ParseInt(),
+                            Quantity = quantity.ParseInt(),
+                            ReceivedDate = DateTime.TryParse(receivedDate, out var date) ? date : DateTime.Now,
+                            PrimeBin = primeBin.ParseInt() == 1 ? true : false,
+                            AreaId = areaId.ParseInt(),
+                            RFID = rfid,
+                        };
+                        // add the new Inventory object to the database
+                        _repoInventory.Insert(inventory);
+                    }
+                    else
+                    {
+                        // get the existing Inventory object
+                        var inventory = _repoInventory.FindByKey(id.ParseInt());
+                        if (inventory == null) continue;
+                        // update the values
+                        inventory.Quantity = quantity.ParseInt();
+                        inventory.ReceivedDate = DateTime.TryParse(receivedDate, out var date) ? date : DateTime.Now;
+                        inventory.PrimeBin = primeBin.ParseInt() == 1 ? true : false;
+                        inventory.RFID = rfid;
+                        // update the database
+                        _repoInventory.Update(inventory);
+                    }
+                    // Update the progress
+                    processedCount++;
+                    var progressPercentage = (int)((double)processedCount / rowCount * 100);
+                    if (progressPercentage % 25 == 0)
+                    {
+                        _ = _logger.LogDetailAsync($"Loading {progressPercentage}% complete");
+                        worker.ReportProgress(progressPercentage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Mediator.GetInstance().OnGeneralError(this, $"Error Adding/Updating Records{Environment.NewLine}{ex.Message}");
+            }
+            Mediator.GetInstance().OnDisplayMessage(this, $"Load complete");
+        }
+
+        private void BackgroundWorkerItemDefinitions_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            ProgressBarInventory.Value = e.ProgressPercentage;
+        }
+
+        private void BackgroundWorkerItemDefinitions_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            _ = RefreshData();
+            ProgressBarInventory.Value = 0;
+            Cursor.Current = Cursors.Default;
+            ButtonLoadFromExcel.Enabled = true;
+            ButtonSaveToExcel.Enabled = true;
+            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet complete");
         }
     }
 }

@@ -13,6 +13,9 @@ namespace NeutronData.ModelViews
     public class PickStop
     {
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private IDynamicLogger _logger;
 
         public PickStop()
         {
@@ -124,6 +127,8 @@ namespace NeutronData.ModelViews
 
         public void SetPickViewsComplete(User user, IDynamicLogger logger)
         {
+            _logger = logger;
+
             var sb = new StringBuilder();
             sb.AppendLine($"Set Pick Views Complete, Update OrderDetail Record");
             try
@@ -133,6 +138,15 @@ namespace NeutronData.ModelViews
                     var total = GetPickViewTotal(pickView);
                     pickView.OrderDetail.PickedQuantity = total;
                     pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
+                    
+                    
+                    // If this is a Transfer Order and the PickView is complete, then Create a new Replenishment Order
+                    if (pickView.Ord1.Equals("TRANSFER", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        _ = _logger.LogDetailAsync($"Transfer Order: {pickView.Ord1}");
+                        CreateReplenOrder(pickView);
+                    }
+
                     pickView.OrderDetail.EmpId = user.EmpId;
                     _repoOrderDetails.Update(pickView.OrderDetail);
                     sb.AppendLine(
@@ -141,9 +155,54 @@ namespace NeutronData.ModelViews
             }
             catch (Exception ex)
             {
-               _ = logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
+               _ = _logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
             }
-            _ = logger.LogDetailAsync($"{sb.ToString()}");
+            _ = _logger.LogDetailAsync($"{sb.ToString()}");
+        }
+
+        private void CreateReplenOrder(PickView pickView)
+        {
+            var sb = new StringBuilder();
+            try
+            {
+                var replenOrder = new ReplenOrder
+                {
+                    Ord1 = pickView.Ord1,
+                    Ord2 = pickView.Ord2,
+                    Priority = 99,
+                    OrderInfo = "Transfer Order",
+                    LoadDate = DateTime.Now,
+                    ShipperId = 1,
+                    ShipMethodId = 1,
+                    OrderStatusId = (int)OrderStatus.Available,
+                };
+                _repoReplenOrders.Insert(replenOrder);
+
+                var replenOrderDetail = new ReplenOrderDetail
+                {
+                    ReplenOrderId = replenOrder.Id,
+                    ItemDefinitionId = pickView.OrderDetail.ItemDefinitionId,
+                    Quantity = pickView.OrderDetail.Quantity,
+                    PickedQuantity = 0,
+                    LineStatusId = (int)LineStatus.Available,
+                    DateTime = DateTime.Now.ToString(),
+                    OrderDetailInfo = "Transfer Order",
+                    AreaId = pickView.OrderDetail.AreaId,
+                    PartNum = pickView.OrderDetail.PartNum,
+                    PartDesc = pickView.OrderDetail.PartDesc,
+                    NewBin = pickView.OrderDetail.NewBin,
+                    PrimeBin = pickView.OrderDetail.PrimeBin,
+                };
+                _repoReplenOrderDetails.Insert(replenOrderDetail);
+
+                sb.AppendLine(
+                    $"Create Replenishment Order: {replenOrder.Ord1}  Description: {replenOrderDetail.PartDesc}  Item: {replenOrderDetail.PartNum}  Qty: {replenOrderDetail.Quantity}");
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
+            }
+            _ = _logger.LogDetailAsync($"{sb.ToString()}");
         }
     }
 }

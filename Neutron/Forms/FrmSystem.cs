@@ -359,33 +359,33 @@ namespace Neutron.Forms
             }
             catch (ConfigurationErrorsException ex)
             {
-                _logger.LogDetailAsync($"Get Connection String Configuration Error {Environment.NewLine} {ex.Message}");
+             _ = _logger.LogDetailAsync($"Get Connection String Configuration Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                    _logger.LogDetailAsync($"Get Connection String Configuration Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                 _ = _logger.LogDetailAsync($"Get Connection String Configuration Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogDetailAsync($"Get Connection String Key Not Found {Environment.NewLine} {ex.Message}");
+             _ = _logger.LogDetailAsync($"Get Connection String Key Not Found {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                    _logger.LogDetailAsync($"Get Connection String Key Not Found - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                 _ = _logger.LogDetailAsync($"Get Connection String Key Not Found - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (FormatException ex)
             {
-                _logger.LogDetailAsync($"Get Connection String Format Error {Environment.NewLine} {ex.Message}");
+             _ = _logger.LogDetailAsync($"Get Connection String Format Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                    _logger.LogDetailAsync($"Get Connection String Format Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                 _ = _logger.LogDetailAsync($"Get Connection String Format Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (ArgumentException ex)
             {
-                _logger.LogDetailAsync($"Get Connection String Argument Error {Environment.NewLine} {ex.Message}");
+             _ = _logger.LogDetailAsync($"Get Connection String Argument Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                    _logger.LogDetailAsync($"Get Connection String Argument Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                 _ = _logger.LogDetailAsync($"Get Connection String Argument Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Get Connection String Unknown Error {Environment.NewLine} {ex.Message}");
+             _ = _logger.LogDetailAsync($"Get Connection String Unknown Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                    _logger.LogDetailAsync($"Get Connection String Unknown Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                 _ = _logger.LogDetailAsync($"Get Connection String Unknown Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
 
             return builder;
@@ -450,10 +450,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Connection Test Error {Environment.NewLine}{ex.Message}");
+             _ = _logger.LogDetailAsync($"Connection Test Error {Environment.NewLine}{ex.Message}");
                 if (ex.InnerException != null)
                 {
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"Connection Test Error Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
                 }
 
@@ -471,10 +471,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Connection Test Failed {Environment.NewLine}{ex.Message}");
+             _ = _logger.LogDetailAsync($"Connection Test Failed {Environment.NewLine}{ex.Message}");
                 if (ex.InnerException != null)
                 {
-                    _logger.LogDetailAsync(
+                 _ = _logger.LogDetailAsync(
                         $"Connection Test Failed Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
                 }
 

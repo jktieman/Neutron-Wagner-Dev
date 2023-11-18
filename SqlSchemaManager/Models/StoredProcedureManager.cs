@@ -32,7 +32,7 @@ namespace SqlSchemaManager
         public void Execute()
         {
             //_storedProcedureNames = GetStoredProcedureNames();
-            _logger.LogDetailAsync("Execute Start");
+         _ = _logger.LogDetailAsync("Execute Start");
             foreach (var storedProcedureName in _storedProcedureNames)
             {
 
@@ -67,11 +67,11 @@ namespace SqlSchemaManager
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"Connection Test Failed {Environment.NewLine}{ex.Message}");
+                 _ = _logger.LogDetailAsync($"Connection Test Failed {Environment.NewLine}{ex.Message}");
                     if (ex.InnerException != null)
                     {
-                        _logger.LogDetailAsync($"{ex.Message}");
-                        _logger.LogDetailAsync(
+                     _ = _logger.LogDetailAsync($"{ex.Message}");
+                     _ = _logger.LogDetailAsync(
                             $"Connection Test Failed Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
                     }
                 }
@@ -80,7 +80,7 @@ namespace SqlSchemaManager
 
         private List<string> GetStoredProcedureNames()
         {
-            _logger.LogDetailAsync("GetStoredProcedureNames Start");
+         _ = _logger.LogDetailAsync("GetStoredProcedureNames Start");
 
             var fileNames = new List<string>();
             var sqlPath = typeof(StoredProcedureManager).Assembly.Location;

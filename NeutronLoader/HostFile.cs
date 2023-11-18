@@ -29,7 +29,7 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly WorkstationView _workstationView;
-        private readonly DynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private string _neutronUpFileName;
 
         public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables, WorkstationView workstationView)
@@ -39,22 +39,18 @@ namespace NeutronLoader
             _workstationView = workstationView;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
-
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"HostFile";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
+            _logger = NeutronCore.Global.Logger.SetupLogger("HostFile");
         }
 
         public bool CreateHostFile(List<History> historyRecs)
         {
-            _logger.Log($"49 CreateHostFile with HistoryRecs");
+            _ = _logger.LogDetailAsync($"49 CreateHostFile with HistoryRecs");
             _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
 
             if (_hostUploadDirectory == null) return false;
             if (_usePr1Processor)
             {
-                _logger.Log($"61 HostFile List<History> Calling SaveUploadDatFile HistoryRecs");
+                _ = _logger.LogDetailAsync($"61 HostFile List<History> Calling SaveUploadDatFile HistoryRecs");
                 if (SaveUploadDatFile(historyRecs))
                 {
                     return true;
@@ -62,7 +58,7 @@ namespace NeutronLoader
             }
             else
             {
-                _logger.Log($"66 HostFile List<HostOrder> Calling SaveFile groups");
+                _ = _logger.LogDetailAsync($"66 HostFile List<HostOrder> Calling SaveFile groups");
                 SaveFile(historyRecs);
                 return true;
             }
@@ -80,7 +76,7 @@ namespace NeutronLoader
         {
             if (history.Count == 0) return ;
 
-            _logger.Log("Send Upload To Host Sql.");
+            _ = _logger.LogDetailAsync("Send Upload To Host Sql.");
 
             try
             {
@@ -108,14 +104,14 @@ namespace NeutronLoader
 
                             db.SaveChanges();
                             transaction.Commit();
-                            _logger.Log("Sql Table Updated With " + history.Count() + "Records.");
+                            _ = _logger.LogDetailAsync("Sql Table Updated With " + history.Count() + "Records.");
                         }
                         catch (Exception ex)
                         {
                             transaction.Rollback();
                             var msg = $"Process Upload To Sql Table Transaction Error. Records: {history.Count} {Environment.NewLine}" +
                                          $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
-                            _logger.Log(msg);
+                            _ = _logger.LogDetailAsync(msg);
                         }
                     }
                 }
@@ -124,9 +120,9 @@ namespace NeutronLoader
             {
                 var msg = $"Process Upload To Sql Table.  {Environment.NewLine}" +
                              $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
-                _logger.Log(msg);
+                _ = _logger.LogDetailAsync(msg);
             }
-            _logger.Log("Send Upload To Host Sql - Success.");
+            _ = _logger.LogDetailAsync("Send Upload To Host Sql - Success.");
         }
 
 
@@ -134,14 +130,14 @@ namespace NeutronLoader
         {
             historyRecs = historyRecs.OrderBy(o => o.Ord1).ThenBy(o => o.Item).ToList();
             var groups = historyRecs.GroupBy(g => g.Ord1).ToList();
-            _logger.Log("76 SaveFile History Groups");
+            _ = _logger.LogDetailAsync("76 SaveFile History Groups");
             if (!Directory.Exists(_hostUploadDirectory.FullName))
             {
                 Directory.CreateDirectory(_hostUploadDirectory.FullName);
             }
 
             var fullName = $"{_hostUploadDirectory.FullName}{GetFileName(string.Empty)}";
-            _logger.Log($"83 SaveFile History Groups: {fullName}");
+            _ = _logger.LogDetailAsync($"83 SaveFile History Groups: {fullName}");
             try
             {
                 using (var tw = new StreamWriter(fullName, true))
@@ -161,7 +157,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"103 Save History Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"103 Save History Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 //MessageBox.Show($"Save Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
@@ -169,15 +165,15 @@ namespace NeutronLoader
 
         private string GetCsvString(History item)
         {
-            _logger.Log($"111 GetCsvString history: {item.Ord1}");
+            _ = _logger.LogDetailAsync($"111 GetCsvString history: {item.Ord1}");
 
-            _logger.Log($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
+            _ = _logger.LogDetailAsync($"113 History Get CSV String Company Code: {_neutronLicense.CompanyCode}");
             string operation = string.Empty;
             var sb = new StringBuilder();
 
             if (_neutronVariables.UsePr1StyleOutputProcessor)
             {
-                _logger.Log($"119 NOVA/SFH - UsePr1Processor: true");
+                _ = _logger.LogDetailAsync($"119 NOVA/SFH - UsePr1Processor: true");
                 //Saint Francis Hospital
                 string loc = @"        ";
                 if (item.OrderDetailInfo.Length >= 8)
@@ -204,8 +200,8 @@ namespace NeutronLoader
             else if (_neutronLicense.CompanyCode == "TMG")
             {
                 //TMG
-                _logger.Log($"146 GetCsvString History TMG - NOT use PR1 Processor");
-                _logger.Log($"147 GetCsvString History.NewBin: {item.NewBin}");
+                _ = _logger.LogDetailAsync($"146 GetCsvString History TMG - NOT use PR1 Processor");
+                _ = _logger.LogDetailAsync($"147 GetCsvString History.NewBin: {item.NewBin}");
                 if (!string.IsNullOrEmpty(item.OrderDetailInfo))
                 {
                     var fields = item.OrderDetailInfo.Split(separator: new char[] { '|' });
@@ -218,7 +214,7 @@ namespace NeutronLoader
             }
             else if (_neutronLicense.CompanyCode == "TOP")
             {
-                _logger.Log($"160 GetCsvString History TOP - NOT use PR1 Processor");
+                _ = _logger.LogDetailAsync($"160 GetCsvString History TOP - NOT use PR1 Processor");
                 // sb.Append(item.TypeCode + _neutronVariables.FieldDelimiter);
                 sb.Append(item.Item + _neutronVariables.FieldDelimiter);
                 sb.Append(item.Description + _neutronVariables.FieldDelimiter);
@@ -233,7 +229,7 @@ namespace NeutronLoader
             }
             else if (_neutronLicense.CompanyCode == "VID")
             {
-                _logger.Log($"160 GetCsvString History VID - NOT use PR1 Processor");
+                _ = _logger.LogDetailAsync($"160 GetCsvString History VID - NOT use PR1 Processor");
                 sb.Append(item.Item + _neutronVariables.FieldDelimiter);
                 sb.Append(item.Description + _neutronVariables.FieldDelimiter);
                 sb.Append(item.Ord1 + _neutronVariables.FieldDelimiter);
@@ -242,7 +238,7 @@ namespace NeutronLoader
                 sb.Append(item.EmpId);
                 sb.AppendLine();
             }
-            _logger.Log($"173 GetCsvString History result: {sb.ToString()}");
+            _ = _logger.LogDetailAsync($"173 GetCsvString History result: {sb.ToString()}");
             return sb.ToString();
         }
 
@@ -257,10 +253,10 @@ namespace NeutronLoader
             if (!string.IsNullOrEmpty(fileName))
             {
                 var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
-                _logger.Log($"187 FullName: {fullName}");
+                _ = _logger.LogDetailAsync($"187 FullName: {fullName}");
                 try
                 {
-                    _logger.Log("Set Neutron Busy.");
+                    _ = _logger.LogDetailAsync("Set Neutron Busy.");
                     if (!SetNeutronBusy())
                     {
                         using (var tw = new StreamWriter(fullName, append: true))
@@ -271,24 +267,24 @@ namespace NeutronLoader
                             }
                         }
 
-                        _logger.Log("Clear Neutron Busy.");
+                        _ = _logger.LogDetailAsync("Clear Neutron Busy.");
                         ClearNeutronBusy();
                         result = true;
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"211 Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    _ = _logger.LogDetailAsync($"211 Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
                 finally
                 {
-                    _logger.Log("Clear Neutron Busy.");
+                    _ = _logger.LogDetailAsync("Clear Neutron Busy.");
                     ClearNeutronBusy();
                 }
             }
             else
             {
-                _logger.Log($"221 Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync($"221 Go to Options and enter an upload file name.");
             }
 
             return result;
@@ -299,7 +295,7 @@ namespace NeutronLoader
             if (File.Exists(_neutronUpFileName))
             {
                 File.Delete(_neutronUpFileName);
-                _logger.Log($"ClearNeutronBusy {_neutronUpFileName} exists, deleting file.");
+                _ = _logger.LogDetailAsync($"ClearNeutronBusy {_neutronUpFileName} exists, deleting file.");
             }
         }
 
@@ -320,7 +316,7 @@ namespace NeutronLoader
           
             neutronBusyPath = neutronBusy != null ? neutronBusy.Trim() : LoaderSettings.GetRootDirectory();
 
-            _logger.Log($"NeutronBusyPath: {neutronBusyPath}");
+            _ = _logger.LogDetailAsync($"NeutronBusyPath: {neutronBusyPath}");
 
             var sapBusy = Environment.GetEnvironmentVariable("SAPBUSY", EnvironmentVariableTarget.Machine);
             if (string.IsNullOrEmpty(sapBusy))
@@ -330,7 +326,7 @@ namespace NeutronLoader
 
             sapBusyPath = sapBusy != null ? sapBusy.Trim() : LoaderSettings.GetRootDirectory();
 
-            _logger.Log($"SapBusyPath: {sapBusyPath}");
+            _ = _logger.LogDetailAsync($"SapBusyPath: {sapBusyPath}");
 
             var sapUp = Environment.GetEnvironmentVariable("SAPUP", EnvironmentVariableTarget.Machine);
             if (string.IsNullOrEmpty(sapUp))
@@ -340,12 +336,12 @@ namespace NeutronLoader
 
             sapUpPath = sapUp != null ? sapUp.Trim() : LoaderSettings.GetRootDirectory();
 
-            _logger.Log($"SapUpPath: {sapUpPath}");
+            _ = _logger.LogDetailAsync($"SapUpPath: {sapUpPath}");
 
             _neutronUpFileName = neutronBusyPath + CheckForBackSlash(neutronBusyPath) + "UP";
-            _logger.Log($"NeutronUpFileName: {_neutronUpFileName}");
+            _ = _logger.LogDetailAsync($"NeutronUpFileName: {_neutronUpFileName}");
             var sapUpFileName = sapBusyPath + CheckForBackSlash(sapBusyPath) + "UP";
-            _logger.Log($"SapUpFileName: {sapUpFileName}");
+            _ = _logger.LogDetailAsync($"SapUpFileName: {sapUpFileName}");
 
             while (counter <= 10)
             {
@@ -360,12 +356,12 @@ namespace NeutronLoader
                     File.Delete(_neutronUpFileName);
                     counter++;
                     Thread.Sleep(100);
-                    _logger.Log($"{sapUpFileName} exists, waiting 1000MS.");
+                    _ = _logger.LogDetailAsync($"{sapUpFileName} exists, waiting 1000MS.");
                 }
                 else
                 {
                     sapFileExist = false;
-                    _logger.Log($"{sapUpFileName} does not exists");
+                    _ = _logger.LogDetailAsync($"{sapUpFileName} does not exists");
                     break;
                 }
             }
@@ -424,7 +420,7 @@ namespace NeutronLoader
             sb.Length = 154;
 
             var result = sb.ToString();
-            _logger.Log($"{result}");
+            _ = _logger.LogDetailAsync($"{result}");
             return result;
         }
 
@@ -472,7 +468,7 @@ namespace NeutronLoader
 
         public void CreateHostFile(List<HostOrder> hostOrders)
         {
-            _logger.Log($"105 Folder Name: HostFile");
+            _ = _logger.LogDetailAsync($"105 Folder Name: HostFile");
             _usePr1Processor = _neutronVariables.UsePr1StyleOutputProcessor;
             hostOrders = hostOrders.OrderBy(o => o.JobNum).ThenBy(o => o.PartNum).ToList();
 
@@ -483,12 +479,12 @@ namespace NeutronLoader
             {
                 if (_usePr1Processor)
                 {
-                    _logger.Log($"116 HostFile List<HostOrder> Calling SaveUploadDatFile groups");
+                    _ = _logger.LogDetailAsync($"116 HostFile List<HostOrder> Calling SaveUploadDatFile groups");
                     SaveUploadDatFile(groups);
                 }
                 else
                 {
-                    _logger.Log($"121 HostFile List<HostOrder> Calling SaveFile groups");
+                    _ = _logger.LogDetailAsync($"121 HostFile List<HostOrder> Calling SaveFile groups");
                     SaveFile(groups);
                 }
             }
@@ -507,12 +503,12 @@ namespace NeutronLoader
             {
                 if (_usePr1Processor)
                 {
-                    _logger.Log($"148 HostFile List<ReplenHostOrder> Calling SaveUploadDataFile groups");
+                    _ = _logger.LogDetailAsync($"148 HostFile List<ReplenHostOrder> Calling SaveUploadDataFile groups");
                     SaveUploadDatFile(groups);
                 }
                 else
                 {
-                    _logger.Log($"153 HostFile List<ReplenHostOrder> Calling SaveFile groups");
+                    _ = _logger.LogDetailAsync($"153 HostFile List<ReplenHostOrder> Calling SaveFile groups");
                     SaveFile(groups);
                 }
             }
@@ -564,13 +560,13 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"205 Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    _ = _logger.LogDetailAsync($"205 Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     MessageBox.Show($"Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             else
             {
-                _logger.Log($"211 Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync($"211 Go to Options and enter an upload file name.");
                 MessageBox.Show(text: "Go to Options and enter an upload file name.");
             }
         }
@@ -675,13 +671,13 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"314 Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    _ = _logger.LogDetailAsync($"314 Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     MessageBox.Show($"Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             else
             {
-                _logger.Log($"320 Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync($"320 Go to Options and enter an upload file name.");
                 MessageBox.Show(text: "Go to Options and enter an upload file name.");
             }
         }
@@ -705,7 +701,7 @@ namespace NeutronLoader
             }
 
             string fullName = string.Format(@"{0}{1}", _logFileDirectory.FullName, GetLogFileName());
-            _logger.Log($"341 SaveUploadLog fullName: {fullName}");
+            _ = _logger.LogDetailAsync($"341 SaveUploadLog fullName: {fullName}");
 
             try
             {
@@ -722,7 +718,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"359 Save Upload Log File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"359 Save Upload Log File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 //MessageBox.Show($"Save Upload Log File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
@@ -735,7 +731,7 @@ namespace NeutronLoader
             }
 
             string fullName = string.Format(@"{0}{1}", _logFileDirectory.FullName, GetLogFileName());
-            _logger.Log($"372 SaveUploadLog fullName: {fullName}");
+            _ = _logger.LogDetailAsync($"372 SaveUploadLog fullName: {fullName}");
 
             try
             {
@@ -752,7 +748,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"389 Save Upload Log File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"389 Save Upload Log File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 //MessageBox.Show($"Save Upload Log File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
@@ -782,7 +778,7 @@ namespace NeutronLoader
         //TMG
         private string GetFileName(string hostOrderTypeCode)
         {
-            _logger.Log($"419 Get File Name Company Code: {_neutronLicense.CompanyCode}");
+            _ = _logger.LogDetailAsync($"419 Get File Name Company Code: {_neutronLicense.CompanyCode}");
             string result = string.Empty;
             if (_neutronLicense.CompanyCode == "TOP")
             {
@@ -844,21 +840,21 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"481 Save ReplenHostOrder File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"481 Save ReplenHostOrder File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 //MessageBox.Show($"Save ReplenHostOrder File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
         public void SaveFile(HostOrder order)
         {
-            _logger.Log($"536 SaveFile Order {order.JobNum}");
+            _ = _logger.LogDetailAsync($"536 SaveFile Order {order.JobNum}");
             if (!Directory.Exists(_hostUploadDirectory.FullName))
             {
                 Directory.CreateDirectory(_hostUploadDirectory.FullName);
             }
 
             string fullName = string.Format(@"{0}{1}", _hostUploadDirectory.FullName, GetFileName(order.TypeCode));
-            _logger.Log($"543 SaveFile HostOrder - FullName: {fullName}");
+            _ = _logger.LogDetailAsync($"543 SaveFile HostOrder - FullName: {fullName}");
             try
             {
                 using (var tw = new StreamWriter(fullName, true))
@@ -872,21 +868,21 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"557 Save HostOrder File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"557 Save HostOrder File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 //MessageBox.Show($"Save HostOrder File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
         public void SaveFile(List<IGrouping<string, HostOrder>> groups)
         {
-            _logger.Log("564 SaveFile Groups");
+            _ = _logger.LogDetailAsync("564 SaveFile Groups");
             if (!Directory.Exists(_hostUploadDirectory.FullName))
             {
                 Directory.CreateDirectory(_hostUploadDirectory.FullName);
             }
 
             string fullName = string.Format(@"{0}{1}", _hostUploadDirectory.FullName, GetFileName(string.Empty));
-            _logger.Log($"571 SaveFile Groups: {fullName}");
+            _ = _logger.LogDetailAsync($"571 SaveFile Groups: {fullName}");
             try
             {
                 using (var tw = new StreamWriter(fullName, true))
@@ -906,7 +902,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.Log($"591 Save Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"591 Save Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 //MessageBox.Show($"Save Group File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
@@ -921,7 +917,7 @@ namespace NeutronLoader
             if (!string.IsNullOrEmpty(fileName))
             {
                 string fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
-                _logger.Log($"606 FullName: {fullName}");
+                _ = _logger.LogDetailAsync($"606 FullName: {fullName}");
                 DateTime d = DateTime.Now;
                 string date = d.ToString(format: "MM-dd-yyyy");
                 string time = d.ToString(format: "HH:mm");
@@ -958,13 +954,13 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"643 Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    _ = _logger.LogDetailAsync($"643 Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     //MessageBox.Show($"Save Upload Dat File Error. {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             else
             {
-                _logger.Log($"649 Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync($"649 Go to Options and enter an upload file name.");
                 //MessageBox.Show($"Go to Options and enter an upload file name.");
             }
         }
@@ -1031,16 +1027,16 @@ namespace NeutronLoader
 
         private string GetCsvString(HostOrder hostOrder)
         {
-            _logger.Log($"716 GetCsvString hostOrder: {hostOrder.JobNum}");
-            _logger.Log($"717 GetCsvString Order.NewBin: {hostOrder.NewBin}");
-            _logger.Log($"718 Get CSV String Company Code: {_neutronLicense.CompanyCode}");
+            _ = _logger.LogDetailAsync($"716 GetCsvString hostOrder: {hostOrder.JobNum}");
+            _ = _logger.LogDetailAsync($"717 GetCsvString Order.NewBin: {hostOrder.NewBin}");
+            _ = _logger.LogDetailAsync($"718 Get CSV String Company Code: {_neutronLicense.CompanyCode}");
             string operation = string.Empty;
             var sb = new StringBuilder();
 
 
             if (_neutronVariables.UsePr1StyleOutputProcessor)
             {
-                _logger.Log($"725 NOVA/SFH - UsePr1Processor: true");
+                _ = _logger.LogDetailAsync($"725 NOVA/SFH - UsePr1Processor: true");
                 //Saint Francis Hospital
                 string loc = @"        ";
                 if (hostOrder.OrderDetail.OrderDetailInfo.Length >= 8)
@@ -1067,8 +1063,8 @@ namespace NeutronLoader
             else if (_neutronLicense.CompanyCode == "TMG")
             {
                 //TMG
-                _logger.Log($"752 GetCsvString TMG - NOT use PR1 Processor");
-                _logger.Log($"753 GetCsvString Order.NewBin: {hostOrder.NewBin}");
+                _ = _logger.LogDetailAsync($"752 GetCsvString TMG - NOT use PR1 Processor");
+                _ = _logger.LogDetailAsync($"753 GetCsvString Order.NewBin: {hostOrder.NewBin}");
                 if (hostOrder.NewBin != null)
                 {
                     string[] fields = hostOrder.NewBin.Split(separator: new char[] { '|' });
@@ -1108,7 +1104,7 @@ namespace NeutronLoader
                 sb.AppendLine();
             }
 
-            _logger.Log($"779 GetCsvString result: {sb.ToString()}");
+            _ = _logger.LogDetailAsync($"779 GetCsvString result: {sb.ToString()}");
             return sb.ToString();
         }
 
@@ -1134,12 +1130,12 @@ namespace NeutronLoader
         {
             string operation = string.Empty;
             var sb = new StringBuilder();
-            _logger.Log($"805 GetCsvString ReplenHostOrder: {order.JobNum}");
+            _ = _logger.LogDetailAsync($"805 GetCsvString ReplenHostOrder: {order.JobNum}");
 
             if (_usePr1Processor)
             {
                 //Saint Francis Hospital
-                _logger.Log($"810 SFH - ReplenHostOrder UsePr1Processor: true");
+                _ = _logger.LogDetailAsync($"810 SFH - ReplenHostOrder UsePr1Processor: true");
                 string loc = @"        ";
                 if (order.OrderDetail.OrderDetailInfo.Length >= 8)
                 {
@@ -1164,8 +1160,8 @@ namespace NeutronLoader
             else
             {
                 //TMG
-                _logger.Log($"835 GetCsvString ReplenHostOrder TMG - NOT use PR1 Processor");
-                _logger.Log($"836 GetCsvString Order.NewBin: {order.NewBin}");
+                _ = _logger.LogDetailAsync($"835 GetCsvString ReplenHostOrder TMG - NOT use PR1 Processor");
+                _ = _logger.LogDetailAsync($"836 GetCsvString Order.NewBin: {order.NewBin}");
                 if (order.NewBin != null)
                 {
                     string[] fields = order.NewBin.Split(separator: new char[] { '|' });
@@ -1176,7 +1172,7 @@ namespace NeutronLoader
                 sb.Append(order.PartNum + _neutronVariables.FieldDelimiter);
                 sb.Append(order.Qty + _neutronVariables.FieldDelimiter);
             }
-            _logger.Log($"847 GetCsvString ReplenHostOrder result: {sb.ToString()}");
+            _ = _logger.LogDetailAsync($"847 GetCsvString ReplenHostOrder result: {sb.ToString()}");
             return sb.ToString();
         }
 
@@ -1221,13 +1217,13 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    _logger.Log($"892 Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    _ = _logger.LogDetailAsync($"892 Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     //MessageBox.Show($"Save Upload Dat File Error. [Replen] {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
             }
             else
             {
-                _logger.Log(@"898 Go to Options and enter an upload file name.");
+                _ = _logger.LogDetailAsync(@"898 Go to Options and enter an upload file name.");
                 MessageBox.Show(@"Go to Options and enter an upload file name.");
             }
         }

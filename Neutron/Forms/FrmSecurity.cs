@@ -172,7 +172,7 @@ namespace Neutron.Forms
             //{
             //    if (item.Checked)
             //    {
-            //        msg += item.Tag + " " + item.Text + "\r\n";
+            //        msg += item.Tag + " " + item.Text + "{Environment.NewLine}";
             //    }
             //}
             //MessageBox.Show(msg);
@@ -246,7 +246,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error Saving User: {ex.Message}\r\n {ex.InnerException}");
+                MessageBox.Show($"Error Saving User: {ex.Message}{Environment.NewLine} {ex.InnerException}");
             }
         }
         private void DisableSelectedUsers(Group group)

@@ -77,7 +77,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Insert Error.  {ex.Message} \r\n {ex.InnerException}");
+                MessageBox.Show($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
@@ -97,7 +97,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Insert Error.  {ex.Message} \r\n {ex.InnerException} \r\n {ex.InnerException.Message}");
+                MessageBox.Show($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException} {Environment.NewLine} {ex.InnerException.Message}");
             }
         }
 

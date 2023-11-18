@@ -30,7 +30,7 @@ namespace Neutron.Controllers
         readonly int Device_Stationary = -1;
         readonly int Device_Alignment_DontCare = 0;
 
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
         private readonly WorkstationView workstation;
         Form currentForm;
         private readonly Object locker = new Object();
@@ -374,11 +374,11 @@ namespace Neutron.Controllers
         {
             var msg = string.Empty;
             var deviceStatus = new Hart_DeviceStatusType();
-            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+         _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!Shuttle_1.Init_Success)
             {
-                _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
-                _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+             _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
+             _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
@@ -389,7 +389,7 @@ namespace Neutron.Controllers
                 if (Shuttle_1.Get_Device_Status(ref myDeviceStatusList, ref cError))
                 {
                     // At this point, you have current status for every device in your list
-                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {workstation.EnabledDevices.Count}");
+                 _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {workstation.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)
@@ -407,12 +407,12 @@ namespace Neutron.Controllers
                         }
                     }
 
-                    _logger.LogDetailAsync(msg);
+                 _ = _logger.LogDetailAsync(msg);
                     //ShowMessage(msg);
                 }
                 else
                 {
-                    _logger.LogDetailAsync("Get Device Status request aborted...");
+                 _ = _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
             return deviceStatus;

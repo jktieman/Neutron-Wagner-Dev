@@ -22,21 +22,8 @@ namespace NeutronLoader
         public LocationProcessor(IJsonData jsonData)
         {
             _jsonData = jsonData;
-            CreateLog();
+            _logger = NeutronCore.Global.Logger.SetupLogger("LocationProcessor");
         }
-
-        /// <summary>
-        /// Creates a new Dynamic Logger
-        /// </summary>
-        /// <returns></returns>
-        private void CreateLog()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = $"LocationProcessor";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-        }
-
         public Location GetOrCreate(HostOrder hostOrder)
         {
             var itemDef = new Location();
@@ -46,7 +33,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error Finding Location - {hostOrder.PrimeBin}.  {ex.Message}{Environment.NewLine} {ex.InnerException}");
+             _ = _logger.LogDetailAsync($"Error Finding Location - {hostOrder.PrimeBin}.  {ex.Message}{Environment.NewLine} {ex.InnerException}");
 
             }
             return itemDef;
@@ -94,7 +81,7 @@ namespace NeutronLoader
                 }
                 else
                 {
-                    _logger.LogDetailAsync(msg: "No Default Location.  Create Location Failed.");
+                 _ = _logger.LogDetailAsync(msg: "No Default Location.  Create Location Failed.");
                     string msg = "A default Location must be set up in ";
                     msg += "order to create definitions during the Order Load process.";
                     msg += "The Slot number MUST be called, DEFAULT .";
@@ -103,7 +90,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Unable to create New Location.  {ex.Message} {Environment.NewLine}{ex.InnerException.Message}");
+             _ = _logger.LogDetailAsync($"Unable to create New Location.  {ex.Message} {Environment.NewLine}{ex.InnerException.Message}");
             }
             return newDefinition;
         }

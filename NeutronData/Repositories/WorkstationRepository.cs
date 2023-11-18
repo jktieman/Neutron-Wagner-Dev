@@ -11,10 +11,8 @@ using NeutronData.Models.Lookups;
 using System.Data.SqlClient;
 using StationType = NeutronCore.Enums.StationType;
 using DeviceType = NeutronCore.Enums.DeviceTypeEnum;
-using RJCP.IO.Ports;
 using Logger = NeutronCore.Global.Logger;
 using NeutronCore.Global;
-using NeutronCore.Models;
 
 
 namespace NeutronData.Repositories
@@ -46,17 +44,10 @@ namespace NeutronData.Repositories
         /// <returns>The Id of an <see cref="WorkstationView"/></returns>
         public async Task<WorkstationView> GetStationView(int workstationId) // ws
         {
-            //_logger.FolderName = $"{nameof(WorkstationRepository)}_{workstationId}";  // ws
-            //var logFileDirectory = LoaderSettings.GetLogFileDirectory();
-            //var folderName = $"StationView_{workstationId.ToString()}";
-            //var logger = new AlliedLogger.DynamicLogger(logFileDirectory, folderName, @"true");
             WorkstationView workstationView = null;
-
-
 
             // Dictionary of Communication Types
             var dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
-
 
             try
             {
@@ -611,7 +602,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<Workstation>();
 
-            Task.Run(() => _logger.Log(@"Get All Stations by AreaId Start"));
+            _ = _logger.LogDetailAsync(@"Get All Stations by AreaId Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -623,10 +614,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.Log($"Get All Stations by AreaId Error.   {ex.Message} \r\n {ex.InnerException}"));
+                _ = _logger.LogDetailAsync($"Get All Stations by AreaId Error.   {ex.Message} \r\n {ex.InnerException}");
             }
 
-            Task.Run(() => _logger.Log($"Get All Stations by AreaId End:  {recs.Count}"));
+            _ = _logger.LogDetailAsync($"Get All Stations by AreaId End:  {recs.Count}");
 
             return recs;
         }
