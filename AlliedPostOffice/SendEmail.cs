@@ -13,7 +13,6 @@ namespace AlliedPostOffice
     {
         private readonly EmailProcessor _emailProcessor;
         private readonly List<string> _people;
-
         public SendEmail()
         {
 
@@ -23,6 +22,7 @@ namespace AlliedPostOffice
         {
             _emailProcessor = emailProcessor;
             _people = people.Select(r => r.EmailAddress).ToList();
+
         }
         public void StartUp()
         {

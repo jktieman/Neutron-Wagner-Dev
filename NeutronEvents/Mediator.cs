@@ -144,6 +144,13 @@ namespace NeutronEvents
             LoaderError?.Invoke(this, new LoaderErrorEventArgs() { Message = message });
         }
 
+        public event EventHandler<SendEmailEventArgs> SendEmailMessage;
+
+        public void OnSendEmailMessage(object sender, string message)
+        {
+            SendEmailMessage?.Invoke(this, new SendEmailEventArgs() { Message = message });
+        }
+
         public event EventHandler<LoaderErrorEventArgs> GeneralError;
 
         public void OnGeneralError(object sender, string message)

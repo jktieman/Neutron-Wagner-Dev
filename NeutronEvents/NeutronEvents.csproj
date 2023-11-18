@@ -61,6 +61,7 @@
     <Compile Include="DisplayMessageEventArgs.cs" />
     <Compile Include="InventoryFileCreatedErrorEventArgs.cs" />
     <Compile Include="IptiButtonPressedEventArgs.cs" />
+    <Compile Include="SendEmailEventArgs.cs" />
     <Compile Include="LoaderErrorEventArgs.cs" />
     <Compile Include="Mediator.cs" />
     <Compile Include="OrderCompleteEventArgs.cs" />

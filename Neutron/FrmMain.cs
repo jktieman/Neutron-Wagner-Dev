@@ -147,38 +147,12 @@ namespace Neutron
             Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
             Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
+            Mediator.GetInstance().SendEmailMessage += (s, e) => _sendEmail.Message(e.Message, _logger.LastLogLines());
 
             //Log on to Neutron
             LogOn();
 
             _ = Init();
-
-            // Set up the workstation
-            //var result = Task.Run(InitForm).Result;
-            // var result = Task.Run(InitForm);
-            //if (result == false)
-            //{
-            //    MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
-            //    return;
-            //}
-
-            //var id = Thread.CurrentThread.ManagedThreadId;
-            //Trace.WriteLine("FrmMain thread: " + id);
-
-            //if (_workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor) return;
-            ////todo  Better way to run auto compress
-            //if (!_neutronVariables.UseAutoCompress) return;
-            //// Run every RunCompressInterval time 1 hour (3600000)
-            //var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
-            //var compressTimer = new Timer(interval);
-
-            //compressTimer.Elapsed += OnRunCompress;
-            //compressTimer.AutoReset = true;
-            //compressTimer.Enabled = true;
-
-            //_compressTimer = compressTimer;
-
-
         }
 
         private async Task Init()
@@ -186,7 +160,9 @@ namespace Neutron
             await _logger.LogDetailAsync("Init Started");
             var result = await InitForm();
             await _logger.LogDetailAsync($"Init Result: {result}");
+            
             GlobalVar.Testing = true;
+            
             if (result == false)
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
@@ -201,7 +177,6 @@ namespace Neutron
                 await _logger.LogDetailAsync("Compress Service Started");
             }
         }
-
         protected override CreateParams CreateParams
         {
             get
@@ -213,11 +188,12 @@ namespace Neutron
             }
         }
 
+        #region EventHandlers
         private void LogGeneralError(string message)
         {
             Task.Run(() => _logger.LogDetailAsync($"General Error: {message}"));
             MessageBox.Show($"Alert: {message}", "Error Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            
+
             //if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
             //{
             //    _sendEmail.Message(message, _logger.LastLogLines());
@@ -242,150 +218,10 @@ namespace Neutron
             {
                 _sendEmail.Message(message, _logger.LastLogLines());
             }
-        }
-
-        //private void OnRunCompress(object sender, ElapsedEventArgs e)
-        //{
-        //    if (_compressRunning) return;
-
-        //    var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
-        //    var days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
-        //    //Run once each day
-        //    if (days >= 0)
-        //    {
-        //        var daysToKeep = _neutronVariables.CompressDays * -1;
-        //        var compressBefore = DateTime.Now.Date.AddDays(daysToKeep);
-
-        //        CompressOrders(compressBefore);
-
-        //        Thread.Sleep(2000);
-        //        CompressReplenOrders(compressBefore);
-
-        //        compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
-        //        _jsonData.SaveFile(compressLastRunDate);
-
-        //    }
-        //    _compressRunning = false;
-        //}
-
-        //private void CompressOrders(DateTime compressBefore)
-        //{
-        //    _compressRunning = true;
-        //    // Compress Normal Orders
-
-        //    var completedOrders = _ordersRepository.GetOrderViews("6", "").ToList();
-        //    var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
-
-        //    if (!ordersToCompress.Any()) return;
-        //    var orderType = "PICK";
-        //    var sb = new StringBuilder();
-        //    var firstTime = true;
-        //    foreach (var order in ordersToCompress)
-        //    {
-        //        if (firstTime)
-        //        {
-        //            sb.Append(order.Id);
-        //            firstTime = false;
-        //        }
-        //        else
-        //        {
-        //            sb.Append(", " + order.Id);
-        //        }
-        //    }
-
-        //    var orderIds = sb.ToString();
-
-        //    try
-        //    {
-        //        using (var context = new NeutronDb())
-        //        {
-        //            var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
-        //            var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
-        //            var parameters = new object[] { paramOrderIds, paramOrderType };
-        //            context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
-        //                paramOrderType);
-        //        }
-
-        //        ArchiveOrders(ordersToCompress);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error Compressing Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
-        //            MessageBoxIcon.Error);
-        //    }
-        //}
-
-        //private void ArchiveOrders(IEnumerable<OrderView> orders)
-        //{
-        //    foreach (var order in orders)
-        //    {
-        //        _historyManager.SaveHistory(ActionCode.OrderArchived, order);
-        //    }
-        //}
-
-        //private void CompressReplenOrders(DateTime compressBefore)
-        //{
-        //    _compressRunning = true;
-        //    // Compress Replenishment Orders
-
-        //    var completedReplenOrders = _replenOrdersRepository.GetReplenOrderViews("6", "").ToList();
-        //    var replenOrdersToCompress = completedReplenOrders.Where(r => r.LoadDate < compressBefore).ToList();
-
-        //    if (!replenOrdersToCompress.Any()) return;
-        //    var orderType = "REPLEN";
-        //    var sb = new StringBuilder();
-        //    var firstTime = true;
-        //    foreach (var order in replenOrdersToCompress)
-        //    {
-        //        if (firstTime)
-        //        {
-        //            sb.Append(order.Id);
-        //            firstTime = false;
-        //        }
-        //        else
-        //        {
-        //            sb.Append(", " + order.Id);
-        //        }
-        //    }
-
-        //    var orderIds = sb.ToString();
-
-        //    try
-        //    {
-
-        //        ArchiveReplenOrders(replenOrdersToCompress);
-
-        //        using (var context = new NeutronDb())
-        //        {
-        //            var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
-        //            var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
-        //            var parameters = new object[] { paramOrderIds, paramOrderType };
-        //            context.Database.ExecuteSqlCommand("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
-        //                paramOrderType);
-        //        }
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error Compressing Replenishment Orders {Environment.NewLine}{ex.Message}", "Compress Error", MessageBoxButtons.OK,
-        //            MessageBoxIcon.Error);
-        //    }
-        //}
-
-        //private void ArchiveReplenOrders(IEnumerable<ReplenOrderView> orders)
-        //{
-        //    foreach (var order in orders)
-        //    {
-        //        _historyManager.SaveHistory(ActionCode.OrderArchived, order);
-        //    }
-        //}
-
+        } 
+        #endregion
         private async Task<bool> InitForm()
         {
-            // var icon = FontAwesome.Sharp.IconChar.BatteryEmpty.ToBitmap( Color.Black);
-            //return true;
-
             var result = false;
 
             _enumManager.SaveActionCodesToDatabase();
@@ -400,8 +236,6 @@ namespace Neutron
                     if (workstationId == 0) workstationId = 1;
                     if (workstationId > 0)
                     {
-
-
                         _workstationView = await _workstationRepository.GetStationView(workstationId);
                         if (_workstationView != null)
                         {
@@ -562,8 +396,8 @@ namespace Neutron
                                         {
                                             Mediator.GetInstance().OnDisplayMessage(this, $"Display Testing");
                                         
-                                            await TestBli();
-                                        await Task.Delay(3000);
+                                        await TestBli();
+                                        await Task.Delay(5000);
                                         //await _logger.LogDetailAsync($"IPTI Displays Result: {result}");
                                         await GlobalVar.Displays.TurnOnAllBli();
                                         //await _logger.LogDetailAsync($"IPTI Displays Turned On");
