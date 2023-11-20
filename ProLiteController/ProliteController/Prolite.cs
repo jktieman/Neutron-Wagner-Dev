@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using AlliedLogger;
-using NeutronData.Models;
-using NeutronData.Models.Lookups;
-using RJCP.IO.Ports;
 using Logger = NeutronCore.Global.Logger;
-using Parity = System.IO.Ports.Parity;
-using StopBits = System.IO.Ports.StopBits;
 
 namespace ProliteController
 {
@@ -20,7 +9,6 @@ namespace ProliteController
 
        private string _proliteNumber = "<ID01>";
        private readonly IDynamicLogger _logger;
-       private readonly HardwareDevice _hardwareDevice;
 
         public int Id { get; }
         public string Name { get; }
@@ -30,16 +18,18 @@ namespace ProliteController
         /// <summary>
         /// An individual Prolite device
         /// </summary>
-        /// <param name="hardwareDevice"></param>
-        public Prolite(HardwareDevice hardwareDevice)
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="deviceNumber"></param>
+        /// <param name="enabled"></param>
+        public Prolite(int id, string name, int deviceNumber, bool enabled)
         {
             _logger = Logger.SetupLogger("Prolite");
-            _hardwareDevice = hardwareDevice;
-
-            Id = hardwareDevice.Id;
-            Name = hardwareDevice.Name;
-            DeviceNumber = hardwareDevice.DeviceNumber;
-            Enabled = hardwareDevice.Enabled;
+            
+            Id = id;
+            Name = name;
+            DeviceNumber = deviceNumber;
+            Enabled = enabled;
            
             Init();
         }
@@ -61,13 +51,13 @@ namespace ProliteController
         /// <returns></returns>
         public string TurnOn(int level, int part, int quantity)
         {
-            var work = $"W: {level}";
-            work += $" D: {part}";
-            work += $" Q: {quantity}";
+            var work = $"<CN>W:<CC>{level}";
+            work += $"<CN> D:<CC>{part}";
+            work += $"<CN> Q:<CE>{quantity}";
 
-            var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
+            var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
 
-         _ = _logger.LogDetailAsync($"TurnOn: {cmd}");
+            _ = _logger.LogDetailAsync($"TurnOn: {cmd}");
 
             return cmd;
         }
@@ -84,19 +74,19 @@ namespace ProliteController
             if (Enabled)
             {
                  var work = "  ";
-            cmd = $"{_proliteNumber}<PA>{work}";
+            cmd = $"{_proliteNumber}<PA>{work}{Environment.NewLine}";
             }
             return cmd;
         }
 
         public string TurnOnBlindCycle(int level, int part)
         {
-            var work = $"W: {level}";
-            work += $" D: {part}";
+            var work = $"<CN>W:<CC>{level}";
+            work += $"<CN> D:<CC>{part}";
 
-            var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
+            var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
 
-         _ = _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
+            _ = _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
 
             return cmd;
         }
@@ -106,7 +96,7 @@ namespace ProliteController
             var work = $"<<<- HOT ->>>";
            
 
-            var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
+            var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}{Environment.NewLine}";
 
          _ = _logger.LogDetailAsync($"TurnOn HOT: {cmd}");
 

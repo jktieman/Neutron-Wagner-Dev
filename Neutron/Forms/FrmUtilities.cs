@@ -44,6 +44,8 @@ using StorageType = NeutronData.Models.Lookups.StorageType;
 using AlliedLogger;
 using Neutron.Ninject;
 using NeutronCore;
+using ProliteController;
+using SerialConfiguration = NeutronData.Models.SerialConfiguration;
 
 
 namespace Neutron.Forms
@@ -2966,7 +2968,7 @@ namespace Neutron.Forms
             var heightCodeManager = DI.Create<HeightCodeManager>();
 
 
-            var locationManager = new RandomLocationManager(sizeCodeManager, heightCodeManager, velocityCodeManager );
+            var locationManager = new RandomLocationManager(sizeCodeManager, heightCodeManager, velocityCodeManager);
             var maintenance = new MasterMaintenanceProcessor(locationManager);
             maintenance.ProcessFiles();
         }
@@ -3029,6 +3031,21 @@ namespace Neutron.Forms
         {
             LabelFormTitle.Text = "Pro-Lite Tester";
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+
+            if (_workstationView.ProLiteManager == null)
+            {
+                ButtonProLiteTurnOn.Enabled = false;
+                ButtonProLiteTurnOff.Enabled = false;
+                ButtonProLiteTurnOnHot.Enabled = false;
+                ButtonProLiteTurnOnCycleCount.Enabled = false;
+            }
+            else
+            {
+                ButtonProLiteTurnOn.Enabled = true;
+                ButtonProLiteTurnOff.Enabled = true;
+                ButtonProLiteTurnOnHot.Enabled = true;
+                ButtonProLiteTurnOnCycleCount.Enabled = true;
+            }
 
             tabControl1.SelectedTab = ProLite;
         }

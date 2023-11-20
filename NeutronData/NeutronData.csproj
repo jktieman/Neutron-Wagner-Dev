@@ -236,11 +236,6 @@
     <Compile Include="PrintModels\PackingList.cs" />
     <Compile Include="PrintModels\PickList.cs" />
     <Compile Include="PrintModels\ShortReport.cs" />
-    <Compile Include="ProliteManager\IProlite.cs" />
-    <Compile Include="ProliteManager\IProLiteController.cs" />
-    <Compile Include="ProliteManager\IProliteManager.cs" />
-    <Compile Include="ProliteManager\Prolite.cs" />
-    <Compile Include="ProliteManager\ProliteManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AkaRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
@@ -314,6 +309,10 @@
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProLiteController\ProliteController\ProLiteController.csproj">
+      <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
+      <Name>ProLiteController</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

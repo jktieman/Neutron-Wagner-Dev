@@ -901,6 +901,10 @@
       <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
       <Name>NeutronMaintenance</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ProLiteController\ProliteController\ProLiteController.csproj">
+      <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
+      <Name>ProLiteController</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SAPServer\SAPServer.csproj">
       <Project>{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}</Project>
       <Name>SAPServer</Name>

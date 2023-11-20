@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using AlliedLogger;
-using NeutronData.Models;
 using NeutronCore.Global;
-//using Logger = NeutronCore.Global.Logger;
 using System.IO.Ports;
 using System.Text;
-//using NeutronData.Migrations;
-using NeutronData.Models.Lookups;
-//using System.Xml.Linq;
+
 
 namespace ProliteController
 {
@@ -28,38 +24,43 @@ namespace ProliteController
     /// </summary>
     public class ProLiteManager : IProLiteManager
     {
+        private readonly string _portName;
+        private readonly int _baudRate;
+        private readonly Parity _parity;
+        private readonly int _dataBits;
+        private readonly int _stopBits;
         private readonly NeutronVariables _neutronVariables;
         private readonly IDynamicLogger _logger;
         private SerialPort _serialPort;
         private readonly IList<Prolite> _prolites;
 
-        public int Id { get; }
-        public string Name { get; private set; }
-        public int WorkstationId { get; private set; }
-        public int DeviceNumber { get; private set; }
-        public int DeviceTypeId { get; private set; }
-        public int? CommunicationTypeId { get; private set; }
-        public int? TcpConfigurationId { get; private set; }
-        public int? SerialConfigurationId { get; private set; }
-        public int NumberOfCarriers { get; }
-        public int CarrierLevel { get; private set; }
-        public int CarrierWidth { get; private set; }
-        public int CarrierDepth { get; private set; }
-        public bool Enabled { get; private set; }
-        public int LogLevel { get; private set; }
-        public bool SimulationMode { get; private set; }
-        public SerialConfiguration SerialConfiguration { get; private set; }
-        public TcpConfiguration TcpConfiguration { get; private set; }
-        public CommunicationType CommunicationType { get; private set; }
-        public DeviceType DeviceType { get; private set; }
-        public int Workstation { get; private set; }
+        //public int Id { get; }
+        //public string Name { get; private set; }
+        //public int WorkstationId { get; private set; }
+        //public int DeviceNumber { get; private set; }
+        //public int DeviceTypeId { get; private set; }
+        //public int? CommunicationTypeId { get; private set; }
+        //public int? TcpConfigurationId { get; private set; }
+        //public int? SerialConfigurationId { get; private set; }
+        //public int NumberOfCarriers { get; }
+        //public int CarrierLevel { get; private set; }
+        //public int CarrierWidth { get; private set; }
+        //public int CarrierDepth { get; private set; }
+        //public bool Enabled { get; private set; }
+        //public int LogLevel { get; private set; }
+        //public bool SimulationMode { get; private set; }
+       // public SerialConfiguration SerialConfiguration { get; private set; }
+        //public TcpConfiguration TcpConfiguration { get; private set; }
+        //public CommunicationType CommunicationType { get; private set; }
+        //public DeviceType DeviceType { get; private set; }
+        //public int Workstation { get; private set; }
 
         /// <summary>
         /// Takes a string and returns the corresponding Parity enum value.
         /// </summary>
         /// <param name="parity"></param>
         /// <returns></returns>
-        private static Parity GetParity(string parity)
+        private Parity GetParity(string parity)
         {
             switch (parity)
             {
@@ -82,9 +83,9 @@ namespace ProliteController
         /// </summary>
         /// <param name="stopBits"></param>
         /// <returns></returns>
-        private static StopBits GetStopBits(int stopBits)
+        private StopBits GetStopBits()
         {
-            switch (stopBits)
+            switch (_stopBits)
             {
                 case 1:
                     return StopBits.One;
@@ -98,61 +99,98 @@ namespace ProliteController
         }
 
 
-        public ProLiteManager(HardwareDevice hardwareDevice, NeutronVariables neutronVariables)
+        public ProLiteManager(string portName, int baudRate, Parity parity, int dataBits, int stopBits, NeutronVariables neutronVariables)
         {
+            _portName = portName;
+            _baudRate = baudRate;
+            _parity = parity;
+            _dataBits = dataBits;
+            _stopBits = stopBits;
+
             _neutronVariables = neutronVariables;
             _prolites = new List<Prolite>();
             _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
 
-            Id = hardwareDevice.Id;
-            Name = hardwareDevice.Name;
-            DeviceNumber = hardwareDevice.DeviceNumber;
-            DeviceTypeId = hardwareDevice.DeviceTypeId;
-            CommunicationTypeId = hardwareDevice.CommunicationTypeId;
-            TcpConfigurationId = hardwareDevice.TcpConfigurationId;
-            SerialConfigurationId = hardwareDevice.SerialConfigurationId;
-            NumberOfCarriers = hardwareDevice.NumberOfCarriers;
-            CarrierLevel = hardwareDevice.CarrierLevel;
-            CarrierWidth = hardwareDevice.CarrierWidth;
-            CarrierDepth = hardwareDevice.CarrierDepth;
-            Enabled = hardwareDevice.Enabled;
-            LogLevel = hardwareDevice.LogLevel;
-            SimulationMode = hardwareDevice.SimulationMode;
-            SerialConfiguration = hardwareDevice.SerialConfiguration;
-            TcpConfiguration = hardwareDevice.TcpConfiguration;
-            CommunicationType = hardwareDevice.CommunicationType;
-            DeviceType = hardwareDevice.DeviceType;
-            WorkstationId = hardwareDevice.WorkstationId;
+            //Id = hardwareDevice.Id;
+            //Name = hardwareDevice.Name;
+            //DeviceNumber = hardwareDevice.DeviceNumber;
+            //DeviceTypeId = hardwareDevice.DeviceTypeId;
+            //CommunicationTypeId = hardwareDevice.CommunicationTypeId;
+            //TcpConfigurationId = hardwareDevice.TcpConfigurationId;
+            //SerialConfigurationId = hardwareDevice.SerialConfigurationId;
+            //NumberOfCarriers = hardwareDevice.NumberOfCarriers;
+            //CarrierLevel = hardwareDevice.CarrierLevel;
+            //CarrierWidth = hardwareDevice.CarrierWidth;
+            //CarrierDepth = hardwareDevice.CarrierDepth;
+            //Enabled = hardwareDevice.Enabled;
+            //LogLevel = hardwareDevice.LogLevel;
+            //SimulationMode = hardwareDevice.SimulationMode;
+            //SerialConfiguration = hardwareDevice.SerialConfiguration;
+            //TcpConfiguration = hardwareDevice.TcpConfiguration;
+            //CommunicationType = hardwareDevice.CommunicationType;
+            //DeviceType = hardwareDevice.DeviceType;
+            //WorkstationId = hardwareDevice.WorkstationId;
             InitSerialPort();
         }
+
+        //public ProLiteManager(HardwareDevice hardwareDevice, NeutronVariables neutronVariables)
+        //{
+        //    _neutronVariables = neutronVariables;
+        //    _prolites = new List<Prolite>();
+        //    _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
+
+        //    Id = hardwareDevice.Id;
+        //    Name = hardwareDevice.Name;
+        //    DeviceNumber = hardwareDevice.DeviceNumber;
+        //    DeviceTypeId = hardwareDevice.DeviceTypeId;
+        //    CommunicationTypeId = hardwareDevice.CommunicationTypeId;
+        //    TcpConfigurationId = hardwareDevice.TcpConfigurationId;
+        //    SerialConfigurationId = hardwareDevice.SerialConfigurationId;
+        //    NumberOfCarriers = hardwareDevice.NumberOfCarriers;
+        //    CarrierLevel = hardwareDevice.CarrierLevel;
+        //    CarrierWidth = hardwareDevice.CarrierWidth;
+        //    CarrierDepth = hardwareDevice.CarrierDepth;
+        //    Enabled = hardwareDevice.Enabled;
+        //    LogLevel = hardwareDevice.LogLevel;
+        //    SimulationMode = hardwareDevice.SimulationMode;
+        //    SerialConfiguration = hardwareDevice.SerialConfiguration;
+        //    TcpConfiguration = hardwareDevice.TcpConfiguration;
+        //    CommunicationType = hardwareDevice.CommunicationType;
+        //    DeviceType = hardwareDevice.DeviceType;
+        //    WorkstationId = hardwareDevice.WorkstationId;
+        //    InitSerialPort();
+        //}
 
         /// <summary>
         /// Add a ProLite device to the list of Prolites.
         /// A Prolite is a HardwareDevice of type Prolite.
         /// </summary>
-        /// <param name="hardwareDevice"></param>
-        public void AddProlite(HardwareDevice hardwareDevice)
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="deviceNumber"></param>
+        /// <param name="enabled"></param>
+        public void AddProlite(int id, string name, int deviceNumber, bool enabled)
         {
-         _ = _logger.LogDetailAsync($"Add Prolite: {hardwareDevice.Name}");
+            _ = _logger.LogDetailAsync($"Add Prolite Id: {deviceNumber} - {name}");
             try
             {
-                var pro = _prolites.FirstOrDefault(p => p.DeviceNumber == hardwareDevice.DeviceNumber);
+                var pro = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (pro is null)
                 {
-                    var prolite = new Prolite(hardwareDevice);
+                    var prolite = new Prolite(id, name, deviceNumber, enabled);
 
                     _prolites.Add(prolite);
                 }
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Add Prolite Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Add Prolite Error: {ex.Message}");
             }
         }
 
         public void RemoveProlite(int deviceNumber)
         {
-         _ = _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}");
+            _ = _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}");
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -164,97 +202,92 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}");
             }
         }
 
         public void TurnOn(int deviceNumber, int level, int part, int quantity)
         {
-         _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
+            _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
-                if (prolite != null)
-                {
-                    var cmd = prolite.TurnOn(level, part, quantity);
-                    var msg = Encoding.UTF8.GetBytes(cmd);
-                    if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(msg,0, msg.Length);
-                   // if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
-                }
+                if (prolite == null) return;
+                var cmd = prolite.TurnOn(level, part, quantity);
+                var msg = Encoding.UTF8.GetBytes(cmd);
+                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(msg, 0, msg.Length);
+
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
             }
         }
 
         public void TurnOnHot(int deviceNumber)
         {
-         _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT");
+            _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT");
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
-                if (prolite != null)
-                {
-                    var cmd = prolite.TurnOnHot();
-                    if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
-                }
+                if (prolite == null) return;
+                var cmd = prolite.TurnOnHot();
+                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
             }
         }
 
         public void TurnOnBlindCycle(int deviceNumber, int level, int part)
         {
-         _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle");
+            _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle");
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
-                if (prolite != null)
-                {
-                    var cmd = prolite.TurnOnBlindCycle(level, part);
-                    if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
-                }
+                if (prolite == null) return;
+                var cmd = prolite.TurnOnBlindCycle(level, part);
+                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
             }
         }
 
         // clear the prolite display
         public void ClearProlite(int deviceNumber)
         {
-         _ = _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}");
+            _ = _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}");
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
-                var cmd = prolite?.Clear();
+                if (prolite is null) return;
+                var cmd = prolite.Clear();
                 if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}");
             }
         }
 
         // turn off the all prolite displays
         public void ClearAllProlites()
         {
-         _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites");
+            _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites");
             try
             {
                 foreach (var prolite in _prolites)
                 {
-                    var cmd = prolite?.Clear();
+                    var cmd = prolite.Clear();
                     if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
                 }
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
+                _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
             }
         }
 
@@ -279,14 +312,13 @@ namespace ProliteController
 
         private void InitSerialPort()
         {
-         _ = _logger.LogDetailAsync($"Init Serial Port");
+            _ = _logger.LogDetailAsync($"Init Serial Port");
 
-            var serialConfig = SerialConfiguration;
+           // var serialConfig = _serialConfiguration;
 
-            var stopBits = GetStopBits(serialConfig.StopBits); // StopBits.One;
+            var stopBits = GetStopBits(); // StopBits.One;
 
-            _serialPort = new SerialPort(serialConfig.PortName, serialConfig.BaudRate, serialConfig.Parity
-                , serialConfig.DataBits, stopBits);
+            _serialPort = new SerialPort(_portName, _baudRate,_parity, _dataBits, stopBits);
 
             _serialPort.WriteTimeout = 200;
             _serialPort.DataReceived += SerialPortOnDataReceived;
@@ -298,7 +330,7 @@ namespace ProliteController
                     _serialPort?.Open();
                     if (_serialPort != null && _serialPort.IsOpen)
                     {
-                     _ = _logger.LogDetailAsync("Startup Success");
+                        _ = _logger.LogDetailAsync("Startup Success");
                         //ShowData("Startup Success");
                         //_readMp12DThread = new Thread(ReadMp12D);
                         //RaiseSerialDataEvent += ProcessMp12DData;
@@ -314,19 +346,19 @@ namespace ProliteController
                     }
                     catch (Exception e)
                     {
-                     _ = _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}");
+                        _ = _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}");
                     }
 
                     Thread.Sleep(500);
 
                     var error = $"SerialPort Open Exception Number {i}: {ex.Message}";
-                 _ = _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
+                    _ = _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
                 }
             }
 
             if (!IsPortOpen)
             {
-             _ = _logger.LogDetailAsync($"Port is NOT Open.  Number of fails: {i}");
+                _ = _logger.LogDetailAsync($"Port is NOT Open.  Number of fails: {i}");
             }
         }
 
@@ -334,11 +366,9 @@ namespace ProliteController
         {
             var serialPort = (SerialPort)sender;
             var data = serialPort.ReadExisting();
-         _ = _logger.LogDetailAsync($"Serial Data Received: {data}");
+            _ = _logger.LogDetailAsync($"Serial Data Received: {data}");
         }
 
         public bool IsPortOpen => _serialPort?.IsOpen ?? false;
-
-
     }
 }

@@ -3,7 +3,8 @@ using Neutron.Interfaces;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.ModelViews;
-using NeutronData.ProLiteManager;
+//using NeutronData.ProLiteManager;
+using ProliteController;
 using SlotNameFactory;
 
 namespace Neutron.Global

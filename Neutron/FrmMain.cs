@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Globalization;
 using System.Resources;
 using System.Threading;
@@ -26,26 +24,20 @@ using NeutronEvents;
 using NeutronLoader;
 using SlotNameFactory;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
 using Neutron.Classes;
-using Neutron.Models;
 using Neutron.Ninject;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
-using NeutronData.PrintModels;
 using SqlSchemaManager;
-using Timer = System.Timers.Timer;
-using NeutronData.ProLiteManager;
 using NeutronData.Repositories;
 using NeutronData.Models.Lookups;
+//using ProLiteController;
 using StationType = NeutronCore.Enums.StationType;
-using static System.Net.Mime.MediaTypeNames;
 using Application = System.Windows.Forms.Application;
-
+using ProliteController;
 #endregion
 
 namespace Neutron
@@ -84,7 +76,7 @@ namespace Neutron
         private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes = new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
         private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
         private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
-        private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
+        private readonly GenericRepository<NeutronData.Models.SerialConfiguration> _repoSerialConfiguration = new GenericRepository<NeutronData.Models.SerialConfiguration>(new NeutronDb());
         /// <summary>
         /// Passed from NInject Kernel
         /// </summary>
@@ -458,39 +450,22 @@ namespace Neutron
                             {
                                 await _logger.LogDetailAsync($"This is a ProLite Device");
                                 _workstationView.HardwareDevices.Add(device);
+                                //var proLite = new ProLite(device.Id, device.Name, device.DeviceNumber, device.Enabled);
                                 // if the GlobalVar.ProLiteManager is null, create a new ProLiteManager
                                 if (_workstationView.ProLiteManager == null)
                                 {
-                                    _workstationView.ProLiteManager = new ProLiteManager(device, _neutronVariables);
+                                    _workstationView.ProLiteManager = new ProLiteManager(device.SerialConfiguration.PortName
+                                        , device.SerialConfiguration.BaudRate
+                                        , device.SerialConfiguration.Parity
+                                        , device.SerialConfiguration.DataBits
+                                        , device.SerialConfiguration.StopBits
+                                        , _neutronVariables);
                                 }
 
-                                //if (GlobalVar.ProLiteManager == null)
-                                //{
-                                //    GlobalVar.ProLiteManager = new ProLiteManager(device, _neutronVariables);
-                                //}
-
-                                //if (device.DeviceType == null)
-                                //{
-                                //    device.DeviceType = _repoDeviceTypes.FindBy(d => d.Id == device.DeviceTypeId).FirstOrDefault();
-                                //}
-
-                                //if (device.CommunicationType == null)
-                                //{
-                                //    device.CommunicationType = _repoCommunicationTypes.FindBy(c => c.Id == device.CommunicationTypeId).FirstOrDefault();
-                                //}
-
-                                //if (device.CommunicationType != null && device.CommunicationType.Name == "Serial")
-                                //{
-                                //    await _logger.LogDetailAsync("This is a Serial Device");
-                                //    var serialConfiguration = device.SerialConfigurationId.GetValueOrDefault();
-                                //    await _logger.LogDetailAsync(@"Serial Configuration number: " + serialConfiguration.ToString());
-                                //    device.SerialConfiguration = _repoSerialConfiguration.FindBy(s => s.Id == device.SerialConfigurationId).FirstOrDefault();
-
-                                //}
                                 await _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
-                                _workstationView.ProLiteManager.AddProlite(device);
-
-                                _workstationView.ProLiteManager.TurnOn(device.DeviceNumber, 3, 2, 99);
+                                
+                                
+                                _workstationView.ProLiteManager.AddProlite(device.Id, device.Name, device.DeviceNumber, device.Enabled);
                                 break;
                             }
                     }

@@ -15,7 +15,7 @@ using NeutronData.Repositories;
 using NeutronLoader;
 using NeutronMaintenance;
 using SqlSchemaManager;
-using NeutronData.ProLiteManager;
+using ProliteController;
 using SAPServer;
 
 

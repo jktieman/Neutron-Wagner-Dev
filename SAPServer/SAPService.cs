@@ -1,16 +1,11 @@
 ﻿using AlliedLogger;
-using AlliedPostOffice;
 using JsonManager;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using SAPServer.Extensions;
 using NeutronEvents;
 
@@ -202,7 +197,7 @@ namespace SAPServer
                 catch (Exception ex)
                 {
                     _ = _logger.LogDetailAsync(
-                           $"Connection Failed to  {sapVariables.SapServer} ./r/n  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                           $"Connection Failed to  {sapVariables.SapServer}{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     //_sendEmail.Message($"Connection Failed to  {sapVariables.SapServer}", _logger.LastLogLines());
                 }
             }

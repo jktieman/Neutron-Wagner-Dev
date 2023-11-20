@@ -449,6 +449,8 @@
             this.PanelProLite = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.LabelProLiteTester = new System.Windows.Forms.Label();
+            this.ButtonProLiteTurnOnHot = new System.Windows.Forms.Button();
+            this.ButtonProLiteTurnOnCycleCount = new System.Windows.Forms.Button();
             this.ButtonProLiteTurnOff = new System.Windows.Forms.Button();
             this.ButtonProLiteTurnOn = new System.Windows.Forms.Button();
             this.LabelProLiteQuantity = new System.Windows.Forms.Label();
@@ -465,8 +467,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ButtonProLiteTurnOnCycleCount = new System.Windows.Forms.Button();
-            this.ButtonProLiteTurnOnHot = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -5472,16 +5472,38 @@
             // 
             this.LabelProLiteTester.AutoSize = true;
             this.LabelProLiteTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelProLiteTester.Location = new System.Drawing.Point(136, 19);
+            this.LabelProLiteTester.Location = new System.Drawing.Point(194, 19);
             this.LabelProLiteTester.Name = "LabelProLiteTester";
             this.LabelProLiteTester.Size = new System.Drawing.Size(169, 25);
             this.LabelProLiteTester.TabIndex = 8;
             this.LabelProLiteTester.Text = "Pro-Lite Tester";
             // 
+            // ButtonProLiteTurnOnHot
+            // 
+            this.ButtonProLiteTurnOnHot.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonProLiteTurnOnHot.Location = new System.Drawing.Point(302, 230);
+            this.ButtonProLiteTurnOnHot.Name = "ButtonProLiteTurnOnHot";
+            this.ButtonProLiteTurnOnHot.Size = new System.Drawing.Size(203, 31);
+            this.ButtonProLiteTurnOnHot.TabIndex = 11;
+            this.ButtonProLiteTurnOnHot.Text = "Hot Pick";
+            this.ButtonProLiteTurnOnHot.UseVisualStyleBackColor = true;
+            this.ButtonProLiteTurnOnHot.Click += new System.EventHandler(this.ButtonProLiteTurnOnHot_Click);
+            // 
+            // ButtonProLiteTurnOnCycleCount
+            // 
+            this.ButtonProLiteTurnOnCycleCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonProLiteTurnOnCycleCount.Location = new System.Drawing.Point(302, 188);
+            this.ButtonProLiteTurnOnCycleCount.Name = "ButtonProLiteTurnOnCycleCount";
+            this.ButtonProLiteTurnOnCycleCount.Size = new System.Drawing.Size(203, 31);
+            this.ButtonProLiteTurnOnCycleCount.TabIndex = 12;
+            this.ButtonProLiteTurnOnCycleCount.Text = "Turn On Cycle Count";
+            this.ButtonProLiteTurnOnCycleCount.UseVisualStyleBackColor = true;
+            this.ButtonProLiteTurnOnCycleCount.Click += new System.EventHandler(this.ButtonProLiteTurnOnCycleCount_Click);
+            // 
             // ButtonProLiteTurnOff
             // 
             this.ButtonProLiteTurnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonProLiteTurnOff.Location = new System.Drawing.Point(329, 131);
+            this.ButtonProLiteTurnOff.Location = new System.Drawing.Point(302, 146);
             this.ButtonProLiteTurnOff.Name = "ButtonProLiteTurnOff";
             this.ButtonProLiteTurnOff.Size = new System.Drawing.Size(203, 31);
             this.ButtonProLiteTurnOff.TabIndex = 11;
@@ -5492,7 +5514,7 @@
             // ButtonProLiteTurnOn
             // 
             this.ButtonProLiteTurnOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonProLiteTurnOn.Location = new System.Drawing.Point(329, 89);
+            this.ButtonProLiteTurnOn.Location = new System.Drawing.Point(302, 104);
             this.ButtonProLiteTurnOn.Name = "ButtonProLiteTurnOn";
             this.ButtonProLiteTurnOn.Size = new System.Drawing.Size(203, 31);
             this.ButtonProLiteTurnOn.TabIndex = 12;
@@ -5505,7 +5527,7 @@
             this.LabelProLiteQuantity.AutoSize = true;
             this.LabelProLiteQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelProLiteQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LabelProLiteQuantity.Location = new System.Drawing.Point(133, 223);
+            this.LabelProLiteQuantity.Location = new System.Drawing.Point(106, 238);
             this.LabelProLiteQuantity.Name = "LabelProLiteQuantity";
             this.LabelProLiteQuantity.Size = new System.Drawing.Size(76, 20);
             this.LabelProLiteQuantity.TabIndex = 8;
@@ -5515,7 +5537,7 @@
             // 
             this.LabelProLiteBack.AutoSize = true;
             this.LabelProLiteBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelProLiteBack.Location = new System.Drawing.Point(160, 181);
+            this.LabelProLiteBack.Location = new System.Drawing.Point(133, 196);
             this.LabelProLiteBack.Name = "LabelProLiteBack";
             this.LabelProLiteBack.Size = new System.Drawing.Size(49, 20);
             this.LabelProLiteBack.TabIndex = 9;
@@ -5525,7 +5547,7 @@
             // 
             this.LabelProLiteUnit.AutoSize = true;
             this.LabelProLiteUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelProLiteUnit.Location = new System.Drawing.Point(79, 97);
+            this.LabelProLiteUnit.Location = new System.Drawing.Point(52, 112);
             this.LabelProLiteUnit.Name = "LabelProLiteUnit";
             this.LabelProLiteUnit.Size = new System.Drawing.Size(130, 20);
             this.LabelProLiteUnit.TabIndex = 10;
@@ -5535,7 +5557,7 @@
             // 
             this.LabelProLiteOver.AutoSize = true;
             this.LabelProLiteOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelProLiteOver.Location = new System.Drawing.Point(163, 139);
+            this.LabelProLiteOver.Location = new System.Drawing.Point(136, 154);
             this.LabelProLiteOver.Name = "LabelProLiteOver";
             this.LabelProLiteOver.Size = new System.Drawing.Size(46, 20);
             this.LabelProLiteOver.TabIndex = 10;
@@ -5544,7 +5566,7 @@
             // TextBoxProLiteQuantity
             // 
             this.TextBoxProLiteQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxProLiteQuantity.Location = new System.Drawing.Point(220, 217);
+            this.TextBoxProLiteQuantity.Location = new System.Drawing.Point(193, 232);
             this.TextBoxProLiteQuantity.Name = "TextBoxProLiteQuantity";
             this.TextBoxProLiteQuantity.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteQuantity.TabIndex = 4;
@@ -5554,7 +5576,7 @@
             // TextBoxProLiteDeviceNumber
             // 
             this.TextBoxProLiteDeviceNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxProLiteDeviceNumber.Location = new System.Drawing.Point(220, 91);
+            this.TextBoxProLiteDeviceNumber.Location = new System.Drawing.Point(193, 106);
             this.TextBoxProLiteDeviceNumber.Name = "TextBoxProLiteDeviceNumber";
             this.TextBoxProLiteDeviceNumber.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteDeviceNumber.TabIndex = 6;
@@ -5564,7 +5586,7 @@
             // TextBoxProLiteBack
             // 
             this.TextBoxProLiteBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxProLiteBack.Location = new System.Drawing.Point(220, 175);
+            this.TextBoxProLiteBack.Location = new System.Drawing.Point(193, 190);
             this.TextBoxProLiteBack.Name = "TextBoxProLiteBack";
             this.TextBoxProLiteBack.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteBack.TabIndex = 5;
@@ -5574,7 +5596,7 @@
             // TextBoxProLiteOver
             // 
             this.TextBoxProLiteOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxProLiteOver.Location = new System.Drawing.Point(220, 133);
+            this.TextBoxProLiteOver.Location = new System.Drawing.Point(193, 148);
             this.TextBoxProLiteOver.Name = "TextBoxProLiteOver";
             this.TextBoxProLiteOver.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteOver.TabIndex = 6;
@@ -5624,28 +5646,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // ButtonProLiteTurnOnCycleCount
-            // 
-            this.ButtonProLiteTurnOnCycleCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonProLiteTurnOnCycleCount.Location = new System.Drawing.Point(329, 173);
-            this.ButtonProLiteTurnOnCycleCount.Name = "ButtonProLiteTurnOnCycleCount";
-            this.ButtonProLiteTurnOnCycleCount.Size = new System.Drawing.Size(203, 31);
-            this.ButtonProLiteTurnOnCycleCount.TabIndex = 12;
-            this.ButtonProLiteTurnOnCycleCount.Text = "Turn On Cycle Count";
-            this.ButtonProLiteTurnOnCycleCount.UseVisualStyleBackColor = true;
-            this.ButtonProLiteTurnOnCycleCount.Click += new System.EventHandler(this.ButtonProLiteTurnOnCycleCount_Click);
-            // 
-            // ButtonProLiteTurnOnHot
-            // 
-            this.ButtonProLiteTurnOnHot.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonProLiteTurnOnHot.Location = new System.Drawing.Point(329, 215);
-            this.ButtonProLiteTurnOnHot.Name = "ButtonProLiteTurnOnHot";
-            this.ButtonProLiteTurnOnHot.Size = new System.Drawing.Size(203, 31);
-            this.ButtonProLiteTurnOnHot.TabIndex = 11;
-            this.ButtonProLiteTurnOnHot.Text = "Hot Pick";
-            this.ButtonProLiteTurnOnHot.UseVisualStyleBackColor = true;
-            this.ButtonProLiteTurnOnHot.Click += new System.EventHandler(this.ButtonProLiteTurnOnHot_Click);
             // 
             // FrmUtilities
             // 
