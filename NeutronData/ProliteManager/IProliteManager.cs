@@ -1,13 +1,14 @@
 ﻿using NeutronData.Models;
 
-namespace NeutronData.ProliteManager;
+namespace NeutronData.ProLiteManager;
 
-public interface IProliteManager
+public interface IProLiteManager
 {
     void AddProlite(HardwareDevice hardwareDevice);
     void RemoveProlite(int deviceNumber);
     void TurnOn(int deviceNumber, int level, int part, int quantity);
     void TurnOnHot(int deviceNumber);
     void TurnOnBlindCycle(int deviceNumber, int level, int part);
+    void ClearProlite(int deviceNumber);
 
 }

@@ -23,10 +23,10 @@ namespace ProliteController
     }
 
     /// <summary>
-    /// The ProliteManager class is responsible for managing the Prolite devices.
+    /// The ProLiteManager class is responsible for managing the Prolite devices.
     /// The Prolite devices are HardwareDevices of type Prolite.
     /// </summary>
-    public class ProliteManager : IProliteManager
+    public class ProLiteManager : IProLiteManager
     {
         private readonly NeutronVariables _neutronVariables;
         private readonly IDynamicLogger _logger;
@@ -98,11 +98,11 @@ namespace ProliteController
         }
 
 
-        public ProliteManager(HardwareDevice hardwareDevice, NeutronVariables neutronVariables)
+        public ProLiteManager(HardwareDevice hardwareDevice, NeutronVariables neutronVariables)
         {
             _neutronVariables = neutronVariables;
             _prolites = new List<Prolite>();
-            _logger = NeutronCore.Global.Logger.SetupLogger("ProliteManager");
+            _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
 
             Id = hardwareDevice.Id;
             Name = hardwareDevice.Name;

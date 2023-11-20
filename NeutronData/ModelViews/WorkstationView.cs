@@ -1,5 +1,5 @@
 ﻿using NeutronData.Models;
-using NeutronData.ProliteManager;
+using NeutronData.ProLiteManager;
 using NeutronData.Models.Lookups;
 using NeutronData.Interfaces;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace NeutronData.ModelViews;
 public class WorkstationView
 {
     public IBlastzone Blastzone { get; set; }
-    public IProliteManager ProliteManager { get; set; }
+    public IProLiteManager ProLiteManager { get; set; }
     public Workstation Workstation { get; set; }
     public WorkstationView()
     {

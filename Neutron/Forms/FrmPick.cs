@@ -3439,6 +3439,9 @@ namespace Neutron.Forms
             ClearAllShi();
             ClearAllBli();
             ClearBlastzone();
+            // Clear all the ProLites using the ProLiteManager
+            _workstationView.ProLiteManager.ClearAllProLites();
+
             Console.WriteLine("Clear Active Device Indicator  PickBack");
             _deviceIndicatorManager.ClearActiveDeviceIndicators();
             NextButtonEnabled();

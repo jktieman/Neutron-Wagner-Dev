@@ -1,4 +1,4 @@
-﻿namespace NeutronData.ProliteManager;
+﻿namespace NeutronData.ProLiteManager;
 
 public interface IProlite
 {

@@ -15,7 +15,7 @@ using NeutronData.Repositories;
 using NeutronLoader;
 using NeutronMaintenance;
 using SqlSchemaManager;
-using NeutronData.ProliteManager;
+using NeutronData.ProLiteManager;
 using SAPServer;
 
 
@@ -98,7 +98,7 @@ namespace Neutron.Ninject
             Bind<IRFIDManager>().To<RFIDManager>().InSingletonScope();
             Bind<ILocationsRepository>().To<LocationsRepository>().InSingletonScope();
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
-            Bind<IProliteManager>().To<ProliteManager>().InSingletonScope();
+            Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
             Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
             Bind<ISapService>().To<SAPService>().InSingletonScope();
         }

@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="AcceptButtonPressedEventArgs.cs" />
     <Compile Include="BatchCompleteEventArgs.cs" />
+    <Compile Include="ProLiteMessageEventArgs.cs" />
     <Compile Include="DisplayMessageEventArgs.cs" />
     <Compile Include="InventoryFileCreatedErrorEventArgs.cs" />
     <Compile Include="IptiButtonPressedEventArgs.cs" />

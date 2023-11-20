@@ -3,7 +3,7 @@ using Neutron.Interfaces;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.ModelViews;
-using NeutronData.ProliteManager;
+using NeutronData.ProLiteManager;
 using SlotNameFactory;
 
 namespace Neutron.Global
@@ -15,7 +15,7 @@ namespace Neutron.Global
         public static IShuttleDriver Shuttle { get; set; }
         public static IHanelDriver Hanel { get; set; }
         public static IBlastzone Blastzone { get; set; }
-        public static IProliteManager ProliteManager { get; set; }
+        public static IProLiteManager ProLiteManager { get; set; }
         public static ISlotNameFactory SlotNameFactory { get; set; }
         public static User User { get; set; }
         public static bool LoaderRunning { get; set; }

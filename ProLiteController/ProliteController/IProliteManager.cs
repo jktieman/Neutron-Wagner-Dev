@@ -2,7 +2,7 @@
 
 namespace ProliteController
 {
-    public interface IProliteManager
+    public interface IProLiteManager
     {
         void AddProlite(HardwareDevice hardwareDevice);
         void RemoveProlite(int deviceNumber);

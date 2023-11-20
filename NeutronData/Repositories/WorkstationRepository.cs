@@ -413,10 +413,10 @@ namespace NeutronData.Repositories
                     //                {
                     //                    await _logger.LogDetailAsync($"This is a ProLite Device");
 
-                    //                    // if the workstationView.ProliteManager is null, create a new ProliteManager
-                    //                    if (workstationView.ProliteManager == null)
+                    //                    // if the workstationView.ProLiteManager is null, create a new ProLiteManager
+                    //                    if (workstationView.ProLiteManager == null)
                     //                    {
-                    //                        workstationView.ProliteManager = new ProliteManager(_neutronVariables);
+                    //                        workstationView.ProLiteManager = new ProLiteManager(_neutronVariables);
                     //                    }
 
                     //                    if (device.DeviceType == null)
@@ -437,8 +437,8 @@ namespace NeutronData.Repositories
                     //                        device.SerialConfiguration = _repoSerialConfiguration.FindBy(s => s.Id == device.SerialConfigurationId).FirstOrDefault();
 
                     //                    }
-                    //                    await _logger.LogDetailAsync($"Adding Prolite Device to ProliteManager");
-                    //                    workstationView.ProliteManager.AddProlite(device);
+                    //                    await _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
+                    //                    workstationView.ProLiteManager.AddProlite(device);
                     //                    break;
                     //                }
                     //        }

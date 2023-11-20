@@ -118,8 +118,10 @@ namespace Neutron.Forms
         private EmailSettings _settings;
         private IDynamicLogger _logger;
         private readonly ISendEmail _sendEmail;
+        private readonly WorkstationView _workstationView;
 
-        public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense, ISendEmail sendEmail)
+        public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
+            , ISendEmail sendEmail, WorkstationView workstationView)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -153,6 +155,7 @@ namespace Neutron.Forms
             ComboBoxLoaderStation.DisplayMember = "Name";
             ComboBoxLoaderStation.ValueMember = "Id";
             _sendEmail = sendEmail;
+            _workstationView = workstationView;
         }
 
         private void SetupDeviceForms()
@@ -3000,6 +3003,55 @@ namespace Neutron.Forms
                 ButtonRefreshSlotNames.Enabled = true;
                 Cursor.Current = Cursors.Default;
             }
+        }
+
+        private void ButtonProLiteTurnOn_Click(object sender, EventArgs e)
+        {
+            var deviceNumber = TextBoxProLiteDeviceNumber.Text.ParseInt();
+            var overNumber = TextBoxProLiteOver.Text.ParseInt();
+            var backNumber = TextBoxProLiteBack.Text.ParseInt();
+            var quantity = TextBoxProLiteQuantity.Text.ParseInt();
+
+            _workstationView.ProLiteManager.TurnOn(deviceNumber, overNumber, backNumber, quantity);
+        }
+
+        private void ButtonProLiteTurnOff_Click(object sender, EventArgs e)
+        {
+            var deviceNumber = TextBoxProLiteDeviceNumber.Text.ParseInt();
+            var overNumber = TextBoxProLiteOver.Text.ParseInt();
+            var backNumber = TextBoxProLiteBack.Text.ParseInt();
+            var quantity = TextBoxProLiteQuantity.Text.ParseInt();
+
+            _workstationView.ProLiteManager.ClearProlite(deviceNumber);
+        }
+
+        private void MBProLiteTester_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Pro-Lite Tester";
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+
+            tabControl1.SelectedTab = ProLite;
+        }
+
+        private void ButtonProLiteBack_Click(object sender, EventArgs e)
+        {
+            BackToMain();
+        }
+
+        private void ButtonProLiteTurnOnHot_Click(object sender, EventArgs e)
+        {
+            var deviceNumber = TextBoxProLiteDeviceNumber.Text.ParseInt();
+
+            _workstationView.ProLiteManager.TurnOnHot(deviceNumber);
+        }
+
+        private void ButtonProLiteTurnOnCycleCount_Click(object sender, EventArgs e)
+        {
+            var deviceNumber = TextBoxProLiteDeviceNumber.Text.ParseInt();
+            var overNumber = TextBoxProLiteOver.Text.ParseInt();
+            var backNumber = TextBoxProLiteBack.Text.ParseInt();
+
+            _workstationView.ProLiteManager.TurnOnBlindCycle(deviceNumber, overNumber, backNumber);
         }
     }
 }

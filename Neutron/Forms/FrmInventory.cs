@@ -2623,12 +2623,12 @@ namespace Neutron.Forms
                         worker.ReportProgress(progressPercentage);
                     }
                 }
+                Mediator.GetInstance().OnDisplayMessage(this, $"Load complete");
             }
             catch (Exception ex)
             {
                 Mediator.GetInstance().OnGeneralError(this, $"Error Adding/Updating Records{Environment.NewLine}{ex.Message}");
             }
-            Mediator.GetInstance().OnDisplayMessage(this, $"Load complete");
         }
 
         private void BackgroundWorkerItemDefinitions_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)

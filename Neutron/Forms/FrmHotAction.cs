@@ -1117,7 +1117,7 @@ namespace Neutron.Forms
                         ClearAllShi();
                         Task.Run(() => _logger.LogDetailAsync($"ShowShi HotAction {loc2} {loc3}"));
                         GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text);
-                        _workstationView.ProliteManager.TurnOn(loc1, loc3, loc4.ParseInt(), text.ParseInt());
+                        _workstationView.ProLiteManager.TurnOn(loc1, loc3, loc4.ParseInt(), text.ParseInt());
                     }
                 }
             }

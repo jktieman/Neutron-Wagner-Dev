@@ -8,11 +8,13 @@ using NeutronCore.Global;
 //using Logger = NeutronCore.Global.Logger;
 using System.IO.Ports;
 using System.Text;
+using System.Windows.Forms;
 //using NeutronData.Migrations;
 using NeutronData.Models.Lookups;
+using NeutronEvents;
 //using System.Xml.Linq;
 
-namespace NeutronData.ProliteManager;
+namespace NeutronData.ProLiteManager;
 
 // create a CallType enum
 public enum CallType
@@ -23,10 +25,10 @@ public enum CallType
 }
 
 /// <summary>
-/// The ProliteManager class is responsible for managing the Prolite devices.
+/// The ProLiteManager class is responsible for managing the Prolite devices.
 /// The Prolite devices are HardwareDevices of type Prolite.
 /// </summary>
-public class ProliteManager : IProliteManager
+public class ProLiteManager : IProLiteManager
 {
     private readonly NeutronVariables _neutronVariables;
     private readonly IDynamicLogger _logger;
@@ -98,11 +100,11 @@ public class ProliteManager : IProliteManager
     }
 
 
-    public ProliteManager(HardwareDevice hardwareDevice, NeutronVariables neutronVariables)
+    public ProLiteManager(HardwareDevice hardwareDevice, NeutronVariables neutronVariables)
     {
         _neutronVariables = neutronVariables;
         _prolites = new List<Prolite>();
-        _logger = NeutronCore.Global.Logger.SetupLogger("ProliteManager");
+        _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
 
         Id = hardwareDevice.Id;
         Name = hardwareDevice.Name;
@@ -124,6 +126,16 @@ public class ProliteManager : IProliteManager
         DeviceType = hardwareDevice.DeviceType;
         WorkstationId = hardwareDevice.WorkstationId;
         InitSerialPort();
+        Mediator.GetInstance().ProLiteMessage += ShowProLiteMessage;
+    }
+
+    private void ShowProLiteMessage(object sender, ProLiteMessageEventArgs e)
+    {
+        var message = e.Message;
+        var proLiteNumber = e.ProLiteNumber;
+        ShowMessage(proLiteNumber, message);
+        Thread.Sleep(5000);
+        ClearProlite(proLiteNumber);
     }
 
     /// <summary>
@@ -168,9 +180,29 @@ public class ProliteManager : IProliteManager
         }
     }
 
+    public void ShowMessage(int deviceNumber, string message)
+    {
+        _ = _logger.LogDetailAsync($"Show a message ON Prolite Device: {deviceNumber} Message:{message}");
+        try
+        {
+            var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+            if (prolite != null)
+            {
+                var cmd = prolite.ShowMessage(message);
+                var msg = Encoding.UTF8.GetBytes(cmd);
+                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(msg, 0, msg.Length);
+            }
+        }
+        catch (Exception ex)
+        {
+            _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
+        }
+    }
+
+
     public void TurnOn(int deviceNumber, int level, int part, int quantity)
     {
-     _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
+     _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level:{level}  Part:{part}  Quantity:{quantity}");
         try
         {
             var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);

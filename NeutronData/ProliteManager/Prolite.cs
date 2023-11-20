@@ -1,8 +1,9 @@
-﻿using AlliedLogger;
+﻿using System;
+using AlliedLogger;
 using NeutronData.Models;
 
 
-namespace NeutronData.ProliteManager;
+namespace NeutronData.ProLiteManager;
 
 public class Prolite : IProlite
 {
@@ -50,11 +51,11 @@ public class Prolite : IProlite
     /// <returns></returns>
     public string TurnOn(int level, int part, int quantity)
     {
-        var work = $"W: {level}";
-        work += $" D: {part}";
-        work += $" Q: {quantity}";
+        var work = $"<CN>W:<CC>{level}";
+        work += $"<CN> D:<CC>{part}";
+        work += $"<CN> Q:<CE>{quantity}";
 
-        var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
+        var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
 
      _ = _logger.LogDetailAsync($"TurnOn: {cmd}");
 
@@ -73,17 +74,17 @@ public class Prolite : IProlite
         if (Enabled)
         {
             var work = "  ";
-            cmd = $"{_proliteNumber}<PA>{work}";
+            cmd = $"{_proliteNumber}<PA>{work}{Environment.NewLine}";
         }
         return cmd;
     }
 
     public string TurnOnBlindCycle(int level, int part)
     {
-        var work = $"W: {level}";
-        work += $" D: {part}";
+        var work = $"<CN>W:<CC>{level}";
+        work += $"<CN> D:<CC>{part}";
 
-        var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
+        var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
 
      _ = _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
 
@@ -92,14 +93,22 @@ public class Prolite : IProlite
 
     public string TurnOnHot()
     {
-        var work = $"<<<- HOT ->>>";
-           
+        Clear();
 
-        var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}";
+        var work = $"<<<- HOT ->>>";
+        var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}{Environment.NewLine}";
 
      _ = _logger.LogDetailAsync($"TurnOn HOT: {cmd}");
 
         return cmd;
     }
 
+    public string ShowMessage(string message)
+    {
+        var cmd = $"{_proliteNumber}<PA><FQ><CC>{message}{Environment.NewLine}";
+
+     _ = _logger.LogDetailAsync($"ShowMessage: {cmd}");
+
+        return cmd;
+    }
 }

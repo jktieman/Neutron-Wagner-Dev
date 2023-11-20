@@ -47,9 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IProlite.cs" />
-    <Compile Include="IProliteManager.cs" />
+    <Compile Include="IProLiteManager.cs" />
     <Compile Include="Prolite.cs" />
-    <Compile Include="ProliteManager.cs" />
+    <Compile Include="ProLiteManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

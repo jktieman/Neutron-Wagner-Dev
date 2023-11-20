@@ -109,12 +109,14 @@ namespace Neutron.Ninject
         public static FrmUtilities CreateUtilitiesForm(
             NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
-            , SendEmail sendEmail)
+            , SendEmail sendEmail
+            , WorkstationView workstationView)
         {
             return _kernel.Get<FrmUtilities>(
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense)
-                , new ConstructorArgument("sendEmail", sendEmail));
+                , new ConstructorArgument("sendEmail", sendEmail)
+                , new ConstructorArgument("workstationView", workstationView));
         }
 
 

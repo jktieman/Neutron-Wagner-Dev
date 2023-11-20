@@ -51,6 +51,7 @@
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
+            this.MBProLiteTester = new MetroFramework.Controls.MetroButton();
             this.LabelVersionLabel = new System.Windows.Forms.Label();
             this.LabelVersion = new System.Windows.Forms.Label();
             this.MBUtilitiesClose = new MetroFramework.Controls.MetroButton();
@@ -443,12 +444,29 @@
             this.ButtonRemoveEmail = new System.Windows.Forms.Button();
             this.ButtonCancelEmailAddresses = new System.Windows.Forms.Button();
             this.ButtonSaveEmailAddresses = new System.Windows.Forms.Button();
+            this.ProLite = new System.Windows.Forms.TabPage();
+            this.ButtonProLiteBack = new MetroFramework.Controls.MetroButton();
+            this.PanelProLite = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.LabelProLiteTester = new System.Windows.Forms.Label();
+            this.ButtonProLiteTurnOff = new System.Windows.Forms.Button();
+            this.ButtonProLiteTurnOn = new System.Windows.Forms.Button();
+            this.LabelProLiteQuantity = new System.Windows.Forms.Label();
+            this.LabelProLiteBack = new System.Windows.Forms.Label();
+            this.LabelProLiteUnit = new System.Windows.Forms.Label();
+            this.LabelProLiteOver = new System.Windows.Forms.Label();
+            this.TextBoxProLiteQuantity = new System.Windows.Forms.TextBox();
+            this.TextBoxProLiteDeviceNumber = new System.Windows.Forms.TextBox();
+            this.TextBoxProLiteBack = new System.Windows.Forms.TextBox();
+            this.TextBoxProLiteOver = new System.Windows.Forms.TextBox();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.ButtonProLiteTurnOnCycleCount = new System.Windows.Forms.Button();
+            this.ButtonProLiteTurnOnHot = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -505,6 +523,9 @@
             this.EmailAddresses.SuspendLayout();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).BeginInit();
+            this.ProLite.SuspendLayout();
+            this.PanelProLite.SuspendLayout();
+            this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -529,6 +550,7 @@
             this.tabControl1.Controls.Add(this.Communications);
             this.tabControl1.Controls.Add(this.EmailServer);
             this.tabControl1.Controls.Add(this.EmailAddresses);
+            this.tabControl1.Controls.Add(this.ProLite);
             this.tabControl1.Location = new System.Drawing.Point(22, 84);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
@@ -539,6 +561,7 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Main.Controls.Add(this.MBProLiteTester);
             this.Main.Controls.Add(this.LabelVersionLabel);
             this.Main.Controls.Add(this.LabelVersion);
             this.Main.Controls.Add(this.MBUtilitiesClose);
@@ -557,6 +580,18 @@
             this.Main.Size = new System.Drawing.Size(1227, 636);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
+            // 
+            // MBProLiteTester
+            // 
+            this.MBProLiteTester.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBProLiteTester.Location = new System.Drawing.Point(957, 377);
+            this.MBProLiteTester.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBProLiteTester.Name = "MBProLiteTester";
+            this.MBProLiteTester.Size = new System.Drawing.Size(241, 84);
+            this.MBProLiteTester.TabIndex = 33;
+            this.MBProLiteTester.Text = "Pro-Lite Tester";
+            this.MBProLiteTester.UseSelectable = true;
+            this.MBProLiteTester.Click += new System.EventHandler(this.MBProLiteTester_Click);
             // 
             // LabelVersionLabel
             // 
@@ -5378,6 +5413,174 @@
             this.ButtonSaveEmailAddresses.UseVisualStyleBackColor = true;
             this.ButtonSaveEmailAddresses.Click += new System.EventHandler(this.ButtonSaveEmailAddresses_Click);
             // 
+            // ProLite
+            // 
+            this.ProLite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.ProLite.Controls.Add(this.ButtonProLiteBack);
+            this.ProLite.Controls.Add(this.PanelProLite);
+            this.ProLite.Location = new System.Drawing.Point(4, 22);
+            this.ProLite.Name = "ProLite";
+            this.ProLite.Size = new System.Drawing.Size(1227, 636);
+            this.ProLite.TabIndex = 15;
+            this.ProLite.Text = "Pro-Lite";
+            // 
+            // ButtonProLiteBack
+            // 
+            this.ButtonProLiteBack.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.ButtonProLiteBack.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.ButtonProLiteBack.Location = new System.Drawing.Point(1098, 4);
+            this.ButtonProLiteBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ButtonProLiteBack.Name = "ButtonProLiteBack";
+            this.ButtonProLiteBack.Size = new System.Drawing.Size(126, 76);
+            this.ButtonProLiteBack.TabIndex = 5;
+            this.ButtonProLiteBack.Text = "Back";
+            this.ButtonProLiteBack.UseSelectable = true;
+            this.ButtonProLiteBack.Click += new System.EventHandler(this.ButtonProLiteBack_Click);
+            // 
+            // PanelProLite
+            // 
+            this.PanelProLite.BackColor = System.Drawing.Color.LightGray;
+            this.PanelProLite.Controls.Add(this.panel6);
+            this.PanelProLite.Controls.Add(this.ButtonProLiteTurnOnHot);
+            this.PanelProLite.Controls.Add(this.ButtonProLiteTurnOnCycleCount);
+            this.PanelProLite.Controls.Add(this.ButtonProLiteTurnOff);
+            this.PanelProLite.Controls.Add(this.ButtonProLiteTurnOn);
+            this.PanelProLite.Controls.Add(this.LabelProLiteQuantity);
+            this.PanelProLite.Controls.Add(this.LabelProLiteBack);
+            this.PanelProLite.Controls.Add(this.LabelProLiteUnit);
+            this.PanelProLite.Controls.Add(this.LabelProLiteOver);
+            this.PanelProLite.Controls.Add(this.TextBoxProLiteQuantity);
+            this.PanelProLite.Controls.Add(this.TextBoxProLiteDeviceNumber);
+            this.PanelProLite.Controls.Add(this.TextBoxProLiteBack);
+            this.PanelProLite.Controls.Add(this.TextBoxProLiteOver);
+            this.PanelProLite.Location = new System.Drawing.Point(277, 161);
+            this.PanelProLite.Name = "PanelProLite";
+            this.PanelProLite.Size = new System.Drawing.Size(557, 315);
+            this.PanelProLite.TabIndex = 4;
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.DarkGray;
+            this.panel6.Controls.Add(this.LabelProLiteTester);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(557, 62);
+            this.panel6.TabIndex = 13;
+            // 
+            // LabelProLiteTester
+            // 
+            this.LabelProLiteTester.AutoSize = true;
+            this.LabelProLiteTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelProLiteTester.Location = new System.Drawing.Point(136, 19);
+            this.LabelProLiteTester.Name = "LabelProLiteTester";
+            this.LabelProLiteTester.Size = new System.Drawing.Size(169, 25);
+            this.LabelProLiteTester.TabIndex = 8;
+            this.LabelProLiteTester.Text = "Pro-Lite Tester";
+            // 
+            // ButtonProLiteTurnOff
+            // 
+            this.ButtonProLiteTurnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonProLiteTurnOff.Location = new System.Drawing.Point(329, 131);
+            this.ButtonProLiteTurnOff.Name = "ButtonProLiteTurnOff";
+            this.ButtonProLiteTurnOff.Size = new System.Drawing.Size(203, 31);
+            this.ButtonProLiteTurnOff.TabIndex = 11;
+            this.ButtonProLiteTurnOff.Text = "Turn Off";
+            this.ButtonProLiteTurnOff.UseVisualStyleBackColor = true;
+            this.ButtonProLiteTurnOff.Click += new System.EventHandler(this.ButtonProLiteTurnOff_Click);
+            // 
+            // ButtonProLiteTurnOn
+            // 
+            this.ButtonProLiteTurnOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonProLiteTurnOn.Location = new System.Drawing.Point(329, 89);
+            this.ButtonProLiteTurnOn.Name = "ButtonProLiteTurnOn";
+            this.ButtonProLiteTurnOn.Size = new System.Drawing.Size(203, 31);
+            this.ButtonProLiteTurnOn.TabIndex = 12;
+            this.ButtonProLiteTurnOn.Text = "Turn On";
+            this.ButtonProLiteTurnOn.UseVisualStyleBackColor = true;
+            this.ButtonProLiteTurnOn.Click += new System.EventHandler(this.ButtonProLiteTurnOn_Click);
+            // 
+            // LabelProLiteQuantity
+            // 
+            this.LabelProLiteQuantity.AutoSize = true;
+            this.LabelProLiteQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelProLiteQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelProLiteQuantity.Location = new System.Drawing.Point(133, 223);
+            this.LabelProLiteQuantity.Name = "LabelProLiteQuantity";
+            this.LabelProLiteQuantity.Size = new System.Drawing.Size(76, 20);
+            this.LabelProLiteQuantity.TabIndex = 8;
+            this.LabelProLiteQuantity.Text = "Quantity";
+            // 
+            // LabelProLiteBack
+            // 
+            this.LabelProLiteBack.AutoSize = true;
+            this.LabelProLiteBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelProLiteBack.Location = new System.Drawing.Point(160, 181);
+            this.LabelProLiteBack.Name = "LabelProLiteBack";
+            this.LabelProLiteBack.Size = new System.Drawing.Size(49, 20);
+            this.LabelProLiteBack.TabIndex = 9;
+            this.LabelProLiteBack.Text = "Back";
+            // 
+            // LabelProLiteUnit
+            // 
+            this.LabelProLiteUnit.AutoSize = true;
+            this.LabelProLiteUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelProLiteUnit.Location = new System.Drawing.Point(79, 97);
+            this.LabelProLiteUnit.Name = "LabelProLiteUnit";
+            this.LabelProLiteUnit.Size = new System.Drawing.Size(130, 20);
+            this.LabelProLiteUnit.TabIndex = 10;
+            this.LabelProLiteUnit.Text = "Device Number";
+            // 
+            // LabelProLiteOver
+            // 
+            this.LabelProLiteOver.AutoSize = true;
+            this.LabelProLiteOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelProLiteOver.Location = new System.Drawing.Point(163, 139);
+            this.LabelProLiteOver.Name = "LabelProLiteOver";
+            this.LabelProLiteOver.Size = new System.Drawing.Size(46, 20);
+            this.LabelProLiteOver.TabIndex = 10;
+            this.LabelProLiteOver.Text = "Over";
+            // 
+            // TextBoxProLiteQuantity
+            // 
+            this.TextBoxProLiteQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxProLiteQuantity.Location = new System.Drawing.Point(220, 217);
+            this.TextBoxProLiteQuantity.Name = "TextBoxProLiteQuantity";
+            this.TextBoxProLiteQuantity.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxProLiteQuantity.TabIndex = 4;
+            this.TextBoxProLiteQuantity.Text = "1";
+            this.TextBoxProLiteQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxProLiteDeviceNumber
+            // 
+            this.TextBoxProLiteDeviceNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxProLiteDeviceNumber.Location = new System.Drawing.Point(220, 91);
+            this.TextBoxProLiteDeviceNumber.Name = "TextBoxProLiteDeviceNumber";
+            this.TextBoxProLiteDeviceNumber.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxProLiteDeviceNumber.TabIndex = 6;
+            this.TextBoxProLiteDeviceNumber.Text = "1";
+            this.TextBoxProLiteDeviceNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxProLiteBack
+            // 
+            this.TextBoxProLiteBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxProLiteBack.Location = new System.Drawing.Point(220, 175);
+            this.TextBoxProLiteBack.Name = "TextBoxProLiteBack";
+            this.TextBoxProLiteBack.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxProLiteBack.TabIndex = 5;
+            this.TextBoxProLiteBack.Text = "1";
+            this.TextBoxProLiteBack.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxProLiteOver
+            // 
+            this.TextBoxProLiteOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxProLiteOver.Location = new System.Drawing.Point(220, 133);
+            this.TextBoxProLiteOver.Name = "TextBoxProLiteOver";
+            this.TextBoxProLiteOver.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxProLiteOver.TabIndex = 6;
+            this.TextBoxProLiteOver.Text = "1";
+            this.TextBoxProLiteOver.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // LabelFormTitle
             // 
             this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -5421,6 +5624,28 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // ButtonProLiteTurnOnCycleCount
+            // 
+            this.ButtonProLiteTurnOnCycleCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonProLiteTurnOnCycleCount.Location = new System.Drawing.Point(329, 173);
+            this.ButtonProLiteTurnOnCycleCount.Name = "ButtonProLiteTurnOnCycleCount";
+            this.ButtonProLiteTurnOnCycleCount.Size = new System.Drawing.Size(203, 31);
+            this.ButtonProLiteTurnOnCycleCount.TabIndex = 12;
+            this.ButtonProLiteTurnOnCycleCount.Text = "Turn On Cycle Count";
+            this.ButtonProLiteTurnOnCycleCount.UseVisualStyleBackColor = true;
+            this.ButtonProLiteTurnOnCycleCount.Click += new System.EventHandler(this.ButtonProLiteTurnOnCycleCount_Click);
+            // 
+            // ButtonProLiteTurnOnHot
+            // 
+            this.ButtonProLiteTurnOnHot.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonProLiteTurnOnHot.Location = new System.Drawing.Point(329, 215);
+            this.ButtonProLiteTurnOnHot.Name = "ButtonProLiteTurnOnHot";
+            this.ButtonProLiteTurnOnHot.Size = new System.Drawing.Size(203, 31);
+            this.ButtonProLiteTurnOnHot.TabIndex = 11;
+            this.ButtonProLiteTurnOnHot.Text = "Hot Pick";
+            this.ButtonProLiteTurnOnHot.UseVisualStyleBackColor = true;
+            this.ButtonProLiteTurnOnHot.Click += new System.EventHandler(this.ButtonProLiteTurnOnHot_Click);
             // 
             // FrmUtilities
             // 
@@ -5512,6 +5737,11 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).EndInit();
+            this.ProLite.ResumeLayout(false);
+            this.PanelProLite.ResumeLayout(false);
+            this.PanelProLite.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
@@ -5920,5 +6150,23 @@
         private System.Windows.Forms.CheckBox CheckBoxRfidEnabledPicking;
         private System.Windows.Forms.NumericUpDown numericUpDownBliControllerId;
         private System.Windows.Forms.Label LabelBliControllerId;
+        private System.Windows.Forms.TabPage ProLite;
+        private System.Windows.Forms.Panel PanelProLite;
+        private System.Windows.Forms.Button ButtonProLiteTurnOff;
+        private System.Windows.Forms.Button ButtonProLiteTurnOn;
+        private System.Windows.Forms.Label LabelProLiteQuantity;
+        private System.Windows.Forms.Label LabelProLiteBack;
+        private System.Windows.Forms.Label LabelProLiteUnit;
+        private System.Windows.Forms.Label LabelProLiteOver;
+        private System.Windows.Forms.TextBox TextBoxProLiteQuantity;
+        private System.Windows.Forms.TextBox TextBoxProLiteDeviceNumber;
+        private System.Windows.Forms.TextBox TextBoxProLiteBack;
+        private System.Windows.Forms.TextBox TextBoxProLiteOver;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label LabelProLiteTester;
+        private MetroFramework.Controls.MetroButton MBProLiteTester;
+        private MetroFramework.Controls.MetroButton ButtonProLiteBack;
+        private System.Windows.Forms.Button ButtonProLiteTurnOnHot;
+        private System.Windows.Forms.Button ButtonProLiteTurnOnCycleCount;
     }
 }

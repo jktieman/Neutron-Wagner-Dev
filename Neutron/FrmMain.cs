@@ -39,7 +39,7 @@ using NeutronData.DataContexts;
 using NeutronData.PrintModels;
 using SqlSchemaManager;
 using Timer = System.Timers.Timer;
-using NeutronData.ProliteManager;
+using NeutronData.ProLiteManager;
 using NeutronData.Repositories;
 using NeutronData.Models.Lookups;
 using StationType = NeutronCore.Enums.StationType;
@@ -149,6 +149,9 @@ namespace Neutron
             Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
             Mediator.GetInstance().SendEmailMessage += (s, e) => _sendEmail.Message(e.Message, _logger.LastLogLines());
 
+            
+            GlobalVar.Testing = true;
+
             //Log on to Neutron
             LogOn();
 
@@ -160,8 +163,7 @@ namespace Neutron
             await _logger.LogDetailAsync("Init Started");
             var result = await InitForm();
             await _logger.LogDetailAsync($"Init Result: {result}");
-            
-            GlobalVar.Testing = true;
+
             
             if (result == false)
             {
@@ -281,28 +283,6 @@ namespace Neutron
                             if (_workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor)
                             {
                                 await SetupHardwareDevices();
-
-                                // GlobalVar.ProliteManager.TurnOn(1,1,1,1);
-
-                                //var setupShuttle = SetupShuttle();
-                                //if (setupShuttle == true)
-                                //{
-                                //    result = true;
-                                //}
-                                //else
-                                //{
-                                //    MessageBox.Show("Main Form: Device Initialization Error.");
-                                //}
-
-                                //var setupDisplay = SetupDisplay();
-                                //if (setupDisplay == true)
-                                //{
-                                //    result = true;
-                                //}
-                                //else
-                                //{
-                                //    MessageBox.Show("Main Form: Display Initialization Error.");
-                                //}
                             }
 
 
@@ -397,14 +377,6 @@ namespace Neutron
                                             Mediator.GetInstance().OnDisplayMessage(this, $"Display Testing");
                                         
                                         await TestBli();
-                                        await Task.Delay(5000);
-                                        //await _logger.LogDetailAsync($"IPTI Displays Result: {result}");
-                                        await GlobalVar.Displays.TurnOnAllBli();
-                                        //await _logger.LogDetailAsync($"IPTI Displays Turned On");
-                                        await Task.Delay(5000);
-                                        // await _logger.LogDetailAsync($"IPTI Displays Turn Off");
-                                        await GlobalVar.Displays.ClearAllBli();
-                                        // await _logger.LogDetailAsync($"IPTI Displays Turned Off");
                                         }
                                     }
                                 }
@@ -486,15 +458,15 @@ namespace Neutron
                             {
                                 await _logger.LogDetailAsync($"This is a ProLite Device");
                                 _workstationView.HardwareDevices.Add(device);
-                                // if the GlobalVar.ProliteManager is null, create a new ProliteManager
-                                if (_workstationView.ProliteManager == null)
+                                // if the GlobalVar.ProLiteManager is null, create a new ProLiteManager
+                                if (_workstationView.ProLiteManager == null)
                                 {
-                                    _workstationView.ProliteManager = new ProliteManager(device, _neutronVariables);
+                                    _workstationView.ProLiteManager = new ProLiteManager(device, _neutronVariables);
                                 }
 
-                                //if (GlobalVar.ProliteManager == null)
+                                //if (GlobalVar.ProLiteManager == null)
                                 //{
-                                //    GlobalVar.ProliteManager = new ProliteManager(device, _neutronVariables);
+                                //    GlobalVar.ProLiteManager = new ProLiteManager(device, _neutronVariables);
                                 //}
 
                                 //if (device.DeviceType == null)
@@ -515,10 +487,10 @@ namespace Neutron
                                 //    device.SerialConfiguration = _repoSerialConfiguration.FindBy(s => s.Id == device.SerialConfigurationId).FirstOrDefault();
 
                                 //}
-                                await _logger.LogDetailAsync($"Adding Prolite Device to ProliteManager");
-                                _workstationView.ProliteManager.AddProlite(device);
+                                await _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
+                                _workstationView.ProLiteManager.AddProlite(device);
 
-                                _workstationView.ProliteManager.TurnOn(device.DeviceNumber, 3, 2, 99);
+                                _workstationView.ProLiteManager.TurnOn(device.DeviceNumber, 3, 2, 99);
                                 break;
                             }
                     }
@@ -1136,7 +1108,7 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities]) return;
             Hide();
-            using (var frm = DI.CreateUtilitiesForm(_neutronVariables, _neutronLicense, _sendEmail))
+            using (var frm = DI.CreateUtilitiesForm(_neutronVariables, _neutronLicense, _sendEmail, _workstationView))
             {
                 frm.ShowDialog();
                 Show();
@@ -1354,7 +1326,7 @@ namespace Neutron
             await _logger.LogDetailAsync($"button1_Click IPTI Displays ");
             await GlobalVar.Displays.TurnOnAllBli();
             await _logger.LogDetailAsync($"button1_Click IPTI Displays Turned On");
-            await Task.Delay(3000);
+            await Task.Delay(5000);
             await _logger.LogDetailAsync($"button1_Click IPTI Displays Turn Off");
             await GlobalVar.Displays.ClearAllBli();
             await _logger.LogDetailAsync($"button1_Click IPTI Displays Turned Off");

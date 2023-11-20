@@ -198,5 +198,12 @@ namespace NeutronEvents
         {
             DisplayMessage?.Invoke(this, new DisplayMessageEventArgs() { Message = message });
         }
+
+        public event EventHandler<ProLiteMessageEventArgs> ProLiteMessage;
+
+        public void OnProLiteMessage(object sender, int proLiteNumber, string message)
+        {
+            ProLiteMessage?.Invoke(this, new ProLiteMessageEventArgs() {ProLiteNumber = proLiteNumber, Message = message });
+        }
     }
 }

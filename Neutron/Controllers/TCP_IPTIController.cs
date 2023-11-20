@@ -56,7 +56,7 @@ namespace Neutron.Controllers
         private readonly bool _bliEnabled;
         private readonly bool _shiEnabled;
 
-        private readonly WorkstationView _workstation;
+        private readonly WorkstationView _workstationView;
 
         private IDynamicLogger _logger;
 
@@ -71,18 +71,17 @@ namespace Neutron.Controllers
         public event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         public bool Ready { get; set; }
 
-        public TCP_IptiController(IJsonData jsonData, WorkstationView workstation, NeutronVariables neutronVariables,
+        public TCP_IptiController(IJsonData jsonData, WorkstationView workstationView, NeutronVariables neutronVariables,
             HardwareDevice hardwareDevice)
         {
-            _workstation = workstation;
+            _workstationView = workstationView;
             _neutronVariables = neutronVariables;
             _hardwareDevice = hardwareDevice;
 
             _bliEnabled = _hardwareDevice.Enabled;    
             _shiEnabled = _neutronVariables.ShiEnabled;
             _bliController = _neutronVariables.BliController.ToString().PadLeft(2, '0');
-            CreateLog();
-
+            _logger = NeutronCore.Global.Logger.SetupLogger("TCP_IptiController");
             if (_bliEnabled) FillBliList();
 
             if (_shiEnabled) GetTowerLevelInfoList();
@@ -289,14 +288,6 @@ namespace Neutron.Controllers
                 _bliList.Add(new Ipti_BLI(_neutronVariables.BliController, i, 0, i.ToString()));
             }
         }
-        private void CreateLog()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName =
-                $"TCP_IPTI Display Controller_{_workstation.WorkstationNumber}";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-        }
         private void StartTransmission()
         {
             _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
@@ -451,7 +442,7 @@ namespace Neutron.Controllers
         public void GetTowerLevelInfoList()
         {
             var towerList = new Dictionary<int, TowerLevelInfo>();
-            if (_workstation.WorkstationNumber == 1)
+            if (_workstationView.WorkstationNumber == 1)
             {
                 var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "04", Display = "01", ArrowDirection = "Left" };
                 towerList.Add(11, rec);
@@ -519,7 +510,7 @@ namespace Neutron.Controllers
                 towerList.Add(48, rec);
             }
 
-            if (_workstation.WorkstationNumber == 2)
+            if (_workstationView.WorkstationNumber == 2)
             {
                 var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
                 towerList.Add(11, rec);
@@ -587,7 +578,7 @@ namespace Neutron.Controllers
                 towerList.Add(48, rec);
             }
 
-            if (_workstation.WorkstationNumber == 3)
+            if (_workstationView.WorkstationNumber == 3)
             {
                 var rec = new TowerLevelInfo { Device = 1, Level = 1, BayId = "02", Display = "01", ArrowDirection = "Left" };
                 towerList.Add(11, rec);
