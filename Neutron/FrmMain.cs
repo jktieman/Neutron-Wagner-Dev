@@ -568,7 +568,6 @@ namespace Neutron
 
             return result;
         }
-
         private bool SetupDisplay()
         {
 
@@ -658,7 +657,6 @@ namespace Neutron
 
             return true;
         }
-
         private bool SetupShuttle()
         {
             var result = false;

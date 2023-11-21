@@ -45,6 +45,7 @@ using AlliedLogger;
 using Neutron.Ninject;
 using NeutronCore;
 using ProliteController;
+using SAPServer.Models;
 using SerialConfiguration = NeutronData.Models.SerialConfiguration;
 
 
@@ -110,6 +111,7 @@ namespace Neutron.Forms
         public LabelPrinterPreferences LabelPrinter;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
+        private SapVariables _sapVariables;
 
         //Lookup variables
         private List<LookupTable> _lookupTables = new List<LookupTable>();
@@ -3069,6 +3071,66 @@ namespace Neutron.Forms
             var backNumber = TextBoxProLiteBack.Text.ParseInt();
 
             _workstationView.ProLiteManager.TurnOnBlindCycle(deviceNumber, overNumber, backNumber);
+        }
+
+        private void MBSapServer_Click(object sender, EventArgs e)
+        {
+            _sapVariables = _jsonData.LoadFile<SapVariables>(); 
+            TextBoxSapServerName.Text = _sapVariables.SapServer;
+            TextBoxSapServerSleepTime.Text = _sapVariables.SleepTime.ToString();
+            TextBoxSapServerStartHour.Text = _sapVariables.StartHour.ToString();
+            TextBoxSapServerStartMinute.Text = _sapVariables.StartMinute.ToString();
+            TextBoxSapServerEndHour.Text = _sapVariables.EndHour.ToString();
+            TextBoxSapServerEndMinute.Text = _sapVariables.EndMinute.ToString();
+            TextBoxSapServerUsername.Text = _sapVariables.Username;
+            TextBoxSapServerPassword.Text = _sapVariables.Password;
+            TextBoxSapServerAppServerHost.Text = _sapVariables.AppServerHost;
+            TextBoxSapServerSystemNumber.Text = _sapVariables.SystemNumber;
+            TextBoxSapServerClient.Text = _sapVariables.Client;
+            TextBoxSapServerLanguage.Text = _sapVariables.Language;
+            TextBoxSapServerPoolSize.Text = _sapVariables.PoolSize;
+            TextBoxSapServerPeakConnectionsLimit.Text = _sapVariables.PeakConnectionsLimit;
+            TextBoxSapServerConnectionIdleTimeout.Text = _sapVariables.ConnectionIdleTimeout;
+            TextBoxSapServerNeutronBusyFile.Text = _sapVariables.NeutronBusyFile;
+            TextBoxSapServerSapBusyFile.Text = _sapVariables.SapBusyFile;
+            TextBoxSapServerEmail1.Text = _sapVariables.Email1;
+            TextBoxSapServerEmail2.Text = _sapVariables.Email2;
+            TextBoxSapServerEmail3.Text = _sapVariables.Email3;
+           
+            tabControl1.SelectedTab = SapServer;
+        }
+
+        private void MBSapServerBack_Click(object sender, EventArgs e)
+        {
+            BackToMain();
+        }
+
+        private void MBSapServerSave_Click(object sender, EventArgs e)
+        {
+            var sapVariables = new SapVariables();
+            sapVariables.SapServer = TextBoxSapServerName.Text;
+            sapVariables.SleepTime = TextBoxSapServerSleepTime.Text.ParseInt();
+            sapVariables.StartHour = TextBoxSapServerStartHour.Text.ParseInt();
+            sapVariables.StartMinute = TextBoxSapServerStartMinute.Text.ParseInt();
+            sapVariables.EndHour = TextBoxSapServerEndHour.Text.ParseInt();
+            sapVariables.EndMinute = TextBoxSapServerEndMinute.Text.ParseInt();
+            sapVariables.Username = TextBoxSapServerUsername.Text;
+            sapVariables.Password = TextBoxSapServerPassword.Text;
+            sapVariables.AppServerHost = TextBoxSapServerAppServerHost.Text;
+            sapVariables.SystemNumber = TextBoxSapServerSystemNumber.Text;
+            sapVariables.Client = TextBoxSapServerClient.Text;
+            sapVariables.Language = TextBoxSapServerLanguage.Text;
+            sapVariables.PoolSize = TextBoxSapServerPoolSize.Text;
+            sapVariables.PeakConnectionsLimit = TextBoxSapServerPeakConnectionsLimit.Text;
+            sapVariables.ConnectionIdleTimeout = TextBoxSapServerConnectionIdleTimeout.Text;
+            sapVariables.NeutronBusyFile = TextBoxSapServerNeutronBusyFile.Text;
+            sapVariables.SapBusyFile = TextBoxSapServerSapBusyFile.Text;
+            sapVariables.Email1 = TextBoxSapServerEmail1.Text;
+            sapVariables.Email2 = TextBoxSapServerEmail2.Text;
+            sapVariables.Email3 = TextBoxSapServerEmail3.Text;
+            
+
+            _jsonData.SaveFile<SapVariables>(sapVariables);
         }
     }
 }

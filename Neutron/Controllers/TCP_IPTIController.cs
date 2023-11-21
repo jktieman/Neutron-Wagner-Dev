@@ -11,8 +11,6 @@ using Hart_DisplayControllers;
 using JsonManager;
 using NeutronCore.Extensions;
 using Neutron.Models;
-using NeutronCore;
-using NeutronCore.Enums;
 using NeutronCore.Global;
 using NeutronData.DataContexts;
 using NeutronData.Models;
@@ -164,7 +162,7 @@ namespace Neutron.Controllers
         {
             if (_shiEnabled)
             {
-                _transmitter.SendData(shi.TurnOff());
+                _ = _transmitter.SendData(shi.TurnOff());
                 Task.Run(() => _logger.LogDetailAsync($"ClearShi Turning OFF BayId: {shi.BayId}  Display: {shi.DisplayId}"));
             }
         }
@@ -197,7 +195,7 @@ namespace Neutron.Controllers
             if (!_bliEnabled) return;
             Task.Run(() => _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}"));
             var cmd = bayId + DisplayOc + "0100" + text;
-            _transmitter.SendData(cmd);
+            _ = _transmitter.SendData(cmd);
         }
         public void ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
@@ -205,7 +203,7 @@ namespace Neutron.Controllers
             if (!_bliEnabled) return;
             Task.Run(() => _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}"));
             var cmd = bayId + DisplayOc + "0100" + "            ";
-            _transmitter.SendData(cmd);
+            _ = _transmitter.SendData(cmd);
         }
 
         public void ShowBli(int bayControllerId, int address, int beacon, string text)
@@ -229,7 +227,7 @@ namespace Neutron.Controllers
         {
             if (!_bliEnabled) return;
             Task.Run(() => _logger.LogDetailAsync($"Ipti BLI-Show:  BayController: {bli.BLI_BayController}  Address: {bli.BLI_Address}"));
-            _transmitter.SendData(bli.TurnOn);
+            _ = _transmitter.SendData(bli.TurnOn);
         }
         public void ClearOc(int bayControllerId, int address)
         {
@@ -237,7 +235,7 @@ namespace Neutron.Controllers
             if (!_bliEnabled) return;
             Task.Run(() => _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}"));
             var cmd = bayId + DisplayOc + "0100" + "            ";
-            _transmitter.SendData(cmd);
+            _ = _transmitter.SendData(cmd);
         }
         public void ShowOc(int bayControllerId, int address, int beacon, string text)
         {
@@ -245,7 +243,7 @@ namespace Neutron.Controllers
             if (!_bliEnabled) return;
             Task.Run(() => _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}"));
             var cmd = bayId + DisplayOc + "0100" + text;
-            _transmitter.SendData(cmd);
+            _ = _transmitter.SendData(cmd);
         }
         public void ShowShi(int device, int bin, int level, string part, string text)
         {
@@ -253,7 +251,7 @@ namespace Neutron.Controllers
             Task.Run(() => _logger.LogDetailAsync($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
             var towerLevelInfo = GetShiAddress(device, level);
             var shi = new Ipti_SHI(towerLevelInfo, _lBeacon, _rBeacon, part, text);
-            _transmitter.SendData(shi.TurnOn());
+            _ = _transmitter.SendData(shi.TurnOn());
         }
         public void ShowShi(Hart_SHI shi)
         {
@@ -271,7 +269,7 @@ namespace Neutron.Controllers
         {
             if (!_bliEnabled) return;
             Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display:  BayController: {bli.BLI_BayController}  {bli.BLI_Address}"));
-            _transmitter.SendData(bli.TurnOff);
+            _ = _transmitter.SendData(bli.TurnOff);
         }
         public int GetInitStatus()
         {
