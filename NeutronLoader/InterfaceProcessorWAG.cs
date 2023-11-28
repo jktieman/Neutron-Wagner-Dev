@@ -23,6 +23,7 @@ using NeutronData.Repositories;
 using NeutronEvents;
 using NovaLoader.Models;
 using SAPServer;
+using SAPServer.Models;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Timer = System.Threading.Timer;
 
@@ -102,7 +103,7 @@ namespace NeutronLoader
             }
         }
 
-        private void UpdateNeutronOrders(List<HostOrderLine> hostOrderLines)
+        private void UpdateNeutronOrders(List<NeutronInput> hostOrderLines)
         {
             var shipperId = 0;
             var shipMethodId = 0;
@@ -112,21 +113,22 @@ namespace NeutronLoader
 
             var shipMethod = _repoShipMethods.All().FirstOrDefault();
             if (shipMethod != null) shipMethodId = shipMethod.Id;
-            var orderNumbers = hostOrderLines.Select(r => r.OrderNumber).Distinct().ToList();
+            var orderNumbers = hostOrderLines.Select(r => r.Order).Distinct().ToList();
 
             foreach (var orderNumber in orderNumbers)
             {
-                var rec = hostOrderLines.FirstOrDefault(r => r.OrderNumber == orderNumber);
+                var rec = hostOrderLines.FirstOrDefault(r => r.Order == orderNumber);
                 if (rec == null) continue;
                 var order = new Order
                 {
-                    Ord1 = rec.Order,
-                    Ord2 = rec.Invoice,
+                    Ord1 = rec.Order.ToString(),
+                    Ord2 = rec.Invoice.ToString(),
                     Priority = int.Parse(rec.Priority),
                     LoadDate = DateTime.Now,
                     OrderStatusId = (int)OrderStatus.Available,
                     ShipMethodId = shipMethodId,
-                    ShipperId = shipperId
+                    ShipperId = shipperId,
+                    OrderInfo = $"{rec.TransId},{rec.Division},{rec.Priority}"
 
                 };
 
@@ -134,7 +136,7 @@ namespace NeutronLoader
                 {
                     _repoOrder.Insert(order);
                     var orderId = order.Id;
-                    var orderDetails = hostOrderLines.Where(r => r.OrderNumber == orderNumber).ToList();
+                    var orderDetails = hostOrderLines.Where(r => r.Order == orderNumber).ToList();
                     if (orderDetails.Any())
                     {
                         foreach (var orderDetail in orderDetails)
@@ -145,13 +147,13 @@ namespace NeutronLoader
                                 var detail = new OrderDetail()
                                 {
                                     PartNum = orderDetail.Sku,
-                                    PartDesc = orderDetail.Description,
-                                    Quantity = int.Parse(orderDetail.Quantity),
+                                    PartDesc = orderDetail.Des,
+                                    Quantity = orderDetail.Qty,
                                     LineStatusId = (int)LineStatus.Available,
                                     AreaId = itemDef.AreaId,
-                                    OrderDetailInfo = orderDetail.CountryOfOrigin,
+                                    OrderDetailInfo = $"{rec.TransId},{rec.Division},{rec.Priority},{"Route"},{rec.Upc}",
                                     OrderId = orderId,
-                                    JobNum = orderDetail.Order,
+                                    JobNum = orderDetail.Order.ToString(),
                                     ItemDefinitionId = itemDef.Id
                                 };
                                 _repoOrderDetail.Insert(detail);
@@ -161,21 +163,54 @@ namespace NeutronLoader
                 }
                 catch (Exception ex)
                 {
-                    var message = $"HighJump to Neutron Order Conversion Failure. {Environment.NewLine}{ex.Message}";
+                    var message = $"SAP to Neutron Order Conversion Failure. {Environment.NewLine}{ex.Message}";
                     ErrorAlert(message);
                 }
             }
         }
 
-        private async Task<List<HostOrderLine>> GetNewOrdersFromSap()
+        private async Task<List<NeutronInput>> GetNewOrdersFromSap()
         {
             await _logger.LogDetailAsync("Get New Orders From SAP");
-            var orderLines = new List<HostOrderLine>();
+            var orderLines = new List<NeutronInput>();
             try
             {
                 // get records from SAP Server
+                List<NOVA_INPUT> recs;
+                using (var db = new WagnerDb())
+                {
+                    recs = db.NOVA_INPUT.Where(r => r.PROCESSED == "N" && r.TRANSTYPE == "22").ToList();
+                }
 
-                var sapService = new SAPService(_jsonData);
+                if (recs.Any())
+                {
+
+                    _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
+                    foreach (var rec in recs)
+                    {
+                        // Check for existing order
+                        var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString()).FirstOrDefault();
+
+                        if (existingOrder != null) continue;
+
+                        var h = new NeutronInput();
+                        h.TransId = rec.TRANSID.ToString();
+                        h.Sku = rec.SKU;
+                        h.Qty = (int)rec.QTY;
+                        h.Division = rec.ORDERCOMPANY;
+                        h.Order = rec.ORDERNO.ToString();
+                        h.Priority = rec.PRIORITY;
+                        h.Invoice = rec.INVOICENO.ToString();
+                        h.Des = rec.SKUDESC;
+                        h.Upc = rec.BOXID;
+                        h.LineNo = rec.TOTENO.ToString();
+
+                        orderLines.Add(h);
+                    }
+                    UpdateToProcessed(recs);
+                }
+
+                // var sapService = new SAPService(_jsonData);
 
             }
             catch (Exception ex)
@@ -245,27 +280,26 @@ namespace NeutronLoader
         //return orderLines;
         //}
 
-        private void UpdateOutboundToComplete(List<t_al_host_carousel_outbound> newRecords)
+        private void UpdateToProcessed(List<NOVA_INPUT> newRecords)
         {
-            _ = _logger.LogDetailAsync("Update Outbound to Processing.");
+            _ = _logger.LogDetailAsync("Update To Processed.");
             try
             {
-                using (var context = new HighJumpContext())
+                using (var context = new WagnerDb())
                 {
                     foreach (var rec in newRecords)
                     {
-                        var outBound = context.t_al_host_carousel_outbound.Find(rec.host_carousel_outbound_id);
-                        outBound.status = "C";
-                        outBound.updated_by = "CAROUSEL";
-                        outBound.updated_date = DateTime.Now;
+                        var outBound = context.NOVA_INPUT.Find(rec.TRANSID);
+                        if (outBound == null) continue;
+                        outBound.PROCESSED = "Y";
                     }
                     context.SaveChanges();
-                    _ = _logger.LogDetailAsync("Update Outbound to (C)omplete was Successful.");
+                    _ = _logger.LogDetailAsync("Update Outbound to Processed was Successful.");
                 }
             }
             catch (Exception ex)
             {
-                var msg = "Update Outbound To Complete Error. " + ex.Message + "  " + ex.InnerException;
+                var msg = "Update Outbound To Processed Error. " + ex.Message + "  " + ex.InnerException;
                 _ = _logger.LogDetailAsync(msg);
                 ErrorAlert(msg);
             }

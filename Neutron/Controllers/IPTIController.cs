@@ -98,8 +98,8 @@ namespace Neutron.Controllers
         }
         public Task TurnOnAllBli()
         {
-           SendData($"{_bliController}{TurnAllOn}");
-           return Task.CompletedTask;
+            SendData($"{_bliController}{TurnAllOn}");
+            return Task.CompletedTask;
         }
 
         public void CloseController()
@@ -116,7 +116,7 @@ namespace Neutron.Controllers
             }
             catch (Exception ex)
             {
-              _ =  Task.Run(() => _logger.LogDetailAsync($"Close Serial Port Exception: {ex.Message} {Environment.NewLine} {ex.InnerException} "));
+                _ = Task.Run(() => _logger.LogDetailAsync($"Close Serial Port Exception: {ex.Message} {Environment.NewLine} {ex.InnerException} "));
             }
         }
 
@@ -133,14 +133,16 @@ namespace Neutron.Controllers
             }
             await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END");
         }
-        public void ShowBlastzone(int bayControllerId, int address, int beacon, string text)
+        public async Task ShowBlastzone(int bayControllerId, int address, int beacon, string text)
         {
+            await _logger.LogDetailAsync($"IPTI Controller - Show Blastzone - START");
             if (!_bliEnabled) return;
             var bli = new Ipti_BLI(bayControllerId, address, beacon, text);
             ShowBli(bli);
         }
-        public void ClearBlastzone()
+        public async Task ClearBlastzone()
         {
+            await _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone - START");
             if (!_bliEnabled) return;
             foreach (var bayController in _bayControllers)
             {
@@ -148,20 +150,32 @@ namespace Neutron.Controllers
                 SendData(cmd);
             }
         }
-         
-        public void ShowBlastzoneOc(int bayControllerId, int address, int beacon, string text)
+
+        public async Task TurnOnAllBlastzones()
+        {
+            await _logger.LogDetailAsync($"IPTI Controller - Turn On All Blastzones - START");
+            if (!_bliEnabled) return;
+            foreach (var bayController in _bayControllers)
+            {
+                var cmd = bayController.ToString().PadLeft(2, '0') + "06";
+                SendData(cmd);
+            }
+        }
+
+            public async Task ShowBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
             if (!_bliEnabled) return;
-            Task.Run(() => _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}"));
+            await _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}");
             var cmd = bayId + DisplayOc + "0100" + text;
             SendData(cmd);
         }
-        public void ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
+        public async Task ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
+            await _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone OC - START");
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
             if (!_bliEnabled) return;
-            Task.Run(() => _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}"));
+            await _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}");
             var cmd = bayId + DisplayOc + "0100" + "            ";
             SendData(cmd);
         }
@@ -191,20 +205,21 @@ namespace Neutron.Controllers
                 Task.Run(() => _logger.LogDetailAsync($"ClearShi Turning OFF BayId: {shi.BayId}  Display: {shi.DisplayId}"));
             }
         }
-        public void ShowBli(int bayController, int address, int beacon, string text)
+        public async Task ShowBli(int bayController, int address, int beacon, string text)
         {
             if (!_bliEnabled) return;
+            await _logger.LogDetailAsync($"IPTI Controller - Show BLI - BLI Enabled");
             var bli = new Ipti_BLI(bayController, address, beacon, text);
-            ShowBli(bli);
+            await ShowBli(bli);
         }
         public void ShowBli(Hart_BLI bli)
         {
             // throw new NotImplementedException();
         }
-        public void ShowBli(Ipti_BLI bli)
+        public async Task ShowBli(Ipti_BLI bli)
         {
             if (!_bliEnabled) return;
-            Task.Run(() => _logger.LogDetailAsync($"Ipti BLI Address: {bli.BLI_Address}"));
+            await _logger.LogDetailAsync($"Ipti BLI Address: {bli.BLI_Address}");
             SendData(bli.TurnOn);
         }
 
@@ -261,19 +276,20 @@ namespace Neutron.Controllers
         {
             //  throw new NotImplementedException();
         }
-        public void ClearBli(Ipti_BLI bli)
+        public async Task ClearBli(Ipti_BLI bli)
         {
             if (!_bliEnabled) return;
-            Task.Run(() => _logger.LogDetailAsync($"BLI Clear Single Display. {bli.BLI_Address}"));
+            await _logger.LogDetailAsync($"BLI Clear Single Display. {bli.BLI_Address}");
             SendData(bli.TurnOff);
         }
 
 
-        public void ShowBli(int address, int beacon, string text)
+        public async Task ShowBli(int address, int beacon, string text)
         {
             if (!_bliEnabled) return;
+            await _logger.LogDetailAsync($"IPTI Controller - Show BLI - BLI Enabled");
             var bli = new Ipti_BLI(_neutronVariables.BliController, address, beacon, text);
-            ShowBli(bli);
+            await ShowBli(bli);
         }
 
         public int GetInitStatus()
@@ -334,8 +350,8 @@ namespace Neutron.Controllers
                             _serialPort.Write(request, 0, request.Length);
                             _responseManager.Transmitting = true;
                             Thread.Sleep(50);
-                           
-                            
+
+
                             // break;
                             //    }
                             //    Thread.Sleep(i * 20);
@@ -507,12 +523,12 @@ namespace Neutron.Controllers
                 if (!serialPort.IsOpen) return;
 
                 _responseManager.Transmitting = false;
-               
+
                 var actualLength = _serialPort.BaseStream.EndRead(result);
                 var received = new byte[actualLength];
                 Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
                 _ = _logger.LogDetailAsync($"OnResult: {received.ByteArrayToStringX2()}");
-                 Mediator.GetInstance().OnSerialPortWrite(this, $"OnResult False  {received.ByteArrayToStringX2()}");
+                Mediator.GetInstance().OnSerialPortWrite(this, $"OnResult False  {received.ByteArrayToStringX2()}");
                 ReceivedBlockingCollection.Add(received);
             }
             catch (IOException ex)

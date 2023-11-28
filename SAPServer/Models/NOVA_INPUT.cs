@@ -8,7 +8,7 @@ namespace SAPServer.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Int32 TRANSID { get; set; }
+        public decimal TRANSID { get; set; }
 
         [StringLength(2)]
         public string TRANSTYPE { get; set; }

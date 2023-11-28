@@ -128,6 +128,7 @@
     <Compile Include="Models\LookUp.cs" />
     <Compile Include="Models\Lookups\DeviceType.cs" />
     <Compile Include="Models\LocationType.cs" />
+    <Compile Include="Models\NeutronInput.cs" />
     <Compile Include="Models\StorageDevice.cs" />
     <Compile Include="Models\GroupUser.cs" />
     <Compile Include="Models\HostOrderLine.cs" />

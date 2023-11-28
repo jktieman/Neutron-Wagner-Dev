@@ -28,13 +28,8 @@ namespace SAPServer
 
             try
             {
-                _ = _logger.LogDetailAsync($"Testing: SAP to Nova Goods Issue Stopped EARLY.  UnComment so processing can continue normally.");
 
                 RfcRepository repo = destination.Repository;
-
-                // Testing
-                return;
-
 
                 IRfcFunction sapToNeutronList = repo.CreateFunction("ZWM_SAP_TO_NOVA_GOODS_ISSUE");
 

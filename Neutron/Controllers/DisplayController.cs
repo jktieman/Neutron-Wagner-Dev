@@ -271,21 +271,21 @@ namespace Neutron.Controllers
             }
         }
 
-        public void ShowBli(int address, int beacon, string text)
+        public async Task ShowBli(int address, int beacon, string text)
         {
             if (_bliEnabled)
             {
-                Task.Run(() => _logger.LogDetailAsync($"BLI Address: {address}"));
+                await _logger.LogDetailAsync($"BLI Address: {address}");
                 var bli = new Hart_BLI(address, 2, text);
                 if (!blisOn.Contains(bli))
                 {
                     blisOn.Add(bli);
                 }
-                Task.Run(() => _logger.LogDetailAsync($"BLI On: {bli.BLI_Address}"));
+                await _logger.LogDetailAsync($"BLI On: {bli.BLI_Address}");
                 Thread.Sleep(10);
                 if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}{Environment.NewLine} {_cError}"));
+                    await _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}{Environment.NewLine} {_cError}");
                 }
             }
         }
@@ -472,29 +472,29 @@ namespace Neutron.Controllers
         //    }
         //}
 
-        public void ShowBli(Ipti_BLI bli)
+        public Task ShowBli(Ipti_BLI bli)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public void ClearBli(Ipti_BLI bli)
+        public Task ClearBli(Ipti_BLI bli)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public void ShowBlastzone(int bayController, int address, int beacon, string text)
+        public Task ShowBlastzone(int bayController, int address, int beacon, string text)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public void ShowBli(int bayControllerId, int address, int beacon, string text)
+        public Task ShowBli(int bayControllerId, int address, int beacon, string text)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public void ClearBlastzone()
+        public Task ClearBlastzone()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public void ShowOc(int bayControllerId, int address, int beacon, string text)
@@ -507,14 +507,19 @@ namespace Neutron.Controllers
             throw new NotImplementedException();
         }
 
-        public void ShowBlastzoneOc(int bayController, int address, int beacon, string text)
+        public Task ShowBlastzoneOc(int bayController, int address, int beacon, string text)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public void ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
+        public Task ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
+        }
+
+        public Task TurnOnAllBlastzones()
+        {
+            return Task.CompletedTask;
         }
     }
 }

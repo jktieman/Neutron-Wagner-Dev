@@ -210,28 +210,24 @@ namespace SAPServer
                 sapToNeutronGoodsIssue.Get(_rfcDestination);
                 _ = _logger.LogDetailAsync($"Receive Goods Issue - Complete");
                 Thread.Sleep(500);
-            
-            //Testing
-                _ = _logger.LogDetailAsync($"Testing: All processes stopped early UnComment from here down when finished.");
 
+                _ = _logger.LogDetailAsync($"Transmit  Goods Issue - Start");
+                var neutronToSapGoodsIssue = new NeutronToSapGoodsIssue(_logger);
+                neutronToSapGoodsIssue.Set(_rfcDestination);
+                _ = _logger.LogDetailAsync($"Transmit  Goods Issue - Complete");
+                Thread.Sleep(500);
 
-                //_ = _logger.LogDetailAsync($"Transmit  Goods Issue - Start");
-                //var neutronToSapGoodsIssue = new NeutronToSapGoodsIssue(_logger);
-                //neutronToSapGoodsIssue.Set(_rfcDestination);
-                //_ = _logger.LogDetailAsync($"Transmit  Goods Issue - Complete");
-                //Thread.Sleep(500);
+                _ = _logger.LogDetailAsync($"Receive Goods Receipts - Start");
+                var sapToNeutronGoodsReceipt = new SapToNeutronGoodsReceipt(_jsonData, _logger);
+                sapToNeutronGoodsReceipt.Get(_rfcDestination);
+                _ = _logger.LogDetailAsync($"Receive  Goods Receipts - Complete");
+                Thread.Sleep(500);
 
-                //_ = _logger.LogDetailAsync($"Receive Goods Receipts - Start");
-                //var sapToNeutronGoodsReceipt = new SapToNeutronGoodsReceipt(_jsonData, _logger);
-                //sapToNeutronGoodsReceipt.Get(_rfcDestination);
-                //_ = _logger.LogDetailAsync($"Receive  Goods Receipts - Complete");
-                //Thread.Sleep(500);
-
-                //_ = _logger.LogDetailAsync($"Transmit  Goods Receipts - Start");
-                //var neutronToSapGoodsReceipt = new NeutronToSapGoodsReceipt(_logger);
-                //neutronToSapGoodsReceipt.Set(_rfcDestination);
-                //_ = _logger.LogDetailAsync($"Transmit  Goods Receipts - Complete");
-                //Thread.Sleep(500);
+                _ = _logger.LogDetailAsync($"Transmit  Goods Receipts - Start");
+                var neutronToSapGoodsReceipt = new NeutronToSapGoodsReceipt(_logger);
+                neutronToSapGoodsReceipt.Set(_rfcDestination);
+                _ = _logger.LogDetailAsync($"Transmit  Goods Receipts - Complete");
+                Thread.Sleep(500);
             }
 
             _ = _logger.LogDetailAsync($"End Processing Records.");

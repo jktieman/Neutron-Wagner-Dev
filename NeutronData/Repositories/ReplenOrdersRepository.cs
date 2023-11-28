@@ -880,9 +880,9 @@ namespace NeutronData.Repositories
         private int[] GetOrderIdArray(List<BatchPosition> ordersToPick)
         {
             var orderIds = new List<int>();
-            foreach (BatchPosition bp in ordersToPick)
+            foreach (var bp in ordersToPick)
             {
-                if (bp.OrderId != null)
+                if (bp.OrderId != 0)
                 {
                     orderIds.Add(Convert.ToInt32(bp.OrderId));
                 }

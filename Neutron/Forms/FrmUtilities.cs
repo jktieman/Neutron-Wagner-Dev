@@ -3016,7 +3016,7 @@ namespace Neutron.Forms
             var backNumber = TextBoxProLiteBack.Text.ParseInt();
             var quantity = TextBoxProLiteQuantity.Text.ParseInt();
 
-            _workstationView.ProLiteManager.TurnOn(deviceNumber, overNumber, backNumber, quantity);
+            _workstationView.ProLiteManager?.TurnOn(deviceNumber, overNumber, backNumber, quantity);
         }
 
         private void ButtonProLiteTurnOff_Click(object sender, EventArgs e)
@@ -3026,7 +3026,7 @@ namespace Neutron.Forms
             var backNumber = TextBoxProLiteBack.Text.ParseInt();
             var quantity = TextBoxProLiteQuantity.Text.ParseInt();
 
-            _workstationView.ProLiteManager.ClearProlite(deviceNumber);
+            _workstationView.ProLiteManager?.ClearProlite(deviceNumber);
         }
 
         private void MBProLiteTester_Click(object sender, EventArgs e)
@@ -3061,7 +3061,7 @@ namespace Neutron.Forms
         {
             var deviceNumber = TextBoxProLiteDeviceNumber.Text.ParseInt();
 
-            _workstationView.ProLiteManager.TurnOnHot(deviceNumber);
+            _workstationView.ProLiteManager?.TurnOnHot(deviceNumber);
         }
 
         private void ButtonProLiteTurnOnCycleCount_Click(object sender, EventArgs e)
@@ -3070,7 +3070,7 @@ namespace Neutron.Forms
             var overNumber = TextBoxProLiteOver.Text.ParseInt();
             var backNumber = TextBoxProLiteBack.Text.ParseInt();
 
-            _workstationView.ProLiteManager.TurnOnBlindCycle(deviceNumber, overNumber, backNumber);
+            _workstationView.ProLiteManager?.TurnOnBlindCycle(deviceNumber, overNumber, backNumber);
         }
 
         private void MBSapServer_Click(object sender, EventArgs e)
@@ -3131,6 +3131,43 @@ namespace Neutron.Forms
             
 
             _jsonData.SaveFile<SapVariables>(sapVariables);
+        }
+
+        private void ButtonBatchLightTurnOn_Click(object sender, EventArgs e)
+        {
+            GlobalVar.Displays.ShowBli(_neutronVariables.BliController
+                , TextBoxBatchLightPosition.Text.ParseInt(), 1, TextBoxBatchLightQuantity.Text);
+        }
+
+        private void ButtonBatchLightTurnOff_Click(object sender, EventArgs e)
+        {
+            GlobalVar.Displays.ClearAllBli();
+        }
+
+        private void MBBatchLightTester_Click(object sender, EventArgs e)
+        {
+            LabelFormTitle.Text = "Batch Light Tester";
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+
+            if (GlobalVar.Displays == null)
+            {
+                ButtonBatchLightTurnOn.Enabled = false;
+                ButtonBatchLightTurnOff.Enabled = false;
+            }
+            else
+            {
+                ButtonBatchLightTurnOn.Enabled = true;
+                ButtonBatchLightTurnOff.Enabled = true;
+                ButtonProLiteTurnOnHot.Enabled = true;
+                ButtonProLiteTurnOnCycleCount.Enabled = true;
+            }
+
+            tabControl1.SelectedTab = BatchLights;
+        }
+
+        private void MBBatchLightBack_Click(object sender, EventArgs e)
+        {
+            BackToMain();
         }
     }
 }

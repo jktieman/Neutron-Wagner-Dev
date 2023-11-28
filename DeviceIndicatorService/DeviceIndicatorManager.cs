@@ -42,7 +42,7 @@ namespace DeviceIndicatorService
             _panelSize = panelSize;
             _neutronVariables = neutronVariables;
              _logger = Logger.SetupLogger(@"DeviceIndicators");
-            Task.Run(Init);
+            _ = Task.Run(Init);
         }
 
         //private void SetupLogger()

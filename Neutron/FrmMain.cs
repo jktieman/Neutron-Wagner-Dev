@@ -141,7 +141,7 @@ namespace Neutron
             Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
             Mediator.GetInstance().SendEmailMessage += (s, e) => _sendEmail.Message(e.Message, _logger.LastLogLines());
 
-            
+            //TODO Remove this or change to false for Production
             GlobalVar.Testing = true;
 
             //Log on to Neutron
@@ -156,7 +156,7 @@ namespace Neutron
             var result = await InitForm();
             await _logger.LogDetailAsync($"Init Result: {result}");
 
-            
+
             if (result == false)
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
@@ -212,7 +212,7 @@ namespace Neutron
             {
                 _sendEmail.Message(message, _logger.LastLogLines());
             }
-        } 
+        }
         #endregion
         private async Task<bool> InitForm()
         {
@@ -303,7 +303,6 @@ namespace Neutron
 
             return result;
         }
-
         private async Task SetupHardwareDevices()
         {
             // get all the hardware devices on this workstation; carousel, lights scale, etc
@@ -361,14 +360,14 @@ namespace Neutron
                                         // ReSharper disable once UseObjectOrCollectionInitializer
                                         GlobalVar.Displays =
                                             new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device);
-                                        //GlobalVar.Displays.MySerialDataReceived += ProcessDataReceived;
-                                        var result = GlobalVar.Displays != null;
+                                        if (GlobalVar.Displays == null)
+                                        {
+                                            Mediator.GetInstance().OnDisplayMessage(this, $"Batch Pick Displays were unable to initialize.");
+                                        }
 
                                         if (GlobalVar.Testing)
                                         {
-                                            Mediator.GetInstance().OnDisplayMessage(this, $"Display Testing");
-                                        
-                                        await TestBli();
+                                          //  await TestBli();
                                         }
                                     }
                                 }
@@ -463,8 +462,8 @@ namespace Neutron
                                 }
 
                                 await _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
-                                
-                                
+
+
                                 _workstationView.ProLiteManager.AddProlite(device.Id, device.Name, device.DeviceNumber, device.Enabled);
                                 break;
                             }
@@ -476,7 +475,6 @@ namespace Neutron
                 await _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}");
             }
         }
-
         private void SetupEmail()
         {
             if (_neutronVariables.EnableEmailNotification)
@@ -494,7 +492,6 @@ namespace Neutron
                 }
             }
         }
-
         private bool StartLoader()
         {
             var result = false;
@@ -516,12 +513,10 @@ namespace Neutron
             {
                 MessageBox.Show(
                     $"The Loader has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                result = false;
             }
 
             return result;
         }
-
         private bool StartUpload()
         {
             var result = false;
@@ -548,6 +543,8 @@ namespace Neutron
 
             return result;
         }
+
+        #region UnUsed
 
         private bool CreateLog(string name, int stationNumber)
         {
@@ -736,17 +733,18 @@ namespace Neutron
 
             return result;
         }
-
         public void ShowMessage(string msg)
         {
             MessageBox.Show(msg);
         }
-
         public void UpdateInitStatus(bool success, int percentage)
         {
             MessageBox.Show($"Success: {success}  Percent: {percentage}%");
         }
 
+        #endregion
+
+        #region Slot Factory
         private bool SetupSlotFactory()
         {
             bool result;
@@ -781,6 +779,9 @@ namespace Neutron
             return result;
         }
 
+        #endregion
+
+        #region Login/Logout Functions
         public void SetMtLogOffText()
         {
             MtLogOff.Text = _resourceManager.GetString("LogOn");
@@ -803,127 +804,15 @@ namespace Neutron
                 LogOn();
             }
         }
-        //else
-        //{
-        //    try
-        //    {
-        //        MtLogOff.Text = "Log Off";
-        //        if (neutronVariables.PinLoginOnly)
-        //        {
-        //            using (var frm = new FrmPin())
-        //            {
-        //                DialogResult result = frm.ShowDialog();
-        //                if (result == DialogResult.OK)
-        //                {
-        //                    currentUser = frm.CurrentUser;
-        //                    mlUserInfo.Text = currentUser.UserInfo;
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            using (var frm = new FrmLogin())
-        //            {
-        //                DialogResult result = frm.ShowDialog();
-        //                if (result == DialogResult.OK)
-        //                {
-        //                    currentUser = frm.CurrentUser;
-        //                    mlUserInfo.Text = currentUser.UserInfo;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Login Error " + ex.Message);
-        //    }
-        //}
-        //if (currentUser != null)
-        //{
-        //    GlobalVar.User = currentUser;
-        //    securityProcessor.ReprocessSecuritySet(currentUser.Pin);
-        //}
-        // }
 
         private void LogOff()
         {
-            //if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
-            //{
-            // MtLogOff.Text = _resourceManager.GetString("LogOn");
             GlobalVar.User = null;
             _currentUser = null;
             mlUserInfo.Text = "";
             _securityProcessor.ReprocessSecuritySet("");
             _lacProcessor.ReprocessLacSet(0);
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        MtLogOff.Text = _resourceManager.GetString("LogOff");
-            //        if (_neutronVariables.PinLoginOnly)
-            //        {
-            //            using (var frm = new FrmPin())
-            //            {
-            //                DialogResult result = frm.ShowDialog();
-            //                if (result == DialogResult.OK)
-            //                {
-            //                    _currentUser = frm.CurrentUser;
-
-            //                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            using (var frm = new FrmLogin())
-            //            {
-            //                DialogResult result = frm.ShowDialog();
-            //                if (result == DialogResult.OK)
-            //                {
-            //                    _currentUser = frm.CurrentUser;
-            //                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
-            //                }
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show(@"Login Error " + ex.Message);
-            //    }
-            //}
-
-            //if (_currentUser != null)
-            //{
-            //    GlobalVar.User = _currentUser;
-            //    if (_currentUser.Pin == "2277")
-            //    {
-            //        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            //        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            //    }
-            //    else
-            //    {
-            //        var cultureInfo = GlobalVar.User.Language.CultureInfo;
-            //        if (cultureInfo.Length == 5 && cultureInfo.Contains('-'))
-            //        {
-            //            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(cultureInfo);
-            //            Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureInfo);
-
-            //        }
-            //        else
-            //        {
-            //            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            //            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            //        }
-            //    }
-
-            //    _cultureInfo = Thread.CurrentThread.CurrentCulture;
-            //    SetCulture(_cultureInfo.Name);
-            //   _securityProcessor.ReprocessSecuritySet(GlobalVar.User.Pin);
-            //    _lacProcessor.ReprocessLacSet(GlobalVar.User.Id);
-            //}
         }
-
         private void LogOn()
         {
             try
@@ -993,6 +882,7 @@ namespace Neutron
                 _lacProcessor.ReprocessLacSet(GlobalVar.User.Id);
             }
         }
+        #endregion
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -1296,13 +1186,36 @@ namespace Neutron
 
         private async Task TestBli()
         {
+
+            await GlobalVar.Displays.ClearBlastzone();
+            _workstationView.ProLiteManager?.ClearProlite(1);
+            await Task.Delay(3000);
+
+            _workstationView.ProLiteManager?.TurnOn(1, 2, 2, 6);
             await _logger.LogDetailAsync($"button1_Click IPTI Displays ");
+            
             await GlobalVar.Displays.TurnOnAllBli();
-            await _logger.LogDetailAsync($"button1_Click IPTI Displays Turned On");
-            await Task.Delay(5000);
-            await _logger.LogDetailAsync($"button1_Click IPTI Displays Turn Off");
+            await Task.Delay(3000);
+
             await GlobalVar.Displays.ClearAllBli();
             await _logger.LogDetailAsync($"button1_Click IPTI Displays Turned Off");
+            await Task.Delay(3000);
+            
+            await _logger.LogDetailAsync($"Blastzone 1 IPTI Displays Turn On");
+            await GlobalVar.Displays.ShowBlastzone(2, 2, 2, "21");
+            await GlobalVar.Displays.ShowBlastzone(2, 1, 2, "11");
+            await Task.Delay(3000);
+
+            await GlobalVar.Displays.ClearBlastzone();
+            await Task.Delay(3000);            
+            
+            await GlobalVar.Displays.TurnOnAllBlastzones();
+            await Task.Delay(3000);
+
+            await GlobalVar.Displays.ClearBlastzone();
+            _workstationView.ProLiteManager?.ClearProlite(1);
+            await Task.Delay(3000);
+
         }
     }
 }

@@ -6,7 +6,7 @@
         private string _bayId;
         private string _turnOn = "33";
         private string _turnOff = "14";
-        private string _turnAllOff = "03";
+        private string _turnAllOff = "1400";
         private const string FourSpaces = "    ";
         private const string EndOfLine = "00000000120012000";
 

@@ -51,6 +51,7 @@
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
+            this.MBSapServer = new MetroFramework.Controls.MetroButton();
             this.MBProLiteTester = new MetroFramework.Controls.MetroButton();
             this.LabelVersionLabel = new System.Windows.Forms.Label();
             this.LabelVersion = new System.Windows.Forms.Label();
@@ -461,58 +462,69 @@
             this.TextBoxProLiteDeviceNumber = new System.Windows.Forms.TextBox();
             this.TextBoxProLiteBack = new System.Windows.Forms.TextBox();
             this.TextBoxProLiteOver = new System.Windows.Forms.TextBox();
+            this.SapServer = new System.Windows.Forms.TabPage();
+            this.LabelSapServerTitle = new System.Windows.Forms.Label();
+            this.MBSapServerBack = new MetroFramework.Controls.MetroButton();
+            this.MBSapServerSave = new MetroFramework.Controls.MetroButton();
+            this.PanelSapServer = new System.Windows.Forms.Panel();
+            this.TextBoxSapServerConnectionIdleTimeout = new System.Windows.Forms.TextBox();
+            this.LabelSapServerConnectionIdleTimeout = new System.Windows.Forms.Label();
+            this.TextBoxSapServerPeakConnectionsLimit = new System.Windows.Forms.TextBox();
+            this.LabelSapServerPeakConnections = new System.Windows.Forms.Label();
+            this.TextBoxSapServerEmail2 = new System.Windows.Forms.TextBox();
+            this.TextBoxSapServerSystemNumber = new System.Windows.Forms.TextBox();
+            this.LabelSapServerEmail2 = new System.Windows.Forms.Label();
+            this.TextBoxSapServerLanguage = new System.Windows.Forms.TextBox();
+            this.LabelSapServerSystemNumber = new System.Windows.Forms.Label();
+            this.TextBoxSapServerPoolSize = new System.Windows.Forms.TextBox();
+            this.TextBoxSapServerSapBusyFile = new System.Windows.Forms.TextBox();
+            this.TextBoxSapServerPassword = new System.Windows.Forms.TextBox();
+            this.TextBoxSapServerEmail1 = new System.Windows.Forms.TextBox();
+            this.LabelSapServerLanguage = new System.Windows.Forms.Label();
+            this.TextBoxSapServerAppServerHost = new System.Windows.Forms.TextBox();
+            this.LabelSapServerPoolSize = new System.Windows.Forms.Label();
+            this.LabelSapServerSapBusyFile = new System.Windows.Forms.Label();
+            this.TextBoxSapServerEmail3 = new System.Windows.Forms.TextBox();
+            this.LabelSapServerPassword = new System.Windows.Forms.Label();
+            this.LabelSapServerEmail1 = new System.Windows.Forms.Label();
+            this.TextBoxSapServerClient = new System.Windows.Forms.TextBox();
+            this.LabelSapServerAppServerHost = new System.Windows.Forms.Label();
+            this.LabelSapServerEmail3 = new System.Windows.Forms.Label();
+            this.TextBoxSapServerNeutronBusyFile = new System.Windows.Forms.TextBox();
+            this.LabelSapServerClient = new System.Windows.Forms.Label();
+            this.LabelSapServerNeutronBusyFile = new System.Windows.Forms.Label();
+            this.TextBoxSapServerUsername = new System.Windows.Forms.TextBox();
+            this.LabelSapServerUsername = new System.Windows.Forms.Label();
+            this.TextBoxSapServerEndMinute = new System.Windows.Forms.TextBox();
+            this.LabelSapServerEndMinute = new System.Windows.Forms.Label();
+            this.TextBoxSapServerStartMinute = new System.Windows.Forms.TextBox();
+            this.LabelSapServerStartMinute = new System.Windows.Forms.Label();
+            this.TextBoxSapServerEndHour = new System.Windows.Forms.TextBox();
+            this.TextBoxSapServerSleepTime = new System.Windows.Forms.TextBox();
+            this.TextBoxSapServerStartHour = new System.Windows.Forms.TextBox();
+            this.LabelSapServerEndHour = new System.Windows.Forms.Label();
+            this.LabelSapServerSleepTime = new System.Windows.Forms.Label();
+            this.LabelSapServerStartHour = new System.Windows.Forms.Label();
+            this.TextBoxSapServerName = new System.Windows.Forms.TextBox();
+            this.LabelSapServerName = new System.Windows.Forms.Label();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.SapServer = new System.Windows.Forms.TabPage();
-            this.LabelSapServerTitle = new System.Windows.Forms.Label();
-            this.MBSapServerBack = new MetroFramework.Controls.MetroButton();
-            this.MBSapServerSave = new MetroFramework.Controls.MetroButton();
-            this.PanelSapServer = new System.Windows.Forms.Panel();
-            this.TextBoxSapServerName = new System.Windows.Forms.TextBox();
-            this.LabelSapServerName = new System.Windows.Forms.Label();
-            this.LabelSapServerSleepTime = new System.Windows.Forms.Label();
-            this.TextBoxSapServerSleepTime = new System.Windows.Forms.TextBox();
-            this.LabelSapServerStartHour = new System.Windows.Forms.Label();
-            this.TextBoxSapServerStartHour = new System.Windows.Forms.TextBox();
-            this.LabelSapServerStartMinute = new System.Windows.Forms.Label();
-            this.TextBoxSapServerStartMinute = new System.Windows.Forms.TextBox();
-            this.LabelSapServerEndHour = new System.Windows.Forms.Label();
-            this.TextBoxSapServerEndHour = new System.Windows.Forms.TextBox();
-            this.LabelSapServerEndMinute = new System.Windows.Forms.Label();
-            this.TextBoxSapServerEndMinute = new System.Windows.Forms.TextBox();
-            this.TextBoxSapServerPassword = new System.Windows.Forms.TextBox();
-            this.LabelSapServerPassword = new System.Windows.Forms.Label();
-            this.TextBoxSapServerUsername = new System.Windows.Forms.TextBox();
-            this.LabelSapServerUsername = new System.Windows.Forms.Label();
-            this.LabelSapServerAppServerHost = new System.Windows.Forms.Label();
-            this.TextBoxSapServerAppServerHost = new System.Windows.Forms.TextBox();
-            this.LabelSapServerSystemNumber = new System.Windows.Forms.Label();
-            this.TextBoxSapServerSystemNumber = new System.Windows.Forms.TextBox();
-            this.LabelSapServerClient = new System.Windows.Forms.Label();
-            this.TextBoxSapServerClient = new System.Windows.Forms.TextBox();
-            this.LabelSapServerPoolSize = new System.Windows.Forms.Label();
-            this.LabelSapServerLanguage = new System.Windows.Forms.Label();
-            this.TextBoxSapServerPoolSize = new System.Windows.Forms.TextBox();
-            this.TextBoxSapServerLanguage = new System.Windows.Forms.TextBox();
-            this.LabelSapServerPeakConnections = new System.Windows.Forms.Label();
-            this.TextBoxSapServerPeakConnectionsLimit = new System.Windows.Forms.TextBox();
-            this.LabelSapServerConnectionIdleTimeout = new System.Windows.Forms.Label();
-            this.TextBoxSapServerConnectionIdleTimeout = new System.Windows.Forms.TextBox();
-            this.LabelSapServerNeutronBusyFile = new System.Windows.Forms.Label();
-            this.TextBoxSapServerNeutronBusyFile = new System.Windows.Forms.TextBox();
-            this.LabelSapServerSapBusyFile = new System.Windows.Forms.Label();
-            this.TextBoxSapServerSapBusyFile = new System.Windows.Forms.TextBox();
-            this.MBSapServer = new MetroFramework.Controls.MetroButton();
-            this.LabelSapServerEmail3 = new System.Windows.Forms.Label();
-            this.LabelSapServerEmail1 = new System.Windows.Forms.Label();
-            this.TextBoxSapServerEmail3 = new System.Windows.Forms.TextBox();
-            this.TextBoxSapServerEmail1 = new System.Windows.Forms.TextBox();
-            this.LabelSapServerEmail2 = new System.Windows.Forms.Label();
-            this.TextBoxSapServerEmail2 = new System.Windows.Forms.TextBox();
+            this.MBBatchLightTester = new MetroFramework.Controls.MetroButton();
+            this.BatchLights = new System.Windows.Forms.TabPage();
+            this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.LabelBatchLightTester = new System.Windows.Forms.Label();
+            this.ButtonBatchLightTurnOff = new System.Windows.Forms.Button();
+            this.ButtonBatchLightTurnOn = new System.Windows.Forms.Button();
+            this.LabelBatchLightQuantity = new System.Windows.Forms.Label();
+            this.LabelBatchPosition = new System.Windows.Forms.Label();
+            this.TextBoxBatchLightQuantity = new System.Windows.Forms.TextBox();
+            this.TextBoxBatchLightPosition = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -572,9 +584,12 @@
             this.ProLite.SuspendLayout();
             this.PanelProLite.SuspendLayout();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SapServer.SuspendLayout();
             this.PanelSapServer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.BatchLights.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel10.SuspendLayout();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -600,6 +615,7 @@
             this.tabControl1.Controls.Add(this.EmailAddresses);
             this.tabControl1.Controls.Add(this.ProLite);
             this.tabControl1.Controls.Add(this.SapServer);
+            this.tabControl1.Controls.Add(this.BatchLights);
             this.tabControl1.Location = new System.Drawing.Point(22, 84);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
@@ -611,6 +627,7 @@
             // 
             this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.Main.Controls.Add(this.MBSapServer);
+            this.Main.Controls.Add(this.MBBatchLightTester);
             this.Main.Controls.Add(this.MBProLiteTester);
             this.Main.Controls.Add(this.LabelVersionLabel);
             this.Main.Controls.Add(this.LabelVersion);
@@ -630,6 +647,18 @@
             this.Main.Size = new System.Drawing.Size(1227, 636);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
+            // 
+            // MBSapServer
+            // 
+            this.MBSapServer.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBSapServer.Location = new System.Drawing.Point(957, 270);
+            this.MBSapServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBSapServer.Name = "MBSapServer";
+            this.MBSapServer.Size = new System.Drawing.Size(241, 84);
+            this.MBSapServer.TabIndex = 33;
+            this.MBSapServer.Text = "SAP Server";
+            this.MBSapServer.UseSelectable = true;
+            this.MBSapServer.Click += new System.EventHandler(this.MBSapServer_Click);
             // 
             // MBProLiteTester
             // 
@@ -5653,50 +5682,6 @@
             this.TextBoxProLiteOver.Text = "1";
             this.TextBoxProLiteOver.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelFormTitle
-            // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
-            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
-            this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
-            this.LabelFormTitle.TabIndex = 22;
-            this.LabelFormTitle.Text = "Utilities";
-            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // mlUserInfo
-            // 
-            this.mlUserInfo.Location = new System.Drawing.Point(911, 10);
-            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(342, 30);
-            this.mlUserInfo.TabIndex = 21;
-            this.mlUserInfo.Text = "Login ?";
-            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelFormHeaderText
-            // 
-            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(5, 9);
-            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
-            this.LabelFormHeaderText.TabIndex = 20;
-            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
-            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // errorProvider
-            // 
-            this.errorProvider.ContainerControl = this;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // SapServer
             // 
             this.SapServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -5796,131 +5781,122 @@
             this.PanelSapServer.Size = new System.Drawing.Size(1145, 444);
             this.PanelSapServer.TabIndex = 37;
             // 
-            // TextBoxSapServerName
+            // TextBoxSapServerConnectionIdleTimeout
             // 
-            this.TextBoxSapServerName.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerName.Location = new System.Drawing.Point(204, 31);
-            this.TextBoxSapServerName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerName.Name = "TextBoxSapServerName";
-            this.TextBoxSapServerName.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerName.TabIndex = 0;
-            this.TextBoxSapServerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSapServerConnectionIdleTimeout.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerConnectionIdleTimeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerConnectionIdleTimeout.Location = new System.Drawing.Point(1012, 103);
+            this.TextBoxSapServerConnectionIdleTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerConnectionIdleTimeout.Name = "TextBoxSapServerConnectionIdleTimeout";
+            this.TextBoxSapServerConnectionIdleTimeout.Size = new System.Drawing.Size(99, 26);
+            this.TextBoxSapServerConnectionIdleTimeout.TabIndex = 1;
+            this.TextBoxSapServerConnectionIdleTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelSapServerName
+            // LabelSapServerConnectionIdleTimeout
             // 
-            this.LabelSapServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerName.Location = new System.Drawing.Point(14, 26);
-            this.LabelSapServerName.Name = "LabelSapServerName";
-            this.LabelSapServerName.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerName.TabIndex = 0;
-            this.LabelSapServerName.Text = "SAP Server Name";
-            this.LabelSapServerName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelSapServerConnectionIdleTimeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerConnectionIdleTimeout.Location = new System.Drawing.Point(785, 98);
+            this.LabelSapServerConnectionIdleTimeout.Name = "LabelSapServerConnectionIdleTimeout";
+            this.LabelSapServerConnectionIdleTimeout.Size = new System.Drawing.Size(221, 36);
+            this.LabelSapServerConnectionIdleTimeout.TabIndex = 2;
+            this.LabelSapServerConnectionIdleTimeout.Text = "Connection Idle Timeout";
+            this.LabelSapServerConnectionIdleTimeout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerSleepTime
+            // TextBoxSapServerPeakConnectionsLimit
             // 
-            this.LabelSapServerSleepTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerSleepTime.Location = new System.Drawing.Point(14, 62);
-            this.LabelSapServerSleepTime.Name = "LabelSapServerSleepTime";
-            this.LabelSapServerSleepTime.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerSleepTime.TabIndex = 0;
-            this.LabelSapServerSleepTime.Text = "Sleep Time";
-            this.LabelSapServerSleepTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerPeakConnectionsLimit.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerPeakConnectionsLimit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerPeakConnectionsLimit.Location = new System.Drawing.Point(1012, 67);
+            this.TextBoxSapServerPeakConnectionsLimit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerPeakConnectionsLimit.Name = "TextBoxSapServerPeakConnectionsLimit";
+            this.TextBoxSapServerPeakConnectionsLimit.Size = new System.Drawing.Size(99, 26);
+            this.TextBoxSapServerPeakConnectionsLimit.TabIndex = 1;
+            this.TextBoxSapServerPeakConnectionsLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxSapServerSleepTime
+            // LabelSapServerPeakConnections
             // 
-            this.TextBoxSapServerSleepTime.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerSleepTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerSleepTime.Location = new System.Drawing.Point(204, 67);
-            this.TextBoxSapServerSleepTime.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerSleepTime.Name = "TextBoxSapServerSleepTime";
-            this.TextBoxSapServerSleepTime.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerSleepTime.TabIndex = 0;
-            this.TextBoxSapServerSleepTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelSapServerPeakConnections.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerPeakConnections.Location = new System.Drawing.Point(785, 62);
+            this.LabelSapServerPeakConnections.Name = "LabelSapServerPeakConnections";
+            this.LabelSapServerPeakConnections.Size = new System.Drawing.Size(221, 36);
+            this.LabelSapServerPeakConnections.TabIndex = 2;
+            this.LabelSapServerPeakConnections.Text = "Peak Connections Limit";
+            this.LabelSapServerPeakConnections.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerStartHour
+            // TextBoxSapServerEmail2
             // 
-            this.LabelSapServerStartHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerStartHour.Location = new System.Drawing.Point(14, 98);
-            this.LabelSapServerStartHour.Name = "LabelSapServerStartHour";
-            this.LabelSapServerStartHour.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerStartHour.TabIndex = 0;
-            this.LabelSapServerStartHour.Text = "Start Hour";
-            this.LabelSapServerStartHour.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerEmail2.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerEmail2.Location = new System.Drawing.Point(597, 247);
+            this.TextBoxSapServerEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerEmail2.Name = "TextBoxSapServerEmail2";
+            this.TextBoxSapServerEmail2.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxSapServerEmail2.TabIndex = 1;
+            this.TextBoxSapServerEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxSapServerStartHour
+            // TextBoxSapServerSystemNumber
             // 
-            this.TextBoxSapServerStartHour.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerStartHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerStartHour.Location = new System.Drawing.Point(204, 103);
-            this.TextBoxSapServerStartHour.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerStartHour.Name = "TextBoxSapServerStartHour";
-            this.TextBoxSapServerStartHour.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerStartHour.TabIndex = 0;
-            this.TextBoxSapServerStartHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSapServerSystemNumber.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerSystemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerSystemNumber.Location = new System.Drawing.Point(597, 67);
+            this.TextBoxSapServerSystemNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerSystemNumber.Name = "TextBoxSapServerSystemNumber";
+            this.TextBoxSapServerSystemNumber.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerSystemNumber.TabIndex = 1;
+            this.TextBoxSapServerSystemNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelSapServerStartMinute
+            // LabelSapServerEmail2
             // 
-            this.LabelSapServerStartMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerStartMinute.Location = new System.Drawing.Point(14, 134);
-            this.LabelSapServerStartMinute.Name = "LabelSapServerStartMinute";
-            this.LabelSapServerStartMinute.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerStartMinute.TabIndex = 0;
-            this.LabelSapServerStartMinute.Text = "Start Minute";
-            this.LabelSapServerStartMinute.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelSapServerEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerEmail2.Location = new System.Drawing.Point(498, 242);
+            this.LabelSapServerEmail2.Name = "LabelSapServerEmail2";
+            this.LabelSapServerEmail2.Size = new System.Drawing.Size(93, 36);
+            this.LabelSapServerEmail2.TabIndex = 2;
+            this.LabelSapServerEmail2.Text = "Email2";
+            this.LabelSapServerEmail2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TextBoxSapServerStartMinute
+            // TextBoxSapServerLanguage
             // 
-            this.TextBoxSapServerStartMinute.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerStartMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerStartMinute.Location = new System.Drawing.Point(204, 139);
-            this.TextBoxSapServerStartMinute.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerStartMinute.Name = "TextBoxSapServerStartMinute";
-            this.TextBoxSapServerStartMinute.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerStartMinute.TabIndex = 0;
-            this.TextBoxSapServerStartMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSapServerLanguage.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerLanguage.Location = new System.Drawing.Point(597, 139);
+            this.TextBoxSapServerLanguage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerLanguage.Name = "TextBoxSapServerLanguage";
+            this.TextBoxSapServerLanguage.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerLanguage.TabIndex = 1;
+            this.TextBoxSapServerLanguage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelSapServerEndHour
+            // LabelSapServerSystemNumber
             // 
-            this.LabelSapServerEndHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerEndHour.Location = new System.Drawing.Point(14, 170);
-            this.LabelSapServerEndHour.Name = "LabelSapServerEndHour";
-            this.LabelSapServerEndHour.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerEndHour.TabIndex = 0;
-            this.LabelSapServerEndHour.Text = "End Hour";
-            this.LabelSapServerEndHour.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelSapServerSystemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerSystemNumber.Location = new System.Drawing.Point(416, 62);
+            this.LabelSapServerSystemNumber.Name = "LabelSapServerSystemNumber";
+            this.LabelSapServerSystemNumber.Size = new System.Drawing.Size(175, 36);
+            this.LabelSapServerSystemNumber.TabIndex = 2;
+            this.LabelSapServerSystemNumber.Text = "System Number";
+            this.LabelSapServerSystemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TextBoxSapServerEndHour
+            // TextBoxSapServerPoolSize
             // 
-            this.TextBoxSapServerEndHour.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerEndHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerEndHour.Location = new System.Drawing.Point(204, 175);
-            this.TextBoxSapServerEndHour.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerEndHour.Name = "TextBoxSapServerEndHour";
-            this.TextBoxSapServerEndHour.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerEndHour.TabIndex = 0;
-            this.TextBoxSapServerEndHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSapServerPoolSize.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerPoolSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerPoolSize.Location = new System.Drawing.Point(1012, 31);
+            this.TextBoxSapServerPoolSize.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerPoolSize.Name = "TextBoxSapServerPoolSize";
+            this.TextBoxSapServerPoolSize.Size = new System.Drawing.Size(99, 26);
+            this.TextBoxSapServerPoolSize.TabIndex = 3;
+            this.TextBoxSapServerPoolSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelSapServerEndMinute
+            // TextBoxSapServerSapBusyFile
             // 
-            this.LabelSapServerEndMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerEndMinute.Location = new System.Drawing.Point(14, 206);
-            this.LabelSapServerEndMinute.Name = "LabelSapServerEndMinute";
-            this.LabelSapServerEndMinute.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerEndMinute.TabIndex = 0;
-            this.LabelSapServerEndMinute.Text = "End Minute";
-            this.LabelSapServerEndMinute.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TextBoxSapServerEndMinute
-            // 
-            this.TextBoxSapServerEndMinute.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerEndMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerEndMinute.Location = new System.Drawing.Point(204, 211);
-            this.TextBoxSapServerEndMinute.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerEndMinute.Name = "TextBoxSapServerEndMinute";
-            this.TextBoxSapServerEndMinute.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerEndMinute.TabIndex = 0;
-            this.TextBoxSapServerEndMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSapServerSapBusyFile.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerSapBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerSapBusyFile.Location = new System.Drawing.Point(204, 399);
+            this.TextBoxSapServerSapBusyFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerSapBusyFile.Name = "TextBoxSapServerSapBusyFile";
+            this.TextBoxSapServerSapBusyFile.Size = new System.Drawing.Size(542, 26);
+            this.TextBoxSapServerSapBusyFile.TabIndex = 1;
+            this.TextBoxSapServerSapBusyFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxSapServerPassword
             // 
@@ -5933,6 +5909,69 @@
             this.TextBoxSapServerPassword.TabIndex = 1;
             this.TextBoxSapServerPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // TextBoxSapServerEmail1
+            // 
+            this.TextBoxSapServerEmail1.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerEmail1.Location = new System.Drawing.Point(597, 211);
+            this.TextBoxSapServerEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerEmail1.Name = "TextBoxSapServerEmail1";
+            this.TextBoxSapServerEmail1.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxSapServerEmail1.TabIndex = 3;
+            this.TextBoxSapServerEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelSapServerLanguage
+            // 
+            this.LabelSapServerLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerLanguage.Location = new System.Drawing.Point(416, 134);
+            this.LabelSapServerLanguage.Name = "LabelSapServerLanguage";
+            this.LabelSapServerLanguage.Size = new System.Drawing.Size(175, 36);
+            this.LabelSapServerLanguage.TabIndex = 2;
+            this.LabelSapServerLanguage.Text = "Language";
+            this.LabelSapServerLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxSapServerAppServerHost
+            // 
+            this.TextBoxSapServerAppServerHost.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerAppServerHost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerAppServerHost.Location = new System.Drawing.Point(597, 31);
+            this.TextBoxSapServerAppServerHost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerAppServerHost.Name = "TextBoxSapServerAppServerHost";
+            this.TextBoxSapServerAppServerHost.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerAppServerHost.TabIndex = 3;
+            this.TextBoxSapServerAppServerHost.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelSapServerPoolSize
+            // 
+            this.LabelSapServerPoolSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerPoolSize.Location = new System.Drawing.Point(785, 26);
+            this.LabelSapServerPoolSize.Name = "LabelSapServerPoolSize";
+            this.LabelSapServerPoolSize.Size = new System.Drawing.Size(221, 36);
+            this.LabelSapServerPoolSize.TabIndex = 4;
+            this.LabelSapServerPoolSize.Text = "Pool Size";
+            this.LabelSapServerPoolSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelSapServerSapBusyFile
+            // 
+            this.LabelSapServerSapBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerSapBusyFile.Location = new System.Drawing.Point(14, 394);
+            this.LabelSapServerSapBusyFile.Name = "LabelSapServerSapBusyFile";
+            this.LabelSapServerSapBusyFile.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerSapBusyFile.TabIndex = 2;
+            this.LabelSapServerSapBusyFile.Text = "SAP Busy File";
+            this.LabelSapServerSapBusyFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxSapServerEmail3
+            // 
+            this.TextBoxSapServerEmail3.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerEmail3.Location = new System.Drawing.Point(597, 283);
+            this.TextBoxSapServerEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerEmail3.Name = "TextBoxSapServerEmail3";
+            this.TextBoxSapServerEmail3.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxSapServerEmail3.TabIndex = 3;
+            this.TextBoxSapServerEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // LabelSapServerPassword
             // 
             this.LabelSapServerPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -5942,6 +5981,78 @@
             this.LabelSapServerPassword.TabIndex = 2;
             this.LabelSapServerPassword.Text = "Password";
             this.LabelSapServerPassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelSapServerEmail1
+            // 
+            this.LabelSapServerEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerEmail1.Location = new System.Drawing.Point(498, 206);
+            this.LabelSapServerEmail1.Name = "LabelSapServerEmail1";
+            this.LabelSapServerEmail1.Size = new System.Drawing.Size(93, 36);
+            this.LabelSapServerEmail1.TabIndex = 4;
+            this.LabelSapServerEmail1.Text = "Email1";
+            this.LabelSapServerEmail1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxSapServerClient
+            // 
+            this.TextBoxSapServerClient.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerClient.Location = new System.Drawing.Point(597, 103);
+            this.TextBoxSapServerClient.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerClient.Name = "TextBoxSapServerClient";
+            this.TextBoxSapServerClient.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerClient.TabIndex = 3;
+            this.TextBoxSapServerClient.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelSapServerAppServerHost
+            // 
+            this.LabelSapServerAppServerHost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerAppServerHost.Location = new System.Drawing.Point(416, 26);
+            this.LabelSapServerAppServerHost.Name = "LabelSapServerAppServerHost";
+            this.LabelSapServerAppServerHost.Size = new System.Drawing.Size(175, 36);
+            this.LabelSapServerAppServerHost.TabIndex = 4;
+            this.LabelSapServerAppServerHost.Text = "AppServerHost";
+            this.LabelSapServerAppServerHost.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelSapServerEmail3
+            // 
+            this.LabelSapServerEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerEmail3.Location = new System.Drawing.Point(498, 278);
+            this.LabelSapServerEmail3.Name = "LabelSapServerEmail3";
+            this.LabelSapServerEmail3.Size = new System.Drawing.Size(93, 36);
+            this.LabelSapServerEmail3.TabIndex = 4;
+            this.LabelSapServerEmail3.Text = "Email3";
+            this.LabelSapServerEmail3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxSapServerNeutronBusyFile
+            // 
+            this.TextBoxSapServerNeutronBusyFile.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerNeutronBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerNeutronBusyFile.Location = new System.Drawing.Point(204, 363);
+            this.TextBoxSapServerNeutronBusyFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerNeutronBusyFile.Name = "TextBoxSapServerNeutronBusyFile";
+            this.TextBoxSapServerNeutronBusyFile.Size = new System.Drawing.Size(542, 26);
+            this.TextBoxSapServerNeutronBusyFile.TabIndex = 3;
+            this.TextBoxSapServerNeutronBusyFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelSapServerClient
+            // 
+            this.LabelSapServerClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerClient.Location = new System.Drawing.Point(416, 98);
+            this.LabelSapServerClient.Name = "LabelSapServerClient";
+            this.LabelSapServerClient.Size = new System.Drawing.Size(175, 36);
+            this.LabelSapServerClient.TabIndex = 4;
+            this.LabelSapServerClient.Text = "Client";
+            this.LabelSapServerClient.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelSapServerNeutronBusyFile
+            // 
+            this.LabelSapServerNeutronBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerNeutronBusyFile.Location = new System.Drawing.Point(14, 358);
+            this.LabelSapServerNeutronBusyFile.Name = "LabelSapServerNeutronBusyFile";
+            this.LabelSapServerNeutronBusyFile.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerNeutronBusyFile.TabIndex = 4;
+            this.LabelSapServerNeutronBusyFile.Text = "Neutron Busy File";
+            this.LabelSapServerNeutronBusyFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxSapServerUsername
             // 
@@ -5964,269 +6075,310 @@
             this.LabelSapServerUsername.Text = "User Name";
             this.LabelSapServerUsername.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerAppServerHost
+            // TextBoxSapServerEndMinute
             // 
-            this.LabelSapServerAppServerHost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerAppServerHost.Location = new System.Drawing.Point(416, 26);
-            this.LabelSapServerAppServerHost.Name = "LabelSapServerAppServerHost";
-            this.LabelSapServerAppServerHost.Size = new System.Drawing.Size(175, 36);
-            this.LabelSapServerAppServerHost.TabIndex = 4;
-            this.LabelSapServerAppServerHost.Text = "AppServerHost";
-            this.LabelSapServerAppServerHost.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerEndMinute.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerEndMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerEndMinute.Location = new System.Drawing.Point(204, 211);
+            this.TextBoxSapServerEndMinute.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerEndMinute.Name = "TextBoxSapServerEndMinute";
+            this.TextBoxSapServerEndMinute.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerEndMinute.TabIndex = 0;
+            this.TextBoxSapServerEndMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxSapServerAppServerHost
+            // LabelSapServerEndMinute
             // 
-            this.TextBoxSapServerAppServerHost.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerAppServerHost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerAppServerHost.Location = new System.Drawing.Point(597, 31);
-            this.TextBoxSapServerAppServerHost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerAppServerHost.Name = "TextBoxSapServerAppServerHost";
-            this.TextBoxSapServerAppServerHost.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerAppServerHost.TabIndex = 3;
-            this.TextBoxSapServerAppServerHost.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelSapServerEndMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerEndMinute.Location = new System.Drawing.Point(14, 206);
+            this.LabelSapServerEndMinute.Name = "LabelSapServerEndMinute";
+            this.LabelSapServerEndMinute.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerEndMinute.TabIndex = 0;
+            this.LabelSapServerEndMinute.Text = "End Minute";
+            this.LabelSapServerEndMinute.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerSystemNumber
+            // TextBoxSapServerStartMinute
             // 
-            this.LabelSapServerSystemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerSystemNumber.Location = new System.Drawing.Point(416, 62);
-            this.LabelSapServerSystemNumber.Name = "LabelSapServerSystemNumber";
-            this.LabelSapServerSystemNumber.Size = new System.Drawing.Size(175, 36);
-            this.LabelSapServerSystemNumber.TabIndex = 2;
-            this.LabelSapServerSystemNumber.Text = "System Number";
-            this.LabelSapServerSystemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerStartMinute.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerStartMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerStartMinute.Location = new System.Drawing.Point(204, 139);
+            this.TextBoxSapServerStartMinute.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerStartMinute.Name = "TextBoxSapServerStartMinute";
+            this.TextBoxSapServerStartMinute.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerStartMinute.TabIndex = 0;
+            this.TextBoxSapServerStartMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxSapServerSystemNumber
+            // LabelSapServerStartMinute
             // 
-            this.TextBoxSapServerSystemNumber.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerSystemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerSystemNumber.Location = new System.Drawing.Point(597, 67);
-            this.TextBoxSapServerSystemNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerSystemNumber.Name = "TextBoxSapServerSystemNumber";
-            this.TextBoxSapServerSystemNumber.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerSystemNumber.TabIndex = 1;
-            this.TextBoxSapServerSystemNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelSapServerStartMinute.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerStartMinute.Location = new System.Drawing.Point(14, 134);
+            this.LabelSapServerStartMinute.Name = "LabelSapServerStartMinute";
+            this.LabelSapServerStartMinute.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerStartMinute.TabIndex = 0;
+            this.LabelSapServerStartMinute.Text = "Start Minute";
+            this.LabelSapServerStartMinute.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerClient
+            // TextBoxSapServerEndHour
             // 
-            this.LabelSapServerClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerClient.Location = new System.Drawing.Point(416, 98);
-            this.LabelSapServerClient.Name = "LabelSapServerClient";
-            this.LabelSapServerClient.Size = new System.Drawing.Size(175, 36);
-            this.LabelSapServerClient.TabIndex = 4;
-            this.LabelSapServerClient.Text = "Client";
-            this.LabelSapServerClient.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerEndHour.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerEndHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerEndHour.Location = new System.Drawing.Point(204, 175);
+            this.TextBoxSapServerEndHour.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerEndHour.Name = "TextBoxSapServerEndHour";
+            this.TextBoxSapServerEndHour.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerEndHour.TabIndex = 0;
+            this.TextBoxSapServerEndHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxSapServerClient
+            // TextBoxSapServerSleepTime
             // 
-            this.TextBoxSapServerClient.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerClient.Location = new System.Drawing.Point(597, 103);
-            this.TextBoxSapServerClient.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerClient.Name = "TextBoxSapServerClient";
-            this.TextBoxSapServerClient.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerClient.TabIndex = 3;
-            this.TextBoxSapServerClient.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSapServerSleepTime.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerSleepTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerSleepTime.Location = new System.Drawing.Point(204, 67);
+            this.TextBoxSapServerSleepTime.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerSleepTime.Name = "TextBoxSapServerSleepTime";
+            this.TextBoxSapServerSleepTime.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerSleepTime.TabIndex = 0;
+            this.TextBoxSapServerSleepTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelSapServerPoolSize
+            // TextBoxSapServerStartHour
             // 
-            this.LabelSapServerPoolSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerPoolSize.Location = new System.Drawing.Point(785, 26);
-            this.LabelSapServerPoolSize.Name = "LabelSapServerPoolSize";
-            this.LabelSapServerPoolSize.Size = new System.Drawing.Size(221, 36);
-            this.LabelSapServerPoolSize.TabIndex = 4;
-            this.LabelSapServerPoolSize.Text = "Pool Size";
-            this.LabelSapServerPoolSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerStartHour.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerStartHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerStartHour.Location = new System.Drawing.Point(204, 103);
+            this.TextBoxSapServerStartHour.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerStartHour.Name = "TextBoxSapServerStartHour";
+            this.TextBoxSapServerStartHour.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerStartHour.TabIndex = 0;
+            this.TextBoxSapServerStartHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LabelSapServerLanguage
+            // LabelSapServerEndHour
             // 
-            this.LabelSapServerLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerLanguage.Location = new System.Drawing.Point(416, 134);
-            this.LabelSapServerLanguage.Name = "LabelSapServerLanguage";
-            this.LabelSapServerLanguage.Size = new System.Drawing.Size(175, 36);
-            this.LabelSapServerLanguage.TabIndex = 2;
-            this.LabelSapServerLanguage.Text = "Language";
-            this.LabelSapServerLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelSapServerEndHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerEndHour.Location = new System.Drawing.Point(14, 170);
+            this.LabelSapServerEndHour.Name = "LabelSapServerEndHour";
+            this.LabelSapServerEndHour.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerEndHour.TabIndex = 0;
+            this.LabelSapServerEndHour.Text = "End Hour";
+            this.LabelSapServerEndHour.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TextBoxSapServerPoolSize
+            // LabelSapServerSleepTime
             // 
-            this.TextBoxSapServerPoolSize.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerPoolSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerPoolSize.Location = new System.Drawing.Point(1012, 31);
-            this.TextBoxSapServerPoolSize.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerPoolSize.Name = "TextBoxSapServerPoolSize";
-            this.TextBoxSapServerPoolSize.Size = new System.Drawing.Size(99, 26);
-            this.TextBoxSapServerPoolSize.TabIndex = 3;
-            this.TextBoxSapServerPoolSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelSapServerSleepTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerSleepTime.Location = new System.Drawing.Point(14, 62);
+            this.LabelSapServerSleepTime.Name = "LabelSapServerSleepTime";
+            this.LabelSapServerSleepTime.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerSleepTime.TabIndex = 0;
+            this.LabelSapServerSleepTime.Text = "Sleep Time";
+            this.LabelSapServerSleepTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // TextBoxSapServerLanguage
+            // LabelSapServerStartHour
             // 
-            this.TextBoxSapServerLanguage.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerLanguage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerLanguage.Location = new System.Drawing.Point(597, 139);
-            this.TextBoxSapServerLanguage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerLanguage.Name = "TextBoxSapServerLanguage";
-            this.TextBoxSapServerLanguage.Size = new System.Drawing.Size(182, 26);
-            this.TextBoxSapServerLanguage.TabIndex = 1;
-            this.TextBoxSapServerLanguage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelSapServerStartHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerStartHour.Location = new System.Drawing.Point(14, 98);
+            this.LabelSapServerStartHour.Name = "LabelSapServerStartHour";
+            this.LabelSapServerStartHour.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerStartHour.TabIndex = 0;
+            this.LabelSapServerStartHour.Text = "Start Hour";
+            this.LabelSapServerStartHour.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerPeakConnections
+            // TextBoxSapServerName
             // 
-            this.LabelSapServerPeakConnections.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerPeakConnections.Location = new System.Drawing.Point(785, 62);
-            this.LabelSapServerPeakConnections.Name = "LabelSapServerPeakConnections";
-            this.LabelSapServerPeakConnections.Size = new System.Drawing.Size(221, 36);
-            this.LabelSapServerPeakConnections.TabIndex = 2;
-            this.LabelSapServerPeakConnections.Text = "Peak Connections Limit";
-            this.LabelSapServerPeakConnections.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.TextBoxSapServerName.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxSapServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSapServerName.Location = new System.Drawing.Point(204, 31);
+            this.TextBoxSapServerName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxSapServerName.Name = "TextBoxSapServerName";
+            this.TextBoxSapServerName.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxSapServerName.TabIndex = 0;
+            this.TextBoxSapServerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxSapServerPeakConnectionsLimit
+            // LabelSapServerName
             // 
-            this.TextBoxSapServerPeakConnectionsLimit.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerPeakConnectionsLimit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerPeakConnectionsLimit.Location = new System.Drawing.Point(1012, 67);
-            this.TextBoxSapServerPeakConnectionsLimit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerPeakConnectionsLimit.Name = "TextBoxSapServerPeakConnectionsLimit";
-            this.TextBoxSapServerPeakConnectionsLimit.Size = new System.Drawing.Size(99, 26);
-            this.TextBoxSapServerPeakConnectionsLimit.TabIndex = 1;
-            this.TextBoxSapServerPeakConnectionsLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelSapServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSapServerName.Location = new System.Drawing.Point(14, 26);
+            this.LabelSapServerName.Name = "LabelSapServerName";
+            this.LabelSapServerName.Size = new System.Drawing.Size(184, 36);
+            this.LabelSapServerName.TabIndex = 0;
+            this.LabelSapServerName.Text = "SAP Server Name";
+            this.LabelSapServerName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerConnectionIdleTimeout
+            // LabelFormTitle
             // 
-            this.LabelSapServerConnectionIdleTimeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerConnectionIdleTimeout.Location = new System.Drawing.Point(785, 98);
-            this.LabelSapServerConnectionIdleTimeout.Name = "LabelSapServerConnectionIdleTimeout";
-            this.LabelSapServerConnectionIdleTimeout.Size = new System.Drawing.Size(221, 36);
-            this.LabelSapServerConnectionIdleTimeout.TabIndex = 2;
-            this.LabelSapServerConnectionIdleTimeout.Text = "Connection Idle Timeout";
-            this.LabelSapServerConnectionIdleTimeout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
+            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
+            this.LabelFormTitle.Name = "LabelFormTitle";
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormTitle.TabIndex = 22;
+            this.LabelFormTitle.Text = "Utilities";
+            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // TextBoxSapServerConnectionIdleTimeout
+            // mlUserInfo
             // 
-            this.TextBoxSapServerConnectionIdleTimeout.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerConnectionIdleTimeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerConnectionIdleTimeout.Location = new System.Drawing.Point(1012, 103);
-            this.TextBoxSapServerConnectionIdleTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerConnectionIdleTimeout.Name = "TextBoxSapServerConnectionIdleTimeout";
-            this.TextBoxSapServerConnectionIdleTimeout.Size = new System.Drawing.Size(99, 26);
-            this.TextBoxSapServerConnectionIdleTimeout.TabIndex = 1;
-            this.TextBoxSapServerConnectionIdleTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.mlUserInfo.Location = new System.Drawing.Point(911, 10);
+            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.mlUserInfo.Name = "mlUserInfo";
+            this.mlUserInfo.Size = new System.Drawing.Size(342, 30);
+            this.mlUserInfo.TabIndex = 21;
+            this.mlUserInfo.Text = "Login ?";
+            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelSapServerNeutronBusyFile
+            // LabelFormHeaderText
             // 
-            this.LabelSapServerNeutronBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerNeutronBusyFile.Location = new System.Drawing.Point(14, 358);
-            this.LabelSapServerNeutronBusyFile.Name = "LabelSapServerNeutronBusyFile";
-            this.LabelSapServerNeutronBusyFile.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerNeutronBusyFile.TabIndex = 4;
-            this.LabelSapServerNeutronBusyFile.Text = "Neutron Busy File";
-            this.LabelSapServerNeutronBusyFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(5, 9);
+            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormHeaderText.TabIndex = 20;
+            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
+            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // TextBoxSapServerNeutronBusyFile
+            // errorProvider
             // 
-            this.TextBoxSapServerNeutronBusyFile.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerNeutronBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerNeutronBusyFile.Location = new System.Drawing.Point(204, 363);
-            this.TextBoxSapServerNeutronBusyFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerNeutronBusyFile.Name = "TextBoxSapServerNeutronBusyFile";
-            this.TextBoxSapServerNeutronBusyFile.Size = new System.Drawing.Size(542, 26);
-            this.TextBoxSapServerNeutronBusyFile.TabIndex = 3;
-            this.TextBoxSapServerNeutronBusyFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.errorProvider.ContainerControl = this;
             // 
-            // LabelSapServerSapBusyFile
+            // openFileDialog1
             // 
-            this.LabelSapServerSapBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerSapBusyFile.Location = new System.Drawing.Point(14, 394);
-            this.LabelSapServerSapBusyFile.Name = "LabelSapServerSapBusyFile";
-            this.LabelSapServerSapBusyFile.Size = new System.Drawing.Size(184, 36);
-            this.LabelSapServerSapBusyFile.TabIndex = 2;
-            this.LabelSapServerSapBusyFile.Text = "SAP Busy File";
-            this.LabelSapServerSapBusyFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // TextBoxSapServerSapBusyFile
+            // MBBatchLightTester
             // 
-            this.TextBoxSapServerSapBusyFile.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerSapBusyFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerSapBusyFile.Location = new System.Drawing.Point(204, 399);
-            this.TextBoxSapServerSapBusyFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerSapBusyFile.Name = "TextBoxSapServerSapBusyFile";
-            this.TextBoxSapServerSapBusyFile.Size = new System.Drawing.Size(542, 26);
-            this.TextBoxSapServerSapBusyFile.TabIndex = 1;
-            this.TextBoxSapServerSapBusyFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.MBBatchLightTester.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBBatchLightTester.Location = new System.Drawing.Point(957, 486);
+            this.MBBatchLightTester.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBBatchLightTester.Name = "MBBatchLightTester";
+            this.MBBatchLightTester.Size = new System.Drawing.Size(241, 84);
+            this.MBBatchLightTester.TabIndex = 33;
+            this.MBBatchLightTester.Text = "Batch Light Tester";
+            this.MBBatchLightTester.UseSelectable = true;
+            this.MBBatchLightTester.Click += new System.EventHandler(this.MBBatchLightTester_Click);
             // 
-            // MBSapServer
+            // BatchLights
             // 
-            this.MBSapServer.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSapServer.Location = new System.Drawing.Point(957, 270);
-            this.MBSapServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBSapServer.Name = "MBSapServer";
-            this.MBSapServer.Size = new System.Drawing.Size(241, 84);
-            this.MBSapServer.TabIndex = 33;
-            this.MBSapServer.Text = "SAP Server";
-            this.MBSapServer.UseSelectable = true;
-            this.MBSapServer.Click += new System.EventHandler(this.MBSapServer_Click);
+            this.BatchLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.BatchLights.Controls.Add(this.MBBatchLightBack);
+            this.BatchLights.Controls.Add(this.panel9);
+            this.BatchLights.Location = new System.Drawing.Point(4, 22);
+            this.BatchLights.Name = "BatchLights";
+            this.BatchLights.Padding = new System.Windows.Forms.Padding(3);
+            this.BatchLights.Size = new System.Drawing.Size(1227, 636);
+            this.BatchLights.TabIndex = 17;
+            this.BatchLights.Text = "BatchLights";
             // 
-            // LabelSapServerEmail3
+            // MBBatchLightBack
             // 
-            this.LabelSapServerEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerEmail3.Location = new System.Drawing.Point(498, 278);
-            this.LabelSapServerEmail3.Name = "LabelSapServerEmail3";
-            this.LabelSapServerEmail3.Size = new System.Drawing.Size(93, 36);
-            this.LabelSapServerEmail3.TabIndex = 4;
-            this.LabelSapServerEmail3.Text = "Email3";
-            this.LabelSapServerEmail3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.MBBatchLightBack.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.MBBatchLightBack.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBBatchLightBack.Location = new System.Drawing.Point(1090, 9);
+            this.MBBatchLightBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBBatchLightBack.Name = "MBBatchLightBack";
+            this.MBBatchLightBack.Size = new System.Drawing.Size(126, 76);
+            this.MBBatchLightBack.TabIndex = 7;
+            this.MBBatchLightBack.Text = "Back";
+            this.MBBatchLightBack.UseSelectable = true;
+            this.MBBatchLightBack.Click += new System.EventHandler(this.MBBatchLightBack_Click);
             // 
-            // LabelSapServerEmail1
+            // panel9
             // 
-            this.LabelSapServerEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerEmail1.Location = new System.Drawing.Point(498, 206);
-            this.LabelSapServerEmail1.Name = "LabelSapServerEmail1";
-            this.LabelSapServerEmail1.Size = new System.Drawing.Size(93, 36);
-            this.LabelSapServerEmail1.TabIndex = 4;
-            this.LabelSapServerEmail1.Text = "Email1";
-            this.LabelSapServerEmail1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.panel9.BackColor = System.Drawing.Color.LightGray;
+            this.panel9.Controls.Add(this.panel10);
+            this.panel9.Controls.Add(this.ButtonBatchLightTurnOff);
+            this.panel9.Controls.Add(this.ButtonBatchLightTurnOn);
+            this.panel9.Controls.Add(this.LabelBatchLightQuantity);
+            this.panel9.Controls.Add(this.LabelBatchPosition);
+            this.panel9.Controls.Add(this.TextBoxBatchLightQuantity);
+            this.panel9.Controls.Add(this.TextBoxBatchLightPosition);
+            this.panel9.Location = new System.Drawing.Point(327, 166);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(557, 315);
+            this.panel9.TabIndex = 6;
             // 
-            // TextBoxSapServerEmail3
+            // panel10
             // 
-            this.TextBoxSapServerEmail3.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerEmail3.Location = new System.Drawing.Point(597, 283);
-            this.TextBoxSapServerEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerEmail3.Name = "TextBoxSapServerEmail3";
-            this.TextBoxSapServerEmail3.Size = new System.Drawing.Size(326, 26);
-            this.TextBoxSapServerEmail3.TabIndex = 3;
-            this.TextBoxSapServerEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.panel10.BackColor = System.Drawing.Color.DarkGray;
+            this.panel10.Controls.Add(this.LabelBatchLightTester);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel10.Location = new System.Drawing.Point(0, 0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(557, 62);
+            this.panel10.TabIndex = 13;
             // 
-            // TextBoxSapServerEmail1
+            // LabelBatchLightTester
             // 
-            this.TextBoxSapServerEmail1.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerEmail1.Location = new System.Drawing.Point(597, 211);
-            this.TextBoxSapServerEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerEmail1.Name = "TextBoxSapServerEmail1";
-            this.TextBoxSapServerEmail1.Size = new System.Drawing.Size(326, 26);
-            this.TextBoxSapServerEmail1.TabIndex = 3;
-            this.TextBoxSapServerEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LabelBatchLightTester.AutoSize = true;
+            this.LabelBatchLightTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBatchLightTester.Location = new System.Drawing.Point(194, 19);
+            this.LabelBatchLightTester.Name = "LabelBatchLightTester";
+            this.LabelBatchLightTester.Size = new System.Drawing.Size(205, 25);
+            this.LabelBatchLightTester.TabIndex = 8;
+            this.LabelBatchLightTester.Text = "Batch Light Tester";
             // 
-            // LabelSapServerEmail2
+            // ButtonBatchLightTurnOff
             // 
-            this.LabelSapServerEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSapServerEmail2.Location = new System.Drawing.Point(498, 242);
-            this.LabelSapServerEmail2.Name = "LabelSapServerEmail2";
-            this.LabelSapServerEmail2.Size = new System.Drawing.Size(93, 36);
-            this.LabelSapServerEmail2.TabIndex = 2;
-            this.LabelSapServerEmail2.Text = "Email2";
-            this.LabelSapServerEmail2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ButtonBatchLightTurnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonBatchLightTurnOff.Location = new System.Drawing.Point(290, 175);
+            this.ButtonBatchLightTurnOff.Name = "ButtonBatchLightTurnOff";
+            this.ButtonBatchLightTurnOff.Size = new System.Drawing.Size(203, 31);
+            this.ButtonBatchLightTurnOff.TabIndex = 11;
+            this.ButtonBatchLightTurnOff.Text = "Turn Off";
+            this.ButtonBatchLightTurnOff.UseVisualStyleBackColor = true;
+            this.ButtonBatchLightTurnOff.Click += new System.EventHandler(this.ButtonBatchLightTurnOff_Click);
             // 
-            // TextBoxSapServerEmail2
+            // ButtonBatchLightTurnOn
             // 
-            this.TextBoxSapServerEmail2.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxSapServerEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSapServerEmail2.Location = new System.Drawing.Point(597, 247);
-            this.TextBoxSapServerEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxSapServerEmail2.Name = "TextBoxSapServerEmail2";
-            this.TextBoxSapServerEmail2.Size = new System.Drawing.Size(326, 26);
-            this.TextBoxSapServerEmail2.TabIndex = 1;
-            this.TextBoxSapServerEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ButtonBatchLightTurnOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonBatchLightTurnOn.Location = new System.Drawing.Point(64, 175);
+            this.ButtonBatchLightTurnOn.Name = "ButtonBatchLightTurnOn";
+            this.ButtonBatchLightTurnOn.Size = new System.Drawing.Size(203, 31);
+            this.ButtonBatchLightTurnOn.TabIndex = 12;
+            this.ButtonBatchLightTurnOn.Text = "Turn On";
+            this.ButtonBatchLightTurnOn.UseVisualStyleBackColor = true;
+            this.ButtonBatchLightTurnOn.Click += new System.EventHandler(this.ButtonBatchLightTurnOn_Click);
+            // 
+            // LabelBatchLightQuantity
+            // 
+            this.LabelBatchLightQuantity.AutoSize = true;
+            this.LabelBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBatchLightQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(337, 115);
+            this.LabelBatchLightQuantity.Name = "LabelBatchLightQuantity";
+            this.LabelBatchLightQuantity.Size = new System.Drawing.Size(76, 20);
+            this.LabelBatchLightQuantity.TabIndex = 8;
+            this.LabelBatchLightQuantity.Text = "Quantity";
+            // 
+            // LabelBatchPosition
+            // 
+            this.LabelBatchPosition.AutoSize = true;
+            this.LabelBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBatchPosition.Location = new System.Drawing.Point(76, 115);
+            this.LabelBatchPosition.Name = "LabelBatchPosition";
+            this.LabelBatchPosition.Size = new System.Drawing.Size(125, 20);
+            this.LabelBatchPosition.TabIndex = 9;
+            this.LabelBatchPosition.Text = "Batch Position";
+            // 
+            // TextBoxBatchLightQuantity
+            // 
+            this.TextBoxBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBatchLightQuantity.Location = new System.Drawing.Point(419, 112);
+            this.TextBoxBatchLightQuantity.Name = "TextBoxBatchLightQuantity";
+            this.TextBoxBatchLightQuantity.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxBatchLightQuantity.TabIndex = 4;
+            this.TextBoxBatchLightQuantity.Text = "1";
+            this.TextBoxBatchLightQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxBatchLightPosition
+            // 
+            this.TextBoxBatchLightPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBatchLightPosition.Location = new System.Drawing.Point(207, 112);
+            this.TextBoxBatchLightPosition.Name = "TextBoxBatchLightPosition";
+            this.TextBoxBatchLightPosition.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxBatchLightPosition.TabIndex = 5;
+            this.TextBoxBatchLightPosition.Text = "1";
+            this.TextBoxBatchLightPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FrmUtilities
             // 
@@ -6323,10 +6475,15 @@
             this.PanelProLite.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.SapServer.ResumeLayout(false);
             this.PanelSapServer.ResumeLayout(false);
             this.PanelSapServer.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.BatchLights.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -6798,5 +6955,17 @@
         private System.Windows.Forms.TextBox TextBoxSapServerEmail3;
         private System.Windows.Forms.Label LabelSapServerEmail1;
         private System.Windows.Forms.Label LabelSapServerEmail3;
+        private MetroFramework.Controls.MetroButton MBBatchLightTester;
+        private System.Windows.Forms.TabPage BatchLights;
+        private MetroFramework.Controls.MetroButton MBBatchLightBack;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label LabelBatchLightTester;
+        private System.Windows.Forms.Button ButtonBatchLightTurnOff;
+        private System.Windows.Forms.Button ButtonBatchLightTurnOn;
+        private System.Windows.Forms.Label LabelBatchLightQuantity;
+        private System.Windows.Forms.Label LabelBatchPosition;
+        private System.Windows.Forms.TextBox TextBoxBatchLightQuantity;
+        private System.Windows.Forms.TextBox TextBoxBatchLightPosition;
     }
 }

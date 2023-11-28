@@ -1636,7 +1636,7 @@ namespace Neutron.Forms
             // 
             this.LabelStaticRelease.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelStaticRelease.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelStaticRelease.Location = new System.Drawing.Point(235, 11);
+            this.LabelStaticRelease.Location = new System.Drawing.Point(248, 11);
             this.LabelStaticRelease.Name = "LabelStaticRelease";
             this.LabelStaticRelease.Size = new System.Drawing.Size(137, 18);
             this.LabelStaticRelease.TabIndex = 74;
@@ -1647,7 +1647,7 @@ namespace Neutron.Forms
             // 
             this.LabelPrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelPrimeBin.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelPrimeBin.Location = new System.Drawing.Point(91, 11);
+            this.LabelPrimeBin.Location = new System.Drawing.Point(104, 11);
             this.LabelPrimeBin.Name = "LabelPrimeBin";
             this.LabelPrimeBin.Size = new System.Drawing.Size(101, 18);
             this.LabelPrimeBin.TabIndex = 74;
@@ -1658,7 +1658,7 @@ namespace Neutron.Forms
             // LabelDevice
             // 
             this.LabelDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDevice.Location = new System.Drawing.Point(10, 31);
+            this.LabelDevice.Location = new System.Drawing.Point(23, 31);
             this.LabelDevice.Name = "LabelDevice";
             this.LabelDevice.Size = new System.Drawing.Size(75, 22);
             this.LabelDevice.TabIndex = 71;
@@ -1668,7 +1668,7 @@ namespace Neutron.Forms
             // TextBoxReceivedDate
             // 
             this.TextBoxReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxReceivedDate.Location = new System.Drawing.Point(164, 133);
+            this.TextBoxReceivedDate.Location = new System.Drawing.Point(177, 133);
             this.TextBoxReceivedDate.Name = "TextBoxReceivedDate";
             this.TextBoxReceivedDate.ReadOnly = true;
             this.TextBoxReceivedDate.Size = new System.Drawing.Size(132, 23);
@@ -1678,7 +1678,7 @@ namespace Neutron.Forms
             // LabelReceivedDate
             // 
             this.LabelReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelReceivedDate.Location = new System.Drawing.Point(32, 135);
+            this.LabelReceivedDate.Location = new System.Drawing.Point(45, 135);
             this.LabelReceivedDate.Name = "LabelReceivedDate";
             this.LabelReceivedDate.Size = new System.Drawing.Size(126, 17);
             this.LabelReceivedDate.TabIndex = 69;
@@ -1690,7 +1690,7 @@ namespace Neutron.Forms
             this.ButtonMove.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_182_download_alt;
             this.ButtonMove.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonMove.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonMove.Location = new System.Drawing.Point(270, 198);
+            this.ButtonMove.Location = new System.Drawing.Point(283, 198);
             this.ButtonMove.Name = "ButtonMove";
             this.ButtonMove.Size = new System.Drawing.Size(78, 51);
             this.ButtonMove.TabIndex = 0;
@@ -1701,7 +1701,7 @@ namespace Neutron.Forms
             // TextBoxTotalQuantity
             // 
             this.TextBoxTotalQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalQuantity.Location = new System.Drawing.Point(270, 166);
+            this.TextBoxTotalQuantity.Location = new System.Drawing.Point(283, 166);
             this.TextBoxTotalQuantity.Name = "TextBoxTotalQuantity";
             this.TextBoxTotalQuantity.ReadOnly = true;
             this.TextBoxTotalQuantity.Size = new System.Drawing.Size(78, 23);
@@ -1711,7 +1711,7 @@ namespace Neutron.Forms
             // LabelTotalQty
             // 
             this.LabelTotalQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalQty.Location = new System.Drawing.Point(177, 169);
+            this.LabelTotalQty.Location = new System.Drawing.Point(190, 169);
             this.LabelTotalQty.Name = "LabelTotalQty";
             this.LabelTotalQty.Size = new System.Drawing.Size(71, 16);
             this.LabelTotalQty.TabIndex = 66;
@@ -1723,7 +1723,7 @@ namespace Neutron.Forms
             this.ButtonNextInventoryLocation.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_224_chevron_right;
             this.ButtonNextInventoryLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonNextInventoryLocation.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonNextInventoryLocation.Location = new System.Drawing.Point(199, 205);
+            this.ButtonNextInventoryLocation.Location = new System.Drawing.Point(212, 205);
             this.ButtonNextInventoryLocation.Name = "ButtonNextInventoryLocation";
             this.ButtonNextInventoryLocation.Size = new System.Drawing.Size(28, 36);
             this.ButtonNextInventoryLocation.TabIndex = 46;
@@ -1737,7 +1737,7 @@ namespace Neutron.Forms
             this.ButtonPreviousInventoryLocation.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_225_chevron_left;
             this.ButtonPreviousInventoryLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonPreviousInventoryLocation.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonPreviousInventoryLocation.Location = new System.Drawing.Point(49, 205);
+            this.ButtonPreviousInventoryLocation.Location = new System.Drawing.Point(62, 205);
             this.ButtonPreviousInventoryLocation.Name = "ButtonPreviousInventoryLocation";
             this.ButtonPreviousInventoryLocation.Size = new System.Drawing.Size(28, 36);
             this.ButtonPreviousInventoryLocation.TabIndex = 46;
@@ -1750,7 +1750,7 @@ namespace Neutron.Forms
             // 
             this.LabelLocationNumber.BackColor = System.Drawing.Color.White;
             this.LabelLocationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationNumber.Location = new System.Drawing.Point(87, 211);
+            this.LabelLocationNumber.Location = new System.Drawing.Point(100, 211);
             this.LabelLocationNumber.Name = "LabelLocationNumber";
             this.LabelLocationNumber.Size = new System.Drawing.Size(100, 24);
             this.LabelLocationNumber.TabIndex = 45;
@@ -1760,7 +1760,7 @@ namespace Neutron.Forms
             // TextBoxLocationQuantity
             // 
             this.TextBoxLocationQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLocationQuantity.Location = new System.Drawing.Point(88, 166);
+            this.TextBoxLocationQuantity.Location = new System.Drawing.Point(101, 166);
             this.TextBoxLocationQuantity.Name = "TextBoxLocationQuantity";
             this.TextBoxLocationQuantity.ReadOnly = true;
             this.TextBoxLocationQuantity.Size = new System.Drawing.Size(78, 23);
@@ -1770,7 +1770,7 @@ namespace Neutron.Forms
             // LabelLocationQty
             // 
             this.LabelLocationQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationQty.Location = new System.Drawing.Point(17, 169);
+            this.LabelLocationQty.Location = new System.Drawing.Point(30, 169);
             this.LabelLocationQty.Name = "LabelLocationQty";
             this.LabelLocationQty.Size = new System.Drawing.Size(60, 16);
             this.LabelLocationQty.TabIndex = 43;
@@ -1782,7 +1782,7 @@ namespace Neutron.Forms
             this.TextBoxPickLoc5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.TextBoxPickLoc5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextBoxPickLoc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc5.Location = new System.Drawing.Point(302, 138);
+            this.TextBoxPickLoc5.Location = new System.Drawing.Point(315, 138);
             this.TextBoxPickLoc5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc5.Name = "TextBoxPickLoc5";
             this.TextBoxPickLoc5.ReadOnly = true;
@@ -1795,7 +1795,7 @@ namespace Neutron.Forms
             // TextBoxPickLoc4
             // 
             this.TextBoxPickLoc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc4.Location = new System.Drawing.Point(292, 57);
+            this.TextBoxPickLoc4.Location = new System.Drawing.Point(305, 57);
             this.TextBoxPickLoc4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc4.Name = "TextBoxPickLoc4";
             this.TextBoxPickLoc4.ReadOnly = true;
@@ -1807,7 +1807,7 @@ namespace Neutron.Forms
             // TextBoxPickLoc3
             // 
             this.TextBoxPickLoc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc3.Location = new System.Drawing.Point(201, 57);
+            this.TextBoxPickLoc3.Location = new System.Drawing.Point(214, 57);
             this.TextBoxPickLoc3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc3.Name = "TextBoxPickLoc3";
             this.TextBoxPickLoc3.ReadOnly = true;
@@ -1819,7 +1819,7 @@ namespace Neutron.Forms
             // TextBoxPickLoc2
             // 
             this.TextBoxPickLoc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc2.Location = new System.Drawing.Point(95, 57);
+            this.TextBoxPickLoc2.Location = new System.Drawing.Point(108, 57);
             this.TextBoxPickLoc2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc2.Name = "TextBoxPickLoc2";
             this.TextBoxPickLoc2.ReadOnly = true;
@@ -1832,7 +1832,7 @@ namespace Neutron.Forms
             // 
             this.TextBoxPickLoc1.BackColor = System.Drawing.SystemColors.Control;
             this.TextBoxPickLoc1.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc1.Location = new System.Drawing.Point(10, 57);
+            this.TextBoxPickLoc1.Location = new System.Drawing.Point(23, 57);
             this.TextBoxPickLoc1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc1.Name = "TextBoxPickLoc1";
             this.TextBoxPickLoc1.ReadOnly = true;
@@ -1844,7 +1844,7 @@ namespace Neutron.Forms
             // LabelBack
             // 
             this.LabelBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBack.Location = new System.Drawing.Point(289, 31);
+            this.LabelBack.Location = new System.Drawing.Point(302, 31);
             this.LabelBack.Name = "LabelBack";
             this.LabelBack.Size = new System.Drawing.Size(75, 22);
             this.LabelBack.TabIndex = 12;
@@ -1854,7 +1854,7 @@ namespace Neutron.Forms
             // LabelOver
             // 
             this.LabelOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOver.Location = new System.Drawing.Point(196, 31);
+            this.LabelOver.Location = new System.Drawing.Point(209, 31);
             this.LabelOver.Name = "LabelOver";
             this.LabelOver.Size = new System.Drawing.Size(75, 22);
             this.LabelOver.TabIndex = 11;
@@ -1864,7 +1864,7 @@ namespace Neutron.Forms
             // LabelTray
             // 
             this.LabelTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTray.Location = new System.Drawing.Point(103, 31);
+            this.LabelTray.Location = new System.Drawing.Point(116, 31);
             this.LabelTray.Name = "LabelTray";
             this.LabelTray.Size = new System.Drawing.Size(75, 22);
             this.LabelTray.TabIndex = 10;

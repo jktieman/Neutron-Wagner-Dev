@@ -12,8 +12,7 @@ namespace NeutronData.ModelViews;
 public class WorkstationView
 {
     public IBlastzone Blastzone { get; set; }
-   // public IProLiteManager ProLiteManager { get; set; }
-   public IProLiteManager ProLiteManager { get; set; }
+    public IProLiteManager ProLiteManager { get; set; }
     public Workstation Workstation { get; set; }
     public WorkstationView()
     {

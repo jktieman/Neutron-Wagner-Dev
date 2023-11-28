@@ -94,9 +94,9 @@ namespace EthernetTransmitter
         private async void Events_DataReceived(object sender, DataReceivedEventArgs e)
         {
             await _logger.LogDetailAsync($"Data Received: {e.IpPort}");
-            byte[] data = e.Data.ToArray();
+            var data = e.Data.ToArray();
             var text = Encoding.UTF8.GetString(data);
-           // Mediator.GetInstance().OnIptiButtonPressed(this, new ResponseInfo());
+
             await _logger.LogDetailAsync($"IP Port: [{e.IpPort}]  Data: {text}");
             await _logger.LogDetailAsync($"IP Port: [{e.IpPort}] HEX Data: {data.ByteArrayToHexString()}{Environment.NewLine}");
             if (text.Contains("OC"))
@@ -124,20 +124,20 @@ namespace EthernetTransmitter
 
         public async Task SendData(string value)
         {
-            await _logger.LogDetailAsync($"SendData: {value}");
+            await _logger.LogDetailAsync($"SendData START: {value}");
             try
             {
                 if (!_server.IsListening) return;
                 // once a client has connected...
                 var command = new Put2LightCommand().GetCommand(value);
                 
-                await _logger.LogDetailAsync($"SendData Command: {command}{Environment.NewLine}");
+                
                 if (IsClientConnected)
                 {
                    await _server.SendAsync(ClientIpPort, command);
                    // await Task to let the displays turn on before sending the next command
-                   await Task.Delay(100);
-                    await _logger.LogDetailAsync($"SendData Command: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}"); 
+                   //await Task.Delay(100);
+                   // await _logger.LogDetailAsync($"SendData Command: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}"); 
                 }
                 
             }
@@ -145,7 +145,7 @@ namespace EthernetTransmitter
             {
                 await _logger.LogDetailAsync($"SendData Exception: {ex.Message}");
             }
-
+            await _logger.LogDetailAsync($"SendData END");
         }
 
         private async Task SendAck(string cmd)

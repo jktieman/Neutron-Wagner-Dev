@@ -137,7 +137,7 @@ namespace Neutron.Forms
             TextBoxInventoryNewLocationsRfid.Visible = _neutronVariables.RfidEnabledInventory;
             LabelAddDetailRfid.Visible = _neutronVariables.RfidEnabledInventory;
             TextBoxAddDetailRfid.Visible = _neutronVariables.RfidEnabledInventory;
-            
+
             var areas = _repoArea.All();
             ComboBoxAreaNumber.DataSource = areas;
             ComboBoxAreaNumber.ValueMember = "Id";
@@ -156,7 +156,7 @@ namespace Neutron.Forms
             _firstTime = false;
             //Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
             //    , "Inventory File", MessageBoxButtons.OK,MessageBoxIcon.Information,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-            _startup = false;            
+            _startup = false;
             _ = RefreshData();
 
         }
@@ -2283,7 +2283,7 @@ namespace Neutron.Forms
             var level = TextBoxAddDetailLoc3.Text.ParseInt();
             var part = TextBoxAddDetailLoc4.Text.ParseInt();
             var qty = TextBoxAddDetailQuantity.Text.ParseInt();
-             _ = _logger.LogDetailAsync($"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
+            _ = _logger.LogDetailAsync($"Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
             MoveDevice(deviceNumber, trayNumber, level, part, qty);
         }
         private void DataGridView1_DoubleClick(object sender, EventArgs e)
@@ -2596,6 +2596,7 @@ namespace Neutron.Forms
                             ReceivedDate = DateTime.TryParse(receivedDate, out var date) ? date : DateTime.Now,
                             PrimeBin = primeBin.ParseInt() == 1 ? true : false,
                             AreaId = areaId.ParseInt(),
+                            StorageTypeId = (int)GetEnumValue<StorageType>(storageTypeName),
                             RFID = rfid,
                         };
                         // add the new Inventory object to the database
@@ -2610,6 +2611,7 @@ namespace Neutron.Forms
                         inventory.Quantity = quantity.ParseInt();
                         inventory.ReceivedDate = DateTime.TryParse(receivedDate, out var date) ? date : DateTime.Now;
                         inventory.PrimeBin = primeBin.ParseInt() == 1 ? true : false;
+                        inventory.StorageTypeId = (int)GetEnumValue<StorageType>(storageTypeName);
                         inventory.RFID = rfid;
                         // update the database
                         _repoInventory.Update(inventory);
@@ -2629,6 +2631,11 @@ namespace Neutron.Forms
             {
                 Mediator.GetInstance().OnGeneralError(this, $"Error Adding/Updating Records{Environment.NewLine}{ex.Message}");
             }
+        }
+
+        public static T GetEnumValue<T>(string str) where T : struct
+        {
+            return (T)Enum.Parse(typeof(T), str);
         }
 
         private void BackgroundWorkerItemDefinitions_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)

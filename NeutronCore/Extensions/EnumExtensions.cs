@@ -91,5 +91,6 @@ namespace NeutronCore.Extensions
                 MessageBox.Show($"Error loading Enum language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
             }
         }
+
     }
 }

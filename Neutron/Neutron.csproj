@@ -193,6 +193,12 @@
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
     <Compile Include="Extensions\UCExtensions.cs" />
+    <Compile Include="Forms\FrmQuantity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmQuantity.Designer.cs">
+      <DependentUpon>FrmQuantity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Global\IHistoryManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
     <Compile Include="Models\HeaderTextManager.cs" />
@@ -522,6 +528,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
       <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmQuantity.resx">
+      <DependentUpon>FrmQuantity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\InductionPosition.resx">
       <DependentUpon>InductionPosition.cs</DependentUpon>

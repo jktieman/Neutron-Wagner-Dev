@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NovaLoader.Models {
+namespace NeutronData.Models {
 
     public class HostOrderLine {
 
