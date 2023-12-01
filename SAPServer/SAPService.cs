@@ -28,7 +28,7 @@ namespace SAPServer
             _jsonData = jsonData;
             // _sendEmail = sendEmail;
             _logger = NeutronCore.Global.Logger.SetupLogger("SAPService");
-            Init();
+           // Init();
         }
 
         public void Init()

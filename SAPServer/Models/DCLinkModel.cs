@@ -55,7 +55,7 @@ namespace SAPServer.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<NOVA_HISTORY>()
-                .Property(e => e.ORDERCOMPANY)
+                .Property(e => e.DIVISION)
                 .IsFixedLength()
                 .IsUnicode(false);
 
@@ -99,7 +99,7 @@ namespace SAPServer.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<NOVA_HISTORY>()
-                .Property(e => e.BOXID)
+                .Property(e => e.UPC)
                 .IsFixedLength()
                 .IsUnicode(false);
 
@@ -178,7 +178,7 @@ namespace SAPServer.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<NOVA_INPUT>()
-                .Property(e => e.ORDERCOMPANY)
+                .Property(e => e.DIVISION)
                 .IsFixedLength()
                 .IsUnicode(false);
 
@@ -222,7 +222,7 @@ namespace SAPServer.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<NOVA_INPUT>()
-                .Property(e => e.BOXID)
+                .Property(e => e.UPC)
                 .IsFixedLength()
                 .IsUnicode(false);
 
@@ -288,7 +288,7 @@ namespace SAPServer.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<NOVA_OUTPUT>()
-                .Property(e => e.ORDERCOMPANY)
+                .Property(e => e.DIVISION)
                 .IsFixedLength()
                 .IsUnicode(false);
 
@@ -332,7 +332,7 @@ namespace SAPServer.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<NOVA_OUTPUT>()
-                .Property(e => e.BOXID)
+                .Property(e => e.UPC)
                 .IsFixedLength()
                 .IsUnicode(false);
 

@@ -30,15 +30,15 @@ namespace SAPServer.Models
         [StringLength(29)]
         public string ACCOUNTNO { get; set; }
 
-        [StringLength(5)]
-        public string ORDERCOMPANY { get; set; }
+        [StringLength(1)]
+        public string PRIORITY { get; set; }
 
         public decimal ORDERNO { get; set; }
 
         public decimal INVOICENO { get; set; }
 
-        [StringLength(2)]
-        public string PRIORITY { get; set; }
+        [StringLength(5)]
+        public string DIVISION { get; set; }
 
         public decimal TOTENO { get; set; }
 
@@ -55,7 +55,7 @@ namespace SAPServer.Models
         public string USERID { get; set; }
 
         [StringLength(30)]
-        public string BOXID { get; set; }
+        public string UPC { get; set; }
 
         [StringLength(1)]
         public string ACTION { get; set; }
@@ -64,5 +64,12 @@ namespace SAPServer.Models
 
         [StringLength(1)]
         public string PROCESSED { get; set; }
+        public string NAME1 { get; set; }
+        public string STREET { get; set; }
+        public string CITY1 { get; set; }
+        public string REGION { get; set; }
+        public string POST_CODE1 { get; set; }
+        public string COUNTRY { get; set; }
+        public string TEXT { get; set; }
     }
 }

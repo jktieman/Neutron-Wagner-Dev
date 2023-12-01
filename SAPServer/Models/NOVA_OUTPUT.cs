@@ -30,7 +30,7 @@ namespace SAPServer.Models
         public string ACCOUNTNO { get; set; }
 
         [StringLength(5)]
-        public string ORDERCOMPANY { get; set; }
+        public string DIVISION { get; set; }
         
         public decimal ORDERNO { get; set; }
        
@@ -54,7 +54,7 @@ namespace SAPServer.Models
         public string USERID { get; set; }
 
         [StringLength(30)]
-        public string BOXID { get; set; }
+        public string UPC { get; set; }
 
         public decimal CYCLECOUNTNO { get; set; }
 
@@ -78,5 +78,6 @@ namespace SAPServer.Models
 
         [StringLength(10)]
         public string TYPE { get; set; }
+        public string TEXT { get; set; }
     }
 }

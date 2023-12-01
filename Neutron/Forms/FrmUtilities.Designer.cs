@@ -52,6 +52,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
             this.MBSapServer = new MetroFramework.Controls.MetroButton();
+            this.MBBatchLightTester = new MetroFramework.Controls.MetroButton();
             this.MBProLiteTester = new MetroFramework.Controls.MetroButton();
             this.LabelVersionLabel = new System.Windows.Forms.Label();
             this.LabelVersion = new System.Windows.Forms.Label();
@@ -67,6 +68,14 @@
             this.MBStations = new MetroFramework.Controls.MetroButton();
             this.MBOptions = new MetroFramework.Controls.MetroButton();
             this.PrintSettings = new System.Windows.Forms.TabPage();
+            this.GroupBoxLoftwareInformation = new System.Windows.Forms.GroupBox();
+            this.TextBoxLoftwarePrinter = new System.Windows.Forms.TextBox();
+            this.TextBoxLoftwareStation = new System.Windows.Forms.TextBox();
+            this.LabelLoftwarePrinter = new System.Windows.Forms.Label();
+            this.LabelLoftwareStation = new System.Windows.Forms.Label();
+            this.TextBoxLoftwareFilePath = new System.Windows.Forms.TextBox();
+            this.LabelLoftwareFilePath = new System.Windows.Forms.Label();
+            this.CheckBoxUseLoftwareFile = new System.Windows.Forms.CheckBox();
             this.CheckBoxLandscape = new System.Windows.Forms.CheckBox();
             this.MBPrintSetUpSave = new MetroFramework.Controls.MetroButton();
             this.LabelPrintSettingsUsesTestOrderNumbe = new System.Windows.Forms.Label();
@@ -507,13 +516,6 @@
             this.LabelSapServerStartHour = new System.Windows.Forms.Label();
             this.TextBoxSapServerName = new System.Windows.Forms.TextBox();
             this.LabelSapServerName = new System.Windows.Forms.Label();
-            this.LabelFormTitle = new System.Windows.Forms.Label();
-            this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
-            this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.MBBatchLightTester = new MetroFramework.Controls.MetroButton();
             this.BatchLights = new System.Windows.Forms.TabPage();
             this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
             this.panel9 = new System.Windows.Forms.Panel();
@@ -525,9 +527,17 @@
             this.LabelBatchPosition = new System.Windows.Forms.Label();
             this.TextBoxBatchLightQuantity = new System.Windows.Forms.TextBox();
             this.TextBoxBatchLightPosition = new System.Windows.Forms.TextBox();
+            this.LabelFormTitle = new System.Windows.Forms.Label();
+            this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
+            this.LabelFormHeaderText = new System.Windows.Forms.Label();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.ButtonPrintBarCode = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
+            this.GroupBoxLoftwareInformation.SuspendLayout();
             this.GroupBoxLabelMargins.SuspendLayout();
             this.GroupBoxDocumentMargins.SuspendLayout();
             this.Settings.SuspendLayout();
@@ -586,10 +596,10 @@
             this.panel6.SuspendLayout();
             this.SapServer.SuspendLayout();
             this.PanelSapServer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.BatchLights.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -659,6 +669,18 @@
             this.MBSapServer.Text = "SAP Server";
             this.MBSapServer.UseSelectable = true;
             this.MBSapServer.Click += new System.EventHandler(this.MBSapServer_Click);
+            // 
+            // MBBatchLightTester
+            // 
+            this.MBBatchLightTester.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBBatchLightTester.Location = new System.Drawing.Point(957, 486);
+            this.MBBatchLightTester.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBBatchLightTester.Name = "MBBatchLightTester";
+            this.MBBatchLightTester.Size = new System.Drawing.Size(241, 84);
+            this.MBBatchLightTester.TabIndex = 33;
+            this.MBBatchLightTester.Text = "Batch Light Tester";
+            this.MBBatchLightTester.UseSelectable = true;
+            this.MBBatchLightTester.Click += new System.EventHandler(this.MBBatchLightTester_Click);
             // 
             // MBProLiteTester
             // 
@@ -827,11 +849,14 @@
             // PrintSettings
             // 
             this.PrintSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.PrintSettings.Controls.Add(this.GroupBoxLoftwareInformation);
+            this.PrintSettings.Controls.Add(this.CheckBoxUseLoftwareFile);
             this.PrintSettings.Controls.Add(this.CheckBoxLandscape);
             this.PrintSettings.Controls.Add(this.MBPrintSetUpSave);
             this.PrintSettings.Controls.Add(this.LabelPrintSettingsUsesTestOrderNumbe);
             this.PrintSettings.Controls.Add(this.TextBoxTestOrderNumber);
             this.PrintSettings.Controls.Add(this.ButtonPrintTestToteLabel);
+            this.PrintSettings.Controls.Add(this.ButtonPrintBarCode);
             this.PrintSettings.Controls.Add(this.ButtonPrintTestDocument);
             this.PrintSettings.Controls.Add(this.ButtonPrintTestShortReport);
             this.PrintSettings.Controls.Add(this.GroupBoxLabelMargins);
@@ -851,10 +876,86 @@
             this.PrintSettings.TabIndex = 5;
             this.PrintSettings.Text = "Print Settings";
             // 
+            // GroupBoxLoftwareInformation
+            // 
+            this.GroupBoxLoftwareInformation.Controls.Add(this.TextBoxLoftwarePrinter);
+            this.GroupBoxLoftwareInformation.Controls.Add(this.TextBoxLoftwareStation);
+            this.GroupBoxLoftwareInformation.Controls.Add(this.LabelLoftwarePrinter);
+            this.GroupBoxLoftwareInformation.Controls.Add(this.LabelLoftwareStation);
+            this.GroupBoxLoftwareInformation.Controls.Add(this.TextBoxLoftwareFilePath);
+            this.GroupBoxLoftwareInformation.Controls.Add(this.LabelLoftwareFilePath);
+            this.GroupBoxLoftwareInformation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GroupBoxLoftwareInformation.Location = new System.Drawing.Point(208, 458);
+            this.GroupBoxLoftwareInformation.Name = "GroupBoxLoftwareInformation";
+            this.GroupBoxLoftwareInformation.Size = new System.Drawing.Size(557, 139);
+            this.GroupBoxLoftwareInformation.TabIndex = 56;
+            this.GroupBoxLoftwareInformation.TabStop = false;
+            this.GroupBoxLoftwareInformation.Text = "Loftware Information";
+            // 
+            // TextBoxLoftwarePrinter
+            // 
+            this.TextBoxLoftwarePrinter.Location = new System.Drawing.Point(192, 59);
+            this.TextBoxLoftwarePrinter.Name = "TextBoxLoftwarePrinter";
+            this.TextBoxLoftwarePrinter.Size = new System.Drawing.Size(281, 22);
+            this.TextBoxLoftwarePrinter.TabIndex = 1;
+            // 
+            // TextBoxLoftwareStation
+            // 
+            this.TextBoxLoftwareStation.Location = new System.Drawing.Point(192, 88);
+            this.TextBoxLoftwareStation.Name = "TextBoxLoftwareStation";
+            this.TextBoxLoftwareStation.Size = new System.Drawing.Size(281, 22);
+            this.TextBoxLoftwareStation.TabIndex = 1;
+            // 
+            // LabelLoftwarePrinter
+            // 
+            this.LabelLoftwarePrinter.AutoSize = true;
+            this.LabelLoftwarePrinter.Location = new System.Drawing.Point(40, 59);
+            this.LabelLoftwarePrinter.Name = "LabelLoftwarePrinter";
+            this.LabelLoftwarePrinter.Size = new System.Drawing.Size(98, 16);
+            this.LabelLoftwarePrinter.TabIndex = 0;
+            this.LabelLoftwarePrinter.Text = "Loftware Printer";
+            // 
+            // LabelLoftwareStation
+            // 
+            this.LabelLoftwareStation.AutoSize = true;
+            this.LabelLoftwareStation.Location = new System.Drawing.Point(40, 88);
+            this.LabelLoftwareStation.Name = "LabelLoftwareStation";
+            this.LabelLoftwareStation.Size = new System.Drawing.Size(101, 16);
+            this.LabelLoftwareStation.TabIndex = 0;
+            this.LabelLoftwareStation.Text = "Loftware Station";
+            // 
+            // TextBoxLoftwareFilePath
+            // 
+            this.TextBoxLoftwareFilePath.Location = new System.Drawing.Point(192, 31);
+            this.TextBoxLoftwareFilePath.Name = "TextBoxLoftwareFilePath";
+            this.TextBoxLoftwareFilePath.Size = new System.Drawing.Size(281, 22);
+            this.TextBoxLoftwareFilePath.TabIndex = 1;
+            // 
+            // LabelLoftwareFilePath
+            // 
+            this.LabelLoftwareFilePath.AutoSize = true;
+            this.LabelLoftwareFilePath.Location = new System.Drawing.Point(40, 31);
+            this.LabelLoftwareFilePath.Name = "LabelLoftwareFilePath";
+            this.LabelLoftwareFilePath.Size = new System.Drawing.Size(112, 16);
+            this.LabelLoftwareFilePath.TabIndex = 0;
+            this.LabelLoftwareFilePath.Text = "Loftware File Path";
+            // 
+            // CheckBoxUseLoftwareFile
+            // 
+            this.CheckBoxUseLoftwareFile.AutoSize = true;
+            this.CheckBoxUseLoftwareFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseLoftwareFile.Location = new System.Drawing.Point(208, 431);
+            this.CheckBoxUseLoftwareFile.Name = "CheckBoxUseLoftwareFile";
+            this.CheckBoxUseLoftwareFile.Size = new System.Drawing.Size(184, 20);
+            this.CheckBoxUseLoftwareFile.TabIndex = 55;
+            this.CheckBoxUseLoftwareFile.Text = "Use Loftware File for Label";
+            this.CheckBoxUseLoftwareFile.UseVisualStyleBackColor = true;
+            this.CheckBoxUseLoftwareFile.CheckedChanged += new System.EventHandler(this.CheckBoxUseLoftwareFile_CheckedChanged);
+            // 
             // CheckBoxLandscape
             // 
             this.CheckBoxLandscape.AutoSize = true;
-            this.CheckBoxLandscape.Location = new System.Drawing.Point(352, 153);
+            this.CheckBoxLandscape.Location = new System.Drawing.Point(210, 72);
             this.CheckBoxLandscape.Name = "CheckBoxLandscape";
             this.CheckBoxLandscape.Size = new System.Drawing.Size(15, 14);
             this.CheckBoxLandscape.TabIndex = 54;
@@ -864,7 +965,7 @@
             // 
             this.MBPrintSetUpSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPrintSetUpSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintSetUpSave.Location = new System.Drawing.Point(874, 10);
+            this.MBPrintSetUpSave.Location = new System.Drawing.Point(957, 10);
             this.MBPrintSetUpSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintSetUpSave.Name = "MBPrintSetUpSave";
             this.MBPrintSetUpSave.Size = new System.Drawing.Size(125, 76);
@@ -876,7 +977,7 @@
             // LabelPrintSettingsUsesTestOrderNumbe
             // 
             this.LabelPrintSettingsUsesTestOrderNumbe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPrintSettingsUsesTestOrderNumbe.Location = new System.Drawing.Point(760, 466);
+            this.LabelPrintSettingsUsesTestOrderNumbe.Location = new System.Drawing.Point(616, 340);
             this.LabelPrintSettingsUsesTestOrderNumbe.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelPrintSettingsUsesTestOrderNumbe.Name = "LabelPrintSettingsUsesTestOrderNumbe";
             this.LabelPrintSettingsUsesTestOrderNumbe.Size = new System.Drawing.Size(165, 16);
@@ -887,26 +988,28 @@
             // TextBoxTestOrderNumber
             // 
             this.TextBoxTestOrderNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTestOrderNumber.Location = new System.Drawing.Point(781, 236);
+            this.TextBoxTestOrderNumber.Location = new System.Drawing.Point(621, 135);
             this.TextBoxTestOrderNumber.Name = "TextBoxTestOrderNumber";
             this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(144, 23);
             this.TextBoxTestOrderNumber.TabIndex = 2;
+            this.TextBoxTestOrderNumber.Text = "33391535";
+            this.TextBoxTestOrderNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ButtonPrintTestToteLabel
             // 
             this.ButtonPrintTestToteLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintTestToteLabel.Location = new System.Drawing.Point(750, 497);
+            this.ButtonPrintTestToteLabel.Location = new System.Drawing.Point(606, 371);
             this.ButtonPrintTestToteLabel.Name = "ButtonPrintTestToteLabel";
             this.ButtonPrintTestToteLabel.Size = new System.Drawing.Size(175, 23);
             this.ButtonPrintTestToteLabel.TabIndex = 7;
-            this.ButtonPrintTestToteLabel.Text = "Print Test Tote Label";
+            this.ButtonPrintTestToteLabel.Text = "Print Test Label";
             this.ButtonPrintTestToteLabel.UseVisualStyleBackColor = true;
             this.ButtonPrintTestToteLabel.Click += new System.EventHandler(this.ButtonPrintTestToteLabel_Click);
             // 
             // ButtonPrintTestDocument
             // 
             this.ButtonPrintTestDocument.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintTestDocument.Location = new System.Drawing.Point(781, 266);
+            this.ButtonPrintTestDocument.Location = new System.Drawing.Point(621, 164);
             this.ButtonPrintTestDocument.Name = "ButtonPrintTestDocument";
             this.ButtonPrintTestDocument.Size = new System.Drawing.Size(144, 23);
             this.ButtonPrintTestDocument.TabIndex = 3;
@@ -917,7 +1020,7 @@
             // ButtonPrintTestShortReport
             // 
             this.ButtonPrintTestShortReport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintTestShortReport.Location = new System.Drawing.Point(750, 343);
+            this.ButtonPrintTestShortReport.Location = new System.Drawing.Point(608, 259);
             this.ButtonPrintTestShortReport.Name = "ButtonPrintTestShortReport";
             this.ButtonPrintTestShortReport.Size = new System.Drawing.Size(175, 23);
             this.ButtonPrintTestShortReport.TabIndex = 4;
@@ -932,16 +1035,16 @@
             this.GroupBoxLabelMargins.Controls.Add(this.LabelPrintSettingsYPosition);
             this.GroupBoxLabelMargins.Controls.Add(this.LabelPrintSettingsXPosition);
             this.GroupBoxLabelMargins.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxLabelMargins.Location = new System.Drawing.Point(225, 439);
+            this.GroupBoxLabelMargins.Location = new System.Drawing.Point(208, 336);
             this.GroupBoxLabelMargins.Name = "GroupBoxLabelMargins";
-            this.GroupBoxLabelMargins.Size = new System.Drawing.Size(359, 101);
+            this.GroupBoxLabelMargins.Size = new System.Drawing.Size(359, 58);
             this.GroupBoxLabelMargins.TabIndex = 50;
             this.GroupBoxLabelMargins.TabStop = false;
             this.GroupBoxLabelMargins.Text = "Home Position";
             // 
             // TextBoxLabelHomeY
             // 
-            this.TextBoxLabelHomeY.Location = new System.Drawing.Point(262, 44);
+            this.TextBoxLabelHomeY.Location = new System.Drawing.Point(263, 21);
             this.TextBoxLabelHomeY.Name = "TextBoxLabelHomeY";
             this.TextBoxLabelHomeY.Size = new System.Drawing.Size(68, 22);
             this.TextBoxLabelHomeY.TabIndex = 1;
@@ -950,7 +1053,7 @@
             // 
             // TextBoxLabelHomeX
             // 
-            this.TextBoxLabelHomeX.Location = new System.Drawing.Point(104, 44);
+            this.TextBoxLabelHomeX.Location = new System.Drawing.Point(105, 21);
             this.TextBoxLabelHomeX.Name = "TextBoxLabelHomeX";
             this.TextBoxLabelHomeX.Size = new System.Drawing.Size(68, 22);
             this.TextBoxLabelHomeX.TabIndex = 0;
@@ -960,7 +1063,7 @@
             // LabelPrintSettingsYPosition
             // 
             this.LabelPrintSettingsYPosition.AutoSize = true;
-            this.LabelPrintSettingsYPosition.Location = new System.Drawing.Point(188, 47);
+            this.LabelPrintSettingsYPosition.Location = new System.Drawing.Point(189, 24);
             this.LabelPrintSettingsYPosition.Name = "LabelPrintSettingsYPosition";
             this.LabelPrintSettingsYPosition.Size = new System.Drawing.Size(67, 16);
             this.LabelPrintSettingsYPosition.TabIndex = 3;
@@ -969,7 +1072,7 @@
             // LabelPrintSettingsXPosition
             // 
             this.LabelPrintSettingsXPosition.AutoSize = true;
-            this.LabelPrintSettingsXPosition.Location = new System.Drawing.Point(28, 47);
+            this.LabelPrintSettingsXPosition.Location = new System.Drawing.Point(29, 24);
             this.LabelPrintSettingsXPosition.Name = "LabelPrintSettingsXPosition";
             this.LabelPrintSettingsXPosition.Size = new System.Drawing.Size(69, 16);
             this.LabelPrintSettingsXPosition.TabIndex = 1;
@@ -978,7 +1081,7 @@
             // ButtonLabelPrinter
             // 
             this.ButtonLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonLabelPrinter.Location = new System.Drawing.Point(798, 408);
+            this.ButtonLabelPrinter.Location = new System.Drawing.Point(654, 305);
             this.ButtonLabelPrinter.Name = "ButtonLabelPrinter";
             this.ButtonLabelPrinter.Size = new System.Drawing.Size(127, 25);
             this.ButtonLabelPrinter.TabIndex = 6;
@@ -989,7 +1092,7 @@
             // TextBoxLabelPrinter
             // 
             this.TextBoxLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLabelPrinter.Location = new System.Drawing.Point(352, 409);
+            this.TextBoxLabelPrinter.Location = new System.Drawing.Point(208, 306);
             this.TextBoxLabelPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxLabelPrinter.Name = "TextBoxLabelPrinter";
             this.TextBoxLabelPrinter.Size = new System.Drawing.Size(438, 22);
@@ -998,7 +1101,7 @@
             // LabelPrintSettingsEnterTestOrderNumber
             // 
             this.LabelPrintSettingsEnterTestOrderNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPrintSettingsEnterTestOrderNumber.Location = new System.Drawing.Point(760, 204);
+            this.LabelPrintSettingsEnterTestOrderNumber.Location = new System.Drawing.Point(618, 101);
             this.LabelPrintSettingsEnterTestOrderNumber.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelPrintSettingsEnterTestOrderNumber.Name = "LabelPrintSettingsEnterTestOrderNumber";
             this.LabelPrintSettingsEnterTestOrderNumber.Size = new System.Drawing.Size(165, 16);
@@ -1009,7 +1112,7 @@
             // LabelPrintSettingsLabelPrinter
             // 
             this.LabelPrintSettingsLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPrintSettingsLabelPrinter.Location = new System.Drawing.Point(241, 412);
+            this.LabelPrintSettingsLabelPrinter.Location = new System.Drawing.Point(97, 309);
             this.LabelPrintSettingsLabelPrinter.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelPrintSettingsLabelPrinter.Name = "LabelPrintSettingsLabelPrinter";
             this.LabelPrintSettingsLabelPrinter.Size = new System.Drawing.Size(110, 16);
@@ -1028,16 +1131,16 @@
             this.GroupBoxDocumentMargins.Controls.Add(this.LabelPrintSettingsLeft);
             this.GroupBoxDocumentMargins.Controls.Add(this.LabelPrintSettingsTop);
             this.GroupBoxDocumentMargins.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxDocumentMargins.Location = new System.Drawing.Point(225, 176);
+            this.GroupBoxDocumentMargins.Location = new System.Drawing.Point(210, 92);
             this.GroupBoxDocumentMargins.Name = "GroupBoxDocumentMargins";
-            this.GroupBoxDocumentMargins.Size = new System.Drawing.Size(359, 205);
+            this.GroupBoxDocumentMargins.Size = new System.Drawing.Size(359, 190);
             this.GroupBoxDocumentMargins.TabIndex = 46;
             this.GroupBoxDocumentMargins.TabStop = false;
             this.GroupBoxDocumentMargins.Text = "Margins";
             // 
             // TextBoxDocumentBottomMargin
             // 
-            this.TextBoxDocumentBottomMargin.Location = new System.Drawing.Point(143, 129);
+            this.TextBoxDocumentBottomMargin.Location = new System.Drawing.Point(153, 121);
             this.TextBoxDocumentBottomMargin.Name = "TextBoxDocumentBottomMargin";
             this.TextBoxDocumentBottomMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentBottomMargin.TabIndex = 2;
@@ -1046,7 +1149,7 @@
             // 
             // TextBoxDocumentRightMargin
             // 
-            this.TextBoxDocumentRightMargin.Location = new System.Drawing.Point(210, 94);
+            this.TextBoxDocumentRightMargin.Location = new System.Drawing.Point(220, 86);
             this.TextBoxDocumentRightMargin.Name = "TextBoxDocumentRightMargin";
             this.TextBoxDocumentRightMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentRightMargin.TabIndex = 1;
@@ -1055,7 +1158,7 @@
             // 
             // TextBoxDocumentLeftMargin
             // 
-            this.TextBoxDocumentLeftMargin.Location = new System.Drawing.Point(75, 94);
+            this.TextBoxDocumentLeftMargin.Location = new System.Drawing.Point(85, 86);
             this.TextBoxDocumentLeftMargin.Name = "TextBoxDocumentLeftMargin";
             this.TextBoxDocumentLeftMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentLeftMargin.TabIndex = 3;
@@ -1064,7 +1167,7 @@
             // 
             // TextBoxDocumentTopMargin
             // 
-            this.TextBoxDocumentTopMargin.Location = new System.Drawing.Point(143, 60);
+            this.TextBoxDocumentTopMargin.Location = new System.Drawing.Point(153, 52);
             this.TextBoxDocumentTopMargin.Name = "TextBoxDocumentTopMargin";
             this.TextBoxDocumentTopMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentTopMargin.TabIndex = 0;
@@ -1074,7 +1177,7 @@
             // LabelPrintSettingsRight
             // 
             this.LabelPrintSettingsRight.AutoSize = true;
-            this.LabelPrintSettingsRight.Location = new System.Drawing.Point(284, 100);
+            this.LabelPrintSettingsRight.Location = new System.Drawing.Point(294, 92);
             this.LabelPrintSettingsRight.Name = "LabelPrintSettingsRight";
             this.LabelPrintSettingsRight.Size = new System.Drawing.Size(38, 16);
             this.LabelPrintSettingsRight.TabIndex = 3;
@@ -1083,7 +1186,7 @@
             // LabelPrintSettingsBottom
             // 
             this.LabelPrintSettingsBottom.AutoSize = true;
-            this.LabelPrintSettingsBottom.Location = new System.Drawing.Point(133, 167);
+            this.LabelPrintSettingsBottom.Location = new System.Drawing.Point(143, 159);
             this.LabelPrintSettingsBottom.Name = "LabelPrintSettingsBottom";
             this.LabelPrintSettingsBottom.Size = new System.Drawing.Size(49, 16);
             this.LabelPrintSettingsBottom.TabIndex = 2;
@@ -1092,7 +1195,7 @@
             // LabelPrintSettingsLeft
             // 
             this.LabelPrintSettingsLeft.AutoSize = true;
-            this.LabelPrintSettingsLeft.Location = new System.Drawing.Point(17, 97);
+            this.LabelPrintSettingsLeft.Location = new System.Drawing.Point(27, 89);
             this.LabelPrintSettingsLeft.Name = "LabelPrintSettingsLeft";
             this.LabelPrintSettingsLeft.Size = new System.Drawing.Size(28, 16);
             this.LabelPrintSettingsLeft.TabIndex = 1;
@@ -1101,7 +1204,7 @@
             // LabelPrintSettingsTop
             // 
             this.LabelPrintSettingsTop.AutoSize = true;
-            this.LabelPrintSettingsTop.Location = new System.Drawing.Point(154, 28);
+            this.LabelPrintSettingsTop.Location = new System.Drawing.Point(164, 20);
             this.LabelPrintSettingsTop.Name = "LabelPrintSettingsTop";
             this.LabelPrintSettingsTop.Size = new System.Drawing.Size(32, 16);
             this.LabelPrintSettingsTop.TabIndex = 0;
@@ -1110,7 +1213,7 @@
             // ButtonDocumentPrinter
             // 
             this.ButtonDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonDocumentPrinter.Location = new System.Drawing.Point(798, 116);
+            this.ButtonDocumentPrinter.Location = new System.Drawing.Point(656, 35);
             this.ButtonDocumentPrinter.Name = "ButtonDocumentPrinter";
             this.ButtonDocumentPrinter.Size = new System.Drawing.Size(127, 25);
             this.ButtonDocumentPrinter.TabIndex = 1;
@@ -1121,7 +1224,7 @@
             // TextBoxDocumentPrinter
             // 
             this.TextBoxDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxDocumentPrinter.Location = new System.Drawing.Point(352, 118);
+            this.TextBoxDocumentPrinter.Location = new System.Drawing.Point(210, 37);
             this.TextBoxDocumentPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxDocumentPrinter.Name = "TextBoxDocumentPrinter";
             this.TextBoxDocumentPrinter.Size = new System.Drawing.Size(438, 22);
@@ -1130,7 +1233,7 @@
             // label8
             // 
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(215, 149);
+            this.label8.Location = new System.Drawing.Point(73, 68);
             this.label8.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(129, 20);
@@ -1141,7 +1244,7 @@
             // LabelCheckPrinter
             // 
             this.LabelCheckPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCheckPrinter.Location = new System.Drawing.Point(215, 118);
+            this.LabelCheckPrinter.Location = new System.Drawing.Point(73, 37);
             this.LabelCheckPrinter.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelCheckPrinter.Name = "LabelCheckPrinter";
             this.LabelCheckPrinter.Size = new System.Drawing.Size(129, 20);
@@ -1153,7 +1256,7 @@
             // 
             this.MBPrintSetUpBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPrintSetUpBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintSetUpBack.Location = new System.Drawing.Point(1010, 10);
+            this.MBPrintSetUpBack.Location = new System.Drawing.Point(1093, 10);
             this.MBPrintSetUpBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintSetUpBack.Name = "MBPrintSetUpBack";
             this.MBPrintSetUpBack.Size = new System.Drawing.Size(125, 76);
@@ -2400,6 +2503,7 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.DataGridView1.RowHeadersWidth = 92;
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3236,7 +3340,7 @@
             this.ListBoxCodeNames.ItemHeight = 20;
             this.ListBoxCodeNames.Location = new System.Drawing.Point(34, 112);
             this.ListBoxCodeNames.Name = "ListBoxCodeNames";
-            this.ListBoxCodeNames.Size = new System.Drawing.Size(271, 504);
+            this.ListBoxCodeNames.Size = new System.Drawing.Size(271, 484);
             this.ListBoxCodeNames.TabIndex = 2;
             this.ListBoxCodeNames.ValueMember = "TableName";
             this.ListBoxCodeNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxCodeNames_SelectedIndexChanged);
@@ -3265,6 +3369,7 @@
             this.DataGridViewLookups.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.DataGridViewLookups.Location = new System.Drawing.Point(338, 112);
             this.DataGridViewLookups.Name = "DataGridViewLookups";
+            this.DataGridViewLookups.RowHeadersWidth = 92;
             this.DataGridViewLookups.RowTemplate.Height = 28;
             this.DataGridViewLookups.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewLookups.Size = new System.Drawing.Size(863, 504);
@@ -3420,6 +3525,7 @@
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridViewStations.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.DataGridViewStations.RowHeadersWidth = 92;
             dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewStations.RowsDefaultCellStyle = dataGridViewCellStyle10;
             this.DataGridViewStations.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3943,6 +4049,7 @@
             dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridViewTcp.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            this.DataGridViewTcp.RowHeadersWidth = 92;
             dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewTcp.RowsDefaultCellStyle = dataGridViewCellStyle14;
             this.DataGridViewTcp.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4387,6 +4494,7 @@
             dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridViewSerial.RowHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            this.DataGridViewSerial.RowHeadersWidth = 92;
             dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSerial.RowsDefaultCellStyle = dataGridViewCellStyle18;
             this.DataGridViewSerial.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -5449,6 +5557,7 @@
             this.DataGridViewEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.DataGridViewEmailAddresses.MultiSelect = false;
             this.DataGridViewEmailAddresses.Name = "DataGridViewEmailAddresses";
+            this.DataGridViewEmailAddresses.RowHeadersWidth = 92;
             this.DataGridViewEmailAddresses.RowTemplate.Height = 24;
             this.DataGridViewEmailAddresses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewEmailAddresses.Size = new System.Drawing.Size(419, 266);
@@ -6201,62 +6310,6 @@
             this.LabelSapServerName.Text = "SAP Server Name";
             this.LabelSapServerName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // LabelFormTitle
-            // 
-            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
-            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
-            this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
-            this.LabelFormTitle.TabIndex = 22;
-            this.LabelFormTitle.Text = "Utilities";
-            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // mlUserInfo
-            // 
-            this.mlUserInfo.Location = new System.Drawing.Point(911, 10);
-            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(342, 30);
-            this.mlUserInfo.TabIndex = 21;
-            this.mlUserInfo.Text = "Login ?";
-            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelFormHeaderText
-            // 
-            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(5, 9);
-            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
-            this.LabelFormHeaderText.TabIndex = 20;
-            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
-            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // errorProvider
-            // 
-            this.errorProvider.ContainerControl = this;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // MBBatchLightTester
-            // 
-            this.MBBatchLightTester.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBBatchLightTester.Location = new System.Drawing.Point(957, 486);
-            this.MBBatchLightTester.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBBatchLightTester.Name = "MBBatchLightTester";
-            this.MBBatchLightTester.Size = new System.Drawing.Size(241, 84);
-            this.MBBatchLightTester.TabIndex = 33;
-            this.MBBatchLightTester.Text = "Batch Light Tester";
-            this.MBBatchLightTester.UseSelectable = true;
-            this.MBBatchLightTester.Click += new System.EventHandler(this.MBBatchLightTester_Click);
-            // 
             // BatchLights
             // 
             this.BatchLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -6380,6 +6433,61 @@
             this.TextBoxBatchLightPosition.Text = "1";
             this.TextBoxBatchLightPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // LabelFormTitle
+            // 
+            this.LabelFormTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LabelFormTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
+            this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
+            this.LabelFormTitle.Name = "LabelFormTitle";
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormTitle.TabIndex = 22;
+            this.LabelFormTitle.Text = "Utilities";
+            this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // mlUserInfo
+            // 
+            this.mlUserInfo.Location = new System.Drawing.Point(911, 10);
+            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.mlUserInfo.Name = "mlUserInfo";
+            this.mlUserInfo.Size = new System.Drawing.Size(342, 30);
+            this.mlUserInfo.TabIndex = 21;
+            this.mlUserInfo.Text = "Login ?";
+            this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelFormHeaderText
+            // 
+            this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(5, 9);
+            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelFormHeaderText.Name = "LabelFormHeaderText";
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormHeaderText.TabIndex = 20;
+            this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
+            this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // ButtonPrintBarCode
+            // 
+            this.ButtonPrintBarCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrintBarCode.Location = new System.Drawing.Point(621, 193);
+            this.ButtonPrintBarCode.Name = "ButtonPrintBarCode";
+            this.ButtonPrintBarCode.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintBarCode.TabIndex = 3;
+            this.ButtonPrintBarCode.Text = "Print BarCode";
+            this.ButtonPrintBarCode.UseVisualStyleBackColor = true;
+            this.ButtonPrintBarCode.Click += new System.EventHandler(this.ButtonPrintBarCode_Click);
+            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -6395,11 +6503,14 @@
             this.Name = "FrmUtilities";
             this.Resizable = false;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmUtilities_FormClosing);
+            this.Load += new System.EventHandler(this.FrmUtilities_Load);
             this.tabControl1.ResumeLayout(false);
             this.Main.ResumeLayout(false);
             this.Main.PerformLayout();
             this.PrintSettings.ResumeLayout(false);
             this.PrintSettings.PerformLayout();
+            this.GroupBoxLoftwareInformation.ResumeLayout(false);
+            this.GroupBoxLoftwareInformation.PerformLayout();
             this.GroupBoxLabelMargins.ResumeLayout(false);
             this.GroupBoxLabelMargins.PerformLayout();
             this.GroupBoxDocumentMargins.ResumeLayout(false);
@@ -6478,12 +6589,12 @@
             this.SapServer.ResumeLayout(false);
             this.PanelSapServer.ResumeLayout(false);
             this.PanelSapServer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.BatchLights.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -6967,5 +7078,14 @@
         private System.Windows.Forms.Label LabelBatchPosition;
         private System.Windows.Forms.TextBox TextBoxBatchLightQuantity;
         private System.Windows.Forms.TextBox TextBoxBatchLightPosition;
+        private System.Windows.Forms.GroupBox GroupBoxLoftwareInformation;
+        private System.Windows.Forms.CheckBox CheckBoxUseLoftwareFile;
+        private System.Windows.Forms.TextBox TextBoxLoftwareFilePath;
+        private System.Windows.Forms.Label LabelLoftwareFilePath;
+        private System.Windows.Forms.TextBox TextBoxLoftwarePrinter;
+        private System.Windows.Forms.TextBox TextBoxLoftwareStation;
+        private System.Windows.Forms.Label LabelLoftwarePrinter;
+        private System.Windows.Forms.Label LabelLoftwareStation;
+        private System.Windows.Forms.Button ButtonPrintBarCode;
     }
 }

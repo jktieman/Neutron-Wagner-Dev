@@ -5,6 +5,7 @@ using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.ModelViews;
 using NeutronEvents;
+using SAPServer;
 
 namespace NeutronLoader
 {
@@ -16,16 +17,19 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
-       // private readonly ISendEmail _sendEmail;
+
+        private readonly ISapService _sapService;
+        // private readonly ISendEmail _sendEmail;
 
         public StartStopLoaderManager(IJsonData jsonData, NeutronVariables neutronVariables,
-            NeutronLicense neutronLicense, WorkstationView workstationView)
+            NeutronLicense neutronLicense, WorkstationView workstationView, ISapService sapService)
         {
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
-          //  _sendEmail = sendEmail;
+            _sapService = sapService;
+            //  _sendEmail = sendEmail;
             _logger = NeutronCore.Global.Logger.SetupLogger("LoaderManager");
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
@@ -66,7 +70,7 @@ namespace NeutronLoader
                 case "WAG":
                     {
                      _ = _logger.LogDetailAsync($"WAG - InterfaceProcessorPr1");
-                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService );
                         break;
                     }
                 default:

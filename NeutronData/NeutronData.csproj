@@ -234,9 +234,12 @@
     <Compile Include="PrintModels\DocumentPrinterPreferences.cs" />
     <Compile Include="PrintModels\LabelDetail.cs" />
     <Compile Include="PrintModels\LabelPrinterPreferences.cs" />
+    <Compile Include="PrintModels\LoftwarePrinterPreferences.cs" />
     <Compile Include="PrintModels\PackingList.cs" />
     <Compile Include="PrintModels\PickList.cs" />
+    <Compile Include="PrintModels\PickSlip.cs" />
     <Compile Include="PrintModels\ShortReport.cs" />
+    <Compile Include="PrintModels\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AkaRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />

@@ -157,10 +157,10 @@ namespace SAPServer
                         g.NSOLM = Convert.ToDecimal(item.BEGINNINGQTY);
                         g.NISTA = Convert.ToDecimal(item.QTY);
                         g.MATKL = item.SKUDESC;
-                        g.SPART = item.ORDERCOMPANY;
+                        g.SPART = item.DIVISION;
                         g.VSBED = item.PRIORITY;
                         g.VBELN = item.ORDERNO.ToString(CultureInfo.InvariantCulture);
-                        g.EAN11 = item.BOXID;
+                        g.EAN11 = item.UPC;
                         g.MEINS = item.BP;
 
                      _ = _logger.LogDetailAsync($"Goods Issue - Output to SAP.  TASKNO: {g.TANUM}  SKU: {g.MATNR} REQ QTY: {g.NSOLM} ISS QTY: {g.NISTA}");

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -50,16 +51,17 @@ namespace NeutronLoader
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
-
+        private ISapService _sapService;
 
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView)
+            IJsonData jsonData, WorkstationView workstationView, ISapService sapService)
         {
             Initialize();
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
+            _sapService = sapService;
         }
 
         private void Initialize()
@@ -84,11 +86,23 @@ namespace NeutronLoader
                 _loadOrdersBusy = true;
                 await _logger.LogDetailAsync("Load Orders Testing Waiting 2 Seconds");
 
+                _sapService.Init();
+                
+                
+
                 var hostOrderLines = await GetNewOrdersFromSap();
 
                 if (hostOrderLines.Any())
                 {
                     UpdateNeutronOrders(hostOrderLines);
+                }
+
+                // process the 02/Replen orders
+                var hostReplenOrderLines = await GetNewReplenOrdersFromSap();
+
+                if (hostReplenOrderLines.Any())
+                {
+                    UpdateNeutronReplenOrders(hostReplenOrderLines);
                 }
 
             }
@@ -100,6 +114,131 @@ namespace NeutronLoader
             finally
             {
                 _loadOrdersBusy = false;
+            }
+        }
+
+        private async Task<List<NeutronInput>> GetNewReplenOrdersFromSap()
+        {
+            await _logger.LogDetailAsync("Get New Replen Orders From SAP");
+            var orderLines = new List<NeutronInput>();
+            try
+            {
+                // get records from SAP Server
+                List<NOVA_INPUT> recs;
+                using (var db = new WagnerDb())
+                {
+                    recs = db.NOVA_INPUT.Where(r => r.PROCESSED == "N" && r.TRANSTYPE == "02").ToList();
+                }
+
+                if (recs.Any())
+                {
+
+                    _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
+                    foreach (var rec in recs)
+                    {
+                        // Check for existing order
+                        var existingOrder = _repoReplenOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString()).FirstOrDefault();
+
+                        if (existingOrder != null) continue;
+
+                        var h = new NeutronInput();
+                        h.TransId = rec.TRANSID.ToString(CultureInfo.CurrentCulture);
+                        h.Sku = rec.SKU;
+                        h.Qty = (int)rec.QTY;
+                        h.Division = rec.DIVISION;
+                        h.Order = rec.ORDERNO.ToString(CultureInfo.CurrentCulture);
+                        h.Priority = rec.PRIORITY;
+                        h.Invoice = rec.INVOICENO.ToString(CultureInfo.CurrentCulture);
+                        h.Des = rec.SKUDESC;
+                        h.Upc = rec.UPC;
+                        h.LineNo = rec.TOTENO.ToString(CultureInfo.CurrentCulture);
+                        h.Name = rec.NAME1;
+                        h.Street = rec.STREET;
+                        h.City = rec.CITY1;
+                        h.Region = rec.REGION;
+                        h.ZipCode = rec.POST_CODE1;
+                        h.Country = rec.COUNTRY;
+                        h.Text = rec.TEXT;
+                        orderLines.Add(h);
+                    }
+                    UpdateToProcessed(recs);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var msg = "Get New Replen Orders From SAP " + ex.Message + "  " + ex.InnerException;
+                await _logger.LogDetailAsync(msg);
+                ErrorAlert(msg);
+            }
+            return orderLines;
+        }
+
+        private void UpdateNeutronReplenOrders(List<NeutronInput> hostReplenOrderLines)
+        {
+            var shipperId = 0;
+            var shipMethodId = 0;
+
+            var shipper = _repoShippers.All().FirstOrDefault();
+            if (shipper != null) shipperId = shipper.Id;
+
+            var shipMethod = _repoShipMethods.All().FirstOrDefault();
+            if (shipMethod != null) shipMethodId = shipMethod.Id;
+
+            var orderNumbers = hostReplenOrderLines.Select(r => r.Order).Distinct().ToList();
+
+            foreach (var orderNumber in orderNumbers)
+            {
+                var rec = hostReplenOrderLines.FirstOrDefault(r => r.Order == orderNumber);
+                if (rec == null) continue;
+                var order = new ReplenOrder
+                {
+                    Ord1 = "REPLENOPRP",
+                    Ord2 = rec.Sku,
+                    Priority = 0,
+                    LoadDate = DateTime.Now,
+                    OrderStatusId = (int)OrderStatus.Available,
+                    ShipMethodId = shipMethodId,
+                    ShipperId = shipperId,
+                    OrderInfo = $"{rec.TransId}"
+
+                };
+
+                try
+                {
+                    _repoReplenOrder.Insert(order);
+                    var orderId = order.Id;
+                    var orderDetails = hostReplenOrderLines.Where(r => r.Order == orderNumber).ToList();
+                    if (orderDetails.Any())
+                    {
+                        foreach (var orderDetail in orderDetails)
+                        {
+                            var itemDef = _repoItemDefinition.FindBy(r => r.Item == orderDetail.Sku).FirstOrDefault();
+                            if (itemDef != null)
+                            {
+                                var detail = new ReplenOrderDetail()
+                                {
+                                    PartNum = orderDetail.Sku,
+                                    PartDesc = orderDetail.Des,
+                                    Quantity = orderDetail.Qty,
+                                    LineStatusId = (int)LineStatus.Available,
+                                    AreaId = itemDef.AreaId,
+                                    OrderDetailInfo = $"{rec.TransId}",
+                                    ReplenOrderId = orderId,
+                                    JobNum = orderDetail.Order.ToString(),
+                                    ItemDefinitionId = itemDef.Id
+                                    
+                                };
+                                _repoReplenOrderDetail.Insert(detail);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var message = $"SAP to Neutron Replen Order Conversion Failure. {Environment.NewLine}{ex.Message}";
+                    ErrorAlert(message);
+                }
             }
         }
 
@@ -119,18 +258,23 @@ namespace NeutronLoader
             {
                 var rec = hostOrderLines.FirstOrDefault(r => r.Order == orderNumber);
                 if (rec == null) continue;
-                var order = new Order
-                {
-                    Ord1 = rec.Order.ToString(),
-                    Ord2 = rec.Invoice.ToString(),
-                    Priority = int.Parse(rec.Priority),
-                    LoadDate = DateTime.Now,
-                    OrderStatusId = (int)OrderStatus.Available,
-                    ShipMethodId = shipMethodId,
-                    ShipperId = shipperId,
-                    OrderInfo = $"{rec.TransId},{rec.Division},{rec.Priority}"
+                var order = new Order();
 
-                };
+                var pri = int.TryParse(rec.Priority, out var newPriority);
+                
+                
+                var pri2 = string.IsNullOrEmpty(rec.Priority);
+
+                order.Ord1 = rec.Order;
+                order.Ord2 = string.IsNullOrEmpty(rec.Invoice) ? rec.Order : rec.Invoice;
+                order.Priority = newPriority;
+                order.LoadDate = DateTime.Now;
+                order.OrderStatusId = (int)OrderStatus.Available;
+                order.ShipMethodId = shipMethodId;
+                order.ShipperId = shipperId;
+                order.OrderInfo = $"{rec.TransId}|{rec.Priority}|{rec.Division}|{rec.Name}|{rec.Street}|{rec.City}|{rec.Region}|{rec.ZipCode}|{rec.Country}|{rec.Text}";
+
+                
 
                 try
                 {
@@ -151,7 +295,7 @@ namespace NeutronLoader
                                     Quantity = orderDetail.Qty,
                                     LineStatusId = (int)LineStatus.Available,
                                     AreaId = itemDef.AreaId,
-                                    OrderDetailInfo = $"{rec.TransId},{rec.Division},{rec.Priority},{"Route"},{rec.Upc}",
+                                    OrderDetailInfo = $"{rec.TransId},{rec.Priority},{rec.Division},{"Route"},{rec.Upc}",
                                     OrderId = orderId,
                                     JobNum = orderDetail.Order.ToString(),
                                     ItemDefinitionId = itemDef.Id
@@ -189,21 +333,29 @@ namespace NeutronLoader
                     foreach (var rec in recs)
                     {
                         // Check for existing order
+
                         var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString()).FirstOrDefault();
 
                         if (existingOrder != null) continue;
 
                         var h = new NeutronInput();
-                        h.TransId = rec.TRANSID.ToString();
+                        h.TransId = rec.TRANSID.ToString(CultureInfo.CurrentCulture);
                         h.Sku = rec.SKU;
                         h.Qty = (int)rec.QTY;
-                        h.Division = rec.ORDERCOMPANY;
-                        h.Order = rec.ORDERNO.ToString();
-                        h.Priority = rec.PRIORITY;
-                        h.Invoice = rec.INVOICENO.ToString();
+                        h.Division = rec.DIVISION;
+                        h.Order = rec.ORDERNO.ToString(CultureInfo.CurrentCulture);
+                        h.Priority = string.IsNullOrEmpty(rec.PRIORITY) ? "0" : rec.PRIORITY;
+                        h.Invoice = rec.INVOICENO == 0 ? String.Empty   : rec.INVOICENO.ToString(CultureInfo.CurrentCulture);
                         h.Des = rec.SKUDESC;
-                        h.Upc = rec.BOXID;
-                        h.LineNo = rec.TOTENO.ToString();
+                        h.Upc = rec.UPC;
+                        h.LineNo = rec.TOTENO.ToString(CultureInfo.CurrentCulture);
+                        h.Name = rec.NAME1;
+                        h.Street = rec.STREET;
+                        h.City = rec.CITY1;
+                        h.Region = rec.REGION;
+                        h.ZipCode = rec.POST_CODE1;
+                        h.Country = rec.COUNTRY;
+                        h.Text = rec.TEXT;
 
                         orderLines.Add(h);
                     }

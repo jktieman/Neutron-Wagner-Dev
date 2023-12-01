@@ -211,10 +211,8 @@ namespace AlliedLogger
                     if (!IsFileLocked(FilePath, 5))
                     {
                         _inProcess = true;
-                        // using (var sw = File.AppendText(FilePath))
                         using (var sw = new StreamWriter(FilePath, true))
                         {
-
                             try
                             {
                                 while (!_messages.IsEmpty)
@@ -224,8 +222,6 @@ namespace AlliedLogger
                                     await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
                                     await sw.FlushAsync();
                                 }
-                                //  break;
-
                             }
                             catch (Exception ex)
                             {
@@ -237,26 +233,12 @@ namespace AlliedLogger
                     {
                         throw new Exception("File is locked");
                     }
-
-
-                    //using (var sw = File.AppendText(FilePath))
-                    //{
-                    //    while (!_messages.IsEmpty)
-                    //    {
-                    //        _messages.TryDequeue(out msg);
-
-                    //    await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
-                    //    await sw.FlushAsync();
-                    //    }
-                    //}
                     _inProcess = false;
                 }
             }
             catch (Exception ex)
             {
-                //ErrorAlert($"Detail Async Error: {ex.Message}");
                 _messages.Enqueue($"Detail Async Error: {ex.Message}");
-               // throw new Exception($"Detail Async Error: {ex.Message}");
             }
         }
 

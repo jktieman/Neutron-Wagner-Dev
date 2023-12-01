@@ -15,6 +15,7 @@
         public string MATKL { get; set; }
         public string VBELN { get; set; }
         public string KDMAT { get; set; }
+        public string TEXT { get; set; }
         public bool Processed { get; set; }
     }
 }

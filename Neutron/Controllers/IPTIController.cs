@@ -138,7 +138,7 @@ namespace Neutron.Controllers
             await _logger.LogDetailAsync($"IPTI Controller - Show Blastzone - START");
             if (!_bliEnabled) return;
             var bli = new Ipti_BLI(bayControllerId, address, beacon, text);
-            ShowBli(bli);
+            await ShowBli(bli);
         }
         public async Task ClearBlastzone()
         {

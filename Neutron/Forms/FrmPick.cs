@@ -4907,9 +4907,13 @@ namespace Neutron.Forms
 
         private void PrintLabel(int reqFunc, int pos, PickView pickview)
         {
-           
+            string division;
             if (_neutronLicense.CompanyCode == "WAG")
             {
+                var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
+                var lineDetailInfo = pickview.OrderDetail.OrderDetailInfo.Split(',');
+                division = lineDetailInfo.Length > 3 ? lineDetailInfo[2] : "";
+                
                 var upc = _repoAka.GetUpc(pickview.Item);
                 var aItem = pickview.Item;
                 var cItem = pickview.Item;
@@ -4917,7 +4921,7 @@ namespace Neutron.Forms
                 var desc = pickview.Description;
 
 
-              ToteToPrint.PrintLoftwareLabel(upc,aItem, cItem,quantity,desc);
+              ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
             }
             else
             {
@@ -5316,15 +5320,15 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             // get the packing list data for the order
-            var packingList = GetPackingList(orderId);
+            var pickSlips = GetPickSlipData(orderId);
             // if there is no data, exit
-            if (!packingList.Any()) return;
+            if (!pickSlips.Any()) return;
             // if the batch position is not empty, set the batch position on the packing list
-            foreach (var pack in packingList)
-            {
-                pack.BatchPosition = batchPosition;
-            }
-            _documentToPrint.PrintPackingList(packingList, _documentPrinter, _neutronVariables.PrintPreview);
+            //foreach (var pack in pickSlips)
+            //{
+            //    pack.BatchPosition = batchPosition;
+            //}
+            _documentToPrint.PrintPickSlipData(pickSlips, _documentPrinter, _neutronVariables.PrintPreview);
         }
         /// <summary>
         /// Uses a stored Procedure to get the Packing list data from the database
@@ -5341,6 +5345,22 @@ namespace Neutron.Forms
             }
             return outs;
         }
+        /// <summary>
+        /// Uses a stored Procedure to get the Packing list data from the database
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        private List<PickSlip> GetPickSlipData(int orderId)
+        {
+            List<PickSlip> outs;
+            using (var context = new NeutronDb())
+            {
+                var paramOrderId = new SqlParameter(parameterName: "@ORDERID", value: orderId);
+                outs = context.Database.SqlQuery<PickSlip>("usp_GetPickSlipData @ORDERID", new object[] { paramOrderId }).ToList();
+            }
+            return outs;
+        }
+
 
         // Rack print - Pick List
         private void MBPrintDocument_Click(object sender, EventArgs e)
@@ -7626,7 +7646,7 @@ namespace Neutron.Forms
                     }
                     else
                     {
-                        MessageBox.Show("No Anticipated Outs to print.");
+                        MessageBox.Show($"No Anticipated Outs to print in Area: {area.AreaNumber}.");
                     }
                 }
             }
@@ -7642,7 +7662,7 @@ namespace Neutron.Forms
                 }
                 else
                 {
-                    MessageBox.Show("No Anticipated Outs to print.");
+                    MessageBox.Show($"No Anticipated Outs to print in Area: {areaNumber}.");
                 }
             }
         }

@@ -56,7 +56,8 @@ namespace SAPServer
                     goodsIssue.SPART = goodsIssueTable.GetString("SPART");
                     goodsIssue.VSBED = goodsIssueTable.GetString("VSBED");
                     goodsIssue.KDMAT = goodsIssueTable.GetString("KDMAT");
-
+                    goodsIssue.TEXT = goodsIssueTable.GetString("TEXT");
+                    
                     if (string.IsNullOrEmpty(goodsIssue.VBELN))
                     {
                         goodsIssue.VBELN = goodsIssue.TANUM;
@@ -98,14 +99,15 @@ namespace SAPServer
                             input.SKU = row.MATNR;
                             input.QTY = Convert.ToInt32(row.NSOLM);
                             input.TASKNO = Convert.ToDecimal(row.TANUM);
-                            input.SKUDESC = ValidSkuDesc(row.MATKL);
-                            input.ORDERCOMPANY = GetPriority(row.SPART, row.VSBED);
-                            input.PRIORITY = row.SPART;
+                            input.SKUDESC = ValidSkuDesc(row.MATKL);   
+                            input.PRIORITY = GetPriority(row.SPART, row.VSBED);  // PRIORITY
+                            input.DIVISION = row.SPART;  //DIVISION
                             input.ORDERNO = Convert.ToDecimal(row.VBELN);
                             input.TOTENO = Convert.ToDecimal(row.TAPOS);
-                            input.BOXID = row.EAN11;
+                            input.UPC = row.EAN11;
                             input.BP = row.MEINS;
                             input.TRANSDATE = DateTime.Now;
+                            input.TEXT = row.TEXT;
 
 
                             try
