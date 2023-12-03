@@ -1,15 +1,11 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NeutronData.ModelViews;
 using CurrentDeviceIndicator;
 using AlliedLogger;
 using System.Windows.Forms;
 using System.Drawing;
-using NeutronCore;
 using NeutronCore.Enums;
 using NeutronCore.Global;
 using NeutronData.Models;
@@ -35,8 +31,7 @@ namespace DeviceIndicatorService
 
         public DeviceIndicatorManager(WorkstationView workstationView, Point panelLocation, Size panelSize, NeutronVariables neutronVariables)
         {
-          
-           // SetupLogger();
+
             _workstationView = workstationView;
             _panelLocation = panelLocation;
             _panelSize = panelSize;
@@ -114,7 +109,6 @@ namespace DeviceIndicatorService
         /// Adds the  DeviceIndicators to the Panel and
         /// turns ON the device that should flash
         /// </summary>
-        /// <param name="loc1">The Device Number of the DeviceIndicator to turn on </param>
         private void AddDeviceIndicatorsToPanel(int loc = 0)
         {
             foreach (var hardwareDevice in _hardwareDevices)

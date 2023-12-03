@@ -1,7 +1,5 @@
 ﻿using NeutronData.Interfaces;
 using NeutronData.Models.Lookups;
-using RJCP.IO.Ports;
-using EthernetTransmitter; 
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NeutronData.Models
@@ -37,6 +35,5 @@ namespace NeutronData.Models
         [ForeignKey("SerialConfigurationId")]
         public virtual SerialConfiguration SerialConfiguration { get; set; }
 
-        
     }
 }

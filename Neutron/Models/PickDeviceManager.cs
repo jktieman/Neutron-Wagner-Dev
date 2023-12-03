@@ -1,15 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using AlliedLogger;
-using EnumsNET;
-using Neutron.Enums;
 using Neutron.Global;
-using NeutronCore;
-using NeutronData.Models;
 using NeutronData.ModelViews;
-using static DGVPrinterHelper.DGVPrinter;
 
 namespace Neutron.Models
 {
@@ -142,7 +135,6 @@ namespace Neutron.Models
                     var loc2 = kvp.Value.Loc2;
                     var loc3 = kvp.Value.Loc3;
                     var loc4 = kvp.Value.Loc4;
-                    var loc5 = kvp.Value.Loc5;
 
                     if (loc1 == moveNext)
                     {

@@ -513,6 +513,7 @@ namespace Neutron.Forms
             this.panel12.Name = "panel12";
             this.panel12.Size = new System.Drawing.Size(388, 45);
             this.panel12.TabIndex = 25;
+            this.panel12.Visible = false;
             // 
             // ComboBoxAreaNumber
             // 
@@ -542,6 +543,7 @@ namespace Neutron.Forms
             this.MBPrintPick.TabIndex = 2;
             this.MBPrintPick.Text = "Print Pick List";
             this.MBPrintPick.UseSelectable = true;
+            this.MBPrintPick.Visible = false;
             this.MBPrintPick.Click += new System.EventHandler(this.MBPrintPick_Click);
             // 
             // ButtonPrintAO
@@ -758,7 +760,7 @@ namespace Neutron.Forms
             this.ButtonPrintPacking.Name = "ButtonPrintPacking";
             this.ButtonPrintPacking.Size = new System.Drawing.Size(187, 36);
             this.ButtonPrintPacking.TabIndex = 10;
-            this.ButtonPrintPacking.Text = "Print Packing List";
+            this.ButtonPrintPacking.Text = "Print Pick Slip";
             this.ButtonPrintPacking.UseSelectable = true;
             this.ButtonPrintPacking.Click += new System.EventHandler(this.ButtonPrintPacking_Click);
             // 

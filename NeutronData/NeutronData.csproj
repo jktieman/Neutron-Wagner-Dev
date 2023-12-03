@@ -45,20 +45,9 @@
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=2.0.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.13\lib\net45\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Remotion, Version=1.18.0.10000, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Remotion.1.18.0\lib\net45\Remotion.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RJCP.SerialPortStream, Version=2.4.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -237,7 +226,7 @@
     <Compile Include="PrintModels\LoftwarePrinterPreferences.cs" />
     <Compile Include="PrintModels\PackingList.cs" />
     <Compile Include="PrintModels\PickList.cs" />
-    <Compile Include="PrintModels\PickSlip.cs" />
+    <Compile Include="PrintModels\PickSlipzzz.cs" />
     <Compile Include="PrintModels\ShortReport.cs" />
     <Compile Include="PrintModels\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -302,17 +291,9 @@
       <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
       <Name>AlliedLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EthernetTransmitter\EthernetTransmitter.csproj">
-      <Project>{cd460f9c-0b52-49ac-a17c-cee7def43220}</Project>
-      <Name>EthernetTransmitter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
-      <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
-      <Name>NeutronEvents</Name>
     </ProjectReference>
     <ProjectReference Include="..\ProLiteController\ProliteController\ProLiteController.csproj">
       <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>

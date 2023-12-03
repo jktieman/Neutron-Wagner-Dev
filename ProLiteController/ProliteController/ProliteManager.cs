@@ -5,7 +5,6 @@ using System.Threading;
 using AlliedLogger;
 using NeutronCore.Global;
 using System.IO.Ports;
-using System.Text;
 
 
 namespace ProliteController

@@ -15,7 +15,7 @@ using NeutronCore.Models;
 
 namespace NeutronMaintenance
 {
-    public partial class MaintenanceProcessor
+    public class MaintenanceProcessor
     {
         private readonly BlockingCollection<FileInfo> interfaceFileQueue = new BlockingCollection<FileInfo>();
         private static BackgroundWorker interfaceFileQueueProcessor;

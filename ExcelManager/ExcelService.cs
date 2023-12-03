@@ -97,7 +97,7 @@ public class ExcelService
     /// </summary>
     /// <param name="table"> A DataTable object</param>
     /// <param name="destination"> A file path</param>
-    private async void ExportDataTableToExcel(DataTable table, string destination)
+    private void ExportDataTableToExcel(DataTable table, string destination)
     {
         try
         {

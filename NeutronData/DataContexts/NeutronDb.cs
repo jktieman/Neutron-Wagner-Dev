@@ -2,7 +2,6 @@
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using System.Data.Entity;
-using NeutronCore.Enums;
 using OrderStatus = NeutronData.Models.Lookups.OrderStatus;
 using StationType = NeutronData.Models.Lookups.StationType;
 using StorageType = NeutronData.Models.Lookups.StorageType;

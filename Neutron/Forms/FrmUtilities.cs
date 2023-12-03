@@ -44,15 +44,9 @@ using StorageType = NeutronData.Models.Lookups.StorageType;
 using AlliedLogger;
 using Neutron.Ninject;
 using NeutronCore;
-using ProliteController;
 using SAPServer.Models;
 using Zen.Barcode;
 using SerialConfiguration = NeutronData.Models.SerialConfiguration;
-using static Remotion.Collections.InvalidationToken;
-using Newtonsoft.Json.Linq;
-using NeutronData.General;
-using System.Security.Cryptography;
-using Syncfusion.WinForms.Core;
 
 
 namespace Neutron.Forms

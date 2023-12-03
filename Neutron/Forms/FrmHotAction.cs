@@ -2138,9 +2138,11 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.ClearAllDeviceIndicators();
 
                 _workstationView.ProLiteManager?.ClearAllProlites();
-
-                await GlobalVar.Displays.ClearAllBli();
-                await GlobalVar.Displays.ClearBlastzone();
+                if (GlobalVar.Displays != null)
+                {
+                    await GlobalVar.Displays?.ClearAllBli();
+                    await GlobalVar.Displays?.ClearBlastzone();
+                }
 
                 if (_useCostCenter)
                 {

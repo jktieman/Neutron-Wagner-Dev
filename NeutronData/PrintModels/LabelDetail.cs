@@ -13,5 +13,8 @@ namespace NeutronData.PrintModels
         public DateTime LoadDate { get; set; }
         public string Origin { get; set; }
         public string UnitOfIssue { get; set; }
+        public string UPC { get; set; }
+        public string Division { get; set; }
+
     }
 }

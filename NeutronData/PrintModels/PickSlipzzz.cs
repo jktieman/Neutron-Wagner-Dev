@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NeutronData.PrintModels
 {
-public class PickSlip
+public class PickSlipzzz
 {
     public string Area { get; set; }
     public string Order { get; set; }

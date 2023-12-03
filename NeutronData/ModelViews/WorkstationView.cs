@@ -5,8 +5,6 @@ using NeutronData.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-
-
 namespace NeutronData.ModelViews;
 
 public class WorkstationView

@@ -4889,44 +4889,59 @@ namespace Neutron.Forms
 
             foreach (var pickView in currentPickStop.PickViews)
             {
-                // get the upc for the item from the AKA table
-                var upc = _repoAka.GetUpc(pickView.Item);
-                // Get the label detail from the pickview
-                var labelDetail = GetLabelDetail(pickView.OrderDetail);
-                // if testing, just display the label
-                if (GlobalVar.Testing)
-                {
-                    Mediator.GetInstance().OnDisplayMessage(this, $"Printing Label: {labelDetail.Item}");
-                }
-                else
-                {
-                    ToteToPrint.Print(reqFunc, pickView.PickPosition, labelDetail, upc, _labelPrinter);
-                }
+                PrintLabel(1, pickView.PickPosition, pickView);
+                //// if testing, just display the label
+                //if (GlobalVar.Testing)
+                //{
+                //    Mediator.GetInstance().OnDisplayMessage(this, $"Printing Label: {labelDetail.Item}");
+                //}
+                //else
+                //{
+                //    ToteToPrint.Print(reqFunc, pickView.PickPosition, labelDetail, upc, _labelPrinter);
+                //}
             }
         }
 
-        private void PrintLabel(int reqFunc, int pos, PickView pickview)
+        private void PrintLabel(int reqFunc, int pos, PickView pickView)
         {
-            string division;
+            var orderDetail = new string[5];
+
             if (_neutronLicense.CompanyCode == "WAG")
             {
-                var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
-                var lineDetailInfo = pickview.OrderDetail.OrderDetailInfo.Split(',');
-                division = lineDetailInfo.Length > 3 ? lineDetailInfo[2] : "";
-                
-                var upc = _repoAka.GetUpc(pickview.Item);
-                var aItem = pickview.Item;
-                var cItem = pickview.Item;
-                var quantity = pickview.QuantityToBePicked.ToString();
-                var desc = pickview.Description;
 
+                var input = pickView.OrderDetail.OrderDetailInfo;
+                if (!string.IsNullOrEmpty(input))
+                {
+                    orderDetail = input.Split('|');
+                    if (orderDetail.Length != 5)
+                    {
+                        orderDetail = new string[5];
+                    }
+                }
+
+                // orderDetail[0] = TransId
+                // orderDetail[1] = Division
+                // orderDetail[2] = Priority
+                // orderDetail[3] = Route
+                // orderDetail[4] = UPC
+
+
+                var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
+               
+                
+                var upc = orderDetail[4];
+                var aItem = pickView.Item;
+                var cItem = pickView.Item;
+                var quantity = pickView.QuantityToBePicked.ToString();
+                var desc = pickView.Description;
+                var division = orderDetail[1];
 
               ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
             }
             else
             {
-                 var upc = _repoAka.GetUpc(pickview.Item);
-            var labelDetail = GetLabelDetail(pickview.OrderDetail);
+                 var upc = _repoAka.GetUpc(pickView.Item);
+            var labelDetail = GetLabelDetail(pickView.OrderDetail);
                 ToteToPrint.Print(reqFunc, pos, labelDetail, upc, _labelPrinter);
             }
         }
@@ -6289,7 +6304,7 @@ namespace Neutron.Forms
             ComboBoxCostCenter.Visible = _useCostCenter;
             LabelCostCenter.Visible = _useCostCenter;
 
-            FillCostCenterComboBox();
+            _ = Task.Run(FillCostCenterComboBox);
 
         }
         private async Task FillCostCenterComboBox()
