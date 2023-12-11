@@ -99,11 +99,10 @@ namespace Neutron.Forms
             // FrmPin
             // 
             this.AcceptButton = this.mButtonLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(21F, 40F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(410, 224);
-            this.ControlBox = false;
             this.Controls.Add(this.mlPin);
             this.Controls.Add(this.mtbPin);
             this.Controls.Add(this.mButtonLogin);

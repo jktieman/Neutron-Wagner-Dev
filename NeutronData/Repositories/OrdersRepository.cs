@@ -1341,25 +1341,40 @@ namespace NeutronData.Repositories
             // There are only 2 LineStatuses that can be picked, 1 and 9, Available and Skipped
             var availableSkip = new int[] { 1, 9 };
             // get the order
-            var ord = _repoOrders.FindByKey(orderId);
-            if (ord != null)
+            var order = GetOrder(orderId);
+            //order = _repoOrders.FindByInclude(i => i.Id == orderId && i.AreaId == areaId, i => i.OrderDetails) .FindBy(r => r.Id == orderId).FirstOrDefault();  //  FindByKey(orderId);
+
+            if (order != null)
             {
-                for (var i = ord.OrderDetails.Count - 1; i >= 0; i--)
+
+                var details = GetOrderDetailsByOrderAndArea(orderId, areaId);
+                // var details = _repoOrderDetails.All().Where(r => r.OrderId == orderId && r.AreaId == areaId).ToList();
+                //&& availableSkip.Contains(r.LineStatusId)).ToList();
+                // var det = details.Where(r => availableSkip.Contains(r.LineStatusId)).ToList();
+
+                //for (var i = ord.OrderDetails.Count - 1; i >= 0; i--)
+                //{
+                //    if (ord.OrderDetails.ElementAt(i).AreaId != areaId)
+                //    {
+                //        ord.OrderDetails.Remove(ord.OrderDetails.ElementAt(i));
+                //    }
+                //}
+
+                //for (var i = ord.OrderDetails.Count - 1; i >= 0; i--)
+                //{
+                //    if (ord.OrderDetails.ElementAt(i).LineStatusId is not (1 or 9))
+                //    {
+                //        ord.OrderDetails.Remove(ord.OrderDetails.ElementAt(i));
+                //    }
+                //}
+                order.OrderDetails = new List<OrderDetail>();
+                
+                foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId is 1 or 9))
                 {
-                    if (ord.OrderDetails.ElementAt(i).AreaId != areaId)
-                    {
-                        ord.OrderDetails.Remove(ord.OrderDetails.ElementAt(i));
-                    }
+                    order.OrderDetails.Add(orderDetail);
                 }
 
-                for (var i = ord.OrderDetails.Count - 1; i >= 0; i--)
-                {
-                    if (ord.OrderDetails.ElementAt(i).LineStatusId is not (1 or 9))
-                    {
-                        ord.OrderDetails.Remove(ord.OrderDetails.ElementAt(i));
-                    }
-                }
-
+                //     ord.OrderDetails = det;
 
                 // set the order details to a new list because all we want are the details for this area
                 //ord.OrderDetails = new List<OrderDetail>();
@@ -1381,7 +1396,7 @@ namespace NeutronData.Repositories
                 //    }
                 //}
             }
-            return ord;
+            return order;
         }
 
         public List<OrderDetail> GetOrderDetailsByOrderAndArea(int orderId, int areaId)

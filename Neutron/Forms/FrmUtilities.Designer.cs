@@ -81,6 +81,7 @@
             this.LabelPrintSettingsUsesTestOrderNumbe = new System.Windows.Forms.Label();
             this.TextBoxTestOrderNumber = new System.Windows.Forms.TextBox();
             this.ButtonPrintTestToteLabel = new System.Windows.Forms.Button();
+            this.ButtonPrintBarCode = new System.Windows.Forms.Button();
             this.ButtonPrintTestDocument = new System.Windows.Forms.Button();
             this.ButtonPrintTestShortReport = new System.Windows.Forms.Button();
             this.GroupBoxLabelMargins = new System.Windows.Forms.GroupBox();
@@ -533,7 +534,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ButtonPrintBarCode = new System.Windows.Forms.Button();
+            this.ButtonPrintReplen = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -856,6 +857,7 @@
             this.PrintSettings.Controls.Add(this.LabelPrintSettingsUsesTestOrderNumbe);
             this.PrintSettings.Controls.Add(this.TextBoxTestOrderNumber);
             this.PrintSettings.Controls.Add(this.ButtonPrintTestToteLabel);
+            this.PrintSettings.Controls.Add(this.ButtonPrintReplen);
             this.PrintSettings.Controls.Add(this.ButtonPrintBarCode);
             this.PrintSettings.Controls.Add(this.ButtonPrintTestDocument);
             this.PrintSettings.Controls.Add(this.ButtonPrintTestShortReport);
@@ -1005,6 +1007,17 @@
             this.ButtonPrintTestToteLabel.Text = "Print Test Label";
             this.ButtonPrintTestToteLabel.UseVisualStyleBackColor = true;
             this.ButtonPrintTestToteLabel.Click += new System.EventHandler(this.ButtonPrintTestToteLabel_Click);
+            // 
+            // ButtonPrintBarCode
+            // 
+            this.ButtonPrintBarCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrintBarCode.Location = new System.Drawing.Point(621, 193);
+            this.ButtonPrintBarCode.Name = "ButtonPrintBarCode";
+            this.ButtonPrintBarCode.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintBarCode.TabIndex = 3;
+            this.ButtonPrintBarCode.Text = "Print BarCode";
+            this.ButtonPrintBarCode.UseVisualStyleBackColor = true;
+            this.ButtonPrintBarCode.Click += new System.EventHandler(this.ButtonPrintBarCode_Click);
             // 
             // ButtonPrintTestDocument
             // 
@@ -6477,16 +6490,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // ButtonPrintBarCode
+            // ButtonPrintReplen
             // 
-            this.ButtonPrintBarCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintBarCode.Location = new System.Drawing.Point(621, 193);
-            this.ButtonPrintBarCode.Name = "ButtonPrintBarCode";
-            this.ButtonPrintBarCode.Size = new System.Drawing.Size(144, 23);
-            this.ButtonPrintBarCode.TabIndex = 3;
-            this.ButtonPrintBarCode.Text = "Print BarCode";
-            this.ButtonPrintBarCode.UseVisualStyleBackColor = true;
-            this.ButtonPrintBarCode.Click += new System.EventHandler(this.ButtonPrintBarCode_Click);
+            this.ButtonPrintReplen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrintReplen.Location = new System.Drawing.Point(621, 222);
+            this.ButtonPrintReplen.Name = "ButtonPrintReplen";
+            this.ButtonPrintReplen.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintReplen.TabIndex = 3;
+            this.ButtonPrintReplen.Text = "Print Replen Doc";
+            this.ButtonPrintReplen.UseVisualStyleBackColor = true;
+            this.ButtonPrintReplen.Click += new System.EventHandler(this.ButtonPrintReplen_Click);
             // 
             // FrmUtilities
             // 
@@ -7087,5 +7100,6 @@
         private System.Windows.Forms.Label LabelLoftwarePrinter;
         private System.Windows.Forms.Label LabelLoftwareStation;
         private System.Windows.Forms.Button ButtonPrintBarCode;
+        private System.Windows.Forms.Button ButtonPrintReplen;
     }
 }

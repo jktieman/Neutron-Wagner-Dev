@@ -11,16 +11,9 @@ namespace NeutronData.ModelViews
 {
     public class ReplenPickStop
     {
-        private readonly GenericRepository<ReplenOrder> _repoOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-
-        public ReplenPickStop()
-        {
-            Inventory = new List<Inventory>();
-            Images = new List<ItemImage>();
-            PickViews = new List<ReplenPickView>();
-        }
-        public List<ReplenPickView> PickViews { get; set; }
+        private readonly GenericRepository<ReplenOrder> _repoOrders = new(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new(new NeutronDb());
+        public List<ReplenPickView> PickViews { get; set; } = [];
         public int Sequence { get; set; }
         public int OrderId { get; set; }
         public string Ord1 { get; set; }
@@ -34,12 +27,12 @@ namespace NeutronData.ModelViews
         public int PickedQty { get; set; }
         public string Slot { get; set; }
         public int SlotQty { get; set; }
-        public List<Inventory> Inventory { get; set; }
+        public List<Inventory> Inventory { get; set; } = [];
         public int InventoryIndex { get; set; }
         public int GroupBoxLocationInventoryIndex { get; set; }
         public Inventory CurrentInventoryLocation { get; set; }
         public int TotalQuantityInInventory { get; set; }
-        public List<ItemImage> Images { get; set; }
+        public List<ItemImage> Images { get; set; } = [];
 
         public bool Skipped { get; set; }
         public string ItemKey { get; set; }
@@ -73,7 +66,7 @@ namespace NeutronData.ModelViews
 
         public int GetTotalQuantityToBePicked()
         {
-            int total = 0;
+            var total = 0;
             foreach (var pickview in PickViews)
             {
                 total += pickview.QuantityToBePicked;
@@ -83,7 +76,7 @@ namespace NeutronData.ModelViews
 
         public int GetPickedSoFar()
         {
-            int total = 0;
+            var total = 0;
             foreach (var pickview in PickViews)
             {
                 total += GetPickViewTotal(pickview);
@@ -93,7 +86,7 @@ namespace NeutronData.ModelViews
 
         private int GetPickViewTotal(ReplenPickView pickview)
         {
-            int total = 0;
+            var total = 0;
             foreach (var pickLocation in pickview.PickLocations)
             {
                 total += pickLocation.Quantity;
@@ -107,7 +100,7 @@ namespace NeutronData.ModelViews
             {
                 foreach (var item in PickViews)
                 {
-                    int total = GetPickViewTotal(item);
+                    var total = GetPickViewTotal(item);
                     item.OrderDetail.PickedQuantity = total;
                     item.OrderDetail.LineStatusId = (int)LineStatus.Complete;
                     item.OrderDetail.EmpId = user.EmpId;
@@ -117,14 +110,14 @@ namespace NeutronData.ModelViews
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Updating Order Details.  " + ex.Message);
+                MessageBox.Show($@"Error Updating Order Details.  {ex.Message}");
             }
         }
 
         private void SetOrderComplete(int orderId)
         {
-            ReplenOrder order = _repoOrders.FindByKey(orderId);
-            List <ReplenOrderDetail> recs = _repoOrderDetails.All().Where(d => d.ReplenOrderId == orderId && d.LineStatusId != 6).ToList();
+            var order = _repoOrders.FindByKey(orderId);
+            var recs = _repoOrderDetails.All().Where(d => d.ReplenOrderId == orderId && d.LineStatusId != 6).ToList();
             if (recs.Count == 0)
             {
                 order.OrderStatusId = 6;

@@ -31,7 +31,6 @@ namespace Neutron.Classes
         private readonly IReplenOrdersRepository _replenOrdersRepository;
         private IDynamicLogger _logger;
         private static System.Timers.Timer _compressTimer = new System.Timers.Timer();
-        static int alarmCounter = 1;
 
         public bool CompressRunning { get; private set; }
 

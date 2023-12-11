@@ -423,8 +423,8 @@ namespace Neutron.Forms
 
             Console.WriteLine("Initialize Device Indicators - InitDeviceIndicators");
 
-            _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(189, 0),
-                new Size(769, 127), _neutronVariables);
+            // _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(189, 0),
+            //    new Size(769, 127), _neutronVariables);
 
 
 
@@ -450,7 +450,7 @@ namespace Neutron.Forms
             //    panel.Controls.Add(device);
             //}
 
-            PickScreen.Controls.Add(_deviceIndicatorManager?.DeviceIndicatorPanel);
+            // PickScreen.Controls.Add(_deviceIndicatorManager?.DeviceIndicatorPanel);
 
             Task.Run(() => _logger.LogDetailAsync($"Init Device Indicators END"));
         }
@@ -2125,14 +2125,14 @@ namespace Neutron.Forms
             //-------------------------------------
             Task.Run(() => _logger.LogDetailAsync($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
 
-            //  PrintAllToteLabels();
-            if (_neutronVariables.EnableDocumentPrinter)
-            {
-                if (_neutronVariables.PrintPackingListStart)
-                {
-                    PrintAllDocuments();
-                }
-            }
+            ////  PrintAllToteLabels();
+            //if (_neutronVariables.EnableDocumentPrinter)
+            //{
+            //    if (_neutronVariables.PrintPackingListStart)
+            //    {
+            //        PrintAllDocuments();
+            //    }
+            //}
 
             Task.Run(() => _logger.LogDetailAsync($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -2144,8 +2144,21 @@ namespace Neutron.Forms
             //var locationType = _workstationView.Area.LocationTypeId;
             if (_workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
             {
+                if (pickViews.Any())
+                {
+                    // check for a valid Location in the Inventory file
+                    foreach (var replenPickView in pickViews)
+                    {
+                        //if (replenPickView.Inventory.)
+                        //{
+
+                        //}
+                    }
+
+                }
+
                 // Sort by PickSequence
-                pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.PickSequence).ToList();
+                //pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation?.Location.PickSequence).ToList();
             }
             else
             {
@@ -2219,10 +2232,12 @@ namespace Neutron.Forms
             UpdatePickScreen();
 
             // UpdateCurrentDeviceIndicator();
-            _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+
+            // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+
             UpdatePickPosition();
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-            UpdateTowerDisplay();
+            // UpdateTowerDisplay();
 
             tabControl1.SelectedTab = PickScreen;
 
@@ -2236,7 +2251,9 @@ namespace Neutron.Forms
         /// <returns></returns>
         private List<ReplenPickStop> FinalPickSequenceRack(List<ReplenPickStop> pickStops)
         {
-            return pickStops.OrderBy(r => r.CurrentInventoryLocation.Location.PickSequence).ToList();
+            // return pickStops.OrderBy(r => r.CurrentInventoryLocation.Location.PickSequence).ToList();
+
+            return pickStops;
         }
 
 
@@ -2250,17 +2267,17 @@ namespace Neutron.Forms
             LoadInventory();
             foreach (var pickView in pickViews)
             {
-                var exactInventorySequence = new List<Inventory>();
+                List<Inventory> exactInventorySequence;
 
                 exactInventorySequence = _neutronVariables.UsePrimeBin ? PrimeBinFirst(pickView) : Fifo(pickView);
 
-                var neededLocations = 2 - exactInventorySequence.Count;
-                if (neededLocations > 0)
-                {
-                    var additionInventoryLocations =
-                        GetNewInventoryLocations(pickView.OrderDetail.ItemDefinition, neededLocations);
-                    exactInventorySequence.AddRange(additionInventoryLocations);
-                }
+                //var neededLocations = 0 - exactInventorySequence.Count;
+                //if (neededLocations > 0)
+                //{
+                //    var additionInventoryLocations =
+                //        GetNewInventoryLocations(pickView.OrderDetail.ItemDefinition, neededLocations);
+                //    exactInventorySequence.AddRange(additionInventoryLocations);
+                //}
 
                 if (exactInventorySequence.Count > 0)
                 {
@@ -2275,8 +2292,29 @@ namespace Neutron.Forms
                 }
                 else
                 {
-                    MessageBox.Show($"There are no locations for item: {pickView.Item}{Environment.NewLine} " +
-                                    $"{pickView.Description}.  This item will not be included in this batch.");
+                    // no inventory locations for this item
+                    // create a new empty Inventory object
+                    var inventory = new Inventory();
+                    inventory.AreaId = pickView.AreaId;
+                    inventory.ItemDefinitionId = pickView.ItemId;
+                    inventory.RFID = string.Empty;
+                    inventory.ReceivedDate = DateTime.Now;
+                    inventory.Quantity = 0;
+
+                    exactInventorySequence.Add(inventory);
+
+
+                    pickView.CurrentInventoryLocation = exactInventorySequence.First();
+                    pickView.Inventory = exactInventorySequence;
+                    pickView.TotalQuantityInInventory = 0;
+                    pickView.Slot = string.Empty;
+                    pickView.SlotQty = 0;
+                    pickView.InventoryIndex = 0;
+                    pickView.ReceivedDate = DateTime.Now;
+                    pickableViews.Add(pickView);
+
+                    //MessageBox.Show($"There are no locations for item: {pickView.Item}{Environment.NewLine} " +
+                    //                $"{pickView.Description}.  This item will not be included in this batch.");
                 }
             }
 
@@ -2292,23 +2330,42 @@ namespace Neutron.Forms
             var recs = GetInventory(pickView.ItemId);
 
             if (!recs.Any()) return inventorySequence;
+            var rec = recs.First();
+            var itemDef = _repoItemDefinition.FindByKey(rec.Id);
+            var locationMax = itemDef.LocationMax;
+
+
             //if there is a prime bin make it first, remove it from the list of inventory locations
             if (recs.Count == 1)
             {
-                inventorySequence = recs;
+
+                if (rec.Quantity < locationMax)
+                {
+                    inventorySequence = recs;
+                }
+
             }
             else if (recs.Count > 1)
             {
                 var prime = recs.FirstOrDefault(r => r.Location.Slot == pickView.OrderDetail.PrimeBin);
                 if (prime != null)
                 {
-                    inventorySequence.Add(prime);
-                    recs.Remove(prime);
+                    if (prime.Quantity < locationMax)
+                    {
+                        inventorySequence.Add(prime);
+                        recs.Remove(prime);
+                    }
                 }
 
                 //sequence the inventory Recs by Received Date
                 var sortedRecs = recs.OrderBy(o => o.ReceivedDate);
-                inventorySequence.AddRange(sortedRecs);
+                foreach (var inventory in sortedRecs)
+                {
+                    if (inventory.Quantity < locationMax)
+                    {
+                        inventorySequence.Add(inventory);
+                    }
+                }
             }
             Task.Run(() => _logger.LogDetailAsync($"Prime Bin First Inventory END"));
             return inventorySequence;
@@ -2938,10 +2995,10 @@ namespace Neutron.Forms
 
                 UpdatePickScreen();
                 // UpdateCurrentDeviceIndicator();
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
 
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
@@ -2965,10 +3022,10 @@ namespace Neutron.Forms
                 _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
                 // UpdateCurrentDeviceIndicator();
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                //_deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
 
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
@@ -2991,10 +3048,10 @@ namespace Neutron.Forms
                 _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
                 // UpdateCurrentDeviceIndicator();
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
 
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
@@ -3016,15 +3073,15 @@ namespace Neutron.Forms
                 _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
                 UpdatePickScreen();
                 // UpdateCurrentDeviceIndicator();
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
                 _ = _logger.LogDetailAsync($"3494 GetLastStop PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}");
                 PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
@@ -3073,12 +3130,14 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen End: [{DateTime.Now.ToLongTimeString()}]"));
             MBStoreAccept.Enabled = _currentPickStop.Quantity != pickedSoFar;
             MBPickChangeQuantity.Enabled = _currentPickStop.Quantity != pickedSoFar;
+            TextBoxSlot.Text = string.Empty;
+            TextBoxSlot.Focus();
         }
 
         private void UpdatePickScreenAfterChangeQuantity()
         {
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen AfterChangeQuantity Start: [{DateTime.Now.ToLongTimeString()}]"));
-            UpdateTowerDisplay();
+            // UpdateTowerDisplay();
             UpdatePickPosition();
             LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen AfterChangeQuantity End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -3086,12 +3145,17 @@ namespace Neutron.Forms
 
         private void UpdateTowerDisplay()
         {
-            var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-            var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-            var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
-            var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
-            var text = _currentPickStop.QuantityToBePicked.ToString();
-            ShowShi(loc1, loc2, loc3, loc4, text);
+            //var loc1 = _currentPickStop.CurrentInventoryLocation.Location == null ? string.Empty :  _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+
+            //var loc2 = _currentPickStop.CurrentInventoryLocation == null ? string.Empty :  _currentPickStop.CurrentInventoryLocation.Location.Loc2;
+
+            //var loc3 = _currentPickStop.CurrentInventoryLocation == null ? string.Empty :  _currentPickStop.CurrentInventoryLocation.Location.Loc3;
+
+            //var loc4 = _currentPickStop.CurrentInventoryLocation == null ? string.Empty :  _currentPickStop.CurrentInventoryLocation.Location.Loc4.ToString();
+
+
+            //var text =     _currentPickStop.QuantityToBePicked.ToString();
+            //ShowShi(loc1, loc2, loc3, loc4, text);
 
         }
 
@@ -3115,8 +3179,12 @@ namespace Neutron.Forms
             //Task.Run(() => _logger.LogDetailAsync($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]"));
 
             Task.Run(() => _logger.LogDetailAsync($"Update GroupBox Location Start : [{DateTime.Now.ToLongTimeString()}]"));
-            if (inventory.Location.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
+            if (_workstationView.StationTypeId == 3)
             {
+
+                //}
+                //if (inventory.Location.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
+                //{
                 //show slot
                 LabelDevice.Visible = true;
                 LabelTray.Visible = false;
@@ -3135,10 +3203,15 @@ namespace Neutron.Forms
 
                 TextBoxPickLoc1.Location = new Point(50, 57);
                 TextBoxPickLoc1.Size = new Size(300, 62);
-                TextBoxPickLoc1.Text = inventory.Location.Slot;
+                TextBoxPickLoc1.Text = inventory.Location == null ? string.Empty : inventory.Location.Slot;
             }
-            if (inventory.Location.Area.LocationTypeId == (int)LocationTypeEnum.Blastzone)
+
+            if (_workstationView.StationType.Id == 7)
             {
+
+                //}
+                //if (inventory.Location.Area.LocationTypeId == (int)LocationTypeEnum.Blastzone)
+                //{
                 LabelTray.Text = @"Unit";
                 LabelBack.Text = @"Display";
                 LabelTray.Location = new Point(70, 30);
@@ -3160,14 +3233,19 @@ namespace Neutron.Forms
                 TextBoxPickLoc4.Visible = true;
                 TextBoxPickLoc5.Visible = false;
 
-                TextBoxPickLoc1.Text = inventory.Location.Loc1.ToString();
-                TextBoxPickLoc2.Text = inventory.Location.Loc2.ToString();
-                TextBoxPickLoc3.Text = inventory.Location.Loc3.ToString();
-                TextBoxPickLoc4.Text = inventory.Location.Loc4.ToString();
-                TextBoxPickLoc5.Text = inventory.Location.Loc5.ToString();
+                TextBoxPickLoc1.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc1.ToString();
+                TextBoxPickLoc2.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc2.ToString();
+                TextBoxPickLoc3.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc3.ToString();
+                TextBoxPickLoc4.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc4.ToString();
+                TextBoxPickLoc5.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc5.ToString();
             }
-            if (inventory.Location.Area.LocationTypeId == (int)LocationTypeEnum.Vertical)
+
+            if (_workstationView.StationTypeId == 1 || _workstationView.StationTypeId == 2)
             {
+
+                //}
+                //if (inventory.Location.Area.LocationTypeId == (int)LocationTypeEnum.Vertical)
+                //{
                 LabelDevice.Visible = true;
                 LabelTray.Visible = true;
                 LabelOver.Visible = true;
@@ -3178,11 +3256,11 @@ namespace Neutron.Forms
                 TextBoxPickLoc4.Visible = true;
                 TextBoxPickLoc5.Visible = true;
 
-                TextBoxPickLoc1.Text = inventory.Location.Loc1.ToString();
-                TextBoxPickLoc2.Text = inventory.Location.Loc2.ToString();
-                TextBoxPickLoc3.Text = inventory.Location.Loc3.ToString();
-                TextBoxPickLoc4.Text = inventory.Location.Loc4.ToString();
-                TextBoxPickLoc5.Text = inventory.Location.Loc5.ToString();
+                TextBoxPickLoc1.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc1.ToString();
+                TextBoxPickLoc2.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc2.ToString();
+                TextBoxPickLoc3.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc3.ToString();
+                TextBoxPickLoc4.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc4.ToString();
+                TextBoxPickLoc5.Text = inventory.Location == null ? string.Empty : inventory.Location.Loc5.ToString();
             }
 
             LabelLocationNumber.Text = $"{_currentPickStop.GroupBoxLocationInventoryIndex + 1} of {_currentPickStop.Inventory.Count}";
@@ -3190,8 +3268,12 @@ namespace Neutron.Forms
             TextBoxTotalQuantity.Text = _currentPickStop.Inventory.Sum(r => r.Quantity).ToString();
             TextBoxReceivedDate.Text = inventory.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = inventory.PrimeBin;
-            LabelStaticRelease.Text = inventory.StorageType.Name;
+            LabelStaticRelease.Text = inventory.StorageType == null ? string.Empty : inventory.StorageType.Name;
+
+            TextBoxSlot.FocusAndHighlightText();
+
             Task.Run(() => _logger.LogDetailAsync($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]"));
+
         }
 
 
@@ -3487,6 +3569,25 @@ namespace Neutron.Forms
                 Invoke(method);
                 return;
             }
+
+            // get the new location based on the scanned in slot number
+            if (!string.IsNullOrEmpty(TextBoxSlot.Text))
+            {
+                var location = GetScannedLocation(TextBoxSlot.Text);
+                if (location == null) return;
+                _currentPickStop.CurrentInventoryLocation.Location = location;
+                _currentPickStop.CurrentInventoryLocation.LocationId = location.Id;
+                _currentPickStop.CurrentInventoryLocation.ItemDefinitionId = _currentPickStop.ItemId;
+
+            }
+            else
+            {
+                // use the current Inventory Item in the Group Box
+                // is other words the _currentPickStops Inventory Item
+            }
+
+
+
             // NeutronDllu exit to do something with the selection
             // before processing the replenishment. 
             // For example: Ask operator to scan a lot or serial number
@@ -3544,10 +3645,10 @@ namespace Neutron.Forms
                     _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
                     UpdatePickScreen();
                     // UpdateCurrentDeviceIndicator();
-                    _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                    // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                     UpdatePickPosition();
                     UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                    UpdateTowerDisplay();
+                    // UpdateTowerDisplay();
                 }
                 else
                 {
@@ -3566,16 +3667,22 @@ namespace Neutron.Forms
 
                 UpdatePickScreen();
                 // UpdateCurrentDeviceIndicator();
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
             }
 
 
             Task.Run(() => _logger.LogDetailAsync($"StoreAccept_Click End : [{DateTime.Now.ToLongTimeString()}]"));
             MBStoreAccept.Enabled = true;
             Cursor.Current = Cursors.Default;
+        }
+
+        private Location GetScannedLocation(string slot)
+        {
+            return _repoLocationRepository.FindBy(r => r.Slot == slot).FirstOrDefault();
+
         }
 
         private bool CheckForOrderCompleteOnDevice(ReplenOrder order)
@@ -3655,7 +3762,8 @@ namespace Neutron.Forms
                     //        AreaId = _currentPickStop.CurrentInventoryLocation.AreaId,
                     //        Workstation = _currentPickStop.CurrentInventoryLocation.Workstation,
                     //        StorageTypeId = storageType.Id,
-                    //        StorageType = storageType
+                    //        StorageType = storageType,
+                    //        RFID = string.Empty
                     //    };
                     //_currentPickStop.Inventory.Add(inventory);
                     //_currentPickStop.InventoryIndex += 1;
@@ -3694,7 +3802,8 @@ namespace Neutron.Forms
                         PrimeBin = false,
                         AreaId = itemDefinition.AreaId,
                         StorageTypeId = storageType.Id,
-                        StorageType = storageType
+                        StorageType = storageType,
+                        RFID = string.Empty
                     };
                     inventory.Add(inv);
                 }
@@ -3749,20 +3858,32 @@ namespace Neutron.Forms
         {
             bool result = false;
 
-            var idx = _currentPickStop.InventoryIndex + 1 < _currentPickStop.Inventory.Count
-                ? _currentPickStop.InventoryIndex + 1
-                : 0;
-            if (idx > 0)
+            if (_workstationView.StationTypeId == 3)
             {
-                // Next Inventory location
-                _currentPickStop.GroupBoxLocationInventoryIndex = idx;
-                var inventory = _currentPickStop.Inventory[idx];
-                _currentPickStop.InventoryIndex = idx;
-                _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[idx];
-                var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-                var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
-                _ = _logger.LogDetailAsync($"Get Next Picking Location: {loc1}-{loc2}");
+                TextBoxSlot.Text = string.Empty;
+                TextBoxSlot.Focus();
                 result = true;
+            }
+            else
+            {
+
+
+                var idx = _currentPickStop.InventoryIndex + 1 < _currentPickStop.Inventory.Count
+                    ? _currentPickStop.InventoryIndex + 1
+                    : 0;
+                if (idx > 0)
+                {
+                    // Next Inventory location
+                    _currentPickStop.GroupBoxLocationInventoryIndex = idx;
+                    var inventory = _currentPickStop.Inventory[idx];
+                    _currentPickStop.InventoryIndex = idx;
+                    _currentPickStop.CurrentInventoryLocation = _currentPickStop.Inventory[idx];
+                    var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+                    var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
+                    _ = _logger.LogDetailAsync($"Get Next Picking Location: {loc1}-{loc2}");
+                    result = true;
+                }
+
             }
 
             return result;
@@ -3770,6 +3891,8 @@ namespace Neutron.Forms
 
         private void UpdateInventoryQuantity(ReplenPickStop pickStop)
         {
+            Inventory inventory;
+
             foreach (ReplenPickView pickView in pickStop.PickViews)
             {
                 foreach (PickLocation pickLocation in pickView.PickLocations)
@@ -3777,7 +3900,16 @@ namespace Neutron.Forms
                     if (pickLocation.Quantity > 0)
                     {
                         pickLocation.Inventory.Quantity += pickLocation.Quantity;
-                        var inventory = _repoInventory.FindByKey(pickLocation.Inventory.Id);
+
+                        if (pickLocation.Inventory.Location.Id == 0)
+                        {
+                            inventory = _repoInventory.FindBy(r => r.LocationId == pickStop.CurrentInventoryLocation.LocationId).FirstOrDefault();
+                        }
+                        else
+                        {
+                            inventory = _repoInventory.FindByKey(pickLocation.Inventory.Id);
+                        }
+
                         if (inventory == null)
                         {
                             // Create an Inventory and get the Id
@@ -3791,7 +3923,8 @@ namespace Neutron.Forms
                                     ReceivedDate = pickLocation.Inventory.ReceivedDate,
                                     PrimeBin = pickLocation.Inventory.PrimeBin,
                                     AreaId = pickLocation.Inventory.AreaId,
-                                    StorageTypeId = pickLocation.Inventory.StorageTypeId
+                                    StorageTypeId = 2,  //   pickLocation.Inventory.StorageTypeId,
+                                    RFID = string.Empty
                                 };
                                 _repoInventory.Insert(inv);
                                 pickLocation.Inventory.Id = inv.Id;
@@ -3826,7 +3959,8 @@ namespace Neutron.Forms
                 ReceivedDate = pickLocation.Inventory.ReceivedDate,
                 PrimeBin = pickLocation.Inventory.PrimeBin,
                 AreaId = pickLocation.Inventory.AreaId,
-                StorageTypeId = pickLocation.Inventory.StorageTypeId
+                StorageTypeId = pickLocation.Inventory.StorageTypeId,
+                RFID = string.Empty
             };
             _repoInventory.Insert(inventory);
 
@@ -3841,7 +3975,7 @@ namespace Neutron.Forms
             ClearOrderPositions();
             ClearBatchPositions();
             Console.WriteLine("Clear All Device Indicators - Close Batch");
-            _deviceIndicatorManager?.ClearAllDeviceIndicators();
+            // _deviceIndicatorManager?.ClearAllDeviceIndicators();
 
             _ = _logger.LogDetailAsync($"Start Upload Processor: {_neutronLicense.CompanyCode}");
             switch (_neutronLicense.CompanyCode)
@@ -3940,87 +4074,87 @@ namespace Neutron.Forms
             }
         }
 
-        private void PrintAllDocuments()
-        {
-            foreach (var bp in _ordersToPick)
-            {
-                if (bp.OrderId == 0) continue;
-                var id = bp.OrderId;
-                var order = _repoReplenOrder.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true)
-                    .FirstOrDefault();
-                if (printJob != null) continue;
-                PrintDoc(bp.PositionNumber, order);
-                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
-                _repoPrintJob.Insert(printJob);
-            }
-        }
+        //private void PrintAllDocuments()
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.OrderId == 0) continue;
+        //        var id = bp.OrderId;
+        //        var order = _repoReplenOrder.FindByKey(id);
+        //        var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true)
+        //            .FirstOrDefault();
+        //        if (printJob != null) continue;
+        //        PrintDoc(bp.PositionNumber, order);
+        //        printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
+        //        _repoPrintJob.Insert(printJob);
+        //    }
+        //}
 
-        private void PrintDocument(int batchPosition)
-        {
-            foreach (var bp in _ordersToPick)
-            {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == 0) continue;
-                var id = bp.OrderId;
-                var order = _repoReplenOrder.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true)
-                    .FirstOrDefault();
-                if (printJob != null) continue;
-                PrintDoc(bp.PositionNumber, order);
-                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
-                _repoPrintJob.Insert(printJob);
-            }
-        }
+        //private void PrintDocument(int batchPosition)
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.PositionNumber != batchPosition) continue;
+        //        if (bp.OrderId == 0) continue;
+        //        var id = bp.OrderId;
+        //        var order = _repoReplenOrder.FindByKey(id);
+        //        var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.PickDocument == true)
+        //            .FirstOrDefault();
+        //        if (printJob != null) continue;
+        //        PrintDoc(bp.PositionNumber, order);
+        //        printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
+        //        _repoPrintJob.Insert(printJob);
+        //    }
+        //}
 
-        private void PrintDoc(int positionNumber, ReplenOrder order)
-        {
-            Task.Run(() => _logger.LogDetailAsync($"Printing Document. {order.Ord1}"));
-            if (_neutronVariables.EnableDocumentPrinter)
-            {
-                Task.Run(() => _documentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
-            }
-        }
+        //private void PrintDoc(int positionNumber, ReplenOrder order)
+        //{
+        //    Task.Run(() => _logger.LogDetailAsync($"Printing Document. {order.Ord1}"));
+        //    if (_neutronVariables.EnableDocumentPrinter)
+        //    {
+        //        Task.Run(() => _documentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
+        //    }
+        //}
 
-        private void PrintAllToteLabels()
-        {
-            foreach (var bp in _ordersToPick)
-            {
-                if (bp.OrderId == 0) continue;
-                var id = bp.OrderId;
-                var order = _repoReplenOrder.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.ToteLabel == true).FirstOrDefault();
-                if (printJob != null) continue;
-                PrintTote(bp.PositionNumber, order);
-                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
-                _repoPrintJob.Insert(printJob);
-            }
-        }
+        //private void PrintAllToteLabels()
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.OrderId == 0) continue;
+        //        var id = bp.OrderId;
+        //        var order = _repoReplenOrder.FindByKey(id);
+        //        var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.ToteLabel == true).FirstOrDefault();
+        //        if (printJob != null) continue;
+        //        PrintTote(bp.PositionNumber, order);
+        //        printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
+        //        _repoPrintJob.Insert(printJob);
+        //    }
+        //}
 
-        private void PrintToteLabel(int batchPosition)
-        {
-            foreach (var bp in _ordersToPick)
-            {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == 0) continue;
-                var id = bp.OrderId;
-                var order = _repoReplenOrder.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.ToteLabel == true).FirstOrDefault();
-                if (printJob != null) continue;
-                PrintTote(bp.PositionNumber, order);
-                printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
-                _repoPrintJob.Insert(printJob);
-            }
-        }
+        //private void PrintToteLabel(int batchPosition)
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.PositionNumber != batchPosition) continue;
+        //        if (bp.OrderId == 0) continue;
+        //        var id = bp.OrderId;
+        //        var order = _repoReplenOrder.FindByKey(id);
+        //        var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id && r.ToteLabel == true).FirstOrDefault();
+        //        if (printJob != null) continue;
+        //        PrintTote(bp.PositionNumber, order);
+        //        printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
+        //        _repoPrintJob.Insert(printJob);
+        //    }
+        //}
 
-        private void PrintTote(int positionNumber, ReplenOrder order)
-        {
-            Task.Run(() => _logger.LogDetailAsync($"Printing Tote Label. {order.Ord1}"));
-            if (_neutronVariables.EnableLabelPrinter)
-            {
-                Task.Run(() => ToteToPrint.Print(positionNumber, order, _labelPrinter));
-            }
-        }
+        //private void PrintTote(int positionNumber, ReplenOrder order)
+        //{
+        //    Task.Run(() => _logger.LogDetailAsync($"Printing Tote Label. {order.Ord1}"));
+        //    if (_neutronVariables.EnableLabelPrinter)
+        //    {
+        //        Task.Run(() => ToteToPrint.Print(positionNumber, order, _labelPrinter));
+        //    }
+        //}
 
 
 
@@ -4067,6 +4201,8 @@ namespace Neutron.Forms
                 var inventory = _currentPickStop.Inventory[idx];
                 UpdateGroupBoxLocation(inventory);
             }
+
+
         }
 
         private void MBPickChangeQuantity_Click(object sender, EventArgs e)
@@ -4114,7 +4250,7 @@ namespace Neutron.Forms
             var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
             // UpdateCurrentDeviceIndicator();
-            _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+            // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
         }
 
         private void MBPriority_Click(object sender, EventArgs e)
@@ -5128,7 +5264,7 @@ namespace Neutron.Forms
                 ////, 1
                 ////, null))
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                           , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                           , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
                            , _neutronLicense, _workstationView, _historyManager, _locationsRepository, item))
                 {
                     DialogResult result = frm.ShowDialog();
@@ -5140,10 +5276,10 @@ namespace Neutron.Forms
                 UpdateInventoryAfterHotAction();
                 UpdatePickScreen();
                 // UpdateCurrentDeviceIndicator();
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
 
                 //_openHotPickFromPickScreen = true;
                 //LabelFormTitle.Text = _resourceManager.GetString($"HotSearch");
@@ -5487,91 +5623,91 @@ namespace Neutron.Forms
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
-        private void MbPrintAvailableOrdersRack_Click(object sender, EventArgs e)
-        {
-            CsvUtility.SaveToCsv(DataGridViewAvailableOrdersRack);
-            TextBoxFindAvailableOrdersRack.Focus();
-        }
+        //private void MbPrintAvailableOrdersRack_Click(object sender, EventArgs e)
+        //{
+        //    CsvUtility.SaveToCsv(DataGridViewAvailableOrdersRack);
+        //    TextBoxFindAvailableOrdersRack.Focus();
+        //}
 
-        private void MBPrintDocumentAndToteLabel_Click(object sender, EventArgs e)
-        {
+        //private void MBPrintDocumentAndToteLabel_Click(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
         private void tabControl1_Enter(object sender, EventArgs e)
         {
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
-        private void MBPrint_Click(object sender, EventArgs e)
-        {
-            var position = _currentPickStop.PickViews.First().PickPosition;
+        //private void MBPrint_Click(object sender, EventArgs e)
+        //{
+        //    var position = _currentPickStop.PickViews.First().PickPosition;
 
-            using (FrmReprint form = new FrmReprint(_neutronVariables, position))
-            {
-                DialogResult result = form.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    if (form.printData.PrintDocument)
-                    {
-                        ReprintDocument(form.printData.Position);
-                    }
+        //    using (FrmReprint form = new FrmReprint(_neutronVariables, position))
+        //    {
+        //        DialogResult result = form.ShowDialog();
+        //        if (result == DialogResult.OK)
+        //        {
+        //            if (form.printData.PrintDocument)
+        //            {
+        //                ReprintDocument(form.printData.Position);
+        //            }
 
-                    if (form.printData.PrintToteLabel)
-                    {
-                        ReprintToteLabel(form.printData.Position);
-                    }
-                }
-            }
-        }
+        //            if (form.printData.PrintToteLabel)
+        //            {
+        //                ReprintToteLabel(form.printData.Position);
+        //            }
+        //        }
+        //    }
+        //}
 
-        private void ReprintToteLabel(int batchPosition)
-        {
-            foreach (var bp in _ordersToPick)
-            {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == 0) continue;
-                var id = bp.OrderId;
-                var order = _repoReplenOrder.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
-                if (printJob == null)
-                {
-                    PrintTote(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
-                    _repoPrintJob.Insert(printJob);
-                }
-                else
-                {
-                    PrintTote(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
-                    _repoPrintJob.Update(printJob);
-                }
-            }
-        }
+        //private void ReprintToteLabel(int batchPosition)
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.PositionNumber != batchPosition) continue;
+        //        if (bp.OrderId == 0) continue;
+        //        var id = bp.OrderId;
+        //        var order = _repoReplenOrder.FindByKey(id);
+        //        var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
+        //        if (printJob == null)
+        //        {
+        //            PrintTote(bp.PositionNumber, order);
+        //            printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
+        //            _repoPrintJob.Insert(printJob);
+        //        }
+        //        else
+        //        {
+        //            PrintTote(bp.PositionNumber, order);
+        //            printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, ToteLabel = true };
+        //            _repoPrintJob.Update(printJob);
+        //        }
+        //    }
+        //}
 
-        private void ReprintDocument(int batchPosition)
-        {
-            foreach (var bp in _ordersToPick)
-            {
-                if (bp.PositionNumber != batchPosition) continue;
-                if (bp.OrderId == 0) continue;
-                var id = bp.OrderId;
-                var order = _repoReplenOrder.FindByKey(id);
-                var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
-                if (printJob == null)
-                {
-                    PrintDoc(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
-                    _repoPrintJob.Insert(printJob);
-                }
-                else
-                {
-                    PrintDoc(bp.PositionNumber, order);
-                    printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
-                    _repoPrintJob.Update(printJob);
-                }
-            }
-        }
+        //private void ReprintDocument(int batchPosition)
+        //{
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        if (bp.PositionNumber != batchPosition) continue;
+        //        if (bp.OrderId == 0) continue;
+        //        var id = bp.OrderId;
+        //        var order = _repoReplenOrder.FindByKey(id);
+        //        var printJob = _repoPrintJob.FindBy(r => r.OrderId == order.Id).FirstOrDefault();
+        //        if (printJob == null)
+        //        {
+        //            PrintDoc(bp.PositionNumber, order);
+        //            printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
+        //            _repoPrintJob.Insert(printJob);
+        //        }
+        //        else
+        //        {
+        //            PrintDoc(bp.PositionNumber, order);
+        //            printJob = new PrintJob { JobNum = order.Ord1, OrderId = order.Id, PickDocument = true };
+        //            _repoPrintJob.Update(printJob);
+        //        }
+        //    }
+        //}
 
         private void TextBoxFindAvailableOrdersRack_KeyDown(object sender, KeyEventArgs e)
         {
@@ -5978,7 +6114,7 @@ namespace Neutron.Forms
             ////, quantity
             ////, pickList))
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                       , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                       , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
                        , _neutronLicense, _workstationView, _historyManager, _locationsRepository, item, quantity, pickList))
             {
                 var result = frm.ShowDialog();

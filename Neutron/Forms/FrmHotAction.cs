@@ -60,7 +60,7 @@ namespace Neutron.Forms
             new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         //private readonly LocationsRepository _repoLocation = new LocationsRepository();
         //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
-        private readonly IWorkstationRepository _workstationRepository;
+       // private readonly IWorkstationRepository _workstationRepository;
         private readonly HistoryManager _historyManager;
 
         private ILocationsRepository _locationsRepository;
@@ -119,7 +119,7 @@ namespace Neutron.Forms
 
         public FrmHotAction(IJsonData jsonData, IAkaRepository akaRepository
             , ILacProcessor lacProcessor, IImageManager imageManager
-            , IWorkstationRepository workstationRepository, IItemDefinitionsRepository itemDefinitionsRepository
+            , IItemDefinitionsRepository itemDefinitionsRepository
             , NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , WorkstationView workstationView, HistoryManager historyManager, ILocationsRepository locationsRepository
             , string item = "", int quantity = 1, PickList pickList = null)
@@ -130,7 +130,7 @@ namespace Neutron.Forms
             //var pickList = new PickList();
             //var item = "10015665";
 
-            _workstationRepository = workstationRepository;
+            //_workstationRepository = workstationRepository;
             _historyManager = historyManager;
             _locationsRepository = locationsRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -432,7 +432,7 @@ namespace Neutron.Forms
             var recs = _repoInv.GetAllInventoryViewsByItemDefinitionId(_currentItemDefinition.Id).ToList();
             var blv = new BindingListView<SqlInventoryView>(recs);
             _bindingSourceCurrent.DataSource = blv;
-            var recordCount = GetRecordCount(recs);
+            GetRecordCount(recs);
             MBCurrentLocations.Text = $"{_resourceManager.GetString($"CurrentLocations")} ({_bindingSourceCurrent.Count})";
 
             Task.Run(() => _logger.LogDetailAsync($"Load Current By Item: {_currentItemDefinition.Item}  END"));
@@ -482,7 +482,7 @@ namespace Neutron.Forms
                 var locationViews = views.ToList();
                 var blvAll = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blvAll;
-                var recordCount = GetRecordCount(locationViews.ToList());
+                GetRecordCount(locationViews.ToList());
             }
             else
             {
@@ -492,7 +492,7 @@ namespace Neutron.Forms
                 var locationViews = views.ToList();
                 var blv = new BindingListView<LocationView>(locationViews.ToList());
                 _bindingSourceNewLocations.DataSource = blv;
-                var recordCount = GetRecordCount(locationViews.ToList());
+                GetRecordCount(locationViews.ToList());
             }
             //var blv = new BindingListView<LocationView>(views.ToList());
             //_bindingSourceNewLocations.DataSource = blv;
@@ -534,7 +534,7 @@ namespace Neutron.Forms
             _bindingSourceNewLocations.DataSource = blvAll;
             SetupGridNew();
             DataGridViewHot.DataSource = _bindingSourceNewLocations;
-            var recordCount = GetRecordCount(locationViews.ToList());
+            GetRecordCount(locationViews.ToList());
 
             MBNewLocations.Text = $"{_newLocationButtonText} ({_bindingSourceNewLocations.Count})";
             Task.Run(() => _logger.LogDetailAsync($"Load New Locations By Slot: {slot}  END"));
@@ -551,7 +551,7 @@ namespace Neutron.Forms
             {
                 DataGridViewHot.DataSource = bindingSource.DataSource;
                 DataGridViewHot.ClearSelection();
-                var recordCount = GetRecordCount(bindingSource);
+                GetRecordCount(bindingSource);
             }
         }
 
@@ -617,8 +617,8 @@ namespace Neutron.Forms
             await _logger.LogDetailAsync($"Load Item Definitions Update the Grid ");
             //UpdateDataGrid(_bindingSourceItemDefinitions);
             await _logger.LogDetailAsync($"Load Item Definitions Get the Record Count");
-            var recordCount = GetRecordCount(_bindingSourceItemDefinitions);
-            if (recordCount > 0)
+            GetRecordCount(_bindingSourceItemDefinitions);
+            if (_bindingSourceItemDefinitions.Count > 0)
             {
                 await _logger.LogDetailAsync($"Load Item Definitions Record count is greater that zero ");
                 if (recId != 0)
@@ -640,7 +640,7 @@ namespace Neutron.Forms
                          ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
                     await _logger.LogDetailAsync($"Load Item Definitions Current Item: {_currentItemDefinition.Item} ");
                     await _logger.LogDetailAsync($"Load Item Definitions If record count = 1 then call LoadCurrentAndNew ");
-                    if (recordCount == 1) await LoadCurrentAndNew();
+                    if (_bindingSourceItemDefinitions.Count == 1) await LoadCurrentAndNew();
                 }
                 catch (Exception ex)
                 {
@@ -688,17 +688,15 @@ namespace Neutron.Forms
             }
             return itemIndex;
         }
-        private int GetRecordCount(BindingSource bs)
+        private void GetRecordCount(BindingSource bs)
         {
             var count = bs.Count;
             LabelRecordCount.Text = $"{_resourceManager.GetString($"Records")}: {count.ToString()}";
-            return count;
         }
-        private int GetRecordCount(IReadOnlyCollection<object> bs)
+        private void GetRecordCount(IReadOnlyCollection<object> bs)
         {
             var count = bs.Count;
             LabelRecordCount.Text = $"{_resourceManager.GetString($"Records")}: {count.ToString()}";
-            return count;
         }
         private void SetupGridItemDefinition()
         {
@@ -1806,7 +1804,7 @@ namespace Neutron.Forms
                         : invItem.ReceivedDate.ToShortDateString();
                     LabelPrimeBin.Visible = invItem.PrimeBin;
                     LabelStaticRelease.Text = invItem.StorageTypeName;
-                    if (_neutronVariables.UseImages) PictureBoxItemHotImage.Load(_imageManager.GetImageFile(invItem.Item));
+                    if (_neutronVariables.UseImages) PictureBoxItemHotImage?.LoadAsync(_imageManager.GetImageFile(invItem.Item));
                 }
             }
             catch (Exception ex)
@@ -2021,7 +2019,7 @@ namespace Neutron.Forms
                     {
                         SetupGridCurrent();
                         DataGridViewHot.DataSource = _bindingSourceCurrent;
-                        var recordCount = GetRecordCount(_bindingSourceCurrent);
+                        GetRecordCount(_bindingSourceCurrent);
                         //if(DataGridViewHot.RowCount > 0)
                         //{
                         //    var selected = DataGridViewHot.SelectedRows[0].Selected; // = true;
@@ -2032,7 +2030,7 @@ namespace Neutron.Forms
                     {
                         SetupGridNew();
                         DataGridViewHot.DataSource = _bindingSourceNewLocations;
-                        var recordCount = GetRecordCount(_bindingSourceNewLocations);
+                        GetRecordCount(_bindingSourceNewLocations);
                         //if (DataGridViewHot.RowCount > 0)
                         //{
                         //    var selected = DataGridViewHot.SelectedRows[0].Selected; // = true;
@@ -2539,7 +2537,7 @@ namespace Neutron.Forms
             MBHotStore.Enabled = true;
             SetupGridCurrent();
             DataGridViewHot.DataSource = _bindingSourceCurrent;
-            var recordCount = GetRecordCount(_bindingSourceCurrent);
+            GetRecordCount(_bindingSourceCurrent);
             Task.Run(() => _logger.LogDetailAsync($"Current Locations Pressed END"));
         }
         private void MBNewLocations_Click(object sender, EventArgs e)
@@ -2549,7 +2547,7 @@ namespace Neutron.Forms
             MBHotStore.Enabled = true;
             SetupGridNew();
             DataGridViewHot.DataSource = _bindingSourceNewLocations;
-            var recordCount = GetRecordCount(_bindingSourceNewLocations);
+            GetRecordCount(_bindingSourceNewLocations);
             Task.Run(() => _logger.LogDetailAsync("New Locations Pressed END"));
         }
 
@@ -2561,7 +2559,7 @@ namespace Neutron.Forms
         {
             await EditItemDefinition(_currentInventoryView.ItemDefinitionId);
         }
-        private async Task EditItemDefinition(int id)
+        private Task EditItemDefinition(int id)
         {
             Hide();
             using (var frm = new FrmEditItemDefinition(id, _historyManager))
@@ -2569,7 +2567,7 @@ namespace Neutron.Forms
                 var result = frm.ShowDialog();
                 Show();
             }
-            await UpdateHotPickScreen(_currentInventoryView);
+            return UpdateHotPickScreen(_currentInventoryView);
         }
         private void ButtonEditLocationDefinition_Click(object sender, EventArgs e)
         {

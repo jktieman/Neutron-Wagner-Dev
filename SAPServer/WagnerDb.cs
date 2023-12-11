@@ -7,7 +7,8 @@ namespace SAPServer
 {
     public class WagnerDb : DbContext
     {
-        public WagnerDb() : base("name=DCLinkModel")
+        //public WagnerDb() : base("name=DCLinkModel")
+        public WagnerDb() : base("name=Neutron")
         {
             Database.SetInitializer(new NullDatabaseInitializer<WagnerDb>());
         }

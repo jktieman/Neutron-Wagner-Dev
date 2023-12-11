@@ -125,7 +125,8 @@ namespace NeutronLoader
                         // and the ending quantity QTY = (rec.IssuedQuantity)
                         // then set the NOVA_OUTPUT record to PROCESSED = "N"  (the SAP process will set it to "Y" when it is processed)
 
-                        using (var wagDb = new WagnerDb())
+                       // using (var wagDb = new WagnerDb())
+                        using (var wagDb = new NeutronDb())
                         {
                             foreach (var rec in recs)
                             {

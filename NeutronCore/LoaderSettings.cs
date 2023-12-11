@@ -41,7 +41,7 @@ namespace NeutronCore
             Init();
         }
         public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
-        public static string GetImagesDirectory() => PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory;
+        public static string GetImagesDirectory() => PathExists(_imagesDirectory) ? _imagesDirectory : _rootDirectory + @"Images\";
         public static void SetImagesDirectory(string value)
         {
             _imagesDirectory = value;

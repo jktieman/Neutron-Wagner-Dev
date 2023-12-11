@@ -23,7 +23,7 @@ namespace NeutronMaintenance
         private readonly GenericRepository<ItemDefinition> repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
         private readonly GenericRepository<Location> repoLocation = new GenericRepository<Location>(new NeutronDb());
         //private readonly HistoryManager historyManager = new HistoryManager();
-        private readonly AlliedFileWatcher interfaceWatcher;
+       // private readonly AlliedFileWatcher interfaceWatcher;
         private readonly IDynamicLogger _logger;
         string configFilePath;
         readonly bool usePr1Processor = false;
@@ -81,7 +81,7 @@ namespace NeutronMaintenance
         public void StopProcessingInterfaceFiles()
         {
                 StopBackgroundWorker();
-                interfaceWatcher.Stop();
+              //  interfaceWatcher.Stop();
         }
 
         //public FileInfo[] GetFiles()

@@ -211,13 +211,13 @@ namespace Neutron.Forms
             _logger = NeutronCore.Global.Logger.SetupLogger("Pick");
 
             Task.Run(() => _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
-            if (_workstationView.WorkstationId == _neutronVariables.LoaderStation)
-            {
-                MBMainLoadOrders.Visible = true;
-                MBMainUpload.Visible = true;
-                MBRunLoader.Visible = true;
-                MBRunUploadOnce.Visible = true;
-            }
+            //if (_workstationView.WorkstationId == _neutronVariables.LoaderStation)
+            //{
+            //    MBMainLoadOrders.Visible = true;
+            //    MBMainUpload.Visible = true;
+            //    MBRunLoader.Visible = true;
+            //    MBRunUploadOnce.Visible = true;
+            //}
             SetupPrinters();
 
             InitGrids();
@@ -2934,7 +2934,7 @@ namespace Neutron.Forms
         {
             Task.Run(() => _logger.LogDetailAsync($"Get Pick Views START"));
             var prevPartNum = "";
-
+            var orderAndDetails = new Order();
             var pickViews = new List<PickView>();
             foreach (var bp in _ordersToPick)
             {
@@ -2952,7 +2952,7 @@ namespace Neutron.Forms
                     // will be picked separately
                 var counter = 0;
                 // get the Order and OrderDetails for the current Order and Area
-                var orderAndDetails = _ordersRepository.GetOrderWithOrderDetails(bp.OrderId, _workstationView.AreaId);
+                orderAndDetails = _ordersRepository.GetOrderWithOrderDetails(bp.OrderId, _workstationView.AreaId);
                 
                 //var order = _ordersRepository.GetOrder(bp.OrderId);
                 //var orderDetails = _ordersRepository.GetOrderDetailsByOrderAndArea(bp.OrderId, _workstationView.AreaId);
@@ -2976,7 +2976,7 @@ namespace Neutron.Forms
                     //key builder makes each line of orderdetails unique so that an order with the same item
                     // will be picked separately
                     // PickStops will be grouped by key, not item number
-
+                    detail.Order = (Order)orderAndDetails;
                     var key = "";
                     if (firstTime)
                     {
@@ -3023,7 +3023,7 @@ namespace Neutron.Forms
                         ItemId = detail.ItemDefinitionId,
                         Item = detail.PartNum,
                         Description = detail.PartDesc,
-                        UnitOfIssue =  detail.ItemDefinition.UnitOfIssue.Name,
+                        UnitOfIssue =  unitOfIssue,
                         Quantity = detail.Quantity,
                         QuantityToBePicked = detail.Quantity,
                         PickedQty = detail.PickedQuantity,
@@ -3470,7 +3470,7 @@ namespace Neutron.Forms
         //Back button on Pick Screen
         private void PickBack()
         {
-            _ = Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
+             _ = Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
             LabelFormTitle.Text = _resourceManager.GetString($"PickList");
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = PickList;
@@ -3618,6 +3618,7 @@ namespace Neutron.Forms
             var finalPickSequence =
                 _workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack ? FinalPickSequenceRack(pickStops) : FinalPickSequence(pickStops);
             // set the BindingSourcePickStops to the finalPickSequence
+            _bindingSourcePickStops.DataSource = null;
             _bindingSourcePickStops.DataSource = finalPickSequence;
 
 
@@ -7162,7 +7163,7 @@ namespace Neutron.Forms
                 //          //, null))
 
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                                          , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                                          , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
                                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, item))
                 {
                     //frm.Item = item;
@@ -8121,7 +8122,7 @@ namespace Neutron.Forms
             ////, null))
 
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                       , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                       , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
                        , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
 
             {

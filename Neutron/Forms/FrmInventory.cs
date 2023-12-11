@@ -359,6 +359,7 @@ namespace Neutron.Forms
         private void MButtonClose_Click(object sender, EventArgs e)
         {
             ClearAllShi();
+            _workstationView.ProLiteManager?.ClearAllProlites();
             CloseButtonPressed = true;
             Close();
         }
@@ -2157,7 +2158,9 @@ namespace Neutron.Forms
                         ClearAllShi();
 
                         var text = ($"{quantity.ToString().PadLeft(6, paddingChar: ' ')}");
-                        GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, part.ToString(), text);
+                        //GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, part.ToString(), text);
+
+                        _workstationView.ProLiteManager.TurnOn(deviceNumber,trayNumber, part,text.ParseInt());
                     }
                 }
 

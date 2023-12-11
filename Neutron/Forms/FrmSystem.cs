@@ -311,6 +311,7 @@ namespace Neutron.Forms
             CostCenterDirectory.Text = LoaderSettings.GetCostCenterDirectory();
             CostCenterFileName.Text = LoaderSettings.GetCostCenterFile();
             LanguageDirectory.Text = LoaderSettings.GetLanguageDirectory();
+            CheckBoxSqlServerAuthentication.Checked = true;
         }
 
         private void ButtonSaveConnectionString_Click(object sender, EventArgs e)

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.IO;
 using AlliedLogger;
 using Neutron.Interfaces;
 using NeutronCore;
@@ -14,7 +15,7 @@ namespace Neutron.Models
         {
             _logger = Logger.SetupLogger(@"ImageManager");
         }
-        public string GetImageFile(string item = @"")
+        public string GetImageFile(string item = "")
         {
          _ = _logger.LogDetailAsync($"GetImageFile: {item}");
 

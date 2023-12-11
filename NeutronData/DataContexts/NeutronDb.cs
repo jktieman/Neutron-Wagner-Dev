@@ -1,7 +1,10 @@
 ﻿using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
+using SAPServer.Models;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Linq;
 using OrderStatus = NeutronData.Models.Lookups.OrderStatus;
 using StationType = NeutronData.Models.Lookups.StationType;
 using StorageType = NeutronData.Models.Lookups.StorageType;
@@ -59,6 +62,38 @@ namespace NeutronData.DataContexts
         public DbSet<StorageDevice> StorageDevices { get; set; }
         public DbSet<CycleCount> CycleCounts { get; set; }
         public DbSet<PrintJob> PrintJobs { get; set; }
+
+        // Loader
+
+
+        public virtual DbSet<NOVA_HISTORY> NOVA_HISTORY { get; set; }
+        public virtual DbSet<NOVA_INPUT> NOVA_INPUT { get; set; }
+        public virtual DbSet<NOVA_OH> NOVA_OH { get; set; }
+        public virtual DbSet<NOVA_OUTPUT> NOVA_OUTPUT { get; set; }
+        public virtual DbSet<PriorityRecord> PriorityRecords { get; set; }
+
+
+
+
+        public override int SaveChanges()
+        {
+            try
+            {
+                return base.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errorMessages = ex.EntityValidationErrors
+                    .SelectMany(x => x.ValidationErrors)
+                    .Select(x => x.ErrorMessage);
+
+                var fullErrorMessage = string.Join("; ", errorMessages);
+
+                var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
+
+                throw new DbEntityValidationException(exceptionMessage, ex.EntityValidationErrors);
+            }
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

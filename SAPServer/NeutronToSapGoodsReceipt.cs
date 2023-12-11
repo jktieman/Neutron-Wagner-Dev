@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AlliedLogger;
+using NeutronData.DataContexts;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
 
@@ -85,7 +86,7 @@ namespace SAPServer
                          _ = _logger.LogDetailAsync($"Single Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
                             // _sendEmail.Message("Single Goods Receipt RfcAbapBaseException Error", _logger.LastLogLines());
 
-                            using (var db = new WagnerDb())
+                           using (var db = new WagnerDb())
                             {
                                 var rec = db.NOVA_OUTPUT.Find(good.TRANSID);
                                 if (rec == null) continue;

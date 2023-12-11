@@ -46,29 +46,33 @@ namespace Neutron
             NeutronLicense neutronLicense = null;
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
-
+            
             const string appName = "Neutron";
 
-            var assembly = Assembly.GetExecutingAssembly();
-            var currentPath = AppDomain.CurrentDomain.BaseDirectory;
-            var licenseFile = Path.Combine(currentPath, @"License.lic");
-            var publicKeyFile = Path.Combine(currentPath, @"PublicKey.xml");
-            var licenseManager = new AlliedLicenseManager();
-            var result = licenseManager.ExamineLicense(licenseFile, assembly.GetName(), publicKeyFile);
+            //var assembly = Assembly.GetExecutingAssembly();
+            //var currentPath = AppDomain.CurrentDomain.BaseDirectory;
+            //var licenseFile = Path.Combine(currentPath, @"License.lic");
+            //var publicKeyFile = Path.Combine(currentPath, @"PublicKey.xml");
+            //var licenseManager = new AlliedLicenseManager();
 
-            if (!result.LicenseStatus.Equals(LicenseStatus.ValidLicense))
-            {
-                MessageBox.Show($"{result.LicenseStatus.GetDescription()}");
-                neutronLicense = null;
-                // exit the application
-                return;
-            }
+            //var result = licenseManager.ExamineLicense(licenseFile, assembly.GetName(), publicKeyFile);
+            ////MessageBox.Show($"Result: {result.Code}");
+            //if (!result.LicenseStatus.Equals(LicenseStatus.ValidLicense))
+            //{
+            //    MessageBox.Show($"{result.LicenseStatus.GetDescription()}");
+            //    neutronLicense = null;
+            //    // exit the application
+            //    return;
+            //}
 
+            //neutronLicense = new NeutronLicense
+            //{
+            //    CompanyCode = result.Code
+            //};
             neutronLicense = new NeutronLicense
             {
-                CompanyCode = result.Code
+                CompanyCode = "WAG"
             };
-
 
             _mutex = new Mutex(initiallyOwned: true, name: appName, createdNew: out var createdNew);
             if (!createdNew)
@@ -118,7 +122,16 @@ namespace Neutron
             if (context)
             {
                 var frmMain = DI.Create<FrmMain>(neutronVariables, neutronLicense);
-                Application.Run(frmMain);
+                //Application.Run(frmMain);
+                //if the FrmMain has already been disposed, just close the app
+                try
+                {
+                    Application.Run(frmMain);
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    // Silent fail, close the app.
+                }
             }
             else
             {

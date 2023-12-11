@@ -17,22 +17,24 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>C:\Neutron\NeutronWagnerInstallation\</PublishUrl>
+    <PublishUrl>\\usot-neutron\software\NeutronWagnerInstallation\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <UpdateUrl>\\usot-neutron\Software\NeutronWagnerInstallation\</UpdateUrl>
     <SupportUrl>http://www.put2light.com</SupportUrl>
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>496</ApplicationRevision>
+    <ApplicationRevision>508</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -506,7 +508,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
     <Content Include="PublicKey.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Forms\FrmAbout.resx">
       <DependentUpon>FrmAbout.cs</DependentUpon>
@@ -521,9 +523,9 @@
       <DependentUpon>InductionPosition.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Allied Inc.txt.pfx" />
-    <None Include="License.lic">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="License.lic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="NeutronKeyFile.pfx" />
     <None Include="Neutron_3_TemporaryKey.pfx" />
     <None Include="Resources\Pick_1.png" />

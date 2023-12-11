@@ -110,7 +110,6 @@ namespace Neutron
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             KeyPreview = true;
-
             _jsonData = jsonData;
             _akaRepository = akaRepository;
             _securityProcessor = securityProcessor;
@@ -129,7 +128,6 @@ namespace Neutron
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
             _logger = NeutronCore.Global.Logger.SetupLogger("Main");
 
-
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
                 , "Inventory File", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
@@ -147,10 +145,13 @@ namespace Neutron
             //Log on to Neutron
             LogOn();
 
-            _ = Init();
+            //Init();
+            var result = Task.Run(async () => await Init());
+
+            _ = _logger.LogDetailAsync($"After Task.Run INIT result: {result} ");
         }
 
-        private async Task Init()
+        private async Task<bool> Init()
         {
             await _logger.LogDetailAsync("Init Started");
             var result = await InitForm();
@@ -160,16 +161,17 @@ namespace Neutron
             if (result == false)
             {
                 MessageBox.Show("Neutron has failed to load properly.  Close Neutron and fix error before restarting.", "Main Form Error", MessageBoxButtons.OK);
-                return;
+                return false;
             }
 
             if (_workstationView.WorkstationId == _neutronVariables.LoaderStation)
             {
-                if (!_neutronVariables.UseAutoCompress) return;
+                if (!_neutronVariables.UseAutoCompress) return true;
                 _compressService = new CompressService(_jsonData, _workstationView, _neutronVariables, _historyManager, _ordersRepository, _replenOrdersRepository);
                 _compressService.StartCompressService();
                 await _logger.LogDetailAsync("Compress Service Started");
             }
+            return true;
         }
         protected override CreateParams CreateParams
         {
@@ -217,6 +219,13 @@ namespace Neutron
         private async Task<bool> InitForm()
         {
             var result = false;
+
+            //MtPick.Enabled = false;
+            //MtStore.Enabled = false;
+            //MtInventory.Enabled = false;
+            //MtLocations.Enabled = false;
+            //MtUtilities.Enabled = false;
+            //MtSystem.Enabled = false;
 
             _enumManager.SaveActionCodesToDatabase();
             _enumManager.SaveLineStatusToDatabase();
@@ -301,6 +310,17 @@ namespace Neutron
                 MessageBox.Show($"Main Form Initialization Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 
+            await _logger.LogDetailAsync("InitForm Complete");
+
+            //MtPick.Enabled = true;
+            //MtStore.Enabled = true;
+            //MtInventory.Enabled = true;
+            //MtLocations.Enabled = true;
+            //MtUtilities.Enabled = true;
+            //MtSystem.Enabled = true;
+
+
+           // MessageBox.Show($"Workstation Initialization Complete.");
             return result;
         }
         private async Task SetupHardwareDevices()
@@ -474,6 +494,8 @@ namespace Neutron
             {
                 await _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}");
             }
+
+            await _logger.LogDetailAsync("Hardware Loading Complete");
         }
         private void SetupEmail()
         {
@@ -831,6 +853,10 @@ namespace Neutron
 
                             mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
                         }
+                        else
+                        {
+                            _ = CloseApp();
+                        }
                     }
                 }
                 else
@@ -891,6 +917,19 @@ namespace Neutron
 
         private void MtItemDefinitions_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageItems])
             {
                 Hide();
@@ -905,6 +944,19 @@ namespace Neutron
 
         private void MtLocations_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations]) return;
             Hide();
             using (MetroForm frm = new FrmLocations(_jsonData, _workstationRepository, _workstationView, _neutronVariables, _lacProcessor, _historyManager))
@@ -915,6 +967,18 @@ namespace Neutron
         }
         private void MtInventory_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory]) return;
             var main = this;
             using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables))
@@ -926,11 +990,24 @@ namespace Neutron
         }
         private void MtHotAction_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions]) return;
             Task.Run(() => _logger.LogDetailAsync("FrmMain HotAction button Pressed"));
             Hide();
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                       , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                       , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
                        , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
             {
                 frm.ShowDialog();
@@ -940,6 +1017,19 @@ namespace Neutron
         }
         private void MtSystem_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageSystem]) return;
             Hide();
             using (var frm = DI.Create<FrmSystem>(_neutronVariables, _neutronLicense, false))
@@ -952,6 +1042,20 @@ namespace Neutron
         {
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
             Hide();
+            var counter = 0;
+            while (true)
+            {
+                if(_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+           
+
             using (var frm = DI.Create<FrmPick>(
                        _neutronVariables
                        , _neutronLicense
@@ -969,6 +1073,19 @@ namespace Neutron
         }
         private void MtUtilities_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities]) return;
             Hide();
             using (var frm = DI.CreateUtilitiesForm(_neutronVariables, _neutronLicense, _sendEmail, _workstationView))
@@ -984,6 +1101,19 @@ namespace Neutron
         }
         private void MtHistory_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ViewHistory]) return;
             Hide();
             using (MetroForm frm = new FrmHistory(_akaRepository, _historyManager, _workstationView))
@@ -994,6 +1124,19 @@ namespace Neutron
         }
         private void MtProductivity_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers]) return;
             Hide();
             using (MetroForm frm = new FrmProductivity(_jsonData, _neutronVariables))
@@ -1004,6 +1147,19 @@ namespace Neutron
         }
         private void MtStore_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.StoreItemsandOrders]) return;
             Hide();
             using (var frm = DI.Create<FrmReplen>(
@@ -1018,6 +1174,19 @@ namespace Neutron
         }
         private void MtUsers_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers]) return;
             Hide();
             using (Form frm = new FrmSecurity(_neutronVariables, _historyManager))
@@ -1028,6 +1197,19 @@ namespace Neutron
         }
         private void MtLac_Click(object sender, EventArgs e)
         {
+            var counter = 0;
+            while (true)
+            {
+                if (_workstationView != null) break;
+                Thread.Sleep(100);
+                counter++;
+                if (counter > 50)
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+            }
+
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLac]) return;
             Hide();
             using (Form frm = new FrmLAC(_workstationRepository, _neutronVariables))
@@ -1080,10 +1262,16 @@ namespace Neutron
 
         private async void ButtonClose_Click(object sender, EventArgs e)
         {
+            await CloseApp();
+        }
+
+        private async Task CloseApp()
+        {
             if (_compressService != null)
             {
                 await _compressService.StopCompressService();
             }
+
             Close();
         }
 
@@ -1101,7 +1289,7 @@ namespace Neutron
             if (e.KeyCode == Keys.F5 || e.KeyCode == Keys.F6)
             {
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
-                           , _lacProcessor, _imageManager, _workstationRepository, _itemDefinitionsRepository, _neutronVariables
+                           , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
                            , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
                 {
                     frm.ShowDialog();

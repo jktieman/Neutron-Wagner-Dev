@@ -4,6 +4,7 @@ using System.Linq;
 using AlliedLogger;
 //using AlliedPostOffice;
 using JsonManager;
+using NeutronData.DataContexts;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
 
@@ -89,6 +90,7 @@ namespace SAPServer
                 try
                 {
                     using (var context = new WagnerDb())
+                    //using (var context = new NeutronDb())
                     {
 
                         foreach (var row in goodsIssueList)
@@ -206,6 +208,7 @@ namespace SAPServer
             var result = string.Empty;
             
                 using (var db = new WagnerDb())
+                //using (var db = new NeutronDb())
                 {
                     var pri = db.PriorityRecords.FirstOrDefault(r => r.Spart == spart && r.Vsbed == vsbeds);
                     if (pri != null)

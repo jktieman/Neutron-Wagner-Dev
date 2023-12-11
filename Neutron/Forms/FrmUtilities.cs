@@ -3232,6 +3232,7 @@ namespace Neutron.Forms
         {
 
         }
+        #region Barcode Print Test
 
         private void ButtonPrintBarCode_Click(object sender, EventArgs e)
         {
@@ -3318,7 +3319,6 @@ namespace Neutron.Forms
             }
             //}
         }
-
         private void DrawBarcode(Graphics g, ref int yValue)
         {
             var xValue = 50;
@@ -3614,8 +3614,8 @@ namespace Neutron.Forms
         {
             _shipInstructions = new List<string>();
             int maxLength = 160;
-            
-            
+
+
             string[] words = input.Split(' ');
             StringBuilder output = new StringBuilder();
             int lineLen = 0;
@@ -3700,5 +3700,20 @@ namespace Neutron.Forms
             "Quantity"
         };
 
+        #endregion
+        private void ButtonPrintReplen_Click(object sender, EventArgs e)
+        {
+            var printPreview = true;
+            var printer = GetCurrentDocumentPrinter();
+            var order = TextBoxTestOrderNumber.Text;
+            var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
+            if (ord == null)
+            {
+                MessageBox.Show($"Order {order} not found.");
+                return;
+            }
+            var orderDetail = ord.OrderDetails.FirstOrDefault();
+            _documentToPrint.PrintReplenDoc(orderDetail, printer, printPreview);
+        }
     }
 }

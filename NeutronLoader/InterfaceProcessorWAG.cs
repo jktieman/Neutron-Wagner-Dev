@@ -31,6 +31,7 @@ namespace NeutronLoader
         private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<Shipper> _repoShippers = new GenericRepository<Shipper>(new NeutronDb());
         private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
 
@@ -117,7 +118,8 @@ namespace NeutronLoader
             {
                 // get records from SAP Server
                 List<NOVA_INPUT> recs;
-                using (var db = new WagnerDb())
+               // using (var db = new WagnerDb())
+                using (var db = new NeutronDb())
                 {
                     recs = db.NOVA_INPUT.Where(r => r.PROCESSED == "N" && r.TRANSTYPE == "02").ToList();
                 }
@@ -277,7 +279,7 @@ namespace NeutronLoader
                     {
                         foreach (var orderDetail in orderDetails)
                         {
-                            var itemDef = _repoItemDefinition.FindBy(r => r.Item == orderDetail.Sku).FirstOrDefault();
+                            var itemDef = _repoItemDefinition.FindBy(r => r.Item == orderDetail.Sku).OrderBy(o => o.AreaId).FirstOrDefault();
                             if (itemDef != null)
                             {
                                 var detail = new OrderDetail()
@@ -286,10 +288,10 @@ namespace NeutronLoader
                                     PartDesc = orderDetail.Des,
                                     Quantity = orderDetail.Qty,
                                     LineStatusId = (int)LineStatus.Available,
-                                    AreaId = itemDef.AreaId,
+                                    AreaId = GetAreaToPickFrom(orderDetail, itemDef),
                                     OrderDetailInfo = $"{rec.TransId},{rec.Priority},{rec.Division},{"Route"},{rec.Upc}",
                                     OrderId = orderId,
-                                    JobNum = orderDetail.Order.ToString(),
+                                    JobNum = orderDetail.Order,
                                     ItemDefinitionId = itemDef.Id
                                 };
                                 _repoOrderDetail.Insert(detail);
@@ -305,6 +307,26 @@ namespace NeutronLoader
             }
         }
 
+        private int GetAreaToPickFrom(NeutronInput orderDetail, ItemDefinition itemDef)
+        {
+            if(itemDef.PickMax == 0) return itemDef.AreaId;
+            if (orderDetail.Qty < itemDef.PickMax) return itemDef.AreaId;
+            if (orderDetail.Qty >= itemDef.PickMax)
+            {
+                var itemDef2 = _repoItemDefinition.FindBy(r => r.Item == orderDetail.Sku && r.AreaId == 8).FirstOrDefault();
+                if (itemDef2 != null)
+                {
+                    var rec = _repoInventory.FindBy(o => o.ItemDefinitionId == itemDef2.Id).FirstOrDefault();
+
+                    if (rec != null)
+                    {
+                        return rec.AreaId;
+                    }
+                }
+            }
+            return itemDef.AreaId;
+        }
+
         private async Task<List<NeutronInput>> GetNewOrdersFromSap()
         {
             await _logger.LogDetailAsync("Get New Orders From SAP");
@@ -313,7 +335,8 @@ namespace NeutronLoader
             {
                 // get records from SAP Server
                 List<NOVA_INPUT> recs;
-                using (var db = new WagnerDb())
+               // using (var db = new WagnerDb())
+                using (var db = new NeutronDb())
                 {
                     recs = db.NOVA_INPUT.Where(r => r.PROCESSED == "N" && r.TRANSTYPE == "22").ToList();
                 }
@@ -429,7 +452,8 @@ namespace NeutronLoader
             _ = _logger.LogDetailAsync("Update To Processed.");
             try
             {
-                using (var context = new WagnerDb())
+               // using (var context = new WagnerDb())
+                using (var context = new NeutronDb())
                 {
                     foreach (var rec in newRecords)
                     {
