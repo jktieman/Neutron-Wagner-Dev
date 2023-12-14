@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AlliedLogger;
-//using AlliedPostOffice;
 using JsonManager;
-using NeutronData.DataContexts;
+using NeutronEvents;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
 
@@ -12,13 +11,12 @@ namespace SAPServer
 {
     public class SapToNeutronGoodsIssue
     {
-       // private readonly ISendEmail _sendEmail;
+
         private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
 
         public SapToNeutronGoodsIssue( IJsonData jsonData, IDynamicLogger logger)
         {
-           // _sendEmail = sendEmail;
             _jsonData = jsonData;
             _logger = logger;
         }
@@ -67,15 +65,14 @@ namespace SAPServer
                     goodsIssueList.Add(goodsIssue);
                 }
 
-                Console.WriteLine($"Goods Issue Records Retrieved From SAP: {goodsIssueList.Count}");
                 _ = _logger.LogDetailAsync($"Goods Issue Records Retrieved From SAP: {goodsIssueList.Count}");
+                
                 //------------------
                 // Create backup Json file in case the Wagner Database is unavailable
                 var recs = _jsonData.LoadFile<List<GoodsIssue>>();
                 if (recs.Count > 0)
                 {
                     _ = _logger.LogDetailAsync($"Goods Issue Records Retrieved From Backup: {recs.Count}");
-                    Console.WriteLine($"Goods Issue Records Retrieved From Backup: {recs.Count}");
                     foreach (var rec in recs)
                     {
                         goodsIssueList.Add(rec);
@@ -90,14 +87,13 @@ namespace SAPServer
                 try
                 {
                     using (var context = new WagnerDb())
-                    //using (var context = new NeutronDb())
                     {
 
                         foreach (var row in goodsIssueList)
                         {
                             var input = new NOVA_INPUT();
-                            input.PROCESSED = @"N";
-                            input.TRANSTYPE = @"22";
+                            input.PROCESSED = "N";
+                            input.TRANSTYPE = "22";
                             input.SKU = row.MATNR;
                             input.QTY = Convert.ToInt32(row.NSOLM);
                             input.TASKNO = Convert.ToDecimal(row.TANUM);
@@ -117,14 +113,14 @@ namespace SAPServer
                                 context.NOVA_INPUT.Add(input);
                                 context.SaveChanges();
                                 row.Processed = true;
-                                Console.WriteLine($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
+                               
                                 _ = _logger.LogDetailAsync($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
                             }
                             catch (Exception e)
                             {
                                 _ = _logger.LogDetailAsync($"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
-                                Console.WriteLine($"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
-                               // _sendEmail.Message($"Error writing Single Goods Issue to INPUT Table", _logger.LastLogLines());
+                                
+                                Mediator.GetInstance().OnSendEmailMessage(this,$"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
 
                             }
                         }
@@ -139,47 +135,40 @@ namespace SAPServer
                     }
                     _jsonData.SaveFile(unProcessedGoods);
                     _ = _logger.LogDetailAsync($"UnProcessed Goods Issue Record Count: {unProcessedGoods.Count}");
-                    Console.WriteLine($"UnProcessed Goods Issue Record Count: {unProcessedGoods.Count}");
-
                 }
                 catch (Exception e)
                 {
                     _ = _logger.LogDetailAsync($"Error writing Goods Issue to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
-                    Console.WriteLine($"Error writing Goods Issue to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
-                    //_sendEmail.Message($"Error writing Goods Issue to INPUT Table", _logger.LastLogLines());
+                    Mediator.GetInstance().OnSendEmailMessage(this,$"Error writing Goods Issue to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
                 }
 
             }
             catch (RfcCommunicationException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Goods Issue RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
             catch (RfcLogonException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Goods Issue RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
             catch (RfcAbapRuntimeException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Goods Issue RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
             catch (RfcAbapBaseException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                //_sendEmail.Message("SAP to Nova Goods Issue Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Goods Issue RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
         }
 
 
         private string ValidSkuDesc(string s)
         {
-            string result = string.Empty;
+            var result = string.Empty;
             try
             {
                 if (!string.IsNullOrEmpty(s))
@@ -198,7 +187,7 @@ namespace SAPServer
             catch (Exception e)
             {
                 _ = _logger.LogDetailAsync($"Invalid Issue SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
-                Console.WriteLine($"Invalid Issue SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Invalid Issue SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
             }
             return result;
         }
@@ -208,7 +197,6 @@ namespace SAPServer
             var result = string.Empty;
             
                 using (var db = new WagnerDb())
-                //using (var db = new NeutronDb())
                 {
                     var pri = db.PriorityRecords.FirstOrDefault(r => r.Spart == spart && r.Vsbed == vsbeds);
                     if (pri != null)

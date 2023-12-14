@@ -42,7 +42,7 @@ namespace NeutronData.Repositories
         /// </summary>
         /// <param name="workstationId">The Id of the current workstation </param>
         /// <returns>The Id of an <see cref="WorkstationView"/></returns>
-        public async Task<WorkstationView> GetStationView(int workstationId) // ws
+        public WorkstationView GetStationView(int workstationId) // ws
         {
             WorkstationView workstationView = null;
 
@@ -55,7 +55,7 @@ namespace NeutronData.Repositories
 
                 if (workstation != null)
                 {
-                    await _logger.LogDetailAsync($"Workstation Name: {workstation.Name}");
+                    _ = _logger.LogDetailAsync($"Workstation Name: {workstation.Name}");
                     // create the WorkstationView object
                     workstationView = new WorkstationView
                     {
@@ -452,12 +452,12 @@ namespace NeutronData.Repositories
                 }
                 else  //workstation = null
                 {
-                    await _logger.LogDetailAsync("Workstation is null");
+                    _ = _logger.LogDetailAsync("Workstation is null");
                 }
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Error finding workstation.  {ex.Message}  Inner:  {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Error finding workstation.  {ex.Message}  Inner:  {ex.InnerException}");
             }
             return workstationView;
         }

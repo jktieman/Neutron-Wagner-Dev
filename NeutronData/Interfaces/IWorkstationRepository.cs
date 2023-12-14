@@ -10,7 +10,7 @@ namespace NeutronData.Interfaces
 {
     public interface IWorkstationRepository
     {
-        Task<WorkstationView> GetStationView(int workstationId);
+        WorkstationView GetStationView(int workstationId);
         int GetStationId(int stationNumber);
         Workstation GetStation(int id);
         List<Workstation> Lookup();

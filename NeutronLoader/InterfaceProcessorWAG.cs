@@ -44,7 +44,7 @@ namespace NeutronLoader
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
-        private ISapService _sapService;
+        private readonly ISapService _sapService;
 
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView, ISapService sapService)
@@ -59,8 +59,10 @@ namespace NeutronLoader
 
         private void Initialize()
         {
-            _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
-            // _fileProcessor = new WAGFileProcessor(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+            _logger = NeutronCore.Global.Logger.SetupLogger("NeutronLoader");
+
+            _sapService.Init();
+
         }
 
         public void StartProcessingInterfaceFiles()
@@ -79,7 +81,7 @@ namespace NeutronLoader
                 _loadOrdersBusy = true;
                 await _logger.LogDetailAsync("Load Orders Testing Waiting 2 Seconds");
 
-                _sapService.Init();
+                _sapService.Run();
                 
                 
 
@@ -102,7 +104,9 @@ namespace NeutronLoader
             catch (Exception ex)
             {
                 await _logger.LogDetailAsync($"Load Orders Error. {Environment.NewLine}{ex.Message}");
-                throw new Exception($"Load Orders Error. {Environment.NewLine}{ex.Message}");
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Load Orders Error. {Environment.NewLine}{ex.Message}");
+
+                //throw new Exception($"Load Orders Error. {Environment.NewLine}{ex.Message}");
             }
             finally
             {

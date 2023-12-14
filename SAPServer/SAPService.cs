@@ -3,7 +3,6 @@ using JsonManager;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using SAPServer.Extensions;
@@ -20,15 +19,14 @@ namespace SAPServer
         private string _sapServer = "WAQ";
         private readonly IDynamicLogger _logger;
         private int _sleepTime = 60;
-        public const string AppName = "SAPConsole";
         private SapVariables _sapVariables;
+        private FileInfo _neutronBusyFile;
+        private FileInfo _sapBusyFile;
 
         public SAPService(IJsonData jsonData)
         {
             _jsonData = jsonData;
-            // _sendEmail = sendEmail;
             _logger = NeutronCore.Global.Logger.SetupLogger("SAPService");
-           // Init();
         }
 
         public void Init()
@@ -36,92 +34,76 @@ namespace SAPServer
             try
             {
                 _sapVariables = _jsonData.LoadFile<SapVariables>();
+                Mediator.GetInstance().OnSendEmailMessage(this, "Neutron/SAP Loader Started");
             }
             catch (Exception ex)
             {
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Error loading SAP Variables File.  {ex.Message}");
                 _ = _logger.LogDetailAsync($"Error loading SAP Variables File.  {ex.Message}");
                 ErrorAlert(ex.Message);
-                throw new Exception($"Error loading SAP Variables File.  {ex.Message}");
+                //throw new Exception($"Error loading SAP Variables File.  {ex.Message}");
             }
 
+            _sleepTime = _sapVariables.SleepTime;
             _sapServer = _sapVariables.SapServer;
 
-            var neutronBusyFile = new FileInfo(_sapVariables.NeutronBusyFile);
-            var sapBusyFile = new FileInfo(_sapVariables.SapBusyFile);
+            _neutronBusyFile = new FileInfo(_sapVariables.NeutronBusyFile);
+            _sapBusyFile = new FileInfo(_sapVariables.SapBusyFile);
+        }
 
+        public void Run()
+        {
 
             try
+
             {
-                if (!string.IsNullOrEmpty(_sapVariables.SapServer))
+                if (string.IsNullOrEmpty(_sapVariables.SapServer)) return;
+                if (_sapVariables.SleepTime <= 0) return;
+
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine("SAP To Neutron Record Processor.");
+                sb.AppendLine($"Current SAP Server is {_sapServer}.");
+                sb.AppendLine($"Current Sleep Time: {_sleepTime} Seconds");
+                sb.AppendLine($"Neutron Busy File Location: {_neutronBusyFile}");
+                sb.AppendLine($"SAP Busy File Location: {_sapBusyFile}");
+                sb.AppendLine(
+                    $"Start Time: {_sapVariables.StartHour}:{_sapVariables.StartMinute}");
+                sb.AppendLine(
+                    $"Start Time: {_sapVariables.EndHour}:{_sapVariables.EndMinute}");
+
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Neutron/SAP Loader Started.{Environment.NewLine}{sb}");
+
+
+                if (!RunProgramNow(_sapVariables)) return;
+                if (_neutronBusyFile.EnsurePathExists())
                 {
-                    if (_sapVariables.SleepTime > 0)
-                    {
-                        if (!string.IsNullOrEmpty(_sapVariables.Email1))
-                        {
-                            _sleepTime = _sapVariables.SleepTime;
-                            _sapServer = _sapVariables.SapServer;
+                    _ = _logger.LogDetailAsync(
+                        $"BEGIN PROCESSING...{Environment.NewLine}Neutron Busy File is available.");
 
-                            var people = new List<string>
-                        {
-                            _sapVariables.Email1,
-                            _sapVariables.Email2,
-                            _sapVariables.Email3
-                        };
+                    if (NeutronBusy(_neutronBusyFile)) return;
+                    _sapBusyFile.Create().Dispose();
+                    Thread.Sleep(2000);
 
-                            _ = _logger.LogDetailAsync("SAP To Neutron Record Processor.");
-                            _ = _logger.LogDetailAsync($"Current SAP Server is {_sapServer}.");
-                            _ = _logger.LogDetailAsync($"Current Sleep Time: {_sleepTime} Seconds");
-                            _ = _logger.LogDetailAsync($"Neutron Busy File Location: {neutronBusyFile}");
-                            _ = _logger.LogDetailAsync($"SAP Busy File Location: {sapBusyFile}");
-                            _ = _logger.LogDetailAsync($"Start Time: {_sapVariables.StartHour}:{_sapVariables.StartMinute}");
-                            _ = _logger.LogDetailAsync($"Start Time: {_sapVariables.EndHour}:{_sapVariables.EndMinute}");
+                    ProcessRecords(_sapVariables);
 
-                            //_sendEmail.StartUp();
-
-                            if (RunProgramNow(_sapVariables))
-                            {
-                                if (neutronBusyFile.EnsurePathExists())
-                                {
-                                    Console.WriteLine("Press Escape Key BETWEEN Executions to Stop.");
-                                    _ = _logger.LogDetailAsync($"BEGIN PROCESSING...{Environment.NewLine}WSTMS08 Server is available.");
-
-
-                                    if (!NeutronBusy(neutronBusyFile))
-                                    {
-                                        sapBusyFile.Create().Dispose();
-                                        Thread.Sleep(2000);
-
-                                       // MessageBox.Show($"Skipping SAP Processing until we get correct drivers.");
-                                        ProcessRecords(_sapVariables);
-
-                                        sapBusyFile.Delete();
-
-                                    }
-                                }
-                                else
-                                {
-                                    _ = _logger.LogDetailAsync(@"WSTMS08 Server Connection Failed.");
-
-                                    //_sendEmail.Message($"WSTMS08 Server Connection Failed", _logger.LastLogLines());
-                                }
-                            }
-
-                            //_sendEmail.ShutDown();
-                        }
-                    }
+                    _sapBusyFile.Delete();
+                }
+                else
+                {
+                    _ = _logger.LogDetailAsync("Neutron Busy File does not exist.");
+                    ErrorAlert("Neutron Busy File does not exist");
+                    Mediator.GetInstance().OnSendEmailMessage(this, "Neutron Busy File does not exist.");
                 }
             }
             catch (Exception ex)
             {
                 _ = _logger.LogDetailAsync($"Error loading SAP Services.  {ex.Message}");
-                ErrorAlert(ex.Message);
-                throw new Exception($"Error loading SAP Services.  {ex.Message}");
+                Mediator.GetInstance().OnSendEmailMessage(this, $"Error loading SAP Services.{Environment.NewLine}{ex.Message}");
+                ErrorAlert($"Error loading SAP Services.{Environment.NewLine}{ex.Message}");
             }
-
-            //Environment.Exit(0);
-
         }
-        public void ErrorAlert(string err)
+
+        private void ErrorAlert(string err)
         {
             Mediator.GetInstance().OnLoaderError(this, err);
         }
@@ -165,17 +147,18 @@ namespace SAPServer
                 counter += 1;
                 Thread.Sleep(3000);
                 if (counter != 60) continue;
+
                 _ = _logger.LogDetailAsync($"Neutron Busy file is locking programs.  Counter Number: {counter}");
-                //_sendEmail.Message("Neutron Loader has been busy too long.", new StringBuilder("See Attached Log."));
+                Mediator.GetInstance().OnSendEmailMessage(this, "Neutron Loader has been busy for three minutes.");
                 result = true;
                 break;
             }
             return result;
         }
 
-        public void ProcessRecords(SapVariables sapVariables)
+        private void ProcessRecords(SapVariables sapVariables)
         {
-            _ = _logger.LogDetailAsync($"Begin Processing Records.");
+            _ = _logger.LogDetailAsync("Begin Processing Records.");
 
             if (_rfcDestination == null)
             {
@@ -198,40 +181,40 @@ namespace SAPServer
                 {
                     _ = _logger.LogDetailAsync(
                            $"Connection Failed to  {sapVariables.SapServer}{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                    //_sendEmail.Message($"Connection Failed to  {sapVariables.SapServer}", _logger.LastLogLines());
+                    Mediator.GetInstance().OnSendEmailMessage(this, $"Connection Failed to: {sapVariables.SapServer}");
                 }
             }
 
 
             if (_rfcDestination != null)
             {
-                _ = _logger.LogDetailAsync($"Receive Goods Issue - Start");
+                _ = _logger.LogDetailAsync("Receive Goods Issue - Start");
                 var sapToNeutronGoodsIssue = new SapToNeutronGoodsIssue(_jsonData, _logger);
                 sapToNeutronGoodsIssue.Get(_rfcDestination);
-                _ = _logger.LogDetailAsync($"Receive Goods Issue - Complete");
+                _ = _logger.LogDetailAsync("Receive Goods Issue - Complete");
                 Thread.Sleep(500);
 
-                _ = _logger.LogDetailAsync($"Transmit  Goods Issue - Start");
+                _ = _logger.LogDetailAsync("Transmit  Goods Issue - Start");
                 var neutronToSapGoodsIssue = new NeutronToSapGoodsIssue(_logger);
                 neutronToSapGoodsIssue.Set(_rfcDestination);
-                _ = _logger.LogDetailAsync($"Transmit  Goods Issue - Complete");
+                _ = _logger.LogDetailAsync("Transmit  Goods Issue - Complete");
                 Thread.Sleep(500);
 
-                _ = _logger.LogDetailAsync($"Receive Goods Receipts - Start");
+                _ = _logger.LogDetailAsync("Receive Goods Receipts - Start");
                 var sapToNeutronGoodsReceipt = new SapToNeutronGoodsReceipt(_jsonData, _logger);
                 sapToNeutronGoodsReceipt.Get(_rfcDestination);
-                _ = _logger.LogDetailAsync($"Receive  Goods Receipts - Complete");
+                _ = _logger.LogDetailAsync("Receive  Goods Receipts - Complete");
                 Thread.Sleep(500);
 
-                _ = _logger.LogDetailAsync($"Transmit  Goods Receipts - Start");
+                _ = _logger.LogDetailAsync("Transmit  Goods Receipts - Start");
                 var neutronToSapGoodsReceipt = new NeutronToSapGoodsReceipt(_logger);
                 neutronToSapGoodsReceipt.Set(_rfcDestination);
-                _ = _logger.LogDetailAsync($"Transmit  Goods Receipts - Complete");
+                _ = _logger.LogDetailAsync("Transmit  Goods Receipts - Complete");
                 Thread.Sleep(500);
             }
 
-            _ = _logger.LogDetailAsync($"End Processing Records.");
-            
+            _ = _logger.LogDetailAsync("End Processing Records.");
+
             //GC.Collect();
         }
     }

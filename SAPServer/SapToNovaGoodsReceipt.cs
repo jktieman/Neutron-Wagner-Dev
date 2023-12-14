@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using AlliedLogger;
 using JsonManager;
-using NeutronData.DataContexts;
+using NeutronEvents;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
 
@@ -10,13 +10,11 @@ namespace SAPServer
 {
     public class SapToNeutronGoodsReceipt
     {
-       // private ISendEmail _sendEmail;
-        private IJsonData _jsonData;
+        private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
 
         public SapToNeutronGoodsReceipt(IJsonData jsonData, IDynamicLogger logger)
         {
-            //_sendEmail = sendEmail;
             _jsonData = jsonData;
             _logger = logger;
         }
@@ -52,7 +50,6 @@ namespace SAPServer
                 }
 
                 _ = _logger.LogDetailAsync($"Goods Receipt Records Retrieved From SAP: {goodsReceiptList.Count}");
-                Console.WriteLine($"Goods Receipt Records Retrieved From SAP: {goodsReceiptList.Count}");
 
                 //------------------
                 // Create backup Json file in case the Wagner Database is unavailable
@@ -60,7 +57,6 @@ namespace SAPServer
                 if (recs.Count > 0)
                 {
                     _ = _logger.LogDetailAsync($"Goods Receipts Records Retrieved From Backup: {recs.Count}");
-                    Console.WriteLine($"Goods Receipts Records Retrieved From Backup: {recs.Count}");
                     foreach (var rec in recs)
                     {
                         goodsReceiptList.Add(rec);
@@ -82,8 +78,8 @@ namespace SAPServer
                         foreach (var row in goodsReceiptList)
                         {
                             var input = new NOVA_INPUT();
-                            input.PROCESSED = @"N";
-                            input.TRANSTYPE = @"02";
+                            input.PROCESSED = "N";
+                            input.TRANSTYPE = "02";
                             input.SKU = row.MATNR;
                             input.QTY = row.VERME;
                             input.TASKNO = Convert.ToDecimal(row.TANUM);
@@ -96,14 +92,14 @@ namespace SAPServer
                                 context.NOVA_INPUT.Add(input); 
                                 context.SaveChanges();
                                 row.Processed = true;
-                                Console.WriteLine($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
                                 _ = _logger.LogDetailAsync($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
                             }
                             catch (Exception e)
                             {
                                 _ = _logger.LogDetailAsync($"Error writing Goods Receipt TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
-                                Console.WriteLine($"Error writing Goods Receipt TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
-                                // _sendEmail.Message($"Error writing Single Goods Receipt to INPUT Table", _logger.LastLogLines());
+                                Mediator.GetInstance().OnSendEmailMessage(this, 
+                                    $"Error writing Goods Receipt TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
+
 
                             }
                         }
@@ -119,13 +115,12 @@ namespace SAPServer
                     _jsonData.SaveFile(unProcessedGoods);
 
                     _ = _logger.LogDetailAsync($"UnProcessed Goods Receipt Record Count: {unProcessedGoods.Count}");
-                    Console.WriteLine($"UnProcessed Goods Receipt Record Count: {unProcessedGoods.Count}");
                 }
                 catch (Exception e)
                 {
                     _ = _logger.LogDetailAsync($"Error writing Receipt to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
-                    Console.WriteLine($"Error writing Receipt to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
-                    // _sendEmail.Message("Error writing Receipt to INPUT Table", _logger.LastLogLines());
+                    Mediator.GetInstance().OnSendEmailMessage(this, 
+                        $"Error writing Receipt to INPUT Table.  {e.Message} {Environment.NewLine} {e.InnerException}");
                 }
 
                 GC.Collect();
@@ -135,26 +130,26 @@ namespace SAPServer
             catch (RfcCommunicationException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Receipt RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Receipt RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, 
+                    $"Goods Receipt RfcCommunicationException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
             catch (RfcLogonException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Receipt RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Receipt RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, 
+                    $"Goods Receipt RfcLogonException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
             catch (RfcAbapRuntimeException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Receipt RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Receipt RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, 
+                    $"Goods Receipt RfcAbapRuntimeException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
             catch (RfcAbapBaseException e)
             {
                 _ = _logger.LogDetailAsync($"Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                Console.WriteLine($"Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
-                // _sendEmail.Message("SAP to Nova Goods Receipt Communication Error", _logger.LastLogLines());
+                Mediator.GetInstance().OnSendEmailMessage(this, 
+                    $"Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
             }
         }
         private string ValidSkuDesc(string s)
@@ -177,7 +172,8 @@ namespace SAPServer
             catch (Exception e)
             {
                 _ = _logger.LogDetailAsync($"Invalid Receipt SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
-                Console.WriteLine($"Invalid Receipt SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
+                Mediator.GetInstance().OnSendEmailMessage(this, 
+                    $"Invalid Receipt SkuDesc/MATKL: [ {s} ] {Environment.NewLine} {e.Message} {Environment.NewLine} {e.InnerException}");
             }
             return result;
         }

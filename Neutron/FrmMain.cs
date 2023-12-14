@@ -146,16 +146,23 @@ namespace Neutron
             LogOn();
 
             //Init();
-            var result = Task.Run(async () => await Init());
+            var result = Init();
 
             _ = _logger.LogDetailAsync($"After Task.Run INIT result: {result} ");
+
+            if (result == false)
+            {
+                _ = CloseApp();
+            }
+
+
         }
 
-        private async Task<bool> Init()
+        private bool Init()
         {
-            await _logger.LogDetailAsync("Init Started");
-            var result = await InitForm();
-            await _logger.LogDetailAsync($"Init Result: {result}");
+            _ = _logger.LogDetailAsync("Init Started");
+            var result = InitForm();
+            _ = _logger.LogDetailAsync($"Init Result: {result}");
 
 
             if (result == false)
@@ -169,7 +176,7 @@ namespace Neutron
                 if (!_neutronVariables.UseAutoCompress) return true;
                 _compressService = new CompressService(_jsonData, _workstationView, _neutronVariables, _historyManager, _ordersRepository, _replenOrdersRepository);
                 _compressService.StartCompressService();
-                await _logger.LogDetailAsync("Compress Service Started");
+                _ = _logger.LogDetailAsync("Compress Service Started");
             }
             return true;
         }
@@ -216,16 +223,10 @@ namespace Neutron
             }
         }
         #endregion
-        private async Task<bool> InitForm()
+        private bool InitForm()
         {
-            var result = false;
-
-            //MtPick.Enabled = false;
-            //MtStore.Enabled = false;
-            //MtInventory.Enabled = false;
-            //MtLocations.Enabled = false;
-            //MtUtilities.Enabled = false;
-            //MtSystem.Enabled = false;
+            _ = _logger.LogDetailAsync("InitForm Started");
+            var result = true;
 
             _enumManager.SaveActionCodesToDatabase();
             _enumManager.SaveLineStatusToDatabase();
@@ -239,98 +240,72 @@ namespace Neutron
                     if (workstationId == 0) workstationId = 1;
                     if (workstationId > 0)
                     {
-                        _workstationView = await _workstationRepository.GetStationView(workstationId);
+                        _workstationView = _ = _workstationRepository.GetStationView(workstationId);
                         if (_workstationView != null)
                         {
                             SetupEmail();
 
                             _historyManager = DI.Create<HistoryManager>(_workstationView);
 
-                            await _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
+                            _ = _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
 
+                            // If this station is responsible for the loader, start the loader
                             if (_neutronVariables.LoaderStation == _workstationView.WorkstationId)
                             {
                                 _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, _workstationView);
+                                StartLoader();
 
                                 _startStopUploadManager = DI.Create<StartStopUploadManager>(_neutronVariables, _neutronLicense, _workstationView);
-                                if (StartLoader())
-                                {
-                                    if (StartUpload())
-                                    {
-                                        result = true;
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("Main Form: Auto Upload Initialization Error.");
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Main Form: Auto Loader Initialization Error.");
-                                }
-
+                                StartUpload();
                             }
 
-                            var setupSlotFactory = SetupSlotFactory();
-                            if (setupSlotFactory == true)
-                            {
-                                result = true;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Main Form: Slot Factory Initialization Error.");
-                            }
+                            SetupSlotFactory();
+
                             // if the workstation is a supervisor, return the workstationView
-                            if (_workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor)
+                            // otherwise, set up the hardware devices
+                            if (_workstationView.StationTypeId != (int)StationType.Supervisor)
                             {
-                                await SetupHardwareDevices();
+                                SetupHardwareDevices();
                             }
-
-
                         }
                         else  // _workstationView is null
                         {
                             MessageBox.Show("Workstation has not been configured.   Neutron Exiting.",
                                 caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
+                            result = false;
                         }
                     }
                     else
                     {
                         MessageBox.Show("Workstation has not been configured.   Neutron Exiting.",
                             caption: "Bad Configuration", buttons: MessageBoxButtons.OK);
+                        result = false;
                     }
                 }
                 else
                 {
                     MessageBox.Show("Main Form: LoaderSettings Initialization Error.");
+                    result = false;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Main Form Initialization Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                result = false;
             }
 
-            await _logger.LogDetailAsync("InitForm Complete");
+            _ = _logger.LogDetailAsync("InitForm Complete");
 
-            //MtPick.Enabled = true;
-            //MtStore.Enabled = true;
-            //MtInventory.Enabled = true;
-            //MtLocations.Enabled = true;
-            //MtUtilities.Enabled = true;
-            //MtSystem.Enabled = true;
-
-
-           // MessageBox.Show($"Workstation Initialization Complete.");
             return result;
         }
-        private async Task SetupHardwareDevices()
+        private void SetupHardwareDevices()
         {
             // get all the hardware devices on this workstation; carousel, lights scale, etc
             try
             {
                 //get all the hardware devices on this workstation; carousel, lights scale, etc
                 var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == _workstationView.WorkstationId).ToList();
-                await _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name + " Number of Devices: " + hardwareDevices.Count);
+                _ = _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name + " Number of Devices: " + hardwareDevices.Count);
 
                 // loop through the hardware devices
                 // get the communication type
@@ -338,7 +313,7 @@ namespace Neutron
                 // create the hardware device view object
                 foreach (var device in hardwareDevices)
                 {
-                    await _logger.LogDetailAsync($"Loading Hardware Device: {device.Name}");
+                    _ = _logger.LogDetailAsync($"Loading Hardware Device: {device.Name}");
 
                     // get the device type
                     switch (device.DeviceTypeId)
@@ -346,7 +321,7 @@ namespace Neutron
                         // DeviceType = 1 or Shuttle
                         case (int)DeviceTypeEnum.Shuttle:
                             {
-                                await _logger.LogDetailAsync($"This is a Shuttle Device");
+                                _ = _logger.LogDetailAsync($"This is a Shuttle Device");
                                 _workstationView.HardwareDevices.Add(device);
 
                                 break;
@@ -355,7 +330,7 @@ namespace Neutron
                         // DeviceType = 2 or Carousel
                         case (int)DeviceTypeEnum.Carousel:
                             {
-                                await _logger.LogDetailAsync(@"This is a Carousel Device");
+                                _ = _logger.LogDetailAsync(@"This is a Carousel Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 break;
                             }
@@ -363,20 +338,20 @@ namespace Neutron
                         // DeviceType = 3 or Rack
                         case (int)DeviceTypeEnum.Rack:   //Rack
                             {
-                                await _logger.LogDetailAsync(@"This is a Rack Device");
+                                _ = _logger.LogDetailAsync(@"This is a Rack Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 break;
                             }
                         // DeviceType = 4 or IPTI
                         case (int)DeviceTypeEnum.IptiDisplays:   //IPTI 
                             {
-                                await _logger.LogDetailAsync(@"This is a IPTI Device");
+                                _ = _logger.LogDetailAsync(@"This is a IPTI Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 if (GlobalVar.Displays == null)
                                 {
                                     if (_neutronVariables.IptiDisplays)
                                     {
-                                        await _logger.LogDetailAsync("IPTI Displays are being used.");
+                                        _ = _logger.LogDetailAsync("IPTI Displays are being used.");
                                         // ReSharper disable once UseObjectOrCollectionInitializer
                                         GlobalVar.Displays =
                                             new TCP_IptiController(_jsonData, _workstationView, _neutronVariables, device);
@@ -387,7 +362,7 @@ namespace Neutron
 
                                         if (GlobalVar.Testing)
                                         {
-                                          //  await TestBli();
+                                            //  await TestBli();
                                         }
                                     }
                                 }
@@ -404,7 +379,7 @@ namespace Neutron
                         // DeviceType = 6 or Remstar Displays
                         case (int)DeviceTypeEnum.RemstarDisplays:   //Remstar BPI/SHI
                             {
-                                await _logger.LogDetailAsync(@"This is a Remstar Display Device");
+                                _ = _logger.LogDetailAsync(@"This is a Remstar Display Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 break;
                             }
@@ -412,7 +387,7 @@ namespace Neutron
                         // DeviceType = 7 or Blastzone
                         case (int)DeviceTypeEnum.Blastzone: //Blastzone
                             {
-                                await _logger.LogDetailAsync(@"This is a Blastzone Device");
+                                _ = _logger.LogDetailAsync(@"This is a Blastzone Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 if (GlobalVar.Displays == null)
                                 {
@@ -430,13 +405,13 @@ namespace Neutron
                         // DeviceType = 8 or Hanel12D
                         case (int)DeviceTypeEnum.Hanel12D:
                             {
-                                await _logger.LogDetailAsync($"This is a Hanel 12D Device");
+                                _ = _logger.LogDetailAsync($"This is a Hanel 12D Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 if (device.Enabled)
                                 {
                                     if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
                                     {
-                                        await _logger.LogDetailAsync("Mp12D Controller.");
+                                        _ = _logger.LogDetailAsync("Mp12D Controller.");
                                         GlobalVar.Hanel = new Mp12D(this, _workstationView);
                                         GlobalVar.Hanel.InitStatus();
                                         var result = GlobalVar.Hanel != null;
@@ -448,13 +423,13 @@ namespace Neutron
                         // DeviceType = 9 or Hanel12N
                         case (int)DeviceTypeEnum.Hanel12N:
                             {
-                                await _logger.LogDetailAsync($"This is a Hanel 12N Device");
+                                _ = _logger.LogDetailAsync($"This is a Hanel 12N Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 if (device.Enabled)
                                 {
                                     if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
                                     {
-                                        await _logger.LogDetailAsync("MP12N Controller.");
+                                        _ = _logger.LogDetailAsync("MP12N Controller.");
                                         GlobalVar.Hanel = new Mp12N(this, _workstationView);
                                         GlobalVar.Hanel.InitStatus();
                                         var result = GlobalVar.Hanel != null;
@@ -467,7 +442,7 @@ namespace Neutron
                         // DeviceType = 10 or ProLite
                         case (int)DeviceTypeEnum.ProLite:
                             {
-                                await _logger.LogDetailAsync($"This is a ProLite Device");
+                                _ = _logger.LogDetailAsync($"This is a ProLite Device");
                                 _workstationView.HardwareDevices.Add(device);
                                 //var proLite = new ProLite(device.Id, device.Name, device.DeviceNumber, device.Enabled);
                                 // if the GlobalVar.ProLiteManager is null, create a new ProLiteManager
@@ -481,7 +456,7 @@ namespace Neutron
                                         , _neutronVariables);
                                 }
 
-                                await _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
+                                _ = _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
 
 
                                 _workstationView.ProLiteManager.AddProlite(device.Id, device.Name, device.DeviceNumber, device.Enabled);
@@ -492,10 +467,10 @@ namespace Neutron
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Error finding hardware devices.  {ex.Message}  Inner:  {ex.InnerException}");
             }
 
-            await _logger.LogDetailAsync("Hardware Loading Complete");
+            _ = _logger.LogDetailAsync("Hardware Loading Complete");
         }
         private void SetupEmail()
         {
@@ -514,21 +489,14 @@ namespace Neutron
                 }
             }
         }
-        private bool StartLoader()
+        private void StartLoader()
         {
-            var result = false;
             try
             {
                 if (_neutronVariables.RunLoaderOnStartup)
                 {
                     Mediator.GetInstance().OnStartStopLoader(this, "Start");
                     GlobalVar.LoaderRunning = true;
-                    result = true;
-                }
-                else
-                {
-                    //don't run on startup, return true
-                    result = true;
                 }
             }
             catch (Exception ex)
@@ -536,34 +504,22 @@ namespace Neutron
                 MessageBox.Show(
                     $"The Loader has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
-
-            return result;
         }
-        private bool StartUpload()
+        private void StartUpload()
         {
-            var result = false;
             try
             {
                 if (_neutronVariables.RunUploadOnStartup)
                 {
                     Mediator.GetInstance().OnStartStopUpload(this, "Start");
                     GlobalVar.UploadRunning = true;
-                    result = true;
-                }
-                else
-                {
-                    //don't run on startup, return true
-                    result = true;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
                     $"The Upload has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                result = false;
             }
-
-            return result;
         }
 
         #region UnUsed
@@ -767,38 +723,37 @@ namespace Neutron
         #endregion
 
         #region Slot Factory
-        private bool SetupSlotFactory()
+        private void SetupSlotFactory()
         {
-            bool result;
-            switch (_neutronVariables.SlotNameType)
+            try
             {
-                case "Default":
-                    GlobalVar.SlotNameFactory = DefaultSlotNameFactory.GetInstance();
-                    result = GlobalVar.SlotNameFactory != null;
-                    break;
-                case "T101-01-01":
-                    GlobalVar.SlotNameFactory = Type1SlotNameFactory.GetInstance();
-                    result = GlobalVar.SlotNameFactory != null;
-                    break;
-                case "V101":
-                    GlobalVar.SlotNameFactory = Type2SlotNameFactory.GetInstance();
-                    result = GlobalVar.SlotNameFactory != null;
-                    break;
-                case "01--01--01--01":
-                    GlobalVar.SlotNameFactory = Type3SlotNameFactory.GetInstance();
-                    result = GlobalVar.SlotNameFactory != null;
-                    break;
-                case "0101010101":
-                    GlobalVar.SlotNameFactory = Type4SlotNameFactory.GetInstance();
-                    result = GlobalVar.SlotNameFactory != null;
-                    break;
-                default:
-                    GlobalVar.SlotNameFactory = DefaultSlotNameFactory.GetInstance();
-                    result = GlobalVar.SlotNameFactory != null;
-                    break;
+                switch (_neutronVariables.SlotNameType)
+                {
+                    case "Default":
+                        GlobalVar.SlotNameFactory = DefaultSlotNameFactory.GetInstance();
+                        break;
+                    case "T101-01-01":
+                        GlobalVar.SlotNameFactory = Type1SlotNameFactory.GetInstance();
+                        break;
+                    case "V101":
+                        GlobalVar.SlotNameFactory = Type2SlotNameFactory.GetInstance();
+                        break;
+                    case "01--01--01--01":
+                        GlobalVar.SlotNameFactory = Type3SlotNameFactory.GetInstance();
+                        break;
+                    case "0101010101":
+                        GlobalVar.SlotNameFactory = Type4SlotNameFactory.GetInstance();
+                        break;
+                    default:
+                        GlobalVar.SlotNameFactory = DefaultSlotNameFactory.GetInstance();
+                        break;
+                }
             }
-
-            return result;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Slot Name Factory has failed to initialize.  {Environment.NewLine}" +
+                                $"{ex.Message}");
+            }
         }
 
         #endregion
@@ -1045,7 +1000,7 @@ namespace Neutron
             var counter = 0;
             while (true)
             {
-                if(_workstationView != null) break;
+                if (_workstationView != null) break;
                 Thread.Sleep(100);
                 counter++;
                 if (counter > 50)
@@ -1054,7 +1009,7 @@ namespace Neutron
                     return;
                 }
             }
-           
+
 
             using (var frm = DI.Create<FrmPick>(
                        _neutronVariables
@@ -1381,22 +1336,22 @@ namespace Neutron
 
             _workstationView.ProLiteManager?.TurnOn(1, 2, 2, 6);
             await _logger.LogDetailAsync($"button1_Click IPTI Displays ");
-            
+
             await GlobalVar.Displays.TurnOnAllBli();
             await Task.Delay(3000);
 
             await GlobalVar.Displays.ClearAllBli();
             await _logger.LogDetailAsync($"button1_Click IPTI Displays Turned Off");
             await Task.Delay(3000);
-            
+
             await _logger.LogDetailAsync($"Blastzone 1 IPTI Displays Turn On");
             await GlobalVar.Displays.ShowBlastzone(2, 2, 2, "21");
             await GlobalVar.Displays.ShowBlastzone(2, 1, 2, "11");
             await Task.Delay(3000);
 
             await GlobalVar.Displays.ClearBlastzone();
-            await Task.Delay(3000);            
-            
+            await Task.Delay(3000);
+
             await GlobalVar.Displays.TurnOnAllBlastzones();
             await Task.Delay(3000);
 
