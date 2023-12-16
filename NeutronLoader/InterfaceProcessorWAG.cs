@@ -42,22 +42,21 @@ namespace NeutronLoader
         private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _loadOrdersBusy;
-        private const string FolderName = "Neutron Loader";
-        private IFileProcessor _fileProcessor;
         private readonly ISapService _sapService;
 
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView, ISapService sapService)
         {
-            Initialize();
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
             _sapService = sapService;
+            Init();            
+            
         }
 
-        private void Initialize()
+        private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("NeutronLoader");
 
@@ -293,7 +292,7 @@ namespace NeutronLoader
                                     Quantity = orderDetail.Qty,
                                     LineStatusId = (int)LineStatus.Available,
                                     AreaId = GetAreaToPickFrom(orderDetail, itemDef),
-                                    OrderDetailInfo = $"{rec.TransId},{rec.Priority},{rec.Division},{"Route"},{rec.Upc}",
+                                    OrderDetailInfo = $"{rec.TransId}|{rec.Priority}|{rec.Division}|{@"Route"}|{rec.Upc}",
                                     OrderId = orderId,
                                     JobNum = orderDetail.Order,
                                     ItemDefinitionId = itemDef.Id
@@ -364,7 +363,7 @@ namespace NeutronLoader
                         h.Division = rec.DIVISION;
                         h.Order = rec.ORDERNO.ToString(CultureInfo.CurrentCulture);
                         h.Priority = string.IsNullOrEmpty(rec.PRIORITY) ? "0" : rec.PRIORITY;
-                        h.Invoice = rec.INVOICENO == 0 ? String.Empty   : rec.INVOICENO.ToString(CultureInfo.CurrentCulture);
+                        h.Invoice = rec.TASKNO == 0 ? String.Empty   : rec.TASKNO.ToString(CultureInfo.CurrentCulture);
                         h.Des = rec.SKUDESC;
                         h.Upc = rec.UPC;
                         h.LineNo = rec.TOTENO.ToString(CultureInfo.CurrentCulture);
@@ -380,9 +379,6 @@ namespace NeutronLoader
                     }
                     UpdateToProcessed(recs);
                 }
-
-                // var sapService = new SAPService(_jsonData);
-
             }
             catch (Exception ex)
             {
@@ -392,65 +388,6 @@ namespace NeutronLoader
             }
             return orderLines;
         }
-
-        //private List<HostOrderLine> GetNewOrdersSql()
-        //{
-        //try
-        //{
-        //    using (var context = new HighJumpContext())
-        //    {
-        //        //try 3 times to get equal count
-        //        for (var i = 0; i < 3; i++)
-        //        {
-        //            _ = _logger.LogDetailAsync("Try Number " + i + " to get equal counts.");
-        //            var newRecords = context.t_al_host_carousel_outbound.Where(o => o.status == "N")
-        //                .OrderBy(o => o.container_label).ToList();
-        //            Thread.Sleep(1000);
-        //            var newRecordsSecondPass = context.t_al_host_carousel_outbound.Where(o => o.status == "N").ToList();
-
-        //            // if there are zero records return an empty list
-        //            if (!newRecords.Any() && !newRecordsSecondPass.Any())
-        //            {
-        //                _ = _logger.LogDetailAsync("No records in HighJump.");
-        //                return orderLines;
-        //            }
-
-        //            if (newRecords.Count() != 0 && newRecords.Count() == newRecordsSecondPass.Count())
-        //            {
-
-        //                _ = _logger.LogDetailAsync("Counts Match.  " + newRecords.Count + " Records to Process.");
-        //                foreach (var rec in newRecords)
-        //                {
-        //                    // Check for existing order
-        //                    var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.container_label.Substring(10, 10)).FirstOrDefault();
-
-        //                    if (existingOrder != null) continue;
-
-        //                    var h = new HostOrderLine();
-        //                    h.OrderNumber = rec.container_label;
-        //                    h.Sku = rec.item_number;
-        //                    h.Quantity = rec.pick_quantity;
-        //                    h.Description = rec.item_description;
-        //                    h.CountryOfOrigin = rec.country_of_origin;
-        //                    h.Priority = "00";
-        //                    orderLines.Add(h);
-        //                }
-        //                UpdateOutboundToComplete(newRecords);
-        //                break;
-        //            }
-        //        }
-        //    }
-
-        //}
-        //catch (Exception ex)
-        //{
-        //    var msg = "Get New Orders " + ex.Message + "  " + ex.InnerException;
-        //    _ = _logger.LogDetailAsync(msg);
-        //    ErrorAlert(msg);
-        //}
-        //return orderLines;
-        //}
-
         private void UpdateToProcessed(List<NOVA_INPUT> newRecords)
         {
             _ = _logger.LogDetailAsync("Update To Processed.");
@@ -488,78 +425,5 @@ namespace NeutronLoader
         }
 
         public void RunLoaderOnce() => _ = LoadOrders();
-
-        //public FileInfo[] GetFiles()
-        //{
-        //    _ = _logger.LogDetailAsync("Call to Get Files Function.");
-        //    var result = new FileInfo[] { };
-        //    try
-        //    {
-        //        result = _hostOrderDirectory.GetFiles(_inputFileFilter);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _ = _logger.LogDetailAsync(
-        //            $"Get Files Error.  {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException?.Message} {Environment.NewLine}  {ex.InnerException?.InnerException?.Message}");
-        //    }
-
-        //    return result;
-        //}
-
-        //private void StopBackgroundWorker()
-        //{
-        //    _backgroundWorker?.CancelAsync();
-        //}
-
-        //private void InitBackgroundWorker()
-        //{
-        //    _backgroundWorker = new BackgroundWorker
-        //    {
-        //        WorkerReportsProgress = false,
-        //        WorkerSupportsCancellation = true
-        //    };
-        //    _backgroundWorker.DoWork += BackgroundWorkerDoWork;
-        //    _backgroundWorker.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
-        //    _backgroundWorker.RunWorkerAsync();
-        //}
-
-        //private void BackgroundWorkerDoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    _ = _logger.LogDetailAsync("Queue Processor Do Work");
-        //    if (_backgroundWorker.CancellationPending)
-        //    {
-        //        _ = _logger.LogDetailAsync($"BackgroundWorker Cancel.");
-        //        e.Cancel = true;
-        //        return;
-        //    }
-
-        //    Thread.Sleep(millisecondsTimeout: 100);
-        //    foreach (var fileInfo in _interfaceFileQueue.GetConsumingEnumerable())
-        //    {
-        //        _ = _logger.LogDetailAsync($"Queue Processor Do Work: {fileInfo.FullName} License: {_neutronLicense.CompanyCode} ");
-        //        var files = new List<FileInfo>();
-        //        if (!File.Exists(fileInfo.FullName)) continue;
-        //        files.Add(fileInfo);
-        //        Thread.Sleep(millisecondsTimeout: 100);
-        //        _ = _logger.LogDetailAsync($"WAGFileProcessor: Number of Files: {files.Count}");
-        //        _fileProcessor.LoadFiles(files);
-        //    }
-        //}
-
-        //private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        //{
-        //    if (e.Cancelled)
-        //    {
-        //    }
-        //    else
-        //    {
-        //        object result = e.Result;
-        //    }
-        //}
-
-        //private string CheckForBackSlash(string neutronBusyPath)
-        //{
-        //    return neutronBusyPath.EndsWith(@"\") ? string.Empty : @"\";
-        //}
     }
 }

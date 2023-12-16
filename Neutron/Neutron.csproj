@@ -17,7 +17,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>\\usot-neutron\software\NeutronWagnerInstallation\</PublishUrl>
+    <PublishUrl>\\10.5.20.200\software\NeutronWagnerInstallation\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>508</ApplicationRevision>
+    <ApplicationRevision>513</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

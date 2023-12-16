@@ -63,9 +63,9 @@ namespace SAPServer
                             {
                                 var rec = db.NOVA_OUTPUT.Find(good.TRANSID);
                                 if (rec == null) continue;
-                                rec.SKUDESC = string.Empty;
+                                //rec.SKUDESC = string.Empty;
                                 rec.PROCESSED = "Y";
-                                rec.EXPLANATION = string.Empty;
+                                //rec.EXPLANATION = string.Empty;
                                 db.SaveChanges();
 
                                 _ = _logger.LogDetailAsync(
@@ -160,12 +160,12 @@ namespace SAPServer
             {
                 using (var db = new WagnerDb())
                 {
-                    List<NOVA_OUTPUT> recs = db.NOVA_OUTPUT.Where(n => n.PROCESSED == "N" && n.TRANSTYPE == "P2").OrderByDescending(o => o.TRANSDATE).ToList();
+                    List<NOVA_OUTPUT> recs = db.NOVA_OUTPUT.Where(n => n.PROCESSED == "N" && n.TRANSTYPE == "22").OrderByDescending(o => o.TRANSDATE).ToList();
 
                     foreach (var item in recs)
                     {
                         var g = new GoodsIssue();
-                        g.TRANSID = item.TRANSID;
+                        g.TRANSID = Convert.ToDecimal(item.TRANSID);
                         g.TANUM = item.TASKNO.ToString(CultureInfo.InvariantCulture);
                         g.TAPOS = item.TOTENO.ToString(CultureInfo.InvariantCulture);
                         g.MATNR = item.SKU;
@@ -178,7 +178,7 @@ namespace SAPServer
                         g.EAN11 = item.UPC;
                         g.MEINS = item.BP;
 
-                     _ = _logger.LogDetailAsync($"Goods Issue - Output to SAP.  TASKNO: {g.TANUM}  SKU: {g.MATNR} REQ QTY: {g.NSOLM} ISS QTY: {g.NISTA}");
+                        _ = _logger.LogDetailAsync($"Goods Issue - Output to SAP.  TASKNO: {g.TANUM}  SKU: {g.MATNR} REQ QTY: {g.NSOLM} ISS QTY: {g.NISTA}");
 
                         goodsIssues.Add(g);
                     }

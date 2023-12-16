@@ -81,6 +81,7 @@
             this.LabelPrintSettingsUsesTestOrderNumbe = new System.Windows.Forms.Label();
             this.TextBoxTestOrderNumber = new System.Windows.Forms.TextBox();
             this.ButtonPrintTestToteLabel = new System.Windows.Forms.Button();
+            this.ButtonPrintReplen = new System.Windows.Forms.Button();
             this.ButtonPrintBarCode = new System.Windows.Forms.Button();
             this.ButtonPrintTestDocument = new System.Windows.Forms.Button();
             this.ButtonPrintTestShortReport = new System.Windows.Forms.Button();
@@ -451,8 +452,6 @@
             this.EmailAddresses = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.LabelEmailInfo = new System.Windows.Forms.Label();
-            this.DataGridViewEmailAddresses = new System.Windows.Forms.DataGridView();
-            this.ButtonRemoveEmail = new System.Windows.Forms.Button();
             this.ButtonCancelEmailAddresses = new System.Windows.Forms.Button();
             this.ButtonSaveEmailAddresses = new System.Windows.Forms.Button();
             this.ProLite = new System.Windows.Forms.TabPage();
@@ -519,8 +518,8 @@
             this.LabelSapServerName = new System.Windows.Forms.Label();
             this.BatchLights = new System.Windows.Forms.TabPage();
             this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.panel10 = new System.Windows.Forms.Panel();
+            this.PanelBatchLightTesterBottom = new System.Windows.Forms.Panel();
+            this.PanelBatchLightTesterTop = new System.Windows.Forms.Panel();
             this.LabelBatchLightTester = new System.Windows.Forms.Label();
             this.ButtonBatchLightTurnOff = new System.Windows.Forms.Button();
             this.ButtonBatchLightTurnOn = new System.Windows.Forms.Button();
@@ -534,7 +533,14 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ButtonPrintReplen = new System.Windows.Forms.Button();
+            this.TextBoxEmailAddressesEmail2 = new System.Windows.Forms.TextBox();
+            this.LabelEmailAddressesEmail2 = new System.Windows.Forms.Label();
+            this.TextBoxEmailAddressesEmail1 = new System.Windows.Forms.TextBox();
+            this.TextBoxEmailAddressesEmail3 = new System.Windows.Forms.TextBox();
+            this.LabelEmailAddressesEmail1 = new System.Windows.Forms.Label();
+            this.LabelEmailAddressesEmail3 = new System.Windows.Forms.Label();
+            this.LabelBayId = new System.Windows.Forms.Label();
+            this.NumericUpDownBayId = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -591,16 +597,16 @@
             this.groupBox1.SuspendLayout();
             this.EmailAddresses.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).BeginInit();
             this.ProLite.SuspendLayout();
             this.PanelProLite.SuspendLayout();
             this.panel6.SuspendLayout();
             this.SapServer.SuspendLayout();
             this.PanelSapServer.SuspendLayout();
             this.BatchLights.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel10.SuspendLayout();
+            this.PanelBatchLightTesterBottom.SuspendLayout();
+            this.PanelBatchLightTesterTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBayId)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -1007,6 +1013,17 @@
             this.ButtonPrintTestToteLabel.Text = "Print Test Label";
             this.ButtonPrintTestToteLabel.UseVisualStyleBackColor = true;
             this.ButtonPrintTestToteLabel.Click += new System.EventHandler(this.ButtonPrintTestToteLabel_Click);
+            // 
+            // ButtonPrintReplen
+            // 
+            this.ButtonPrintReplen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPrintReplen.Location = new System.Drawing.Point(621, 222);
+            this.ButtonPrintReplen.Name = "ButtonPrintReplen";
+            this.ButtonPrintReplen.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintReplen.TabIndex = 3;
+            this.ButtonPrintReplen.Text = "Print Replen Doc";
+            this.ButtonPrintReplen.UseVisualStyleBackColor = true;
+            this.ButtonPrintReplen.Click += new System.EventHandler(this.ButtonPrintReplen_Click);
             // 
             // ButtonPrintBarCode
             // 
@@ -5530,7 +5547,6 @@
             // 
             this.EmailAddresses.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.EmailAddresses.Controls.Add(this.groupBox5);
-            this.EmailAddresses.Controls.Add(this.ButtonRemoveEmail);
             this.EmailAddresses.Controls.Add(this.ButtonCancelEmailAddresses);
             this.EmailAddresses.Controls.Add(this.ButtonSaveEmailAddresses);
             this.EmailAddresses.Location = new System.Drawing.Point(4, 22);
@@ -5542,12 +5558,17 @@
             // groupBox5
             // 
             this.groupBox5.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox5.Controls.Add(this.TextBoxEmailAddressesEmail2);
+            this.groupBox5.Controls.Add(this.LabelEmailAddressesEmail2);
+            this.groupBox5.Controls.Add(this.TextBoxEmailAddressesEmail1);
+            this.groupBox5.Controls.Add(this.TextBoxEmailAddressesEmail3);
+            this.groupBox5.Controls.Add(this.LabelEmailAddressesEmail1);
+            this.groupBox5.Controls.Add(this.LabelEmailAddressesEmail3);
             this.groupBox5.Controls.Add(this.LabelEmailInfo);
-            this.groupBox5.Controls.Add(this.DataGridViewEmailAddresses);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox5.Location = new System.Drawing.Point(360, 122);
+            this.groupBox5.Location = new System.Drawing.Point(360, 181);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(506, 351);
+            this.groupBox5.Size = new System.Drawing.Size(506, 274);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             // 
@@ -5555,48 +5576,21 @@
             // 
             this.LabelEmailInfo.AutoSize = true;
             this.LabelEmailInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelEmailInfo.Location = new System.Drawing.Point(148, 31);
+            this.LabelEmailInfo.Location = new System.Drawing.Point(134, 31);
             this.LabelEmailInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelEmailInfo.Name = "LabelEmailInfo";
             this.LabelEmailInfo.Size = new System.Drawing.Size(239, 20);
             this.LabelEmailInfo.TabIndex = 9;
             this.LabelEmailInfo.Text = "Notification Email Addresses";
             // 
-            // DataGridViewEmailAddresses
-            // 
-            this.DataGridViewEmailAddresses.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.DataGridViewEmailAddresses.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridViewEmailAddresses.Location = new System.Drawing.Point(44, 64);
-            this.DataGridViewEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.DataGridViewEmailAddresses.MultiSelect = false;
-            this.DataGridViewEmailAddresses.Name = "DataGridViewEmailAddresses";
-            this.DataGridViewEmailAddresses.RowHeadersWidth = 92;
-            this.DataGridViewEmailAddresses.RowTemplate.Height = 24;
-            this.DataGridViewEmailAddresses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewEmailAddresses.Size = new System.Drawing.Size(419, 266);
-            this.DataGridViewEmailAddresses.TabIndex = 8;
-            // 
-            // ButtonRemoveEmail
-            // 
-            this.ButtonRemoveEmail.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.ButtonRemoveEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonRemoveEmail.Location = new System.Drawing.Point(376, 487);
-            this.ButtonRemoveEmail.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ButtonRemoveEmail.Name = "ButtonRemoveEmail";
-            this.ButtonRemoveEmail.Size = new System.Drawing.Size(147, 36);
-            this.ButtonRemoveEmail.TabIndex = 9;
-            this.ButtonRemoveEmail.Text = "Remove";
-            this.ButtonRemoveEmail.UseVisualStyleBackColor = true;
-            this.ButtonRemoveEmail.Click += new System.EventHandler(this.ButtonRemoveEmail_Click);
-            // 
             // ButtonCancelEmailAddresses
             // 
             this.ButtonCancelEmailAddresses.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancelEmailAddresses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonCancelEmailAddresses.Location = new System.Drawing.Point(703, 487);
+            this.ButtonCancelEmailAddresses.Location = new System.Drawing.Point(1090, 10);
             this.ButtonCancelEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ButtonCancelEmailAddresses.Name = "ButtonCancelEmailAddresses";
-            this.ButtonCancelEmailAddresses.Size = new System.Drawing.Size(147, 36);
+            this.ButtonCancelEmailAddresses.Size = new System.Drawing.Size(126, 76);
             this.ButtonCancelEmailAddresses.TabIndex = 10;
             this.ButtonCancelEmailAddresses.Text = "Cancel";
             this.ButtonCancelEmailAddresses.UseVisualStyleBackColor = true;
@@ -5605,10 +5599,10 @@
             // ButtonSaveEmailAddresses
             // 
             this.ButtonSaveEmailAddresses.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonSaveEmailAddresses.Location = new System.Drawing.Point(544, 487);
+            this.ButtonSaveEmailAddresses.Location = new System.Drawing.Point(954, 10);
             this.ButtonSaveEmailAddresses.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.ButtonSaveEmailAddresses.Name = "ButtonSaveEmailAddresses";
-            this.ButtonSaveEmailAddresses.Size = new System.Drawing.Size(147, 36);
+            this.ButtonSaveEmailAddresses.Size = new System.Drawing.Size(126, 76);
             this.ButtonSaveEmailAddresses.TabIndex = 11;
             this.ButtonSaveEmailAddresses.Text = "Save";
             this.ButtonSaveEmailAddresses.UseVisualStyleBackColor = true;
@@ -5629,7 +5623,7 @@
             // 
             this.ButtonProLiteBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ButtonProLiteBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonProLiteBack.Location = new System.Drawing.Point(1098, 4);
+            this.ButtonProLiteBack.Location = new System.Drawing.Point(1090, 10);
             this.ButtonProLiteBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonProLiteBack.Name = "ButtonProLiteBack";
             this.ButtonProLiteBack.Size = new System.Drawing.Size(126, 76);
@@ -5952,6 +5946,7 @@
             this.TextBoxSapServerEmail2.Location = new System.Drawing.Point(597, 247);
             this.TextBoxSapServerEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEmail2.Name = "TextBoxSapServerEmail2";
+            this.TextBoxSapServerEmail2.ReadOnly = true;
             this.TextBoxSapServerEmail2.Size = new System.Drawing.Size(326, 26);
             this.TextBoxSapServerEmail2.TabIndex = 1;
             this.TextBoxSapServerEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6038,6 +6033,7 @@
             this.TextBoxSapServerEmail1.Location = new System.Drawing.Point(597, 211);
             this.TextBoxSapServerEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEmail1.Name = "TextBoxSapServerEmail1";
+            this.TextBoxSapServerEmail1.ReadOnly = true;
             this.TextBoxSapServerEmail1.Size = new System.Drawing.Size(326, 26);
             this.TextBoxSapServerEmail1.TabIndex = 3;
             this.TextBoxSapServerEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6090,6 +6086,7 @@
             this.TextBoxSapServerEmail3.Location = new System.Drawing.Point(597, 283);
             this.TextBoxSapServerEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEmail3.Name = "TextBoxSapServerEmail3";
+            this.TextBoxSapServerEmail3.ReadOnly = true;
             this.TextBoxSapServerEmail3.Size = new System.Drawing.Size(326, 26);
             this.TextBoxSapServerEmail3.TabIndex = 3;
             this.TextBoxSapServerEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6327,7 +6324,7 @@
             // 
             this.BatchLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.BatchLights.Controls.Add(this.MBBatchLightBack);
-            this.BatchLights.Controls.Add(this.panel9);
+            this.BatchLights.Controls.Add(this.PanelBatchLightTesterBottom);
             this.BatchLights.Location = new System.Drawing.Point(4, 22);
             this.BatchLights.Name = "BatchLights";
             this.BatchLights.Padding = new System.Windows.Forms.Padding(3);
@@ -6339,7 +6336,7 @@
             // 
             this.MBBatchLightBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBBatchLightBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBBatchLightBack.Location = new System.Drawing.Point(1090, 9);
+            this.MBBatchLightBack.Location = new System.Drawing.Point(1090, 10);
             this.MBBatchLightBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBBatchLightBack.Name = "MBBatchLightBack";
             this.MBBatchLightBack.Size = new System.Drawing.Size(126, 76);
@@ -6348,30 +6345,32 @@
             this.MBBatchLightBack.UseSelectable = true;
             this.MBBatchLightBack.Click += new System.EventHandler(this.MBBatchLightBack_Click);
             // 
-            // panel9
+            // PanelBatchLightTesterBottom
             // 
-            this.panel9.BackColor = System.Drawing.Color.LightGray;
-            this.panel9.Controls.Add(this.panel10);
-            this.panel9.Controls.Add(this.ButtonBatchLightTurnOff);
-            this.panel9.Controls.Add(this.ButtonBatchLightTurnOn);
-            this.panel9.Controls.Add(this.LabelBatchLightQuantity);
-            this.panel9.Controls.Add(this.LabelBatchPosition);
-            this.panel9.Controls.Add(this.TextBoxBatchLightQuantity);
-            this.panel9.Controls.Add(this.TextBoxBatchLightPosition);
-            this.panel9.Location = new System.Drawing.Point(327, 166);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(557, 315);
-            this.panel9.TabIndex = 6;
+            this.PanelBatchLightTesterBottom.BackColor = System.Drawing.Color.LightGray;
+            this.PanelBatchLightTesterBottom.Controls.Add(this.NumericUpDownBayId);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.PanelBatchLightTesterTop);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBatchLightTurnOff);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBatchLightTurnOn);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBatchLightQuantity);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBayId);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBatchPosition);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchLightQuantity);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchLightPosition);
+            this.PanelBatchLightTesterBottom.Location = new System.Drawing.Point(327, 166);
+            this.PanelBatchLightTesterBottom.Name = "PanelBatchLightTesterBottom";
+            this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(557, 315);
+            this.PanelBatchLightTesterBottom.TabIndex = 6;
             // 
-            // panel10
+            // PanelBatchLightTesterTop
             // 
-            this.panel10.BackColor = System.Drawing.Color.DarkGray;
-            this.panel10.Controls.Add(this.LabelBatchLightTester);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(0, 0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(557, 62);
-            this.panel10.TabIndex = 13;
+            this.PanelBatchLightTesterTop.BackColor = System.Drawing.Color.DarkGray;
+            this.PanelBatchLightTesterTop.Controls.Add(this.LabelBatchLightTester);
+            this.PanelBatchLightTesterTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PanelBatchLightTesterTop.Location = new System.Drawing.Point(0, 0);
+            this.PanelBatchLightTesterTop.Name = "PanelBatchLightTesterTop";
+            this.PanelBatchLightTesterTop.Size = new System.Drawing.Size(557, 62);
+            this.PanelBatchLightTesterTop.TabIndex = 13;
             // 
             // LabelBatchLightTester
             // 
@@ -6386,7 +6385,7 @@
             // ButtonBatchLightTurnOff
             // 
             this.ButtonBatchLightTurnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBatchLightTurnOff.Location = new System.Drawing.Point(290, 175);
+            this.ButtonBatchLightTurnOff.Location = new System.Drawing.Point(290, 217);
             this.ButtonBatchLightTurnOff.Name = "ButtonBatchLightTurnOff";
             this.ButtonBatchLightTurnOff.Size = new System.Drawing.Size(203, 31);
             this.ButtonBatchLightTurnOff.TabIndex = 11;
@@ -6397,7 +6396,7 @@
             // ButtonBatchLightTurnOn
             // 
             this.ButtonBatchLightTurnOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBatchLightTurnOn.Location = new System.Drawing.Point(64, 175);
+            this.ButtonBatchLightTurnOn.Location = new System.Drawing.Point(64, 217);
             this.ButtonBatchLightTurnOn.Name = "ButtonBatchLightTurnOn";
             this.ButtonBatchLightTurnOn.Size = new System.Drawing.Size(203, 31);
             this.ButtonBatchLightTurnOn.TabIndex = 12;
@@ -6410,7 +6409,7 @@
             this.LabelBatchLightQuantity.AutoSize = true;
             this.LabelBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelBatchLightQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(337, 115);
+            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(337, 162);
             this.LabelBatchLightQuantity.Name = "LabelBatchLightQuantity";
             this.LabelBatchLightQuantity.Size = new System.Drawing.Size(76, 20);
             this.LabelBatchLightQuantity.TabIndex = 8;
@@ -6420,7 +6419,7 @@
             // 
             this.LabelBatchPosition.AutoSize = true;
             this.LabelBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBatchPosition.Location = new System.Drawing.Point(76, 115);
+            this.LabelBatchPosition.Location = new System.Drawing.Point(76, 162);
             this.LabelBatchPosition.Name = "LabelBatchPosition";
             this.LabelBatchPosition.Size = new System.Drawing.Size(125, 20);
             this.LabelBatchPosition.TabIndex = 9;
@@ -6429,7 +6428,7 @@
             // TextBoxBatchLightQuantity
             // 
             this.TextBoxBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxBatchLightQuantity.Location = new System.Drawing.Point(419, 112);
+            this.TextBoxBatchLightQuantity.Location = new System.Drawing.Point(419, 159);
             this.TextBoxBatchLightQuantity.Name = "TextBoxBatchLightQuantity";
             this.TextBoxBatchLightQuantity.Size = new System.Drawing.Size(62, 26);
             this.TextBoxBatchLightQuantity.TabIndex = 4;
@@ -6439,7 +6438,7 @@
             // TextBoxBatchLightPosition
             // 
             this.TextBoxBatchLightPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxBatchLightPosition.Location = new System.Drawing.Point(207, 112);
+            this.TextBoxBatchLightPosition.Location = new System.Drawing.Point(207, 159);
             this.TextBoxBatchLightPosition.Name = "TextBoxBatchLightPosition";
             this.TextBoxBatchLightPosition.Size = new System.Drawing.Size(62, 26);
             this.TextBoxBatchLightPosition.TabIndex = 5;
@@ -6490,16 +6489,102 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // ButtonPrintReplen
+            // TextBoxEmailAddressesEmail2
             // 
-            this.ButtonPrintReplen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintReplen.Location = new System.Drawing.Point(621, 222);
-            this.ButtonPrintReplen.Name = "ButtonPrintReplen";
-            this.ButtonPrintReplen.Size = new System.Drawing.Size(144, 23);
-            this.ButtonPrintReplen.TabIndex = 3;
-            this.ButtonPrintReplen.Text = "Print Replen Doc";
-            this.ButtonPrintReplen.UseVisualStyleBackColor = true;
-            this.ButtonPrintReplen.Click += new System.EventHandler(this.ButtonPrintReplen_Click);
+            this.TextBoxEmailAddressesEmail2.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxEmailAddressesEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxEmailAddressesEmail2.Location = new System.Drawing.Point(118, 133);
+            this.TextBoxEmailAddressesEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxEmailAddressesEmail2.Name = "TextBoxEmailAddressesEmail2";
+            this.TextBoxEmailAddressesEmail2.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxEmailAddressesEmail2.TabIndex = 10;
+            this.TextBoxEmailAddressesEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelEmailAddressesEmail2
+            // 
+            this.LabelEmailAddressesEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailAddressesEmail2.Location = new System.Drawing.Point(36, 128);
+            this.LabelEmailAddressesEmail2.Name = "LabelEmailAddressesEmail2";
+            this.LabelEmailAddressesEmail2.Size = new System.Drawing.Size(76, 36);
+            this.LabelEmailAddressesEmail2.TabIndex = 11;
+            this.LabelEmailAddressesEmail2.Text = "Email2";
+            this.LabelEmailAddressesEmail2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxEmailAddressesEmail1
+            // 
+            this.TextBoxEmailAddressesEmail1.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxEmailAddressesEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxEmailAddressesEmail1.Location = new System.Drawing.Point(118, 97);
+            this.TextBoxEmailAddressesEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxEmailAddressesEmail1.Name = "TextBoxEmailAddressesEmail1";
+            this.TextBoxEmailAddressesEmail1.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxEmailAddressesEmail1.TabIndex = 12;
+            this.TextBoxEmailAddressesEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxEmailAddressesEmail3
+            // 
+            this.TextBoxEmailAddressesEmail3.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxEmailAddressesEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxEmailAddressesEmail3.Location = new System.Drawing.Point(118, 169);
+            this.TextBoxEmailAddressesEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxEmailAddressesEmail3.Name = "TextBoxEmailAddressesEmail3";
+            this.TextBoxEmailAddressesEmail3.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxEmailAddressesEmail3.TabIndex = 13;
+            this.TextBoxEmailAddressesEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelEmailAddressesEmail1
+            // 
+            this.LabelEmailAddressesEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailAddressesEmail1.Location = new System.Drawing.Point(36, 92);
+            this.LabelEmailAddressesEmail1.Name = "LabelEmailAddressesEmail1";
+            this.LabelEmailAddressesEmail1.Size = new System.Drawing.Size(76, 36);
+            this.LabelEmailAddressesEmail1.TabIndex = 14;
+            this.LabelEmailAddressesEmail1.Text = "Email1";
+            this.LabelEmailAddressesEmail1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelEmailAddressesEmail3
+            // 
+            this.LabelEmailAddressesEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailAddressesEmail3.Location = new System.Drawing.Point(36, 164);
+            this.LabelEmailAddressesEmail3.Name = "LabelEmailAddressesEmail3";
+            this.LabelEmailAddressesEmail3.Size = new System.Drawing.Size(76, 36);
+            this.LabelEmailAddressesEmail3.TabIndex = 15;
+            this.LabelEmailAddressesEmail3.Text = "Email3";
+            this.LabelEmailAddressesEmail3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelBayId
+            // 
+            this.LabelBayId.AutoSize = true;
+            this.LabelBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBayId.Location = new System.Drawing.Point(202, 103);
+            this.LabelBayId.Name = "LabelBayId";
+            this.LabelBayId.Size = new System.Drawing.Size(60, 20);
+            this.LabelBayId.TabIndex = 9;
+            this.LabelBayId.Text = "Bay Id";
+            // 
+            // NumericUpDownBayId
+            // 
+            this.NumericUpDownBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumericUpDownBayId.Location = new System.Drawing.Point(268, 101);
+            this.NumericUpDownBayId.Maximum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.NumericUpDownBayId.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NumericUpDownBayId.Name = "NumericUpDownBayId";
+            this.NumericUpDownBayId.Size = new System.Drawing.Size(87, 26);
+            this.NumericUpDownBayId.TabIndex = 14;
+            this.NumericUpDownBayId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.NumericUpDownBayId.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // FrmUtilities
             // 
@@ -6593,7 +6678,6 @@
             this.EmailAddresses.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewEmailAddresses)).EndInit();
             this.ProLite.ResumeLayout(false);
             this.PanelProLite.ResumeLayout(false);
             this.PanelProLite.PerformLayout();
@@ -6603,11 +6687,12 @@
             this.PanelSapServer.ResumeLayout(false);
             this.PanelSapServer.PerformLayout();
             this.BatchLights.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
-            this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
+            this.PanelBatchLightTesterBottom.ResumeLayout(false);
+            this.PanelBatchLightTesterBottom.PerformLayout();
+            this.PanelBatchLightTesterTop.ResumeLayout(false);
+            this.PanelBatchLightTesterTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBayId)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -6991,8 +7076,6 @@
         private System.Windows.Forms.TabPage EmailAddresses;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label LabelEmailInfo;
-        private System.Windows.Forms.DataGridView DataGridViewEmailAddresses;
-        private System.Windows.Forms.Button ButtonRemoveEmail;
         private System.Windows.Forms.Button ButtonCancelEmailAddresses;
         private System.Windows.Forms.Button ButtonSaveEmailAddresses;
         private System.Windows.Forms.Button ButtonUploadActionCodes;
@@ -7082,8 +7165,8 @@
         private MetroFramework.Controls.MetroButton MBBatchLightTester;
         private System.Windows.Forms.TabPage BatchLights;
         private MetroFramework.Controls.MetroButton MBBatchLightBack;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Panel PanelBatchLightTesterBottom;
+        private System.Windows.Forms.Panel PanelBatchLightTesterTop;
         private System.Windows.Forms.Label LabelBatchLightTester;
         private System.Windows.Forms.Button ButtonBatchLightTurnOff;
         private System.Windows.Forms.Button ButtonBatchLightTurnOn;
@@ -7101,5 +7184,13 @@
         private System.Windows.Forms.Label LabelLoftwareStation;
         private System.Windows.Forms.Button ButtonPrintBarCode;
         private System.Windows.Forms.Button ButtonPrintReplen;
+        private System.Windows.Forms.TextBox TextBoxEmailAddressesEmail2;
+        private System.Windows.Forms.Label LabelEmailAddressesEmail2;
+        private System.Windows.Forms.TextBox TextBoxEmailAddressesEmail1;
+        private System.Windows.Forms.TextBox TextBoxEmailAddressesEmail3;
+        private System.Windows.Forms.Label LabelEmailAddressesEmail1;
+        private System.Windows.Forms.Label LabelEmailAddressesEmail3;
+        private System.Windows.Forms.NumericUpDown NumericUpDownBayId;
+        private System.Windows.Forms.Label LabelBayId;
     }
 }

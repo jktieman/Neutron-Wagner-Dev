@@ -4,6 +4,7 @@
     {
 
         private string _bayId;
+        private string _turnOnMicro = "10";
         private string _turnOn = "33";
         private string _turnOff = "14";
         private string _turnAllOff = "1400";
@@ -37,9 +38,14 @@
 
         public string TurnOff => _bayId + _turnOff + BLI_Address.ToString().PadLeft(2, '0');
         
-        public string TurnOn => _bayId + _turnOn + BLI_Address.ToString().PadLeft(2, '0') 
-                   + BLI_Text.PadLeft(4, ' ') 
-                   + FourSpaces + EndOfLine;
+        //public string TurnOn => _bayId + _turnOn + BLI_Address.ToString().PadLeft(2, '0') 
+        //           + BLI_Text.PadLeft(4, ' ') 
+        //           + FourSpaces + EndOfLine;
+
+        public string TurnOn => _bayId + _turnOnMicro + BLI_Address.ToString().PadLeft(2, '0')
+                                     + "43300430000"
+                                     + BLI_Text.PadLeft(2, '0');
+                                
         public string TurnAllOff => _bayId + _turnAllOff;
 
     }

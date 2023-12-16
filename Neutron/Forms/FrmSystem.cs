@@ -34,13 +34,12 @@ namespace Neutron.Forms
         private readonly NeutronLicense _neutronLicense;
         private string _rootDirectory;
         private readonly IDynamicLogger _logger;
-        private ISendEmail _sendEmail;
         private readonly IStoredProcedureManager _storedProcedureManager;
         private readonly bool _standAlone;
         private readonly bool _emailEnabled;
 
         public FrmSystem(IJsonData jsonData, IStoredProcedureManager storedProcedureManager
-            , NeutronVariables neutronVariables, NeutronLicense neutronLicense, ISendEmail sendEmail, bool standAlone = false)
+            , NeutronVariables neutronVariables, NeutronLicense neutronLicense, bool standAlone = false)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -48,7 +47,6 @@ namespace Neutron.Forms
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
-            _sendEmail = sendEmail;
             _logger = NeutronCore.Global.Logger.SetupLogger("System");
            // SetupEmail();
             _storedProcedureManager = storedProcedureManager;

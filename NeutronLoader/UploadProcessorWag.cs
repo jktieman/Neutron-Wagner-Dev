@@ -2,6 +2,7 @@
 using NeutronCore.Global;
 using NeutronCore.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -111,70 +112,80 @@ namespace NeutronLoader
             var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             try
             {
+                List<History> recs;
                 using (var db = new NeutronDb())
                 {
-                    var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode)).ToList();
-                    if (recs.Count > 0)
+                    recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
+                        .ToList();
+                }
+
+                if (recs.Count > 0)
+                {
+                    //var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository);
+                    //var result = hostFile.CreateHostFile(recs);
+                    // for each record, get the TransId from the OrderDetailInfo field (rec.OrderDetailInfo)
+                    // then get the NOVA_INPUT record with that TransId
+                    // then create a new NOVA_OUTPUT record with the information from the NOVA_INPUT record
+                    // add the beginning quantity, BEGINNINGQTY = (rec.RequestedQuantity) 
+                    // and the ending quantity QTY = (rec.IssuedQuantity)
+                    // then set the NOVA_OUTPUT record to PROCESSED = "N"  (the SAP process will set it to "Y" when it is processed)
+
+                    // using (var wagDb = new WagnerDb())
+                    using (var db = new NeutronDb())
                     {
-                        //var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository);
-                        //var result = hostFile.CreateHostFile(recs);
-                        // for each record, get the TransId from the OrderDetailInfo field (rec.OrderDetailInfo)
-                        // then get the NOVA_INPUT record with that TransId
-                        // then create a new NOVA_OUTPUT record with the information from the NOVA_INPUT record
-                        // add the beginning quantity, BEGINNINGQTY = (rec.RequestedQuantity) 
-                        // and the ending quantity QTY = (rec.IssuedQuantity)
-                        // then set the NOVA_OUTPUT record to PROCESSED = "N"  (the SAP process will set it to "Y" when it is processed)
-
-                       // using (var wagDb = new WagnerDb())
-                        using (var wagDb = new NeutronDb())
-                        {
-                            foreach (var rec in recs)
-                            {
-                                if (string.IsNullOrEmpty(rec.OrderDetailInfo)) continue;
-                                var orderDetailInfo = rec.OrderDetailInfo.Split(',');
-                                var transId = orderDetailInfo[0];
-                                // convert transId to decimal
-                                var transIdDec = Convert.ToDecimal(transId);
-
-                                var input = wagDb.NOVA_INPUT.FirstOrDefault(n => n.TRANSID == transIdDec);
-                                if (input != null)
-                                {
-                                    var output = new NOVA_OUTPUT();
-                                    output.TASKNO = input.TASKNO;
-                                    output.TOTENO = input.TOTENO;
-                                    output.SKU = input.SKU;
-                                    output.BEGINNINGQTY = rec.RequestedQuantity;
-                                    output.QTY = rec.IssuedQuantity;
-                                    output.TRANSDATE = rec.ActionDateTime;
-                                    output.TRANSTYPE = input.TRANSTYPE;
-                                    output.PROCESSED = "N";
-                                    output.EXPLANATION = string.Empty;
-                                    wagDb.NOVA_OUTPUT.Add(output);
-                                    wagDb.SaveChanges();
-                                }
-                            }
-                        }
-
-
-                        //if (result)
-                        //{
                         foreach (var rec in recs)
                         {
-                            rec.TransmitDateTime = DateTime.Now;
+                            var history = db.History.FirstOrDefault(h => h.Id == rec.Id);
+                            if (history == null) continue;
+                            
+                            if (string.IsNullOrEmpty(history.OrderDetailInfo)) continue;
+                            var orderDetailInfo = history.OrderDetailInfo.Split('|');
+                            var transId = orderDetailInfo[0];
+                            // convert transId to decimal
+                            var transIdDec = Convert.ToDecimal(transId);
+
+                            var input = db.NOVA_INPUT.FirstOrDefault(n => n.TRANSID == transIdDec);
+                            if (input != null)
+                            {
+                                var output = new NOVA_OUTPUT();
+                                output.TRANSID = input.TRANSID;
+                                output.TASKNO = input.TASKNO;
+                                output.TOTENO = input.TOTENO;
+                                output.SKU = input.SKU;
+                                output.BEGINNINGQTY = rec.RequestedQuantity;
+                                output.QTY = rec.IssuedQuantity;
+                                output.TRANSDATE = rec.ActionDateTime;
+                                output.TRANSTYPE = input.TRANSTYPE;
+                                output.PROCESSED = "N";
+                                output.EXPLANATION = string.Empty;
+                                db.NOVA_OUTPUT.Add(output);
+                                db.SaveChanges();
+                            }
+                            history.TransmitDateTime = DateTime.Now;
+                            db.SaveChanges();
                         }
-                        db.SaveChanges();
-                        //}
-                        //else
-                        //{
-                        //    MessageBox.Show(@"Create Host File Failed, see Log file in UploadManager.");
-                        //    _ = _logger.LogDetailAsync($"Create Host File Failed, see Log file in UploadManager.");
-                        //}
                     }
                 }
+
+                //if (result)
+                //{
+                //foreach (var rec in recs)
+                //{
+
+                //}
+
+                //}
+                //else
+                //{
+                //    MessageBox.Show(@"Create Host File Failed, see Log file in UploadManager.");
+                //    _ = _logger.LogDetailAsync($"Create Host File Failed, see Log file in UploadManager.");
+                //}
+                //}
+                // }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Upload Process Failed, see Log file in UploadManager.");
+                MessageBox.Show($@"Upload Process Failed, see Log file in UploadManager. {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 _ = _logger.LogDetailAsync($"Upload Process Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
 

@@ -4685,7 +4685,11 @@ namespace Neutron.Forms
 
                         _bindingSourcePickStops.MoveNext();
                         _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
-                        PrintLabels(_currentPickStop);
+                        if (_workstationView.Area.LocationTypeId != (int)LocationTypeEnum.Rack)
+                        {
+                            PrintLabels(_currentPickStop);
+                        }
+                        
                         UpdatePickScreen();
                         // UpdateCurrentDeviceIndicator();
                         _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
@@ -4861,7 +4865,12 @@ namespace Neutron.Forms
 
                 _bindingSourcePickStops.MoveNext();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
-                PrintLabels(_currentPickStop);
+                if (_workstationView.Area.LocationTypeId != (int)LocationTypeEnum.Rack)
+                {
+                    PrintLabels(_currentPickStop);
+                }
+
+
                 UpdatePickScreen();
                 //UpdateCurrentDeviceIndicator();
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
@@ -4930,11 +4939,11 @@ namespace Neutron.Forms
                 var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
                
                 
-                var upc = orderDetail[4];
-                var aItem = pickView.Item;
-                var cItem = pickView.Item;
+                var upc = orderDetail[4].Trim();
+                var aItem = pickView.Item.Trim();
+                var cItem = pickView.Item.Trim();
                 var quantity = pickView.QuantityToBePicked.ToString();
-                var desc = pickView.Description;
+                var desc = pickView.Description.Trim();
                 var division = orderDetail[1];
 
               ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
@@ -7339,12 +7348,13 @@ namespace Neutron.Forms
 
         private void MBFill_Click(object sender, EventArgs e)
         {
-            if (DataGridViewAvailableOrders.Rows.Count <= 0) return;
+            var totalRows = DataGridViewAvailableOrders.Rows.Count;
+            if (totalRows <= 0) return;
             foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
             {
 
 
-                if (row.Selected) continue;
+                //if (row.Selected) continue;
                 var id = Convert.ToInt32(row.Cells["Id"].Value);
                 var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
                 var ord2 = Convert.ToString(row.Cells["Ord2"].Value);

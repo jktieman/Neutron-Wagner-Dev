@@ -7,7 +7,7 @@ namespace SAPServer.Models
     public class NOVA_OUTPUT
     {
         [Key]
-        public int TRANSID { get; set; }
+        public decimal TRANSID { get; set; }
 
         [StringLength(2)]
         public string TRANSTYPE { get; set; }

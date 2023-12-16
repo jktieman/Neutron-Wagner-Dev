@@ -699,57 +699,6 @@
   <data name="&gt;&gt;ButtonClose.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;RadioButtonFrenchCanadian.Name" xml:space="preserve">
-    <value>RadioButtonFrenchCanadian</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonFrenchCanadian.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonFrenchCanadian.Parent" xml:space="preserve">
-    <value>GroupBoxLanguage</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonFrenchCanadian.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonEnglish.Name" xml:space="preserve">
-    <value>RadioButtonEnglish</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonEnglish.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonEnglish.Parent" xml:space="preserve">
-    <value>GroupBoxLanguage</value>
-  </data>
-  <data name="&gt;&gt;RadioButtonEnglish.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="GroupBoxLanguage.Location" type="System.Drawing.Point, System.Drawing">
-    <value>533, 20</value>
-  </data>
-  <data name="GroupBoxLanguage.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 82</value>
-  </data>
-  <data name="GroupBoxLanguage.TabIndex" type="System.Int32, mscorlib">
-    <value>32</value>
-  </data>
-  <data name="GroupBoxLanguage.Text" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
-    <value>GroupBoxLanguage</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="RadioButtonFrenchCanadian.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -810,6 +759,33 @@
   <data name="&gt;&gt;RadioButtonEnglish.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="GroupBoxLanguage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>533, 20</value>
+  </data>
+  <data name="GroupBoxLanguage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 82</value>
+  </data>
+  <data name="GroupBoxLanguage.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="GroupBoxLanguage.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="GroupBoxLanguage.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Name" xml:space="preserve">
+    <value>GroupBoxLanguage</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GroupBoxLanguage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="PictureBoxLogo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -857,6 +833,9 @@
   </data>
   <data name="button1.Text" xml:space="preserve">
     <value>Turn On BLI</value>
+  </data>
+  <data name="button1.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;button1.Name" xml:space="preserve">
     <value>button1</value>

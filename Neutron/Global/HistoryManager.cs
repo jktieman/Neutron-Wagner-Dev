@@ -21,7 +21,6 @@ namespace Neutron.Global
     public class HistoryManager : IHistoryManager
     {
         private readonly WorkstationView _workstationView;
-        private readonly ISendEmail _sendEmail;
         private readonly IInventoryRepository _inventoryRepository;
 
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
@@ -29,11 +28,10 @@ namespace Neutron.Global
             new GenericRepository<ReplenOrderDetail>(new NeutronDb());
 
 
-        public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView, ISendEmail sendEmail)
+        public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView)
         {
             _inventoryRepository = inventoryRepository;
             _workstationView = workstationView;
-            _sendEmail = sendEmail;
         }
 
 

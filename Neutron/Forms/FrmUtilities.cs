@@ -44,6 +44,7 @@ using StorageType = NeutronData.Models.Lookups.StorageType;
 using AlliedLogger;
 using Neutron.Ninject;
 using NeutronCore;
+using NeutronEvents;
 using SAPServer.Models;
 using Zen.Barcode;
 using SerialConfiguration = NeutronData.Models.SerialConfiguration;
@@ -122,11 +123,10 @@ namespace Neutron.Forms
         private readonly Random _randomNumber = new Random();
         private EmailSettings _settings;
         private IDynamicLogger _logger;
-        private readonly ISendEmail _sendEmail;
         private readonly WorkstationView _workstationView;
 
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , ISendEmail sendEmail, WorkstationView workstationView)
+            , WorkstationView workstationView)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -159,7 +159,6 @@ namespace Neutron.Forms
             ComboBoxLoaderStation.DataSource = _repoWorkstations.All();
             ComboBoxLoaderStation.DisplayMember = "Name";
             ComboBoxLoaderStation.ValueMember = "Id";
-            _sendEmail = sendEmail;
             _workstationView = workstationView;
         }
 
@@ -2789,120 +2788,25 @@ namespace Neutron.Forms
 
         private void SaveData()
         {
-            List<EmailAddressData> emailAddressData = GetDataFromGrid();
+            var emailAddressData = new List<EmailAddressData>();
+            var email = TextBoxEmailAddressesEmail1.Text;
+            emailAddressData.Add(new EmailAddressData { Id = 1, EmailAddress = email });
+            email = TextBoxEmailAddressesEmail2.Text;
+            emailAddressData.Add(new EmailAddressData { Id = 2, EmailAddress = email });
+            email = TextBoxEmailAddressesEmail3.Text;
+            emailAddressData.Add(new EmailAddressData { Id = 3, EmailAddress = email });
+
             _jsonData.SaveFile<List<EmailAddressData>>(emailAddressData);
         }
 
-        private List<EmailAddressData> GetDataFromGrid()
-        {
-            var result = new List<EmailAddressData>();
-            foreach (DataGridViewRow item in DataGridViewEmailAddresses.Rows)
-            {
-
-                if (item.Cells["EmailAddress"].Value != null)
-                {
-                    var emailAddress = item.Cells["EmailAddress"].Value.ToString();
-                    if (new EmailAddressAttribute().IsValid(emailAddress))
-                    {
-                        var p = new EmailAddressData();
-                        if (item.Cells[0].Value == null || (int)item.Cells[0].Value == 0)
-                        {
-                            p.Id = _randomNumber.Next();
-                        }
-                        else
-                        {
-                            p.Id = int.Parse(item.Cells[0].Value.ToString());
-                        }
-
-                        p.EmailAddress = emailAddress;
-                        result.Add(p);
-                    }
-                }
-            }
-
-            DataGridViewEmailAddresses.Refresh();
-            return result;
-        }
 
         private List<EmailAddressData> LoadJsonFile()
         {
             return _jsonData.LoadFile<List<EmailAddressData>>();
-            // return JsonData.LoadEmailData();
         }
-
-        private void InitDataGrid()
-        {
-            DataGridViewEmailAddresses.AutoGenerateColumns = false;
-            DataGridViewEmailAddresses.AutoSize = false;
-            var col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "Id",
-                Name = "Id",
-                Width = 01,
-                HeaderText = "Id",
-                Visible = false
-            };
-            DataGridViewEmailAddresses.Columns.Add(col);
-
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "EmailAddress",
-                Name = "EmailAddress",
-                Width = 300,
-                HeaderText = "Email Address",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
-            };
-            DataGridViewEmailAddresses.Columns.Add(col);
-        }
-
         private void ButtonCancelEmailAddresses_Click(object sender, EventArgs e)
         {
             BackToMain();
-        }
-
-        private void ButtonRemoveEmail_Click(object sender, EventArgs e)
-        {
-            RemoveEmail();
-        }
-
-        private void RemoveEmail()
-        {
-            var rows = DataGridViewEmailAddresses.SelectedRows;
-            try
-            {
-                foreach (DataGridViewRow item in rows)
-                {
-                    RemoveEmailDataRecord(int.Parse(item.Cells[0].Value.ToString()));
-                }
-            }
-            catch (Exception)
-            {
-            }
-
-            DataGridViewEmailAddresses.Refresh();
-        }
-
-
-        public void RemoveEmailDataRecord(int id)
-        {
-            try
-            {
-                var recs = _jsonData.LoadFile<List<EmailAddressData>>();
-                for (var i = recs.Count - 1; i >= 0; i--)
-                {
-                    if (recs[i].Id == id)
-                    {
-                        recs.Remove(recs[i]);
-                    }
-                }
-
-                _jsonData.SaveFile<List<EmailAddressData>>(recs);
-            }
-            catch (Exception)
-            {
-
-            }
         }
 
         #endregion
@@ -2952,7 +2856,7 @@ namespace Neutron.Forms
 
         private void ButtonSendTestEmail_Click(object sender, EventArgs e)
         {
-            _sendEmail.Message(@"Test Message", new StringBuilder("This is a test message."));
+            Mediator.GetInstance().OnSendEmailMessage(this, "This is a test message.");
         }
 
         private void ButtonCancelEmailServer_Click(object sender, EventArgs e)
@@ -2966,12 +2870,13 @@ namespace Neutron.Forms
         {
             LabelFormTitle.Text = "Email Addresses";
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
-            InitDataGrid();
+
             List<EmailAddressData> recs = LoadJsonFile();
-            if (recs.Count > 0)
+            if (recs.Count == 3)
             {
-                var boundRecs = new BindingListView<EmailAddressData>(recs);
-                DataGridViewEmailAddresses.DataSource = boundRecs;
+                TextBoxEmailAddressesEmail1.Text = recs[0].EmailAddress;
+                TextBoxEmailAddressesEmail2.Text = recs[1].EmailAddress;
+                TextBoxEmailAddressesEmail3.Text = recs[2].EmailAddress;
             }
 
             tabControl1.SelectedTab = EmailAddresses;
@@ -3128,6 +3033,8 @@ namespace Neutron.Forms
         private void MBSapServer_Click(object sender, EventArgs e)
         {
             _sapVariables = _jsonData.LoadFile<SapVariables>();
+            var emailAddresses = _jsonData.LoadFile<List<EmailAddressData>>();
+
             TextBoxSapServerName.Text = _sapVariables.SapServer;
             TextBoxSapServerSleepTime.Text = _sapVariables.SleepTime.ToString();
             TextBoxSapServerStartHour.Text = _sapVariables.StartHour.ToString();
@@ -3145,9 +3052,13 @@ namespace Neutron.Forms
             TextBoxSapServerConnectionIdleTimeout.Text = _sapVariables.ConnectionIdleTimeout;
             TextBoxSapServerNeutronBusyFile.Text = _sapVariables.NeutronBusyFile;
             TextBoxSapServerSapBusyFile.Text = _sapVariables.SapBusyFile;
-            TextBoxSapServerEmail1.Text = _sapVariables.Email1;
-            TextBoxSapServerEmail2.Text = _sapVariables.Email2;
-            TextBoxSapServerEmail3.Text = _sapVariables.Email3;
+            if (emailAddresses.Count == 3)
+            {
+                TextBoxSapServerEmail1.Text = emailAddresses[0].EmailAddress;
+                TextBoxSapServerEmail2.Text = emailAddresses[1].EmailAddress;
+                TextBoxSapServerEmail3.Text = emailAddresses[2].EmailAddress;
+            }
+
 
             tabControl1.SelectedTab = SapServer;
         }
@@ -3187,8 +3098,8 @@ namespace Neutron.Forms
 
         private void ButtonBatchLightTurnOn_Click(object sender, EventArgs e)
         {
-            GlobalVar.Displays.ShowBli(_neutronVariables.BliController
-                , TextBoxBatchLightPosition.Text.ParseInt(), 1, TextBoxBatchLightQuantity.Text);
+            var bayId = (int)NumericUpDownBayId.Value;
+            GlobalVar.Displays.ShowBli(bayId, TextBoxBatchLightPosition.Text.ParseInt(), 1, TextBoxBatchLightQuantity.Text);
         }
 
         private void ButtonBatchLightTurnOff_Click(object sender, EventArgs e)

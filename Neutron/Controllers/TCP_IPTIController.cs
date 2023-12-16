@@ -148,8 +148,14 @@ namespace Neutron.Controllers
                 await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI NOT Enabled");
                 return;
             }
+            var bayIds = new List<string> { "01", "02", "03", "04" };
 
-            _ = _transmitter.SendData($"{_bliController}{TurnAllOff14}");
+            foreach (var bayId in bayIds)
+            {
+                _ = _transmitter.SendData($"{bayId}{TurnAllOff14}");
+            }
+
+
 
 
             //foreach (var bli in _bliList)

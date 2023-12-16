@@ -34,7 +34,7 @@ namespace SAPServer
             try
             {
                 _sapVariables = _jsonData.LoadFile<SapVariables>();
-                Mediator.GetInstance().OnSendEmailMessage(this, "Neutron/SAP Loader Started");
+                //Mediator.GetInstance().OnSendEmailMessage(this, "Neutron/SAP Loader Started");
             }
             catch (Exception ex)
             {
@@ -49,30 +49,28 @@ namespace SAPServer
 
             _neutronBusyFile = new FileInfo(_sapVariables.NeutronBusyFile);
             _sapBusyFile = new FileInfo(_sapVariables.SapBusyFile);
+
+            if (_sapVariables.SleepTime <= 0) return;
+
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("SAP To Neutron Record Processor.");
+            sb.AppendLine($"Current SAP Server is {_sapServer}.");
+            sb.AppendLine($"Current Sleep Time: {_sleepTime} Seconds");
+            sb.AppendLine($"Neutron Busy File Location: {_neutronBusyFile}");
+            sb.AppendLine($"SAP Busy File Location: {_sapBusyFile}");
+            sb.AppendLine(
+                $"Start Time: {_sapVariables.StartHour}:{_sapVariables.StartMinute}");
+            sb.AppendLine(
+                $"Stop Time: {_sapVariables.EndHour}:{_sapVariables.EndMinute}");
+
+            Mediator.GetInstance().OnSendEmailMessage(this, $"Neutron/SAP Loader Information.{Environment.NewLine}{sb}");
         }
 
         public void Run()
         {
-
             try
-
             {
                 if (string.IsNullOrEmpty(_sapVariables.SapServer)) return;
-                if (_sapVariables.SleepTime <= 0) return;
-
-                var sb = new System.Text.StringBuilder();
-                sb.AppendLine("SAP To Neutron Record Processor.");
-                sb.AppendLine($"Current SAP Server is {_sapServer}.");
-                sb.AppendLine($"Current Sleep Time: {_sleepTime} Seconds");
-                sb.AppendLine($"Neutron Busy File Location: {_neutronBusyFile}");
-                sb.AppendLine($"SAP Busy File Location: {_sapBusyFile}");
-                sb.AppendLine(
-                    $"Start Time: {_sapVariables.StartHour}:{_sapVariables.StartMinute}");
-                sb.AppendLine(
-                    $"Start Time: {_sapVariables.EndHour}:{_sapVariables.EndMinute}");
-
-                Mediator.GetInstance().OnSendEmailMessage(this, $"Neutron/SAP Loader Started.{Environment.NewLine}{sb}");
-
 
                 if (!RunProgramNow(_sapVariables)) return;
                 if (_neutronBusyFile.EnsurePathExists())

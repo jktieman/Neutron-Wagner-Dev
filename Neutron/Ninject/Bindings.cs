@@ -70,8 +70,8 @@ namespace Neutron.Ninject
 
             Bind<FrmUtilities>().ToSelf()
                 .WithConstructorArgument("neutronVariables")
-                .WithConstructorArgument("neutronLicense")
-                .WithConstructorArgument("sendEmail");
+                .WithConstructorArgument("neutronLicense");
+               // .WithConstructorArgument("sendEmail");
 
             Bind<StartStopLoaderManager>().To<StartStopLoaderManager>().InSingletonScope();
             Bind<StartStopUploadManager>().To<StartStopUploadManager>().InSingletonScope();
@@ -87,7 +87,9 @@ namespace Neutron.Ninject
 
 
             Bind<IMasterMaintenanceProcessor>().To<MasterMaintenanceProcessor>().InSingletonScope();
+            
             Bind<IHistoryManager>().To<HistoryManager>().WithConstructorArgument("workstationView");
+            
             Bind<IDynamicLogger>().To<DynamicLogger>()
                 .WithConstructorArgument("logFileDir", string.Empty)
                 .WithConstructorArgument("folderName", @"General")
@@ -99,8 +101,8 @@ namespace Neutron.Ninject
             Bind<ILocationsRepository>().To<LocationsRepository>().InSingletonScope();
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
-            Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
-            Bind<ISapService>().To<SAPService>().InSingletonScope();
+            //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
+            //Bind<ISapService>().To<SAPService>().InSingletonScope();
         }
     }
 }

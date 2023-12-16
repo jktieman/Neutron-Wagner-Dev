@@ -137,7 +137,7 @@ namespace Neutron
             Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
             Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
-            Mediator.GetInstance().SendEmailMessage += (s, e) => _sendEmail.Message(e.Message, _logger.LastLogLines());
+            Mediator.GetInstance().SendEmailMessage += (s, e) => DisplayMessage(e.Message); // _sendEmail.Message(this, e.Message);
 
             //TODO Remove this or change to false for Production
             GlobalVar.Testing = true;
@@ -217,7 +217,7 @@ namespace Neutron
         private void EmailLoaderError(string message)
         {
             Task.Run(() => _logger.LogDetailAsync($"Loader Error: {message}"));
-            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            if (_neutronVariables.EnableEmailNotification)
             {
                 _sendEmail.Message(message, _logger.LastLogLines());
             }
@@ -1043,7 +1043,7 @@ namespace Neutron
 
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUtilities]) return;
             Hide();
-            using (var frm = DI.CreateUtilitiesForm(_neutronVariables, _neutronLicense, _sendEmail, _workstationView))
+            using (var frm = DI.CreateUtilitiesForm(_neutronVariables, _neutronLicense, _workstationView))
             {
                 frm.ShowDialog();
                 Show();
