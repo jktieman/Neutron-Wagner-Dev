@@ -93,18 +93,54 @@ namespace EthernetTransmitter
 
         private async void Events_DataReceived(object sender, DataReceivedEventArgs e)
         {
-            await _logger.LogDetailAsync($"Data Received: {e.IpPort}");
+            //await _logger.LogDetailAsync($"Data Received: {e.IpPort}");
             var data = e.Data.ToArray();
             var text = Encoding.UTF8.GetString(data);
 
             await _logger.LogDetailAsync($"IP Port: [{e.IpPort}]  Data: {text}");
-            await _logger.LogDetailAsync($"IP Port: [{e.IpPort}] HEX Data: {data.ByteArrayToHexString()}{Environment.NewLine}");
+           // await _logger.LogDetailAsync($"IP Port: [{e.IpPort}] HEX Data: {data.ByteArrayToHexString()}{Environment.NewLine}");
+
+            _ = ProcessDataReceived(text);
+
+            //if (text.Contains("OC"))
+            //{
+            //    var command = text.Substring(1, 4);
+            //    await _logger.LogDetailAsync($"Text Contains OC Send Response Command: {command}");
+            //    await SendAck(command);
+            //}
+        }
+
+        private async Task ProcessDataReceived(string text)
+        {
+            var character = Convert.ToChar(6);
+            int index = 1;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] == character)
+                {
+                    index = i;
+                    await _logger.LogDetailAsync($"ACK INDEX: {index}");
+                    break;
+                }
+            }
+
+            _ = _logger.LogDetailAsync($"ProcessDataReceived TEXT: {text}  LENGTH: {text.Length}");
+            
+            var command = text.Substring(1, 6);
+           // _ = _logger.LogDetailAsync($"ProcessDataReceived COMMAND: {command}  LENGTH:[ {command.Length} ]");
+
             if (text.Contains("OC"))
             {
-                var command = text.Substring(1, 4);
                 await _logger.LogDetailAsync($"Text Contains OC Send Response Command: {command}");
                 await SendAck(command);
             }
+
+            if (text.Contains("33") && text.Length > 10)
+            {
+                await _logger.LogDetailAsync($"Text Contains 33 Send Response Command: {command}");
+                await SendAck(command);
+            }
+
         }
 
         private void Events_ClientDisconnected(object sender, ConnectionEventArgs e)
