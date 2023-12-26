@@ -44,7 +44,7 @@ namespace AlliedLogger
             // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
             LogActivity = logActivity;
             IsValidLocation(FilePath);
-            IsValidLocation(TempFilePath);
+           // IsValidLocation(TempFilePath);
         }
 
         public string LogFileDir
@@ -74,7 +74,7 @@ namespace AlliedLogger
 
 
         public string FilePath => _baseFolder + _folderName + GetFileName();
-        public string TempFilePath => $"{_baseFolder}{_folderName}Temp\\{GetFileName()}";
+      //  public string TempFilePath => $"{_baseFolder}{_folderName}Temp\\{GetFileName()}";
 
 
         private void IsValidLocation(string filePath)
@@ -107,7 +107,7 @@ namespace AlliedLogger
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
-            IsValidLocation(TempFilePath);
+         //   IsValidLocation(TempFilePath);
             if (!_validLocation) return;
             lock (_myLock)
             {
@@ -137,7 +137,7 @@ namespace AlliedLogger
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
-            IsValidLocation(TempFilePath);
+         //   IsValidLocation(TempFilePath);
             if (!_validLocation) return;
             if (msg.Length > 0)
             {
@@ -163,7 +163,7 @@ namespace AlliedLogger
         {
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
-            IsValidLocation(TempFilePath);
+         //   IsValidLocation(TempFilePath);
             if (!_validLocation) return;
 
             if (msg.Length <= 0) return;
@@ -194,7 +194,7 @@ namespace AlliedLogger
 
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
-            IsValidLocation(TempFilePath);
+         //   IsValidLocation(TempFilePath);
             if (!_validLocation) return;
 
             if (msg.Length <= 0) return;
@@ -384,23 +384,23 @@ namespace AlliedLogger
         //    }
         //}
 
-        private void CreateTempLog()
-        {
-            try
-            {
-                if (File.Exists(FilePath))
-                {
-                    File.Copy(FilePath, TempFilePath, true);
-                }
+        //private void CreateTempLog()
+        //{
+        //    try
+        //    {
+        //        if (File.Exists(FilePath))
+        //        {
+        //            File.Copy(FilePath, TempFilePath, true);
+        //        }
 
 
-            }
-            catch (Exception ex)
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                Log($"{ex.Message}{ex.InnerException}");
-            };
-        }
+        //        Log($"{ex.Message}{ex.InnerException}");
+        //    };
+        //}
     }
 }
 
