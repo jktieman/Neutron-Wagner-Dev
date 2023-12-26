@@ -1,23 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronCore.Extensions;
-using NeutronEvents;
 using SuperSimpleTcp;
 
 namespace EthernetTransmitter
 {
     public class TcpTransmitter
     {
-        public char SOH = Convert.ToChar(1);
-        public char ETX = Convert.ToChar(3);
-        public char ACK = Convert.ToChar(6);
-        public string ClientIpPort;
-        public bool IsClientConnected = false;
+        /// <summary>
+        /// Represents the Start of Header (SOH) control character in ASCII. 
+        /// This character is used to indicate the start of a text header in a transmission.
+        /// </summary>
+        public const char SOH = '\x01';
+        /// <summary>
+        /// Represents the Start of Header (SOH) control character in ASCII. 
+        /// This character is used to indicate the start of a text header in a transmission.
+        /// </summary>
+        public const char ETX = '\x03';
+        /// <summary>
+        /// Represents the Start of Header (SOH) control character in ASCII. 
+        /// This character is used to indicate the start of a text header in a transmission.
+        /// </summary>
+        public const char ACK = '\x06';
 
+
+
+        // public char SOH = Convert.ToChar(1);
+       // public char ETX = Convert.ToChar(3);
+       // public char ACK = Convert.ToChar(6);
+        public string ClientIpPort;
+        public bool IsClientConnected;
 
         private readonly SimpleTcpServer _server;
         private readonly IDynamicLogger _logger;
@@ -113,12 +128,11 @@ namespace EthernetTransmitter
         private async Task ProcessDataReceived(string text)
         {
             var character = Convert.ToChar(6);
-            int index = 1;
-            for (int i = 0; i < text.Length; i++)
+            for (var i = 0; i < text.Length; i++)
             {
                 if (text[i] == character)
                 {
-                    index = i;
+                    var index = i;
                     await _logger.LogDetailAsync($"ACK INDEX: {index}");
                     break;
                 }

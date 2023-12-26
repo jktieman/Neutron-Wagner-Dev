@@ -37,6 +37,9 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.CheckBoxUseSelectedItems = new System.Windows.Forms.CheckBox();
+            this.LabelFindDescription = new System.Windows.Forms.Label();
+            this.ProgressBarLocations = new System.Windows.Forms.ProgressBar();
             this.ComboBoxAreaNumber = new System.Windows.Forms.ComboBox();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
             this.MButtonNew = new MetroFramework.Controls.MetroButton();
@@ -121,10 +124,7 @@
             this.LabelStationName = new System.Windows.Forms.Label();
             this.SaveFileDialogLocations = new System.Windows.Forms.SaveFileDialog();
             this.OpenFileDialogLocations = new System.Windows.Forms.OpenFileDialog();
-            this.ProgressBarLocations = new System.Windows.Forms.ProgressBar();
             this.BackgroundWorkerLocations = new System.ComponentModel.BackgroundWorker();
-            this.LabelFindDescription = new System.Windows.Forms.Label();
-            this.CheckBoxUseSelectedItems = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -210,6 +210,36 @@
             this.tabPage1.Size = new System.Drawing.Size(1232, 634);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
+            // 
+            // CheckBoxUseSelectedItems
+            // 
+            this.CheckBoxUseSelectedItems.AutoSize = true;
+            this.CheckBoxUseSelectedItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxUseSelectedItems.ForeColor = System.Drawing.Color.White;
+            this.CheckBoxUseSelectedItems.Location = new System.Drawing.Point(466, 38);
+            this.CheckBoxUseSelectedItems.Name = "CheckBoxUseSelectedItems";
+            this.CheckBoxUseSelectedItems.Size = new System.Drawing.Size(143, 20);
+            this.CheckBoxUseSelectedItems.TabIndex = 28;
+            this.CheckBoxUseSelectedItems.Text = "Use Selected Items";
+            this.CheckBoxUseSelectedItems.UseVisualStyleBackColor = true;
+            // 
+            // LabelFindDescription
+            // 
+            this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFindDescription.ForeColor = System.Drawing.Color.White;
+            this.LabelFindDescription.Location = new System.Drawing.Point(647, 43);
+            this.LabelFindDescription.Name = "LabelFindDescription";
+            this.LabelFindDescription.Size = new System.Drawing.Size(267, 20);
+            this.LabelFindDescription.TabIndex = 19;
+            this.LabelFindDescription.Text = "Search For";
+            this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ProgressBarLocations
+            // 
+            this.ProgressBarLocations.Location = new System.Drawing.Point(3, 611);
+            this.ProgressBarLocations.Name = "ProgressBarLocations";
+            this.ProgressBarLocations.Size = new System.Drawing.Size(1225, 23);
+            this.ProgressBarLocations.TabIndex = 12;
             // 
             // ComboBoxAreaNumber
             // 
@@ -367,6 +397,7 @@
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.Size = new System.Drawing.Size(1225, 514);
             this.DataGridView1.TabIndex = 10;
+            this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
             this.DataGridView1.DoubleClick += new System.EventHandler(this.DataGridView1_DoubleClick);
             // 
             // tabPage2
@@ -382,7 +413,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage2.Size = new System.Drawing.Size(1225, 617);
+            this.tabPage2.Size = new System.Drawing.Size(1232, 634);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "View/Edit";
             // 
@@ -783,7 +814,7 @@
             this.tabPage3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage3.Size = new System.Drawing.Size(1225, 617);
+            this.tabPage3.Size = new System.Drawing.Size(1232, 634);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "New";
             // 
@@ -1214,13 +1245,6 @@
             this.OpenFileDialogLocations.FileName = "Locations.xlsx";
             this.OpenFileDialogLocations.Filter = "Excel files|*.xlsx|All files|*.*";
             // 
-            // ProgressBarLocations
-            // 
-            this.ProgressBarLocations.Location = new System.Drawing.Point(3, 611);
-            this.ProgressBarLocations.Name = "ProgressBarLocations";
-            this.ProgressBarLocations.Size = new System.Drawing.Size(1225, 23);
-            this.ProgressBarLocations.TabIndex = 12;
-            // 
             // BackgroundWorkerLocations
             // 
             this.BackgroundWorkerLocations.WorkerReportsProgress = true;
@@ -1228,29 +1252,6 @@
             this.BackgroundWorkerLocations.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerLocations_DoWork);
             this.BackgroundWorkerLocations.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorkerLocations_ProgressChanged);
             this.BackgroundWorkerLocations.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerLocations_RunWorkerCompleted);
-            // 
-            // LabelFindDescription
-            // 
-            this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFindDescription.ForeColor = System.Drawing.Color.White;
-            this.LabelFindDescription.Location = new System.Drawing.Point(647, 43);
-            this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(267, 20);
-            this.LabelFindDescription.TabIndex = 19;
-            this.LabelFindDescription.Text = "Search For";
-            this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CheckBoxUseSelectedItems
-            // 
-            this.CheckBoxUseSelectedItems.AutoSize = true;
-            this.CheckBoxUseSelectedItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseSelectedItems.ForeColor = System.Drawing.Color.White;
-            this.CheckBoxUseSelectedItems.Location = new System.Drawing.Point(466, 38);
-            this.CheckBoxUseSelectedItems.Name = "CheckBoxUseSelectedItems";
-            this.CheckBoxUseSelectedItems.Size = new System.Drawing.Size(143, 20);
-            this.CheckBoxUseSelectedItems.TabIndex = 28;
-            this.CheckBoxUseSelectedItems.Text = "Use Selected Items";
-            this.CheckBoxUseSelectedItems.UseVisualStyleBackColor = true;
             // 
             // FrmLocations
             // 

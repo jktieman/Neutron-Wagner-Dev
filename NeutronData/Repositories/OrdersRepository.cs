@@ -1348,25 +1348,7 @@ namespace NeutronData.Repositories
             {
 
                 var details = GetOrderDetailsByOrderAndArea(orderId, areaId);
-                // var details = _repoOrderDetails.All().Where(r => r.OrderId == orderId && r.AreaId == areaId).ToList();
-                //&& availableSkip.Contains(r.LineStatusId)).ToList();
-                // var det = details.Where(r => availableSkip.Contains(r.LineStatusId)).ToList();
 
-                //for (var i = ord.OrderDetails.Count - 1; i >= 0; i--)
-                //{
-                //    if (ord.OrderDetails.ElementAt(i).AreaId != areaId)
-                //    {
-                //        ord.OrderDetails.Remove(ord.OrderDetails.ElementAt(i));
-                //    }
-                //}
-
-                //for (var i = ord.OrderDetails.Count - 1; i >= 0; i--)
-                //{
-                //    if (ord.OrderDetails.ElementAt(i).LineStatusId is not (1 or 9))
-                //    {
-                //        ord.OrderDetails.Remove(ord.OrderDetails.ElementAt(i));
-                //    }
-                //}
                 order.OrderDetails = new List<OrderDetail>();
                 
                 foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId is 1 or 9))

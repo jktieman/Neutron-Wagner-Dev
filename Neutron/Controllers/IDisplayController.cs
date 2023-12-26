@@ -10,6 +10,7 @@ namespace Neutron.Controllers
         event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         void CloseController();
         bool Ready { get; set; }
+        void SendText(string text);
         Task ClearAllBli();
         void ClearAllShi();
         Task TurnOnAllBli();

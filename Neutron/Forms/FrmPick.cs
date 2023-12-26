@@ -56,6 +56,8 @@ using StorageType = NeutronData.Models.Lookups.StorageType;
 using TextBox = System.Windows.Forms.TextBox;
 using Timer = System.Threading.Timer;
 using AlliedPostOffice;
+using IPTI.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Neutron.Forms
 {
@@ -68,6 +70,7 @@ namespace Neutron.Forms
         private readonly IInventoryRepository _inventoryRepository;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
+        private ResourceManager _gridResourceManager;
         private readonly AkaRepository _repoAka = new AkaRepository();
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
@@ -164,7 +167,19 @@ namespace Neutron.Forms
         private bool _spaceBarDisabled;
         // private Timer _spaceBarDelayTimer;
         private bool _useCostCenter = false;
-        private bool _isBlastzone = false;
+        private bool _blastzone = false;
+        private bool _batchTable = false;
+        private bool _prolite = false;
+        private bool _hanel = false;
+
+        private HardwareDevice _batchTables;
+        private List<HardwareDevice> _blastzones;
+        private List<HardwareDevice> _prolites;
+        private List<HardwareDevice> _hanels;
+
+        private TcpIptiCommandCenter _tcpIptiCommandCenter;
+
+
         public delegate void UpdatePickAcceptDelegate(bool b);
 
         public FrmPick(IJsonData jsonData, WorkstationView workstationView
@@ -250,14 +265,25 @@ namespace Neutron.Forms
             //    MBMainAvailableOrders.Text = _resourceManager.GetString($"OffCarousel");
             //}
             if (_workstationView.StationType.Id == (int)StationType.Supervisor) MBMainAvailableOrders.Visible = false;
-            
-            var blastzone = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone);
 
-            _isBlastzone = blastzone != null;
+            _blastzones = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone).ToList();
+            _blastzone = _blastzones.Any();
 
-            MBMainAvailableOrders.Text = $"Available Orders - {_workstationView.Area.Name}";
+            _batchTables = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.IptiDisplays);
+            _batchTable = _batchTables != null;
+
+            var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
+            _prolite = prolites.Any();
+
+            var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
+            _hanel = hanels.Any();
+
+
+            MBMainAvailableOrders.Text = $"{_resourceManager.GetString($"AvailableOrders")} - {_workstationView.Area.Name}";
 
             InitDeviceIndicators();
+
+            _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger);
 
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
@@ -701,6 +727,37 @@ namespace Neutron.Forms
             return idx;
         }
 
+        private int ShowAvailableStagingOrders(int recId = 0)
+        {
+            Task.Run(() => _logger.LogDetailAsync($"ShowAllOrders Start: [{DateTime.Now.ToString(CultureInfo.CurrentCulture)}]"));
+            var idx = 0;
+            var findWhat = TextBoxFind.Text.Trim().ToLower();
+            var orderStatus = "1,2,3,4,5,7,8,9";
+
+            var views = _ordersRepository.GetOrderViews(orderStatus, findWhat);
+            var bindingListView = new BindingListView<OrderView>(views.ToList());
+            _bindingSourceOrderView.DataSource = bindingListView;
+            DataGridView1.DataSource = _bindingSourceOrderView;
+
+            if (GetRecordCount(_bindingSourceOrderView) > 0)
+            {
+                if (recId != 0)
+                {
+                    idx = IndexOf(_bindingSourceOrderView, recId);
+                    DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+                }
+                else
+                {
+                    DataGridView1.ClearSelection();
+                    DataGridView1.Update();
+                }
+                DataGridView1.Refresh();
+                CurrentItem = ((ObjectView<OrderView>)_bindingSourceOrderView[recId]).Object;
+            }
+            Task.Run(() => _logger.LogDetailAsync($"ShowAllOrders End: [{DateTime.Now.ToLongTimeString()}]"));
+            return idx;
+        }
+
         private int ShowRackOrders(int recId = 0)
         {
             Task.Run(() => _logger.LogDetailAsync($"Show Rack Orders Start: [{DateTime.Now.ToString(CultureInfo.CurrentCulture)}]"));
@@ -745,7 +802,7 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _ordersRepository.GetRackOrdersView(_workstationView.WorkstationId, findWhat);
+                var views = _ordersRepository.GetRackOrdersView(_workstationView.AreaId, findWhat);
 
                 var rackOrderViews = views.ToList();
                 foreach (var rackOrderView in rackOrderViews)
@@ -956,12 +1013,16 @@ namespace Neutron.Forms
             }
             return itemIndex;
         }
-
+        /// <summary>
+        /// Gets the count of records in the provided BindingSource.
+        /// </summary>
+        /// <param name="bs">The BindingSource whose records count is to be retrieved.</param>
+        /// <returns>The count of records in the provided BindingSource.</returns>
         private int GetRecordCount(BindingSource bs)
         {
             var count = bs.Count;
             var records = _resourceManager.GetString($"Records");
-            LabelRecordCount.Text = string.Format(format: "{0}: {1}", arg0: records, arg1: count.ToString());
+            LabelRecordCount.Text = $"{records}: {count}";
             return count;
         }
 
@@ -1041,7 +1102,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _gridResourceManager.GetString($"Ord1"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Ord1"
@@ -1051,7 +1112,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _gridResourceManager.GetString($"Ord2"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Ord2"
@@ -1061,7 +1122,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Priority",
-                HeaderText = _resourceManager.GetString($"Priority"),
+                HeaderText = _gridResourceManager.GetString($"Priority"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Priority"
@@ -1071,7 +1132,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderStatusName",
-                HeaderText = _resourceManager.GetString($"OrderStatusName"),
+                HeaderText = _gridResourceManager.GetString($"Status"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "OrderStatusName",
                 Visible = true,
@@ -1097,7 +1158,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_1_HasPicks",
-                HeaderText = @"1",
+                HeaderText = _gridResourceManager.GetString($"Area-1"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_1_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1107,7 +1168,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_2_HasPicks",
-                HeaderText = @"2",
+                HeaderText = _gridResourceManager.GetString($"Area-2"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_2_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1117,7 +1178,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_3_HasPicks",
-                HeaderText = @"3",
+                HeaderText = _gridResourceManager.GetString($"Area-3"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_3_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1127,7 +1188,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_4_HasPicks",
-                HeaderText = @"4",
+                HeaderText = _gridResourceManager.GetString($"Area-4"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_4_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1137,7 +1198,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_5_HasPicks",
-                HeaderText = @"5",
+                HeaderText = _gridResourceManager.GetString($"Area-5"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_5_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1147,7 +1208,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_6_HasPicks",
-                HeaderText = @"6",
+                HeaderText = _gridResourceManager.GetString($"Area-6"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_6_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1156,7 +1217,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_7_HasPicks",
-                HeaderText = @"7",
+                HeaderText = _gridResourceManager.GetString($"Area-7"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_7_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1167,7 +1228,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Station_8_HasPicks",
-                HeaderText = @"8",  // _resourceManager.GetString($"Off"),
+                HeaderText = _gridResourceManager.GetString($"Area-8"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Station_8_HasPicks",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1177,7 +1238,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Lines",
-                HeaderText = _resourceManager.GetString($"Lines"),
+                HeaderText = _gridResourceManager.GetString($"Lines"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Lines",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1188,7 +1249,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "Pieces",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = _resourceManager.GetString($"Pieces"),
+                HeaderText = _gridResourceManager.GetString($"Pieces"),
                 Name = "Pieces",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
@@ -1197,7 +1258,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LoadDate",
-                HeaderText = _resourceManager.GetString($"LoadDate"),
+                HeaderText = _gridResourceManager.GetString($"LoadDate"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LoadDate",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -1207,7 +1268,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ShipMethodName",
-                HeaderText = _resourceManager.GetString($"ShipMethodName"),
+                HeaderText = _gridResourceManager.GetString($"ShipMethod"),
                 Visible = false,
                 Name = "ShipMethodName"
             };
@@ -1216,7 +1277,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -1257,7 +1318,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _resourceManager.GetString($"Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "AreaId"
@@ -1267,7 +1328,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _gridResourceManager.GetString($"Ord1"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Ord1"
@@ -1277,7 +1338,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _gridResourceManager.GetString($"Ord2"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Ord2"
@@ -1287,7 +1348,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Priority",
-                HeaderText = _resourceManager.GetString($"Priority"),
+                HeaderText = _gridResourceManager.GetString($"Priority"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Priority"
@@ -1297,7 +1358,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Item"
@@ -1308,7 +1369,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderStatusName",
-                HeaderText = _resourceManager.GetString($"OrderStatusName"),
+                HeaderText = _gridResourceManager.GetString($"Status"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "OrderStatusName",
                 Visible = true,
@@ -1319,7 +1380,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1330,7 +1391,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "Picked",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = _resourceManager.GetString($"Picked"),
+                HeaderText = _gridResourceManager.GetString($"Picked"),
                 Name = "Picked",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
@@ -1339,7 +1400,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LoadDate",
-                HeaderText = _resourceManager.GetString($"LoadDate"),
+                HeaderText = _gridResourceManager.GetString($"LoadDate"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "LoadDate",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1349,7 +1410,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description",
                 Visible = true,
@@ -1361,7 +1422,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -1370,7 +1431,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _resourceManager.GetString($"OrderId"),
+                HeaderText = _gridResourceManager.GetString($"OrderId"),
                 Visible = false,
                 Name = "OrderId"
             };
@@ -1379,7 +1440,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailId",
-                HeaderText = _resourceManager.GetString($"OrderDetailId"),
+                HeaderText = _gridResourceManager.GetString($"OrderDetailId"),
                 Visible = false,
                 Name = "OrderDetailId"
             };
@@ -1408,7 +1469,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Sequence",
-                HeaderText = _resourceManager.GetString($"Sequence"),
+                HeaderText = _gridResourceManager.GetString($"Sequence"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Visible = false,
@@ -1419,7 +1480,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PickPosition",
-                HeaderText = _resourceManager.GetString($"PickPosition"),
+                HeaderText = _gridResourceManager.GetString($"PickPosition"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "PickPosition",
@@ -1429,7 +1490,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _gridResourceManager.GetString($"Ord1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord1"
@@ -1439,7 +1500,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _gridResourceManager.GetString($"Ord2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord2"
@@ -1449,7 +1510,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -1459,7 +1520,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity"
@@ -1469,7 +1530,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-                HeaderText = _resourceManager.GetString($"Slot"),
+                HeaderText = _gridResourceManager.GetString($"Slot"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Slot"
@@ -1479,7 +1540,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "TotalQuantityInInventory",
-                HeaderText = _resourceManager.GetString($"TotalQuantityInInventory"),
+                HeaderText = _gridResourceManager.GetString($"Total"),
                 Name = "TotalQuantityInInventory",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -1489,7 +1550,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -1499,7 +1560,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ReceivedDate",
-                HeaderText = _resourceManager.GetString($"ReceivedDate"),
+                HeaderText = _gridResourceManager.GetString($"ReceivedDate"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
@@ -1510,7 +1571,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _resourceManager.GetString($"OrderId"),
+                HeaderText = _gridResourceManager.GetString($"OrderId"),
                 Visible = false,
                 Name = "OrderId"
             };
@@ -1730,7 +1791,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _gridResourceManager.GetString($"Ord1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord1"
@@ -1740,7 +1801,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _gridResourceManager.GetString($"Ord2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord2"
@@ -1750,7 +1811,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StatusName",
-                HeaderText = _resourceManager.GetString($"StatusName"),
+                HeaderText = _gridResourceManager.GetString($"Status"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "StatusName",
@@ -1761,7 +1822,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Priority",
-                HeaderText = _resourceManager.GetString($"Priority"),
+                HeaderText = _gridResourceManager.GetString($"Priority"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "Priority"
@@ -1771,7 +1832,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Lines",
-                HeaderText = _resourceManager.GetString($"Lines"),
+                HeaderText = _gridResourceManager.GetString($"Lines"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Lines"
@@ -1781,7 +1842,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Pieces",
-                HeaderText = _resourceManager.GetString($"Pieces"),
+                HeaderText = _gridResourceManager.GetString($"Pieces"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Pieces"
@@ -1791,7 +1852,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LoadDate",
-                HeaderText = _resourceManager.GetString($"LoadDate"),
+                HeaderText = _gridResourceManager.GetString($"LoadDate"),
                 Name = "LoadDate",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
@@ -1814,7 +1875,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -1845,7 +1906,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _resourceManager.GetString($"Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "AreaId"
@@ -1855,7 +1916,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -1865,7 +1926,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 Name = "Description",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
@@ -1875,7 +1936,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -1885,7 +1946,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ItemDefinitionId",
-                HeaderText = _resourceManager.GetString($"ItemDefinitionId"),
+                HeaderText = _gridResourceManager.GetString($"ItemDefinitionId"),
                 Visible = false,
                 Name = "ItemDefinitionId"
             };
@@ -1929,7 +1990,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _resourceManager.GetString($"Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "AreaId"
@@ -1939,7 +2000,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _resourceManager.GetString($"Ord1"),
+                HeaderText = _gridResourceManager.GetString($"Ord1"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord1"
@@ -1949,7 +2010,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _resourceManager.GetString($"Ord2"),
+                HeaderText = _gridResourceManager.GetString($"Ord2"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Ord2"
@@ -1959,7 +2020,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -1969,7 +2030,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -1979,7 +2040,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PickedQuantity",
-                HeaderText = _resourceManager.GetString($"PickedQuantity"),
+                HeaderText = _gridResourceManager.GetString($"Picked"),
                 Name = "PickedQuantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -1989,7 +2050,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -1999,7 +2060,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LineStatusName",
-                HeaderText = _resourceManager.GetString($"LineStatusName"),
+                HeaderText = _gridResourceManager.GetString($"Status"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LineStatusName"
@@ -2009,7 +2070,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _resourceManager.GetString($"OrderId"),
+                HeaderText = _gridResourceManager.GetString($"OrderId"),
                 Visible = false,
                 Name = "OrderId"
             };
@@ -2018,7 +2079,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailId",
-                HeaderText = _resourceManager.GetString($"OrderDetailId"),
+                HeaderText = _gridResourceManager.GetString($"OrderDetailId"),
                 Visible = false,
                 Name = "OrderDetailId"
             };
@@ -2063,7 +2124,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _resourceManager.GetString($"Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "AreaId",
@@ -2075,7 +2136,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PartNum",
-                HeaderText = _resourceManager.GetString($"PartNum"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "PartNum",
@@ -2086,7 +2147,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PartDesc",
-                HeaderText = _resourceManager.GetString($"PartDesc"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "PartDesc",
@@ -2097,7 +2158,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
@@ -2108,7 +2169,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PickedQuantity",
-                HeaderText = _resourceManager.GetString($"PickedQuantity"),
+                HeaderText = _gridResourceManager.GetString($"Picked"),
                 Name = "PickedQuantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
@@ -2119,7 +2180,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LineStatusName",
-                HeaderText = _resourceManager.GetString($"LineStatusName"),
+                HeaderText = _gridResourceManager.GetString($"Status"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "LineStatusName",
@@ -2131,7 +2192,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _resourceManager.GetString($"OrderId"),
+                HeaderText = _gridResourceManager.GetString($"OrderId"),
                 Visible = false,
                 Name = "OrderId"
             };
@@ -2140,7 +2201,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailId",
-                HeaderText = _resourceManager.GetString($"OrderDetailId"),
+                HeaderText = _gridResourceManager.GetString($"OrderDetailId"),
                 Visible = false,
                 Name = "OrderDetailId"
             };
@@ -2174,7 +2235,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _resourceManager.GetString($"Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "AreaId"
@@ -2184,7 +2245,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Item"
@@ -2194,7 +2255,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description"
@@ -2204,7 +2265,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 Name = "Quantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
@@ -2214,7 +2275,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _resourceManager.GetString($"Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 Visible = false,
                 Name = "Id"
             };
@@ -2243,7 +2304,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _resourceManager.GetString($"Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -2254,7 +2315,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageType",
-                HeaderText = _resourceManager.GetString($"StorageType"),
+                HeaderText = _gridResourceManager.GetString($"StorageType"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -2265,7 +2326,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-                HeaderText = _resourceManager.GetString($"Slot"),
+                HeaderText = _gridResourceManager.GetString($"Slot"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -2276,7 +2337,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _resourceManager.GetString($"Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 ReadOnly = true,
@@ -2287,7 +2348,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _resourceManager.GetString($"Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "Description",
                 ReadOnly = true,
@@ -2298,7 +2359,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Quantity",
-                HeaderText = _resourceManager.GetString($"Quantity"),
+                HeaderText = _gridResourceManager.GetString($"Quantity"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Quantity",
                 ReadOnly = true,
@@ -2310,7 +2371,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "Picked",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = _resourceManager.GetString($"Picked"),
+                HeaderText = _gridResourceManager.GetString($"Picked"),
                 Name = "Picked",
                 ReadOnly = false,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -2320,7 +2381,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Required",
-                HeaderText = _resourceManager.GetString($"Required"),
+                HeaderText = _gridResourceManager.GetString($"Required"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "Required",
                 ReadOnly = true,
@@ -2331,7 +2392,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "InventoryId",
-                HeaderText = _resourceManager.GetString($"InventoryId"),
+                HeaderText = _gridResourceManager.GetString($"InventoryId"),
                 Visible = false,
                 Name = "InventoryId"
             };
@@ -2709,10 +2770,10 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory For PickViews START"));
             // get a distinct list of ItemIds from the pickviews
             var itemIds = pickViews.Select(r => r.ItemId).Distinct().ToList();
-            
+
             // get the current inventory in this area for all the distinct items in the pickviews
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
-                .Where(f => itemIds.Contains(f.ItemDefinitionId) && f.AreaId == areaId ).ToList();
+                .Where(f => itemIds.Contains(f.ItemDefinitionId) && f.AreaId == areaId).ToList();
 
             Task.Run(() => _logger.LogDetailAsync($"Load Inventory For PickViews END"));
         }
@@ -2948,12 +3009,12 @@ namespace Neutron.Forms
                 // set the firstTime flag to true to indicate this is the first time through the loop
                 // for this Order
                 var firstTime = true;
-                    // counter is used to make each line of OrderDetails unique so that an order with the same item
-                    // will be picked separately
+                // counter is used to make each line of OrderDetails unique so that an order with the same item
+                // will be picked separately
                 var counter = 0;
                 // get the Order and OrderDetails for the current Order and Area
                 orderAndDetails = _ordersRepository.GetOrderWithOrderDetails(bp.OrderId, _workstationView.AreaId);
-                
+
                 //var order = _ordersRepository.GetOrder(bp.OrderId);
                 //var orderDetails = _ordersRepository.GetOrderDetailsByOrderAndArea(bp.OrderId, _workstationView.AreaId);
                 //foreach (var orderDetail in orderDetails)
@@ -2966,8 +3027,8 @@ namespace Neutron.Forms
                 currentOrder.Order = orderAndDetails;
                 // get the OrderDetails for the current Order
                 //var details = currentOrder.Order.OrderDetails.OrderBy(o => o.PartNum).ToList();
-                
-                
+
+
                 // loop over the OrderDetails
                 foreach (var detail in orderAndDetails.OrderDetails)
                 {
@@ -3023,7 +3084,7 @@ namespace Neutron.Forms
                         ItemId = detail.ItemDefinitionId,
                         Item = detail.PartNum,
                         Description = detail.PartDesc,
-                        UnitOfIssue =  unitOfIssue,
+                        UnitOfIssue = unitOfIssue,
                         Quantity = detail.Quantity,
                         QuantityToBePicked = detail.Quantity,
                         PickedQty = detail.PickedQuantity,
@@ -3073,7 +3134,7 @@ namespace Neutron.Forms
             var orderIds = new List<int>();
             foreach (var bp in ordersToPick)
             {
-                if (bp.OrderId != 0 )
+                if (bp.OrderId != 0)
                 {
                     orderIds.Add(Convert.ToInt32(bp.OrderId));
                 }
@@ -3433,7 +3494,7 @@ namespace Neutron.Forms
                 {
                     var d = item.Ord2.PadLeft(4, ' ');
                     var displayText = d.Substring(d.Length - 4, 4);
-                    TurnOnBatchPositionDisplay(bayControllerId: _neutronVariables.BliController, item.PositionNumber, beacon: 2, text: displayText);
+                    TurnOnIptiDisplay(_neutronVariables.BliController, item.PositionNumber, displayText);
                 }
             }
             Task.Run(() => _logger.LogDetailAsync($"ShowOrdersToPick End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -3449,7 +3510,9 @@ namespace Neutron.Forms
             _ = _logger.LogDetailAsync($"ShowOrderOrQuantityToggle START");
             if (MBShowOrderOrQuantityToggle.Text == _resourceManager.GetString($"ShowJobs"))
             {
-                ClearAllBli();
+                //ClearAllBli();
+                ClearBatchTable();
+
                 ClearPickPositions();
                 ShowOrdersToPick();
                 MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"ShowQuantity");
@@ -3470,16 +3533,21 @@ namespace Neutron.Forms
         //Back button on Pick Screen
         private void PickBack()
         {
-             _ = Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
+            _ = Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
             LabelFormTitle.Text = _resourceManager.GetString($"PickList");
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = PickList;
+
+
             ClearAllShi();
-            ClearAllBli();
-            ClearOc();
+            //ClearAllBli();
+            //ClearOc();
+            ClearBatchTable();
+
             ClearBlastzone();
             // Clear all the ProLites using the ProLiteManager
             _workstationView.ProLiteManager?.ClearAllProlites();
+
 
             Console.WriteLine("Clear Active Device Indicator  PickBack");
             _deviceIndicatorManager?.ClearActiveDeviceIndicators();
@@ -3530,9 +3598,9 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
 
             Task.Run(() => _logger.LogDetailAsync($"Start_Click Start: [{DateTime.Now.ToLongTimeString()}]"));
-           
+
             // a final check to make sure we have PickViews to pick
-            if(_bindingSourcePickViews.Count == 0)  return;
+            if (_bindingSourcePickViews.Count == 0) return;
             var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
 
             // set the sort order based on Location Type
@@ -3630,7 +3698,7 @@ namespace Neutron.Forms
             _bindingSourcePickStops.MoveFirst();
             // set the currentPickStop variable to the first PickStop in the BindingSource
             _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
-           
+
             // PickStops are built from PickViews
             // it's time to print the labels for the first PickStop
             // If the workstation is a Rack station then ALL the labels will be printed
@@ -3656,17 +3724,17 @@ namespace Neutron.Forms
             // the currentPickStop is set to the first PickStop in the BindingSourcePickStops
             // the currentPickStop is the PickStop that will be picked
             // the currentPickStop is the PickStop that will be displayed on the Pick Screen
-            
+
             UpdatePickScreen();
 
             //UpdateCurrentDeviceIndicator();
             _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(
                 _currentPickStop.CurrentInventoryLocation.Location.Loc1);
-            
+
             UpdatePickPosition();
-            
+
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-            
+
             UpdateTowerDisplay();
 
             tabControl1.SelectedTab = PickScreen;
@@ -4248,17 +4316,27 @@ namespace Neutron.Forms
             ClearPickPositions();
             // Clear the Pick Displays
             ClearPickDisplays();
-            
-            ClearAllBli();
-            ClearOc();
-            ClearBlastzone();
 
-            _workstationView.ProLiteManager?.ClearAllProlites();
-
-            if (_neutronVariables.IptiDisplays)
+            if (_batchTable && _batchTables.Enabled)
             {
-                TurnOnOcDisplay(1, 1, _currentPickStop.Item);
+                ClearBatchTable();
             }
+
+            if (_blastzone)
+            {
+                ClearBlastzone();
+            }
+
+            if (_prolite)
+            {
+                _workstationView.ProLiteManager?.ClearAllProlites();
+            }
+
+            if (_batchTable)
+            {
+                TurnOnIptiOrderControl(_neutronVariables.BliController, _currentPickStop.Item.Trim());
+            }
+
 
             foreach (var pickView in _currentPickStop.PickViews)
             {
@@ -4277,24 +4355,27 @@ namespace Neutron.Forms
                     //var panel = ((Panel)control);
                     panel.BackColor = Color.Red;
                 }
-                TurnOnBatchPositionDisplay(bayControllerId: _neutronVariables.BliController, position: pos, beacon: 2, text: pickView.QuantityToBePicked.ToString());
+
+                if (_batchTable)
+                {
+                    TurnOnIptiDisplay(_neutronVariables.BliController, pos, pickView.QuantityToBePicked.ToString());
+                }
             }
 
             // let me know if this is not a Blastzone
-            if (_workstationView.AreaId == 1 || _workstationView.AreaId == 2)
-            {
-                _isBlastzone = true;
-            }
+            //if (_workstationView.AreaId == 1 || _workstationView.AreaId == 2)
+            //{
+            //    _blastzone = true;
+            //}
 
-            if (_neutronVariables.IptiDisplays && _isBlastzone)
-            {   
+            if (_neutronVariables.IptiDisplays && _blastzone)
+            {
                 var device = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var bayController = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var display = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
-                TurnOnBlastzone(bayController: bayController, position: display, beacon: 1, text: _currentPickStop.GetTotalQuantityToBePicked().ToString());
-                
-                
-                _workstationView.ProLiteManager?.TurnOn(device,bayController, display, _currentPickStop.GetTotalQuantityToBePicked());
+                TurnOnIptiDisplay(bayController, display, _currentPickStop.GetTotalQuantityToBePicked().ToString());
+                TurnOnIptiOrderControl(bayController, _currentPickStop.Item.Trim());
+                _workstationView.ProLiteManager?.TurnOn(device, bayController, display, _currentPickStop.GetTotalQuantityToBePicked());
             }
 
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickPosition END"));
@@ -4323,26 +4404,104 @@ namespace Neutron.Forms
                 }
             }
         }
-        private void TurnOnBlastzone(int bayController, int position, int beacon, string text)
+
+        /// <summary>
+        /// Done
+        /// </summary>
+        /// <param name="bayController"></param>
+        /// <param name="position"></param>
+        /// <param name="text"></param>
+        private void TurnOnIptiDisplay(int bayController, int position, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
                 if (_neutronVariables.IptiDisplays)
                 {
                     if (GlobalVar.Displays == null) return;
-                    GlobalVar.Displays.ShowBlastzone(bayController, position, beacon, text);
+                    var command = _tcpIptiCommandCenter.TurnOnDisplay(bayController.ToString(), position, text);
+                    GlobalVar.Displays.SendText(command);
                 }
             }
         }
-        private void ClearBlastzone()
+
+        private void TurnOnIptiOrderControl(int bayController, string text)
         {
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
-            if (_neutronVariables.DisplaysEnabled && _isBlastzone)
+            if (_neutronVariables.DisplaysEnabled)
             {
                 if (_neutronVariables.IptiDisplays)
                 {
                     if (GlobalVar.Displays == null) return;
-                    GlobalVar.Displays.ClearBlastzone();
+
+                    var bayId = bayController.ToString().PadLeft(2, '0');
+                    var command = _tcpIptiCommandCenter.GetBayController(bayId)
+                        .TurnOnOrderControlModule(text);
+                    GlobalVar.Displays.SendText(command);
+                }
+            }
+        }
+
+        private void ClearBatchTable()
+        {
+            _ = _logger.LogDetailAsync($"Clear Batch Table Function - START");
+
+            if (_neutronVariables.IptiDisplays)
+            {
+                if (GlobalVar.Displays == null) return;
+                var bayId = _neutronVariables.BliController.ToString();
+
+                var command = _tcpIptiCommandCenter.ClearBayController(bayId);
+                GlobalVar.Displays.SendText(command);
+
+                command = _tcpIptiCommandCenter.GetBayController(bayId).TurnOffOrderControlModule();
+                GlobalVar.Displays.SendText(command);
+
+            }
+
+            _ = _logger.LogDetailAsync($"Clear Batch Table Function - END");
+        }
+
+
+        /// <summary>
+        /// Done
+        /// </summary>
+        /// <param name="bayController"></param>
+        /// <param name="position"></param>
+        /// <param name="beacon"></param>
+        /// <param name="text"></param>
+        private void TurnOnBlastzone(int bayController, int position, string text)
+        {
+            if (_neutronVariables.DisplaysEnabled)
+            {
+                if (_neutronVariables.IptiDisplays)
+                {
+                    if (GlobalVar.Displays == null) return;
+                    var command = _tcpIptiCommandCenter.TurnOnDisplay(bayController.ToString(), position, text);
+                    GlobalVar.Displays.SendText(command);
+                    // GlobalVar.Displays.ShowBlastzone(bayController, position, beacon, text);
+                }
+            }
+        }
+        /// <summary>
+        /// Done
+        /// </summary>
+        private void ClearBlastzone()
+        {
+            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
+            if (_neutronVariables.DisplaysEnabled && _blastzone)
+            {
+                if (_neutronVariables.IptiDisplays)
+                {
+                    if (GlobalVar.Displays == null) return;
+
+                    var blastzoneBayControllers = _tcpIptiCommandCenter.BayControllers
+                        .Where(r => r.BayControllerType == "Blast").ToList();
+                    foreach (var blastzoneBayId in blastzoneBayControllers)
+                    {
+                        var command = _tcpIptiCommandCenter.ClearBayController(blastzoneBayId.BayId);
+                        GlobalVar.Displays.SendText(command);
+                        command = _tcpIptiCommandCenter.GetBayController(blastzoneBayId.BayId).TurnOffOrderControlModule();
+                        GlobalVar.Displays.SendText(command);
+                    }
                 }
             }
             _ = _logger.LogDetailAsync($"ClearBlastzone Function - END");
@@ -4382,9 +4541,13 @@ namespace Neutron.Forms
         /// </summary>
         private void SetOrderCompleteThisArea()
         {
-            foreach (var bp in from bp in _ordersToPick where bp.OrderId != 0 let linesNotComplete = _repoOrderDetails
+            foreach (var bp in from bp in _ordersToPick
+                               where bp.OrderId != 0
+                               let linesNotComplete = _repoOrderDetails
                          .FindBy(r => r.OrderId == bp.OrderId && r.AreaId == _workstationView.AreaId)
-                         .Where(r => r.LineStatusId != (int)LineStatus.Complete).ToList() where !linesNotComplete.Any() select bp)
+                         .Where(r => r.LineStatusId != (int)LineStatus.Complete).ToList()
+                               where !linesNotComplete.Any()
+                               select bp)
             {
                 bp.OrderComplete = true;
             }
@@ -4498,8 +4661,10 @@ namespace Neutron.Forms
         {
             _ = Task.Run(() => _logger.LogDetailAsync($"CloseBatchWithSkip START"));
             ClearAllShi();
-            ClearAllBli();
-            ClearOc();
+            // ClearAllBli();
+            // ClearOc();
+            ClearBatchTable();
+
             ClearOrderPositions();
             ClearBatchPositions();
             _deviceIndicatorManager?.ClearAllDeviceIndicators();
@@ -4689,7 +4854,7 @@ namespace Neutron.Forms
                         {
                             PrintLabels(_currentPickStop);
                         }
-                        
+
                         UpdatePickScreen();
                         // UpdateCurrentDeviceIndicator();
                         _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
@@ -4914,7 +5079,7 @@ namespace Neutron.Forms
 
         private void PrintLabel(int reqFunc, int pos, PickView pickView)
         {
-            var orderDetail = new string[5];
+            var orderDetail = new string[5] { "", "", "", "", "" };
 
             if (_neutronLicense.CompanyCode == "WAG")
             {
@@ -4922,23 +5087,15 @@ namespace Neutron.Forms
                 var input = pickView.OrderDetail.OrderDetailInfo;
                 if (!string.IsNullOrEmpty(input))
                 {
-                    orderDetail = input.Split('|');
-                    if (orderDetail.Length != 5)
+                    var splitInput = input.Split('|');
+                    if (splitInput.Length == 5)
                     {
-                        orderDetail = new string[5];
+                        orderDetail = splitInput;
                     }
                 }
 
-                // orderDetail[0] = TransId
-                // orderDetail[1] = Division
-                // orderDetail[2] = Priority
-                // orderDetail[3] = Route
-                // orderDetail[4] = UPC
-
-
                 var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
-               
-                
+
                 var upc = orderDetail[4].Trim();
                 var aItem = pickView.Item.Trim();
                 var cItem = pickView.Item.Trim();
@@ -4946,12 +5103,12 @@ namespace Neutron.Forms
                 var desc = pickView.Description.Trim();
                 var division = orderDetail[1];
 
-              ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
+                ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
             }
             else
             {
-                 var upc = _repoAka.GetUpc(pickView.Item);
-            var labelDetail = GetLabelDetail(pickView.OrderDetail);
+                var upc = _repoAka.GetUpc(pickView.Item);
+                var labelDetail = GetLabelDetail(pickView.OrderDetail);
                 ToteToPrint.Print(reqFunc, pos, labelDetail, upc, _labelPrinter);
             }
         }
@@ -5108,8 +5265,11 @@ namespace Neutron.Forms
         {
             _ = Task.Run(() => _logger.LogDetailAsync($"CloseBatch START"));
             ClearAllShi();
-            ClearAllBli();
-            ClearOc();
+            //ClearAllBli();
+            //ClearOc();
+            ClearBatchTable();
+            ClearBlastzone();
+
             ClearOrderPositions();
             ClearBatchPositions();
             Console.WriteLine("Clear All Device Indicators - Close Batch");
@@ -5741,28 +5901,33 @@ namespace Neutron.Forms
             }
             ShowAllOrders();
         }
-
+        /// <summary>
+        /// Handles the Click event of the MBChangeLineStatus control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">An EventArgs that contains the event data.</param>
+        /// <remarks>
+        /// This method retrieves the selected order details from the DataGridViewOrderDetails control.
+        /// If any order details are selected, it opens the FrmChangeLineStatus form for each selected order detail.
+        /// After the FrmChangeLineStatus form is closed, it refreshes the order details for the order associated with the selected order detail.
+        /// </remarks>
         private void MBChangeLineStatus_Click(object sender, EventArgs e)
         {
-            //OrderDetail line = null;
             var lines = GetSelectedOrderDetails(DataGridViewOrderDetails);
 
-            if (lines.Any())
+            if (!lines.Any()) return;
+            foreach (var line in lines)
             {
-                foreach (var line in lines)
+                using (var form = new FrmChangeLineStatus(line, _historyManager))
                 {
-                    using (var form = new FrmChangeLineStatus(line, _historyManager))
+                    var result = form.ShowDialog();
+                    if (result == DialogResult.OK)
                     {
-                        var result = form.ShowDialog();
-                        if (result == DialogResult.OK)
-                        {
 
-                        }
                     }
-                    ShowOrderDetailsByOrder(line.OrderId);
                 }
+                ShowOrderDetailsByOrder(line.OrderId);
             }
-
         }
 
         private void MBReturnToStock_Click(object sender, EventArgs e)
@@ -5834,7 +5999,13 @@ namespace Neutron.Forms
         {
             ShowJobDetails();
         }
-
+        /// <summary>
+        /// Shows the details of the job associated with the current row in the DataGridView1.
+        /// </summary>
+        /// <remarks>
+        /// This method retrieves the ID from the "Id" cell of the current row in DataGridView1.
+        /// If the ID is greater than 0, it calls the ShowOrderDetailsByOrder method with the ID as an argument.
+        /// </remarks>
         private void ShowJobDetails()
         {
             var row = DataGridView1.CurrentRow;
@@ -5845,7 +6016,16 @@ namespace Neutron.Forms
                 ShowOrderDetailsByOrder(id);
             }
         }
-
+        /// <summary>
+        /// Displays the details of a specific order in the DataGridViewOrderDetails control.
+        /// </summary>
+        /// <param name="orderId">The ID of the order whose details are to be displayed.</param>
+        /// <remarks>
+        /// This method retrieves the order details from the _orderDetailsRepository using the provided orderId. 
+        /// The details are then bound to the _bindingSourceOrderDetailsView and displayed in the DataGridViewOrderDetails control.
+        /// The method also updates the LabelFormTitle text and the selected tab in the tabControl1 control.
+        /// If the LineStatusId of the current order detail is not Complete, the MBKillLine control is enabled.
+        /// </remarks>
         private void ShowOrderDetailsByOrder(int orderId)
         {
             _currentJobDetailsOrderId = orderId;
@@ -5889,7 +6069,8 @@ namespace Neutron.Forms
 
         private void LoadOrderManagerScreen()
         {
-            ShowAllOrders();
+           // ShowAllOrders();
+            ShowAvailableStagingOrders();
             Cursor.Current = Cursors.WaitCursor;
             Task.Run(() => _logger.LogDetailAsync($"Job Manager Main Screen Start"));
             LabelFormTitle.Text = _resourceManager.GetString($"JobListing");
@@ -6105,7 +6286,8 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             _currentDataSet = CurrentDataSet.Available;
-            ShowAllOrders();
+            ShowAvailableStagingOrders();  
+            //ShowAllOrders();
             MBCompress.Visible = false;
             MBDeleteOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
             MBKillOrder.Visible = _workstationView.StationType.Id == (int)StationType.Supervisor;
@@ -8154,6 +8336,8 @@ namespace Neutron.Forms
                 var languageDirectory = LoaderSettings.GetLanguageDirectory();
                 _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
                 _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmPick", resourceDir: languageDirectory, usingResourceSet: null);
+                _gridResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "GridHeaders", resourceDir: languageDirectory, usingResourceSet: null);
+                
                 //Main Panel
                 LabelFormHeaderText.Text = _resourceManager.GetString($"LabelFormHeaderText");
                 LabelFormTitle.Text = _resourceManager.GetString($"LabelFormTitle");
@@ -8604,7 +8788,17 @@ namespace Neutron.Forms
                     MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Terminates the processing of the specified collection of replenishment order details.
+        /// </summary>
+        /// <param name="orderDetails">The collection of replenishment order details to be processed.</param>
+        /// <remarks>
+        /// This method iterates through each order detail in the provided collection. If the line status of an order detail is either 'Available' or 'Skipped', and the order status is 'Available', 
+        /// the method sets the picked quantity to zero, changes the line status to 'Complete', and updates the order detail in the repository. 
+        /// It also saves the history of the 'KillLine' action. If the order is complete after this operation, it checks for order completion.
+        /// If an exception occurs during the processing, a message box is displayed with the error details.
+        /// </remarks>
+        /// <exception cref="System.Exception">Thrown when an error occurs during the processing of the order details.</exception>
         private void KillLine(ICollection<OrderDetail> orderDetails)
         {
             try
@@ -8630,14 +8824,27 @@ namespace Neutron.Forms
                     MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Handles the Click event of the MBKillLine control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This method retrieves the selected order details from the DataGridViewOrderDetails control. If any order details are selected, it calls the KillLine method to terminate the processing of the selected order details.
+        /// After the KillLine operation, it refreshes the display of order details by calling the ShowOrderDetailsByOrder method with the current job details order ID.
+        /// </remarks>
         private void MBKillLine_Click(object sender, EventArgs e)
         {
             var orderDetails = GetSelectedOrderDetails(DataGridViewOrderDetails);
             if (orderDetails.Any()) KillLine(orderDetails);
             ShowOrderDetailsByOrder(_currentJobDetailsOrderId);
         }
-
+        /// <summary>
+        /// Retrieves the details of the selected orders from a given DataGridView.
+        /// </summary>
+        /// <param name="dataGridView">The DataGridView from which to retrieve the selected order details.</param>
+        /// <returns>A list of ReplenOrderDetail objects representing the details of the selected orders.
+        /// If no orders are selected, a message box is displayed and an empty list is returned.</returns>
         private List<OrderDetail> GetSelectedOrderDetails(DataGridView dataGridView)
         {
             var orderDetails = new List<OrderDetail>();
@@ -8670,7 +8877,16 @@ namespace Neutron.Forms
             if (orderDetails.Any()) KillLine(orderDetails);
             ShowSkipped();
         }
-
+        /// <summary>
+        /// Checks if the specified replenishment order is complete.
+        /// </summary>
+        /// <param name="order">The replenishment order to check.</param>
+        /// <returns>Returns true if the order is complete, otherwise returns false.</returns>
+        /// <remarks>
+        /// This method checks each line of the order. If any line is not complete, the method returns false.
+        /// If all lines are complete, the method logs the completion, updates the order status to complete,
+        /// saves the history, updates the order in the repository, and returns true.
+        /// </remarks>
         private bool CheckForOrderComplete(Order order)
         {
             Task.Run(() => _logger.LogDetailAsync($"CheckForOrderComplete   Ord:{order.Ord1}   Res:{order.Ord2} "));

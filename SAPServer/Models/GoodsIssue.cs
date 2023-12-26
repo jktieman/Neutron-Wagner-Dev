@@ -34,6 +34,16 @@
         // Customer SKU
         public string KDMAT { get; set; }
         // Additional Information
+        public string NAME1 { get; set; }
+        public string STREET { get; set; }
+        // City
+        public string CITY1 { get; set; }
+        // State
+        public string REGION { get; set; }
+        // Postal Code
+        public string POST_CODE1 { get; set; }
+        // Country
+        public string COUNTRY { get; set; }
         public string TEXT { get; set; }
         //Processed record flag
         public bool Processed { get; set; }

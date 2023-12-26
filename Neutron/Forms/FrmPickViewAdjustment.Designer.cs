@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.LabelPosition = new System.Windows.Forms.Label();
-            this.TextBoxPosition = new System.Windows.Forms.TextBox();
-            this.LabelNewQuantity = new System.Windows.Forms.Label();
-            this.TextBoxNewQuantity = new System.Windows.Forms.TextBox();
-            this.LabelDescription = new System.Windows.Forms.Label();
-            this.LabelItem = new System.Windows.Forms.Label();
-            this.LabelOrder = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.ButtonAccept = new System.Windows.Forms.Button();
             this.ButtonBackorder = new System.Windows.Forms.Button();
             this.ButtonHighlight = new System.Windows.Forms.Button();
+            this.LabelOrder = new System.Windows.Forms.Label();
+            this.LabelItem = new System.Windows.Forms.Label();
+            this.LabelDescription = new System.Windows.Forms.Label();
+            this.LabelPosition = new System.Windows.Forms.Label();
+            this.TextBoxPosition = new System.Windows.Forms.TextBox();
+            this.LabelNewQuantity = new System.Windows.Forms.Label();
+            this.TextBoxNewQuantity = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +61,83 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(532, 572);
             this.panel1.TabIndex = 29;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel2.Controls.Add(this.ButtonAccept);
+            this.panel2.Controls.Add(this.ButtonBackorder);
+            this.panel2.Controls.Add(this.ButtonHighlight);
+            this.panel2.Location = new System.Drawing.Point(12, 450);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(503, 100);
+            this.panel2.TabIndex = 36;
+            // 
+            // ButtonAccept
+            // 
+            this.ButtonAccept.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonAccept.Location = new System.Drawing.Point(336, 14);
+            this.ButtonAccept.Name = "ButtonAccept";
+            this.ButtonAccept.Size = new System.Drawing.Size(150, 72);
+            this.ButtonAccept.TabIndex = 2;
+            this.ButtonAccept.Text = "Accept";
+            this.ButtonAccept.UseVisualStyleBackColor = true;
+            this.ButtonAccept.Click += new System.EventHandler(this.ButtonAccept_Click);
+            // 
+            // ButtonBackorder
+            // 
+            this.ButtonBackorder.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonBackorder.Location = new System.Drawing.Point(176, 14);
+            this.ButtonBackorder.Name = "ButtonBackorder";
+            this.ButtonBackorder.Size = new System.Drawing.Size(150, 72);
+            this.ButtonBackorder.TabIndex = 1;
+            this.ButtonBackorder.Text = "Backorder";
+            this.ButtonBackorder.UseVisualStyleBackColor = true;
+            this.ButtonBackorder.Click += new System.EventHandler(this.ButtonBackorder_Click);
+            // 
+            // ButtonHighlight
+            // 
+            this.ButtonHighlight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonHighlight.Location = new System.Drawing.Point(17, 14);
+            this.ButtonHighlight.Name = "ButtonHighlight";
+            this.ButtonHighlight.Size = new System.Drawing.Size(150, 72);
+            this.ButtonHighlight.TabIndex = 0;
+            this.ButtonHighlight.Text = "Skip";
+            this.ButtonHighlight.UseVisualStyleBackColor = true;
+            this.ButtonHighlight.Click += new System.EventHandler(this.ButtonHighlight_Click);
+            // 
+            // LabelOrder
+            // 
+            this.LabelOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelOrder.Location = new System.Drawing.Point(33, 14);
+            this.LabelOrder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelOrder.Name = "LabelOrder";
+            this.LabelOrder.Size = new System.Drawing.Size(463, 36);
+            this.LabelOrder.TabIndex = 33;
+            this.LabelOrder.Text = "Order";
+            this.LabelOrder.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelItem
+            // 
+            this.LabelItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelItem.Location = new System.Drawing.Point(33, 55);
+            this.LabelItem.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelItem.Name = "LabelItem";
+            this.LabelItem.Size = new System.Drawing.Size(463, 36);
+            this.LabelItem.TabIndex = 33;
+            this.LabelItem.Text = "Item";
+            this.LabelItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelDescription
+            // 
+            this.LabelDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelDescription.Location = new System.Drawing.Point(33, 97);
+            this.LabelDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelDescription.Name = "LabelDescription";
+            this.LabelDescription.Size = new System.Drawing.Size(463, 36);
+            this.LabelDescription.TabIndex = 33;
+            this.LabelDescription.Text = "Description";
+            this.LabelDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelPosition
             // 
@@ -107,83 +184,6 @@
             this.TextBoxNewQuantity.TabIndex = 0;
             this.TextBoxNewQuantity.Text = "1";
             this.TextBoxNewQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelDescription
-            // 
-            this.LabelDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDescription.Location = new System.Drawing.Point(33, 97);
-            this.LabelDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelDescription.Name = "LabelDescription";
-            this.LabelDescription.Size = new System.Drawing.Size(463, 36);
-            this.LabelDescription.TabIndex = 33;
-            this.LabelDescription.Text = "Description";
-            this.LabelDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelItem
-            // 
-            this.LabelItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelItem.Location = new System.Drawing.Point(33, 55);
-            this.LabelItem.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelItem.Name = "LabelItem";
-            this.LabelItem.Size = new System.Drawing.Size(463, 36);
-            this.LabelItem.TabIndex = 33;
-            this.LabelItem.Text = "Item";
-            this.LabelItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelOrder
-            // 
-            this.LabelOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOrder.Location = new System.Drawing.Point(33, 14);
-            this.LabelOrder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.LabelOrder.Name = "LabelOrder";
-            this.LabelOrder.Size = new System.Drawing.Size(463, 36);
-            this.LabelOrder.TabIndex = 33;
-            this.LabelOrder.Text = "Order";
-            this.LabelOrder.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel2.Controls.Add(this.ButtonAccept);
-            this.panel2.Controls.Add(this.ButtonBackorder);
-            this.panel2.Controls.Add(this.ButtonHighlight);
-            this.panel2.Location = new System.Drawing.Point(12, 450);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(503, 100);
-            this.panel2.TabIndex = 36;
-            // 
-            // ButtonAccept
-            // 
-            this.ButtonAccept.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonAccept.Location = new System.Drawing.Point(336, 14);
-            this.ButtonAccept.Name = "ButtonAccept";
-            this.ButtonAccept.Size = new System.Drawing.Size(150, 72);
-            this.ButtonAccept.TabIndex = 2;
-            this.ButtonAccept.Text = "Accept";
-            this.ButtonAccept.UseVisualStyleBackColor = true;
-            this.ButtonAccept.Click += new System.EventHandler(this.ButtonAccept_Click);
-            // 
-            // ButtonBackorder
-            // 
-            this.ButtonBackorder.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBackorder.Location = new System.Drawing.Point(176, 14);
-            this.ButtonBackorder.Name = "ButtonBackorder";
-            this.ButtonBackorder.Size = new System.Drawing.Size(150, 72);
-            this.ButtonBackorder.TabIndex = 1;
-            this.ButtonBackorder.Text = "Backorder";
-            this.ButtonBackorder.UseVisualStyleBackColor = true;
-            this.ButtonBackorder.Click += new System.EventHandler(this.ButtonBackorder_Click);
-            // 
-            // ButtonHighlight
-            // 
-            this.ButtonHighlight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonHighlight.Location = new System.Drawing.Point(17, 14);
-            this.ButtonHighlight.Name = "ButtonHighlight";
-            this.ButtonHighlight.Size = new System.Drawing.Size(150, 72);
-            this.ButtonHighlight.TabIndex = 0;
-            this.ButtonHighlight.Text = "Highlight";
-            this.ButtonHighlight.UseVisualStyleBackColor = true;
-            this.ButtonHighlight.Click += new System.EventHandler(this.ButtonHighlight_Click);
             // 
             // FrmPickViewAdjustment
             // 

@@ -451,6 +451,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.EmailAddresses = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.TextBoxEmailAddressesEmail2 = new System.Windows.Forms.TextBox();
+            this.LabelEmailAddressesEmail2 = new System.Windows.Forms.Label();
+            this.TextBoxEmailAddressesEmail1 = new System.Windows.Forms.TextBox();
+            this.TextBoxEmailAddressesEmail3 = new System.Windows.Forms.TextBox();
+            this.LabelEmailAddressesEmail1 = new System.Windows.Forms.Label();
+            this.LabelEmailAddressesEmail3 = new System.Windows.Forms.Label();
             this.LabelEmailInfo = new System.Windows.Forms.Label();
             this.ButtonCancelEmailAddresses = new System.Windows.Forms.Button();
             this.ButtonSaveEmailAddresses = new System.Windows.Forms.Button();
@@ -517,14 +523,31 @@
             this.TextBoxSapServerName = new System.Windows.Forms.TextBox();
             this.LabelSapServerName = new System.Windows.Forms.Label();
             this.BatchLights = new System.Windows.Forms.TabPage();
+            this.ButtonSaveIptiConfig = new MetroFramework.Controls.MetroButton();
             this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
             this.PanelBatchLightTesterBottom = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.LabelLine1 = new System.Windows.Forms.Label();
+            this.ComboBoxButtonOnTime = new System.Windows.Forms.ComboBox();
+            this.LabelButtonOnTime = new System.Windows.Forms.Label();
+            this.ComboBoxOrderControlButton = new System.Windows.Forms.ComboBox();
+            this.ComboBoxButtonColorOne = new System.Windows.Forms.ComboBox();
+            this.NumericUpDownBayId = new System.Windows.Forms.NumericUpDown();
             this.PanelBatchLightTesterTop = new System.Windows.Forms.Panel();
             this.LabelBatchLightTester = new System.Windows.Forms.Label();
+            this.ButtonClearAll = new System.Windows.Forms.Button();
+            this.ButtonTurnOffOrderControl = new System.Windows.Forms.Button();
             this.ButtonBatchLightTurnOff = new System.Windows.Forms.Button();
+            this.ButtonTurnOnOrderControl = new System.Windows.Forms.Button();
             this.ButtonBatchLightTurnOn = new System.Windows.Forms.Button();
+            this.LabelOrderControlButton = new System.Windows.Forms.Label();
             this.LabelBatchLightQuantity = new System.Windows.Forms.Label();
+            this.LabelButtonColorOne = new System.Windows.Forms.Label();
+            this.LabelBayId = new System.Windows.Forms.Label();
+            this.LabelOrderControlText = new System.Windows.Forms.Label();
             this.LabelBatchPosition = new System.Windows.Forms.Label();
+            this.TextBoxOrderControlText = new System.Windows.Forms.TextBox();
             this.TextBoxBatchLightQuantity = new System.Windows.Forms.TextBox();
             this.TextBoxBatchLightPosition = new System.Windows.Forms.TextBox();
             this.LabelFormTitle = new System.Windows.Forms.Label();
@@ -533,14 +556,10 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.TextBoxEmailAddressesEmail2 = new System.Windows.Forms.TextBox();
-            this.LabelEmailAddressesEmail2 = new System.Windows.Forms.Label();
-            this.TextBoxEmailAddressesEmail1 = new System.Windows.Forms.TextBox();
-            this.TextBoxEmailAddressesEmail3 = new System.Windows.Forms.TextBox();
-            this.LabelEmailAddressesEmail1 = new System.Windows.Forms.Label();
-            this.LabelEmailAddressesEmail3 = new System.Windows.Forms.Label();
-            this.LabelBayId = new System.Windows.Forms.Label();
-            this.NumericUpDownBayId = new System.Windows.Forms.NumericUpDown();
+            this.ComboBoxButtonColorTwo = new System.Windows.Forms.ComboBox();
+            this.ButtonColorTwo = new System.Windows.Forms.Label();
+            this.ComboBoxButtonOffTime = new System.Windows.Forms.ComboBox();
+            this.LabelButtonOffTime = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -604,9 +623,9 @@
             this.PanelSapServer.SuspendLayout();
             this.BatchLights.SuspendLayout();
             this.PanelBatchLightTesterBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBayId)).BeginInit();
             this.PanelBatchLightTesterTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBayId)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -685,7 +704,7 @@
             this.MBBatchLightTester.Name = "MBBatchLightTester";
             this.MBBatchLightTester.Size = new System.Drawing.Size(241, 84);
             this.MBBatchLightTester.TabIndex = 33;
-            this.MBBatchLightTester.Text = "Batch Light Tester";
+            this.MBBatchLightTester.Text = "IPTI";
             this.MBBatchLightTester.UseSelectable = true;
             this.MBBatchLightTester.Click += new System.EventHandler(this.MBBatchLightTester_Click);
             // 
@@ -1000,7 +1019,6 @@
             this.TextBoxTestOrderNumber.Name = "TextBoxTestOrderNumber";
             this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(144, 23);
             this.TextBoxTestOrderNumber.TabIndex = 2;
-            this.TextBoxTestOrderNumber.Text = "33391535";
             this.TextBoxTestOrderNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ButtonPrintTestToteLabel
@@ -1017,9 +1035,9 @@
             // ButtonPrintReplen
             // 
             this.ButtonPrintReplen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintReplen.Location = new System.Drawing.Point(621, 222);
+            this.ButtonPrintReplen.Location = new System.Drawing.Point(610, 224);
             this.ButtonPrintReplen.Name = "ButtonPrintReplen";
-            this.ButtonPrintReplen.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintReplen.Size = new System.Drawing.Size(173, 23);
             this.ButtonPrintReplen.TabIndex = 3;
             this.ButtonPrintReplen.Text = "Print Replen Doc";
             this.ButtonPrintReplen.UseVisualStyleBackColor = true;
@@ -1028,22 +1046,22 @@
             // ButtonPrintBarCode
             // 
             this.ButtonPrintBarCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintBarCode.Location = new System.Drawing.Point(621, 193);
+            this.ButtonPrintBarCode.Location = new System.Drawing.Point(610, 195);
             this.ButtonPrintBarCode.Name = "ButtonPrintBarCode";
-            this.ButtonPrintBarCode.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintBarCode.Size = new System.Drawing.Size(173, 23);
             this.ButtonPrintBarCode.TabIndex = 3;
-            this.ButtonPrintBarCode.Text = "Print BarCode";
+            this.ButtonPrintBarCode.Text = "Print Pick Slip";
             this.ButtonPrintBarCode.UseVisualStyleBackColor = true;
             this.ButtonPrintBarCode.Click += new System.EventHandler(this.ButtonPrintBarCode_Click);
             // 
             // ButtonPrintTestDocument
             // 
             this.ButtonPrintTestDocument.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPrintTestDocument.Location = new System.Drawing.Point(621, 164);
+            this.ButtonPrintTestDocument.Location = new System.Drawing.Point(610, 166);
             this.ButtonPrintTestDocument.Name = "ButtonPrintTestDocument";
-            this.ButtonPrintTestDocument.Size = new System.Drawing.Size(144, 23);
+            this.ButtonPrintTestDocument.Size = new System.Drawing.Size(173, 23);
             this.ButtonPrintTestDocument.TabIndex = 3;
-            this.ButtonPrintTestDocument.Text = "Print Test Document";
+            this.ButtonPrintTestDocument.Text = "Print Packing Document";
             this.ButtonPrintTestDocument.UseVisualStyleBackColor = true;
             this.ButtonPrintTestDocument.Click += new System.EventHandler(this.ButtonPrintTestDocument_Click);
             // 
@@ -5572,6 +5590,69 @@
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             // 
+            // TextBoxEmailAddressesEmail2
+            // 
+            this.TextBoxEmailAddressesEmail2.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxEmailAddressesEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxEmailAddressesEmail2.Location = new System.Drawing.Point(118, 133);
+            this.TextBoxEmailAddressesEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxEmailAddressesEmail2.Name = "TextBoxEmailAddressesEmail2";
+            this.TextBoxEmailAddressesEmail2.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxEmailAddressesEmail2.TabIndex = 10;
+            this.TextBoxEmailAddressesEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelEmailAddressesEmail2
+            // 
+            this.LabelEmailAddressesEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailAddressesEmail2.Location = new System.Drawing.Point(36, 128);
+            this.LabelEmailAddressesEmail2.Name = "LabelEmailAddressesEmail2";
+            this.LabelEmailAddressesEmail2.Size = new System.Drawing.Size(76, 36);
+            this.LabelEmailAddressesEmail2.TabIndex = 11;
+            this.LabelEmailAddressesEmail2.Text = "Email2";
+            this.LabelEmailAddressesEmail2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxEmailAddressesEmail1
+            // 
+            this.TextBoxEmailAddressesEmail1.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxEmailAddressesEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxEmailAddressesEmail1.Location = new System.Drawing.Point(118, 97);
+            this.TextBoxEmailAddressesEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxEmailAddressesEmail1.Name = "TextBoxEmailAddressesEmail1";
+            this.TextBoxEmailAddressesEmail1.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxEmailAddressesEmail1.TabIndex = 12;
+            this.TextBoxEmailAddressesEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxEmailAddressesEmail3
+            // 
+            this.TextBoxEmailAddressesEmail3.BackColor = System.Drawing.SystemColors.Window;
+            this.TextBoxEmailAddressesEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxEmailAddressesEmail3.Location = new System.Drawing.Point(118, 169);
+            this.TextBoxEmailAddressesEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxEmailAddressesEmail3.Name = "TextBoxEmailAddressesEmail3";
+            this.TextBoxEmailAddressesEmail3.Size = new System.Drawing.Size(326, 26);
+            this.TextBoxEmailAddressesEmail3.TabIndex = 13;
+            this.TextBoxEmailAddressesEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelEmailAddressesEmail1
+            // 
+            this.LabelEmailAddressesEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailAddressesEmail1.Location = new System.Drawing.Point(36, 92);
+            this.LabelEmailAddressesEmail1.Name = "LabelEmailAddressesEmail1";
+            this.LabelEmailAddressesEmail1.Size = new System.Drawing.Size(76, 36);
+            this.LabelEmailAddressesEmail1.TabIndex = 14;
+            this.LabelEmailAddressesEmail1.Text = "Email1";
+            this.LabelEmailAddressesEmail1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // LabelEmailAddressesEmail3
+            // 
+            this.LabelEmailAddressesEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelEmailAddressesEmail3.Location = new System.Drawing.Point(36, 164);
+            this.LabelEmailAddressesEmail3.Name = "LabelEmailAddressesEmail3";
+            this.LabelEmailAddressesEmail3.Size = new System.Drawing.Size(76, 36);
+            this.LabelEmailAddressesEmail3.TabIndex = 15;
+            this.LabelEmailAddressesEmail3.Text = "Email3";
+            this.LabelEmailAddressesEmail3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // LabelEmailInfo
             // 
             this.LabelEmailInfo.AutoSize = true;
@@ -6323,6 +6404,7 @@
             // BatchLights
             // 
             this.BatchLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.BatchLights.Controls.Add(this.ButtonSaveIptiConfig);
             this.BatchLights.Controls.Add(this.MBBatchLightBack);
             this.BatchLights.Controls.Add(this.PanelBatchLightTesterBottom);
             this.BatchLights.Location = new System.Drawing.Point(4, 22);
@@ -6331,6 +6413,18 @@
             this.BatchLights.Size = new System.Drawing.Size(1227, 636);
             this.BatchLights.TabIndex = 17;
             this.BatchLights.Text = "BatchLights";
+            // 
+            // ButtonSaveIptiConfig
+            // 
+            this.ButtonSaveIptiConfig.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.ButtonSaveIptiConfig.Location = new System.Drawing.Point(954, 10);
+            this.ButtonSaveIptiConfig.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ButtonSaveIptiConfig.Name = "ButtonSaveIptiConfig";
+            this.ButtonSaveIptiConfig.Size = new System.Drawing.Size(126, 76);
+            this.ButtonSaveIptiConfig.TabIndex = 36;
+            this.ButtonSaveIptiConfig.Text = "Save";
+            this.ButtonSaveIptiConfig.UseSelectable = true;
+            this.ButtonSaveIptiConfig.Click += new System.EventHandler(this.ButtonSaveIptiConfig_Click);
             // 
             // MBBatchLightBack
             // 
@@ -6348,19 +6442,146 @@
             // PanelBatchLightTesterBottom
             // 
             this.PanelBatchLightTesterBottom.BackColor = System.Drawing.Color.LightGray;
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonOffTime);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonOffTime);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonColorTwo);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonColorTwo);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label10);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label9);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelLine1);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonOnTime);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonOnTime);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxOrderControlButton);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonColorOne);
             this.PanelBatchLightTesterBottom.Controls.Add(this.NumericUpDownBayId);
             this.PanelBatchLightTesterBottom.Controls.Add(this.PanelBatchLightTesterTop);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonClearAll);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffOrderControl);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBatchLightTurnOff);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOnOrderControl);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBatchLightTurnOn);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelOrderControlButton);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBatchLightQuantity);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonColorOne);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBayId);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelOrderControlText);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBatchPosition);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxOrderControlText);
             this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchLightQuantity);
             this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchLightPosition);
-            this.PanelBatchLightTesterBottom.Location = new System.Drawing.Point(327, 166);
+            this.PanelBatchLightTesterBottom.Location = new System.Drawing.Point(303, 95);
             this.PanelBatchLightTesterBottom.Name = "PanelBatchLightTesterBottom";
-            this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(557, 315);
+            this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(620, 446);
             this.PanelBatchLightTesterBottom.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.BackColor = System.Drawing.Color.Black;
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label10.Location = new System.Drawing.Point(22, 310);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(575, 1);
+            this.label10.TabIndex = 20;
+            // 
+            // label9
+            // 
+            this.label9.BackColor = System.Drawing.Color.Black;
+            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label9.Location = new System.Drawing.Point(22, 259);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(575, 1);
+            this.label9.TabIndex = 19;
+            // 
+            // LabelLine1
+            // 
+            this.LabelLine1.BackColor = System.Drawing.Color.Black;
+            this.LabelLine1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LabelLine1.Location = new System.Drawing.Point(24, 163);
+            this.LabelLine1.Name = "LabelLine1";
+            this.LabelLine1.Size = new System.Drawing.Size(575, 1);
+            this.LabelLine1.TabIndex = 18;
+            // 
+            // ComboBoxButtonOnTime
+            // 
+            this.ComboBoxButtonOnTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxButtonOnTime.FormattingEnabled = true;
+            this.ComboBoxButtonOnTime.Items.AddRange(new object[] {
+            "000",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500"});
+            this.ComboBoxButtonOnTime.Location = new System.Drawing.Point(180, 365);
+            this.ComboBoxButtonOnTime.Name = "ComboBoxButtonOnTime";
+            this.ComboBoxButtonOnTime.Size = new System.Drawing.Size(76, 28);
+            this.ComboBoxButtonOnTime.TabIndex = 17;
+            // 
+            // LabelButtonOnTime
+            // 
+            this.LabelButtonOnTime.AutoSize = true;
+            this.LabelButtonOnTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelButtonOnTime.Location = new System.Drawing.Point(40, 368);
+            this.LabelButtonOnTime.Name = "LabelButtonOnTime";
+            this.LabelButtonOnTime.Size = new System.Drawing.Size(134, 20);
+            this.LabelButtonOnTime.TabIndex = 16;
+            this.LabelButtonOnTime.Text = "Button On Time";
+            // 
+            // ComboBoxOrderControlButton
+            // 
+            this.ComboBoxOrderControlButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxOrderControlButton.FormattingEnabled = true;
+            this.ComboBoxOrderControlButton.Items.AddRange(new object[] {
+            "Off",
+            "Blue Flash Fast",
+            "Blue Flash Slow",
+            "Blue Solid"});
+            this.ComboBoxOrderControlButton.Location = new System.Drawing.Point(323, 404);
+            this.ComboBoxOrderControlButton.Name = "ComboBoxOrderControlButton";
+            this.ComboBoxOrderControlButton.Size = new System.Drawing.Size(178, 28);
+            this.ComboBoxOrderControlButton.TabIndex = 15;
+            // 
+            // ComboBoxButtonColorOne
+            // 
+            this.ComboBoxButtonColorOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxButtonColorOne.FormattingEnabled = true;
+            this.ComboBoxButtonColorOne.Items.AddRange(new object[] {
+            "Off",
+            "Green",
+            "Red",
+            "Blue",
+            "Cyan",
+            "Magenta",
+            "Orange",
+            "White"});
+            this.ComboBoxButtonColorOne.Location = new System.Drawing.Point(180, 332);
+            this.ComboBoxButtonColorOne.Name = "ComboBoxButtonColorOne";
+            this.ComboBoxButtonColorOne.Size = new System.Drawing.Size(121, 28);
+            this.ComboBoxButtonColorOne.TabIndex = 15;
+            // 
+            // NumericUpDownBayId
+            // 
+            this.NumericUpDownBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NumericUpDownBayId.Location = new System.Drawing.Point(161, 80);
+            this.NumericUpDownBayId.Maximum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.NumericUpDownBayId.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.NumericUpDownBayId.Name = "NumericUpDownBayId";
+            this.NumericUpDownBayId.Size = new System.Drawing.Size(63, 26);
+            this.NumericUpDownBayId.TabIndex = 14;
+            this.NumericUpDownBayId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.NumericUpDownBayId.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             // 
             // PanelBatchLightTesterTop
             // 
@@ -6369,76 +6590,159 @@
             this.PanelBatchLightTesterTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.PanelBatchLightTesterTop.Location = new System.Drawing.Point(0, 0);
             this.PanelBatchLightTesterTop.Name = "PanelBatchLightTesterTop";
-            this.PanelBatchLightTesterTop.Size = new System.Drawing.Size(557, 62);
+            this.PanelBatchLightTesterTop.Size = new System.Drawing.Size(620, 62);
             this.PanelBatchLightTesterTop.TabIndex = 13;
             // 
             // LabelBatchLightTester
             // 
             this.LabelBatchLightTester.AutoSize = true;
             this.LabelBatchLightTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBatchLightTester.Location = new System.Drawing.Point(194, 19);
+            this.LabelBatchLightTester.Location = new System.Drawing.Point(150, 19);
             this.LabelBatchLightTester.Name = "LabelBatchLightTester";
-            this.LabelBatchLightTester.Size = new System.Drawing.Size(205, 25);
+            this.LabelBatchLightTester.Size = new System.Drawing.Size(321, 25);
             this.LabelBatchLightTester.TabIndex = 8;
-            this.LabelBatchLightTester.Text = "Batch Light Tester";
+            this.LabelBatchLightTester.Text = "IPTI Configuration and Tester";
+            // 
+            // ButtonClearAll
+            // 
+            this.ButtonClearAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonClearAll.Location = new System.Drawing.Point(156, 269);
+            this.ButtonClearAll.Name = "ButtonClearAll";
+            this.ButtonClearAll.Size = new System.Drawing.Size(309, 31);
+            this.ButtonClearAll.TabIndex = 11;
+            this.ButtonClearAll.Text = "Turn All Off by Bay Id";
+            this.ButtonClearAll.UseVisualStyleBackColor = true;
+            this.ButtonClearAll.Click += new System.EventHandler(this.ButtonClearAll_Click);
+            // 
+            // ButtonTurnOffOrderControl
+            // 
+            this.ButtonTurnOffOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOffOrderControl.Location = new System.Drawing.Point(314, 218);
+            this.ButtonTurnOffOrderControl.Name = "ButtonTurnOffOrderControl";
+            this.ButtonTurnOffOrderControl.Size = new System.Drawing.Size(92, 31);
+            this.ButtonTurnOffOrderControl.TabIndex = 11;
+            this.ButtonTurnOffOrderControl.Text = "Turn Off";
+            this.ButtonTurnOffOrderControl.UseVisualStyleBackColor = true;
+            this.ButtonTurnOffOrderControl.Click += new System.EventHandler(this.ButtonTurnOffOrderControl_Click);
             // 
             // ButtonBatchLightTurnOff
             // 
             this.ButtonBatchLightTurnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBatchLightTurnOff.Location = new System.Drawing.Point(290, 217);
+            this.ButtonBatchLightTurnOff.Location = new System.Drawing.Point(314, 122);
             this.ButtonBatchLightTurnOff.Name = "ButtonBatchLightTurnOff";
-            this.ButtonBatchLightTurnOff.Size = new System.Drawing.Size(203, 31);
+            this.ButtonBatchLightTurnOff.Size = new System.Drawing.Size(92, 31);
             this.ButtonBatchLightTurnOff.TabIndex = 11;
             this.ButtonBatchLightTurnOff.Text = "Turn Off";
             this.ButtonBatchLightTurnOff.UseVisualStyleBackColor = true;
             this.ButtonBatchLightTurnOff.Click += new System.EventHandler(this.ButtonBatchLightTurnOff_Click);
             // 
+            // ButtonTurnOnOrderControl
+            // 
+            this.ButtonTurnOnOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOnOrderControl.Location = new System.Drawing.Point(214, 218);
+            this.ButtonTurnOnOrderControl.Name = "ButtonTurnOnOrderControl";
+            this.ButtonTurnOnOrderControl.Size = new System.Drawing.Size(94, 31);
+            this.ButtonTurnOnOrderControl.TabIndex = 12;
+            this.ButtonTurnOnOrderControl.Text = "Turn On";
+            this.ButtonTurnOnOrderControl.UseVisualStyleBackColor = true;
+            this.ButtonTurnOnOrderControl.Click += new System.EventHandler(this.ButtonTurnOnOrderControl_Click);
+            // 
             // ButtonBatchLightTurnOn
             // 
             this.ButtonBatchLightTurnOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBatchLightTurnOn.Location = new System.Drawing.Point(64, 217);
+            this.ButtonBatchLightTurnOn.Location = new System.Drawing.Point(214, 122);
             this.ButtonBatchLightTurnOn.Name = "ButtonBatchLightTurnOn";
-            this.ButtonBatchLightTurnOn.Size = new System.Drawing.Size(203, 31);
+            this.ButtonBatchLightTurnOn.Size = new System.Drawing.Size(94, 31);
             this.ButtonBatchLightTurnOn.TabIndex = 12;
             this.ButtonBatchLightTurnOn.Text = "Turn On";
             this.ButtonBatchLightTurnOn.UseVisualStyleBackColor = true;
             this.ButtonBatchLightTurnOn.Click += new System.EventHandler(this.ButtonBatchLightTurnOn_Click);
+            // 
+            // LabelOrderControlButton
+            // 
+            this.LabelOrderControlButton.AutoSize = true;
+            this.LabelOrderControlButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelOrderControlButton.Location = new System.Drawing.Point(131, 407);
+            this.LabelOrderControlButton.Name = "LabelOrderControlButton";
+            this.LabelOrderControlButton.Size = new System.Drawing.Size(176, 20);
+            this.LabelOrderControlButton.TabIndex = 9;
+            this.LabelOrderControlButton.Text = "Order Control Button";
             // 
             // LabelBatchLightQuantity
             // 
             this.LabelBatchLightQuantity.AutoSize = true;
             this.LabelBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelBatchLightQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(337, 162);
+            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(387, 83);
             this.LabelBatchLightQuantity.Name = "LabelBatchLightQuantity";
             this.LabelBatchLightQuantity.Size = new System.Drawing.Size(76, 20);
             this.LabelBatchLightQuantity.TabIndex = 8;
             this.LabelBatchLightQuantity.Text = "Quantity";
             // 
+            // LabelButtonColorOne
+            // 
+            this.LabelButtonColorOne.AutoSize = true;
+            this.LabelButtonColorOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelButtonColorOne.Location = new System.Drawing.Point(26, 335);
+            this.LabelButtonColorOne.Name = "LabelButtonColorOne";
+            this.LabelButtonColorOne.Size = new System.Drawing.Size(148, 20);
+            this.LabelButtonColorOne.TabIndex = 9;
+            this.LabelButtonColorOne.Text = "Button Color One";
+            // 
+            // LabelBayId
+            // 
+            this.LabelBayId.AutoSize = true;
+            this.LabelBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelBayId.Location = new System.Drawing.Point(95, 82);
+            this.LabelBayId.Name = "LabelBayId";
+            this.LabelBayId.Size = new System.Drawing.Size(60, 20);
+            this.LabelBayId.TabIndex = 9;
+            this.LabelBayId.Text = "Bay Id";
+            // 
+            // LabelOrderControlText
+            // 
+            this.LabelOrderControlText.AutoSize = true;
+            this.LabelOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelOrderControlText.Location = new System.Drawing.Point(150, 184);
+            this.LabelOrderControlText.Name = "LabelOrderControlText";
+            this.LabelOrderControlText.Size = new System.Drawing.Size(156, 20);
+            this.LabelOrderControlText.TabIndex = 9;
+            this.LabelOrderControlText.Text = "Order Control Text";
+            // 
             // LabelBatchPosition
             // 
             this.LabelBatchPosition.AutoSize = true;
             this.LabelBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBatchPosition.Location = new System.Drawing.Point(76, 162);
+            this.LabelBatchPosition.Location = new System.Drawing.Point(238, 83);
             this.LabelBatchPosition.Name = "LabelBatchPosition";
-            this.LabelBatchPosition.Size = new System.Drawing.Size(125, 20);
+            this.LabelBatchPosition.Size = new System.Drawing.Size(73, 20);
             this.LabelBatchPosition.TabIndex = 9;
-            this.LabelBatchPosition.Text = "Batch Position";
+            this.LabelBatchPosition.Text = "Position";
+            // 
+            // TextBoxOrderControlText
+            // 
+            this.TextBoxOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxOrderControlText.Location = new System.Drawing.Point(312, 181);
+            this.TextBoxOrderControlText.Name = "TextBoxOrderControlText";
+            this.TextBoxOrderControlText.Size = new System.Drawing.Size(159, 26);
+            this.TextBoxOrderControlText.TabIndex = 5;
+            this.TextBoxOrderControlText.Text = "123456";
+            this.TextBoxOrderControlText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxBatchLightQuantity
             // 
             this.TextBoxBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxBatchLightQuantity.Location = new System.Drawing.Point(419, 159);
+            this.TextBoxBatchLightQuantity.Location = new System.Drawing.Point(469, 80);
             this.TextBoxBatchLightQuantity.Name = "TextBoxBatchLightQuantity";
-            this.TextBoxBatchLightQuantity.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxBatchLightQuantity.Size = new System.Drawing.Size(56, 26);
             this.TextBoxBatchLightQuantity.TabIndex = 4;
-            this.TextBoxBatchLightQuantity.Text = "1";
+            this.TextBoxBatchLightQuantity.Text = "21";
             this.TextBoxBatchLightQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxBatchLightPosition
             // 
             this.TextBoxBatchLightPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxBatchLightPosition.Location = new System.Drawing.Point(207, 159);
+            this.TextBoxBatchLightPosition.Location = new System.Drawing.Point(317, 80);
             this.TextBoxBatchLightPosition.Name = "TextBoxBatchLightPosition";
             this.TextBoxBatchLightPosition.Size = new System.Drawing.Size(62, 26);
             this.TextBoxBatchLightPosition.TabIndex = 5;
@@ -6489,102 +6793,59 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // TextBoxEmailAddressesEmail2
+            // ComboBoxButtonColorTwo
             // 
-            this.TextBoxEmailAddressesEmail2.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxEmailAddressesEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxEmailAddressesEmail2.Location = new System.Drawing.Point(118, 133);
-            this.TextBoxEmailAddressesEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxEmailAddressesEmail2.Name = "TextBoxEmailAddressesEmail2";
-            this.TextBoxEmailAddressesEmail2.Size = new System.Drawing.Size(326, 26);
-            this.TextBoxEmailAddressesEmail2.TabIndex = 10;
-            this.TextBoxEmailAddressesEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ComboBoxButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxButtonColorTwo.FormattingEnabled = true;
+            this.ComboBoxButtonColorTwo.Items.AddRange(new object[] {
+            "Off",
+            "Green",
+            "Red",
+            "Blue",
+            "Cyan",
+            "Magenta",
+            "Orange",
+            "White"});
+            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(474, 332);
+            this.ComboBoxButtonColorTwo.Name = "ComboBoxButtonColorTwo";
+            this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 28);
+            this.ComboBoxButtonColorTwo.TabIndex = 22;
             // 
-            // LabelEmailAddressesEmail2
+            // ButtonColorTwo
             // 
-            this.LabelEmailAddressesEmail2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelEmailAddressesEmail2.Location = new System.Drawing.Point(36, 128);
-            this.LabelEmailAddressesEmail2.Name = "LabelEmailAddressesEmail2";
-            this.LabelEmailAddressesEmail2.Size = new System.Drawing.Size(76, 36);
-            this.LabelEmailAddressesEmail2.TabIndex = 11;
-            this.LabelEmailAddressesEmail2.Text = "Email2";
-            this.LabelEmailAddressesEmail2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ButtonColorTwo.AutoSize = true;
+            this.ButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonColorTwo.Location = new System.Drawing.Point(320, 335);
+            this.ButtonColorTwo.Name = "ButtonColorTwo";
+            this.ButtonColorTwo.Size = new System.Drawing.Size(147, 20);
+            this.ButtonColorTwo.TabIndex = 21;
+            this.ButtonColorTwo.Text = "Button Color Two";
             // 
-            // TextBoxEmailAddressesEmail1
+            // ComboBoxButtonOffTime
             // 
-            this.TextBoxEmailAddressesEmail1.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxEmailAddressesEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxEmailAddressesEmail1.Location = new System.Drawing.Point(118, 97);
-            this.TextBoxEmailAddressesEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxEmailAddressesEmail1.Name = "TextBoxEmailAddressesEmail1";
-            this.TextBoxEmailAddressesEmail1.Size = new System.Drawing.Size(326, 26);
-            this.TextBoxEmailAddressesEmail1.TabIndex = 12;
-            this.TextBoxEmailAddressesEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ComboBoxButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxButtonOffTime.FormattingEnabled = true;
+            this.ComboBoxButtonOffTime.Items.AddRange(new object[] {
+            "000",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500"});
+            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(475, 365);
+            this.ComboBoxButtonOffTime.Name = "ComboBoxButtonOffTime";
+            this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 28);
+            this.ComboBoxButtonOffTime.TabIndex = 24;
             // 
-            // TextBoxEmailAddressesEmail3
+            // LabelButtonOffTime
             // 
-            this.TextBoxEmailAddressesEmail3.BackColor = System.Drawing.SystemColors.Window;
-            this.TextBoxEmailAddressesEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxEmailAddressesEmail3.Location = new System.Drawing.Point(118, 169);
-            this.TextBoxEmailAddressesEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.TextBoxEmailAddressesEmail3.Name = "TextBoxEmailAddressesEmail3";
-            this.TextBoxEmailAddressesEmail3.Size = new System.Drawing.Size(326, 26);
-            this.TextBoxEmailAddressesEmail3.TabIndex = 13;
-            this.TextBoxEmailAddressesEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // LabelEmailAddressesEmail1
-            // 
-            this.LabelEmailAddressesEmail1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelEmailAddressesEmail1.Location = new System.Drawing.Point(36, 92);
-            this.LabelEmailAddressesEmail1.Name = "LabelEmailAddressesEmail1";
-            this.LabelEmailAddressesEmail1.Size = new System.Drawing.Size(76, 36);
-            this.LabelEmailAddressesEmail1.TabIndex = 14;
-            this.LabelEmailAddressesEmail1.Text = "Email1";
-            this.LabelEmailAddressesEmail1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelEmailAddressesEmail3
-            // 
-            this.LabelEmailAddressesEmail3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelEmailAddressesEmail3.Location = new System.Drawing.Point(36, 164);
-            this.LabelEmailAddressesEmail3.Name = "LabelEmailAddressesEmail3";
-            this.LabelEmailAddressesEmail3.Size = new System.Drawing.Size(76, 36);
-            this.LabelEmailAddressesEmail3.TabIndex = 15;
-            this.LabelEmailAddressesEmail3.Text = "Email3";
-            this.LabelEmailAddressesEmail3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // LabelBayId
-            // 
-            this.LabelBayId.AutoSize = true;
-            this.LabelBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBayId.Location = new System.Drawing.Point(202, 103);
-            this.LabelBayId.Name = "LabelBayId";
-            this.LabelBayId.Size = new System.Drawing.Size(60, 20);
-            this.LabelBayId.TabIndex = 9;
-            this.LabelBayId.Text = "Bay Id";
-            // 
-            // NumericUpDownBayId
-            // 
-            this.NumericUpDownBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumericUpDownBayId.Location = new System.Drawing.Point(268, 101);
-            this.NumericUpDownBayId.Maximum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.NumericUpDownBayId.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.NumericUpDownBayId.Name = "NumericUpDownBayId";
-            this.NumericUpDownBayId.Size = new System.Drawing.Size(87, 26);
-            this.NumericUpDownBayId.TabIndex = 14;
-            this.NumericUpDownBayId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.NumericUpDownBayId.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.LabelButtonOffTime.AutoSize = true;
+            this.LabelButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelButtonOffTime.Location = new System.Drawing.Point(333, 368);
+            this.LabelButtonOffTime.Name = "LabelButtonOffTime";
+            this.LabelButtonOffTime.Size = new System.Drawing.Size(136, 20);
+            this.LabelButtonOffTime.TabIndex = 23;
+            this.LabelButtonOffTime.Text = "Button Off Time";
             // 
             // FrmUtilities
             // 
@@ -6689,10 +6950,10 @@
             this.BatchLights.ResumeLayout(false);
             this.PanelBatchLightTesterBottom.ResumeLayout(false);
             this.PanelBatchLightTesterBottom.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBayId)).EndInit();
             this.PanelBatchLightTesterTop.ResumeLayout(false);
             this.PanelBatchLightTesterTop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBayId)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -7192,5 +7453,24 @@
         private System.Windows.Forms.Label LabelEmailAddressesEmail3;
         private System.Windows.Forms.NumericUpDown NumericUpDownBayId;
         private System.Windows.Forms.Label LabelBayId;
+        private System.Windows.Forms.Label LabelOrderControlText;
+        private System.Windows.Forms.TextBox TextBoxOrderControlText;
+        private System.Windows.Forms.Button ButtonClearAll;
+        private System.Windows.Forms.Button ButtonTurnOnOrderControl;
+        private System.Windows.Forms.Button ButtonTurnOffOrderControl;
+        private System.Windows.Forms.ComboBox ComboBoxButtonOnTime;
+        private System.Windows.Forms.Label LabelButtonOnTime;
+        private System.Windows.Forms.ComboBox ComboBoxButtonColorOne;
+        private System.Windows.Forms.Label LabelButtonColorOne;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label LabelLine1;
+        private MetroFramework.Controls.MetroButton ButtonSaveIptiConfig;
+        private System.Windows.Forms.ComboBox ComboBoxOrderControlButton;
+        private System.Windows.Forms.Label LabelOrderControlButton;
+        private System.Windows.Forms.ComboBox ComboBoxButtonColorTwo;
+        private System.Windows.Forms.Label ButtonColorTwo;
+        private System.Windows.Forms.ComboBox ComboBoxButtonOffTime;
+        private System.Windows.Forms.Label LabelButtonOffTime;
     }
 }

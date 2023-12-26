@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using AlliedLogger;
 using EthernetTransmitter;
 using Hart_DisplayControllers;
+using IPTI.Models;
 using JsonManager;
 using NeutronCore.Extensions;
 using Neutron.Models;
@@ -30,7 +31,7 @@ namespace Neutron.Controllers
         private const string TurnAllOff03 = "03";
         private const string TurnAllOn06 = "06";
         private const string TurnAllOff07 = "07";
-
+        private readonly TcpIptiCommandCenter _tcpIptiCommandCenter;
 
 
         public CancellationTokenSource Token = new CancellationTokenSource();
@@ -90,9 +91,19 @@ namespace Neutron.Controllers
             _responseManager = new ResponseManager(ResponseBlockingCollection, RequestBlockingCollection,
                 ReceivedBlockingCollection)
             { Transmit = false };
-
+            _tcpIptiCommandCenter = new TcpIptiCommandCenter(jsonData, _logger);
             IptiControllerInit();
         }
+
+        public void SendText(string text)
+        {
+            _ = _logger.LogDetailAsync($"IPTI Controller - SendText - START");
+            if (!_bliEnabled) return;
+            _logger.LogDetailAsync($"IPTI Controller - Text: {text}");
+            _ = _transmitter.SendData(text);
+            _ = _logger.LogDetailAsync($"IPTI Controller - SendText - END");
+        }
+        
         public void SetTransmit(bool value)
         {
             Transmit = value;
@@ -120,7 +131,6 @@ namespace Neutron.Controllers
             await _transmitter.SendData($"{_bliController}{TurnAllOn02}");
             await _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END");
         }
-
         public async Task TurnOnAllBlastzones()
         {
             await _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - START");
@@ -139,7 +149,6 @@ namespace Neutron.Controllers
 
             await _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END");
         }
-
         public async Task ClearAllBli()
         {
             await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START  {DateTime.Now.ToLongTimeString()}");
@@ -261,7 +270,10 @@ namespace Neutron.Controllers
             if (!_bliEnabled) return;
             await _logger.LogDetailAsync($"Ipti BLI-Show:  BayController: {bli.BLI_BayController}  Address: {bli.BLI_Address} " +
                                          $"Text: {bli.BLI_Text}");
-            await _transmitter.SendData(bli.TurnOn);
+            var cmd = _tcpIptiCommandCenter.TurnOnDisplay(bli.BLI_BayController, bli.BLI_Address,bli.BLI_Text);
+            
+            await _transmitter.SendData(cmd);
+           // await _transmitter.SendData(bli.TurnOn);
             await _logger.LogDetailAsync($"IPTI Controller - Show BLI - END");
         }
         public void ClearOc(int bayControllerId, int address)

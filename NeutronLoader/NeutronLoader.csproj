@@ -117,6 +117,10 @@
       <Project>{B600904B-1B59-47BF-8884-5A4982D8B2FE}</Project>
       <Name>HighJump</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
+      <Project>{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}</Project>
+      <Name>NeutronDllu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AlliedFileSystemWatcher\AlliedFileSystemWatcher.csproj">
       <Project>{A8C533EF-F9B0-4B04-A1BA-53AAF5354A2B}</Project>
       <Name>AlliedFileSystemWatcher</Name>

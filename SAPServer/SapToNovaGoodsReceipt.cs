@@ -8,16 +8,29 @@ using SAPServer.Models;
 
 namespace SAPServer
 {
-    public class SapToNeutronGoodsReceipt
+    public class SapToNovaGoodsReceipt
     {
         private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
 
-        public SapToNeutronGoodsReceipt(IJsonData jsonData, IDynamicLogger logger)
+        public SapToNovaGoodsReceipt(IJsonData jsonData, IDynamicLogger logger)
         {
             _jsonData = jsonData;
             _logger = logger;
         }
+        /// <summary>
+        /// Retrieves the goods receipt records from the SAP system.
+        /// </summary>
+        /// <param name="destination">The RFC destination which represents the SAP system.</param>
+        /// <remarks>
+        /// This method fetches the goods receipt records from the SAP system using the provided RFC destination.
+        /// The fetched records are then processed and saved as a JSON file for backup purposes.
+        /// If any exceptions occur during the process, they are logged and an email is sent with the exception details.
+        /// </remarks>
+        /// <exception cref="RfcCommunicationException">Thrown when there is a communication error with the SAP system.</exception>
+        /// <exception cref="RfcLogonException">Thrown when there is a logon error in the SAP system.</exception>
+        /// <exception cref="RfcAbapRuntimeException">Thrown when there is a runtime error in the ABAP program.</exception>
+        /// <exception cref="RfcAbapBaseException">Thrown when there is a base exception in the ABAP program.</exception>
 
         public void Get(RfcDestination destination)
         {
@@ -25,15 +38,36 @@ namespace SAPServer
 
             try
             {
+
+                // Represents the repository of the RFC destination. This repository is used to create and manage RFC functions.
                 RfcRepository repo = destination.Repository;
-                IRfcFunction sapToNeutronList = repo.CreateFunction("ZWM_SAP_TO_NOVA");
 
-                IRfcTable goodsReceiptTable = sapToNeutronList.GetTable("LT_SAPNOVA");
+                // Represents an RFC function named "ZWM_SAP_TO_NOVA" created from the RFC repository.
+                // This function is used to interact with the SAP system, specifically to retrieve a list of goods receipts.
+                IRfcFunction sapToNovaList = repo.CreateFunction("ZWM_SAP_TO_NOVA");
 
+                // Represents a table of goods receipts retrieved from the
+                // SAP system via the "ZWM_SAP_TO_NOVA" RFC function.
+                // Each row in the table corresponds to a single goods receipt,
+                // with fields for receipt number (TANUM), item number (TAPOS),
+                // material number (MATNR), quantity (VERME), unit of measure (MEINS),
+                // and material description (MAKTX).
+                IRfcTable goodsReceiptTable = sapToNovaList.GetTable("LT_SAPNOVA");
+
+                // Represents a list of GoodsReceipt objects.
+                // Each object in the list corresponds to a goods receipt retrieved from the SAP system.
+                // This list is populated by invoking the "ZWM_SAP_TO_NOVA" RFC function
+                // and iterating over the returned table of goods receipts.
+                // The list is then used for further processing, such as logging
+                // the number of retrieved records, creating a backup JSON file,
+                // and writing the goods receipts to the INPUT table in the Wagner Database.
                 List<GoodsReceipt> goodsReceiptList = new List<GoodsReceipt>();
 
-                sapToNeutronList.Invoke(destination);
+                
+                // Load the data
+                sapToNovaList.Invoke(destination);
 
+                
                 for (int cuIndex = 0; cuIndex < goodsReceiptTable.RowCount; cuIndex++)
                 {
 

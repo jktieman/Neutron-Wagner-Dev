@@ -120,6 +120,11 @@ namespace Neutron.Controllers
             }
         }
 
+        public void SendText(string text)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task ClearAllBli()
         {
             await _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START");

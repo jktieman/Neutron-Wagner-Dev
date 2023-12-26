@@ -949,19 +949,50 @@ namespace NeutronData.Repositories
 
 
 
-        public ReplenOrder GetOrderAndOrderDetails(int? orderId, int areaId)
+        public ReplenOrder GetOrderAndOrderDetails(int orderId, int areaId)
         {
-            var ord = new ReplenOrder();
-            var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
+            var order = new ReplenOrder();
+           // var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
             if (orderId != null)
             {
-                ord = _repoReplenOrders.FindByKey(orderId);
-                if (ord != null)
+                order = _repoReplenOrders.FindByKey(orderId);
+                if (order != null)
                 {
-                    ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
+                    var details = GetReplenOrderDetailsByOrderAndArea(orderId, areaId);
+
+                    order.ReplenOrderDetails = new List<ReplenOrderDetail>();
+
+                    foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId is 1 or 9))
+                    {
+                        order.ReplenOrderDetails.Add(orderDetail);
+                    }
+
+                    //ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
                 }
             }
-            return ord;
+            return order;
+        }
+
+        public List<ReplenOrderDetail> GetReplenOrderDetailsByOrderAndArea(int orderId, int areaId)
+        {
+            var recs = new List<ReplenOrderDetail>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using var context = new NeutronDb();
+                var param = new SqlParameter(parameterName: "@ORDERID", value: orderId);
+                parameters.Add(param);
+                param = new SqlParameter(parameterName: "@AREAID", value: areaId);
+                parameters.Add(param);
+
+                recs = context.Database.SqlQuery<ReplenOrderDetail>("usp_GetReplenOrderDetailsByOrderAndArea @ORDERID, @AREAID", parameters.ToArray()).ToList(); // SQL Tested
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get OrderDetails Error. " + ex.Message + " " + ex.InnerException);
+            }
+            return recs;
         }
 
         public IEnumerable<ReplenOrderView> GetRackOrders(string search = "")

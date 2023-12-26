@@ -573,7 +573,7 @@ namespace Neutron.Forms
             // MBPrintOrderListing
             // 
             this.MBPrintOrderListing.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderListing.Location = new System.Drawing.Point(1057, 582);
+            this.MBPrintOrderListing.Location = new System.Drawing.Point(1103, 582);
             this.MBPrintOrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderListing.Name = "MBPrintOrderListing";
             this.MBPrintOrderListing.Size = new System.Drawing.Size(125, 79);
@@ -588,7 +588,7 @@ namespace Neutron.Forms
             this.MBJobDetails.Location = new System.Drawing.Point(926, 582);
             this.MBJobDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBJobDetails.Name = "MBJobDetails";
-            this.MBJobDetails.Size = new System.Drawing.Size(125, 79);
+            this.MBJobDetails.Size = new System.Drawing.Size(171, 79);
             this.MBJobDetails.TabIndex = 18;
             this.MBJobDetails.Text = "Job Details";
             this.ToolTipPickScreen.SetToolTip(this.MBJobDetails, "Shows all the details of the Job.");
@@ -2013,7 +2013,7 @@ namespace Neutron.Forms
             // MBChangeLineStatus
             // 
             this.MBChangeLineStatus.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBChangeLineStatus.Location = new System.Drawing.Point(221, 11);
+            this.MBChangeLineStatus.Location = new System.Drawing.Point(221, 10);
             this.MBChangeLineStatus.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBChangeLineStatus.Name = "MBChangeLineStatus";
             this.MBChangeLineStatus.Size = new System.Drawing.Size(135, 79);
@@ -2025,7 +2025,7 @@ namespace Neutron.Forms
             // MBHoldDetail
             // 
             this.MBHoldDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHoldDetail.Location = new System.Drawing.Point(407, 11);
+            this.MBHoldDetail.Location = new System.Drawing.Point(407, 10);
             this.MBHoldDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHoldDetail.Name = "MBHoldDetail";
             this.MBHoldDetail.Size = new System.Drawing.Size(135, 79);
@@ -2037,7 +2037,7 @@ namespace Neutron.Forms
             // MBPrintOrderDetails
             // 
             this.MBPrintOrderDetails.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPrintOrderDetails.Location = new System.Drawing.Point(795, 11);
+            this.MBPrintOrderDetails.Location = new System.Drawing.Point(795, 10);
             this.MBPrintOrderDetails.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPrintOrderDetails.Name = "MBPrintOrderDetails";
             this.MBPrintOrderDetails.Size = new System.Drawing.Size(135, 79);
@@ -2049,7 +2049,7 @@ namespace Neutron.Forms
             // MBReleaseDetail
             // 
             this.MBReleaseDetail.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBReleaseDetail.Location = new System.Drawing.Point(601, 11);
+            this.MBReleaseDetail.Location = new System.Drawing.Point(601, 10);
             this.MBReleaseDetail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBReleaseDetail.Name = "MBReleaseDetail";
             this.MBReleaseDetail.Size = new System.Drawing.Size(135, 79);
@@ -2118,7 +2118,7 @@ namespace Neutron.Forms
             // 
             this.MBOrderDetailsBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBOrderDetailsBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOrderDetailsBack.Location = new System.Drawing.Point(1080, 11);
+            this.MBOrderDetailsBack.Location = new System.Drawing.Point(1080, 10);
             this.MBOrderDetailsBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOrderDetailsBack.Name = "MBOrderDetailsBack";
             this.MBOrderDetailsBack.Size = new System.Drawing.Size(135, 79);

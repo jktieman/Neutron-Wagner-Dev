@@ -13,7 +13,9 @@ using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
+using NeutronData.PrintModels;
 using NeutronData.Repositories;
+using NeutronDllu;
 using NeutronEvents;
 using SAPServer;
 using SAPServer.Models;
@@ -43,6 +45,8 @@ namespace NeutronLoader
         private Timer _timer;
         private bool _loadOrdersBusy;
         private readonly ISapService _sapService;
+        private DocumentToPrint _documentToPrint;
+        private DocumentPrinterPreferences _documentPrinter;
 
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView, ISapService sapService)
@@ -52,6 +56,8 @@ namespace NeutronLoader
             _jsonData = jsonData;
             _workstationView = workstationView;
             _sapService = sapService;
+            _documentToPrint = new DocumentToPrint();
+            _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
             Init();            
             
         }
@@ -60,20 +66,59 @@ namespace NeutronLoader
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("NeutronLoader");
 
-            _sapService.Init();
+            try
+            {
+                _sapService.Init();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error Initializing Loader. {Environment.NewLine} {ex.Message}");
+            }
 
         }
-
+        /// <summary>
+        /// Asynchronously loads orders from the SAP service and updates the Neutron orders and Neutron Replen orders.
+        /// </summary>
+        /// <remarks>
+        /// This method first checks if the loading process is already busy. If it is, it logs a message and returns.
+        /// If not, it sets the loading process to busy and starts loading orders from the SAP service.
+        /// After loading, it updates the Neutron orders and Neutron Replen orders based on the loaded orders.
+        /// If any exceptions occur during this process, it logs the error message and sends an email with the error message.
+        /// Finally, it sets the loading process to not busy.
+        /// </remarks>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         public void StartProcessingInterfaceFiles()
         {
-            var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.LoaderDelay);
-            _timer = new Timer(t => { _ = LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
+            try
+            {
+                var startTimeSpan = TimeSpan.Zero;
+                var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.LoaderDelay);
+                _timer = new Timer(t => { _ = LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error Processing Interface File. {Environment.NewLine} {ex.Message}");
+            }
         }
 
+        /// <summary>
+        /// Asynchronously loads and processes orders from the SAP service.
+        /// </summary>
+        /// <remarks>
+        /// This method first checks if the loading process is already busy. If it is, it logs a message and returns.
+        /// If not, it sets the loading process to busy and starts loading orders from the SAP service.
+        /// After loading, it updates the Neutron orders and Neutron Replen orders based on the loaded orders.
+        /// If any exceptions occur during this process, it logs the error message and sends an email with the error message.
+        /// Finally, it sets the loading process to not busy.
+        /// </remarks>
+        /// <returns>A Task representing the asynchronous operation.</returns>
         private async Task LoadOrders()
         {
-            if (_loadOrdersBusy) return;
+            if (_loadOrdersBusy)
+            {
+                await _logger.LogDetailAsync("Load Orders is currently busy.");
+                return;
+            }
 
             try
             {
@@ -159,6 +204,7 @@ namespace NeutronLoader
                         orderLines.Add(h);
                     }
                     UpdateToProcessed(recs);
+                    
                 }
 
             }
@@ -227,6 +273,7 @@ namespace NeutronLoader
                                     
                                 };
                                 _repoReplenOrderDetail.Insert(detail);
+                                _documentToPrint.PrintReplenDoc(detail, _documentPrinter, false);
                             }
                         }
                     }
@@ -292,7 +339,7 @@ namespace NeutronLoader
                                     Quantity = orderDetail.Qty,
                                     LineStatusId = (int)LineStatus.Available,
                                     AreaId = GetAreaToPickFrom(orderDetail, itemDef),
-                                    OrderDetailInfo = $"{rec.TransId}|{rec.Priority}|{rec.Division}|{@"Route"}|{rec.Upc}",
+                                    OrderDetailInfo = $"{orderDetail.TransId}|{rec.Priority}|{rec.Division}|{@"Route"}|{rec.Upc}",
                                     OrderId = orderId,
                                     JobNum = orderDetail.Order,
                                     ItemDefinitionId = itemDef.Id
@@ -352,7 +399,7 @@ namespace NeutronLoader
                     {
                         // Check for existing order
 
-                        var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString()).FirstOrDefault();
+                        var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString() && r.Ord2 == rec.INVOICENO.ToString()).FirstOrDefault();
 
                         if (existingOrder != null) continue;
 

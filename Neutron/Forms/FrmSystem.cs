@@ -56,8 +56,7 @@ namespace Neutron.Forms
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
-            SetLoaderButtonText();
-            SetUploadButtonText();
+
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
         }
@@ -170,6 +169,7 @@ namespace Neutron.Forms
             MBRunLoaderOnce.Enabled = false;
             RunLoaderOnce();
             MBRunLoaderOnce.Enabled = true;
+            MessageBox.Show("Load Complete");
         }
 
         private void RunLoaderOnce()
@@ -193,6 +193,7 @@ namespace Neutron.Forms
             MBRunUploadOnce.Enabled = false;
             RunUploadOnce();
             MBRunUploadOnce.Enabled = true;
+            MessageBox.Show("Upload Complete");
         }
 
         private void RunUploadOnce()
@@ -310,6 +311,9 @@ namespace Neutron.Forms
             CostCenterFileName.Text = LoaderSettings.GetCostCenterFile();
             LanguageDirectory.Text = LoaderSettings.GetLanguageDirectory();
             CheckBoxSqlServerAuthentication.Checked = true;
+
+            SetLoaderButtonText();
+            SetUploadButtonText();
         }
 
         private void ButtonSaveConnectionString_Click(object sender, EventArgs e)

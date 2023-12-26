@@ -228,8 +228,8 @@ namespace Neutron
             _ = _logger.LogDetailAsync("InitForm Started");
             var result = true;
 
-            _enumManager.SaveActionCodesToDatabase();
-            _enumManager.SaveLineStatusToDatabase();
+            //_enumManager.SaveActionCodesToDatabase();
+            //_enumManager.SaveLineStatusToDatabase();
 
             try
             {
@@ -249,23 +249,27 @@ namespace Neutron
 
                             _ = _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}");
 
+                            _ = _logger.LogDetailAsync($"Loader Station Test:{_neutronVariables.LoaderStation}=={_workstationView.WorkstationId}");
                             // If this station is responsible for the loader, start the loader
                             if (_neutronVariables.LoaderStation == _workstationView.WorkstationId)
                             {
+                                _ = _logger.LogDetailAsync("Workstation is a Loader Station"); 
                                 _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, _workstationView);
                                 StartLoader();
 
                                 _startStopUploadManager = DI.Create<StartStopUploadManager>(_neutronVariables, _neutronLicense, _workstationView);
                                 StartUpload();
                             }
-
-                            SetupSlotFactory();
-
+                            _ = _logger.LogDetailAsync("SetupSlotFactory - Before");
+                           SetupSlotFactory();
+                           _ = _logger.LogDetailAsync("SetupSlotFactory - After");
                             // if the workstation is a supervisor, return the workstationView
                             // otherwise, set up the hardware devices
                             if (_workstationView.StationTypeId != (int)StationType.Supervisor)
                             {
+                                _ = _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - Before");
                                 SetupHardwareDevices();
+                                _ = _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - After");
                             }
                         }
                         else  // _workstationView is null
@@ -300,12 +304,23 @@ namespace Neutron
         }
         private void SetupHardwareDevices()
         {
+            _ = _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name );
             // get all the hardware devices on this workstation; carousel, lights scale, etc
             try
             {
                 //get all the hardware devices on this workstation; carousel, lights scale, etc
                 var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == _workstationView.WorkstationId).ToList();
-                _ = _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name + " Number of Devices: " + hardwareDevices.Count);
+                if (hardwareDevices.Any())
+                {
+                    _ = _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name + " Number of Devices: " + hardwareDevices.Count);
+                }
+                else
+                {
+                    _ = _logger.LogDetailAsync("No hardware devices found on this workstation");
+                    return;
+                }
+                
+                
 
                 // loop through the hardware devices
                 // get the communication type
@@ -491,6 +506,7 @@ namespace Neutron
         }
         private void StartLoader()
         {
+            _ = _logger.LogDetailAsync($"Start Loader - Before. Start Loader - {_neutronVariables.RunLoaderOnStartup}");
             try
             {
                 if (_neutronVariables.RunLoaderOnStartup)
@@ -501,12 +517,15 @@ namespace Neutron
             }
             catch (Exception ex)
             {
+                _ = _logger.LogDetailAsync(
+                    $"The Loader has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 MessageBox.Show(
                     $"The Loader has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
         private void StartUpload()
         {
+            _ = _logger.LogDetailAsync($"Start Upload - Before. Start Upload - {_neutronVariables.RunUploadOnStartup}");
             try
             {
                 if (_neutronVariables.RunUploadOnStartup)
@@ -517,6 +536,8 @@ namespace Neutron
             }
             catch (Exception ex)
             {
+                _ = _logger.LogDetailAsync(
+                    $"The Upload has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 MessageBox.Show(
                     $"The Upload has failed to start on Startup.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
@@ -911,14 +932,24 @@ namespace Neutron
                     return;
                 }
             }
-
-            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations]) return;
-            Hide();
-            using (MetroForm frm = new FrmLocations(_jsonData, _workstationRepository, _workstationView, _neutronVariables, _lacProcessor, _historyManager))
+            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory]) return;
+            var main = this;
+            using (var frm = DI.Create<FrmLocations>(_workstationView, _neutronVariables))
             {
+                main.Hide();
                 frm.ShowDialog();
-                Show();
+                main.Show();
             }
+
+
+
+           // if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations]) return;
+          //  Hide();
+            //using (MetroForm frm = new FrmLocations(_jsonData, _workstationRepository, _workstationView, _neutronVariables, _lacProcessor, _historyManager))
+            //{
+            //    frm.ShowDialog();
+            //    Show();
+            //}
         }
         private void MtInventory_Click(object sender, EventArgs e)
         {
@@ -1320,45 +1351,6 @@ namespace Neutron
                 frm.ShowDialog();
                 Show();
             }
-        }
-
-        private async void button1_Click(object sender, EventArgs e)
-        {
-            await TestBli();
-        }
-
-        private async Task TestBli()
-        {
-
-            await GlobalVar.Displays.ClearBlastzone();
-            _workstationView.ProLiteManager?.ClearProlite(1);
-            await Task.Delay(3000);
-
-            _workstationView.ProLiteManager?.TurnOn(1, 2, 2, 6);
-            await _logger.LogDetailAsync($"button1_Click IPTI Displays ");
-
-            await GlobalVar.Displays.TurnOnAllBli();
-            await Task.Delay(3000);
-
-            await GlobalVar.Displays.ClearAllBli();
-            await _logger.LogDetailAsync($"button1_Click IPTI Displays Turned Off");
-            await Task.Delay(3000);
-
-            await _logger.LogDetailAsync($"Blastzone 1 IPTI Displays Turn On");
-            await GlobalVar.Displays.ShowBlastzone(2, 2, 2, "21");
-            await GlobalVar.Displays.ShowBlastzone(2, 1, 2, "11");
-            await Task.Delay(3000);
-
-            await GlobalVar.Displays.ClearBlastzone();
-            await Task.Delay(3000);
-
-            await GlobalVar.Displays.TurnOnAllBlastzones();
-            await Task.Delay(3000);
-
-            await GlobalVar.Displays.ClearBlastzone();
-            _workstationView.ProLiteManager?.ClearProlite(1);
-            await Task.Delay(3000);
-
         }
     }
 }

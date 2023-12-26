@@ -14,17 +14,20 @@ using JsonManager;
 using Neutron.Forms;
 using NeutronData.Interfaces;
 using NeutronData.PrintModels;
+using AlliedLogger;
 
 namespace Neutron.Ninject
 {
     public static class DI
     {
         private static StandardKernel _kernel;
+        private static IDynamicLogger _logger;
 
         public static void Initialize()
         {
             _kernel = new StandardKernel();
             _kernel.Load(Assembly.GetExecutingAssembly());
+            _logger = NeutronCore.Global.Logger.SetupLogger("DI_Module");
         }
 
         public static T Create<T>()

@@ -1350,7 +1350,12 @@ namespace Neutron.Forms
             if (itemDef == null) return;
             int id = itemDef.Id;
             var index = _bindingSource.Find("Id", id);
-
+            if (index == -1)
+            {
+                MessageBox.Show(
+                    $"Selection not in this Area.  If you want to view this selection, change to All Areas.");
+            }
+            
             _bindingSource.Position = index;
 
             ViewEditItemDefinition();

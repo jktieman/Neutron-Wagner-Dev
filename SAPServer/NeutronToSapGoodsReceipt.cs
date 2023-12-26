@@ -9,11 +9,11 @@ using SAPServer.Models;
 
 namespace SAPServer
 {
-    public class NeutronToSapGoodsReceipt
+    public class NovaToSapGoodsReceipt
     {
         private readonly IDynamicLogger _logger;
 
-        public NeutronToSapGoodsReceipt( IDynamicLogger logger)
+        public NovaToSapGoodsReceipt( IDynamicLogger logger)
         {
             _logger = logger;
         }
@@ -24,9 +24,9 @@ namespace SAPServer
             try
             {
                 RfcRepository repo = destination.Repository;
-                IRfcFunction neutronToSapList = repo.CreateFunction("ZWM_NOVA_TO_SAP");
+                IRfcFunction novaToSapList = repo.CreateFunction("ZWM_NOVA_TO_SAP");
 
-                IRfcTable goodsReceiptTable = neutronToSapList.GetTable("LT_NOVASAP");
+                IRfcTable goodsReceiptTable = novaToSapList.GetTable("LT_NOVASAP");
 
                 List<GoodsReceipt> goodsReceiptList = GetGoodsReceiptsFromOutput();
 
@@ -47,7 +47,7 @@ namespace SAPServer
 
                         try
                         {
-                            neutronToSapList.Invoke(destination);
+                            novaToSapList.Invoke(destination);
 
                          _ = _logger.LogDetailAsync($"Goods Receipt Record Sent To SAP: TASK: {good.TANUM} -- SKU: {good.MATNR}");
 

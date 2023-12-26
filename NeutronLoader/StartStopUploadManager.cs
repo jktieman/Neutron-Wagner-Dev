@@ -66,7 +66,8 @@ namespace NeutronLoader
                 case "WAG":
                 {
                  _ = _logger.LogDetailAsync($"WAG - UploadProcessorWAG");
-                    _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _neutronLicense, _logger, _workstationView, _workstationRepository);
+                    //_uploadProcessor = new UploadProcessorWAG(_neutronVariables, _neutronLicense, _logger, _workstationView, _workstationRepository);
+                        _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _logger);
                     break;
                 }
                 default:

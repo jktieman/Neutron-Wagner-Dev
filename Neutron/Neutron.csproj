@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>513</ApplicationRevision>
+    <ApplicationRevision>525</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -180,6 +180,12 @@
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
     <Compile Include="Extensions\UCExtensions.cs" />
+    <Compile Include="Forms\FrmChangeReplenLineStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmChangeReplenLineStatus.Designer.cs">
+      <DependentUpon>FrmChangeReplenLineStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmQuantity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -512,6 +518,9 @@
     </Content>
     <EmbeddedResource Include="Forms\FrmAbout.resx">
       <DependentUpon>FrmAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmChangeReplenLineStatus.resx">
+      <DependentUpon>FrmChangeReplenLineStatus.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
       <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
@@ -868,6 +877,10 @@
     <ProjectReference Include="..\Hanel_DC\Hanel_DC.csproj">
       <Project>{156add50-d792-4d9b-897d-f4b38aed9234}</Project>
       <Name>Hanel_DC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IPTI\IPTI.csproj">
+      <Project>{7ee07f5a-f299-48b2-8b5f-9028b089a73e}</Project>
+      <Name>IPTI</Name>
     </ProjectReference>
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>

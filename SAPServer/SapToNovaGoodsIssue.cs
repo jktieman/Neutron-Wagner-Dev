@@ -9,13 +9,13 @@ using SAPServer.Models;
 
 namespace SAPServer
 {
-    public class SapToNeutronGoodsIssue
+    public class SapToNovaGoodsIssue
     {
 
         private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
 
-        public SapToNeutronGoodsIssue( IJsonData jsonData, IDynamicLogger logger)
+        public SapToNovaGoodsIssue( IJsonData jsonData, IDynamicLogger logger)
         {
             _jsonData = jsonData;
             _logger = logger;
@@ -30,13 +30,13 @@ namespace SAPServer
 
                 RfcRepository repo = destination.Repository;
 
-                IRfcFunction sapToNeutronList = repo.CreateFunction("ZWM_SAP_TO_NOVA_GOODS_ISSUE");
+                IRfcFunction sapToNovaList = repo.CreateFunction("ZWM_SAP_TO_NOVA_GOODS_ISSUE");
 
                 var goodsIssueList = new List<GoodsIssue>();
 
-                IRfcTable goodsIssueTable = sapToNeutronList.GetTable("LT_SAPNOVA_G");
+                IRfcTable goodsIssueTable = sapToNovaList.GetTable("LT_SAPNOVA_G");
 
-                sapToNeutronList.Invoke(destination);
+                sapToNovaList.Invoke(destination);
 
                 for (int cuIndex = 0; cuIndex < goodsIssueTable.RowCount; cuIndex++)
                 {
@@ -55,6 +55,13 @@ namespace SAPServer
                     goodsIssue.SPART = goodsIssueTable.GetString("SPART");
                     goodsIssue.VSBED = goodsIssueTable.GetString("VSBED");
                     goodsIssue.KDMAT = goodsIssueTable.GetString("KDMAT");
+                    goodsIssue.NAME1 = goodsIssueTable.GetString("NAME1");
+                    goodsIssue.STREET = goodsIssueTable.GetString("STREET");
+                    goodsIssue.CITY1 = goodsIssueTable.GetString("CITY1");
+                    goodsIssue.REGION = goodsIssueTable.GetString("REGION");
+                    goodsIssue.POST_CODE1 = goodsIssueTable.GetString("POST_CODE1");
+                    goodsIssue.COUNTRY = goodsIssueTable.GetString("COUNTRY");
+                    
                     goodsIssue.TEXT = goodsIssueTable.GetString("TEXT");
                     
                     if (string.IsNullOrEmpty(goodsIssue.VBELN))
@@ -105,8 +112,13 @@ namespace SAPServer
                             input.UPC = row.EAN11;
                             input.BP = row.MEINS;
                             input.TRANSDATE = DateTime.Now;
+                            input.NAME1 = row.NAME1;
+                            input.STREET = row.STREET;
+                            input.CITY1 = row.CITY1;
+                            input.REGION = row.REGION;
+                            input.POST_CODE1 = row.POST_CODE1;
+                            input.COUNTRY = row.COUNTRY;
                             input.TEXT = row.TEXT;
-
 
                             try
                             {

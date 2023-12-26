@@ -154,6 +154,21 @@ namespace SAPServer
             return result;
         }
 
+        /// <summary>
+        /// Processes the SAP records based on the provided SAP variables.
+        /// </summary>
+        /// <param name="sapVariables">The SAP variables used to connect and interact with the SAP server.</param>
+        /// <remarks>
+        /// This method performs the following operations in order:
+        /// 1. Logs the start of the processing.
+        /// 2. Establishes a connection with the SAP server.
+        /// 3. If the connection is successful, it performs the following operations:
+        ///    - Receives and processes Goods Issue from SAP to Nova.
+        ///    - Transmits and processes Goods Issue from Nova to SAP.
+        ///    - Receives and processes Goods Receipts from SAP to Nova.
+        ///    - Transmits and processes Goods Receipts from Nova to SAP.
+        /// 4. Logs the end of the processing.
+        /// </remarks>
         private void ProcessRecords(SapVariables sapVariables)
         {
             _ = _logger.LogDetailAsync("Begin Processing Records.");
@@ -187,26 +202,26 @@ namespace SAPServer
             if (_rfcDestination != null)
             {
                 _ = _logger.LogDetailAsync("Receive Goods Issue - Start");
-                var sapToNeutronGoodsIssue = new SapToNeutronGoodsIssue(_jsonData, _logger);
-                sapToNeutronGoodsIssue.Get(_rfcDestination);
+                var sapToNovaGoodsIssue = new SapToNovaGoodsIssue(_jsonData, _logger);
+                sapToNovaGoodsIssue.Get(_rfcDestination);
                 _ = _logger.LogDetailAsync("Receive Goods Issue - Complete");
                 Thread.Sleep(500);
 
                 _ = _logger.LogDetailAsync("Transmit  Goods Issue - Start");
-                var neutronToSapGoodsIssue = new NeutronToSapGoodsIssue(_logger);
-                neutronToSapGoodsIssue.Set(_rfcDestination);
+                var novaToSapGoodsIssue = new NovaToSapGoodsIssue(_logger);
+                novaToSapGoodsIssue.Set(_rfcDestination);
                 _ = _logger.LogDetailAsync("Transmit  Goods Issue - Complete");
                 Thread.Sleep(500);
 
                 _ = _logger.LogDetailAsync("Receive Goods Receipts - Start");
-                var sapToNeutronGoodsReceipt = new SapToNeutronGoodsReceipt(_jsonData, _logger);
-                sapToNeutronGoodsReceipt.Get(_rfcDestination);
+                var sapToNovaGoodsReceipt = new SapToNovaGoodsReceipt(_jsonData, _logger);
+                sapToNovaGoodsReceipt.Get(_rfcDestination);
                 _ = _logger.LogDetailAsync("Receive  Goods Receipts - Complete");
                 Thread.Sleep(500);
 
                 _ = _logger.LogDetailAsync("Transmit  Goods Receipts - Start");
-                var neutronToSapGoodsReceipt = new NeutronToSapGoodsReceipt(_logger);
-                neutronToSapGoodsReceipt.Set(_rfcDestination);
+                var novaToSapGoodsReceipt = new NovaToSapGoodsReceipt(_logger);
+                novaToSapGoodsReceipt.Set(_rfcDestination);
                 _ = _logger.LogDetailAsync("Transmit  Goods Receipts - Complete");
                 Thread.Sleep(500);
             }

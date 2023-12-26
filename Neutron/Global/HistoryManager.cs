@@ -160,7 +160,7 @@ namespace Neutron.Global
                 RequestedQuantity = orderDetail.Quantity,
                 IssuedQuantity = orderDetail.PickedQuantity,
                 EmpId = GlobalVar.User.EmpId,
-                OrderInfo = orderDetail.ReplenOrder.OrderInfo,
+                OrderInfo = orderDetail.ReplenOrder.OrderInfo == null ? string.Empty : orderDetail.ReplenOrder.OrderInfo,
                 OrderDetailInfo = orderDetail.OrderDetailInfo,
                 AreaId = orderDetail.AreaId,
                 WorkstationId = _workstationView.WorkstationId
@@ -487,6 +487,37 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = string.Empty,
                 OrderInfo = orderDetail.Order.OrderInfo,
+                OrderDetailInfo = orderDetail.OrderDetailInfo,
+                WorkstationId = _workstationView.WorkstationId
+            };
+            Save(history);
+        }
+
+        public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, ReplenOrderDetail orderDetail)
+        {
+
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = orderDetail.ReplenOrder.Ord1,
+                Ord2 = orderDetail.ReplenOrder.Ord2,
+                OrderId = orderDetail.ReplenOrderId,
+                Item = orderDetail.PartNum,
+                Description = orderDetail.PartDesc,
+                IssuedQuantity = pickedQty,
+                RequestedQuantity = orderDetail.Quantity,
+                AreaId = inventory.Location.AreaId,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
+                OrderInfo = orderDetail.ReplenOrder.OrderInfo,
                 OrderDetailInfo = orderDetail.OrderDetailInfo,
                 WorkstationId = _workstationView.WorkstationId
             };

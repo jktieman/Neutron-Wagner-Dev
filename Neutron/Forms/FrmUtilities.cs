@@ -42,12 +42,14 @@ using StorageDeviceType = NeutronData.Models.Lookups.StorageDeviceType;
 using StationType = NeutronData.Models.Lookups.StationType;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 using AlliedLogger;
+using IPTI.Models;
 using Neutron.Ninject;
 using NeutronCore;
 using NeutronEvents;
 using SAPServer.Models;
 using Zen.Barcode;
 using SerialConfiguration = NeutronData.Models.SerialConfiguration;
+using NeutronData.Interfaces;
 
 
 namespace Neutron.Forms
@@ -63,6 +65,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<Area> _repoAreas = new GenericRepository<Area>(new NeutronDb());
         private readonly AkaRepository _repoAka = new AkaRepository();
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocations = new GenericRepository<Location>(new NeutronDb());
 
         private readonly GenericRepository<Workstation> _repoWorkstations =
@@ -124,9 +127,11 @@ namespace Neutron.Forms
         private EmailSettings _settings;
         private IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
+        private readonly IEnumManager _enumManager;
+        private TcpIptiCommandCenter _tcpIptiCommandCenter;
 
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , WorkstationView workstationView)
+            , WorkstationView workstationView, IEnumManager enumManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -140,6 +145,7 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             SetupLogger();
             SetupGrids();
+            // _tcpIptiCommandCenter = new TcpIptiCommandCenter(jsonData, _logger);
             _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
                 $"{ApplicationVersion.Major}.{ApplicationVersion.Minor}.{ApplicationVersion.Build}.{ApplicationVersion.Revision}";
@@ -160,6 +166,7 @@ namespace Neutron.Forms
             ComboBoxLoaderStation.DisplayMember = "Name";
             ComboBoxLoaderStation.ValueMember = "Id";
             _workstationView = workstationView;
+            _enumManager = enumManager;
         }
 
         private void SetupDeviceForms()
@@ -208,6 +215,7 @@ namespace Neutron.Forms
 
             CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
             CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter();
+
 
         }
 
@@ -1382,6 +1390,10 @@ namespace Neutron.Forms
             var s = _currentRecs;
             var t = DataGridViewLookups.DataSource;
             await UpdateTableData();
+
+            _enumManager.SaveActionCodesToDatabase();
+            _enumManager.SaveLineStatusToDatabase();
+
         }
 
         private async Task UpdateTableData()
@@ -3098,19 +3110,52 @@ namespace Neutron.Forms
 
         private void ButtonBatchLightTurnOn_Click(object sender, EventArgs e)
         {
-            var bayId = (int)NumericUpDownBayId.Value;
-            GlobalVar.Displays.ShowBli(bayId, TextBoxBatchLightPosition.Text.ParseInt(), 1, TextBoxBatchLightQuantity.Text);
+            var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
+            var text = _tcpIptiCommandCenter.GetBayController(bayId).TurnOnDisplay(TextBoxBatchLightPosition.Text.ParseInt(),
+                 TextBoxBatchLightQuantity.Text);
+            GlobalVar.Displays.SendText(text);
+        }
+
+        private void TurnOnOrderControl(string bayId)
+        {
+            var text = _tcpIptiCommandCenter.GetBayController(bayId)
+                .TurnOnOrderControlModule(TextBoxOrderControlText.Text);
+            GlobalVar.Displays.SendText(text);
         }
 
         private void ButtonBatchLightTurnOff_Click(object sender, EventArgs e)
         {
-            GlobalVar.Displays.ClearAllBli();
+            var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
+            var text = _tcpIptiCommandCenter.GetBayController(bayId)
+                .TurnOffDisplay(TextBoxBatchLightPosition.Text.ParseInt());
+            GlobalVar.Displays.SendText(text);
         }
 
         private void MBBatchLightTester_Click(object sender, EventArgs e)
         {
-            LabelFormTitle.Text = "Batch Light Tester";
+            LabelFormTitle.Text = "IPTI Light Tester";
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+            _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger);
+
+            var ipti = _jsonData.LoadFile<IptiConfig>();
+            if (ipti == null)
+            {
+                ComboBoxButtonColorOne.SelectedIndex = ComboBoxButtonColorOne.FindStringExact("Red");
+                ComboBoxButtonColorTwo.SelectedIndex = ComboBoxButtonColorTwo.FindStringExact("OFF");
+                ComboBoxButtonOnTime.SelectedIndex = ComboBoxButtonOnTime.FindStringExact("300");
+                ComboBoxButtonOffTime.SelectedIndex = ComboBoxButtonOffTime.FindStringExact("300");
+                ComboBoxOrderControlButton.SelectedIndex = ComboBoxOrderControlButton.FindStringExact("Blue Solid");
+            }
+            else
+            {
+                ComboBoxButtonColorOne.SelectedIndex = ipti.ButtonColorOne.ParseInt();
+                ComboBoxButtonColorTwo.SelectedIndex = ipti.ButtonColorTwo.ParseInt();
+                ComboBoxButtonOnTime.SelectedIndex = ComboBoxButtonOnTime.FindStringExact(ipti.ButtonOnTime);
+                ComboBoxButtonOffTime.SelectedIndex = ComboBoxButtonOffTime.FindStringExact(ipti.ButtonOffTime);
+                ComboBoxOrderControlButton.SelectedIndex = ipti.OrderControlButton.ParseInt();
+
+            }
+
 
             if (GlobalVar.Displays == null)
             {
@@ -3123,6 +3168,7 @@ namespace Neutron.Forms
                 ButtonBatchLightTurnOff.Enabled = true;
                 ButtonProLiteTurnOnHot.Enabled = true;
                 ButtonProLiteTurnOnCycleCount.Enabled = true;
+
             }
 
             tabControl1.SelectedTab = BatchLights;
@@ -3611,20 +3657,68 @@ namespace Neutron.Forms
             "Quantity"
         };
 
+
+
         #endregion
         private void ButtonPrintReplen_Click(object sender, EventArgs e)
         {
             var printPreview = true;
             var printer = GetCurrentDocumentPrinter();
             var order = TextBoxTestOrderNumber.Text;
-            var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
+            var ord = _repoReplenOrders.FindBy(r => r.Ord2 == order).FirstOrDefault();
             if (ord == null)
             {
                 MessageBox.Show($"Order {order} not found.");
                 return;
             }
-            var orderDetail = ord.OrderDetails.FirstOrDefault();
+            var orderDetail = ord.ReplenOrderDetails.FirstOrDefault();
             _documentToPrint.PrintReplenDoc(orderDetail, printer, printPreview);
+        }
+
+        private void ButtonClearAll_Click(object sender, EventArgs e)
+        {
+            foreach (var bayController in _tcpIptiCommandCenter.BayControllers)
+            {
+                var text = bayController.ClearDisplays();
+                GlobalVar.Displays.SendText(text);
+
+                text = bayController.TurnOffOrderControlModule();
+                GlobalVar.Displays.SendText(text);
+            }
+        }
+
+        private void ButtonTurnOnOrderControl_Click(object sender, EventArgs e)
+        {
+            var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
+            var text = _tcpIptiCommandCenter.GetBayController(bayId)
+                .TurnOnOrderControlModule(TextBoxOrderControlText.Text);
+            GlobalVar.Displays.SendText(text);
+
+        }
+
+        private void ButtonTurnOffOrderControl_Click(object sender, EventArgs e)
+        {
+            var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
+            var text = _tcpIptiCommandCenter.GetBayController(bayId)
+                .TurnOffOrderControlModule();
+            GlobalVar.Displays.SendText(text);
+        }
+
+        private void ButtonSaveIptiConfig_Click(object sender, EventArgs e)
+        {
+            var iptiConfig = new IptiConfig()
+            {
+                ButtonColorOne = ComboBoxButtonColorOne.SelectedIndex.ToString(),
+                ButtonColorTwo = ComboBoxButtonColorTwo.SelectedIndex.ToString(),
+                ButtonOnTime = ComboBoxButtonOnTime.SelectedItem.ToString(),
+                ButtonOffTime = ComboBoxButtonOffTime.SelectedItem.ToString(),
+                OrderControlButton = ComboBoxOrderControlButton.SelectedIndex.ToString()
+            };
+
+            // save the json iptiConfig file
+            _jsonData.SaveFile(iptiConfig);
+            _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger);
+
         }
     }
 }

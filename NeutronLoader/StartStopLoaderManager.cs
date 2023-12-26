@@ -65,7 +65,7 @@ namespace NeutronLoader
                     }
                 case "WAG":
                     {
-                     _ = _logger.LogDetailAsync($"WAG - InterfaceProcessorPr1");
+                     _ = _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG");
                         _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService );
                         break;
                     }
