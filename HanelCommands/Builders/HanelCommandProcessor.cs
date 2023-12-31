@@ -13,8 +13,8 @@ namespace HanelCommands.Builders
     {
         private readonly List<IMatchRule> _commandRules = new List<IMatchRule>
         {
-            new P_XN_ResponseRule(new HanelResultProcessor()),
-            new P_XS_ResponseRule( new HanelResultProcessor()),
+            new P_XN_ResponseRule(new HanelXNResultProcessor()),
+            new P_XS_ResponseRule( new HanelXSResultProcessor()),
             new P_XA_ResponseRule( new A_ResultProcessor(), new E_ResultProcessor()),
         };
 

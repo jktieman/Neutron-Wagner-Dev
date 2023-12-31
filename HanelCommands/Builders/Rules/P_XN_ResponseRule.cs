@@ -15,6 +15,7 @@ namespace HanelCommands.Builders.Rules
         {
             _processor = processor;
         }
+        
         public bool IsMatch(string result)
         {
             return Result.Equals(result, StringComparison.OrdinalIgnoreCase);

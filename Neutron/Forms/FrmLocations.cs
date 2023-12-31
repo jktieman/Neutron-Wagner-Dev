@@ -263,6 +263,8 @@ namespace Neutron.Forms
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            _logger.LogDetailAsync($"Cell Click");
+            
             if (_bindingSource.Current == null) return;
             var location = ((ObjectView<LocationView>)_bindingSource.Current).Object;
             if (_workstationView.AreaId != location.AreaId)
@@ -294,7 +296,7 @@ namespace Neutron.Forms
         {
             var qty = 0;
             var display = string.Empty;
-
+            _logger.LogDetailAsync($"DataGridViewPosition");
             try
             {
                 if (rowIndex < 0) return;
@@ -310,10 +312,12 @@ namespace Neutron.Forms
                 var level = grid["Loc3", rowIndex].Value.ToString().ParseInt();
                 if (!grid.Columns.Contains(columnName: "Loc4")) return;
                 var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
-                if (grid.Columns.Contains(columnName: "Quantity"))
-                {
-                    qty = grid["Quantity", rowIndex].Value.ToString().ParseInt();
-                }
+                
+                
+                //if (grid.Columns.Contains(columnName: "Quantity"))
+                //{
+                //    qty = grid["Quantity", rowIndex].Value.ToString().ParseInt();
+                //}
 
                 //if (_workstationView.StationType.Id == (int)StationType.EBin)
                 //{
@@ -367,6 +371,7 @@ namespace Neutron.Forms
 
         private void MoveDevice(int deviceNumber, int trayNumber, int level, int part, int quantity = 0, string display = "")
         {
+            _logger.LogDetailAsync($"MoveDevice");
             try
             {
                 _workstationView.ProLiteManager?.ClearAllProlites();
@@ -399,6 +404,7 @@ namespace Neutron.Forms
                                 }
                                 else if (GlobalVar.Hanel != null)
                                 {
+                                    _logger.LogDetailAsync($"Call Hanel.Position Device");
                                     var response = Task.Run(() =>
                                         GlobalVar.Hanel.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
                                             display));
@@ -447,13 +453,13 @@ namespace Neutron.Forms
                                 TurnOnIptiOrderControl(trayNumber, $"Qty: {quantity}");
                             }
 
-                            var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
-                            var prolite = prolites.Any();
-                            if (prolite)
-                            {
+                            //var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
+                            //var prolite = prolites.Any();
+                            //if (prolite)
+                            //{
 
                                 _workstationView.ProLiteManager?.TurnOn(deviceNumber, trayNumber, part, quantity);
-                            }
+                            //}
                         }
                     }
 
@@ -1106,10 +1112,15 @@ namespace Neutron.Forms
 
         private void MButtonClose_Click(object sender, EventArgs e)
         {
+            _logger.LogDetailAsync($"Close 1");
             ClearAllShi();
+            _logger.LogDetailAsync($"Close 2");
             _workstationView.ProLiteManager?.ClearAllProlites();
+            _logger.LogDetailAsync($"Close 3");
             ClearBlastzone();
+            _logger.LogDetailAsync($"Close 4");
             CloseButtonPressed = true;
+            _logger.LogDetailAsync($"Close 5");
             Close();
         }
 

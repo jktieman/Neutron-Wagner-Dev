@@ -27,6 +27,7 @@ namespace HanelCommands.Builders.Rules
             {
                 var result = commandSegments.FirstOrDefault(r => r.StartsWith("E"));
                 if (result == null) return;
+                
                 _processor.Process(commandSegments, ref hanelDeviceStatusList);
             }
         }

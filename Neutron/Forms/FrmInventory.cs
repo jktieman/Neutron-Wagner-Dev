@@ -2087,6 +2087,7 @@ namespace Neutron.Forms
             {
                 if (rowIndex < 0) return;
                 if (!grid.Columns.Contains("Position")) return;
+                var position = grid["Position", rowIndex].Value.ToString().ParseInt();
                 if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
                
                 

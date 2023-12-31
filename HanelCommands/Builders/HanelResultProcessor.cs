@@ -7,47 +7,52 @@ using System.Threading.Tasks;
 using HanelCommands.Builders.Interfaces;
 using HanelCommands.Builders.Rules;
 using HanelCommands.Builders.Rules.E_Rules;
-using P_XSE05MatchRule = HanelCommands.Builders.Rules.P_XSE05MatchRule;
+//using P_XSE05MatchRule = HanelCommands.Builders.Rules.P_XSE05MatchRule;
 
 namespace HanelCommands.Builders
 {
     public class HanelResultProcessor : IHanelResultProcessor
     {
-        private readonly List<IMatchRule> _resultRules;
-
-        public HanelResultProcessor()
+        private readonly List<IMatchRule> _resultRules = new List<IMatchRule>
         {
-            _resultRules = new List<IMatchRule>
-            {
-                new P_XNE00MatchRule(),
-                new E00MatchRule(),
-                new P_XSE02MatchRule(),
-                new P_XSE05MatchRule()
-            };
-        }
+            new P_XNE00MatchRule(),
+            new E00MatchRule(),
+            new P_XSE02MatchRule(),
+            new P_XSE05MatchRule()
+        };
 
         public void Process(string[] commandSegments, ref List<HanelDeviceStatus> hanelDeviceStatusList)
         {
-            var lift = commandSegments[0].Substring(2, 2);
-            var accessPoint = commandSegments[0].Substring(4, 1);
-            var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == int.Parse(lift));
-            var command = commandSegments.FirstOrDefault(r => r.StartsWith("P"));
-            var result = commandSegments.FirstOrDefault(r => r.StartsWith("E"));
+            if (commandSegments.Length > 0 && hanelDeviceStatusList != null)
+            {
+                var commandE = commandSegments.FirstOrDefault(r => r.StartsWith("E"));
+                if (commandE == null) return;
+                var rule = _resultRules.FirstOrDefault(r => r.IsMatch(commandE));
+                if (rule == null) return;
+                rule.ProcessResult(commandSegments, ref hanelDeviceStatusList);
+            }
 
-            try
-            {
-                if (command != null && result != null)
-                {
-                    var res = $"{command}_{result}";
-                    var rule = _resultRules.First(r => r.IsMatch(res));
-                    rule.ProcessResult(commandSegments, ref hanelDeviceStatusList);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+
+            //var lift = commandSegments[0].Substring(2, 2);
+            //var accessPoint = commandSegments[0].Substring(4, 1);
+            //var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == int.Parse(lift));
+            //var command = commandSegments.FirstOrDefault(r => r.StartsWith("P"));
+            //var result = commandSegments.FirstOrDefault(r => r.StartsWith("E"));
+
+            //try
+            //{
+            //    if (command != null && result != null)
+            //    {
+            //        var res = $"{command}_{result}";
+            //        var rule = _resultRules.First(r => r.IsMatch(res));
+            //        rule.ProcessResult(commandSegments, ref hanelDeviceStatusList);
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e);
+            //    throw;
+            //}
         }
     }
 }

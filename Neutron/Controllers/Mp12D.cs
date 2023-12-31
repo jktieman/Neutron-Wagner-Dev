@@ -307,7 +307,7 @@ namespace Neutron.Controllers
                                     else
                                     {
                                         loopCounter += 1;
-                                        Thread.Sleep(millisecondsTimeout: 500);
+                                        Thread.Sleep(millisecondsTimeout: 50);
                                         var counter = loopCounter;
                                         Task.Run(() => _logger.LogDetailAsync($"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.CurrentTray} CommandExecuted: {status.CommandExecuted}  Loop Count: {counter.ToString()}"));
                                     }
