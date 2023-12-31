@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,9 @@ namespace AlliedLogger
         public string LogActivity { get; set; }
 
         public string FileName { get; set; }
-
+        
+        
+        [DebuggerStepThrough]
         public DynamicLogger(string logFileDir = "", string folderName = @"General", string logActivity = "true")
         {
             // Send all logs to the same file
@@ -185,7 +188,8 @@ namespace AlliedLogger
             }
         }
         private bool _inProcess = false;
-
+        
+        [DebuggerStepThrough]
         public async Task LogDetailAsync(string msg = ""
         , [CallerMemberName] string origin = ""
         , [CallerFilePath] string filePath = ""
@@ -219,13 +223,18 @@ namespace AlliedLogger
                                 {
                                     _messages.TryDequeue(out msg);
 
-                                    await sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
+                                    await sw.WriteLineAsync(
+                                        $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
                                     await sw.FlushAsync();
                                 }
                             }
                             catch (Exception ex)
                             {
                                 throw new Exception($"Detail Async Error: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _inProcess = false;
                             }
                         }
                     }

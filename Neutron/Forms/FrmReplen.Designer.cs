@@ -479,7 +479,7 @@
             this.DataGridViewAvailableOrdersRack.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrdersRack.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrdersRack.RowTemplate.ReadOnly = true;
-            this.DataGridViewAvailableOrdersRack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewAvailableOrdersRack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1224, 469);
             this.DataGridViewAvailableOrdersRack.TabIndex = 5;
             // 
@@ -709,7 +709,7 @@
             this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewNewOrder.RowTemplate.Height = 28;
             this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
-            this.DataGridViewNewOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewNewOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewNewOrder.Size = new System.Drawing.Size(691, 438);
             this.DataGridViewNewOrder.TabIndex = 61;
             this.DataGridViewNewOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewNewOrder_CellContentClick);
@@ -745,7 +745,7 @@
             this.DataGridViewNewItems.MultiSelect = false;
             this.DataGridViewNewItems.Name = "DataGridViewNewItems";
             this.DataGridViewNewItems.ReadOnly = true;
-            this.DataGridViewNewItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewNewItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewNewItems.Size = new System.Drawing.Size(458, 210);
             this.DataGridViewNewItems.TabIndex = 72;
             this.DataGridViewNewItems.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.DataGridViewNewItems_RowsAdded);
@@ -1077,7 +1077,7 @@
             this.DataGridViewOrderDetails.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewOrderDetails.RowTemplate.Height = 28;
             this.DataGridViewOrderDetails.RowTemplate.ReadOnly = true;
-            this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1196, 564);
             this.DataGridViewOrderDetails.TabIndex = 5;
             this.DataGridViewOrderDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellClick);
@@ -1710,7 +1710,7 @@
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
-            this.DataGridPickView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridPickView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridPickView.Size = new System.Drawing.Size(1222, 564);
             this.DataGridPickView.TabIndex = 2;
             this.DataGridPickView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridPickView_DataBindingComplete);
@@ -1852,7 +1852,7 @@
             this.DataGridViewAvailableOrders.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrders.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrders.RowTemplate.ReadOnly = true;
-            this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1222, 298);
             this.DataGridViewAvailableOrders.TabIndex = 5;
             this.DataGridViewAvailableOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrders_CellClick);
@@ -2105,7 +2105,7 @@
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
-            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1221, 478);
             this.DataGridView1.TabIndex = 16;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
@@ -2289,7 +2289,7 @@
             this.DataGridViewAdjust.MultiSelect = false;
             this.DataGridViewAdjust.Name = "DataGridViewAdjust";
             this.DataGridViewAdjust.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.Green;
-            this.DataGridViewAdjust.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewAdjust.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewAdjust.Size = new System.Drawing.Size(848, 555);
             this.DataGridViewAdjust.TabIndex = 0;
             this.DataGridViewAdjust.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAdjust_CellClick);

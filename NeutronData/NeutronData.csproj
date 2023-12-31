@@ -49,6 +49,21 @@
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RJCP.Core.Environment, Version=0.2.0.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\RJCP.Core.Environment.0.2.0\lib\net40\RJCP.Core.Environment.dll</HintPath>
+    </Reference>
+    <Reference Include="RJCP.Diagnostics.Trace, Version=0.2.0.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\RJCP.Diagnostics.Trace.0.2.0\lib\net40\RJCP.Diagnostics.Trace.dll</HintPath>
+    </Reference>
+    <Reference Include="RJCP.IO.Buffer, Version=0.2.0.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\RJCP.IO.Buffer.0.2.0\lib\net45\RJCP.IO.Buffer.dll</HintPath>
+    </Reference>
+    <Reference Include="RJCP.IO.Device, Version=0.8.0.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\RJCP.IO.Device.0.8.0\lib\net45\RJCP.IO.Device.dll</HintPath>
+    </Reference>
+    <Reference Include="RJCP.SerialPortStream, Version=3.0.0.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\RJCP.SerialPortStream.3.0.0\lib\net45\RJCP.SerialPortStream.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />

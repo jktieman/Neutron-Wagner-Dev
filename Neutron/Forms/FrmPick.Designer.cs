@@ -815,7 +815,7 @@ namespace Neutron.Forms
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
-            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1221, 475);
             this.DataGridView1.TabIndex = 7;
             this.DataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellDoubleClick);
@@ -1123,7 +1123,7 @@ namespace Neutron.Forms
             this.DataGridPickView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridPickView.RowTemplate.Height = 28;
             this.DataGridPickView.RowTemplate.ReadOnly = true;
-            this.DataGridPickView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridPickView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridPickView.Size = new System.Drawing.Size(1222, 563);
             this.DataGridPickView.TabIndex = 2;
             this.DataGridPickView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DataGridPickView_DataBindingComplete);
@@ -1435,9 +1435,9 @@ namespace Neutron.Forms
             this.LabelPickedSoFar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelPickedSoFar.BackColor = System.Drawing.Color.Transparent;
             this.LabelPickedSoFar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickedSoFar.Location = new System.Drawing.Point(628, 553);
+            this.LabelPickedSoFar.Location = new System.Drawing.Point(646, 553);
             this.LabelPickedSoFar.Name = "LabelPickedSoFar";
-            this.LabelPickedSoFar.Size = new System.Drawing.Size(128, 20);
+            this.LabelPickedSoFar.Size = new System.Drawing.Size(110, 20);
             this.LabelPickedSoFar.TabIndex = 106;
             this.LabelPickedSoFar.Text = "Picked So Far";
             this.LabelPickedSoFar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1969,10 +1969,9 @@ namespace Neutron.Forms
             // 
             // PictureBoxItemImage
             // 
-            this.PictureBoxItemImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.PictureBoxItemImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxItemImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.InitialImage")));
-            this.PictureBoxItemImage.Location = new System.Drawing.Point(422, 463);
+            this.PictureBoxItemImage.Location = new System.Drawing.Point(440, 476);
             this.PictureBoxItemImage.Name = "PictureBoxItemImage";
             this.PictureBoxItemImage.Size = new System.Drawing.Size(200, 200);
             this.PictureBoxItemImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -2109,7 +2108,7 @@ namespace Neutron.Forms
             this.DataGridViewOrderDetails.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewOrderDetails.RowTemplate.Height = 28;
             this.DataGridViewOrderDetails.RowTemplate.ReadOnly = true;
-            this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1196, 564);
             this.DataGridViewOrderDetails.TabIndex = 6;
             this.DataGridViewOrderDetails.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellContentClick);
@@ -2246,7 +2245,7 @@ namespace Neutron.Forms
             this.DataGridViewNewOrder.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewNewOrder.RowTemplate.Height = 28;
             this.DataGridViewNewOrder.RowTemplate.ReadOnly = true;
-            this.DataGridViewNewOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewNewOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewNewOrder.Size = new System.Drawing.Size(717, 439);
             this.DataGridViewNewOrder.TabIndex = 67;
             this.DataGridViewNewOrder.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewNewOrder_CellContentClick);
@@ -2282,7 +2281,7 @@ namespace Neutron.Forms
             this.DataGridViewNewItems.MultiSelect = false;
             this.DataGridViewNewItems.Name = "DataGridViewNewItems";
             this.DataGridViewNewItems.ReadOnly = true;
-            this.DataGridViewNewItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewNewItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewNewItems.Size = new System.Drawing.Size(458, 210);
             this.DataGridViewNewItems.TabIndex = 0;
             this.DataGridViewNewItems.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.DataGridViewNewItems_RowsAdded);
@@ -2599,7 +2598,7 @@ namespace Neutron.Forms
             this.DataGridViewAvailableOrdersRack.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrdersRack.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrdersRack.RowTemplate.ReadOnly = true;
-            this.DataGridViewAvailableOrdersRack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewAvailableOrdersRack.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewAvailableOrdersRack.Size = new System.Drawing.Size(1214, 494);
             this.DataGridViewAvailableOrdersRack.TabIndex = 7;
             // 
@@ -2787,7 +2786,7 @@ namespace Neutron.Forms
             this.DataGridViewAdjust.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.DataGridViewAdjust.Location = new System.Drawing.Point(193, 108);
             this.DataGridViewAdjust.Name = "DataGridViewAdjust";
-            this.DataGridViewAdjust.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewAdjust.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewAdjust.Size = new System.Drawing.Size(848, 542);
             this.DataGridViewAdjust.TabIndex = 0;
             // 
@@ -2894,7 +2893,7 @@ namespace Neutron.Forms
             this.DataGridViewSkip.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewSkip.RowTemplate.Height = 28;
             this.DataGridViewSkip.RowTemplate.ReadOnly = true;
-            this.DataGridViewSkip.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewSkip.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewSkip.Size = new System.Drawing.Size(1195, 560);
             this.DataGridViewSkip.TabIndex = 0;
             // 

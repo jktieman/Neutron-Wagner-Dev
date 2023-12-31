@@ -421,6 +421,9 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             _ = RefreshData();
+            ClearAllShi();
+            _workstationView.ProLiteManager?.ClearAllProlites();
+            ClearBlastzone();
             Cursor.Current = Cursors.Default;
             tabControl1.SelectedTab = tabPage1;
         }
@@ -643,7 +646,7 @@ namespace Neutron.Forms
         private void SetupGrids()
         {
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridView1.AllowUserToAddRows = false;
             var position = _gridResourceManager.GetString("Position");
             var bCol = new DataGridViewButtonColumn
@@ -851,7 +854,7 @@ namespace Neutron.Forms
             //}
             //Location Grid
             DataGridViewInventoryLocations.AutoGenerateColumns = false;
-            DataGridViewInventoryLocations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewInventoryLocations.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewInventoryLocations.AllowUserToAddRows = false;
             bCol = new DataGridViewButtonColumn
             {
@@ -1040,7 +1043,7 @@ namespace Neutron.Forms
             //}
             //New Location Grid
             DataGridViewInventoryNewLocations.AutoGenerateColumns = false;
-            DataGridViewInventoryNewLocations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewInventoryNewLocations.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewInventoryNewLocations.AllowUserToAddRows = false;
             bCol = new DataGridViewButtonColumn
             {
@@ -1992,6 +1995,9 @@ namespace Neutron.Forms
             //_ = RefreshData();
             //SetCurrentItemDefinition();
             LoadViewEdit();
+            ClearAllShi();
+            _workstationView.ProLiteManager?.ClearAllProlites();
+            ClearBlastzone();
             tabControl1.SelectedTab = tabPage2;
         }
         private void MbAddDetailListing_Click(object sender, EventArgs e)
@@ -2114,7 +2120,7 @@ namespace Neutron.Forms
         {
             try
             {
-                _workstationView.ProLiteManager?.ClearAllProlites();
+                //_workstationView.ProLiteManager?.ClearAllProlites();
                 Thread.Sleep(100);
                 if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, deviceNumber, trayNumber))
                 {
@@ -2123,8 +2129,8 @@ namespace Neutron.Forms
                         var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
                         var hanel = hanels.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
 
-                        var hardwareDevice =
-                            _workstationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                        //var hardwareDevice =
+                        //    _workstationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
 
                         if (hanel != null)
                         {
@@ -2162,7 +2168,7 @@ namespace Neutron.Forms
                             else
                             {
                                 MessageBox.Show(
-                                    $"{_resourceManager.GetString("Message12")} - {hardwareDevice.Name}");
+                                    $"{_resourceManager.GetString("Message12")} - {hanel.Name}");
                             }
                         }
                         else
@@ -2192,13 +2198,13 @@ namespace Neutron.Forms
                                 TurnOnIptiOrderControl(trayNumber, $"Qty: {quantity}");
                             }
 
-                            var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
-                            var prolite = prolites.Any();
-                            if (prolite)
-                            {
+                            //var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
+                            //var prolite = prolites.Any();
+                            //if (prolite)
+                            //{
 
-                                _workstationView.ProLiteManager?.TurnOn(deviceNumber, trayNumber, part, quantity);
-                            }
+                                _workstationView.ProLiteManager?.TurnOn(deviceNumber, level, part, quantity);
+                            //}
                         }
                     }
 

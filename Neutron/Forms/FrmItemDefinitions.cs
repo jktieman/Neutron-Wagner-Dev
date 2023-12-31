@@ -29,6 +29,7 @@ using ExcelManager;
 using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
+using Neutron.Extensions;
 using NeutronEvents;
 
 namespace Neutron.Forms
@@ -698,7 +699,7 @@ namespace Neutron.Forms
         private void SetupGrid()
         {
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             var w = (DataGridView1.Width - 60) / 10;
             var col = new DataGridViewTextBoxColumn
             {
@@ -842,7 +843,7 @@ namespace Neutron.Forms
             //}
 
             DataGridViewExistingItems.AutoGenerateColumns = false;
-            DataGridViewExistingItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewExistingItems.SelectionMode = DataGridViewSelectionMode.CellSelect;
 
             col = new DataGridViewTextBoxColumn
             {
@@ -877,7 +878,7 @@ namespace Neutron.Forms
             DataGridViewExistingItems.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
 
             DataGridViewViewEditExistingItems.AutoGenerateColumns = false;
-            DataGridViewViewEditExistingItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewViewEditExistingItems.SelectionMode = DataGridViewSelectionMode.CellSelect;
 
             col = new DataGridViewTextBoxColumn
             {
@@ -1354,6 +1355,7 @@ namespace Neutron.Forms
             {
                 MessageBox.Show(
                     $"Selection not in this Area.  If you want to view this selection, change to All Areas.");
+                return;
             }
             
             _bindingSource.Position = index;
@@ -1365,6 +1367,16 @@ namespace Neutron.Forms
         {
             ShowExistingArea();
         }
+
+        private void DataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var grid = sender as DataGridView;
+            var columnIndex = e.ColumnIndex;
+            var rowIndex = e.RowIndex;
+            FormUtilities.CopyCellToClipBoard(grid, columnIndex, rowIndex);
+        }
+
 
         private void ShowExistingArea()
         {
@@ -1669,6 +1681,13 @@ namespace Neutron.Forms
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
             _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet complete");
+        }
+
+        private void TextBoxFind_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var textBox = sender as TextBox;
+            FormUtilities.PasteFromClipboard(textBox);
         }
     }
 }

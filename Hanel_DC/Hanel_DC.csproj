@@ -37,7 +37,7 @@
       <HintPath>Hart Controller 2019-03-28 local auth tokens\Hart_DC.dll</HintPath>
     </Reference>
     <Reference Include="RJCP.SerialPortStream, Version=2.4.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\VS2022\Projects\Neutron-Wagner-Dev\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
+      <HintPath>..\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,10 +73,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\VS2019\Projects\HanelCommands\HanelCommands\HanelCommands.csproj">
-      <Project>{e5c92f26-e834-4913-9482-c8af45f358ea}</Project>
-      <Name>HanelCommands</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\VS2022\Projects\Neutron-Wagner-Dev\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
@@ -84,6 +80,14 @@
     <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
       <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
       <Name>AlliedLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HanelCommands\HanelCommands.csproj">
+      <Project>{e5c92f26-e834-4913-9482-c8af45f358ea}</Project>
+      <Name>HanelCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
+      <Name>NeutronCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

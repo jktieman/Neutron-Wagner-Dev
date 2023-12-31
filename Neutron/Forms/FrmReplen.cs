@@ -530,7 +530,7 @@ namespace Neutron.Forms
         private void SetupOrderGrid(object state)
         {
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
             DataGridView1.ScrollBars = ScrollBars.Both;
@@ -733,7 +733,7 @@ namespace Neutron.Forms
         {
 
             DataGridPickView.AutoGenerateColumns = false;
-            DataGridPickView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridPickView.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridPickView.DefaultCellStyle.ForeColor = Color.Black;
             DataGridPickView.DefaultCellStyle.BackColor = Color.White;
 
@@ -868,7 +868,7 @@ namespace Neutron.Forms
             //DataGridViewAvailableOrders
 
             DataGridViewAvailableOrders.AutoGenerateColumns = false;
-            DataGridViewAvailableOrders.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewAvailableOrders.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewAvailableOrders.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewAvailableOrders.DefaultCellStyle.BackColor = Color.White;
 
@@ -1045,7 +1045,7 @@ namespace Neutron.Forms
             //DataGridViewAvailableOrdersRack
 
             DataGridViewAvailableOrdersRack.AutoGenerateColumns = false;
-            DataGridViewAvailableOrdersRack.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewAvailableOrdersRack.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewAvailableOrdersRack.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewAvailableOrdersRack.DefaultCellStyle.BackColor = Color.White;
 
@@ -1173,7 +1173,7 @@ namespace Neutron.Forms
             // DataGridViewNewOrder
 
             DataGridViewNewOrder.AutoGenerateColumns = false;
-            DataGridViewNewOrder.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewNewOrder.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewNewOrder.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewNewOrder.DefaultCellStyle.BackColor = Color.White;
 
@@ -1245,7 +1245,7 @@ namespace Neutron.Forms
             //DataGridViewOrderDetails
 
             DataGridViewOrderDetails.AutoGenerateColumns = false;
-            DataGridViewOrderDetails.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewOrderDetails.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewOrderDetails.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewOrderDetails.DefaultCellStyle.BackColor = Color.White;
             DataGridViewOrderDetails.ScrollBars = ScrollBars.Both;
@@ -1495,7 +1495,7 @@ namespace Neutron.Forms
             //DataGridViewNewItems
 
             DataGridViewNewItems.AutoGenerateColumns = false;
-            DataGridViewNewItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewNewItems.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewNewItems.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewNewItems.DefaultCellStyle.BackColor = Color.White;
             DataGridViewNewItems.ScrollBars = ScrollBars.Both;

@@ -18,7 +18,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
         public int Quantity { get; set; }
         public int TextAction { get; set; }
         public string Text { get; set; }
-        public HanelCommand HanelCommand { get; set; }
+        public IHanelCommand HanelCommand { get; set; }
 
     }
 }

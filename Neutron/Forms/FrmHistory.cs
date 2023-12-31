@@ -96,7 +96,7 @@ namespace Neutron.Forms
         {
 
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
             var col = new DataGridViewTextBoxColumn

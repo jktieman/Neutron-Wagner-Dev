@@ -211,9 +211,6 @@ namespace Neutron.Forms
             _locationsRepository = locationsRepository;
             _areaRepository = areaRepository;
             _inventoryRepository = inventoryRepository;
-            // _moveableDeviceTypes = _workstationRepository.GetMoveableDeviceTypeIds();
-            //_pickStations = _workstationRepository.GetAllPickStations();
-
 
             _synchronizationContext = SynchronizationContext.Current;
 
@@ -226,13 +223,7 @@ namespace Neutron.Forms
             _logger = NeutronCore.Global.Logger.SetupLogger("Pick");
 
             Task.Run(() => _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}"));
-            //if (_workstationView.WorkstationId == _neutronVariables.LoaderStation)
-            //{
-            //    MBMainLoadOrders.Visible = true;
-            //    MBMainUpload.Visible = true;
-            //    MBRunLoader.Visible = true;
-            //    MBRunUploadOnce.Visible = true;
-            //}
+
             SetupPrinters();
 
             InitGrids();
@@ -4362,19 +4353,18 @@ namespace Neutron.Forms
                 }
             }
 
-            // let me know if this is not a Blastzone
-            //if (_workstationView.AreaId == 1 || _workstationView.AreaId == 2)
-            //{
-            //    _blastzone = true;
-            //}
-
+            var device =_currentPickStop.CurrentInventoryLocation.Location.Loc1;
+            var bayController = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
+            var display = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+            
             if (_neutronVariables.IptiDisplays && _blastzone)
             {
-                var device = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
-                var bayController = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
-                var display = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                 TurnOnIptiDisplay(bayController, display, _currentPickStop.GetTotalQuantityToBePicked().ToString());
                 TurnOnIptiOrderControl(bayController, _currentPickStop.Item.Trim());
+            }
+
+            if (_prolite)
+            {
                 _workstationView.ProLiteManager?.TurnOn(device, bayController, display, _currentPickStop.GetTotalQuantityToBePicked());
             }
 
@@ -7681,7 +7671,7 @@ namespace Neutron.Forms
         private void PictureBoxItemImage_MouseEnter(object sender, EventArgs e)
         {
             if (!_neutronVariables.AutoEnlargeImage) return;
-            PictureBoxItemImage.Location = new Point(318, 117);
+            PictureBoxItemImage.Location = new Point(128, 161);
             PictureBoxItemImage.Size = new Size(512, 512);
             PictureBoxItemImage.BringToFront();
         }
@@ -7689,9 +7679,8 @@ namespace Neutron.Forms
         private void PictureBoxItemImage_MouseLeave(object sender, EventArgs e)
         {
             if (!_neutronVariables.AutoEnlargeImage) return;
-            var y = GroupBoxLocation.Location.Y;
-            PictureBoxItemImage.Location = new Point(398, y);
-            PictureBoxItemImage.Size = new Size(256, 256);
+            PictureBoxItemImage.Location = new Point(440, 476);
+            PictureBoxItemImage.Size = new Size(200, 200);
             PictureBoxItemImage.BringToFront();
         }
 

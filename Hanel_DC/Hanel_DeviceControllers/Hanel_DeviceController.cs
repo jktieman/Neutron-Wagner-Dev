@@ -16,7 +16,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
     {
         private readonly string ObjectID;
         private readonly string _ControllerType;
-        private readonly int nThreadSleepMilliseconds = 50;
+        private readonly int nThreadSleepMilliseconds = 500;
         private readonly int MaximumStatusErrors = 3;
         private int _Init_PercentageComplete;
         private bool _Machine_HaltConversation;
@@ -37,6 +37,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         private Queue<MachineRequestType> _Machine_CallersRequestsQueue;
         private Queue<IHanelCommand> _hanelCommandQueue;
+        private HanelCommandService _hanelCommandService;
         private readonly IDynamicLogger _logger;
 
         public static string[] Valid_Controller_Types()
@@ -52,18 +53,19 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         public static string Controller_Type_Hanel_Mp12N() => HanelDcStatics.Controller_Type_Hanel_Mp12N();
 
-        public Hanel_DeviceController(string controllerType, IDynamicLogger logger)
+        public Hanel_DeviceController(string controllerType)
         {
-            _logger = logger;
+            _logger = NeutronCore.Global.Logger.SetupLogger("Hanel_DeviceController");
             _UnitNumbers_ValidList = new List<int>();
             _Machine_CallersRequestsQueue = new Queue<MachineRequestType>();
             _hanelCommandQueue = new Queue<IHanelCommand>();
             _currentHanelDeviceStatusList = new List<HanelDeviceStatus>();
             _Notifications_CallersRequestsList = new List<HanelDeviceNotificationType>();
             _ControllerType = controllerType;
+            _hanelCommandService = new HanelCommandService(_currentHanelDeviceStatusList.Count, _currentHanelDeviceStatusList);
             if (controllerType == HanelDcStatics.Controller_Type_Hanel_Mp12D())
             {
-                _MyDeviceController = new HanelMp12DDeviceController(_logger);
+                _MyDeviceController = new HanelMp12DDeviceController();
                 _MyMp12DController = _MyDeviceController as HanelMp12DDeviceController;
             }
             //if (controllerType == HanelDcStatics.Controller_Type_Hanel_Mp12N())
@@ -83,7 +85,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
             //_LogPath = _logger.LogFileDir = LogFolder;
             //// Logger.FileName =
             //_logger.FileName = _MyDeviceController.Get_LogFileName();
-         _ = _logger.LogDetailAsync(ObjectID + " " + controllerType + " Device Controller Constructor ");
+            _ = _logger.LogDetailAsync(ObjectID + " " + controllerType + " Device Controller Constructor ");
         }
 
         public bool Init_Success { get; private set; }
@@ -97,150 +99,119 @@ namespace Hanel_DC.Hanel_DeviceControllers
         }
 
         public bool Init_Controller(
-            int ControllerID,
-            int CommPort,
-            int BaudRate,
-            int DataBits,
-            string Parity,
-            int StopBits,
-            bool Machine_SimulationMode,
-            int LogLevel,
-            IReadOnlyCollection<int> EnabledDeviceUnitNumbers,
-            object CallersObject,
-            SendOrPostCallback CallersDelegateHandler,
+            int controllerId,
+            int commPort,
+            int baudRate,
+            int dataBits,
+            string parity,
+            int stopBits,
+            bool machineSimulationMode,
+            int logLevel,
+            IReadOnlyCollection<int> enabledDeviceUnitNumbers,
+            object callersObject,
+            SendOrPostCallback callersDelegateHandler,
             ref string cError)
         {
-            return Init_Controller("", 0, ControllerID, CommPort, BaudRate, DataBits, Parity, StopBits,
-                Machine_SimulationMode, LogLevel, EnabledDeviceUnitNumbers, CallersObject, CallersDelegateHandler,
+            return Init_Controller("", 0, controllerId, commPort, baudRate, dataBits, parity, stopBits,
+                machineSimulationMode, logLevel, enabledDeviceUnitNumbers, callersObject, callersDelegateHandler,
                 ref cError);
         }
 
-        public bool Init_Controller(
-            string Host_IP,
-            int Host_Port,
-            bool Machine_SimulationMode,
-            int LogLevel,
-            IReadOnlyCollection<int> EnabledDeviceUnitNumbers,
-            object CallersObject,
-            SendOrPostCallback CallersDelegateHandler,
-            ref string cError)
-        {
-            return Init_Controller(Host_IP, Host_Port, 0, 0, 0, 0, "", 0, Machine_SimulationMode, LogLevel,
-                EnabledDeviceUnitNumbers, CallersObject, CallersDelegateHandler, ref cError);
-        }
-
-        public bool Init_Controller(
-            int CommPort,
-            int BaudRate,
-            int DataBits,
-            string Parity,
-            int StopBits,
-            bool Machine_SimulationMode,
-            int LogLevel,
-            IReadOnlyCollection<int> EnabledDeviceUnitNumbers,
-            object CallersObject,
-            SendOrPostCallback CallersDelegateHandler,
-            ref string cError)
-        {
-            return Init_Controller("", 0, 0, CommPort, BaudRate, DataBits, Parity, StopBits, Machine_SimulationMode,
-                LogLevel, EnabledDeviceUnitNumbers, CallersObject, CallersDelegateHandler, ref cError);
-        }
-
         private bool Init_Controller(
-            string Host_IP,
-            int Host_Port,
-            int ControllerID,
-            int CommPort,
-            int BaudRate,
-            int DataBits,
-            string Parity,
-            int StopBits,
-            bool Machine_SimulationMode,
-            int LogLevel,
-            IReadOnlyCollection<int> EnabledDeviceUnitNumbers,
-            object CallersObject,
-            SendOrPostCallback CallersDelegateHandler,
+            string hostIp,
+            int hostPort,
+            int controllerId,
+            int commPort,
+            int baudRate,
+            int dataBits,
+            string parity,
+            int stopBits,
+            bool machineSimulationMode,
+            int logLevel,
+            IReadOnlyCollection<int> enabledDeviceUnitNumbers,
+            object callersObject,
+            SendOrPostCallback callersDelegateHandler,
             ref string cError)
         {
-            string ThisProc = ObjectID + " Init_Controller(): ";
+            string thisProc = ObjectID + " Init_Controller(): ";
             bool flag = false;
-            bool Open_Success = false;
+            bool openSuccess = false;
             if (_MyMp12DController != null)
-             _ = _logger.LogDetailAsync(ThisProc + "In - Controller ID: " + ControllerID.ToString() + " Com Port: " +
-                                       CommPort.ToString() + " BaudRate: " + BaudRate.ToString() + " DataBits: " +
-                                       DataBits.ToString() + " Parity: " + Parity + " StopBits: " +
-                                       StopBits.ToString() + " Simulation: " + (Machine_SimulationMode ? "Yes" : "No") +
-                                       " LogLevel: " + LogLevel.ToString());
+                _ = _logger.LogDetailAsync(thisProc + "In - Controller ID: " + controllerId.ToString() + " Com Port: " +
+                                          commPort.ToString() + " BaudRate: " + baudRate.ToString() + " DataBits: " +
+                                          dataBits.ToString() + " Parity: " + parity + " StopBits: " +
+                                          stopBits.ToString() + " Simulation: " + (machineSimulationMode ? "Yes" : "No") +
+                                          " LogLevel: " + logLevel.ToString());
             if (_MyMp12NController != null)
-             _ = _logger.LogDetailAsync(ThisProc + "In - Com Port: " + CommPort.ToString() + " BaudRate: " +
-                                       BaudRate.ToString() + " DataBits: " + DataBits.ToString() + " Parity: " +
-                                       Parity + " StopBits: " + StopBits.ToString() + " Simulation: " +
-                                       (Machine_SimulationMode ? "Yes" : "No") + " LogLevel: " + LogLevel.ToString());
+                _ = _logger.LogDetailAsync(thisProc + "In - Com Port: " + commPort.ToString() + " BaudRate: " +
+                                          baudRate.ToString() + " DataBits: " + dataBits.ToString() + " Parity: " +
+                                          parity + " StopBits: " + stopBits.ToString() + " Simulation: " +
+                                          (machineSimulationMode ? "Yes" : "No") + " LogLevel: " + logLevel.ToString());
             cError = "";
 
             // Simulation Mode
-            if (Machine_SimulationMode)
+            if (machineSimulationMode)
             {
                 Init_Success = true;
                 LastStatus_Code = 0;
                 LastStatus_Message = "";
                 Init_Success = true;
                 flag = true;
-                return flag;
+                return true;
             }
 
 
             if (!Init_Success)
             {
-             _ = _logger.LogDetailAsync(ThisProc + "Not Init");
+                _ = _logger.LogDetailAsync(thisProc + "Not Init");
                 if (Get_Init_PercentageComplete() == 0 || Get_Init_PercentageComplete() == 100)
                 {
-                 _ = _logger.LogDetailAsync(ThisProc + "0 or 100");
+                    _ = _logger.LogDetailAsync(thisProc + "0 or 100");
                     Close_Device_Controller();
-                 _ = _logger.LogDetailAsync(ThisProc + "Controller Closed");
+                    _ = _logger.LogDetailAsync(thisProc + "Controller Closed");
 
                     if (_MyDeviceController != null)
                     {
-                     _ = _logger.LogDetailAsync(ThisProc + "_MyDeviceController");
-                        _UnitNumbers_ValidList.Clear();
+                        _ = _logger.LogDetailAsync(thisProc + "_MyDeviceController");
+                        //_UnitNumbers_ValidList.Clear();
                         _UnitNumbers_ValidList =
-                            HanelDC.GetSortedListOfUniqueDeviceUnitNumbers(EnabledDeviceUnitNumbers);
-                     _ = _logger.LogDetailAsync(ThisProc + "There are " + _UnitNumbers_ValidList.Count.ToString() +
-                                               " Enabled Units.");
+                            HanelDC.GetSortedListOfUniqueDeviceUnitNumbers(enabledDeviceUnitNumbers);
+                        _ = _logger.LogDetailAsync(thisProc + "There are " + _UnitNumbers_ValidList.Count.ToString() +
+                                                  " Enabled Units.");
                         if (_UnitNumbers_ValidList.Count > 0)
                         {
                             _CallersContext_Init = SynchronizationContext.Current;
-                            _CallersObject_Init = CallersObject;
-                            _CallersDelegateHandler_Init = CallersDelegateHandler;
+                            _CallersObject_Init = callersObject;
+                            _CallersDelegateHandler_Init = callersDelegateHandler;
                             _Notifications_DelegateHandler = new SendOrPostCallback(NotificationInContextofCaller);
                             Set_Init_PercentageComplete(10);
-                         _ = _logger.LogDetailAsync(ThisProc + "10%");
+                            _ = _logger.LogDetailAsync(thisProc + "10%");
                             _currentHanelDeviceStatusList.Clear();
                             for (int index = 0; index < _UnitNumbers_ValidList.Count; ++index)
                             {
-                             _ = _logger.LogDetailAsync(ThisProc + "Enabled Unit: " +
-                                                       _UnitNumbers_ValidList[index].ToString());
+                                _ = _logger.LogDetailAsync(thisProc + "Enabled Unit: " +
+                                                          _UnitNumbers_ValidList[index].ToString());
                                 _currentHanelDeviceStatusList.Add(new HanelDeviceStatus(index));
                                 _currentHanelDeviceStatusList[index].Device = _UnitNumbers_ValidList[index];
-                                if (Machine_SimulationMode)
-                                {
-                                    _currentHanelDeviceStatusList[index].GoodStatus = true;
-                                    _currentHanelDeviceStatusList[index].LastStatus = DateTime.Now;
-                                    _currentHanelDeviceStatusList[index].LastCommand = DateTime.Now;
-                                    _currentHanelDeviceStatusList[index].TargetTray = 0;
-                                    _currentHanelDeviceStatusList[index].CurrentTray = 0;
-                                    _currentHanelDeviceStatusList[index].InMotion = false;
-                                    _currentHanelDeviceStatusList[index].InAlignment = true;
-                                    _currentHanelDeviceStatusList[index].StatusMessage = "";
-                                    _currentHanelDeviceStatusList[index].CommandAccepted = false;
-                                    _currentHanelDeviceStatusList[index].CommandExecuted = false;
-
-                                }
-                                else
-                                    _currentHanelDeviceStatusList[index].GoodStatus = true;
-
+                                _currentHanelDeviceStatusList[index].DeviceNumber = _UnitNumbers_ValidList[index];
+                                _currentHanelDeviceStatusList[index].GoodStatus = true;
+                                _currentHanelDeviceStatusList[index].LastStatus = DateTime.Now;
+                                _currentHanelDeviceStatusList[index].LastCommand = DateTime.Now;
+                                _currentHanelDeviceStatusList[index].TargetTray = 0;
+                                _currentHanelDeviceStatusList[index].CurrentTray = 0;
+                                _currentHanelDeviceStatusList[index].InMotion = false;
+                                _currentHanelDeviceStatusList[index].InAlignment = true;
+                                _currentHanelDeviceStatusList[index].StatusMessage = "";
                                 _currentHanelDeviceStatusList[index].CommandAccepted = false;
                                 _currentHanelDeviceStatusList[index].CommandExecuted = false;
+
+                                //    if (machineSimulationMode == false)
+                                //    {
+                                //        _currentHanelDeviceStatusList[index].GoodStatus = true;
+                                //    }
+
+                                //    _currentHanelDeviceStatusList[index].CommandAccepted = false;
+                                //_currentHanelDeviceStatusList[index].CommandExecuted = false;
                             }
 
                             Set_Init_PercentageComplete(25);
@@ -249,22 +220,24 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 Set_Init_PercentageComplete(50);
                                 string cError1 = "";
                                 string cError2 = "";
-                                _Machine_SimulationMode = Machine_SimulationMode;
+                                _Machine_SimulationMode = machineSimulationMode;
                                 if (_MyMp12DController != null)
                                 {
-                                 _ = _logger.LogDetailAsync(ThisProc +
-                                                           "Opening a channel to the Hanel MP12D machine controller.");
-                                    Open_Success = _MyMp12DController.OpenChannel(CommPort, BaudRate, DataBits, Parity,
-                                        StopBits, ref cError1, Machine_SimulationMode, LogLevel,
-                                        ref _currentHanelDeviceStatusList, _LogPath);
+                                    _ = _logger.LogDetailAsync(thisProc +
+                                                              "Opening a channel to the Hanel MP12D machine controller.");
+
+                                    openSuccess = _MyMp12DController.OpenChannel(commPort, baudRate, dataBits, parity,
+                                        stopBits, ref cError1, machineSimulationMode, logLevel,
+                                        _currentHanelDeviceStatusList, _LogPath);
                                 }
 
+                                _ = _logger.LogDetailAsync($"Open Success: {openSuccess}");
                                 //if (this._MyMp12NController != null)
                                 //{
                                 // _ = _logger.LogDetailAsync(ThisProc + "Opening a channel to the Hanel MP12N machine controller.");
                                 //    Open_Success = this._MyMp12NController.OpenChannel(Host_IP, Host_Port, Machine_SimulationMode, LogLevel, this._LogPath, ref cError1);
                                 //}
-                                if (Open_Success)
+                                if (openSuccess)
                                 {
                                     LastStatus_Code = 0;
                                     LastStatus_Message = "";
@@ -275,17 +248,17 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 {
                                     LastStatus_Code = -1;
                                     LastStatus_Message = "Unable to connect with the serial port. \n" + cError1;
-                                 _ = _logger.LogDetailAsync(ThisProc + "Error Message: " + LastStatus_Message);
+                                    _ = _logger.LogDetailAsync(thisProc + "Error Message: " + LastStatus_Message);
                                 }
 
                                 Set_Init_PercentageComplete(100);
-                             _ = _logger.LogDetailAsync(ThisProc + "End of task.");
+                                _ = _logger.LogDetailAsync(thisProc + "End of task.");
                             }));
                         }
                         else
                         {
-                            cError = ThisProc + "No device unit numbers have been defined.";
-                         _ = _logger.LogDetailAsync(cError);
+                            cError = thisProc + "No device unit numbers have been defined.";
+                            _ = _logger.LogDetailAsync(cError);
                             Set_Init_PercentageComplete(100);
                             flag = false;
                         }
@@ -293,17 +266,17 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     else
                     {
                         // cError = ThisProc + "Incorrect version of Hart_LV.DLL. Version " + this._MyDeviceController.Get_Required_LV_Version() + " of " + this._ControllerType + " is required.";
-                     _ = _logger.LogDetailAsync(cError);
+                        _ = _logger.LogDetailAsync(cError);
                         Set_Init_PercentageComplete(100);
                         flag = false;
                     }
                 }
                 else
-                 _ = _logger.LogDetailAsync(ThisProc + "Existing request in progress. Let it run...");
+                    _ = _logger.LogDetailAsync(thisProc + "Existing request in progress. Let it run...");
             }
             else
             {
-             _ = _logger.LogDetailAsync(ThisProc + "Request already completed. Let the caller know.");
+                _ = _logger.LogDetailAsync(thisProc + "Request already completed. Let the caller know.");
                 Set_Init_PercentageComplete(100);
             }
 
@@ -314,22 +287,23 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         private void Set_Init_PercentageComplete(int value)
         {
+            _ = _logger.LogDetailAsync($"Percentage Value: {value}");
             if (value == 100 && Init_Success && _Init_PercentageComplete != 100)
                 //_Machine_ConversationStart_Async();
                 _Hanel_ConversationStart_Async();
             if (value <= _Init_PercentageComplete)
                 return;
-         _ = _logger.LogDetailAsync(ObjectID + " Init_PercentageComplete(): New Value: " + value.ToString() +
-                                   " Current Value: " + _Init_PercentageComplete.ToString());
+            _ = _logger.LogDetailAsync(ObjectID + " Init_PercentageComplete(): New Value: " + value.ToString() +
+                                      " Current Value: " + _Init_PercentageComplete.ToString());
             _Init_PercentageComplete = value;
             if (_Init_PercentageComplete <= 0 || _CallersContext_Init == null || _CallersDelegateHandler_Init == null ||
                 _CallersObject_Init == null)
                 return;
             HanelDcInit state = new HanelDcInit(_CallersObject_Init, value, Init_Success);
-            if (SynchronizationContext.Current == _CallersContext_Init)
-                SynchronizationContext.Current.Post(_CallersDelegateHandler_Init, state);
-            else
-                _CallersContext_Init.Post(_CallersDelegateHandler_Init, state);
+            //if (SynchronizationContext.Current == _CallersContext_Init)
+            //    SynchronizationContext.Current.Post(_CallersDelegateHandler_Init, state);
+            //else
+            //    _CallersContext_Init.Post(_CallersDelegateHandler_Init, state);
         }
 
         public bool EnqueueHanelCommand(IHanelCommand hanelCommand)
@@ -366,12 +340,12 @@ namespace Hanel_DC.Hanel_DeviceControllers
             string str = ObjectID + " Drive_Device(): ";
             bool flag = false;
             int num = 0;
-         _ = _logger.LogDetailAsync(str + "Device " + DeviceUnit.ToString() + " to Tray " + Tray.ToString() +
-                                   " Facing " + Facing.ToString() + " Depth " + Depth.ToString() + " Quantity " +
-                                   Quantity.ToString());
+            _ = _logger.LogDetailAsync(str + "Device " + DeviceUnit.ToString() + " to Tray " + Tray.ToString() +
+                                      " Facing " + Facing.ToString() + " Depth " + Depth.ToString() + " Quantity " +
+                                      Quantity.ToString());
             while (Init_Success)
             {
-             _ = _logger.LogDetailAsync(str + "Controller has been initialized");
+                _ = _logger.LogDetailAsync(str + "Controller has been initialized");
                 if (!_UnitNumbers_ValidList.Contains(DeviceUnit))
                 {
                     cError = DeviceUnit.ToString() + " is an invalid device unit number.";
@@ -380,7 +354,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                 else
                 {
                     int index = _UnitNumbers_ValidList.IndexOf(DeviceUnit);
-                 _ = _logger.LogDetailAsync(str + "Valid device unit number. List entry is " + index.ToString());
+                    _ = _logger.LogDetailAsync(str + "Valid device unit number. List entry is " + index.ToString());
                     if (Tray < 0)
                     {
                         cError = Tray.ToString() + " is an invalid tray number. Must be greater than zero.";
@@ -388,7 +362,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     }
                     else
                     {
-                     _ = _logger.LogDetailAsync(str + "Valid Tray");
+                        _ = _logger.LogDetailAsync(str + "Valid Tray");
                         if (Facing < 0 || Facing > 99)
                         {
                             cError = Facing.ToString() + " is an invalid facing. Must be in the range of zero to 99.";
@@ -396,7 +370,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                         }
                         else
                         {
-                         _ = _logger.LogDetailAsync(str + "Valid Facing");
+                            _ = _logger.LogDetailAsync(str + "Valid Facing");
                             if (Depth < 0 || Depth > 99)
                             {
                                 cError = Depth.ToString() + " is an invalid depth. Must be in the range of zero to 99.";
@@ -404,7 +378,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                             }
                             else
                             {
-                             _ = _logger.LogDetailAsync(str + "Valid Depth");
+                                _ = _logger.LogDetailAsync(str + "Valid Depth");
                                 if (Quantity < 0 || Quantity > 9999)
                                 {
                                     cError = Quantity.ToString() +
@@ -413,7 +387,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 }
                                 else
                                 {
-                                 _ = _logger.LogDetailAsync(str + "Valid Qty");
+                                    _ = _logger.LogDetailAsync(str + "Valid Qty");
                                     if (!_Machine_SimulationMode)
                                     {
                                         if (!_currentHanelDeviceStatusList[index].GoodStatus)
@@ -421,7 +395,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                             ++num;
                                             cError = "Device " + DeviceUnit.ToString() + " appears to be off-line. " +
                                                      num.ToString() + " attempt(s). Request rejected.";
-                                         _ = _logger.LogDetailAsync(str + cError);
+                                            _ = _logger.LogDetailAsync(str + cError);
                                             // What does 4 represent? 
                                             if (num <= 4)
                                             {
@@ -433,7 +407,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                         }
                                         else
                                         {
-                                         _ = _logger.LogDetailAsync(str + "Device appears to be on-line.");
+                                            _ = _logger.LogDetailAsync(str + "Device appears to be on-line.");
                                             if (_currentHanelDeviceStatusList[index].InMotion)
                                             {
                                                 cError = "Device " + DeviceUnit.ToString() +
@@ -441,20 +415,38 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                                 goto label_21;
                                             }
                                             else
-                                             _ = _logger.LogDetailAsync(str + "Not in motion");
+                                                _ = _logger.LogDetailAsync(str + "Not in motion");
                                         }
+
+                                        _logger.LogDetailAsync($"Calling Enqueue: Tray  {Tray}");
                                     }
 
-                                    _Machine_CallersRequestsQueue.Enqueue(new MachineRequestType()
-                                    {
-                                        DeviceUnit = DeviceUnit,
-                                        Tray = Tray,
-                                        Facing = Facing,
-                                        Depth = Depth,
-                                        Quantity = Quantity,
-                                        Text = DisplayText
-                                    });
-                                 _ = _logger.LogDetailAsync(str + "Drive Request Submitted.");
+                                    var hanelCommand =
+                                        _hanelCommandService.MoveDeviceCommand(DeviceUnit, 1, Tray, Facing, Depth);
+
+                                    _hanelCommandQueue.Enqueue(hanelCommand);
+
+
+                                    //_Machine_CallersRequestsQueue.Enqueue(new MachineRequestType()
+                                    //{
+                                    //    DeviceUnit = DeviceUnit,
+                                    //    Tray = Tray,
+                                    //    Facing = Facing,
+                                    //    Depth = Depth,
+                                    //    Quantity = Quantity,
+                                    //    Text = DisplayText
+                                    //});
+
+                                    //_Machine_CallersRequestsQueue.Enqueue(new MachineRequestType()
+                                    //{
+                                    //    DeviceUnit = DeviceUnit,
+                                    //    Tray = Tray,
+                                    //    Facing = Facing,
+                                    //    Depth = Depth,
+                                    //    Quantity = Quantity,
+                                    //    Text = DisplayText
+                                    //});
+                                    _ = _logger.LogDetailAsync(str + "Drive Request Submitted.");
                                     cError = "";
                                     flag = true;
                                     goto label_21;
@@ -468,7 +460,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
             cError = "Controller not initialized. Unable to drive device.";
         label_21:
             if (!flag)
-             _ = _logger.LogDetailAsync(str + cError);
+                _ = _logger.LogDetailAsync(str + cError);
             return flag;
         }
 
@@ -521,7 +513,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
             }
 
             if (cError != "")
-             _ = _logger.LogDetailAsync(str + cError);
+                _ = _logger.LogDetailAsync(str + cError);
             return Unique_ID;
         }
 
@@ -546,8 +538,27 @@ namespace Hanel_DC.Hanel_DeviceControllers
                 cError = "Controller not initialized. Call Init_Controller().";
 
             if (!flag)
-             _ = _logger.LogDetailAsync(str + cError);
+                _ = _logger.LogDetailAsync(str + cError);
             return flag;
+        }
+
+        /// <summary>
+        /// Retrieves the current status of the device.
+        /// </summary>
+        /// <returns>
+        /// A list of <see cref="HanelDeviceStatus"/> representing the status of the device. 
+        /// If the device initialization is not successful, an empty list is returned.
+        /// </returns>
+        /// <remarks>
+        /// The method logs the operation details using the <see cref="IDynamicLogger"/> instance.
+        /// </remarks>
+        public List<HanelDeviceStatus> Get_Device_Status()
+        {
+            var str = ObjectID + " Get_Device_Status()";
+            _logger.LogDetailAsync($"{str}");
+            var hanelDeviceStatusList = new List<HanelDeviceStatus>();
+            if (!Init_Success) return hanelDeviceStatusList;
+            return _currentHanelDeviceStatusList ?? hanelDeviceStatusList;
         }
 
         public bool Get_Device_Status(ref List<HanelDeviceStatus> newList, ref string cError)
@@ -569,13 +580,13 @@ namespace Hanel_DC.Hanel_DeviceControllers
                 else
                 {
                     cError = "No device status available.";
-                 _ = _logger.LogDetailAsync(str + cError);
+                    _ = _logger.LogDetailAsync(str + cError);
                 }
             }
             else
             {
                 cError = "Controller not initialized. No device status available.";
-             _ = _logger.LogDetailAsync(str + cError);
+                _ = _logger.LogDetailAsync(str + cError);
             }
 
             return deviceStatus;
@@ -635,7 +646,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
             }
 
             if (!flag)
-             _ = _logger.LogDetailAsync(str1 + cError);
+                _ = _logger.LogDetailAsync(str1 + cError);
             return flag;
         }
 
@@ -643,7 +654,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
         {
             string str = ObjectID + " Clear_Text(): ";
             bool flag = false;
-         _ = _logger.LogDetailAsync(str + "Beg");
+            _ = _logger.LogDetailAsync(str + "Beg");
             // if (_MyMp12NController != null)
             if (_MyMp12DController != null)
             {
@@ -678,8 +689,8 @@ namespace Hanel_DC.Hanel_DeviceControllers
             }
 
             if (!flag)
-             _ = _logger.LogDetailAsync(str + cError);
-         _ = _logger.LogDetailAsync(str + "End");
+                _ = _logger.LogDetailAsync(str + cError);
+            _ = _logger.LogDetailAsync(str + "End");
             return flag;
         }
 
@@ -687,7 +698,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
         {
             string str = ObjectID + " Close_Controller(): ";
             bool flag = false;
-         _ = _logger.LogDetailAsync(str + "Beg");
+            _ = _logger.LogDetailAsync(str + "Beg");
             if (Init_Success)
             {
                 Close_Device_Controller();
@@ -697,17 +708,17 @@ namespace Hanel_DC.Hanel_DeviceControllers
             else
             {
                 cError = "Controller not initialized. Cannot close.";
-             _ = _logger.LogDetailAsync(str + cError);
+                _ = _logger.LogDetailAsync(str + cError);
             }
 
-         _ = _logger.LogDetailAsync(str + "End");
+            _ = _logger.LogDetailAsync(str + "End");
             return flag;
         }
 
         private void Close_Device_Controller()
         {
             string str = ObjectID + " Close_Device_Controller(): ";
-         _ = _logger.LogDetailAsync(str + "Beg");
+            _ = _logger.LogDetailAsync(str + "Beg");
             Init_Success = false;
             _Machine_HaltConversation = true;
             _UnitNumbers_ValidList.Clear();
@@ -717,57 +728,58 @@ namespace Hanel_DC.Hanel_DeviceControllers
             _MyDeviceController.CloseChannel();
             _Machine_CallersRequestsQueue.Clear();
             _hanelCommandQueue.Clear();
-         _ = _logger.LogDetailAsync(str + "End");
+            _ = _logger.LogDetailAsync(str + "End");
         }
 
         private void _Hanel_ConversationStart_Async(bool blockThisCall = false)
         {
             var thisProc = ObjectID + " _Hanel_ConversationStart_Async(): ";
-            Task.Run((Action)(() =>
+            _logger.LogDetailAsync(thisProc + "Starting conversation.");
+            //Task.Run(() =>
+            //{
+            var num1 = 0;
+            int nTray = 0;
+            int index1 = 0;
+            bool nInMotion = false;
+            bool nInAlignment = false;
+            string str1 = "";
+            bool flag1 = false;
+            string cError1 = "";
+            string cError2 = "";
+            LastStatus_Code = 0;
+            LastStatus_Message = "";
+            // Clear the StatusMessage for ALL devices
+            foreach (HanelDeviceStatus currentHanelDeviceStatus in _currentHanelDeviceStatusList)
+                currentHanelDeviceStatus.StatusMessage = "";
+            _Machine_HaltConversation = false;
+
+            // Run while _Machine_HaltConversation is TRUE
+            while (!_Machine_HaltConversation)
             {
-                var num1 = 0;
-                int nTray = 0;
-                int index1 = 0;
-                bool nInMotion = false;
-                bool nInAlignment = false;
-                string str1 = "";
-                bool flag1 = false;
-                string cError1 = "";
-                string cError2 = "";
-                LastStatus_Code = 0;
-                LastStatus_Message = "";
-                // Clear the StatusMessage for ALL devices
-                foreach (HanelDeviceStatus currentHanelDeviceStatus in _currentHanelDeviceStatusList)
-                    currentHanelDeviceStatus.StatusMessage = "";
-                _Machine_HaltConversation = false;
-
-                // Run while _Machine_HaltConversation is TRUE
-                while (!_Machine_HaltConversation)
+                int num2;
+                // If there is something in the queue
+                if (_hanelCommandQueue.Count > 0)
                 {
-                    int num2;
-                    // If there is something in the queue
-                    if (_hanelCommandQueue.Count > 0)
+                    _ = _logger.LogDetailAsync(thisProc + "There is a request in the queue, remove it.");
+                    // Get the next request from the queue
+
+                    var hanelCommand = _hanelCommandQueue.Dequeue();
+
+                    _ = _logger.LogDetailAsync($"Hanel Command: {hanelCommand.Command}");
+
+                    var status = _currentHanelDeviceStatusList.FirstOrDefault(r => r.Device == hanelCommand.Device);
+                    
+                    if (status != null)
                     {
-                     _ = _logger.LogDetailAsync(thisProc + "There is a request in the queue, remove it.");
-                        // Get the next request from the queue
-
-                        var hanelCommand = _hanelCommandQueue.Dequeue();
-
-                     _ = _logger.LogDetailAsync($"Hanel Command: {hanelCommand.Command}");
-
-                        var status =
-                            _currentHanelDeviceStatusList.FirstOrDefault(r => r.Device == hanelCommand.Device);
-                        if (status != null)
+                        status.LastCommand = DateTime.Now;
+                        if (!string.IsNullOrWhiteSpace(hanelCommand.Tray))
                         {
-                            status.LastCommand = DateTime.Now;
-                            if (!string.IsNullOrWhiteSpace(hanelCommand.Tray))
-                            {
-                                status.TargetTray = int.Parse(hanelCommand.Tray);
-                            }
-                            
-                            status.CommandAccepted = false;
-                            status.StatusMessage = "Displaying Text!!!";
+                            status.TargetTray = int.Parse(hanelCommand.Tray);
                         }
+
+                        status.CommandAccepted = false;
+                        status.StatusMessage = "Displaying Text!!!";
+
 
                         string[] strArray = new string[5]
                         {
@@ -782,162 +794,171 @@ namespace Hanel_DC.Hanel_DeviceControllers
                         strArray[4] = hanelCommand.Tray;
                         var lineToWrite12 = string.Concat(strArray);
 
-                     _ = _logger.LogDetailAsync(lineToWrite12);
+                        _ = _logger.LogDetailAsync(lineToWrite12);
 
                         if (!_MyMp12DController.DriveDevice(hanelCommand, ref cError2))
                         {
-                         _ = _logger.LogDetailAsync(thisProc + "Machine Drive error Message: " + cError2);
+                            _ = _logger.LogDetailAsync(thisProc + "Machine Drive error Message: " + cError2);
                             str1 = "Machine error message: " + cError2;
                         }
 
-
-
-                        if (_Machine_SimulationMode)
-                        {
-                            _currentHanelDeviceStatusList[index1].GoodStatus = true;
-                            _currentHanelDeviceStatusList[index1].LastStatus = DateTime.Now;
-                            _currentHanelDeviceStatusList[index1].CurrentTray =
-                                _currentHanelDeviceStatusList[index1].TargetTray;
-                            _currentHanelDeviceStatusList[index1].InMotion = false;
-                            _currentHanelDeviceStatusList[index1].InAlignment = true;
-                            _currentHanelDeviceStatusList[index1].StatusMessage = "";
-                            _currentHanelDeviceStatusList[index1].CommandAccepted = false;
-                            _currentHanelDeviceStatusList[index1].CommandExecuted = false;
-
-                            strArray = new string[6]
-                            {
-                                thisProc,
-                                "DriveDevice for Unit ",
-                                null,
-                                null,
-                                null,
-                                null
-                            };
-                            strArray[2] = hanelCommand.Lift;
-                            strArray[3] = " and Tray ";
-                            strArray[4] = hanelCommand.Tray;
-                            strArray[5] = " but in Simulation Mode or Suspended.";
-                            var lineToWrite13 = string.Concat(strArray);
-
-                         _ = _logger.LogDetailAsync($"13-{lineToWrite13}");
-                        }
-
-                        //_logger.LogDetailAsync(thisProc + "Go back to the top of the while (true) in case there is another request in the queue...");
-                        Thread.Sleep(nThreadSleepMilliseconds);
-                        continue;
+                        status.GoodStatus = true;
+                        status.LastStatus = DateTime.Now;
+                        status.CurrentTray = status.TargetTray;
+                        status.InMotion = false;
+                        status.InAlignment = true;
+                        status.StatusMessage = "";
+                        status.CommandAccepted = false;
+                        status.CommandExecuted = false;
                     }
-                    //_logger.LogDetailAsync(thisProc + "Ignore the request in the queue and fall through to obtaining status, it has been awhile...");
 
 
-                    //num1 = 0;
-                    //     _ = _logger.LogDetailAsync(thisProc + "Request status from the controller for each device & update the controller status collection.");
-                    //foreach (HanelDeviceStatus currentHanelDeviceStatus in _currentHanelDeviceStatusList)
-                    //{
-                    //    //IDynamicLogger logger14 = Logger;
-                    //    string str28 = thisProc;
-                    //    num2 = currentHanelDeviceStatus.Device;
-                    //    string str29 = num2.ToString();
-                    //    var lineToWrite14 = str28 + $"14-Calling Machine Controller GetDeviceStatus() for Unit {str29}";
-                    //    //logger14.Log(LineToWrite14);
-                    //    //         _ = _logger.LogDetailAsync(lineToWrite14);
-                    //    var deviceStatus = _MyDeviceController.GetDeviceStatus(currentHanelDeviceStatus.Device, ref nTray, ref nInMotion, ref nInAlignment, ref cError2);
-                    //    if (!_Machine_SimulationMode)
+
+                    //_currentHanelDeviceStatusList[index1].GoodStatus = true;
+                    //_currentHanelDeviceStatusList[index1].LastStatus = DateTime.Now;
+                    //_currentHanelDeviceStatusList[index1].CurrentTray =
+                    //    _currentHanelDeviceStatusList[index1].TargetTray;
+                    //_currentHanelDeviceStatusList[index1].InMotion = false;
+                    //_currentHanelDeviceStatusList[index1].InAlignment = true;
+                    //_currentHanelDeviceStatusList[index1].StatusMessage = "";
+                    //_currentHanelDeviceStatusList[index1].CommandAccepted = false;
+                    //_currentHanelDeviceStatusList[index1].CommandExecuted = false;
+
+                    //    strArray = new string[6]
                     //    {
-                    //        if (deviceStatus)
-                    //        {
-                    //            //IDynamicLogger logger15 = Logger;
-                    //            var strArray = new string[9];
-                    //            strArray[0] = thisProc;
-                    //            strArray[1] = "Unit ";
-                    //            num2 = currentHanelDeviceStatus.Device;
-                    //            strArray[2] = num2.ToString();
-                    //            strArray[3] = " Tray:";
-                    //            strArray[4] = nTray.ToString();
-                    //            strArray[5] = " Motion:";
-                    //            strArray[6] = nInMotion.ToString();
-                    //            strArray[7] = " Alignment:";
-                    //            strArray[8] = nInAlignment.ToString();
-                    //            var lineToWrite15 = string.Concat(strArray);
-                    //            //logger15.Log(LineToWrite15);
-                    //         _ = _logger.LogDetailAsync($"15-{lineToWrite15}");
+                    //        thisProc,
+                    //        "DriveDevice for Unit ",
+                    //        null,
+                    //        null,
+                    //        null,
+                    //        null
+                    //    };
+                    //    strArray[2] = hanelCommand.Lift;
+                    //    strArray[3] = " and Tray ";
+                    //    strArray[4] = hanelCommand.Tray;
+                    //    strArray[5] = " but in Simulation Mode or Suspended.";
+                    //    var lineToWrite13 = string.Concat(strArray);
 
-                    //            currentHanelDeviceStatus.GoodStatus = true;
-                    //            currentHanelDeviceStatus.LastStatus = DateTime.Now;
-                    //            currentHanelDeviceStatus.CurrentTray = nTray;
-                    //            currentHanelDeviceStatus.InMotion = nInMotion;
-                    //            currentHanelDeviceStatus.InAlignment = nInAlignment;
-                    //            currentHanelDeviceStatus.StatusMessage = "";
-                    //        }
-                    //        else
-                    //        {
-                    //            //IDynamicLogger logger16 = Logger;
-                    //            string[] strArray = new string[7];
-                    //            strArray[0] = thisProc;
-                    //            strArray[1] = "Machine Controller GetDeviceStatus() Device Unit ";
-                    //            num2 = currentHanelDeviceStatus.Device;
-                    //            strArray[2] = num2.ToString();
-                    //            strArray[3] = " Count: ";
-                    //            num2 = currentHanelDeviceStatus.ActiveErrorCount;
-                    //            strArray[4] = num2.ToString();
-                    //            strArray[5] = " Error: ";
-                    //            strArray[6] = cError2;
-                    //            string LineToWrite16 = string.Concat(strArray);
-                    //            //logger16.Log(LineToWrite16);
-                    //            //_logger.LogDetailAsync(LineToWrite16);
-                    //            if (currentHanelDeviceStatus.ActiveErrorCount < MaximumStatusErrors)
-                    //            {
-                    //                num2 = currentHanelDeviceStatus.ActiveErrorCount++;
-                    //            }
-                    //            else
-                    //            {
-                    //                currentHanelDeviceStatus.GoodStatus = false;
-                    //                currentHanelDeviceStatus.StatusMessage = cError2;
-                    //                currentHanelDeviceStatus.ActiveErrorCount = 0;
-                    //            }
-                    //        }
-                    //    }
-                    //    for (int index2 = _Notifications_CallersRequestsList.Count - 1; index2 >= 0; --index2)
-                    //    {
-                    //        bool flag2 = false;
-                    //        HanelDeviceNotificationType notificationsCallersRequests = _Notifications_CallersRequestsList[index2];
-                    //        if (notificationsCallersRequests.TimeOutSeconds > 0 && DateTime.Compare(DateTime.Now, notificationsCallersRequests.Expiry) > 0)
-                    //            notificationsCallersRequests.Expired = true;
-                    //        else if (currentHanelDeviceStatus.GoodStatus && currentHanelDeviceStatus.CurrentTray == notificationsCallersRequests.TargetTray)
-                    //        {
-                    //            if (notificationsCallersRequests.RequestedMotionStatus == 0)
-                    //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
-                    //            else if (notificationsCallersRequests.RequestedMotionStatus < 0 && !currentHanelDeviceStatus.InMotion)
-                    //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
-                    //            else if (notificationsCallersRequests.RequestedMotionStatus > 0 && currentHanelDeviceStatus.InMotion)
-                    //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
-                    //        }
-                    //        if (flag2)
-                    //        {
-                    //            notificationsCallersRequests.AlignmentStatusUponNotification = _currentHanelDeviceStatusList[index1].InAlignment;
-                    //            notificationsCallersRequests.MotionStatusUponNotification = _currentHanelDeviceStatusList[index1].InMotion;
-                    //            notificationsCallersRequests.Message = str1;
-                    //            str1 = "";
-                    //        }
-                    //        if (flag2 || notificationsCallersRequests.Expired)
-                    //        {
-                    //            if (notificationsCallersRequests.AutoDeregister)
-                    //                _Notifications_CallersRequestsList.RemoveAt(index2);
-                    //            if (notificationsCallersRequests.CallBack != null && notificationsCallersRequests.CallersObject != null)
-                    //            {
-                    //                _Notification_Current = notificationsCallersRequests;
-                    //                notificationsCallersRequests.CallersContext.Post(_Notifications_DelegateHandler, notificationsCallersRequests.CallersObject);
-                    //            }
-                    //        }
-                    //    }
+                    //    _ = _logger.LogDetailAsync($"13-{lineToWrite13}");
                     //}
+
+                    //_logger.LogDetailAsync(thisProc + "Go back to the top of the while (true) in case there is another request in the queue...");
                     Thread.Sleep(nThreadSleepMilliseconds);
+                    continue;
                 }
-            }));
-         _ = _logger.LogDetailAsync(thisProc + "Someone or something has requested this process to shut down.");
+                //_logger.LogDetailAsync(thisProc + "Ignore the request in the queue and fall through to obtaining status, it has been awhile...");
+
+
+                //num1 = 0;
+                //     _ = _logger.LogDetailAsync(thisProc + "Request status from the controller for each device & update the controller status collection.");
+                //foreach (HanelDeviceStatus currentHanelDeviceStatus in _currentHanelDeviceStatusList)
+                //{
+                //    //IDynamicLogger logger14 = Logger;
+                //    string str28 = thisProc;
+                //    num2 = currentHanelDeviceStatus.Device;
+                //    string str29 = num2.ToString();
+                //    var lineToWrite14 = str28 + $"14-Calling Machine Controller GetDeviceStatus() for Unit {str29}";
+                //    //logger14.Log(LineToWrite14);
+                //    //         _ = _logger.LogDetailAsync(lineToWrite14);
+                //    var deviceStatus = _MyDeviceController.GetDeviceStatus(currentHanelDeviceStatus.Device, ref nTray, ref nInMotion, ref nInAlignment, ref cError2);
+                //    if (!_Machine_SimulationMode)
+                //    {
+                //        if (deviceStatus)
+                //        {
+                //            //IDynamicLogger logger15 = Logger;
+                //            var strArray = new string[9];
+                //            strArray[0] = thisProc;
+                //            strArray[1] = "Unit ";
+                //            num2 = currentHanelDeviceStatus.Device;
+                //            strArray[2] = num2.ToString();
+                //            strArray[3] = " Tray:";
+                //            strArray[4] = nTray.ToString();
+                //            strArray[5] = " Motion:";
+                //            strArray[6] = nInMotion.ToString();
+                //            strArray[7] = " Alignment:";
+                //            strArray[8] = nInAlignment.ToString();
+                //            var lineToWrite15 = string.Concat(strArray);
+                //            //logger15.Log(LineToWrite15);
+                //         _ = _logger.LogDetailAsync($"15-{lineToWrite15}");
+
+                //            currentHanelDeviceStatus.GoodStatus = true;
+                //            currentHanelDeviceStatus.LastStatus = DateTime.Now;
+                //            currentHanelDeviceStatus.CurrentTray = nTray;
+                //            currentHanelDeviceStatus.InMotion = nInMotion;
+                //            currentHanelDeviceStatus.InAlignment = nInAlignment;
+                //            currentHanelDeviceStatus.StatusMessage = "";
+                //        }
+                //        else
+                //        {
+                //            //IDynamicLogger logger16 = Logger;
+                //            string[] strArray = new string[7];
+                //            strArray[0] = thisProc;
+                //            strArray[1] = "Machine Controller GetDeviceStatus() Device Unit ";
+                //            num2 = currentHanelDeviceStatus.Device;
+                //            strArray[2] = num2.ToString();
+                //            strArray[3] = " Count: ";
+                //            num2 = currentHanelDeviceStatus.ActiveErrorCount;
+                //            strArray[4] = num2.ToString();
+                //            strArray[5] = " Error: ";
+                //            strArray[6] = cError2;
+                //            string LineToWrite16 = string.Concat(strArray);
+                //            //logger16.Log(LineToWrite16);
+                //            //_logger.LogDetailAsync(LineToWrite16);
+                //            if (currentHanelDeviceStatus.ActiveErrorCount < MaximumStatusErrors)
+                //            {
+                //                num2 = currentHanelDeviceStatus.ActiveErrorCount++;
+                //            }
+                //            else
+                //            {
+                //                currentHanelDeviceStatus.GoodStatus = false;
+                //                currentHanelDeviceStatus.StatusMessage = cError2;
+                //                currentHanelDeviceStatus.ActiveErrorCount = 0;
+                //            }
+                //        }
+                //    }
+                //    for (int index2 = _Notifications_CallersRequestsList.Count - 1; index2 >= 0; --index2)
+                //    {
+                //        bool flag2 = false;
+                //        HanelDeviceNotificationType notificationsCallersRequests = _Notifications_CallersRequestsList[index2];
+                //        if (notificationsCallersRequests.TimeOutSeconds > 0 && DateTime.Compare(DateTime.Now, notificationsCallersRequests.Expiry) > 0)
+                //            notificationsCallersRequests.Expired = true;
+                //        else if (currentHanelDeviceStatus.GoodStatus && currentHanelDeviceStatus.CurrentTray == notificationsCallersRequests.TargetTray)
+                //        {
+                //            if (notificationsCallersRequests.RequestedMotionStatus == 0)
+                //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
+                //            else if (notificationsCallersRequests.RequestedMotionStatus < 0 && !currentHanelDeviceStatus.InMotion)
+                //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
+                //            else if (notificationsCallersRequests.RequestedMotionStatus > 0 && currentHanelDeviceStatus.InMotion)
+                //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
+                //        }
+                //        if (flag2)
+                //        {
+                //            notificationsCallersRequests.AlignmentStatusUponNotification = _currentHanelDeviceStatusList[index1].InAlignment;
+                //            notificationsCallersRequests.MotionStatusUponNotification = _currentHanelDeviceStatusList[index1].InMotion;
+                //            notificationsCallersRequests.Message = str1;
+                //            str1 = "";
+                //        }
+                //        if (flag2 || notificationsCallersRequests.Expired)
+                //        {
+                //            if (notificationsCallersRequests.AutoDeregister)
+                //                _Notifications_CallersRequestsList.RemoveAt(index2);
+                //            if (notificationsCallersRequests.CallBack != null && notificationsCallersRequests.CallersObject != null)
+                //            {
+                //                _Notification_Current = notificationsCallersRequests;
+                //                notificationsCallersRequests.CallersContext.Post(_Notifications_DelegateHandler, notificationsCallersRequests.CallersObject);
+                //            }
+                //        }
+                //    }
+                //}
+                Thread.Sleep(nThreadSleepMilliseconds);
+            }
+            //});
+            _ = _logger.LogDetailAsync(thisProc + "Someone or something has requested this process to shut down.");
         }
         private void _Machine_ConversationStart_Async(bool blockThisCall = false)
         {
             var thisProc = ObjectID + " _Machine_ConversationStart_Async(): ";
+            _ = _logger.LogDetailAsync($"{thisProc}");
             Task.Run((Action)(() =>
             {
                 var num1 = 0;
@@ -963,7 +984,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     // If there is something in the queue
                     if (_Machine_CallersRequestsQueue.Count > 0)
                     {
-                     _ = _logger.LogDetailAsync(thisProc + "There is a request in the queue, remove it.");
+                        _ = _logger.LogDetailAsync(thisProc + "There is a request in the queue, remove it.");
                         // Get the next request from the queue
 
                         var ready = IsReadyToDequeue(_Machine_CallersRequestsQueue.Peek());
@@ -993,7 +1014,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 num2 = machineRequestType.DeviceUnit;
                                 string str3 = num2.ToString();
                                 string LineToWrite = str2 + "Calling Machine Controller ShowText() for Unit " + str3;
-                             _ = _logger.LogDetailAsync(LineToWrite);
+                                _ = _logger.LogDetailAsync(LineToWrite);
                                 _MyMp12DController.ShowText(machineRequestType.DeviceUnit, machineRequestType.Text, ref cError2);
                                 //_MyMp12NController.ShowText(machineRequestType.DeviceUnit, machineRequestType.Text, ref cError2);
                                 //_logger.LogDetailAsync(thisProc + "Continue...");
@@ -1007,7 +1028,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 num2 = machineRequestType.DeviceUnit;
                                 string str5 = num2.ToString();
                                 string LineToWrite = str4 + "Calling Machine Controller ClearText() for Unit " + str5;
-                             _ = _logger.LogDetailAsync(LineToWrite);
+                                _ = _logger.LogDetailAsync(LineToWrite);
                                 _MyMp12DController.ClearText(machineRequestType.DeviceUnit, ref cError2);
                                 //_MyMp12NController.ClearText(machineRequestType.DeviceUnit, ref cError2);
                                 //_logger.LogDetailAsync(thisProc + "Continue...");
@@ -1020,7 +1041,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                             string str7 = num2.ToString();
                             string LineToWrite1 = str6 + "Should be a drive command for unit " + str7 + ". Have to validate first.";
                             // logger1.Log(LineToWrite1);
-                         _ = _logger.LogDetailAsync(LineToWrite1);
+                            _ = _logger.LogDetailAsync(LineToWrite1);
                             if (!_UnitNumbers_ValidList.Contains(machineRequestType.DeviceUnit))
                             {
                                 //IDynamicLogger logger2 = Logger;
@@ -1029,7 +1050,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 string str9 = num2.ToString();
                                 string LineToWrite2 = str8 + "Invalid device unit number: " + str9 + ", continue...";
                                 //logger2.Log(LineToWrite2);
-                             _ = _logger.LogDetailAsync(LineToWrite2);
+                                _ = _logger.LogDetailAsync(LineToWrite2);
                                 continue;
                             }
                             // IDynamicLogger logger3 = Logger;
@@ -1038,7 +1059,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                             string str11 = num2.ToString();
                             string LineToWrite3 = str10 + "Valid device unit " + str11;
                             //logger3.Log(LineToWrite3);
-                         _ = _logger.LogDetailAsync(LineToWrite3);
+                            _ = _logger.LogDetailAsync(LineToWrite3);
                             if (machineRequestType.Tray < 0)
                             {
                                 //IDynamicLogger logger4 = Logger;
@@ -1047,7 +1068,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 string str13 = num2.ToString();
                                 string LineToWrite4 = str12 + "Invalid tray: " + str13 + ", continue...";
                                 // logger4.Log(LineToWrite4);
-                             _ = _logger.LogDetailAsync(LineToWrite4);
+                                _ = _logger.LogDetailAsync(LineToWrite4);
                                 continue;
                             }
                             //  IDynamicLogger logger5 = Logger;
@@ -1056,7 +1077,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                             string str15 = num2.ToString();
                             string LineToWrite5 = str14 + "Valid tray " + str15;
                             //logger5.Log(LineToWrite5);
-                         _ = _logger.LogDetailAsync(LineToWrite5);
+                            _ = _logger.LogDetailAsync(LineToWrite5);
 
                             //if (_MyMp12NController != null)
                             if (_MyMp12DController != null)
@@ -1069,7 +1090,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                     string str17 = num2.ToString();
                                     string LineToWrite6 = str16 + "Invalid facing: " + str17 + ", continue...";
                                     //logger6.Log(LineToWrite6);
-                                 _ = _logger.LogDetailAsync(LineToWrite6);
+                                    _ = _logger.LogDetailAsync(LineToWrite6);
                                     continue;
                                 }
                                 //IDynamicLogger logger7 = Logger;
@@ -1078,7 +1099,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 string str19 = num2.ToString();
                                 string LineToWrite7 = str18 + "Valid facing " + str19;
                                 //logger7.Log(LineToWrite7);
-                             _ = _logger.LogDetailAsync(LineToWrite7);
+                                _ = _logger.LogDetailAsync(LineToWrite7);
                                 if (machineRequestType.Depth < 0 || machineRequestType.Depth > 99)
                                 {
                                     //IDynamicLogger logger8 = Logger;
@@ -1087,7 +1108,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                     string str21 = num2.ToString();
                                     string LineToWrite8 = str20 + "Invalid depth: " + str21 + ", continue...";
                                     //logger8.Log(LineToWrite8);
-                                 _ = _logger.LogDetailAsync(LineToWrite8);
+                                    _ = _logger.LogDetailAsync(LineToWrite8);
                                     continue;
                                 }
                                 //IDynamicLogger logger9 = Logger;
@@ -1096,7 +1117,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 string str23 = num2.ToString();
                                 string LineToWrite9 = str22 + "Valid depth " + str23;
                                 //logger9.Log(LineToWrite9);
-                             _ = _logger.LogDetailAsync(LineToWrite9);
+                                _ = _logger.LogDetailAsync(LineToWrite9);
                                 if (machineRequestType.Quantity < 0 || machineRequestType.Quantity > 9999)
                                 {
                                     //IDynamicLogger logger10 = Logger;
@@ -1105,7 +1126,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                     string str25 = num2.ToString();
                                     string LineToWrite10 = str24 + "Invalid quantity: " + str25 + ", continue...";
                                     //logger10.Log(LineToWrite10);
-                                 _ = _logger.LogDetailAsync(LineToWrite10);
+                                    _ = _logger.LogDetailAsync(LineToWrite10);
                                     continue;
                                 }
                                 //IDynamicLogger logger11 = Logger;
@@ -1114,15 +1135,15 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 string str27 = num2.ToString();
                                 string LineToWrite11 = str26 + "Valid quantity " + str27;
                                 //logger11.Log(LineToWrite11);
-                             _ = _logger.LogDetailAsync(LineToWrite11);
+                                _ = _logger.LogDetailAsync(LineToWrite11);
                                 if (machineRequestType.Text.Trim().Length > 80)
                                 {
-                                 _ = _logger.LogDetailAsync(thisProc + "Text is too long: " + machineRequestType.Text + ", continue...");
+                                    _ = _logger.LogDetailAsync(thisProc + "Text is too long: " + machineRequestType.Text + ", continue...");
                                     continue;
                                 }
                                 //_logger.LogDetailAsync(thisProc + "Valid text " + machineRequestType.Text);
                             }
-                         _ = _logger.LogDetailAsync(thisProc + "This is a drive command.");
+                            _ = _logger.LogDetailAsync(thisProc + "This is a drive command.");
                             index1 = _UnitNumbers_ValidList.IndexOf(machineRequestType.DeviceUnit);
                             _currentHanelDeviceStatusList[index1].LastCommand = DateTime.Now;
                             _currentHanelDeviceStatusList[index1].TargetTray = machineRequestType.Tray;
@@ -1146,7 +1167,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 strArray[4] = num2.ToString();
                                 string LineToWrite12 = string.Concat(strArray);
                                 //logger12.Log(LineToWrite12);
-                             _ = _logger.LogDetailAsync(LineToWrite12);
+                                _ = _logger.LogDetailAsync(LineToWrite12);
                                 //if (!(_MyMp12NController == null ? _MyDeviceController.DriveDevice(
                                 //            machineRequestType.DeviceUnit
                                 //            , machineRequestType.Tray
@@ -1176,7 +1197,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                             , machineRequestType.Text
                                             , ref cError2)))
                                 {
-                                 _ = _logger.LogDetailAsync(thisProc + "Machine Drive error Message: " + cError2);
+                                    _ = _logger.LogDetailAsync(thisProc + "Machine Drive error Message: " + cError2);
                                     str1 = "Machine error message: " + cError2;
                                 }
                             }
@@ -1208,7 +1229,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 strArray[5] = " but in Simulation Mode or Suspended.";
                                 var lineToWrite13 = string.Concat(strArray);
                                 //logger13.Log(LineToWrite13);
-                             _ = _logger.LogDetailAsync($"13-{lineToWrite13}");
+                                _ = _logger.LogDetailAsync($"13-{lineToWrite13}");
                             }
                             //_logger.LogDetailAsync(thisProc + "Go back to the top of the while (true) in case there is another request in the queue...");
                             Thread.Sleep(nThreadSleepMilliseconds);
@@ -1246,7 +1267,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                                 strArray[8] = nInAlignment.ToString();
                                 var lineToWrite15 = string.Concat(strArray);
                                 //logger15.Log(LineToWrite15);
-                             _ = _logger.LogDetailAsync($"15-{lineToWrite15}");
+                                _ = _logger.LogDetailAsync($"15-{lineToWrite15}");
 
                                 currentHanelDeviceStatus.GoodStatus = true;
                                 currentHanelDeviceStatus.LastStatus = DateTime.Now;
@@ -1319,7 +1340,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     }
                     Thread.Sleep(nThreadSleepMilliseconds);
                 }
-             _ = _logger.LogDetailAsync(thisProc + "Someone or something has requested this process to shut down.");
+                _ = _logger.LogDetailAsync(thisProc + "Someone or something has requested this process to shut down.");
             }));
         }
 
@@ -1330,7 +1351,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
             var status = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == device);
             if (status != null)
             {
-             _ = _logger.LogDetailAsync($"Peek at Status: {status.CommandAccepted}");
+                _ = _logger.LogDetailAsync($"Peek at Status: {status.CommandAccepted}");
                 if (status.CommandAccepted)
                 {
                     if (status.CommandExecuted)

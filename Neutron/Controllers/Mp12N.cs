@@ -21,8 +21,8 @@ namespace Neutron.Controllers
 
     public class Mp12N : IHanelDriver
     {
-        private readonly Hanel_DeviceController _hanel;
-        readonly SendOrPostCallback CallBackHandler_Init;
+        private Hanel_DeviceController _hanel;
+        private SendOrPostCallback CallBackHandler_Init;
         HanelTellMeWhenTrayArrives MyTrayArrivedNotificationDelegate = MyTrayArrived;
         Guid MyNotificationHandle;
         int NotificationTimeOutSeconds = 60;
@@ -31,7 +31,7 @@ namespace Neutron.Controllers
         private readonly int Device_Stationary = -1;
         private readonly int Device_Alignment_DontCare = 0;
 
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
         private readonly WorkstationView _workstation;
         Form _currentForm;
         private readonly Object _locker = new Object();
@@ -41,24 +41,20 @@ namespace Neutron.Controllers
         {
             _previousTray = new int[10];
             _workstation = workstation;
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = string.Format(format: @"RCC2_Station_{0}", arg0: workstation.WorkstationId.ToString());
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
             _currentForm = frm;
-            Task.Run(() => _logger.LogDetailAsync($"Mp12N Constructor - {frm.Name}"));
+
+            Init();
+        }
+
+        private void Init()
+        {
+            _logger = NeutronCore.Global.Logger.SetupLogger("Mp12N");
+            Task.Run(() => _logger.LogDetailAsync($"Mp12N Constructor - {_currentForm.Name}"));
             CallBackHandler_Init = new SendOrPostCallback(MyInitProgressDelegate);
-           //var hanelLog = ($"{logFileDir}Hanel");
-            _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12N(),_logger);
-            if (_hanel != null)
-            {
-                Task.Run(() => _logger.LogDetailAsync(@"Shuttle has been created: "));
-                RCC2Init();
-            }
-            else
-            {
-                Task.Run(() => _logger.LogDetailAsync("Shuttle has NOT been created:  Exiting "));
-            }
+            _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12N());
+
+            Task.Run(() => _logger.LogDetailAsync(@"Hanel Device Controller has been created: "));
+            RCC2Init();
         }
 
         public Form CurrentForm
@@ -260,6 +256,7 @@ namespace Neutron.Controllers
                                         }
 
                                         cError = "";
+                                        // this puts the command into the Queue
                                         if (_hanel.Drive_Device(deviceNumber, trayNumber, ref cError))
                                         {
                                             Task.Run(() => _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}"));
@@ -375,36 +372,40 @@ namespace Neutron.Controllers
             try
             {
                 _hanel.Close_Controller(ref cError);
-                
+
                 Task.Run(() => _logger.LogDetailAsync($"Close RCC Controller - Success {cError}"));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Task.Run(() => _logger.LogDetailAsync($"Close RCC Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}"));
             }
-  
+
         }
 
         public HanelDeviceStatus GetDeviceStatus(int deviceNumber)
         {
             var msg = string.Empty;
             var deviceStatus = new HanelDeviceStatus();
-         _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+            _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!_hanel.Init_Success)
             {
-             _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
-             _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+                _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
+                _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
                 cError = "";
                 // When you request device status, you get status for all devices. That is the reason for the list.
                 // Even if there is only a single device, it comes back in a list.
-                var myDeviceStatusList = new List<HanelDeviceStatus>();
-                if (_hanel.Get_Device_Status(ref myDeviceStatusList, ref cError))
+                // var myDeviceStatusList = new List<HanelDeviceStatus>();
+
+                var myDeviceStatusList = _hanel.Get_Device_Status();
+
+                // if (_hanel.Get_Device_Status(ref myDeviceStatusList, ref cError))
+                if (myDeviceStatusList.Any())
                 {
                     // At this point, you have current status for every device in your list
-                 _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstation.EnabledDevices.Count}");
+                    _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstation.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)
@@ -422,12 +423,12 @@ namespace Neutron.Controllers
                         }
                     }
 
-                 _ = _logger.LogDetailAsync(msg);
+                    _ = _logger.LogDetailAsync(msg);
                     //ShowMessage(msg);
                 }
                 else
                 {
-                 _ = _logger.LogDetailAsync("Get Device Status request aborted...");
+                    _ = _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
             return deviceStatus;

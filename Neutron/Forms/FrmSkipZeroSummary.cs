@@ -82,7 +82,7 @@ namespace Neutron.Forms
         {
 
             DataGridViewSkipZeroSummary.AutoGenerateColumns = false;
-            DataGridViewSkipZeroSummary.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewSkipZeroSummary.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewSkipZeroSummary.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewSkipZeroSummary.DefaultCellStyle.BackColor = Color.White;
 

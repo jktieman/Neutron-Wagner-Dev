@@ -613,7 +613,7 @@
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridViewInventoryLocations.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.DataGridViewInventoryLocations.RowTemplate.Height = 28;
-            this.DataGridViewInventoryLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewInventoryLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewInventoryLocations.Size = new System.Drawing.Size(1210, 441);
             this.DataGridViewInventoryLocations.TabIndex = 2;
             this.DataGridViewInventoryLocations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewInventoryLocations_CellClick);
@@ -1518,7 +1518,7 @@
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridViewInventoryNewLocations.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DataGridViewInventoryNewLocations.RowTemplate.Height = 28;
-            this.DataGridViewInventoryNewLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewInventoryNewLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewInventoryNewLocations.Size = new System.Drawing.Size(1210, 345);
             this.DataGridViewInventoryNewLocations.TabIndex = 0;
             this.DataGridViewInventoryNewLocations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewInventoryAddDetailLocations_CellClick);

@@ -141,6 +141,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RJCP.SerialPortStream, Version=2.4.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.Core.WinForms, Version=21.1460.35.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="Syncfusion.Shared.Base, Version=21.1460.35.0, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="System" />
@@ -149,6 +152,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>True</Private>
@@ -179,6 +183,7 @@
     <Compile Include="Controllers\TCP_IPTIController.cs" />
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
+    <Compile Include="Extensions\FormUtilities.cs" />
     <Compile Include="Extensions\UCExtensions.cs" />
     <Compile Include="Forms\FrmChangeReplenLineStatus.cs">
       <SubType>Form</SubType>
@@ -834,10 +839,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\VS2019\Projects\HanelCommands\HanelCommands\HanelCommands.csproj">
-      <Project>{e5c92f26-e834-4913-9482-c8af45f358ea}</Project>
-      <Name>HanelCommands</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
       <Project>{b600904b-1b59-47bf-8884-5a4982d8b2fe}</Project>
       <Name>HighJump</Name>
@@ -873,6 +874,10 @@
     <ProjectReference Include="..\ExcelManager\ExcelManager.csproj">
       <Project>{5A55EB87-D42F-4AE4-9584-0F83DF746EA4}</Project>
       <Name>ExcelManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HanelCommands\HanelCommands.csproj">
+      <Project>{e5c92f26-e834-4913-9482-c8af45f358ea}</Project>
+      <Name>HanelCommands</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hanel_DC\Hanel_DC.csproj">
       <Project>{156add50-d792-4d9b-897d-f4b38aed9234}</Project>

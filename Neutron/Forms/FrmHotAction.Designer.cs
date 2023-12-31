@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -100,6 +100,7 @@
             this.LabelHotPickDescription = new System.Windows.Forms.Label();
             this.LabelMainQuantity = new System.Windows.Forms.Label();
             this.LabelHotPickItem = new System.Windows.Forms.Label();
+            this.LabelMainDescription = new System.Windows.Forms.Label();
             this.LabelMainItem = new System.Windows.Forms.Label();
             this.MBHotActionCount = new MetroFramework.Controls.MetroButton();
             this.MBHotAccept = new MetroFramework.Controls.MetroButton();
@@ -177,7 +178,6 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.LabelMainDescription = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
@@ -208,11 +208,11 @@
             this.tabControl1.Controls.Add(this.HotAction);
             this.tabControl1.Controls.Add(this.HotActionTray);
             this.tabControl1.Controls.Add(this.HotRackTray);
-            this.tabControl1.Location = new System.Drawing.Point(22, 44);
+            this.tabControl1.Location = new System.Drawing.Point(23, 44);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1243, 708);
+            this.tabControl1.Size = new System.Drawing.Size(1243, 700);
             this.tabControl1.TabIndex = 0;
             // 
             // HotPick
@@ -235,7 +235,7 @@
             this.HotPick.Controls.Add(this.DataGridViewHot);
             this.HotPick.Location = new System.Drawing.Point(4, 22);
             this.HotPick.Name = "HotPick";
-            this.HotPick.Size = new System.Drawing.Size(1235, 669);
+            this.HotPick.Size = new System.Drawing.Size(1235, 682);
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
             // 
@@ -417,42 +417,42 @@
             this.DataGridViewHot.AllowUserToAddRows = false;
             this.DataGridViewHot.AllowUserToDeleteRows = false;
             this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridViewHot.Location = new System.Drawing.Point(12, 161);
             this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridViewHot.MultiSelect = false;
             this.DataGridViewHot.Name = "DataGridViewHot";
             this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewHot.RowTemplate.Height = 28;
             this.DataGridViewHot.RowTemplate.ReadOnly = true;
-            this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridViewHot.Size = new System.Drawing.Size(1208, 499);
             this.DataGridViewHot.TabIndex = 5;
             this.DataGridViewHot.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewHot_CellClick);
@@ -483,7 +483,7 @@
             this.HotAction.Controls.Add(this.PictureBoxItemHotImage);
             this.HotAction.Location = new System.Drawing.Point(4, 22);
             this.HotAction.Name = "HotAction";
-            this.HotAction.Size = new System.Drawing.Size(1235, 682);
+            this.HotAction.Size = new System.Drawing.Size(1235, 674);
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
             this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
@@ -515,7 +515,7 @@
             this.GroupBoxHotPickLocation.Controls.Add(this.LabelOver);
             this.GroupBoxHotPickLocation.Controls.Add(this.LabelTray);
             this.GroupBoxHotPickLocation.Controls.Add(this.LabelDevice);
-            this.GroupBoxHotPickLocation.Location = new System.Drawing.Point(7, 373);
+            this.GroupBoxHotPickLocation.Location = new System.Drawing.Point(7, 369);
             this.GroupBoxHotPickLocation.Name = "GroupBoxHotPickLocation";
             this.GroupBoxHotPickLocation.Size = new System.Drawing.Size(397, 303);
             this.GroupBoxHotPickLocation.TabIndex = 21;
@@ -1049,6 +1049,17 @@
             this.LabelHotPickItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.LabelHotPickItem.DoubleClick += new System.EventHandler(this.LabelHotPickItem_Click);
             // 
+            // LabelMainDescription
+            // 
+            this.LabelMainDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelMainDescription.Location = new System.Drawing.Point(326, 334);
+            this.LabelMainDescription.Name = "LabelMainDescription";
+            this.LabelMainDescription.Size = new System.Drawing.Size(113, 44);
+            this.LabelMainDescription.TabIndex = 15;
+            this.LabelMainDescription.Text = "Desc";
+            this.LabelMainDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelMainDescription.Visible = false;
+            // 
             // LabelMainItem
             // 
             this.LabelMainItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1101,7 +1112,7 @@
             this.PictureBoxItemHotImage.BackColor = System.Drawing.Color.Transparent;
             this.PictureBoxItemHotImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxItemHotImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemHotImage.InitialImage")));
-            this.PictureBoxItemHotImage.Location = new System.Drawing.Point(426, 418);
+            this.PictureBoxItemHotImage.Location = new System.Drawing.Point(426, 414);
             this.PictureBoxItemHotImage.Name = "PictureBoxItemHotImage";
             this.PictureBoxItemHotImage.Size = new System.Drawing.Size(256, 256);
             this.PictureBoxItemHotImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -1126,7 +1137,7 @@
             this.HotActionTray.Location = new System.Drawing.Point(4, 22);
             this.HotActionTray.Name = "HotActionTray";
             this.HotActionTray.Padding = new System.Windows.Forms.Padding(3);
-            this.HotActionTray.Size = new System.Drawing.Size(1235, 682);
+            this.HotActionTray.Size = new System.Drawing.Size(1235, 674);
             this.HotActionTray.TabIndex = 8;
             this.HotActionTray.Text = "Hot Action Tray";
             // 
@@ -1568,7 +1579,7 @@
             this.HotRackTray.Controls.Add(this.label37);
             this.HotRackTray.Location = new System.Drawing.Point(4, 22);
             this.HotRackTray.Name = "HotRackTray";
-            this.HotRackTray.Size = new System.Drawing.Size(1235, 682);
+            this.HotRackTray.Size = new System.Drawing.Size(1235, 674);
             this.HotRackTray.TabIndex = 9;
             this.HotRackTray.Text = "Hot Rack Tray";
             this.HotRackTray.UseVisualStyleBackColor = true;
@@ -1578,7 +1589,7 @@
             this.PanelTableLayoutRack.Dock = System.Windows.Forms.DockStyle.Left;
             this.PanelTableLayoutRack.Location = new System.Drawing.Point(0, 0);
             this.PanelTableLayoutRack.Name = "PanelTableLayoutRack";
-            this.PanelTableLayoutRack.Size = new System.Drawing.Size(467, 682);
+            this.PanelTableLayoutRack.Size = new System.Drawing.Size(467, 674);
             this.PanelTableLayoutRack.TabIndex = 188;
             // 
             // TextBoxPickPos1
@@ -1963,17 +1974,6 @@
             this.LabelFormHeaderText.TabIndex = 26;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // LabelMainDescription
-            // 
-            this.LabelMainDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainDescription.Location = new System.Drawing.Point(326, 334);
-            this.LabelMainDescription.Name = "LabelMainDescription";
-            this.LabelMainDescription.Size = new System.Drawing.Size(113, 44);
-            this.LabelMainDescription.TabIndex = 15;
-            this.LabelMainDescription.Text = "Desc";
-            this.LabelMainDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LabelMainDescription.Visible = false;
             // 
             // FrmHotAction
             // 

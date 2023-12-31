@@ -1223,7 +1223,7 @@ namespace Neutron.Forms
         {
 
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             var bCol = new DataGridViewButtonColumn
             {
                 HeaderText = string.Empty,

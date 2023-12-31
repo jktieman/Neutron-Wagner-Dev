@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.IO.Ports;
 using RJCP.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -14,7 +13,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
 {
     internal class HanelMp12DDeviceController : IHanelDeviceController
     {
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
         private string _xErrorMsg = "";
         private readonly bool _Serial_Type = true;
         private readonly string _LogFileName = "Hanel_MP12D";   
@@ -27,11 +26,18 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         private List<HanelDeviceStatus> _currentHanelDeviceStatusList;
 
-        public HanelMp12DDeviceController(IDynamicLogger logger)
+        public HanelMp12DDeviceController()
         {
-            _logger = logger;
             this._ObjectID = HanelUtil.GetUniqueObjectIdentifier();
+            Init();
         }
+
+        private void Init()
+        {
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelMp12DDeviceController");
+        }
+
+        public HanelMp12DSerialPortMonitor SerialPortMonitor => _serialPortMonitor;
 
         public int Get_LastErrorCode()
         {
@@ -65,7 +71,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         public bool OpenChannel(int nCommPort, int nBaudRate
             , int nDataBits, string cParity, int nStopBits, ref string cError
-            , bool simulationMode, int logLevel, ref List<HanelDeviceStatus> currentHanelDeviceStatusList, string logPath = "")
+            , bool simulationMode, int logLevel, List<HanelDeviceStatus> currentHanelDeviceStatusList, string logPath = "")
         {
             var parity = Parity.None;
             var stopBits = GetStopBits(nStopBits);  // StopBits.One;
@@ -83,7 +89,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     //_serialPortMonitor = new HanelMp12DSerialPortMonitor( comPort
                     //    , nBaudRate, nDataBits, parity, stopBits, ref cError, ref _currentHanelDeviceStatusList, _logger);
                     _serialPortMonitor = new HanelMp12DSerialPortMonitor(comPort
-                        , nBaudRate, nDataBits, parity, stopBits, ref cError, ref currentHanelDeviceStatusList, _logger);
+                        , nBaudRate, nDataBits, parity, stopBits, ref cError, ref currentHanelDeviceStatusList);
                 }
                 catch (Exception ex)
                 {

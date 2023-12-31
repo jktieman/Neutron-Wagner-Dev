@@ -12,7 +12,6 @@ namespace AlliedLogger
         string FolderName { get; set; }
         string FileName { get; set; }
         string FilePath { get; }
-        string TempFilePath { get; }
         void Flush();
         void Log(string msg);
         Task LogAsync(string msg);

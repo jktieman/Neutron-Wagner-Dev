@@ -399,7 +399,7 @@ namespace Neutron.Controllers
                     {
                         PortName = serialConfiguration.PortName,
                         BaudRate = serialConfiguration.BaudRate,
-                        Parity = serialConfiguration.Parity,
+                        Parity = (Parity)serialConfiguration.Parity,
                         DataBits = serialConfiguration.DataBits,
                         StopBits = (StopBits)serialConfiguration.StopBits
                     };

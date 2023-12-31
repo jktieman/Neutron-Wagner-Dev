@@ -256,7 +256,7 @@ namespace Neutron.Forms
         private void SetupGrids()
         {
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
 
@@ -416,7 +416,7 @@ namespace Neutron.Forms
 
             //DataGridView TCP
             DataGridViewTcp.AutoGenerateColumns = false;
-            DataGridViewTcp.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewTcp.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewTcp.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewTcp.DefaultCellStyle.BackColor = Color.White;
 
@@ -481,7 +481,7 @@ namespace Neutron.Forms
 
             //DataGridView Serial
             DataGridViewSerial.AutoGenerateColumns = false;
-            DataGridViewSerial.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewSerial.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewSerial.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewSerial.DefaultCellStyle.BackColor = Color.White;
 
@@ -620,7 +620,7 @@ namespace Neutron.Forms
             //--- Workstation Grid --------------------------
 
             DataGridViewStations.AutoGenerateColumns = false;
-            DataGridViewStations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewStations.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGridViewStations.DefaultCellStyle.ForeColor = Color.Black;
             DataGridViewStations.DefaultCellStyle.BackColor = Color.White;
 
@@ -2401,7 +2401,7 @@ namespace Neutron.Forms
         private void LoadSerialViewEdit()
         {
             var serial = ((ObjectView<SerialConfiguration>)_bindingSourceSerial.Current).Object;
-            TextBoxSerialViewEditName.Text = serial.Name;
+            TextBoxSerialViewEditName.Text = serial.Name ?? string.Empty;
             ComboBoxSerialViewEditPortName.SelectedItem = serial.PortName;
             NumericUpDownSerialViewEditPortNumber.Value = serial.PortNumber;
             ComboBoxSerialViewEditBaudRate.SelectedItem = serial.BaudRate;
@@ -2420,7 +2420,7 @@ namespace Neutron.Forms
         {
             var id = ((ObjectView<SerialConfiguration>)_bindingSourceSerial.Current).Object.Id;
             var serial = _repoSerialConfigurations.FindByKey(id);
-            serial.Name = TextBoxSerialViewEditName.Text;
+            serial.Name = TextBoxSerialViewEditName.Text ?? string.Empty;
             serial.PortName = (string)ComboBoxSerialViewEditPortName.SelectedItem;
             serial.PortNumber = Convert.ToInt32(NumericUpDownSerialViewEditPortNumber.Value);
             serial.BaudRate = Convert.ToInt32(ComboBoxSerialViewEditBaudRate.SelectedItem);
@@ -2440,7 +2440,7 @@ namespace Neutron.Forms
         {
             var serial = new SerialConfiguration
             {
-                Name = TextBoxSerialNewName.Text,
+                Name = TextBoxSerialNewName.Text ?? string.Empty,
                 PortName = (string)ComboBoxSerialNewPortName.SelectedItem,
                 PortNumber = Convert.ToInt32(NumericUpDownSerialNewPortNumber.Value),
                 BaudRate = Convert.ToInt32(ComboBoxSerialNewBaudRate.SelectedItem),

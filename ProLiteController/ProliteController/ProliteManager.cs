@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Threading;
 using AlliedLogger;
 using NeutronCore.Global;
-using System.IO.Ports;
+using NeutronCore.Enums;
+using NeutronData.ModelViews;
 
 
 namespace ProliteController
@@ -29,6 +31,7 @@ namespace ProliteController
         private readonly int _dataBits;
         private readonly int _stopBits;
         private readonly NeutronVariables _neutronVariables;
+        private readonly WorkstationView _workstationView;
         private readonly IDynamicLogger _logger;
         private SerialPort _serialPort;
         private readonly IList<Prolite> _prolites;
@@ -78,7 +81,8 @@ namespace ProliteController
         }
 
 
-        public ProLiteManager(string portName, int baudRate, Parity parity, int dataBits, int stopBits, NeutronVariables neutronVariables)
+        public ProLiteManager(string portName, int baudRate, Parity parity, int dataBits, int stopBits,
+            NeutronVariables neutronVariables, WorkstationView workstationView)
         {
             _portName = portName;
             _baudRate = baudRate;
@@ -87,6 +91,7 @@ namespace ProliteController
             _stopBits = stopBits;
 
             _neutronVariables = neutronVariables;
+            _workstationView = workstationView;
             _prolites = new List<Prolite>();
             _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
 
@@ -146,9 +151,6 @@ namespace ProliteController
                 var cmd = prolite.TurnOn(level, part, quantity);
                 _lastCommand = cmd;
                 _serialPort.Write(cmd);
-                // var msg = Encoding.UTF8.GetBytes(cmd);
-
-                // if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(msg, 0, msg.Length);
 
             }
             catch (Exception ex)
@@ -195,6 +197,7 @@ namespace ProliteController
         public void ClearProlite(int deviceNumber)
         {
             _ = _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}");
+            
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -224,6 +227,7 @@ namespace ProliteController
             {
                 _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
             }
+            _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites Complete");
         }
 
 
@@ -311,10 +315,9 @@ namespace ProliteController
 
             if (data.Length > 0)
             {
-                ProcessSerialData(data);
+                _ = _logger.LogDetailAsync($"Pro-Lite Serial Data Received: {data}");
+               // ProcessSerialData(data);
             }
-
-            _ = _logger.LogDetailAsync($"Pro-Lite Serial Data Received: {data}");
         }
 
         private void ProcessSerialData(string data)
@@ -322,6 +325,7 @@ namespace ProliteController
             if (data.Length < 11)
             {
                 _serialPort.Write(_lastCommand);
+                _ = _logger.LogDetailAsync($"Pro-Lite Write Data: {_lastCommand}");
             }
         }
 

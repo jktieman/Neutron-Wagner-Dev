@@ -106,25 +106,26 @@ namespace Neutron
             , IAreaRepository areaRepository
             , ILocationsRepository locationsRepository)
         {
+            _jsonData = jsonData ?? throw new ArgumentNullException(nameof(jsonData));
+            _akaRepository = akaRepository ?? throw new ArgumentNullException(nameof(akaRepository));
+            _securityProcessor = securityProcessor ?? throw new ArgumentNullException(nameof(securityProcessor));
+            _lacProcessor = lacProcessor ?? throw new ArgumentNullException(nameof(lacProcessor));
+            _workstationRepository = workstationRepository ?? throw new ArgumentNullException(nameof(workstationRepository));
+            _imageManager = imageManager ?? throw new ArgumentNullException(nameof(imageManager));
+            _ordersRepository = ordersRepository ?? throw new ArgumentNullException(nameof(ordersRepository));
+            _replenOrdersRepository = replenOrdersRepository ?? throw new ArgumentNullException(nameof(replenOrdersRepository));
+            _enumManager = enumManager ?? throw new ArgumentNullException(nameof(enumManager));
+            _itemDefinitionsRepository = itemDefinitionsRepository ?? throw new ArgumentNullException(nameof(itemDefinitionsRepository));
+            _storedProcedureManager = storedProcedureManager ?? throw new ArgumentNullException(nameof(storedProcedureManager));
+            _neutronVariables = neutronVariables ?? throw new ArgumentNullException(nameof(neutronVariables));
+            _neutronLicense = neutronLicense ?? throw new ArgumentNullException(nameof(neutronLicense));
+            _areaRepository = areaRepository ?? throw new ArgumentNullException(nameof(areaRepository));
+            _locationsRepository = locationsRepository ?? throw new ArgumentNullException(nameof(locationsRepository));
+            
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             KeyPreview = true;
-            _jsonData = jsonData;
-            _akaRepository = akaRepository;
-            _securityProcessor = securityProcessor;
-            _lacProcessor = lacProcessor;
-            _workstationRepository = workstationRepository;
-            _imageManager = imageManager;
-            _ordersRepository = ordersRepository;
-            _replenOrdersRepository = replenOrdersRepository;
-            _enumManager = enumManager;
-            _itemDefinitionsRepository = itemDefinitionsRepository;
-            _storedProcedureManager = storedProcedureManager;
-            _neutronVariables = neutronVariables;
-            _neutronLicense = neutronLicense;
-            _areaRepository = areaRepository;
-            _locationsRepository = locationsRepository;
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
             _logger = NeutronCore.Global.Logger.SetupLogger("Main");
 
@@ -139,28 +140,45 @@ namespace Neutron
             Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
             Mediator.GetInstance().SendEmailMessage += (s, e) => DisplayMessage(e.Message); // _sendEmail.Message(this, e.Message);
 
-            //TODO Remove this or change to false for Production
-            GlobalVar.Testing = true;
+            _ = InitializeAsync();
 
-            //Log on to Neutron
-            LogOn();
+            ////TODO Remove this or change to false for Production
+            //GlobalVar.Testing = true;
 
-            //Init();
-            var result = Init();
+            ////Log on to Neutron
+            //LogOn();
 
-            _ = _logger.LogDetailAsync($"After Task.Run INIT result: {result} ");
+            ////Init();
+            //var result = Init();
 
-            if (result == false)
-            {
-                _ = CloseApp();
-            }
+            //_ = _logger.LogDetailAsync($"After Task.Run INIT result: {result} ");
+
+            //if (result == false)
+            //{
+            //    _ = CloseApp();
+            //}
 
 
         }
 
-        private bool Init()
+        private async Task InitializeAsync()
         {
-            _ = _logger.LogDetailAsync("Init Started");
+            //TODO Remove this or change to false for Production
+            GlobalVar.Testing = true;
+            //Log on to Neutron
+            LogOn();
+            //Init();
+            var result = await InitAsync();
+            _ = _logger.LogDetailAsync($"After Task.Run INIT result: {result} ");
+            if (result == false)
+            {
+                _ = CloseApp();
+            }
+        }
+
+        private async Task<bool> InitAsync()
+        {
+            await _logger.LogDetailAsync("Init Started");
             var result = InitForm();
             _ = _logger.LogDetailAsync($"Init Result: {result}");
 
@@ -253,7 +271,7 @@ namespace Neutron
                             // If this station is responsible for the loader, start the loader
                             if (_neutronVariables.LoaderStation == _workstationView.WorkstationId)
                             {
-                                _ = _logger.LogDetailAsync("Workstation is a Loader Station"); 
+                                _ = _logger.LogDetailAsync("Workstation is a Loader Station");
                                 _startStopLoaderManager = DI.Create<StartStopLoaderManager>(_neutronVariables, _neutronLicense, _workstationView);
                                 StartLoader();
 
@@ -261,8 +279,8 @@ namespace Neutron
                                 StartUpload();
                             }
                             _ = _logger.LogDetailAsync("SetupSlotFactory - Before");
-                           SetupSlotFactory();
-                           _ = _logger.LogDetailAsync("SetupSlotFactory - After");
+                            SetupSlotFactory();
+                            _ = _logger.LogDetailAsync("SetupSlotFactory - After");
                             // if the workstation is a supervisor, return the workstationView
                             // otherwise, set up the hardware devices
                             if (_workstationView.StationTypeId != (int)StationType.Supervisor)
@@ -304,7 +322,7 @@ namespace Neutron
         }
         private void SetupHardwareDevices()
         {
-            _ = _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name );
+            _ = _logger.LogDetailAsync($"Workstation Name: " + _workstationView.Name);
             // get all the hardware devices on this workstation; carousel, lights scale, etc
             try
             {
@@ -319,8 +337,8 @@ namespace Neutron
                     _ = _logger.LogDetailAsync("No hardware devices found on this workstation");
                     return;
                 }
-                
-                
+
+
 
                 // loop through the hardware devices
                 // get the communication type
@@ -420,9 +438,14 @@ namespace Neutron
                         // DeviceType = 8 or Hanel12D
                         case (int)DeviceTypeEnum.Hanel12D:
                             {
-                                _ = _logger.LogDetailAsync($"This is a Hanel 12D Device");
+                                // Represents the total number of Hanel 12D devices in the hardware devices list.
+                                var totalHanelUnits = hardwareDevices.Count(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D);
+
+                                _ = _logger.LogDetailAsync($"This is a Hanel 12D Device with {totalHanelUnits} Towers.");
                                 _workstationView.HardwareDevices.Add(device);
-                                if (device.Enabled)
+
+                                if (_workstationView.HardwareDevices.Count(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D) ==
+                                    totalHanelUnits)
                                 {
                                     if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
                                     {
@@ -431,7 +454,6 @@ namespace Neutron
                                         GlobalVar.Hanel.InitStatus();
                                         var result = GlobalVar.Hanel != null;
                                     }
-
                                 }
                                 break;
                             }
@@ -468,7 +490,8 @@ namespace Neutron
                                         , device.SerialConfiguration.Parity
                                         , device.SerialConfiguration.DataBits
                                         , device.SerialConfiguration.StopBits
-                                        , _neutronVariables);
+                                        , _neutronVariables
+                                        , _workstationView);
                                 }
 
                                 _ = _logger.LogDetailAsync($"Adding Prolite Device to ProLiteManager");
@@ -653,85 +676,85 @@ namespace Neutron
 
             return true;
         }
-        private bool SetupShuttle()
-        {
-            var result = false;
-            if (_workstationView.StationTypeId == (int)StationType.Carousel ||
-                _workstationView.StationTypeId == (int)StationType.Vertical)
-            {
-                try
-                {
-                    if (_neutronVariables.ShuttleEnabled)
-                    {
-                        Task.Run(() => _logger.LogDetailAsync("Shuttle Enabled - Setup."));
-                        if (_workstationView.HardwareDevices.Count > 0)
-                        {
-                            if (_neutronVariables.DeviceDriver == DeviceDriverName.C3000() && GlobalVar.Shuttle == null)
-                            {
-                                Task.Run(() => _logger.LogDetailAsync("C3000 Controller."));
-                                GlobalVar.Shuttle = new C3000(this, _workstationView);
-                                GlobalVar.Shuttle.InitStatus();
-                                result = GlobalVar.Shuttle != null;
-                            }
+        //private bool SetupShuttle()
+        //{
+        //    var result = false;
+        //    if (_workstationView.StationTypeId == (int)StationType.Carousel ||
+        //        _workstationView.StationTypeId == (int)StationType.Vertical)
+        //    {
+        //        try
+        //        {
+        //            if (_neutronVariables.ShuttleEnabled)
+        //            {
+        //                Task.Run(() => _logger.LogDetailAsync("Shuttle Enabled - Setup."));
+        //                if (_workstationView.HardwareDevices.Count > 0)
+        //                {
+        //                    if (_neutronVariables.DeviceDriver == DeviceDriverName.C3000() && GlobalVar.Shuttle == null)
+        //                    {
+        //                        Task.Run(() => _logger.LogDetailAsync("C3000 Controller."));
+        //                        GlobalVar.Shuttle = new C3000(this, _workstationView);
+        //                        GlobalVar.Shuttle.InitStatus();
+        //                        result = GlobalVar.Shuttle != null;
+        //                    }
 
-                            if (_neutronVariables.DeviceDriver == DeviceDriverName.C2000() && GlobalVar.Shuttle == null)
-                            {
-                                Task.Run(() => _logger.LogDetailAsync("C2000 Controller."));
-                                GlobalVar.Shuttle = new C2000(this, _workstationView);
-                                GlobalVar.Shuttle.InitStatus();
-                                result = GlobalVar.Shuttle != null;
-                            }
+        //                    if (_neutronVariables.DeviceDriver == DeviceDriverName.C2000() && GlobalVar.Shuttle == null)
+        //                    {
+        //                        Task.Run(() => _logger.LogDetailAsync("C2000 Controller."));
+        //                        GlobalVar.Shuttle = new C2000(this, _workstationView);
+        //                        GlobalVar.Shuttle.InitStatus();
+        //                        result = GlobalVar.Shuttle != null;
+        //                    }
 
-                            if (_neutronVariables.DeviceDriver == DeviceDriverName.RCC2() && GlobalVar.Shuttle == null)
-                            {
-                                Task.Run(() => _logger.LogDetailAsync("RCC2 Controller."));
-                                GlobalVar.Shuttle = new RCC2(this, _workstationView);
-                                GlobalVar.Shuttle.InitStatus();
-                                result = GlobalVar.Shuttle != null;
-                            }
+        //                    if (_neutronVariables.DeviceDriver == DeviceDriverName.RCC2() && GlobalVar.Shuttle == null)
+        //                    {
+        //                        Task.Run(() => _logger.LogDetailAsync("RCC2 Controller."));
+        //                        GlobalVar.Shuttle = new RCC2(this, _workstationView);
+        //                        GlobalVar.Shuttle.InitStatus();
+        //                        result = GlobalVar.Shuttle != null;
+        //                    }
 
-                            if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
-                            {
-                                Task.Run(() => _logger.LogDetailAsync("Mp12D Controller."));
-                                GlobalVar.Hanel = new Mp12D(this, _workstationView);
-                                GlobalVar.Hanel.InitStatus();
-                                result = GlobalVar.Hanel != null;
-                            }
+        //                    if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
+        //                    {
+        //                        Task.Run(() => _logger.LogDetailAsync("Mp12D Controller."));
+        //                        GlobalVar.Hanel = new Mp12D(this, _workstationView);
+        //                        GlobalVar.Hanel.InitStatus();
+        //                        result = GlobalVar.Hanel != null;
+        //                    }
 
-                            if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
-                            {
-                                Task.Run(() => _logger.LogDetailAsync("MP12N Controller."));
-                                GlobalVar.Hanel = new Mp12N(this, _workstationView);
-                                GlobalVar.Hanel.InitStatus();
-                                result = GlobalVar.Hanel != null;
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Main Form Init: Hardware device count error.");
-                        }
-                    }
-                    else
-                    {
-                        // no shuttle enabled, return true
-                        result = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        $"Error setting up device controller.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                    result = false;
-                }
-            }
-            else
-            {
-                // not a carousel or vertical, return true
-                result = true;
-            }
+        //                    if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
+        //                    {
+        //                        Task.Run(() => _logger.LogDetailAsync("MP12N Controller."));
+        //                        GlobalVar.Hanel = new Mp12N(this, _workstationView);
+        //                        GlobalVar.Hanel.InitStatus();
+        //                        result = GlobalVar.Hanel != null;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    MessageBox.Show("Main Form Init: Hardware device count error.");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // no shuttle enabled, return true
+        //                result = true;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show(
+        //                $"Error setting up device controller.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+        //            result = false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // not a carousel or vertical, return true
+        //        result = true;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
         public void ShowMessage(string msg)
         {
             MessageBox.Show(msg);
@@ -943,8 +966,8 @@ namespace Neutron
 
 
 
-           // if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations]) return;
-          //  Hide();
+            // if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageLocations]) return;
+            //  Hide();
             //using (MetroForm frm = new FrmLocations(_jsonData, _workstationRepository, _workstationView, _neutronVariables, _lacProcessor, _historyManager))
             //{
             //    frm.ShowDialog();

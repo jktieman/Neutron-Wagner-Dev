@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDllu", "..\NeutronDl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neutron_Test", "Neutron_Test\Neutron_Test.csproj", "{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HanelCommands", "..\..\..\VS2019\Projects\HanelCommands\HanelCommands\HanelCommands.csproj", "{E5C92F26-E834-4913-9482-C8AF45F358EA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBinDisplay", "EBinDisplayManager\EBinDisplay.csproj", "{51955251-C665-4F33-B31B-45011E6BAB99}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDataTests", "NeutronDataTests\NeutronDataTests.csproj", "{A4825200-9451-4D7C-AB6D-830FEABFEDFF}"
@@ -62,6 +60,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanel_DC", "Hanel_DC\Hanel_DC.csproj", "{156ADD50-D792-4D9B-897D-F4B38AED9234}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPTI", "IPTI\IPTI.csproj", "{7EE07F5A-F299-48B2-8B5F-9028B089A73E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HanelCommands", "HanelCommands\HanelCommands.csproj", "{E5C92F26-E834-4913-9482-C8AF45F358EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -150,10 +150,6 @@ Global
 		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51955251-C665-4F33-B31B-45011E6BAB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51955251-C665-4F33-B31B-45011E6BAB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51955251-C665-4F33-B31B-45011E6BAB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -190,6 +186,10 @@ Global
 		{7EE07F5A-F299-48B2-8B5F-9028B089A73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE07F5A-F299-48B2-8B5F-9028B089A73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE07F5A-F299-48B2-8B5F-9028B089A73E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C92F26-E834-4913-9482-C8AF45F358EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
