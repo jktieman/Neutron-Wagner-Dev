@@ -3530,7 +3530,7 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = PickList;
 
 
-            ClearAllShi();
+           // ClearAllShi();
             //ClearAllBli();
             //ClearOc();
             ClearBatchTable();
@@ -3726,7 +3726,7 @@ namespace Neutron.Forms
 
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
 
-            UpdateTowerDisplay();
+           // UpdateTowerDisplay();
 
             tabControl1.SelectedTab = PickScreen;
             MBPickAccept.Focus();
@@ -3800,13 +3800,18 @@ namespace Neutron.Forms
             //    newCarList.Add(carList);
             //}
 
-            if (_deviceManager != null)
+            if (_deviceManager == null)
             {
                 Task.Run(() =>
                  _ = _logger.LogDetailAsync(
                         $"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
                 _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
-                for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
+                
+                //for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
+                var pickableHardware = _workstationView.HardwareDevices.Where(r => r.DeviceType.Pickable).ToList();
+                
+                for (var i = 1; i <= pickableHardware.Count; i++)
+                
                 {
                     _deviceManager.MoveNext(i);
                 }
@@ -3851,7 +3856,7 @@ namespace Neutron.Forms
                 // UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
@@ -3859,7 +3864,7 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetFirstStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
-                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
         }
 
@@ -3875,7 +3880,7 @@ namespace Neutron.Forms
                 // UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
@@ -3883,7 +3888,7 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetNextStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
-                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
         }
 
@@ -3899,7 +3904,7 @@ namespace Neutron.Forms
                 // UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
@@ -3907,7 +3912,7 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetPreviousStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
-                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
         }
 
@@ -3923,7 +3928,7 @@ namespace Neutron.Forms
                 //UpdateCurrentDeviceIndicator();
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
                 var loc1 = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
                 var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
@@ -3932,7 +3937,7 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
                 Task.Run(() => _logger.LogDetailAsync($"GetLastStop Location : {loc1}-{loc2}-{loc3}-{loc4}"));
 
-                // PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
+                PositionDevice(loc1, loc2, loc3, loc4, moveDevice);
             }
         }
 
@@ -4015,7 +4020,7 @@ namespace Neutron.Forms
         private void UpdatePickScreenAfterChangeQuantity()
         {
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen AfterChangeQuantity Start: [{DateTime.Now.ToLongTimeString()}]"));
-            UpdateTowerDisplay();
+            // UpdateTowerDisplay();
             UpdatePickPosition();
             LabelPickQty.Text = (_currentPickStop.QuantityToBePicked).ToString();
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen AfterChangeQuantity End: [{DateTime.Now.ToLongTimeString()}]"));
@@ -4213,7 +4218,7 @@ namespace Neutron.Forms
                 {
                     if (_neutronVariables.ShiEnabled)
                     {
-                        ClearAllShi();
+                       // ClearAllShi();
                         _ = Task.Run(() => _logger.LogDetailAsync($"Show SHI function {loc1}-{loc2}-{loc3}-{loc4}{Environment.NewLine}{text}"));
 
                         GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text);
@@ -4632,7 +4637,7 @@ namespace Neutron.Forms
                     _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                     UpdatePickPosition();
                     UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                    UpdateTowerDisplay();
+                    // UpdateTowerDisplay();
                 }
                 else
                 {
@@ -4650,7 +4655,7 @@ namespace Neutron.Forms
         private void CloseBatchWithSkip()
         {
             _ = Task.Run(() => _logger.LogDetailAsync($"CloseBatchWithSkip START"));
-            ClearAllShi();
+           // ClearAllShi();
             // ClearAllBli();
             // ClearOc();
             ClearBatchTable();
@@ -4850,7 +4855,7 @@ namespace Neutron.Forms
                         _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                        UpdateTowerDisplay();
+                        // UpdateTowerDisplay();
 
                     }
                     else
@@ -4876,7 +4881,7 @@ namespace Neutron.Forms
                     _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
                     UpdatePickPosition();
                     UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                    UpdateTowerDisplay();
+                    // UpdateTowerDisplay();
                 }
             }
             else
@@ -5031,7 +5036,7 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
             }
             else
             {
@@ -5254,7 +5259,7 @@ namespace Neutron.Forms
         private void CloseBatch()
         {
             _ = Task.Run(() => _logger.LogDetailAsync($"CloseBatch START"));
-            ClearAllShi();
+            //ClearAllShi();
             //ClearAllBli();
             //ClearOc();
             ClearBatchTable();
@@ -5842,7 +5847,7 @@ namespace Neutron.Forms
             _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
             UpdatePickPosition();
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-            UpdateTowerDisplay();
+            // UpdateTowerDisplay();
             await _logger.LogDetailAsync($"5331 PositionDevice Button MOVE");
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
         }
@@ -6623,7 +6628,7 @@ namespace Neutron.Forms
                         _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                        UpdateTowerDisplay();
+                        // UpdateTowerDisplay();
                     }
                 }
             }
@@ -7362,7 +7367,7 @@ namespace Neutron.Forms
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-                UpdateTowerDisplay();
+                // UpdateTowerDisplay();
 
 
                 //var location = _currentPickStop.CurrentInventoryLocation.Location;

@@ -1215,7 +1215,7 @@ namespace Neutron.Forms
                 {
                     if (_neutronVariables.ShiEnabled)
                     {
-                        ClearAllShi();
+                       // ClearAllShi();
                         Task.Run(() => _logger.LogDetailAsync($"ShowShi HotAction {loc2} {loc3}"));
                         GlobalVar.Displays.ShowShi(loc1, loc2, loc3, loc4, text);
                         _workstationView.ProLiteManager?.TurnOn(loc1, loc3, loc4.ParseInt(), text.ParseInt());
@@ -2268,7 +2268,7 @@ namespace Neutron.Forms
             if (_pickList == null)
             {
                 CloseButtonPressed = false;
-                ClearAllShi();
+               // ClearAllShi();
 
                 GlobalVar.Displays?.ClearAllBli();
                 GlobalVar.Displays?.ClearBlastzone();
@@ -2312,7 +2312,7 @@ namespace Neutron.Forms
             {
                 actionCode = ActionCode.PickHot;
 
-                ClearAllShi();
+               // ClearAllShi();
                 _deviceIndicatorManager?.ClearAllDeviceIndicators();
 
                 _workstationView.ProLiteManager?.ClearAllProlites();

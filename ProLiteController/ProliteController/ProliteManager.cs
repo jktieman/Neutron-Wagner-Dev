@@ -220,7 +220,8 @@ namespace ProliteController
             {
                 foreach (var prolite in _prolites)
                 {
-                    ClearProlite(prolite.DeviceNumber);
+                    _serialPort.Write(prolite.Clear());
+                    //ClearProlite(prolite.DeviceNumber);
                 }
             }
             catch (Exception ex)

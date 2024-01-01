@@ -39,6 +39,7 @@ using System.Reflection;
 using NeutronEvents;
 using IPTI.Models;
 using NeutronData.SqlModelViews;
+//using System.Windows.Controls;
 
 namespace Neutron.Forms
 {
@@ -264,16 +265,66 @@ namespace Neutron.Forms
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             _logger.LogDetailAsync($"Cell Click");
-            
-            if (_bindingSource.Current == null) return;
-            var location = ((ObjectView<LocationView>)_bindingSource.Current).Object;
-            if (_workstationView.AreaId != location.AreaId)
-            {
-                MessageBox.Show($"The Location is not in this Area.");
-                return;
-            }
-            DataGridViewPosition((DataGridView)sender, e.RowIndex);
 
+            var grid = sender as DataGridView;
+            var rowIndex = e.RowIndex;
+            var colIndex = e.ColumnIndex;
+
+            //if (_bindingSource.Current == null) return;
+            //var location = ((ObjectView<LocationView>)_bindingSource.Current).Object;
+
+            //_logger.LogDetailAsync($"Cell Click 2");
+            //if (_workstationView.AreaId != location.AreaId)
+            //{
+            //    MessageBox.Show($"The Location is not in this Area.");
+            //    return;
+            //}
+
+            //_logger.LogDetailAsync($"Cell Click 3");
+
+            // ----------------------------------------------------------------
+            // DataGridViewPosition((DataGridView)sender, e.RowIndex);
+            var qty = 0;
+            var display = string.Empty;
+            _ = _logger.LogDetailAsync($"DataGridViewPosition");
+            try
+            {
+                if (rowIndex < 0) return;
+                if (!grid.Columns.Contains("Position")) return;
+                if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
+
+
+                if (!grid.Columns.Contains(columnName: "Loc1")) return;
+                var deviceNumber = grid["Loc1", rowIndex].Value.ToString().ParseInt();
+                if (!grid.Columns.Contains(columnName: "Loc2")) return;
+                var trayNumber = grid["Loc2", rowIndex].Value.ToString().ParseInt();
+                if (!grid.Columns.Contains(columnName: "Loc3")) return;
+                var level = grid["Loc3", rowIndex].Value.ToString().ParseInt();
+                if (!grid.Columns.Contains(columnName: "Loc4")) return;
+                var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
+
+
+                //if (grid.Columns.Contains(columnName: "Quantity"))
+                //{
+                //    qty = grid["Quantity", rowIndex].Value.ToString().ParseInt();
+                //}
+
+                //if (_workstationView.StationType.Id == (int)StationType.EBin)
+                //{
+                //    var eBinDisplayManager = new EBinDisplayManager();
+                //    var response = eBinDisplayManager.TurnOnDisplay(deviceNumber, trayNumber, level, part, qty, display);
+                //    MessageBox.Show($"{response}", "EBin Display Command", MessageBoxButtons.OK);
+                //}
+                MoveDevice(deviceNumber, trayNumber, level, part, qty, display);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to move device. {Environment.NewLine} {ex.Message}");
+            }
+
+
+
+            // ----------------------------------------------------------
 
             //var grid = (DataGridView)sender;
             //if (e.RowIndex < 0) return;
@@ -296,7 +347,7 @@ namespace Neutron.Forms
         {
             var qty = 0;
             var display = string.Empty;
-            _logger.LogDetailAsync($"DataGridViewPosition");
+            _ = _logger.LogDetailAsync($"DataGridViewPosition");
             try
             {
                 if (rowIndex < 0) return;
@@ -343,7 +394,7 @@ namespace Neutron.Forms
         {
             string lArrow;
             string rArrow;
-            ClearAllShi();
+           // ClearAllShi();
             if (_neutronVariables.DisplaysEnabled)
                 if (GlobalVar.Displays != null)
                 {
@@ -371,10 +422,9 @@ namespace Neutron.Forms
 
         private void MoveDevice(int deviceNumber, int trayNumber, int level, int part, int quantity = 0, string display = "")
         {
-            _logger.LogDetailAsync($"MoveDevice");
             try
             {
-                _workstationView.ProLiteManager?.ClearAllProlites();
+                //_workstationView.ProLiteManager?.ClearAllProlites();
                 Thread.Sleep(100);
                 if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, deviceNumber, trayNumber))
                 {
@@ -383,8 +433,8 @@ namespace Neutron.Forms
                         var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
                         var hanel = hanels.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
 
-                        var hardwareDevice =
-                            _workstationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
+                        //var hardwareDevice =
+                        //    _workstationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
 
                         if (hanel != null)
                         {
@@ -423,7 +473,7 @@ namespace Neutron.Forms
                             else
                             {
                                 MessageBox.Show(
-                                    $"{_resourceManager.GetString("Message12")} - {hardwareDevice.Name}");
+                                    $"{_resourceManager.GetString("Message12")} - {hanel.Name}");
                             }
                         }
                         else
@@ -436,14 +486,14 @@ namespace Neutron.Forms
                     {
                         if (GlobalVar.Displays != null)
                         {
-                            ClearAllShi();
+                          //  ClearAllShi();
                             var blastzones = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone).ToList();
                             var blastzone = blastzones.Any();
 
                             if (_neutronVariables.IptiDisplays && blastzone)
 
                             {
-                                ClearBlastzone();
+                                Task.Run(() => _ = ClearBlastzone());
 
                                 var qty = quantity > 100 ? "--" : quantity.ToString();
 
@@ -457,8 +507,8 @@ namespace Neutron.Forms
                             //var prolite = prolites.Any();
                             //if (prolite)
                             //{
-
-                                _workstationView.ProLiteManager?.TurnOn(deviceNumber, trayNumber, part, quantity);
+                            _ = _logger.LogDetailAsync($"Task Run Turn On Prolite");
+                            Task.Run(() => _workstationView.ProLiteManager?.TurnOn(deviceNumber, level, part, quantity));
                             //}
                         }
                     }
@@ -475,6 +525,8 @@ namespace Neutron.Forms
                 _ = _logger.LogDetailAsync($"Move Device - Inventory Module: {Environment.NewLine}{ex.Message}");
 
             }
+
+            _ = _logger.LogDetailAsync($"MoveDevice Done.");
         }
 
 
@@ -507,9 +559,9 @@ namespace Neutron.Forms
             }
         }
 
-        private void ClearBlastzone()
+        private async Task ClearBlastzone()
         {
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
+            await _logger.LogDetailAsync($"ClearBlastzone Function - START");
             try
             {
                 if (_neutronVariables.DisplaysEnabled)
@@ -532,10 +584,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
+                await _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
 
             }
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - END");
+            await _logger.LogDetailAsync($"ClearBlastzone Function - END");
         }
 
         //------------
@@ -1112,15 +1164,9 @@ namespace Neutron.Forms
 
         private void MButtonClose_Click(object sender, EventArgs e)
         {
-            _logger.LogDetailAsync($"Close 1");
-            ClearAllShi();
-            _logger.LogDetailAsync($"Close 2");
-            _workstationView.ProLiteManager?.ClearAllProlites();
-            _logger.LogDetailAsync($"Close 3");
-            ClearBlastzone();
-            _logger.LogDetailAsync($"Close 4");
+            Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
+            Task.Run(() => ClearBlastzone());
             CloseButtonPressed = true;
-            _logger.LogDetailAsync($"Close 5");
             Close();
         }
 

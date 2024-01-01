@@ -360,9 +360,8 @@ namespace Neutron.Forms
         }
         private void MButtonClose_Click(object sender, EventArgs e)
         {
-            ClearAllShi();
-            _workstationView.ProLiteManager?.ClearAllProlites();
-            ClearBlastzone();
+            Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
+            Task.Run(() => ClearBlastzone());
             CloseButtonPressed = true;
             Close();
         }
@@ -421,7 +420,7 @@ namespace Neutron.Forms
         {
             Cursor.Current = Cursors.WaitCursor;
             _ = RefreshData();
-            ClearAllShi();
+          //  ClearAllShi();
             _workstationView.ProLiteManager?.ClearAllProlites();
             ClearBlastzone();
             Cursor.Current = Cursors.Default;
@@ -1995,7 +1994,7 @@ namespace Neutron.Forms
             //_ = RefreshData();
             //SetCurrentItemDefinition();
             LoadViewEdit();
-            ClearAllShi();
+           // ClearAllShi();
             _workstationView.ProLiteManager?.ClearAllProlites();
             ClearBlastzone();
             tabControl1.SelectedTab = tabPage2;
@@ -2182,14 +2181,14 @@ namespace Neutron.Forms
                     {
                         if (GlobalVar.Displays != null)
                         {
-                            ClearAllShi();
+                          //  ClearAllShi();
                             var blastzones = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone).ToList();
                             var blastzone = blastzones.Any();
 
                             if (_neutronVariables.IptiDisplays && blastzone)
 
                             {
-                                ClearBlastzone();
+                                Task.Run(() => ClearBlastzone());
 
                                 var qty = quantity > 100 ? "--" : quantity.ToString();
 
@@ -2204,7 +2203,7 @@ namespace Neutron.Forms
                             //if (prolite)
                             //{
 
-                                _workstationView.ProLiteManager?.TurnOn(deviceNumber, level, part, quantity);
+                            Task.Run(() => _workstationView.ProLiteManager?.TurnOn(deviceNumber, level, part, quantity));
                             //}
                         }
                     }
@@ -2251,9 +2250,9 @@ namespace Neutron.Forms
                 }
             }
         }
-        private void ClearBlastzone()
+        private async Task ClearBlastzone()
         {
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
+            await _logger.LogDetailAsync($"ClearBlastzone Function - START");
             try
             {
                 if (_neutronVariables.DisplaysEnabled)
@@ -2276,10 +2275,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
+                await _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
 
             }
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - END");
+            await _logger.LogDetailAsync($"ClearBlastzone Function - END");
         }
 
         private void ClearAllShi()

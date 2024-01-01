@@ -3378,7 +3378,7 @@ namespace Neutron.Forms
                 {
                     if (_neutronVariables.ShiEnabled)
                     {
-                        ClearAllShi();
+                       // ClearAllShi();
                         Task.Run(() =>
                          _ = _logger.LogDetailAsync(
                                 $"Frm Replen Show SHI {loc1}-{loc2}-{loc3}-{loc4}{Environment.NewLine}-{text}"));
@@ -4181,7 +4181,7 @@ namespace Neutron.Forms
         //TODO
         private void CloseBatch()
         {
-            ClearAllShi();
+           // ClearAllShi();
             ClearAllBli();
             ClearOrderPositions();
             ClearBatchPositions();
