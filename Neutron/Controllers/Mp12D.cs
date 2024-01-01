@@ -71,7 +71,7 @@ namespace Neutron.Controllers
         {
             if (_workstationView != null)
             {
-                var firstDevice = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D);
+                var firstDevice = _workstationView.Hanels.FirstOrDefault();
 
                 if (firstDevice != null)
                 {
@@ -79,12 +79,12 @@ namespace Neutron.Controllers
 
                     if (serialConfiguration != null)
                     {
-                        var deviceCount = _workstationView.HardwareDevices.Count(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D);
+                        var deviceCount = _workstationView.Hanels.Count;
                         _previousTray = new int[deviceCount + 1];
                         _notificationTimeOutSeconds = serialConfiguration.NotificationTimeout;
                         var simulationMode = firstDevice.SimulationMode;
                         var logLevel = firstDevice.LogLevel;
-                        var enabledUnitNumbers = _workstationView.HardwareDevices.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
+                        var enabledUnitNumbers = _workstationView.Hanels.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
 
                         Task.Run(() => _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()} Device Count: {serialConfiguration.DeviceCount}"));
 

@@ -12,10 +12,6 @@ public class WorkstationView
     public IBlastzone Blastzone { get; set; }
     public IProLiteManager ProLiteManager { get; set; }
     public Workstation Workstation { get; set; }
-    public WorkstationView()
-    {
-        HardwareDevices = new List<HardwareDevice>();
-    }
     public int WorkstationId { get; set; }
     public int WorkstationNumber { get; set; }
     public string Name { get; set; }
@@ -24,7 +20,9 @@ public class WorkstationView
     public Area Area { get; set; }
     public int AreaId { get; set; }
     public int Sequence { get; set; }
-    public List<HardwareDevice> HardwareDevices { get; set; }
+    public List<HardwareDevice> HardwareDevices { get; set; } = new();
+    public List<HardwareDevice> Hanels { get; set; } = new();
+
     public IReadOnlyCollection<int> EnabledDevices
     {
         get

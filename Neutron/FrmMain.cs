@@ -60,7 +60,6 @@ namespace Neutron
         private readonly NeutronLicense _neutronLicense;
         private readonly IAreaRepository _areaRepository;
         private readonly ILocationsRepository _locationsRepository;
-        private readonly IBlastzone _blastzone;
         private WorkstationView _workstationView;
         private readonly IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
@@ -121,7 +120,7 @@ namespace Neutron
             _neutronLicense = neutronLicense ?? throw new ArgumentNullException(nameof(neutronLicense));
             _areaRepository = areaRepository ?? throw new ArgumentNullException(nameof(areaRepository));
             _locationsRepository = locationsRepository ?? throw new ArgumentNullException(nameof(locationsRepository));
-            
+
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
@@ -441,15 +440,17 @@ namespace Neutron
                                 // Represents the total number of Hanel 12D devices in the hardware devices list.
                                 var totalHanelUnits = hardwareDevices.Count(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D);
 
-                                _ = _logger.LogDetailAsync($"This is a Hanel 12D Device with {totalHanelUnits} Towers.");
+                                _workstationView.Hanels.Add(device);
+
                                 _workstationView.HardwareDevices.Add(device);
 
-                                if (_workstationView.HardwareDevices.Count(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D) ==
-                                    totalHanelUnits)
+                                if (_workstationView.Hanels.Count == totalHanelUnits)
                                 {
+                                    _ = _logger.LogDetailAsync($"This is a Hanel 12D Station with {totalHanelUnits} Towers.");
+                                   
                                     if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
                                     {
-                                        _ = _logger.LogDetailAsync("Mp12D Controller.");
+                                        _ = _logger.LogDetailAsync("FrmMain building Mp12D Controller.");
                                         GlobalVar.Hanel = new Mp12D(this, _workstationView);
                                         GlobalVar.Hanel.InitStatus();
                                         var result = GlobalVar.Hanel != null;
