@@ -3502,7 +3502,7 @@ namespace Neutron.Forms
             if (MBShowOrderOrQuantityToggle.Text == _resourceManager.GetString($"ShowJobs"))
             {
                 //ClearAllBli();
-                ClearBatchTable();
+                _ = Task.Run(ClearBatchTable); 
 
                 ClearPickPositions();
                 ShowOrdersToPick();
@@ -3533,11 +3533,13 @@ namespace Neutron.Forms
            // ClearAllShi();
             //ClearAllBli();
             //ClearOc();
-            ClearBatchTable();
+            _ = Task.Run(ClearBatchTable);
+            GlobalVar.Hanel.ResetHanelDeviceStatus();
 
             ClearBlastzone();
+            
             // Clear all the ProLites using the ProLiteManager
-            _workstationView.ProLiteManager?.ClearAllProlites();
+            _ = Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
 
 
             Console.WriteLine("Clear Active Device Indicator  PickBack");
@@ -3574,6 +3576,8 @@ namespace Neutron.Forms
         }
         private void Start()
         {
+            GlobalVar.Hanel.ResetHanelDeviceStatus();
+
             _spaceBarDisabled = true;
             Task.Run(() => _logger.LogDetailAsync($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
 
@@ -3800,8 +3804,8 @@ namespace Neutron.Forms
             //    newCarList.Add(carList);
             //}
 
-            if (_deviceManager == null)
-            {
+            //if (_deviceManager == null)
+            //{
                 Task.Run(() =>
                  _ = _logger.LogDetailAsync(
                         $"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
@@ -3820,7 +3824,7 @@ namespace Neutron.Forms
                  _ = _logger.LogDetailAsync(
                         $"FinalPickSequence End Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
                 Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence End: [{DateTime.Now.ToLongTimeString()}]"));
-            }
+           // }
 
             return newList;
         }
@@ -4315,22 +4319,22 @@ namespace Neutron.Forms
 
             if (_batchTable && _batchTables.Enabled)
             {
-                ClearBatchTable();
+                _ = Task.Run(ClearBatchTable);
             }
 
             if (_blastzone)
             {
-                ClearBlastzone();
+                _ = Task.Run(ClearBlastzone);
             }
 
             if (_prolite)
             {
-                _workstationView.ProLiteManager?.ClearAllProlites();
+                _ = Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
             }
 
             if (_batchTable)
             {
-                TurnOnIptiOrderControl(_neutronVariables.BliController, _currentPickStop.Item.Trim());
+                _ = Task.Run(() => TurnOnIptiOrderControl(_neutronVariables.BliController, _currentPickStop.Item.Trim()));
             }
 
 
@@ -4370,7 +4374,7 @@ namespace Neutron.Forms
 
             if (_prolite)
             {
-                _workstationView.ProLiteManager?.TurnOn(device, bayController, display, _currentPickStop.GetTotalQuantityToBePicked());
+                _ = Task.Run(() => _workstationView.ProLiteManager?.TurnOn(device, bayController, display, _currentPickStop.GetTotalQuantityToBePicked()));
             }
 
             Task.Run(() => _logger.LogDetailAsync($"UpdatePickPosition END"));
@@ -4435,9 +4439,9 @@ namespace Neutron.Forms
             }
         }
 
-        private void ClearBatchTable()
+        private async Task ClearBatchTable()
         {
-            _ = _logger.LogDetailAsync($"Clear Batch Table Function - START");
+            await _logger.LogDetailAsync($"Clear Batch Table Function - START");
 
             if (_neutronVariables.IptiDisplays)
             {
@@ -4452,7 +4456,7 @@ namespace Neutron.Forms
 
             }
 
-            _ = _logger.LogDetailAsync($"Clear Batch Table Function - END");
+            await _logger.LogDetailAsync($"Clear Batch Table Function - END");
         }
 
 
@@ -4658,7 +4662,7 @@ namespace Neutron.Forms
            // ClearAllShi();
             // ClearAllBli();
             // ClearOc();
-            ClearBatchTable();
+            _ = Task.Run(ClearBatchTable);
 
             ClearOrderPositions();
             ClearBatchPositions();
@@ -4739,7 +4743,7 @@ namespace Neutron.Forms
             }
 
             // _deviceIndicatorManager?.ClearAllDeviceIndicators();
-            _deviceIndicatorManager?.ClearActiveDeviceIndicators();
+            //_deviceIndicatorManager?.ClearActiveDeviceIndicators();
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -4852,10 +4856,10 @@ namespace Neutron.Forms
 
                         UpdatePickScreen();
                         // UpdateCurrentDeviceIndicator();
-                        _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                         UpdatePickPosition();
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         // UpdateTowerDisplay();
+                        _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
 
                     }
                     else
@@ -5262,14 +5266,17 @@ namespace Neutron.Forms
             //ClearAllShi();
             //ClearAllBli();
             //ClearOc();
-            ClearBatchTable();
+            
+            GlobalVar.Hanel.ResetHanelDeviceStatus();
+            
+            _ = Task.Run(ClearBatchTable);
             ClearBlastzone();
 
             ClearOrderPositions();
             ClearBatchPositions();
             Console.WriteLine("Clear All Device Indicators - Close Batch");
             _deviceIndicatorManager?.ClearAllDeviceIndicators();
-            _workstationView.ProLiteManager?.ClearAllProlites();
+            _ = Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
             DeleteRelease();
 
             ParkPositionAfterBatch();

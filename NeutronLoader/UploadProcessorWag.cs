@@ -11,6 +11,7 @@ using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.ModelViews;
+using SAPServer;
 using SAPServer.Models;
 using static System.Int32;
 using Timer = System.Threading.Timer;
@@ -129,7 +130,7 @@ namespace NeutronLoader
                     // and the ending quantity QTY = (rec.IssuedQuantity)
                     // then set the NOVA_OUTPUT record to PROCESSED = "N"  (the SAP process will set it to "Y" when it is processed)
 
-                    // using (var wagDb = new WagnerDb())
+                    //using (var db = new WagnerDb())
                     using (var db = new NeutronDb())
                     {
                         foreach (var rec in recs)

@@ -162,6 +162,11 @@ namespace Neutron.Controllers
             return initCode;
         }
 
+        public void ResetHanelDeviceStatus()
+        {
+            _hanel.ResetHanelDeviceStatus();
+        }
+
         public void ShowMessage(string msg)
         {
             //MessageBox.Show(msg);

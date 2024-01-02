@@ -359,7 +359,7 @@ namespace Neutron.Forms
             // MBRunUploadOnce
             // 
             this.MBRunUploadOnce.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunUploadOnce.Location = new System.Drawing.Point(397, 562);
+            this.MBRunUploadOnce.Location = new System.Drawing.Point(18, 606);
             this.MBRunUploadOnce.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunUploadOnce.Name = "MBRunUploadOnce";
             this.MBRunUploadOnce.Size = new System.Drawing.Size(350, 53);
@@ -372,7 +372,7 @@ namespace Neutron.Forms
             // MBRunLoader
             // 
             this.MBRunLoader.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBRunLoader.Location = new System.Drawing.Point(397, 440);
+            this.MBRunLoader.Location = new System.Drawing.Point(18, 484);
             this.MBRunLoader.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBRunLoader.Name = "MBRunLoader";
             this.MBRunLoader.Size = new System.Drawing.Size(350, 53);
@@ -398,7 +398,7 @@ namespace Neutron.Forms
             // MBMainUpload
             // 
             this.MBMainUpload.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainUpload.Location = new System.Drawing.Point(397, 501);
+            this.MBMainUpload.Location = new System.Drawing.Point(18, 545);
             this.MBMainUpload.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainUpload.Name = "MBMainUpload";
             this.MBMainUpload.Size = new System.Drawing.Size(350, 53);
@@ -411,7 +411,7 @@ namespace Neutron.Forms
             // MBMainLoadOrders
             // 
             this.MBMainLoadOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainLoadOrders.Location = new System.Drawing.Point(397, 379);
+            this.MBMainLoadOrders.Location = new System.Drawing.Point(18, 423);
             this.MBMainLoadOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainLoadOrders.Name = "MBMainLoadOrders";
             this.MBMainLoadOrders.Size = new System.Drawing.Size(350, 53);
@@ -424,7 +424,7 @@ namespace Neutron.Forms
             // MBMainNewOrder
             // 
             this.MBMainNewOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainNewOrder.Location = new System.Drawing.Point(397, 260);
+            this.MBMainNewOrder.Location = new System.Drawing.Point(442, 406);
             this.MBMainNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainNewOrder.Name = "MBMainNewOrder";
             this.MBMainNewOrder.Size = new System.Drawing.Size(350, 100);
@@ -436,7 +436,7 @@ namespace Neutron.Forms
             // MBMainOrderManager
             // 
             this.MBMainOrderManager.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainOrderManager.Location = new System.Drawing.Point(397, 142);
+            this.MBMainOrderManager.Location = new System.Drawing.Point(442, 288);
             this.MBMainOrderManager.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainOrderManager.Name = "MBMainOrderManager";
             this.MBMainOrderManager.Size = new System.Drawing.Size(350, 100);
@@ -448,7 +448,7 @@ namespace Neutron.Forms
             // MBMainAvailableOrders
             // 
             this.MBMainAvailableOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainAvailableOrders.Location = new System.Drawing.Point(397, 24);
+            this.MBMainAvailableOrders.Location = new System.Drawing.Point(442, 170);
             this.MBMainAvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainAvailableOrders.Name = "MBMainAvailableOrders";
             this.MBMainAvailableOrders.Size = new System.Drawing.Size(350, 100);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AlliedLogger;
+using NeutronData.DataContexts;
+using NeutronData.Models;
 using NeutronEvents;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
@@ -51,7 +53,7 @@ namespace SAPServer
 
                          _ = _logger.LogDetailAsync($"Goods Receipt Record Sent To SAP: TASK: {good.TANUM} -- SKU: {good.MATNR}");
 
-                            using (var db = new WagnerDb())
+                            using (var db = new NeutronDb())
                             {
                                 var rec = db.NOVA_OUTPUT.Find(good.TRANSID);
                                 if (rec == null) continue;
@@ -88,7 +90,7 @@ namespace SAPServer
                          Mediator.GetInstance().OnSendEmailMessage(this, 
                              $"Single Goods Receipt RfcAbapBaseException {e.Message}{Environment.NewLine}{e.InnerException} ");
 
-                           using (var db = new WagnerDb())
+                           using (var db = new NeutronDb())
                             {
                                 var rec = db.NOVA_OUTPUT.Find(good.TRANSID);
                                 if (rec == null) continue;
@@ -148,7 +150,7 @@ namespace SAPServer
 
             try
             {
-                using (var db = new WagnerDb())
+                using (var db = new NeutronDb())
                 {
                     List<NOVA_OUTPUT> recs = db.NOVA_OUTPUT.Where(n => n.PROCESSED == @"N" && n.TRANSTYPE == "02").OrderByDescending(o => o.TRANSDATE).ToList();
 

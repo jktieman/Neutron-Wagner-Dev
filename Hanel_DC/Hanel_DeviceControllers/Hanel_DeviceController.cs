@@ -8,6 +8,7 @@ using AlliedLogger;
 using Hanel_DC.HanelUtilities;
 using System.Reflection;
 using HanelCommands;
+using System.Text;
 
 
 namespace Hanel_DC.Hanel_DeviceControllers
@@ -559,6 +560,55 @@ namespace Hanel_DC.Hanel_DeviceControllers
             var hanelDeviceStatusList = new List<HanelDeviceStatus>();
             if (!Init_Success) return hanelDeviceStatusList;
             return _currentHanelDeviceStatusList ?? hanelDeviceStatusList;
+        }
+
+        public void ResetHanelDeviceStatus()
+        {
+            if (_currentHanelDeviceStatusList.Count <= 0) return;
+            foreach (var device in _currentHanelDeviceStatusList)
+            {
+                device.GoodStatus = true;
+                device.LastStatus = DateTime.Now;
+                device.LastCommand = DateTime.Now;
+                device.TargetTray = 0;
+                device.CurrentTray = 0;
+                device.InMotion = false;
+                device.InAlignment = true;
+                device.StatusMessage = "";
+                device.CommandAccepted = false;
+                device.CommandExecuted = false;
+            }
+
+            DumpStatus();
+        }
+
+        private void DumpStatus()
+        {
+            foreach (var deviceStatus in _currentHanelDeviceStatusList)
+            {
+                if (deviceStatus == null) continue;
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Hanel_DeviceController - ResetHanelDeviceStatus");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  DeviceNumber = {deviceStatus.DeviceNumber}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  GoodStatus = {deviceStatus.GoodStatus}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  LastStatus = {deviceStatus.LastStatus}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  LastCommand = {deviceStatus.LastCommand}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  Device = {deviceStatus.Device}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  TargetTray = {deviceStatus.TargetTray}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CurrentTray = {deviceStatus.CurrentTray}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  InMotion = {deviceStatus.InMotion}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  InAlignment = {deviceStatus.InAlignment}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  StatusMessage = {deviceStatus.StatusMessage}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  ActiveErrorCount ={deviceStatus.ActiveErrorCount}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandAccepted = {deviceStatus.CommandAccepted}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandExecuted = {deviceStatus.CommandExecuted}");
+                sb.AppendLine($"Device #{deviceStatus.DeviceNumber} Switched On = {deviceStatus.SwitchedOn}");
+                sb.AppendLine($"--------------------------------------------------");
+                sb.AppendLine();
+
+                _logger.LogDetailAsync(sb.ToString());
+            }
         }
 
         public bool Get_Device_Status(ref List<HanelDeviceStatus> newList, ref string cError)

@@ -2200,7 +2200,7 @@
             // MBMainNewOrder
             // 
             this.MBMainNewOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainNewOrder.Location = new System.Drawing.Point(442, 347);
+            this.MBMainNewOrder.Location = new System.Drawing.Point(442, 406);
             this.MBMainNewOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainNewOrder.Name = "MBMainNewOrder";
             this.MBMainNewOrder.Size = new System.Drawing.Size(350, 100);
@@ -2212,7 +2212,7 @@
             // MBMainOrderManager
             // 
             this.MBMainOrderManager.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainOrderManager.Location = new System.Drawing.Point(442, 229);
+            this.MBMainOrderManager.Location = new System.Drawing.Point(442, 288);
             this.MBMainOrderManager.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainOrderManager.Name = "MBMainOrderManager";
             this.MBMainOrderManager.Size = new System.Drawing.Size(350, 100);
@@ -2224,7 +2224,7 @@
             // MBMainAvailableOrders
             // 
             this.MBMainAvailableOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBMainAvailableOrders.Location = new System.Drawing.Point(442, 111);
+            this.MBMainAvailableOrders.Location = new System.Drawing.Point(442, 170);
             this.MBMainAvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBMainAvailableOrders.Name = "MBMainAvailableOrders";
             this.MBMainAvailableOrders.Size = new System.Drawing.Size(350, 100);

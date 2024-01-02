@@ -11,5 +11,6 @@ namespace Neutron.Interfaces
         void CloseController();
         HanelDeviceStatus GetDeviceStatus(int deviceNumber);
         int InitStatus();
+        void ResetHanelDeviceStatus();
     }
 }

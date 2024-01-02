@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using AlliedLogger;
 using JsonManager;
+using NeutronData.DataContexts;
+//using NeutronData.DataContexts;
 using NeutronEvents;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
+using NeutronData.Models;
 
 namespace SAPServer
 {
@@ -93,7 +96,7 @@ namespace SAPServer
 
                 try
                 {
-                    using (var context = new WagnerDb())
+                    using (var context = new NeutronDb())
                     {
 
                         foreach (var row in goodsIssueList)
@@ -208,7 +211,7 @@ namespace SAPServer
         {
             var result = string.Empty;
             
-                using (var db = new WagnerDb())
+                using (var db = new NeutronDb())
                 {
                     var pri = db.PriorityRecords.FirstOrDefault(r => r.Spart == spart && r.Vsbed == vsbeds);
                     if (pri != null)

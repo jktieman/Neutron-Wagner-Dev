@@ -20,7 +20,9 @@ namespace Neutron.Models
             for (var i = 0; i < carList.Count; i++)
             {
                 var mover = CreateDeviceMover(i + 1, carList[i]);
-                _currentLocations[i] = null;
+                //_currentLocations[i + 1] = null;
+                //_currentLocations.Add(mover.MoverNumber, mover.);
+                //_currentLocations[mover.MoverNumber] = null;
                 _deviceMovers.Add(mover);
             }
             _shuttleEnabled = shuttleEnabled;

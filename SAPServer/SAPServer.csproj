@@ -70,11 +70,6 @@
     <Compile Include="Models\DCLinkModel.cs" />
     <Compile Include="Models\GoodsIssue.cs" />
     <Compile Include="Models\GoodsReceipt.cs" />
-    <Compile Include="Models\NOVA_HISTORY.cs" />
-    <Compile Include="Models\NOVA_INPUT.cs" />
-    <Compile Include="Models\NOVA_OH.cs" />
-    <Compile Include="Models\NOVA_OUTPUT.cs" />
-    <Compile Include="Models\PriorityRecord.cs" />
     <Compile Include="Models\SapVariables.cs" />
     <Compile Include="Models\zzSapNovaVariables.cs" />
     <Compile Include="NovaRec.cs" />
@@ -86,7 +81,6 @@
     <Compile Include="SapSystemConnect.cs" />
     <Compile Include="SapToNovaGoodsIssue.cs" />
     <Compile Include="SapToNovaGoodsReceipt.cs" />
-    <Compile Include="WagnerDb.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

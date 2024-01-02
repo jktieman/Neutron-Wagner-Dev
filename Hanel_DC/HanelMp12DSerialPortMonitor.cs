@@ -366,7 +366,7 @@ namespace Hanel_DC
         private void ProcessDataIn(byte[] dataIn)
         {
             var commandString = Encoding.UTF8.GetString(dataIn);
-            
+
             var commandSegments = commandString.Split('$');
 
             if (commandSegments.Length <= 1) return;
@@ -483,7 +483,6 @@ namespace Hanel_DC
             //    // do nothing
             //}
         }
-
         private void DumpStatus()
         {
             foreach (var deviceStatus in _currentHanelDeviceStatusList)

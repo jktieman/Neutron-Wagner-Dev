@@ -1,7 +1,6 @@
 ﻿using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
-using SAPServer.Models;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -63,14 +62,11 @@ namespace NeutronData.DataContexts
         public DbSet<CycleCount> CycleCounts { get; set; }
         public DbSet<PrintJob> PrintJobs { get; set; }
 
-        // Loader
-
-
-        public virtual DbSet<NOVA_HISTORY> NOVA_HISTORY { get; set; }
-        public virtual DbSet<NOVA_INPUT> NOVA_INPUT { get; set; }
-        public virtual DbSet<NOVA_OH> NOVA_OH { get; set; }
-        public virtual DbSet<NOVA_OUTPUT> NOVA_OUTPUT { get; set; }
-        public virtual DbSet<PriorityRecord> PriorityRecords { get; set; }
+        public DbSet<NOVA_HISTORY> NOVA_HISTORY { get; set; }
+        public DbSet<NOVA_INPUT> NOVA_INPUT { get; set; }
+        public DbSet<NOVA_OH> NOVA_OH { get; set; }
+        public DbSet<NOVA_OUTPUT> NOVA_OUTPUT { get; set; }
+        public DbSet<PriorityRecord> PriorityRecords { get; set; }
 
 
 

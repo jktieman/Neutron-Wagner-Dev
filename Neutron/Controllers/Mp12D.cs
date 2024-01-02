@@ -67,6 +67,12 @@ namespace Neutron.Controllers
             }
         }
 
+        public void ResetPreviousTray()
+        {
+            var deviceCount = _workstationView.Hanels.Count;
+            _previousTray = new int[deviceCount + 1];
+        }
+
         private void Init2()
         {
             if (_workstationView != null)
@@ -455,6 +461,13 @@ namespace Neutron.Controllers
             }
 
             return deviceStatus;
+        }
+
+
+        public void ResetHanelDeviceStatus()
+        {
+           _hanel.ResetHanelDeviceStatus();
+           ResetPreviousTray();
         }
     }
 }

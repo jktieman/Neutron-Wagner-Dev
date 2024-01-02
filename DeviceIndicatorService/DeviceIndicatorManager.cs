@@ -36,8 +36,8 @@ namespace DeviceIndicatorService
             _panelLocation = panelLocation;
             _panelSize = panelSize;
             _neutronVariables = neutronVariables;
-             _logger = Logger.SetupLogger(@"DeviceIndicators");
-            _ = Task.Run(Init);
+            _logger = Logger.SetupLogger(@"DeviceIndicators");
+            Init();
         }
 
         //private void SetupLogger()
@@ -48,11 +48,11 @@ namespace DeviceIndicatorService
         //    _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         //}
 
-        private async Task Init()
+        private void Init()
         {
-            await _logger.LogDetailAsync("Initialize Device Indicators - InitDeviceIndicators");
+            _ = _logger.LogDetailAsync("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new List<DeviceIndicator>();
-            _hardwareDevices = _workstationView.HardwareDevices.ToList();
+            _hardwareDevices = _workstationView.Hanels;
             _flashRate = _neutronVariables.DeviceFlashRate;
             _numDevices = _hardwareDevices.Count;
 
@@ -117,7 +117,7 @@ namespace DeviceIndicatorService
                     hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12N &&
                     hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Carousel &&
                     hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Shuttle) continue;
-                
+
                 var device = new DeviceIndicator(hardwareDevice.DeviceNumber, _flashRate, Color.Yellow
                     , Color.Transparent);
                 device.Name = $"DeviceIndicator{hardwareDevice.DeviceNumber}";
@@ -128,7 +128,9 @@ namespace DeviceIndicatorService
                 _deviceIndicators.Add(device);
                 // Add the DeviceIndicator Control to the Panel
                 DeviceIndicatorPanel.Controls.Add(device);
+
             }
+            DeviceIndicatorPanel.Refresh();
         }
 
         public async void UpdateCurrentDeviceIndicator(int loc)

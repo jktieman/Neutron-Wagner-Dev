@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using AlliedLogger;
 using JsonManager;
+using NeutronData.DataContexts;
+using NeutronData.Models;
 using NeutronEvents;
 using SAP.Middleware.Connector;
 using SAPServer.Models;
@@ -107,7 +109,7 @@ namespace SAPServer
 
                 try
                 {
-                    using (var context = new WagnerDb())
+                    using (var context = new NeutronDb())
                     {
                         foreach (var row in goodsReceiptList)
                         {
