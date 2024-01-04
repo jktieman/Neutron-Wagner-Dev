@@ -164,7 +164,7 @@ namespace Neutron.Controllers
 
         public void ResetHanelDeviceStatus()
         {
-            _hanel.ResetHanelDeviceStatus();
+            _hanel?.ResetHanelDeviceStatus();
         }
 
         public void ShowMessage(string msg)

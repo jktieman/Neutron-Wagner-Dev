@@ -1,10 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using NeutronData.Interfaces;
 
 namespace NeutronData.Models
 {
     
-    public class NOVA_OUTPUT
+    public class NOVA_OUTPUT : IEntity
     {
         [Key]
         public decimal TRANSID { get; set; }
@@ -79,5 +80,6 @@ namespace NeutronData.Models
         [StringLength(10)]
         public string TYPE { get; set; }
         public string TEXT { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using NeutronData.Interfaces;
 
 namespace NeutronData.Models
 {
-    public class NOVA_INPUT
+    public class NOVA_INPUT : IEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -71,5 +72,6 @@ namespace NeutronData.Models
         public string POST_CODE1 { get; set; }
         public string COUNTRY { get; set; }
         public string TEXT { get; set; }
+        public int Id { get; set; }
     }
 }

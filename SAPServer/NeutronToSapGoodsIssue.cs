@@ -162,7 +162,7 @@ namespace SAPServer
             {
                 using (var db = new NeutronDb())
                 {
-                    List<NOVA_OUTPUT> recs = db.NOVA_OUTPUT.Where(n => n.PROCESSED == "N" && n.TRANSTYPE == "22").OrderByDescending(o => o.TRANSDATE).ToList();
+                    var recs = db.NOVA_OUTPUT.Where(n => n.PROCESSED == "N" && n.TRANSTYPE == "22").OrderByDescending(o => o.TRANSDATE).ToList();
 
                     foreach (var item in recs)
                     {

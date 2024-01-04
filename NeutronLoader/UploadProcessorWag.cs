@@ -15,6 +15,7 @@ using SAPServer;
 using SAPServer.Models;
 using static System.Int32;
 using Timer = System.Threading.Timer;
+using NeutronData.Repositories;
 
 namespace NeutronLoader
 {
@@ -28,7 +29,11 @@ namespace NeutronLoader
        // private readonly IWorkstationRepository _workstationRepository;
         private Timer _timer;
         private bool _uploadBusy;
-       // private DirectoryInfo _hostUploadDirectory;
+        private readonly GenericRepository<NOVA_INPUT> _repoNovaInput = new GenericRepository<NOVA_INPUT>(new NeutronDb());
+        private readonly GenericRepository<NOVA_OUTPUT> _repoNovaOutput = new GenericRepository<NOVA_OUTPUT>(new NeutronDb());
+        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
+
+        // private DirectoryInfo _hostUploadDirectory;
 
         //public UploadProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
         //    IDynamicLogger logger, WorkstationView workstationView, IWorkstationRepository workstationRepository)
@@ -112,12 +117,16 @@ namespace NeutronLoader
 
             try
             {
-                List<History> recs;
-                using (var db = new NeutronDb())
-                {
-                    recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
+                // recs;
+                //using (var db = new NeutronDb())
+                //{
+                
+                  var  recs = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
                         .ToList();
-                }
+
+                    //recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
+                    //    .ToList();
+                //}
 
                 if (recs.Any())
                 {
@@ -131,42 +140,50 @@ namespace NeutronLoader
                     // then set the NOVA_OUTPUT record to PROCESSED = "N"  (the SAP process will set it to "Y" when it is processed)
 
                     //using (var db = new WagnerDb())
-                    using (var db = new NeutronDb())
-                    {
-                        foreach (var rec in recs)
-                        {
-                            var history = db.History.FirstOrDefault(h => h.Id == rec.Id);
-                            if (history == null) continue;
 
+                    //using (var db = new NeutronDb())
+                    //{
+                        foreach (var history in recs)
+                        {
+                           // var history = db.History.FirstOrDefault(h => h.Id == rec.Id);
+                            //var history =_repoHistory.FindBy(h => h.Id == rec.Id).FirstOrDefault();
+                            
+                            if (history == null) continue;
                             if (string.IsNullOrEmpty(history.OrderDetailInfo)) continue;
                             var orderDetailInfo = history.OrderDetailInfo.Split('|');
                             var transId = orderDetailInfo[0];
                             // convert transId to decimal
                             var transIdDec = Convert.ToDecimal(transId);
-
-                            var input = db.NOVA_INPUT.FirstOrDefault(n => n.TRANSID == transIdDec);
+                            
+                            var input = _repoNovaInput.FindBy(n => n.TRANSID == transIdDec).FirstOrDefault();
+                            
+                            // var input = db.NOVA_INPUT.FirstOrDefault(n => n.TRANSID == transIdDec);
                             if (input != null)
                             {
-                                var output = new NOVA_OUTPUT();
-                                output.TRANSID = input.TRANSID;
-                                output.TASKNO = input.TASKNO;
-                                output.TOTENO = input.TOTENO;
-                                output.BP = input.BP;
-                                output.SKU = input.SKU;
-                                output.BEGINNINGQTY = rec.RequestedQuantity;
-                                output.QTY = rec.IssuedQuantity;
-                                output.TRANSDATE = rec.ActionDateTime;
-                                output.TRANSTYPE = input.TRANSTYPE;
-                                output.PROCESSED = "N";
-                                output.EXPLANATION = string.Empty;
-                                db.NOVA_OUTPUT.Add(output);
-                                db.SaveChanges();
+                                var output = new NOVA_OUTPUT
+                                {
+                                    TRANSID = input.TRANSID,
+                                    TASKNO = input.TASKNO,
+                                    TOTENO = input.TOTENO,
+                                    BP = input.BP,
+                                    SKU = input.SKU,
+                                    BEGINNINGQTY = history.RequestedQuantity,
+                                    QTY = history.IssuedQuantity,
+                                    TRANSDATE = history.ActionDateTime,
+                                    TRANSTYPE = input.TRANSTYPE,
+                                    PROCESSED = "N",
+                                    EXPLANATION = string.Empty
+                                };
+                            _ = _repoNovaOutput.InsertAsync(output);
+                                //db.NOVA_OUTPUT.Add(output);
+                                //db.SaveChanges();
                             }
 
                             history.TransmitDateTime = DateTime.Now;
-                            db.SaveChanges();
+                            _repoHistory.Update(history);
+                           // db.SaveChanges();
                         }
-                    }
+                    //}
                 }
             }
             catch (Exception ex)

@@ -28,7 +28,7 @@ namespace IPTI.Models
 
         public string TurnOn(string text)
         {
-            return _turnOn + _ocId + _ledState + "0" + text;
+            return _turnOn + _ocId + _ledState + " " + text;
         }
 
         public string Clear()

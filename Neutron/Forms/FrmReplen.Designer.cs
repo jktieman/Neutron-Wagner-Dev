@@ -1139,6 +1139,7 @@
             this.TextBoxSlot.Size = new System.Drawing.Size(512, 116);
             this.TextBoxSlot.TabIndex = 0;
             this.TextBoxSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxSlot.Visible = false;
             // 
             // MBShortCut
             // 

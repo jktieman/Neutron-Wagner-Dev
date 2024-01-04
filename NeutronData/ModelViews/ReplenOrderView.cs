@@ -33,7 +33,7 @@ namespace NeutronData.ModelViews
         public ReplenOrder ReplenOrder { get; set; }
         public int CurrentPickArea { get; set; }
         public int FirstPickArea { get; set; }
-
+        public string OrderInfo { get; set; }
         public string SearchField
         {
             get

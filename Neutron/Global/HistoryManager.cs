@@ -24,8 +24,8 @@ namespace Neutron.Global
         private readonly IInventoryRepository _inventoryRepository;
 
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
-            new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
 
 
         public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView)
@@ -94,7 +94,8 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = string.Empty,   //order.Order.OrderInfo,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
 
@@ -113,9 +114,10 @@ namespace Neutron.Global
                 Priority = order.Priority,
                 LoadDate = order.LoadDate,
                 EmpId = GlobalVar.User.EmpId,
-                OrderInfo = string.Empty,   //.ReplenOrder.OrderInfo,
+                OrderInfo = order.OrderInfo,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
              Save(history);
 
@@ -138,8 +140,8 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = orderDetail.Order.OrderInfo,
                 OrderDetailInfo = orderDetail.OrderDetailInfo,
-                AreaId = orderDetail.AreaId,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
 
@@ -162,8 +164,8 @@ namespace Neutron.Global
                 EmpId = GlobalVar.User.EmpId,
                 OrderInfo = orderDetail.ReplenOrder.OrderInfo == null ? string.Empty : orderDetail.ReplenOrder.OrderInfo,
                 OrderDetailInfo = orderDetail.OrderDetailInfo,
-                AreaId = orderDetail.AreaId,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
 
@@ -193,7 +195,6 @@ namespace Neutron.Global
                         Description = pickView.Description,
                         RequestedQuantity = pickView.Quantity,
                         IssuedQuantity = pickLocation.Quantity,
-                        AreaId = pickLocation.Inventory.AreaId,
                         Loc1 = pickLocation.Inventory.Location.Loc1,
                         Loc2 = pickLocation.Inventory.Location.Loc2,
                         Loc3 = pickLocation.Inventory.Location.Loc3,
@@ -204,7 +205,8 @@ namespace Neutron.Global
                         CostCenter = cCenter,
                         OrderInfo = pickView.OrderDetail.Order.OrderInfo,
                         OrderDetailInfo = pickView.OrderDetail.OrderDetailInfo,
-                        WorkstationId = _workstationView.WorkstationId
+                        WorkstationId = _workstationView.WorkstationId,
+                        AreaId = _workstationView.AreaId
                     };
                     Save(history);
                 }
@@ -213,10 +215,15 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, ReplenPickStop pickStop)
         {
+            
+                
             foreach (var pickView in pickStop.PickViews)
             {
+                var order = _repoReplenOrders.FindByKey(pickView.OrderId);
+                
                 foreach (var pickLocation in pickView.PickLocations)
                 {
+                    
                     var history = new History
                     {
                         ActionCode = (int)actionCode,
@@ -229,7 +236,7 @@ namespace Neutron.Global
                         Description = pickView.Description,
                         RequestedQuantity = pickView.Quantity,
                         IssuedQuantity = pickLocation.Quantity,
-                        AreaId = pickLocation.Inventory.AreaId,  
+                        //AreaId = pickLocation.Inventory.AreaId,  
                         Loc1 = pickLocation.Inventory.Location.Loc1,
                         Loc2 = pickLocation.Inventory.Location.Loc2,
                         Loc3 = pickLocation.Inventory.Location.Loc3,
@@ -238,9 +245,10 @@ namespace Neutron.Global
                         Slot = pickLocation.Inventory.Location.Slot,
                         EmpId = GlobalVar.User.EmpId,
                         CostCenter = string.Empty,
-                        OrderInfo = string.Empty,
-                        OrderDetailInfo = string.Empty,
-                        WorkstationId = _workstationView.WorkstationId
+                        OrderInfo = order.OrderInfo,  //  string.Empty,
+                        OrderDetailInfo = pickView.OrderDetail.OrderDetailInfo,  // string.Empty,
+                        WorkstationId = _workstationView.WorkstationId,
+                        AreaId = _workstationView.AreaId
                     };
                     Save(history);
                 }
@@ -286,12 +294,13 @@ namespace Neutron.Global
                 IssuedQuantity = 0,
                 Slot = string.Empty,
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = areaId,  
+                //AreaId = areaId,  
                 //OrderDetailId = value.Id,
                 CostCenter = cCenter,
                 OrderInfo = value.OrderInfo,
                 OrderDetailInfo = orderDetailInfo,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -335,12 +344,13 @@ namespace Neutron.Global
                 IssuedQuantity = value.PickedQuantity,
                 Slot = value.PrimeBin,
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = areaId, 
+               // AreaId = areaId, 
                 OrderDetailId = value.Id,
                 CostCenter = cCenter,
                 OrderInfo = value.Order.OrderInfo,
                 OrderDetailInfo = orderDetailInfo,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -361,7 +371,7 @@ namespace Neutron.Global
                 Description = inv.ItemDefinition.Description,
                 IssuedQuantity = inv.Quantity,
                 RequestedQuantity = 0,
-                AreaId = inv.Location.AreaId,
+                //AreaId = inv.Location.AreaId,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,
@@ -372,7 +382,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -415,7 +426,7 @@ namespace Neutron.Global
                 Description = inv.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickView.Quantity,
-                AreaId = inv.Location.AreaId,
+                //AreaId = inv.Location.AreaId,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,
@@ -426,7 +437,8 @@ namespace Neutron.Global
                 CostCenter = cCenter,
                 OrderInfo = pickView.OrderDetail.Order.OrderInfo,
                 OrderDetailInfo = orderDetailInfo,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -446,7 +458,7 @@ namespace Neutron.Global
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickList.Ordered.ParseInt(),
-                AreaId = inventory.Location.AreaId,
+                //AreaId = inventory.Location.AreaId,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -457,7 +469,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -477,7 +490,7 @@ namespace Neutron.Global
                 Description = orderDetail.PartDesc,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = orderDetail.Quantity,
-                AreaId = inventory.Location.AreaId,
+               // AreaId = inventory.Location.AreaId,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -488,7 +501,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = orderDetail.Order.OrderInfo,
                 OrderDetailInfo = orderDetail.OrderDetailInfo,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -508,7 +522,7 @@ namespace Neutron.Global
                 Description = orderDetail.PartDesc,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = orderDetail.Quantity,
-                AreaId = inventory.Location.AreaId,
+                //AreaId = inventory.Location.AreaId,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -519,7 +533,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = orderDetail.ReplenOrder.OrderInfo,
                 OrderDetailInfo = orderDetail.OrderDetailInfo,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -562,7 +577,7 @@ namespace Neutron.Global
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickedQty,
-                AreaId = inventory.Location.AreaId,
+                //AreaId = inventory.Location.AreaId,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -573,7 +588,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -594,7 +610,7 @@ namespace Neutron.Global
                 Description = inventory.ItemDefinition.Description,
                 IssuedQuantity = pickedQty,
                 RequestedQuantity = pickedQty,
-                AreaId = inventory.Location.AreaId,
+               // AreaId = inventory.Location.AreaId,
                 Loc1 = inventory.Location.Loc1,
                 Loc2 = inventory.Location.Loc2,
                 Loc3 = inventory.Location.Loc3,
@@ -605,7 +621,8 @@ namespace Neutron.Global
                 CostCenter = costCenter,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -625,7 +642,7 @@ namespace Neutron.Global
                 Description = inv.Description,
                 RequestedQuantity = cnt.PreviousQty,
                 IssuedQuantity = cnt.NewQty,
-                AreaId = inv.Location.AreaId,
+                //AreaId = inv.Location.AreaId,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
                 Loc3 = inv.Location.Loc3,
@@ -638,7 +655,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
 
@@ -653,7 +671,7 @@ namespace Neutron.Global
                 ActionDateTime = DateTime.Now,
                 Item = null,
                 Description = null,
-                AreaId = location.AreaId,
+                //AreaId = location.AreaId,
                 Loc1 = location.Loc1,
                 Loc2 = location.Loc2,
                 Loc3 = location.Loc3,
@@ -665,7 +683,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             await SaveAsync(history);
         }
@@ -679,7 +698,7 @@ namespace Neutron.Global
                 ActionDateTime = DateTime.Now,
                 Item = null,
                 Description = null,
-                AreaId = location.AreaId,
+               // AreaId = location.AreaId,
                 Loc1 = location.Loc1,
                 Loc2 = location.Loc2,
                 Loc3 = location.Loc3,
@@ -691,7 +710,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -706,8 +726,9 @@ namespace Neutron.Global
                 Item = itemDefinition.Item,
                 Description = itemDefinition.Description,
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = itemDefinition.AreaId,
-                WorkstationId = _workstationView.WorkstationId
+                //AreaId = itemDefinition.AreaId,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
 
             };
             await SaveAsync(history);
@@ -723,8 +744,8 @@ namespace Neutron.Global
                 Item = itemDefinition.Item,
                 Description = itemDefinition.Description,
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = itemDefinition.AreaId,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
 
             };
             Save(history);
@@ -807,12 +828,13 @@ namespace Neutron.Global
                 IssuedQuantity = value.PickedQuantity,
                 Slot = value.PrimeBin,
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = value.AreaId,
+                //AreaId = value.AreaId,
                 OrderDetailId = value.Id,
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -831,8 +853,8 @@ namespace Neutron.Global
                 CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
-                AreaId = workstationId,
-                WorkstationId = _workstationView.WorkstationId
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -867,7 +889,8 @@ namespace Neutron.Global
                             Description = rec.Description,
                             EmpId = rec.EmpId,
                             Item = rec.Item,
-                            WorkstationId = rec.WorkstationId
+                            WorkstationId = _workstationView.WorkstationId,
+                            AreaId = _workstationView.AreaId
                         };
                         history.Add(historyView);
                     }
@@ -973,11 +996,13 @@ namespace Neutron.Global
                 IssuedQuantity = skipView.Picked,
                 Slot = "Skip",
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = skipView.AreaId, 
+                //AreaId = skipView.AreaId, 
                 OrderDetailId = skipView.Id,
                 CostCenter = skipView.OrderDetail.OrderDetailInfo.Length < 5 ? string.Empty : skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,
-                OrderDetailInfo = skipView.OrderDetail.OrderDetailInfo
+                OrderDetailInfo = skipView.OrderDetail.OrderDetailInfo,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }

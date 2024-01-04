@@ -2617,40 +2617,53 @@ namespace Neutron.Forms
             Task.Run(() => _logger.LogDetailAsync($"Go Batch START after FinalCheckOfOrdersToPick"));
 
             TextBoxFindAvailableOrders.Text = string.Empty;
-
-            var numOrders = _ordersToPick.Count(o => o.OrderId != 0);
-            if (numOrders > 0)
+            try
             {
-                LabelFormTitle.Text = _resourceManager.GetString($"PickList");
-                LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
 
-                var pickableViews = PickListLoad();
-
-                if (pickableViews.Count > 0)
+                var numOrders = _ordersToPick.Count(o => o.OrderId != 0);
+                if (numOrders > 0)
                 {
-                    _bindingSourcePickViews.DataSource = pickableViews;
-                    DataGridPickView.DataSource = _bindingSourcePickViews;
-                    Task.Run(() => _logger.LogDetailAsync($"bindingSourcePickViews Count:{_bindingSourcePickViews.Count.ToString()}"));
-                    GetRecordCount(_bindingSourcePickViews);
-                    // Check for items with insufficient inventory
-                    var shortItems = GetShortItems(pickableViews);
-                    // If there are any short items then show the PickListShortItemReport
-                    if (shortItems.Any())
+                    LabelFormTitle.Text = _resourceManager.GetString($"PickList");
+                    LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+
+                    var pickableViews = PickListLoad();
+
+                    if (pickableViews.Count > 0)
                     {
-                        tabControl1.SelectedTab = PickList;
-                        MBStart.Focus();
-                        Task.Run(() => _logger.LogDetailAsync($"Opening Pick List  Short Item Report"));
+                        _bindingSourcePickViews.DataSource = pickableViews;
+                        DataGridPickView.DataSource = _bindingSourcePickViews;
+                        Task.Run(() => _logger.LogDetailAsync($"bindingSourcePickViews Count:{_bindingSourcePickViews.Count.ToString()}"));
+                        GetRecordCount(_bindingSourcePickViews);
+                        // Check for items with insufficient inventory
+                        var shortItems = GetShortItems(pickableViews);
+                        // If there are any short items then show the PickListShortItemReport
+                        if (shortItems.Any())
+                        {
+                            tabControl1.SelectedTab = PickList;
+                            MBStart.Focus();
+                            Task.Run(() => _logger.LogDetailAsync($"Opening Pick List  Short Item Report"));
+                        }
+                        else
+                        {
+                            // At this point we have a list of PickViews that have sufficient inventory
+                            // and we have checked for short items
+                            // so we can go ahead and start the batch
+                            Start();
+                        }
                     }
                     else
                     {
-                        // At this point we have a list of PickViews that have sufficient inventory
-                        // and we have checked for short items
-                        // so we can go ahead and start the batch
-                        Start();
+                        MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+                        ClearAllSelectOrdersToPick();
+                        ClearBatchPositions();
+                        LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+                        LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+                        AvailableOrdersScreen();
                     }
                 }
                 else
                 {
+                    Task.Run(() => _logger.LogDetailAsync($"No Orders Selected"));
                     MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
                     ClearAllSelectOrdersToPick();
                     ClearBatchPositions();
@@ -2659,15 +2672,9 @@ namespace Neutron.Forms
                     AvailableOrdersScreen();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"No Orders Selected"));
-                MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
-                ClearAllSelectOrdersToPick();
-                ClearBatchPositions();
-                LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
-                LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
-                AvailableOrdersScreen();
+                Task.Run(() => _logger.LogDetailAsync($"Exception: {ex.Message}"));
             }
 
             Task.Run(() => _logger.LogDetailAsync($"Go Batch START Complete"));
@@ -2682,22 +2689,31 @@ namespace Neutron.Forms
             // and check for TextBoxPosx.Text that doesn't match OrdersToPick.Order
             // Clear invalid OrdersToPick
             Task.Run(() => _logger.LogDetailAsync($" Start FinalCheckOfOrdersToPick"));
-            foreach (var bp in _ordersToPick)
+            try
             {
-                var pos = bp.PositionNumber.ToString();
-                var c = Controls.Find($"TextBoxPos{pos}", true).First();
-                if (c != null)
+                foreach (var bp in _ordersToPick)
                 {
-                    var textBox = ((TextBox)c);
-                    var order = textBox.Text.Trim();
-                    if (string.IsNullOrEmpty(order))
+                    var pos = bp.PositionNumber.ToString();
+                    var c = Controls.Find($"TextBoxPos{pos}", true).First();
+                    if (c != null)
                     {
-                        Task.Run(() => _logger.LogDetailAsync($"TextBox must be Null or Empty: {order}"));
-                        // clear the Batch Position
-                        ClearItemFromBatchByPosition(bp.PositionNumber);
+                        var textBox = ((TextBox)c);
+                        var order = textBox.Text.Trim();
+                        if (string.IsNullOrEmpty(order))
+                        {
+                            Task.Run(() => _logger.LogDetailAsync($"TextBox is Null or Empty: {order}"));
+                            // clear the Batch Position
+                            ClearItemFromBatchByPosition(bp.PositionNumber);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Task.Run(() => _logger.LogDetailAsync($"Error: {ex.Message}"));
+
+            }
+            Task.Run(() => _logger.LogDetailAsync($" End FinalCheckOfOrdersToPick"));
         }
 
         private void AddItemToBatchByPosition(Order order, string pos)
@@ -3525,16 +3541,17 @@ namespace Neutron.Forms
         private void PickBack()
         {
             _ = Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
-            LabelFormTitle.Text = _resourceManager.GetString($"PickList");
-            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
-            tabControl1.SelectedTab = PickList;
+            //LabelFormTitle.Text = _resourceManager.GetString($"PickList");
+            //LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+            //tabControl1.SelectedTab = PickList;
 
 
            // ClearAllShi();
             //ClearAllBli();
             //ClearOc();
             _ = Task.Run(ClearBatchTable);
-            GlobalVar.Hanel.ResetHanelDeviceStatus();
+            
+            GlobalVar.Hanel?.ResetHanelDeviceStatus();
 
             ClearBlastzone();
             
@@ -3548,6 +3565,10 @@ namespace Neutron.Forms
             //TODO  commented out because I'm not handling something correctly
             // and items are getting stuck in Pick status
             UpdateOrdersToAvailableStatus(_ordersToPick);
+
+            LabelFormTitle.Text = _resourceManager.GetString($"PickList");
+            LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
+            tabControl1.SelectedTab = PickList;
             _ = Task.Run(() => _logger.LogDetailAsync($"PickBack END"));
         }
 
@@ -3576,7 +3597,8 @@ namespace Neutron.Forms
         }
         private void Start()
         {
-            GlobalVar.Hanel.ResetHanelDeviceStatus();
+            GlobalVar.Hanel?.ResetHanelDeviceStatus();
+
 
             _spaceBarDisabled = true;
             Task.Run(() => _logger.LogDetailAsync($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
@@ -5267,7 +5289,7 @@ namespace Neutron.Forms
             //ClearAllBli();
             //ClearOc();
             
-            GlobalVar.Hanel.ResetHanelDeviceStatus();
+            GlobalVar.Hanel?.ResetHanelDeviceStatus();
             
             _ = Task.Run(ClearBatchTable);
             ClearBlastzone();

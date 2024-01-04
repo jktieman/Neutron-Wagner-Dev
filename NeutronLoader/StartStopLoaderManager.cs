@@ -28,7 +28,7 @@ namespace NeutronLoader
             _sapService = new SAPService(_jsonData);
             _logger = NeutronCore.Global.Logger.SetupLogger("LoaderManager");
             InitInterfaceFile();
-            Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().RunLoaderOnce += (s, e) => RunLoaderOnce();
 
         }

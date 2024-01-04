@@ -18,9 +18,9 @@ namespace NeutronData.Repositories
 {
     public class ReplenOrdersRepository : IReplenOrdersRepository
     {
-        private readonly  GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly  GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly  GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
 
         private readonly WorkstationView _workstationView;
@@ -28,8 +28,8 @@ namespace NeutronData.Repositories
         private readonly IAreaRepository _areaRepository;
         private static int _totalOrderDetailCount;
         private static int _runningOrderDetailCount;
-       // private int[] _moveablePickStationIds;
-       // private Workstation _rackStation;
+        // private int[] _moveablePickStationIds;
+        // private Workstation _rackStation;
         private List<Workstation> _pickStations;
         private int[] _allPickableAreaIds;
         private IDynamicLogger _logger;
@@ -55,7 +55,7 @@ namespace NeutronData.Repositories
             _runningOrderDetailCount = 0;
         }
 
-       public ReplenOrder GetOrder(int orderId)
+        public ReplenOrder GetOrder(int orderId)
         {
             ReplenOrder order = null;
             using (var db = new NeutronDb())
@@ -85,7 +85,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
             return recs;
         }
@@ -166,7 +166,7 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetOrderView()
         {
-             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
+            var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All()
                 // .Where(r => statusToGet.Contains(r.OrderStatusId))
                 .Select(s => new ReplenOrderView
@@ -186,7 +186,7 @@ namespace NeutronData.Repositories
                     Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
                     Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
                     Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
-                   // Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+                    // Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
                     ShipMethodId = s.ShipMethodId
@@ -198,7 +198,7 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetOrderView(string search)
         {
-            
+
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
             IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
             {
@@ -236,21 +236,34 @@ namespace NeutronData.Repositories
                 using (var context = new NeutronDb())
                 {
                     var records = context.ReplenOrderDetails.Include("ReplenOrder")
-                        .Where(o => o.AreaId == workstationView.AreaId 
+                        .Where(o => o.AreaId == workstationView.AreaId
                                     && o.ReplenOrder.OrderStatusId == (int)OrderStatus.Available)
                         .Where(p => p.LineStatusId == (int)LineStatus.Available).ToList();
-                   
-                    var ords = records.GroupBy(r => new { r.ReplenOrderId, r.ReplenOrder.Ord1
-                            , r.ReplenOrder.Ord2, r.ReplenOrder.Priority, r.ReplenOrder.LoadDate })
+
+                    var ords = records.GroupBy(r => new
+                    {
+                        r.ReplenOrderId,
+                        r.ReplenOrder.Ord1
+                            ,
+                        r.ReplenOrder.Ord2,
+                        r.ReplenOrder.Priority,
+                        r.ReplenOrder.LoadDate
+                    })
                          .Select(r => new AvailableReplenOrdersView
                          {
                              Id = r.Key.ReplenOrderId
-                             , Ord1 = r.Key.Ord1
-                             , Ord2 = r.Key.Ord2
-                             , Priority = r.Key.Priority
-                             , Lines = r.Count()
-                             , Pieces = r.Sum(s => s.Quantity)
-                             , LoadDate = r.Key.LoadDate
+                             ,
+                             Ord1 = r.Key.Ord1
+                             ,
+                             Ord2 = r.Key.Ord2
+                             ,
+                             Priority = r.Key.Priority
+                             ,
+                             Lines = r.Count()
+                             ,
+                             Pieces = r.Sum(s => s.Quantity)
+                             ,
+                             LoadDate = r.Key.LoadDate
                          }).ToList();
 
                     foreach (var ord in ords)
@@ -289,7 +302,7 @@ namespace NeutronData.Repositories
             IEnumerable<ReplenOrderView> recs = null;
             var replenOrderList = _repoReplenOrders.All().ToList();
             if (replenOrderList.Count == 0) return availableRecs;
-            
+
             try
             {
                 recs = replenOrderList.Select(s => new ReplenOrderView
@@ -317,7 +330,7 @@ namespace NeutronData.Repositories
                     ShipMethodId = s.ShipMethodId
 
                 }).ToList();
-                
+
                 //})
                 //   .OrderByDescending(o => o.Priority).ToList();
                 //MessageBox.Show($"Recs");
@@ -408,7 +421,7 @@ namespace NeutronData.Repositories
             {
                 MessageBox.Show($"Assign Next Station: {recs.Count()} {ex.Message} \r\n {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]");
             }
-           
+
             try
             {
                 foreach (var item in recs.Where(r => r.CurrentPickArea == workstationView.AreaId))
@@ -569,7 +582,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get Available Replen Orders Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get Available Replen Orders Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -898,16 +911,16 @@ namespace NeutronData.Repositories
         public IEnumerable<RackReplenOrderView> GetRackOrdersView(int areaId, string search)
         {
             IEnumerable<RackReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new RackReplenOrderView
-                {
-                    AreaId = areaId,
-                    Id = s.Id,
-                    Ord1 = s.Ord1,
-                    Ord2 = s.Ord2,
-                    Priority = s.Priority,
-                    Order = s,
-                    LoadDate = s.LoadDate,
-                    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.AreaId == areaId).ToList()
-                }).Where(o => o.Order.OrderStatusId != (int)LineStatus.Complete)
+            {
+                AreaId = areaId,
+                Id = s.Id,
+                Ord1 = s.Ord1,
+                Ord2 = s.Ord2,
+                Priority = s.Priority,
+                Order = s,
+                LoadDate = s.LoadDate,
+                OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.AreaId == areaId).ToList()
+            }).Where(o => o.Order.OrderStatusId != (int)LineStatus.Complete)
                 .OrderBy(o => o.Ord2).ToList();
 
             var result = recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0);
@@ -948,28 +961,26 @@ namespace NeutronData.Repositories
         //}
 
 
-
         public ReplenOrder GetOrderAndOrderDetails(int orderId, int areaId)
         {
-            var order = new ReplenOrder();
-           // var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
-            if (orderId != null)
+            //var order = new ReplenOrder();
+            // var availableSkip = new int[] { (int)LineStatus.Available, (int)LineStatus.Skipped };
+            var order = GetOrder(orderId);
+           // var order = _repoReplenOrders.FindByKey(orderId);
+            if (order != null)
             {
-                order = _repoReplenOrders.FindByKey(orderId);
-                if (order != null)
+                var details = GetReplenOrderDetailsByOrderAndArea(orderId, areaId);
+
+                order.ReplenOrderDetails = new List<ReplenOrderDetail>();
+
+                foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId == 1))
                 {
-                    var details = GetReplenOrderDetailsByOrderAndArea(orderId, areaId);
-
-                    order.ReplenOrderDetails = new List<ReplenOrderDetail>();
-
-                    foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId is 1 or 9))
-                    {
-                        order.ReplenOrderDetails.Add(orderDetail);
-                    }
-
-                    //ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
+                    order.ReplenOrderDetails.Add(orderDetail);
                 }
+
+                //ord.ReplenOrderDetails = ord.ReplenOrderDetails.Where(x => x.ReplenOrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
             }
+
             return order;
         }
 
@@ -1026,7 +1037,7 @@ namespace NeutronData.Repositories
 
         public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField)
         {
-         _ = _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}");
+            _ = _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}");
             var recs = new List<AvailableReplenOrdersView>();
 
             try
@@ -1044,7 +1055,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get Available Replen Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
