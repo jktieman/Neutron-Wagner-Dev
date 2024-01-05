@@ -121,7 +121,9 @@ namespace NeutronLoader
                 //using (var db = new NeutronDb())
                 //{
                 
-                  var  recs = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
+                  var  recs = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue 
+                                                       && actionCodes.Contains(h.ActionCode)
+                      && h.RequestedQuantity == h.IssuedQuantity)
                         .ToList();
 
                     //recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
@@ -183,6 +185,18 @@ namespace NeutronLoader
                             _repoHistory.Update(history);
                            // db.SaveChanges();
                         }
+
+                    // Are there any History records where the RequestedQuantity and IssuedQuantity aren't the same
+                    var orphans = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue
+                                                        && actionCodes.Contains(h.ActionCode)).ToList();
+                    if (orphans.Any())
+                    {
+                        // Can you total any of them up and send to SAP
+                        var requested = orphans.GroupBy(g => new { g.Ord1, g.Ord2, g.Item, g.RequestedQuantity }).Distinct();
+                        
+                        
+                       
+                    }
                     //}
                 }
             }

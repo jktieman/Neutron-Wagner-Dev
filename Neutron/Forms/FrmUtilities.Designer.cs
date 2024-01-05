@@ -526,6 +526,10 @@
             this.ButtonSaveIptiConfig = new MetroFramework.Controls.MetroButton();
             this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
             this.PanelBatchLightTesterBottom = new System.Windows.Forms.Panel();
+            this.ComboBoxButtonOffTime = new System.Windows.Forms.ComboBox();
+            this.LabelButtonOffTime = new System.Windows.Forms.Label();
+            this.ComboBoxButtonColorTwo = new System.Windows.Forms.ComboBox();
+            this.ButtonColorTwo = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.LabelLine1 = new System.Windows.Forms.Label();
@@ -556,10 +560,6 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.ComboBoxButtonColorTwo = new System.Windows.Forms.ComboBox();
-            this.ButtonColorTwo = new System.Windows.Forms.Label();
-            this.ComboBoxButtonOffTime = new System.Windows.Forms.ComboBox();
-            this.LabelButtonOffTime = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -1816,7 +1816,6 @@
             // CheckBoxEnableLabelPrinter
             // 
             this.CheckBoxEnableLabelPrinter.AutoSize = true;
-            this.CheckBoxEnableLabelPrinter.Enabled = false;
             this.CheckBoxEnableLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableLabelPrinter.Location = new System.Drawing.Point(349, 346);
             this.CheckBoxEnableLabelPrinter.Name = "CheckBoxEnableLabelPrinter";
@@ -1828,7 +1827,6 @@
             // CheckBoxEnableDocumentPrinter
             // 
             this.CheckBoxEnableDocumentPrinter.AutoSize = true;
-            this.CheckBoxEnableDocumentPrinter.Enabled = false;
             this.CheckBoxEnableDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableDocumentPrinter.Location = new System.Drawing.Point(349, 310);
             this.CheckBoxEnableDocumentPrinter.Name = "CheckBoxEnableDocumentPrinter";
@@ -6474,6 +6472,60 @@
             this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(620, 446);
             this.PanelBatchLightTesterBottom.TabIndex = 6;
             // 
+            // ComboBoxButtonOffTime
+            // 
+            this.ComboBoxButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxButtonOffTime.FormattingEnabled = true;
+            this.ComboBoxButtonOffTime.Items.AddRange(new object[] {
+            "000",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500"});
+            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(475, 365);
+            this.ComboBoxButtonOffTime.Name = "ComboBoxButtonOffTime";
+            this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 28);
+            this.ComboBoxButtonOffTime.TabIndex = 24;
+            // 
+            // LabelButtonOffTime
+            // 
+            this.LabelButtonOffTime.AutoSize = true;
+            this.LabelButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelButtonOffTime.Location = new System.Drawing.Point(333, 368);
+            this.LabelButtonOffTime.Name = "LabelButtonOffTime";
+            this.LabelButtonOffTime.Size = new System.Drawing.Size(136, 20);
+            this.LabelButtonOffTime.TabIndex = 23;
+            this.LabelButtonOffTime.Text = "Button Off Time";
+            // 
+            // ComboBoxButtonColorTwo
+            // 
+            this.ComboBoxButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBoxButtonColorTwo.FormattingEnabled = true;
+            this.ComboBoxButtonColorTwo.Items.AddRange(new object[] {
+            "Off",
+            "Green",
+            "Red",
+            "Blue",
+            "Cyan",
+            "Magenta",
+            "Orange",
+            "White"});
+            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(474, 332);
+            this.ComboBoxButtonColorTwo.Name = "ComboBoxButtonColorTwo";
+            this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 28);
+            this.ComboBoxButtonColorTwo.TabIndex = 22;
+            // 
+            // ButtonColorTwo
+            // 
+            this.ButtonColorTwo.AutoSize = true;
+            this.ButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonColorTwo.Location = new System.Drawing.Point(320, 335);
+            this.ButtonColorTwo.Name = "ButtonColorTwo";
+            this.ButtonColorTwo.Size = new System.Drawing.Size(147, 20);
+            this.ButtonColorTwo.TabIndex = 21;
+            this.ButtonColorTwo.Text = "Button Color Two";
+            // 
             // label10
             // 
             this.label10.BackColor = System.Drawing.Color.Black;
@@ -6792,60 +6844,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // ComboBoxButtonColorTwo
-            // 
-            this.ComboBoxButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxButtonColorTwo.FormattingEnabled = true;
-            this.ComboBoxButtonColorTwo.Items.AddRange(new object[] {
-            "Off",
-            "Green",
-            "Red",
-            "Blue",
-            "Cyan",
-            "Magenta",
-            "Orange",
-            "White"});
-            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(474, 332);
-            this.ComboBoxButtonColorTwo.Name = "ComboBoxButtonColorTwo";
-            this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 28);
-            this.ComboBoxButtonColorTwo.TabIndex = 22;
-            // 
-            // ButtonColorTwo
-            // 
-            this.ButtonColorTwo.AutoSize = true;
-            this.ButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonColorTwo.Location = new System.Drawing.Point(320, 335);
-            this.ButtonColorTwo.Name = "ButtonColorTwo";
-            this.ButtonColorTwo.Size = new System.Drawing.Size(147, 20);
-            this.ButtonColorTwo.TabIndex = 21;
-            this.ButtonColorTwo.Text = "Button Color Two";
-            // 
-            // ComboBoxButtonOffTime
-            // 
-            this.ComboBoxButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxButtonOffTime.FormattingEnabled = true;
-            this.ComboBoxButtonOffTime.Items.AddRange(new object[] {
-            "000",
-            "100",
-            "200",
-            "300",
-            "400",
-            "500"});
-            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(475, 365);
-            this.ComboBoxButtonOffTime.Name = "ComboBoxButtonOffTime";
-            this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 28);
-            this.ComboBoxButtonOffTime.TabIndex = 24;
-            // 
-            // LabelButtonOffTime
-            // 
-            this.LabelButtonOffTime.AutoSize = true;
-            this.LabelButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelButtonOffTime.Location = new System.Drawing.Point(333, 368);
-            this.LabelButtonOffTime.Name = "LabelButtonOffTime";
-            this.LabelButtonOffTime.Size = new System.Drawing.Size(136, 20);
-            this.LabelButtonOffTime.TabIndex = 23;
-            this.LabelButtonOffTime.Text = "Button Off Time";
             // 
             // FrmUtilities
             // 

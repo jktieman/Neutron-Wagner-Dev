@@ -63,7 +63,7 @@ namespace SAPServer
 
                             using (var db = new NeutronDb())
                             {
-                                var rec = db.NOVA_OUTPUT.Find(good.TRANSID);
+                                var rec = db.NOVA_OUTPUT.FirstOrDefault(r => r.TRANSID == good.TRANSID);
                                 if (rec == null) continue;
                                 //rec.SKUDESC = string.Empty;
                                 rec.PROCESSED = "Y";
@@ -100,7 +100,7 @@ namespace SAPServer
 
                             using (var db = new NeutronDb())
                             {
-                                var rec = db.NOVA_OUTPUT.Find(good.TRANSID);
+                                var rec = db.NOVA_OUTPUT.FirstOrDefault(r => r.TRANSID == good.TRANSID);
                                 if (rec == null) continue;
                                 rec.SKUDESC = string.Empty;
                                 rec.PROCESSED = "Y";

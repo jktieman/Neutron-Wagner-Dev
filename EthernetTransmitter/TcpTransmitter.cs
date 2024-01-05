@@ -180,8 +180,8 @@ namespace EthernetTransmitter
                 if (!_server.IsListening) return;
                 // once a client has connected...
                 var command = new Put2LightCommand().GetCommand(value);
-                
-                
+                await _logger.LogDetailAsync($"SendData command: {command}");
+
                 if (IsClientConnected)
                 {
                    await _server.SendAsync(ClientIpPort, command);

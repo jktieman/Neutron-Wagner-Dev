@@ -1281,16 +1281,20 @@ namespace Neutron.Forms
 
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
+
             var bCol = new DataGridViewButtonColumn
             {
                 HeaderText = string.Empty,
-                Visible = true,
+                Visible = _workstationView.AreaId != 8,
                 //Visible = _workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.RackTablet &&
                 //          _workstationView.StationTypeId != (int)NeutronCore.Enums.StationType.Supervisor,
                 Name = "Position",
                 Text = _gridResourceManager.GetString("Position"),
                 UseColumnTextForButtonValue = true,
             };
+            
+            
+            
             DataGridView1.Columns.Add(bCol);
             var xcol = new DataGridViewCheckBoxColumn
             {

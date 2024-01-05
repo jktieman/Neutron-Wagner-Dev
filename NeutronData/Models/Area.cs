@@ -16,7 +16,7 @@ namespace NeutronData.Models
         public bool Pickable { get; set; }
         [ForeignKey("LocationTypeId")]
         public virtual LocationType LocationType { get; set; }
-        public virtual ICollection<StorageDevice> Devices { get; set; }=new List<StorageDevice>();
+        //public virtual ICollection<StorageDevice> Devices { get; set; }=new List<StorageDevice>();
 
     }
 }

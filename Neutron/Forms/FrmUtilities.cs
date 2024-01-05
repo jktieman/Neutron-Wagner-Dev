@@ -945,8 +945,8 @@ namespace Neutron.Forms
             TextBoxRunCompressInterval.Text =
                 _neutronVariables.RunCompressInterval.ToString(CultureInfo.InvariantCulture);
             CheckBoxEnableEmailNotification.Checked = _neutronVariables.EnableEmailNotification;
-            CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
-            CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter();
+           // CheckBoxEnableDocumentPrinter.Enabled = GetCurrentDocumentPrinter() != null;
+           // CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter();
             ComboBoxLoaderStation.SelectedValue = _neutronVariables.LoaderStation;
             CheckBoxRfidEnabledInventory.Checked = _neutronVariables.RfidEnabledInventory;
             CheckBoxRfidEnabledPicking.Checked = _neutronVariables.RfidEnabledPicking;
@@ -1057,7 +1057,7 @@ namespace Neutron.Forms
 
         private bool GetCurrentLabelPrinter()
         {
-            var result = false;
+            var result = true;
 
             return result;
         }
@@ -1163,6 +1163,13 @@ namespace Neutron.Forms
         {
             try
             {
+                if (string.IsNullOrEmpty(TextBoxTestOrderNumber.Text))
+                {
+                    MessageBox.Show($"Enter a valid Delivery number.");
+                    return;
+                }
+
+                var upc = string.Empty;
                 var order = TextBoxTestOrderNumber.Text;
                 var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
                 if (ord != null)
@@ -1174,8 +1181,14 @@ namespace Neutron.Forms
                         var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
                         var lineDetailInfo = orderDetail.OrderDetailInfo.Split(',');
                         var division = lineDetailInfo.Length > 3 ? lineDetailInfo[2].Trim() : "";
-
-                        var upc = _repoAka.GetUpc(orderDetail.PartNum).Trim();
+                        
+                        var info = orderDetail.OrderDetailInfo.Split('|');
+                        if (info.Length == 5)
+                        {
+                            upc = info[4].Trim();
+                        }
+                        
+                        //var upc = _repoAka.GetUpc(orderDetail.PartNum).Trim();
                         var aItem = orderDetail.PartNum.Trim();
                         var cItem = orderDetail.PartNum.Trim();
                         var quantity = orderDetail.Quantity.ToString().Trim();
@@ -1200,7 +1213,7 @@ namespace Neutron.Forms
                             UnitOfIssue = orderDetail.ItemDefinition.UnitOfIssue.Name
                         };
 
-                        var upc = _repoAka.GetUpc(orderDetail.PartNum);
+                       upc = _repoAka.GetUpc(orderDetail.PartNum);
 
                         ToteToPrint.Print(1, 1, labelDetail, upc, LabelPrinter);
                     }
