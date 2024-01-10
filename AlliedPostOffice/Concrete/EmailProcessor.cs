@@ -35,11 +35,13 @@ namespace AlliedPostOffice.Concrete
 
             using (var smtpClient = new SmtpClient())
             {
+                _emailSettings.WriteAsFile = false;
+                
                 smtpClient.EnableSsl = _emailSettings.UseSsl;
                 smtpClient.Host = _emailSettings.ServerName;
                 smtpClient.Port = _emailSettings.ServerPort;
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
+                //smtpClient.Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password);
                 if (_emailSettings.WriteAsFile)
                 {
                     smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;

@@ -662,7 +662,7 @@ namespace Neutron.Global
 
         }
 
-        public async Task SaveHistoryAsync(ActionCode actionCode, Location location)
+        public void SaveHistoryAsync(ActionCode actionCode, Location location)
         {
             var history = new History
             {
@@ -686,7 +686,7 @@ namespace Neutron.Global
                 WorkstationId = _workstationView.WorkstationId,
                 AreaId = _workstationView.AreaId
             };
-            await SaveAsync(history);
+            SaveAsync(history);
         }
 
         public void SaveHistory(ActionCode actionCode, Location location)
@@ -716,7 +716,7 @@ namespace Neutron.Global
             Save(history);
         }
 
-        public async Task SaveHistoryAsync(ActionCode actionCode, ItemDefinition itemDefinition)
+        public void SaveHistoryAsync(ActionCode actionCode, ItemDefinition itemDefinition)
         {
             var history = new History
             {
@@ -731,7 +731,7 @@ namespace Neutron.Global
                 AreaId = _workstationView.AreaId
 
             };
-            await SaveAsync(history);
+            SaveAsync(history);
         }
 
         public void SaveHistory(ActionCode actionCode, ItemDefinition itemDefinition)
@@ -751,11 +751,11 @@ namespace Neutron.Global
             Save(history);
         }
 
-        private async Task SaveAsync(History history)
+        private void SaveAsync(History history)
         {
             try
             {
-                await _repoHistory.InsertAsync(history);
+                _repoHistory.InsertAsync(history);
             }
             catch (Exception ex)
             {

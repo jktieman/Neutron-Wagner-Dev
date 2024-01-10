@@ -441,7 +441,7 @@
             this.TextBoxUsername = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.CheckBoxRequiredUsername = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.TextBoxPort = new System.Windows.Forms.TextBox();
             this.TextBoxServerName = new System.Windows.Forms.TextBox();
@@ -5421,7 +5421,7 @@
             this.groupBox2.Controls.Add(this.TextBoxUsername);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.checkBox1);
+            this.groupBox2.Controls.Add(this.CheckBoxRequiredUsername);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(308, 198);
             this.groupBox2.Name = "groupBox2";
@@ -5472,17 +5472,17 @@
             this.label4.TabIndex = 1;
             this.label4.Text = "Username:";
             // 
-            // checkBox1
+            // CheckBoxRequiredUsername
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(24, 36);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(304, 24);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "Requires Username and Password";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.CheckBoxRequiredUsername.AutoSize = true;
+            this.CheckBoxRequiredUsername.Checked = true;
+            this.CheckBoxRequiredUsername.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxRequiredUsername.Location = new System.Drawing.Point(24, 36);
+            this.CheckBoxRequiredUsername.Name = "CheckBoxRequiredUsername";
+            this.CheckBoxRequiredUsername.Size = new System.Drawing.Size(304, 24);
+            this.CheckBoxRequiredUsername.TabIndex = 0;
+            this.CheckBoxRequiredUsername.Text = "Requires Username and Password";
+            this.CheckBoxRequiredUsername.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -6675,7 +6675,7 @@
             this.ButtonTurnOffOrderControl.TabIndex = 11;
             this.ButtonTurnOffOrderControl.Text = "Turn Off";
             this.ButtonTurnOffOrderControl.UseVisualStyleBackColor = true;
-            this.ButtonTurnOffOrderControl.Click += new System.EventHandler(this.ButtonTurnOffOrderControl_Click);
+            this.ButtonTurnOffOrderControl.Click += new System.EventHandler(this.ButtonTurnOffOrderControl_ClickAsync);
             // 
             // ButtonBatchLightTurnOff
             // 
@@ -6697,7 +6697,7 @@
             this.ButtonTurnOnOrderControl.TabIndex = 12;
             this.ButtonTurnOnOrderControl.Text = "Turn On";
             this.ButtonTurnOnOrderControl.UseVisualStyleBackColor = true;
-            this.ButtonTurnOnOrderControl.Click += new System.EventHandler(this.ButtonTurnOnOrderControl_Click);
+            this.ButtonTurnOnOrderControl.Click += new System.EventHandler(this.ButtonTurnOnOrderControl_ClickAsync);
             // 
             // ButtonBatchLightTurnOn
             // 
@@ -6708,7 +6708,7 @@
             this.ButtonBatchLightTurnOn.TabIndex = 12;
             this.ButtonBatchLightTurnOn.Text = "Turn On";
             this.ButtonBatchLightTurnOn.UseVisualStyleBackColor = true;
-            this.ButtonBatchLightTurnOn.Click += new System.EventHandler(this.ButtonBatchLightTurnOn_Click);
+            this.ButtonBatchLightTurnOn.Click += new System.EventHandler(this.ButtonBatchLightTurnOn_ClickAsync);
             // 
             // LabelOrderControlButton
             // 
@@ -7324,7 +7324,7 @@
         private System.Windows.Forms.TextBox TextBoxUsername;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox CheckBoxRequiredUsername;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox TextBoxPort;
         private System.Windows.Forms.TextBox TextBoxServerName;

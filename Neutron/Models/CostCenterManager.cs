@@ -19,13 +19,13 @@ namespace Neutron.Models
             _costCenterList = new List<CostCenter>();
         }
 
-        public async Task<List<CostCenter>> GetCostCenterListAsync()
+        public List<CostCenter> GetCostCenterListAsync()
         {
             try
             {
                 if (File.Exists(_costCenterFile))
                 {
-                    _ccList = await Task.Run(() => File.ReadAllLines(_costCenterFile).ToList());
+                    _ccList = File.ReadAllLines(_costCenterFile).ToList();
 
                     _costCenterList.Add(new CostCenter {Code = string.Empty,Name = string.Empty});
                     foreach (var cc in _ccList)

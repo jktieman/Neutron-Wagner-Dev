@@ -52,7 +52,16 @@ namespace DeviceIndicatorService
         {
             _ = _logger.LogDetailAsync("Initialize Device Indicators - InitDeviceIndicators");
             _deviceIndicators = new List<DeviceIndicator>();
-            _hardwareDevices = _workstationView.Hanels;
+            if (_workstationView.Hanels.Any())
+            {
+                _hardwareDevices = _workstationView.Hanels;
+            }
+            
+            if (_hardwareDevices.Count == 0)
+            {
+                return;
+            }
+            
             _flashRate = _neutronVariables.DeviceFlashRate;
             _numDevices = _hardwareDevices.Count;
 

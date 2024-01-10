@@ -64,8 +64,7 @@ namespace Neutron.Forms
             this.mtbPin.CustomButton.UseSelectable = true;
             this.mtbPin.CustomButton.Visible = false;
             this.mtbPin.FontSize = MetroFramework.MetroTextBoxSize.Tall;
-            this.mtbPin.Lines = new string[] {
-        "8031"};
+            this.mtbPin.Lines = new string[0];
             this.mtbPin.Location = new System.Drawing.Point(132, 116);
             this.mtbPin.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.mtbPin.MaxLength = 32767;
@@ -78,7 +77,6 @@ namespace Neutron.Forms
             this.mtbPin.ShortcutsEnabled = true;
             this.mtbPin.Size = new System.Drawing.Size(146, 36);
             this.mtbPin.TabIndex = 0;
-            this.mtbPin.Text = "8031";
             this.mtbPin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.mtbPin.UseSelectable = true;
             this.mtbPin.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -99,7 +97,7 @@ namespace Neutron.Forms
             // FrmPin
             // 
             this.AcceptButton = this.mButtonLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(21F, 40F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(410, 224);

@@ -1503,7 +1503,7 @@ namespace Neutron.Forms
 
             if (inUse == 2)
             {
-                views = await _locationsRepository.GetAllLocationViewsExact(area.Id, itemDefinition.SizeCodeId,
+                views = _locationsRepository.GetAllLocationViewsExact(area.Id, itemDefinition.SizeCodeId,
                     itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId, inUse);
             }
             else
@@ -1513,7 +1513,7 @@ namespace Neutron.Forms
                 views = await Task.Run(() => _locationsRepository.GetAllLocationViewsExactByInUse(area.Id, itemDefinition.SizeCodeId,
                     itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId, inUse));
             }
-            await _logger.LogDetailAsync($"GetAvailableLocations Views Count = {views.Count()}");
+            _ = _logger.LogDetailAsync($"GetAvailableLocations Views Count = {views.Count()}");
 
 
             // if (inUse != 2)
@@ -2191,11 +2191,11 @@ namespace Neutron.Forms
                                 Task.Run(() => ClearBlastzone());
 
                                 var qty = quantity > 100 ? "--" : quantity.ToString();
+                                
+                                TurnOnIptiDisplayAsync(trayNumber, part, qty);
 
-                                TurnOnIptiDisplay(trayNumber, part, qty);
 
-
-                                TurnOnIptiOrderControl(trayNumber, $"Qty: {quantity}");
+                                TurnOnIptiOrderControlAsync(trayNumber, $"Qty: {quantity}");
                             }
 
                             //var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
@@ -2222,7 +2222,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void TurnOnIptiDisplay(int bayController, int position, string text)
+        private void TurnOnIptiDisplayAsync(int bayController, int position, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -2235,7 +2235,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void TurnOnIptiOrderControl(int bayController, string text)
+        private void TurnOnIptiOrderControlAsync(int bayController, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -2250,9 +2250,9 @@ namespace Neutron.Forms
                 }
             }
         }
-        private async Task ClearBlastzone()
+        private void ClearBlastzone()
         {
-            await _logger.LogDetailAsync($"ClearBlastzone Function - START");
+            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
             try
             {
                 if (_neutronVariables.DisplaysEnabled)
@@ -2275,10 +2275,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
+                _ = _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
 
             }
-            await _logger.LogDetailAsync($"ClearBlastzone Function - END");
+            _ = _logger.LogDetailAsync($"ClearBlastzone Function - END");
         }
 
         private void ClearAllShi()

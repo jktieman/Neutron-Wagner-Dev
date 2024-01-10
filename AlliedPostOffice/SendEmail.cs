@@ -167,6 +167,7 @@ namespace AlliedPostOffice
 
         public void Message(string subject, StringBuilder body)
         {
+            if (string.IsNullOrEmpty(body.ToString())) return; 
             try
             {
                 var attachment = GetAttachment();

@@ -3011,11 +3011,11 @@ namespace Neutron.Forms
 
         private void MBPickBack_Click(object sender, EventArgs e)
         {
-            _ = Task.Run(ClearBatchTable);
+            _ = Task.Run(ClearBatchTableAsync);
 
             GlobalVar.Hanel?.ResetHanelDeviceStatus();
 
-            ClearBlastzone();
+            ClearBlastzoneAsync();
 
             // Clear all the ProLites using the ProLiteManager
             _ = Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
@@ -3604,12 +3604,12 @@ namespace Neutron.Forms
 
             if (_batchTable && _batchTables.Enabled)
             {
-                _ = Task.Run(ClearBatchTable);
+                _ = Task.Run(ClearBatchTableAsync);
             }
 
             if (_blastzone)
             {
-                _ = Task.Run(ClearBlastzone);
+                _ = Task.Run(ClearBlastzoneAsync);
             }
 
             if (_prolite)
@@ -3619,7 +3619,7 @@ namespace Neutron.Forms
 
             if (_batchTable)
             {
-                _ = Task.Run(() => TurnOnIptiOrderControl(_neutronVariables.BliController, _currentPickStop.Item.Trim()));
+                _ = Task.Run(() => TurnOnIptiOrderControlAsync(_neutronVariables.BliController, _currentPickStop.Item.Trim()));
             }
 
 
@@ -3642,7 +3642,7 @@ namespace Neutron.Forms
 
                 if (_batchTable)
                 {
-                    TurnOnIptiDisplay(_neutronVariables.BliController, pos, pickView.QuantityToBePicked.ToString());
+                    TurnOnIptiDisplayAsync(_neutronVariables.BliController, pos, pickView.QuantityToBePicked.ToString());
                 }
                 //TurnOnBatchPositionDisplay(position: pos, beacon: 2, text: pickView.QuantityToBePicked.ToString());
 
@@ -3662,8 +3662,8 @@ namespace Neutron.Forms
 
                 if (_neutronVariables.IptiDisplays && _blastzone)
                 {
-                    TurnOnIptiDisplay(bayController, display, _currentPickStop.GetTotalQuantityToBePicked().ToString());
-                    TurnOnIptiOrderControl(bayController, _currentPickStop.Item.Trim());
+                    TurnOnIptiDisplayAsync(bayController, display, _currentPickStop.GetTotalQuantityToBePicked().ToString());
+                    TurnOnIptiOrderControlAsync(bayController, _currentPickStop.Item.Trim());
                 }
 
                 if (_prolite)
@@ -3682,7 +3682,7 @@ namespace Neutron.Forms
         /// <param name="bayController"></param>
         /// <param name="position"></param>
         /// <param name="text"></param>
-        private void TurnOnIptiDisplay(int bayController, int position, string text)
+        private void TurnOnIptiDisplayAsync(int bayController, int position, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -3694,7 +3694,7 @@ namespace Neutron.Forms
                 }
             }
         }
-        private void TurnOnIptiOrderControl(int bayController, string text)
+        private void TurnOnIptiOrderControlAsync(int bayController, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -3710,7 +3710,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void ClearBatchTable()
+        private void ClearBatchTableAsync()
         {
             _ = _logger.LogDetailAsync($"Clear Batch Table Function - START");
 
@@ -3738,7 +3738,7 @@ namespace Neutron.Forms
         /// <param name="position"></param>
         /// <param name="beacon"></param>
         /// <param name="text"></param>
-        private void TurnOnBlastzone(int bayController, int position, string text)
+        private void TurnOnBlastzoneAsync(int bayController, int position, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -3747,14 +3747,13 @@ namespace Neutron.Forms
                     if (GlobalVar.Displays == null) return;
                     var command = _tcpIptiCommandCenter.TurnOnDisplay(bayController.ToString(), position, text);
                     GlobalVar.Displays.SendText(command);
-                    // GlobalVar.Displays.ShowBlastzone(bayController, position, beacon, text);
                 }
             }
         }
         /// <summary>
         /// Done
         /// </summary>
-        private void ClearBlastzone()
+        private void ClearBlastzoneAsync()
         {
             _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
             if (_neutronVariables.DisplaysEnabled && _blastzone)
@@ -3925,10 +3924,13 @@ namespace Neutron.Forms
                 return;
             }
 
+            var slot = TextBoxSlot.Text.Trim();
             // get the new location based on the scanned in slot number
-            if (!string.IsNullOrEmpty(TextBoxSlot.Text))
+            if (!string.IsNullOrEmpty(slot))
             {
-                var location = GetScannedLocation(TextBoxSlot.Text);
+                var location = GetScannedLocation(slot);
+                MessageBox.Show($"You scanned Location: {slot} and found Location: {location.Slot}");
+                
                 if (location == null) return;
                 _currentPickStop.CurrentInventoryLocation.Location = location;
                 _currentPickStop.CurrentInventoryLocation.LocationId = location.Id;
@@ -4036,7 +4038,7 @@ namespace Neutron.Forms
 
         private Location GetScannedLocation(string slot)
         {
-            return _repoLocationRepository.FindBy(r => r.Slot == slot).FirstOrDefault();
+            return _repoLocationRepository.FindBy(r => r.Slot.Trim() == slot).FirstOrDefault();
 
         }
 
@@ -4180,7 +4182,7 @@ namespace Neutron.Forms
 
             var views = _repoLocationRepository.All().Where(s =>
                 s.AreaId == areaId && s.SizeCodeId == item.SizeCodeId &&
-                s.VelocityCodeId == item.VelocityCodeId && s.HeightCodeId == item.HeightCodeId && s.InUse == false).ToList();
+                s.VelocityCodeId == item.VelocityCodeId && s.HeightCodeId == item.HeightCodeId && s.InUse == false).Take(5).ToList();
 
             // got all we needed
             if (views.Count() >= stillNeeded)
@@ -4461,45 +4463,45 @@ namespace Neutron.Forms
                     break;
             }
 
-            using (var db = new NeutronDb())
-            {
-                var locationIds = new List<int>();
-                var invs = db.Inventory.Where(r =>
-                    r.Quantity == 0 && r.AreaId == _workstationView.AreaId &&
-                    r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
-                if (invs.Count > 0)
-                {
-                    foreach (var inv in invs)
-                    {
-                        locationIds.Add(inv.LocationId);
-                        _historyManager.SaveHistory(ActionCode.InventoryDelete, inv);
-                        db.Inventory.Remove(inv);
-                    }
+            //using (var db = new NeutronDb())
+            //{
+            //    var locationIds = new List<int>();
+            //    var invs = db.Inventory.Where(r =>
+            //        r.Quantity == 0 && r.AreaId == _workstationView.AreaId &&
+            //        r.StorageTypeId == (int)NeutronCore.Enums.StorageType.Release).ToList();
+            //    if (invs.Count > 0)
+            //    {
+            //        foreach (var inv in invs)
+            //        {
+            //            locationIds.Add(inv.LocationId);
+            //            _historyManager.SaveHistory(ActionCode.InventoryDelete, inv);
+            //            db.Inventory.Remove(inv);
+            //        }
 
-                    db.SaveChanges();
-                }
+            //        db.SaveChanges();
+            //    }
 
-                if (locationIds.Count > 0)
-                {
-                    foreach (var locationId in locationIds)
-                    {
-                        // Look for other items in inventory where the location is the same.
-                        // Don't want to change InUse to False is there are other items using this location.
+            //    if (locationIds.Count > 0)
+            //    {
+            //        foreach (var locationId in locationIds)
+            //        {
+            //            // Look for other items in inventory where the location is the same.
+            //            // Don't want to change InUse to False is there are other items using this location.
 
-                        var item = db.Inventory.FirstOrDefault(r => r.LocationId == locationId);
-                        if (item == null)
-                        {
-                            var location = db.Locations.Find(locationId);
-                            if (location != null)
-                            {
-                                location.InUse = false;
-                            }
-                        }
-                    }
+            //            var item = db.Inventory.FirstOrDefault(r => r.LocationId == locationId);
+            //            if (item == null)
+            //            {
+            //                var location = db.Locations.Find(locationId);
+            //                if (location != null)
+            //                {
+            //                    location.InUse = false;
+            //                }
+            //            }
+            //        }
 
-                    db.SaveChanges();
-                }
-            }
+            //        db.SaveChanges();
+            //    }
+            //}
 
             ParkPositionAfterBatch();
 
@@ -6323,7 +6325,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.UseImages) return;
             if (!_neutronVariables.AutoEnlargeImage) return;
-            PictureBoxItemImage.Location = new Point(318, 117);
+            PictureBoxItemImage.Location = new Point(138, 151);
             PictureBoxItemImage.Size = new Size(512, 512);
             PictureBoxItemImage.BringToFront();
         }
@@ -6332,8 +6334,8 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.UseImages) return;
             if (!_neutronVariables.AutoEnlargeImage) return;
-            PictureBoxItemImage.Location = new Point(398, 499);
-            PictureBoxItemImage.Size = new Size(256, 256);
+            PictureBoxItemImage.Location = new Point(422, 464);
+            PictureBoxItemImage.Size = new Size(228, 199);
             PictureBoxItemImage.BringToFront();
         }
 

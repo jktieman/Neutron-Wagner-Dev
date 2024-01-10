@@ -35,6 +35,7 @@ namespace AlliedPostOffice.Concrete
 
         public string MailToAddress { get; set; }
 
-        
+        public bool RequiredUsername { get; set; }
+        public string TestEmailAddress { get; set; }
     }
 }

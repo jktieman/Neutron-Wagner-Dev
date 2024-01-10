@@ -24,6 +24,7 @@ using NeutronEvents;
 using NeutronLoader;
 using SlotNameFactory;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
@@ -126,6 +127,7 @@ namespace Neutron
             SetCulture(_cultureInfo.Name);
             KeyPreview = true;
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
+           
             _logger = NeutronCore.Global.Logger.SetupLogger("Main");
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
@@ -139,7 +141,7 @@ namespace Neutron
             Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
             Mediator.GetInstance().SendEmailMessage += (s, e) => DisplayMessage(e.Message); // _sendEmail.Message(this, e.Message);
 
-            _ = InitializeAsync();
+            Initialize();
 
             ////TODO Remove this or change to false for Production
             //GlobalVar.Testing = true;
@@ -160,14 +162,14 @@ namespace Neutron
 
         }
 
-        private async Task InitializeAsync()
+        private void Initialize()
         {
             //TODO Remove this or change to false for Production
             GlobalVar.Testing = true;
             //Log on to Neutron
             LogOn();
             //Init();
-            var result = await InitAsync();
+            var result = Init();
             _ = _logger.LogDetailAsync($"After Task.Run INIT result: {result} ");
             if (result == false)
             {
@@ -175,9 +177,9 @@ namespace Neutron
             }
         }
 
-        private async Task<bool> InitAsync()
+        private bool Init()
         {
-            await _logger.LogDetailAsync("Init Started");
+            _ = _logger.LogDetailAsync("Init Started");
             var result = InitForm();
             _ = _logger.LogDetailAsync($"Init Result: {result}");
 
@@ -212,23 +214,23 @@ namespace Neutron
         private void LogGeneralError(string message)
         {
             Task.Run(() => _logger.LogDetailAsync($"General Error: {message}"));
-            MessageBox.Show($"Alert: {message}", "Error Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //MessageBox.Show($"Alert: {message}", "Error Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            //if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-            //{
-            //    _sendEmail.Message(message, _logger.LastLogLines());
-            //}
+            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            {
+           //     _sendEmail.Message(message, _logger.LastLogLines());
+            }
         }
 
         private void DisplayMessage(string message)
         {
             //Task.Run(() => _logger.LogDetailAsync($"Display Message: {message}"));
-            MessageBox.Show($"{message}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // MessageBox.Show($"{message}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            //if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
-            //{
-            //    _sendEmail.Message(message, _logger.LastLogLines());
-            //}
+            if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
+            {
+           //     _sendEmail.Message(message, _logger.LastLogLines());
+            }
         }
 
         private void EmailLoaderError(string message)
@@ -236,7 +238,7 @@ namespace Neutron
             Task.Run(() => _logger.LogDetailAsync($"Loader Error: {message}"));
             if (_neutronVariables.EnableEmailNotification)
             {
-                _sendEmail.Message(message, _logger.LastLogLines());
+           //     _sendEmail.Message(message, _logger.LastLogLines());
             }
         }
         #endregion

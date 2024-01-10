@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AlliedLogger;
 using JsonManager;
 using NeutronCore.Enums;
+using NeutronCore.Extensions;
 using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.DataContexts;
@@ -269,7 +270,8 @@ namespace NeutronLoader
                                     OrderDetailInfo = $"{rec.TransId}",
                                     ReplenOrderId = orderId,
                                     JobNum = orderDetail.Order.ToString(),
-                                    ItemDefinitionId = itemDef.Id
+                                    ItemDefinitionId = itemDef.Id,
+                                    TransId = orderDetail.TransId.ParseInt(),
 
                                 };
                                 _repoReplenOrderDetail.Insert(detail);
@@ -362,6 +364,17 @@ namespace NeutronLoader
 
                             }
 
+                            if (itemDefs.Count == 1)
+                            {
+                                itemDef = itemDefs[0];
+                                
+                            }
+
+                            if (itemDefs.Count == 0)
+                            {
+                                // No ItemDefinition
+                                _logger.LogDetailAsync($"No Item Definition for {orderDetail.Sku} in Area ? .");
+                            }
 
                             if (itemDef != null)
                             {
@@ -375,7 +388,8 @@ namespace NeutronLoader
                                     OrderDetailInfo = $"{orderDetail.TransId}|{rec.Priority}|{rec.Division}|{@"Route"}|{rec.Upc}",
                                     OrderId = orderId,
                                     JobNum = orderDetail.Order,
-                                    ItemDefinitionId = itemDef.Id
+                                    ItemDefinitionId = itemDef.Id,
+                                    TransId = orderDetail.TransId.ParseInt(),
                                 };
                                 _repoOrderDetail.Insert(detail);
                             }
@@ -430,12 +444,6 @@ namespace NeutronLoader
                     _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
                     foreach (var rec in recs)
                     {
-                        // Check for existing order
-
-                        var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString() && r.Ord2 == rec.INVOICENO.ToString()).FirstOrDefault();
-
-                        if (existingOrder != null) continue;
-
                         var h = new NeutronInput();
                         h.TransId = rec.TRANSID.ToString(CultureInfo.CurrentCulture);
                         h.Sku = rec.SKU;

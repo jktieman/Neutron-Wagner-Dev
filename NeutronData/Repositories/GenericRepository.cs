@@ -81,7 +81,7 @@ namespace NeutronData.Repositories
             }
         }
 
-        public async Task InsertAsync(TEntity entity)
+        public void InsertAsync(TEntity entity)
         {
 
             try
@@ -93,11 +93,11 @@ namespace NeutronData.Repositories
                 }
 
                 _dbSet.Add(entity);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException} {Environment.NewLine} {ex.InnerException.Message}");
+                MessageBox.Show($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException} {Environment.NewLine}");
             }
         }
 

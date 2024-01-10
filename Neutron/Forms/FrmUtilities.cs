@@ -145,6 +145,7 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             SetupLogger();
             SetupGrids();
+            LoadEmailServer();
             // _tcpIptiCommandCenter = new TcpIptiCommandCenter(jsonData, _logger);
             _documentToPrint = new DocumentToPrint();
             LabelVersion.Text =
@@ -2848,7 +2849,7 @@ namespace Neutron.Forms
         {
             _settings = new EmailSettings
             {
-                WriteAsFile = true,
+                WriteAsFile = false,
                 ServerName = TextBoxServerName.Text,
                 Username = TextBoxUsername.Text,
                 Password = TextBoxPassword.Text,
@@ -2859,25 +2860,29 @@ namespace Neutron.Forms
                 ServerPort = Int32.Parse(TextBoxPort.Text),
                 DefaultReplyToAddress = string.Empty,
                 FileLocation = @"C:\Neutron\Email\TestEmail.eml",
-                IsBodyHtml = true
+                IsBodyHtml = true,
+                TestEmailAddress= TextBoxSendToEmailAddress.Text,
+                RequiredUsername =  CheckBoxRequiredUsername.Checked
             };
 
             _jsonData.SaveFile(_settings);
         }
 
-        //private void FormEmailServer_Load(object sender, EventArgs e)
-        //{
-        //    _settings = _jsonData.LoadFile<EmailSettings>();
-        //    if (_settings != null)
-        //    {
-        //        TextbBoxServerName.Text = _settings.ServerName;
-        //        TextBoxUsername.Text = _settings.Username;
-        //        TextBoxPassword.Text = _settings.Password;
-        //        TextBoxEmailFromAddress.Text = _settings.MailFromAddress;
-        //        CheckBoxUseSsl.Checked = _settings.UseSsl;
-        //        TextBoxPort.Text = _settings.ServerPort.ToString();
-        //    }
-        //}
+        private void LoadEmailServer()
+        {
+            _settings = _jsonData.LoadFile<EmailSettings>();
+            if (_settings != null)
+            {
+                TextBoxServerName.Text = _settings.ServerName;
+                TextBoxUsername.Text = _settings.Username;
+                TextBoxPassword.Text = _settings.Password;
+                TextBoxEmailFromAddress.Text = _settings.MailFromAddress;
+                CheckBoxUseSsl.Checked = _settings.UseSsl;
+                TextBoxPort.Text = _settings.ServerPort.ToString();
+                TextBoxSendToEmailAddress.Text = _settings.TestEmailAddress;
+                CheckBoxRequiredUsername.Checked = _settings.RequiredUsername;
+            }
+        }
 
         private void ButtonSendTestEmail_Click(object sender, EventArgs e)
         {
@@ -3121,7 +3126,7 @@ namespace Neutron.Forms
             _jsonData.SaveFile<SapVariables>(sapVariables);
         }
 
-        private void ButtonBatchLightTurnOn_Click(object sender, EventArgs e)
+        private void ButtonBatchLightTurnOn_ClickAsync(object sender, EventArgs e)
         {
             var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
             var text = _tcpIptiCommandCenter.GetBayController(bayId).TurnOnDisplay(TextBoxBatchLightPosition.Text.ParseInt(),
@@ -3129,7 +3134,7 @@ namespace Neutron.Forms
             GlobalVar.Displays.SendText(text);
         }
 
-        private void TurnOnOrderControl(string bayId)
+        private void TurnOnOrderControlAsync(string bayId)
         {
             var text = _tcpIptiCommandCenter.GetBayController(bayId)
                 .TurnOnOrderControlModule(TextBoxOrderControlText.Text);
@@ -3207,7 +3212,7 @@ namespace Neutron.Forms
         private void ButtonPrintBarCode_Click(object sender, EventArgs e)
         {
             _pageCount = 1;
-            var printPreview = true;
+            var printPreview = false;
             var printer = GetCurrentDocumentPrinter();
             var order = TextBoxTestOrderNumber.Text;
             var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
@@ -3675,7 +3680,7 @@ namespace Neutron.Forms
         #endregion
         private void ButtonPrintReplen_Click(object sender, EventArgs e)
         {
-            var printPreview = true;
+            var printPreview = false;
             var printer = GetCurrentDocumentPrinter();
             var order = TextBoxTestOrderNumber.Text;
             var ord = _repoReplenOrders.FindBy(r => r.Ord2 == order).FirstOrDefault();
@@ -3700,16 +3705,15 @@ namespace Neutron.Forms
             }
         }
 
-        private void ButtonTurnOnOrderControl_Click(object sender, EventArgs e)
+        private void ButtonTurnOnOrderControl_ClickAsync(object sender, EventArgs e)
         {
             var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
             var text = _tcpIptiCommandCenter.GetBayController(bayId)
                 .TurnOnOrderControlModule(TextBoxOrderControlText.Text);
             GlobalVar.Displays.SendText(text);
-
         }
 
-        private void ButtonTurnOffOrderControl_Click(object sender, EventArgs e)
+        private void ButtonTurnOffOrderControl_ClickAsync(object sender, EventArgs e)
         {
             var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
             var text = _tcpIptiCommandCenter.GetBayController(bayId)

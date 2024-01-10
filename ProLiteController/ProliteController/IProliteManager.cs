@@ -11,5 +11,6 @@ namespace ProliteController
         void ClearProlite(int deviceNumber);
         void ClearAllProlites();
 
+        bool IsProliteManagerEnabled();
     }
 }

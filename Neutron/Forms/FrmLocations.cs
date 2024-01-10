@@ -493,14 +493,14 @@ namespace Neutron.Forms
                             if (_neutronVariables.IptiDisplays && blastzone)
 
                             {
-                                Task.Run(() => _ = ClearBlastzone());
+                                ClearBlastzone();
 
                                 var qty = quantity > 100 ? "--" : quantity.ToString();
 
-                                TurnOnIptiDisplay(trayNumber, part, qty);
+                                TurnOnIptiDisplayAsync(trayNumber, part, qty);
 
 
-                                TurnOnIptiOrderControl(trayNumber, $"Qty: {quantity}");
+                                TurnOnIptiOrderControlAsync(trayNumber, $"Qty: {quantity}");
                             }
 
                             //var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
@@ -530,7 +530,7 @@ namespace Neutron.Forms
         }
 
 
-        private void TurnOnIptiDisplay(int bayController, int position, string text)
+        private void TurnOnIptiDisplayAsync(int bayController, int position, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -543,7 +543,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void TurnOnIptiOrderControl(int bayController, string text)
+        private void TurnOnIptiOrderControlAsync(int bayController, string text)
         {
             if (_neutronVariables.DisplaysEnabled)
             {
@@ -559,9 +559,9 @@ namespace Neutron.Forms
             }
         }
 
-        private async Task ClearBlastzone()
+        private void ClearBlastzone()
         {
-            await _logger.LogDetailAsync($"ClearBlastzone Function - START");
+            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
             try
             {
                 if (_neutronVariables.DisplaysEnabled)
@@ -584,10 +584,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
+                _ = _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
 
             }
-            await _logger.LogDetailAsync($"ClearBlastzone Function - END");
+            _ = _logger.LogDetailAsync($"ClearBlastzone Function - END");
         }
 
         //------------
@@ -709,8 +709,9 @@ namespace Neutron.Forms
                                     && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5);
                                 if (rec == null)
                                 {
-                                    var slotName = GlobalVar.SlotNameFactory
-                                        .CreateSlotName(areaId, deviceNumber, loc2, loc3, loc4, loc5).SlotName;
+                                    var slotName = TextBoxNewSlot.Text;
+                                    //var slotName = GlobalVar.SlotNameFactory
+                                    //    .CreateSlotName(areaId, deviceNumber, loc2, loc3, loc4, loc5).SlotName;
                                     var loc = new Location
                                     {
                                         AreaId = areaId,
@@ -951,7 +952,7 @@ namespace Neutron.Forms
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
                 _repoLocation.Delete(loc.Id);
-                await _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
+                _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
                 RefreshData();
                 tabControl1.SelectedTab = tabPage1;
             }

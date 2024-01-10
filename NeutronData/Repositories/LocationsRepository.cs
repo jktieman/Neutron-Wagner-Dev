@@ -36,7 +36,7 @@ namespace NeutronData.Repositories
        
         #endregion
 
-        public async Task<IEnumerable<LocationView>> GetAllLocationViewsExact(int areaId, int sizeCodeId,
+        public IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse)
         {
             var recs = new List<LocationView>();
@@ -50,20 +50,20 @@ namespace NeutronData.Repositories
                     var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
                     var param5 = new SqlParameter("@InUse", inUse);
 
-                    recs = await context.Database.SqlQuery<LocationView>(
+                    recs = context.Database.SqlQuery<LocationView>(
                         "usp_GetLocationViewsExact @AreaId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
-                        , param1, param2, param3, param4, param5).ToListAsync();
+                        , param1, param2, param3, param4, param5).ToList();
                 }
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
             }
 
             return recs;
         }
 
-        public async Task<IEnumerable<LocationView>> GetAllLocationViewsExactByInUse(int areaId, int sizeCodeId,
+        public IEnumerable<LocationView> GetAllLocationViewsExactByInUse(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse)
         {
             var recs = new List<LocationView>();
@@ -77,14 +77,14 @@ namespace NeutronData.Repositories
                     var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
                     var param5 = new SqlParameter("@InUse", inUse);
 
-                    recs = await context.Database.SqlQuery<LocationView>(
+                    recs = context.Database.SqlQuery<LocationView>(
                         "usp_GetLocationViewsExactByInUse @AreaId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
-                        , param1, param2, param3, param4, param5).ToListAsync();
+                        , param1, param2, param3, param4, param5).ToList();
                 }
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Get All Location Views Exact By InUse Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Get All Location Views Exact By InUse Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
             }
 
             return recs;
@@ -330,7 +330,7 @@ namespace NeutronData.Repositories
         /// <param name="itemDefinitionHeightCodeId"></param>
         /// <param name="inUse"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<LocationView>> GetAllLocationViewsExactByAreas(string areas, int itemDefinitionSizeCodeId
+        public IEnumerable<LocationView> GetAllLocationViewsExactByAreas(string areas, int itemDefinitionSizeCodeId
             , int itemDefinitionVelocityCodeId, int itemDefinitionHeightCodeId, int inUse)
         {
             var recs = new List<LocationView>();
@@ -344,14 +344,14 @@ namespace NeutronData.Repositories
                     var param4 = new SqlParameter("@HeightCodeId", itemDefinitionHeightCodeId);
                     var param5 = new SqlParameter("@InUse", inUse);
 
-                    recs = await context.Database.SqlQuery<LocationView>(
+                    recs = context.Database.SqlQuery<LocationView>(
                         "usp_GetLocationViewsExactByAreas @Areas, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
-                        , param1, param2, param3, param4, param5).ToListAsync();
+                        , param1, param2, param3, param4, param5).ToList();
                 }
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Get All Location Views Exact By Areas Error.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
+                _ = _logger.LogDetailAsync($"Get All Location Views Exact By Areas Error.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
 
             return recs;

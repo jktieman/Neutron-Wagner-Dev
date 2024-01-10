@@ -37,7 +37,6 @@ namespace NeutronData.Models
        
         public decimal INVOICENO { get; set; }
 
-        [StringLength(2)]
         public string PRIORITY { get; set; }
 
         public decimal TOTENO { get; set; }

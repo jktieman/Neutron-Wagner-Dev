@@ -13,7 +13,7 @@ namespace ProliteController
         public int Id { get; }
         public string Name { get; }
         public int DeviceNumber { get; }
-        public bool Enabled { get; }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// An individual Prolite device

@@ -31,7 +31,6 @@ namespace NeutronData.Models
         [StringLength(29)]
         public string ACCOUNTNO { get; set; }
 
-        [StringLength(1)]
         public string PRIORITY { get; set; }
 
         public decimal ORDERNO { get; set; }

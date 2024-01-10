@@ -23,6 +23,8 @@ namespace NeutronData.Models
         public int LineStatusId { get; set; }
         public int AreaId { get; set; }
         public string OrderDetailInfo { get; set; }
+        public int TransId { get; set; }
+        
         [ForeignKey("OrderId")]
         public virtual Order Order { get; set; }
         [ForeignKey("ItemDefinitionId")]

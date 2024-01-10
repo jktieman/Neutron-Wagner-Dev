@@ -437,7 +437,7 @@ namespace Neutron.Forms
         /// <summary>
         /// Save a New Item Definition
         /// </summary>
-        private async void SaveNew()
+        private  void SaveNew()
         {
 
             if (!string.IsNullOrEmpty(TextBoxNewItem.Text.Trim()))
@@ -491,8 +491,8 @@ namespace Neutron.Forms
                         };
                         try
                         {
-                            await _repoItemDefinition.InsertAsync(rec);
-                            await _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
+                             _repoItemDefinition.InsertAsync(rec);
+                            _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
                         }
                         catch (Exception ex)
                         {

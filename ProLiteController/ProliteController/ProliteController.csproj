@@ -42,6 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +71,10 @@
     <ProjectReference Include="..\..\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NeutronEvents\NeutronEvents.csproj">
+      <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
+      <Name>NeutronEvents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

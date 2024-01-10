@@ -80,9 +80,9 @@ namespace Neutron.Controllers
             }
         }
 
-        public async Task TurnOnAllBli()
+        public void TurnOnAllBli()
         {
-            await _logger.LogDetailAsync("BLI Turn On All Displays NOT WORKING.");
+            _ = _logger.LogDetailAsync("BLI Turn On All Displays NOT WORKING.");
         }
         private bool HartDisplayControllerInit()
         {
@@ -232,13 +232,13 @@ namespace Neutron.Controllers
             throw new NotImplementedException();
         }
 
-        public async Task ClearAllBli()
+        public void ClearAllBli()
         {
-            await _logger.LogDetailAsync($"BLI Clear All Displays.");
+            _ = _logger.LogDetailAsync($"BLI Clear All Displays.");
 
             if (!_hartDisplayController.Clear(_bliList, ref _cError))
             {
-                await _logger.LogDetailAsync($"BLI Clear All Display Error. {Environment.NewLine}  {_cError}");
+                _ = _logger.LogDetailAsync($"BLI Clear All Display Error. {Environment.NewLine}  {_cError}");
             }
 
         }
@@ -248,21 +248,21 @@ namespace Neutron.Controllers
         {
             if (!_hartDisplayController.Clear(Global_Module, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"SHI Clear All Display Error.  {Environment.NewLine}{_cError}"));
+                _ = _logger.LogDetailAsync($"SHI Clear All Display Error.  {Environment.NewLine}{_cError}");
             }
         }
 
         //this is the one Neutron uses
         public void ShowShi(int device, int bin, int level, string part, string text)
         {
-            Task.Run(() => _logger.LogDetailAsync($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}"));
+            _ = _logger.LogDetailAsync($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}");
             var address = GetAddress(device, level);
 
             var shi = new Hart_SHI(address, _lBeacon, _rBeacon, part, text);
 
             if (!_hartDisplayController.Show(shi, ref _cError))
             {
-                Task.Run(() => _logger.LogDetailAsync($"SHI Show Single Display Error.  {shi.SHI_Address}{Environment.NewLine} {_cError}"));
+                _ = _logger.LogDetailAsync($"SHI Show Single Display Error.  {shi.SHI_Address}{Environment.NewLine} {_cError}");
             }
         }
 
@@ -276,21 +276,21 @@ namespace Neutron.Controllers
             }
         }
 
-        public async Task ShowBli(int address, int beacon, string text)
+        public void ShowBli(int address, int beacon, string text)
         {
             if (_bliEnabled)
             {
-                await _logger.LogDetailAsync($"BLI Address: {address}");
+                _ = _logger.LogDetailAsync($"BLI Address: {address}");
                 var bli = new Hart_BLI(address, 2, text);
                 if (!blisOn.Contains(bli))
                 {
                     blisOn.Add(bli);
                 }
-                await _logger.LogDetailAsync($"BLI On: {bli.BLI_Address}");
+                _ = _logger.LogDetailAsync($"BLI On: {bli.BLI_Address}");
                 Thread.Sleep(10);
                 if (!_hartDisplayController.Show(bli, ref _cError))
                 {
-                    await _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}{Environment.NewLine} {_cError}");
+                    _ = _logger.LogDetailAsync($"BLI Show Single Display Error.  { bli.BLI_Address}{Environment.NewLine} {_cError}");
                 }
             }
         }
@@ -477,54 +477,54 @@ namespace Neutron.Controllers
         //    }
         //}
 
-        public Task ShowBli(Ipti_BLI bli)
+        public void ShowBli(Ipti_BLI bli)
         {
-            return Task.CompletedTask;
+            
         }
 
-        public Task ClearBli(Ipti_BLI bli)
+        public void ClearBli(Ipti_BLI bli)
         {
-            return Task.CompletedTask;
+            
         }
 
-        public Task ShowBlastzone(int bayController, int address, int beacon, string text)
+        public void ShowBlastzone(int bayController, int address, int beacon, string text)
         {
-            return Task.CompletedTask;
+            
         }
 
-        public Task ShowBli(int bayControllerId, int address, int beacon, string text)
+        public void ShowBli(int bayControllerId, int address, int beacon, string text)
         {
-            return Task.CompletedTask;
+            
         }
 
-        public Task ClearBlastzone()
+        public void ClearBlastzone()
         {
-            return Task.CompletedTask;
+            
         }
 
         public void ShowOc(int bayControllerId, int address, int beacon, string text)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void ClearOc(int bayControllerId, int address)
+        public void ClearOcAsync(int bayControllerId, int address)
         {
             throw new NotImplementedException();
         }
 
-        public Task ShowBlastzoneOc(int bayController, int address, int beacon, string text)
+        public void ShowBlastzoneOc(int bayController, int address, int beacon, string text)
         {
-            return Task.CompletedTask;
+            
         }
 
-        public Task ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
+        public void ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
-            return Task.CompletedTask;
+            
         }
 
-        public Task TurnOnAllBlastzones()
+        public void TurnOnAllBlastzones()
         {
-            return Task.CompletedTask;
+           
         }
     }
 }
