@@ -19,6 +19,7 @@ namespace NeutronData.Models
         public string Machine { get; set; }
         public string Dept { get; set; }
         public string LineStatusId { get; set; }
+        public int TransId { get; set; }
         public OrderDetail OrderDetail { get; set; }
     }
 }

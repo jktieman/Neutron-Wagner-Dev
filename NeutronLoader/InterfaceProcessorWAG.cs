@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using AlliedLogger;
 using JsonManager;
 using NeutronCore.Enums;
@@ -69,7 +70,8 @@ namespace NeutronLoader
 
             try
             {
-                _sapService.Init();
+                MessageBox.Show($"Bypassing call to SAP Server during Testing");
+                // _sapService.Init();
             }
             catch (Exception ex)
             {
@@ -126,7 +128,8 @@ namespace NeutronLoader
                 _loadOrdersBusy = true;
                 await _logger.LogDetailAsync("Load Orders Testing Waiting 2 Seconds");
 
-                _sapService.Run();
+                MessageBox.Show($"Bypassing call to SAP Server during Testing");
+                // _sapService.Run();
 
 
 
@@ -167,7 +170,7 @@ namespace NeutronLoader
             {
                 // get records from SAP Server
                 List<NOVA_INPUT> recs;
-                // using (var db = new WagnerDb())
+
                 using (var db = new NeutronDb())
                 {
                     recs = db.NOVA_INPUT.Where(r => r.PROCESSED == "N" && r.TRANSTYPE == "02").ToList();
@@ -177,34 +180,39 @@ namespace NeutronLoader
                 {
 
                     _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
+
                     foreach (var rec in recs)
                     {
-                        // Check for existing order
-                        var existingOrder = _repoReplenOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString()).FirstOrDefault();
+                        //// Check for existing order
+                        //var existingOrder = _repoReplenOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString()).FirstOrDefault();
 
-                        if (existingOrder != null) continue;
+                        //if (existingOrder != null) continue;
 
                         var h = new NeutronInput();
                         h.TransId = rec.TRANSID.ToString(CultureInfo.CurrentCulture);
-                        h.Sku = rec.SKU;
+                        h.Sku = rec.SKU.Trim();
                         h.Qty = (int)rec.QTY;
-                        h.Division = rec.DIVISION;
+                        // h.Division = rec.DIVISION;
                         h.Order = rec.ORDERNO.ToString(CultureInfo.CurrentCulture);
-                        h.Priority = rec.PRIORITY;
+                        // h.Priority = rec.PRIORITY;
                         h.Invoice = rec.INVOICENO.ToString(CultureInfo.CurrentCulture);
-                        h.Des = rec.SKUDESC;
-                        h.Upc = rec.UPC;
+                        h.Des = rec.SKUDESC.Trim();
+                        // h.Upc = rec.UPC;
                         h.LineNo = rec.TOTENO.ToString(CultureInfo.CurrentCulture);
-                        h.Name = rec.NAME1;
-                        h.Street = rec.STREET;
-                        h.City = rec.CITY1;
-                        h.Region = rec.REGION;
-                        h.ZipCode = rec.POST_CODE1;
-                        h.Country = rec.COUNTRY;
-                        h.Text = rec.TEXT;
+                        //h.Name = rec.NAME1;
+                        //h.Street = rec.STREET;
+                        //h.City = rec.CITY1;
+                        //h.Region = rec.REGION;
+                        //h.ZipCode = rec.POST_CODE1;
+                        //h.Country = rec.COUNTRY;
+                        //h.Text = rec.TEXT;
                         orderLines.Add(h);
+
+
                     }
-                    UpdateToProcessed(recs);
+
+                    MessageBox.Show($"Bypassing call to Set Processing on Server during Testing");
+                    //UpdateToProcessed(recs);
 
                 }
 
@@ -220,31 +228,34 @@ namespace NeutronLoader
 
         private void UpdateNeutronReplenOrders(List<NeutronInput> hostReplenOrderLines)
         {
-            var shipperId = 0;
-            var shipMethodId = 0;
+            var Area8 = 8;
+            //var shipperId = 0;
+            //var shipMethodId = 0;
 
-            var shipper = _repoShippers.All().FirstOrDefault();
-            if (shipper != null) shipperId = shipper.Id;
+            //var shipper = _repoShippers.All().FirstOrDefault();
+            //if (shipper != null) shipperId = shipper.Id;
 
-            var shipMethod = _repoShipMethods.All().FirstOrDefault();
-            if (shipMethod != null) shipMethodId = shipMethod.Id;
+            //var shipMethod = _repoShipMethods.All().FirstOrDefault();
+            //if (shipMethod != null) shipMethodId = shipMethod.Id;
 
-            var orderNumbers = hostReplenOrderLines.Select(r => r.Order).Distinct().ToList();
+            //
+            //
+            //var orderNumbers = hostReplenOrderLines.Select(r => r.Order).Distinct().ToList();
 
-            foreach (var orderNumber in orderNumbers)
+            foreach (var line in hostReplenOrderLines)
             {
-                var rec = hostReplenOrderLines.FirstOrDefault(r => r.Order == orderNumber);
-                if (rec == null) continue;
+                // var rec = hostReplenOrderLines.FirstOrDefault(r => r.Order == orderNumber);
+                // if (rec == null) continue;
                 var order = new ReplenOrder
                 {
-                    Ord1 = "REPLENOPRP",
-                    Ord2 = rec.Sku,
+                    Ord1 = line.Sku,
+                    Ord2 = $"PUTAWAY8",
                     Priority = 0,
                     LoadDate = DateTime.Now,
                     OrderStatusId = (int)OrderStatus.Available,
-                    ShipMethodId = shipMethodId,
-                    ShipperId = shipperId,
-                    OrderInfo = $"{rec.TransId}"
+                    // ShipMethodId = shipMethodId,
+                    // ShipperId = shipperId,
+                    // OrderInfo = $""
 
                 };
 
@@ -252,33 +263,35 @@ namespace NeutronLoader
                 {
                     _repoReplenOrder.Insert(order);
                     var orderId = order.Id;
-                    var orderDetails = hostReplenOrderLines.Where(r => r.Order == orderNumber).ToList();
-                    if (orderDetails.Any())
-                    {
-                        foreach (var orderDetail in orderDetails)
-                        {
-                            var itemDef = _repoItemDefinition.FindBy(r => r.Item == orderDetail.Sku).FirstOrDefault();
-                            if (itemDef != null)
-                            {
-                                var detail = new ReplenOrderDetail()
-                                {
-                                    PartNum = orderDetail.Sku,
-                                    PartDesc = orderDetail.Des,
-                                    Quantity = orderDetail.Qty,
-                                    LineStatusId = (int)LineStatus.Available,
-                                    AreaId = itemDef.AreaId,
-                                    OrderDetailInfo = $"{rec.TransId}",
-                                    ReplenOrderId = orderId,
-                                    JobNum = orderDetail.Order.ToString(),
-                                    ItemDefinitionId = itemDef.Id,
-                                    TransId = orderDetail.TransId.ParseInt(),
+                    // var orderDetails = hostReplenOrderLines.Where(r => r.Order == orderNumber).ToList();
+                    // if (orderDetails.Any())
+                    // {
+                    //     foreach (var orderDetail in orderDetails)
+                    //     {
+                    var itemDef = _repoItemDefinition.FindBy(r => r.Item == line.Sku).FirstOrDefault();
 
-                                };
-                                _repoReplenOrderDetail.Insert(detail);
-                                _documentToPrint.PrintReplenDoc(detail, _documentPrinter, false);
-                            }
-                        }
+
+                    if (itemDef != null)
+                    {
+                        var detail = new ReplenOrderDetail()
+                        {
+                            PartNum = line.Sku,
+                            PartDesc = line.Des,
+                            Quantity = line.Qty,
+                            LineStatusId = (int)LineStatus.Available,
+                            AreaId = Area8,
+                            OrderDetailInfo = $"{line.TransId}",
+                            ReplenOrderId = orderId,
+                            //JobNum = orderDetail.Order.ToString(),
+                            ItemDefinitionId = itemDef.Id,
+                            TransId = line.TransId.ParseInt(),
+
+                        };
+                        _repoReplenOrderDetail.Insert(detail);
+                        _documentToPrint.PrintReplenDoc(detail, _documentPrinter, _neutronVariables.PrintPreview);
                     }
+                    //}
+                    // }
                 }
                 catch (Exception ex)
                 {
@@ -345,7 +358,7 @@ namespace NeutronLoader
                             // If there are multiple ItemDefinitions
                             // We need to know if there is a PickMax rule to follow
                             // If no PickMax rule, pick All from the lowest/first Area
-                            if (itemDefs.Count > 1)
+                            if (itemDefs.Count > 0)
                             {
                                 var firstItemDef = itemDefs[0];
                                 // More than one ItemDefinition
@@ -356,21 +369,19 @@ namespace NeutronLoader
                                 // is larger than the PickMax value
                                 // if it is, we'll us the ItemDefinition from the Last ItemDefinition
 
-                                if (orderDetail.Qty >= firstItemDef.PickMax)
+                                if (firstItemDef.PickMax != 0)
                                 {
-                                    // It is larger, so Pick from the last ItemDefinition
-                                    itemDef = itemDefs.Last();
+                                    if (orderDetail.Qty > firstItemDef.PickMax)
+                                    {
+                                        // It is larger, so Pick from the last ItemDefinition
+                                        itemDef = itemDefs.Last();
+                                    }
                                 }
 
+
                             }
 
-                            if (itemDefs.Count == 1)
-                            {
-                                itemDef = itemDefs[0];
-                                
-                            }
-
-                            if (itemDefs.Count == 0)
+                            else
                             {
                                 // No ItemDefinition
                                 _logger.LogDetailAsync($"No Item Definition for {orderDetail.Sku} in Area ? .");
@@ -444,6 +455,12 @@ namespace NeutronLoader
                     _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
                     foreach (var rec in recs)
                     {
+                        // Check for existing order
+
+                        //var existingOrder = _repoOrder.FindBy(r => r.Ord1 == rec.ORDERNO.ToString() && r.Ord2 == rec.INVOICENO.ToString()).FirstOrDefault();
+
+                        //if (existingOrder != null) continue;
+
                         var h = new NeutronInput();
                         h.TransId = rec.TRANSID.ToString(CultureInfo.CurrentCulture);
                         h.Sku = rec.SKU;

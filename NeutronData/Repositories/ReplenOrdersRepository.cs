@@ -175,7 +175,7 @@ namespace NeutronData.Repositories
                     Ord1 = s.Ord1,
                     Ord2 = s.Ord2,
                     OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
+                   // ShipMethodName = s.ShipMethod.Name,
                     Priority = s.Priority,
                     ReplenOrder = s,
                     Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
@@ -189,7 +189,7 @@ namespace NeutronData.Repositories
                     // Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
+                  //  ShipMethodId = s.ShipMethodId
                 }).Where(r => statusToGet.Contains(r.OrderStatusId))
             .OrderBy(o => o.Id).ToList();
 
@@ -206,7 +206,7 @@ namespace NeutronData.Repositories
                 Ord1 = s.Ord1,
                 Ord2 = s.Ord2,
                 OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
+               // ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
                 Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
@@ -220,7 +220,7 @@ namespace NeutronData.Repositories
                 //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId,
+               // ShipMethodId = s.ShipMethodId,
             }).Where(r => statusToGet.Contains(r.OrderStatusId))
             .OrderBy(o => o.Ord1).ToList();
             IEnumerable<ReplenOrderView> result = recs.Where(s => s.SearchField.Contains(search));
@@ -312,7 +312,7 @@ namespace NeutronData.Repositories
                     Ord2 = s.Ord2,
                     //Starter = StartOnThisStation(workstationView.StationNumber, s.ReplenOrderDetails),
                     OrderStatusName = s.OrderStatus.Name,
-                    ShipMethodName = s.ShipMethod.Name,
+                  //  ShipMethodName = s.ShipMethod.Name,
                     Priority = s.Priority,
                     ReplenOrder = s,
                     Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
@@ -327,7 +327,7 @@ namespace NeutronData.Repositories
                     FirstPickArea = GetFirstPickArea(s.ReplenOrderDetails),
                     LoadDate = s.LoadDate,
                     OrderStatusId = s.OrderStatusId,
-                    ShipMethodId = s.ShipMethodId
+                   // ShipMethodId = s.ShipMethodId
 
                 }).ToList();
 
@@ -476,7 +476,7 @@ namespace NeutronData.Repositories
                 Ord1 = s.Ord1,
                 Ord2 = s.Ord2,
                 OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
+              //  ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
                 Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
@@ -490,7 +490,7 @@ namespace NeutronData.Repositories
                 //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
+              //  ShipMethodId = s.ShipMethodId
             }).Where(r => r.OrderStatusId == 6)
             .OrderByDescending(o => o.Priority).ToList();
             var result = recs.Where(s => s.SearchField.Contains(find));
@@ -597,7 +597,7 @@ namespace NeutronData.Repositories
                 Ord1 = s.Ord1,
                 Ord2 = s.Ord2,
                 OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
+               // ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
                 Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
@@ -611,7 +611,7 @@ namespace NeutronData.Repositories
                 //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId,
+               // ShipMethodId = s.ShipMethodId,
             }).Where(r => statusToGet.Contains(r.OrderStatusId))
             .OrderByDescending(o => o.Ord1).Where(r => r.SearchField.Contains(search.ToLower())).ToList();
 
@@ -1014,7 +1014,7 @@ namespace NeutronData.Repositories
                 Ord1 = s.Ord1,
                 Ord2 = s.Ord2,
                 OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
+              //  ShipMethodName = s.ShipMethod.Name,
                 Priority = s.Priority,
                 ReplenOrder = s,
                 Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
@@ -1028,7 +1028,7 @@ namespace NeutronData.Repositories
                 //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
                 LoadDate = s.LoadDate,
                 OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
+              //  ShipMethodId = s.ShipMethodId
             }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
                 .OrderBy(o => o.Ord1).ToList();
             IEnumerable<ReplenOrderView> result = recs.Where(s => s.SearchField.Contains(search));

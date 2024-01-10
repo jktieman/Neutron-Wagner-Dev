@@ -3207,12 +3207,13 @@ namespace Neutron.Forms
         {
 
         }
-        #region Barcode Print Test
+        #region Pick Slip with Barcode Print Test
 
+        //Pick Slip
         private void ButtonPrintBarCode_Click(object sender, EventArgs e)
         {
             _pageCount = 1;
-            var printPreview = false;
+            
             var printer = GetCurrentDocumentPrinter();
             var order = TextBoxTestOrderNumber.Text;
             var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
@@ -3239,7 +3240,7 @@ namespace Neutron.Forms
             var margins = new Margins(50, 50, 50, 50);
             document.DefaultPageSettings.Margins = margins;
 
-            printPreview = true;
+            var printPreview = CheckBoxPrintPreviewTesting.Checked;
 
             if (printPreview)
             {
@@ -3365,7 +3366,7 @@ namespace Neutron.Forms
             yValue += RowHeight;
             g.DrawString(_orderDetailInfo[8], new Font("arial", 10), new SolidBrush(Color.Black), 760, yValue);
             yValue += RowHeight;
-            g.DrawLine(Pens.Black, new Point(50, 175), new Point(1050, 175));
+            g.DrawLine(Pens.Black, new Point(xValue, 175), new Point(1050, 175));
             yValue += RowHeight;
         }
         private void DrawTaskNoSection(Graphics g, ref int yValue)
@@ -3678,20 +3679,23 @@ namespace Neutron.Forms
 
 
         #endregion
+
+        #region Replen Doc
         private void ButtonPrintReplen_Click(object sender, EventArgs e)
         {
-            var printPreview = false;
             var printer = GetCurrentDocumentPrinter();
             var order = TextBoxTestOrderNumber.Text;
-            var ord = _repoReplenOrders.FindBy(r => r.Ord2 == order).FirstOrDefault();
+            var ord = _repoReplenOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
             if (ord == null)
             {
                 MessageBox.Show($"Order {order} not found.");
                 return;
             }
+            
             var orderDetail = ord.ReplenOrderDetails.FirstOrDefault();
-            _documentToPrint.PrintReplenDoc(orderDetail, printer, printPreview);
-        }
+            _documentToPrint.PrintReplenDoc(orderDetail, printer, _neutronVariables.PrintPreview);
+        } 
+        #endregion
 
         private void ButtonClearAll_Click(object sender, EventArgs e)
         {

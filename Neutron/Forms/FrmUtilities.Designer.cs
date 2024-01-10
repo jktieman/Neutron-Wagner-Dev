@@ -560,6 +560,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.CheckBoxPrintPreviewTesting = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -876,6 +877,7 @@
             // 
             this.PrintSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.PrintSettings.Controls.Add(this.GroupBoxLoftwareInformation);
+            this.PrintSettings.Controls.Add(this.CheckBoxPrintPreviewTesting);
             this.PrintSettings.Controls.Add(this.CheckBoxUseLoftwareFile);
             this.PrintSettings.Controls.Add(this.CheckBoxLandscape);
             this.PrintSettings.Controls.Add(this.MBPrintSetUpSave);
@@ -1015,9 +1017,9 @@
             // TextBoxTestOrderNumber
             // 
             this.TextBoxTestOrderNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTestOrderNumber.Location = new System.Drawing.Point(621, 135);
+            this.TextBoxTestOrderNumber.Location = new System.Drawing.Point(610, 131);
             this.TextBoxTestOrderNumber.Name = "TextBoxTestOrderNumber";
-            this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(144, 23);
+            this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(173, 23);
             this.TextBoxTestOrderNumber.TabIndex = 2;
             this.TextBoxTestOrderNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1149,7 +1151,7 @@
             // LabelPrintSettingsEnterTestOrderNumber
             // 
             this.LabelPrintSettingsEnterTestOrderNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPrintSettingsEnterTestOrderNumber.Location = new System.Drawing.Point(618, 101);
+            this.LabelPrintSettingsEnterTestOrderNumber.Location = new System.Drawing.Point(607, 112);
             this.LabelPrintSettingsEnterTestOrderNumber.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelPrintSettingsEnterTestOrderNumber.Name = "LabelPrintSettingsEnterTestOrderNumber";
             this.LabelPrintSettingsEnterTestOrderNumber.Size = new System.Drawing.Size(165, 16);
@@ -6845,6 +6847,20 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // CheckBoxPrintPreviewTesting
+            // 
+            this.CheckBoxPrintPreviewTesting.AutoSize = true;
+            this.CheckBoxPrintPreviewTesting.Checked = true;
+            this.CheckBoxPrintPreviewTesting.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxPrintPreviewTesting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPreviewTesting.Location = new System.Drawing.Point(581, 72);
+            this.CheckBoxPrintPreviewTesting.Name = "CheckBoxPrintPreviewTesting";
+            this.CheckBoxPrintPreviewTesting.Size = new System.Drawing.Size(202, 20);
+            this.CheckBoxPrintPreviewTesting.TabIndex = 55;
+            this.CheckBoxPrintPreviewTesting.Text = "Use Print Preview For Testing";
+            this.CheckBoxPrintPreviewTesting.UseVisualStyleBackColor = true;
+            this.CheckBoxPrintPreviewTesting.CheckedChanged += new System.EventHandler(this.CheckBoxUseLoftwareFile_CheckedChanged);
+            // 
             // FrmUtilities
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -7470,5 +7486,6 @@
         private System.Windows.Forms.Label ButtonColorTwo;
         private System.Windows.Forms.ComboBox ComboBoxButtonOffTime;
         private System.Windows.Forms.Label LabelButtonOffTime;
+        private System.Windows.Forms.CheckBox CheckBoxPrintPreviewTesting;
     }
 }

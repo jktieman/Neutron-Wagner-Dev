@@ -5469,8 +5469,8 @@ namespace Neutron.Forms
                     Ord2 = TextBoxNewOrderOrd2.Text,
                     Priority = TextBoxNewOrderPriority.Text.ParseInt(),
                     LoadDate = DateTime.Now,
-                    ShipperId = 1,
-                    ShipMethodId = 1,
+                   // ShipperId = 1,
+                   // ShipMethodId = 1,
                     OrderStatusId = (int)NeutronCore.Enums.OrderStatus.Available
                 };
                 _repoReplenOrder.Insert(order);
@@ -5892,7 +5892,7 @@ namespace Neutron.Forms
         private void UpdateInventoryAfterHotAction()
         {
             var exactInventorySequence = new List<Inventory>();
-            var success = false;
+           // var success = false;
             var pickView = _currentPickStop.PickViews.FirstOrDefault();
             if (pickView != null)
             {

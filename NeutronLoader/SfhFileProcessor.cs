@@ -282,8 +282,8 @@ namespace NeutronLoader
                         order.Priority = line.Substring(31, 2).ParseInt();
                         order.LoadDate = DateTime.Now;
                         order.OrderStatusId = 1;
-                        order.ShipMethodId = 1;
-                        order.ShipperId = 1;
+                       // order.ShipMethodId = 1;
+                       // order.ShipperId = 1;
                         break;
                     case "2":
                         if (replenDetail != null)

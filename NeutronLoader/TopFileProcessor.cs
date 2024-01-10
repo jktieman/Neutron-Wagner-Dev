@@ -407,8 +407,8 @@ namespace NeutronLoader
                     Ord2 = firstRec.PartDesc, // .EmpId,
                     Priority = GetTrayNumber(firstRec.PrimeBin),
                     LoadDate = DateTime.Now,
-                    ShipperId = 1,
-                    ShipMethodId = 1,
+                   // ShipperId = 1,
+                   // ShipMethodId = 1,
                     OrderStatusId = (int)OrderStatus.Available
                 };
                 try

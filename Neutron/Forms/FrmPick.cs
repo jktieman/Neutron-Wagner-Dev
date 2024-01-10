@@ -388,7 +388,7 @@ namespace Neutron.Forms
         {
             if (PickScreen.Controls.ContainsKey("PanelDeviceIndicators")) return;
 
-            Task.Run( () =>_logger.LogDetailAsync("Initialize Device Indicators - Create New DeviceIndicatorManager"));
+            Task.Run(() => _logger.LogDetailAsync("Initialize Device Indicators - Create New DeviceIndicatorManager"));
 
             _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(189, 0),
                 new Size(769, 127), _neutronVariables);
@@ -804,7 +804,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                // ---         Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrdersRack Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrdersRack Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
 
@@ -858,7 +858,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                // ---         Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
@@ -914,7 +914,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                // ---         Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
@@ -2669,7 +2669,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                // ---         Task.Run(() => _logger.LogDetailAsync($"Exception: {ex.Message}"));
+                Task.Run(() => _logger.LogDetailAsync($"Exception: {ex.Message}"));
             }
 
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START Complete"));
@@ -2705,7 +2705,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                // ---         Task.Run(() => _logger.LogDetailAsync($"Error: {ex.Message}"));
+                Task.Run(() => _logger.LogDetailAsync($"Error: {ex.Message}"));
 
             }
             // ---         Task.Run(() => _logger.LogDetailAsync($" End FinalCheckOfOrdersToPick"));
@@ -3584,7 +3584,7 @@ namespace Neutron.Forms
         //Back button on Pick Screen
         private void PickBack()
         {
-           // ---   _ =        Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
+            // ---   _ =        Task.Run(() => _logger.LogDetailAsync($"PickBack START"));
             //LabelFormTitle.Text = _resourceManager.GetString($"PickList");
             //LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             //tabControl1.SelectedTab = PickList;
@@ -3593,8 +3593,8 @@ namespace Neutron.Forms
             // ClearAllShi();
             //ClearAllBli();
             //ClearOc();
-            
-            
+
+
             ClearBatchTable();
 
             GlobalVar.Hanel?.ResetHanelDeviceStatus();
@@ -3888,7 +3888,7 @@ namespace Neutron.Forms
             //if (_deviceManager == null)
             //{
             // ---         Task.Run(() => _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-            
+
             _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
 
             //for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
@@ -4275,7 +4275,7 @@ namespace Neutron.Forms
 
         private void ClearAllBli()
         {
-          // ---  _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - START"));
+            // ---  _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - START"));
             if (_neutronVariables.DisplaysEnabled)
             {
                 if (_neutronVariables.BliEnabled)
@@ -4283,26 +4283,26 @@ namespace Neutron.Forms
                     if (GlobalVar.Displays == null) return;
                     // ---_ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - ClearAllBli Function Call"));
                     GlobalVar.Displays.ClearAllBli();
-                   // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - Clear Order Control Function Return"));
+                    // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - Clear Order Control Function Return"));
                 }
             }
-           // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - END"));
+            // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - END"));
         }
 
         private void ClearOc()
         {
-           // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear Order Control Module - START"));
+            // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear Order Control Module - START"));
             if (_neutronVariables.DisplaysEnabled)
             {
                 if (_neutronVariables.BliEnabled)
                 {
                     if (GlobalVar.Displays == null) return;
-                  // ---   _ =         Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear Order Control Module Function Call"));
+                    // ---   _ =         Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear Order Control Module Function Call"));
                     GlobalVar.Displays.ClearOcAsync(_neutronVariables.BliController, 1);
-                  // ---   _ =         Task.Run(() => _logger.LogDetailAsync($"Pick Form - Order Control Module - Clear Order Control Function Return"));
+                    // ---   _ =         Task.Run(() => _logger.LogDetailAsync($"Pick Form - Order Control Module - Clear Order Control Function Return"));
                 }
             }
-          // ---      _ =      Task.Run(() => _logger.LogDetailAsync($"Pick Form - Order Control Module - END"));
+            // ---      _ =      Task.Run(() => _logger.LogDetailAsync($"Pick Form - Order Control Module - END"));
         }
 
         /// <summary>
@@ -4323,20 +4323,20 @@ namespace Neutron.Forms
                 ClearBatchTable();
             }
 
-                //ClearBlastzone();
-                if (GlobalVar.Displays != null && _blastzone == true)
+            //ClearBlastzone();
+            if (GlobalVar.Displays != null && _blastzone == true)
+            {
+
+                foreach (var controller in _tcpIptiCommandCenter.BayControllers)
                 {
+                    var text = controller.ClearDisplays();
+                    GlobalVar.Displays.SendText(text);
 
-                    foreach (var controller in _tcpIptiCommandCenter.BayControllers)
-                    {
-                        var text = controller.ClearDisplays();
-                        GlobalVar.Displays.SendText(text);
-
-                        text = controller.TurnOffOrderControlModule();
-                        GlobalVar.Displays.SendText(text);
-                    } 
+                    text = controller.TurnOffOrderControlModule();
+                    GlobalVar.Displays.SendText(text);
                 }
-            
+            }
+
 
             if (_prolite && _workstationView.ProLiteManager.IsProliteManagerEnabled())
             {
@@ -4437,7 +4437,7 @@ namespace Neutron.Forms
 
                     // ---     _ =     Task.Run(() => _logger.LogDetailAsync($"Command: {command}"));
 
-                     GlobalVar.Displays.SendText(command);
+                    GlobalVar.Displays.SendText(command);
                 }
             }
         }
@@ -4463,7 +4463,7 @@ namespace Neutron.Forms
 
         private void ClearBatchTable()
         {
-           
+
 
             if (_neutronVariables.IptiDisplays)
             {
@@ -4501,7 +4501,7 @@ namespace Neutron.Forms
                     var command = _tcpIptiCommandCenter.TurnOnDisplay(bayController.ToString(), position, text);
 
                     //          _ = _logger.LogDetailAsync($"GlobalVar.Displays.SendText --  Command: {command}");
-                     GlobalVar.Displays.SendText(command);
+                    GlobalVar.Displays.SendText(command);
                     // GlobalVar.Displays.ShowBlastzone(bayController, position, beacon, text);
                 }
             }
@@ -4686,7 +4686,7 @@ namespace Neutron.Forms
 
         private void CloseBatchWithSkip()
         {
-        // ---        _ =      Task.Run(() => _logger.LogDetailAsync($"CloseBatchWithSkip START"));
+            // ---        _ =      Task.Run(() => _logger.LogDetailAsync($"CloseBatchWithSkip START"));
             // ClearAllShi();
             // ClearAllBli();
             // ClearOc();
@@ -5144,7 +5144,7 @@ namespace Neutron.Forms
                 var desc = pickView.Description.Trim();
                 var division = orderDetail[1];
 
-               // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Loftware Label: UPC:{upc} Desc:{desc} Item:{aItem}"));
+                // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Loftware Label: UPC:{upc} Desc:{desc} Item:{aItem}"));
 
                 ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
             }
@@ -5306,7 +5306,7 @@ namespace Neutron.Forms
 
         private void CloseBatch()
         {
-           // ---   _ =        Task.Run(() => _logger.LogDetailAsync($"CloseBatch START"));
+            // ---   _ =        Task.Run(() => _logger.LogDetailAsync($"CloseBatch START"));
             //ClearAllShi();
             //ClearAllBli();
             //ClearOc();
@@ -5340,7 +5340,7 @@ namespace Neutron.Forms
                 //ShowAvailableOrders();
                 //tabControl1.SelectedTab = AvailableOrders;
             }
-          // ---  _ =          Task.Run(() => _logger.LogDetailAsync($"CloseBatch END"));
+            // ---  _ =          Task.Run(() => _logger.LogDetailAsync($"CloseBatch END"));
         }
 
         //private void DeleteRelease()
@@ -7178,8 +7178,8 @@ namespace Neutron.Forms
                     Ord2 = firstRec.EmpId,
                     Priority = 99,
                     LoadDate = DateTime.Now,
-                    ShipperId = 1,
-                    ShipMethodId = 1,
+                    //  ShipperId = 1,
+                    //  ShipMethodId = 1,
                     OrderStatusId = (int)OrderStatus.Available
                 };
                 try
@@ -7274,8 +7274,8 @@ namespace Neutron.Forms
                         Ord2 = firstRec.EmpId,
                         Priority = 99,
                         LoadDate = DateTime.Now,
-                        ShipperId = 1,
-                        ShipMethodId = 1,
+                        // ShipperId = 1,
+                        //  ShipMethodId = 1,
                         OrderStatusId = (int)OrderStatus.Available
                     };
                     try
@@ -7439,7 +7439,7 @@ namespace Neutron.Forms
                 //  UpdatePickViewsAfterHotAction();
                 LoadInventory();
                 UpdateInventoryAfterHotAction();
-                
+
                 UpdatePickScreen();
 
                 _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
@@ -8680,6 +8680,16 @@ namespace Neutron.Forms
                                 ShowShortCutForm();
                                 e.Handled = true;
                                 break;
+
+                            case Keys.F12:
+                                {
+                                    using (var frm = DI.Create<FrmInventory>())
+                                    {
+                                        var result = frm.ShowDialog();
+                                        Show();
+                                        break;
+                                    }
+                                }
                         }
 
                         break;
@@ -8697,46 +8707,13 @@ namespace Neutron.Forms
                                     break;
                                 }
                         }
+
                         break;
                     }
-                    if (e.KeyCode == Keys.F12)
-                    {
-                        //using (MetroForm frm = new FrmInventory(_jsonData, _akaRepository, _lacProcessor, _workstationView))
-                        using (var frm = DI.Create<FrmInventory>())
-                        {
-                            var result = frm.ShowDialog();
-                            Show();
-                        }
-                    }
-                    //if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
-                    //{
-                    //    if (tabControl1.SelectedTab.Name == "PickScreen")
-                    //    {
-                    //        PickAccept();
-                    //    }
-
-                    //}
-
-                    if (e.KeyCode == Keys.Escape)
-                    {
-                        if (tabControl1.SelectedTab.Name == "PickScreen")
-                        {
-                            PickBack();
-                        }
-
-                        if (tabControl1.SelectedTab.Name == "PickList")
-                        {
-                            PickListBack();
-                        }
-
-                        if (tabControl1.SelectedTab.Name == "AvailableOrders")
-                        {
-                            AvailableOrdersBack();
-                        }
-                    }
-
             }
         }
+
+
 
         private void FrmPick_KeyPress(object sender, KeyPressEventArgs e)
         {

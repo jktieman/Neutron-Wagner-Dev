@@ -172,8 +172,8 @@ namespace NeutronData.ModelViews
                     Priority = 99,
                     OrderInfo = "Transfer Order",
                     LoadDate = DateTime.Now,
-                    ShipperId = 1,
-                    ShipMethodId = 1,
+                   // ShipperId = 1,
+                   // ShipMethodId = 1,
                     OrderStatusId = (int)OrderStatus.Available,
                 };
                 _repoReplenOrders.Insert(replenOrder);

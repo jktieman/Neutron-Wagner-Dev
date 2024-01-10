@@ -6,6 +6,8 @@ namespace NeutronData.Models
     {
         public int Id { get; set; }
         public string TypeCode { get; set; }
+
+        public int TransId { get; set; }
         public string PartNum { get; set; }
         public string PartDesc { get; set; }
         public string JobNum { get; set; }

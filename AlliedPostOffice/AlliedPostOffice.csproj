@@ -35,9 +35,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NeutronEvents">
-      <HintPath>..\NeutronEvents\bin\Release\NeutronEvents.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -68,6 +65,10 @@
     <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
+      <Project>{fbc827af-2ce9-4d2c-b8a2-f782e27c8078}</Project>
+      <Name>NeutronEvents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
