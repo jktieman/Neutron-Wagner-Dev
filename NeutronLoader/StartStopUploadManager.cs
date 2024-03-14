@@ -3,40 +3,46 @@ using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
 using NeutronData.Interfaces;
-using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronData.Repositories;
 using NeutronEvents;
+using AsyncAwaitBestPractices;
 
 namespace NeutronLoader
 {
     public class StartStopUploadManager
     {
         private readonly IJsonData _jsonData;
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
         private IUploadProcessor _uploadProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
-        private readonly IWorkstationRepository _workstationRepository;
+        private IWorkstationRepository _workstationRepository;
 
         public StartStopUploadManager(IJsonData jsonData, NeutronVariables neutronVariables,
             NeutronLicense neutronLicense, WorkstationView workstationView)
         {
             _jsonData = jsonData;
-            _logger = NeutronCore.Global.Logger.SetupLogger("UploadManager");
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
-            _workstationRepository = new WorkstationRepository(_neutronVariables);
+           
+            Init();
+        }
+
+        private void Init()
+        {
+            _logger = NeutronCore.Global.Logger.SetupLogger("UploadManager");
+             _workstationRepository = new WorkstationRepository(_neutronVariables);
             InitInterfaceFile();
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopAction(e.StartStop);
-            Mediator.GetInstance().RunUploadOnce += (s, e) => RunUploadOnce();
+            Mediator.GetInstance().RunUploadOnce += async (s, e) => await _uploadProcessor.RunUploadOnce();
         }
 
         private void InitInterfaceFile()
         {
-         _ = _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}");
+         _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}").SafeFireAndForget();
             switch (_neutronLicense.CompanyCode)
             {
                 case "SFH":
@@ -65,8 +71,7 @@ namespace NeutronLoader
                     }
                 case "WAG":
                 {
-                 _ = _logger.LogDetailAsync($"WAG - UploadProcessorWAG");
-                    //_uploadProcessor = new UploadProcessorWAG(_neutronVariables, _neutronLicense, _logger, _workstationView, _workstationRepository);
+                 _logger.LogDetailAsync($"WAG - UploadProcessorWAG").SafeFireAndForget();
                         _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _logger);
                     break;
                 }
@@ -79,22 +84,17 @@ namespace NeutronLoader
             }
         }
 
-        private void RunUploadOnce()
-        {
-            _uploadProcessor.RunUploadOnce();
-        }
-
         private void StartStopAction(string startStop)
         {
             if (startStop == "Start")
             {
                 
-                _ = _logger.LogDetailAsync("Start Processing Upload Files");
+                _logger.LogDetailAsync("Start Processing Upload Files").SafeFireAndForget();
                 StartProcessingUploadFiles();
             }
             else
             {
-                _ = _logger.LogDetailAsync("Stop Processing Upload Files");
+                _logger.LogDetailAsync("Stop Processing Upload Files").SafeFireAndForget();
                 StopProcessingUploadFiles();
             }
         }

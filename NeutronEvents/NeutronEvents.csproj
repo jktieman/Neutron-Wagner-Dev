@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="AcceptButtonPressedEventArgs.cs" />
     <Compile Include="BatchCompleteEventArgs.cs" />
+    <Compile Include="InPositionInfo.cs" />
+    <Compile Include="IsClientConnectedEventArgs.cs" />
     <Compile Include="ProLiteMessageEventArgs.cs" />
     <Compile Include="DisplayMessageEventArgs.cs" />
     <Compile Include="InventoryFileCreatedErrorEventArgs.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="StartStopEventArgs.cs" />
     <Compile Include="StationOrderDetailsCompleteEventArgs.cs" />
     <Compile Include="TransmitStateChangedEventArgs.cs" />
+    <Compile Include="TrayInPositionEventArgs.cs" />
     <Compile Include="WorkItEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>

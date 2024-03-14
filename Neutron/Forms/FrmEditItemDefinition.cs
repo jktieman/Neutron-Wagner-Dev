@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Resources;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Neutron.Global;
 using NeutronCore.Extensions;
@@ -82,12 +83,12 @@ namespace Neutron.Forms
             Close();
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_Click(object sender, EventArgs e)
         {
-            UpdateItemDefinition();
+           await UpdateItemDefinition();
         }
 
-        private void UpdateItemDefinition()
+        private async Task UpdateItemDefinition()
         {
             var rec = _repoItemDefinition.FindByKey(ItemDefinition.Id);
             if (rec == null) return;
@@ -104,7 +105,7 @@ namespace Neutron.Forms
             rec.Weight = Convert.ToSingle(TextBoxViewEditWeight.Text);
             rec.Scale = CheckBoxViewEditScale.Checked;
             _repoItemDefinition.Update(rec);
-            _historyManager.SaveHistoryAsync(ActionCode.ItemModify, ItemDefinition);
+           await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, ItemDefinition);
             ItemDefinition = rec;  
         }
 

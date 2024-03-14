@@ -1,7 +1,10 @@
-﻿using AlliedLogger;
+﻿using System.Threading.Tasks;
+using AlliedLogger;
+using AsyncAwaitBestPractices;
 using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.Interfaces;
 using NeutronData.ModelViews;
 using NeutronEvents;
 using SAPServer;
@@ -11,31 +14,38 @@ namespace NeutronLoader
     public class StartStopLoaderManager
     {
         private readonly IJsonData _jsonData;
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
         private IInterfaceProcessor _interfaceProcessor;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
-        private readonly ISapService _sapService;
+        private readonly IOrdersRepository _ordersRepository;
+        private ISapService _sapService;
 
         public StartStopLoaderManager(IJsonData jsonData, NeutronVariables neutronVariables,
-            NeutronLicense neutronLicense, WorkstationView workstationView)
+            NeutronLicense neutronLicense, WorkstationView workstationView, IOrdersRepository ordersRepository)
         {
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
+            _ordersRepository = ordersRepository;
+            Init();
+        }
+
+        private void Init()
+        {
             _sapService = new SAPService(_jsonData);
             _logger = NeutronCore.Global.Logger.SetupLogger("LoaderManager");
             InitInterfaceFile();
-             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
-            Mediator.GetInstance().RunLoaderOnce += (s, e) => RunLoaderOnce();
+            Mediator.GetInstance().StartStopLoader += async (s, e) => await StartStopLoaderAction(e.StartStop);
+            Mediator.GetInstance().RunLoaderOnce += async (s, e) => await RunLoaderOnce();
 
         }
 
         private void InitInterfaceFile()
         {
-            _ = _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}");
+            _logger.LogDetailAsync($"InitInterfaceFile Company Code: {_neutronLicense.CompanyCode}").SafeFireAndForget();
             switch (_neutronLicense.CompanyCode)
             {
                 case "SFH":
@@ -65,8 +75,8 @@ namespace NeutronLoader
                     }
                 case "WAG":
                     {
-                     _ = _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG");
-                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService );
+                        _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG").SafeFireAndForget();
+                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _ordersRepository);
                         break;
                     }
                 default:
@@ -78,38 +88,38 @@ namespace NeutronLoader
 
         }
 
-        private void RunLoaderOnce()
+        private async Task RunLoaderOnce()
         {
-            _ = _logger.LogDetailAsync("Run Loader Once");
-            _interfaceProcessor.RunLoaderOnce();
+            _logger.LogDetailAsync("Run Loader Once").SafeFireAndForget();
+            await _interfaceProcessor.RunLoaderOnce();
         }
 
-        private void StartStopLoaderAction(string startStop)
+        private async Task StartStopLoaderAction(string startStop)
         {
-         _ = _logger.LogDetailAsync($"StartStopLoaderAction: {startStop}");
+            _logger.LogDetailAsync($"StartStopLoaderAction: {startStop}").SafeFireAndForget();
 
             if (startStop == "Start")
             {
-             _ = _logger.LogDetailAsync("Start Processing Interface Files");
-                StartProcessingInterfaceFiles();
+                _logger.LogDetailAsync("Start Processing Interface Files").SafeFireAndForget();
+               await StartProcessingInterfaceFiles();
             }
             else
             {
-             _ = _logger.LogDetailAsync("Stop Processing Interface Files");
+                _logger.LogDetailAsync("Stop Processing Interface Files").SafeFireAndForget();
                 StopProcessingInterfaceFiles();
             }
         }
 
-        private void StartProcessingInterfaceFiles()
+        public async Task StartProcessingInterfaceFiles()
         {
-         _ = _logger.LogDetailAsync("Start ProcessingInterfaceFiles");
+            _logger.LogDetailAsync("Start ProcessingInterfaceFiles").SafeFireAndForget();
 
-            _interfaceProcessor.StartProcessingInterfaceFiles();
+           await _interfaceProcessor.StartProcessingInterfaceFiles();
         }
 
-        private void StopProcessingInterfaceFiles()
+        public void StopProcessingInterfaceFiles()
         {
-         _ = _logger.LogDetailAsync("Stop ProcessingInterfaceFiles");
+            _logger.LogDetailAsync("Stop ProcessingInterfaceFiles").SafeFireAndForget();
             _interfaceProcessor?.StopProcessingInterfaceFiles();
         }
     }

@@ -23,6 +23,12 @@
         /// </summary>
         /// <returns>A string representing the state of the display after being turned off.</returns>
         string TurnOff();
+        
+        /// <summary>
+        /// Turns on the display with "END".
+        /// </summary>
+        /// <returns>A string representing the state of the display after being turned on.</returns>
+        string TurnOnEnd();
     }
 
 }

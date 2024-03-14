@@ -128,7 +128,7 @@ namespace Neutron
                 {
                     Application.Run(frmMain);
                 }
-                catch (ObjectDisposedException ex)
+                catch (ObjectDisposedException)
                 {
                     // Silent fail, close the app.
                 }

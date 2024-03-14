@@ -1,0 +1,241 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AlliedLogger;
+using NeutronCore.Enums;
+using NeutronData.DataContexts;
+using NeutronData.Models;
+using NeutronData.Repositories;
+using NeutronEvents;
+
+namespace ReplenService
+{
+    public class ReplenProcessor
+    {
+        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinitions = new GenericRepository<ItemDefinition>(new NeutronDb());
+
+        private ReplenRepository _replenRepository;
+        private IDynamicLogger _logger;
+
+        public ReplenProcessor()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            _replenRepository = new ReplenRepository();
+            _logger = NeutronCore.Global.Logger.SetupLogger("ReplenProcessor");
+            Mediator.GetInstance().OrderComplete += (s, e) => CheckForReplenOrder(e.Order);
+        }
+
+        private void CheckForReplenOrder(Order order)
+        {
+            if (order == null) return;
+            var ord = _repoOrder.FindByKey(order.Id);
+            if (ord.Ord2.Contains("REPLEN"))
+            {
+                CreateReplenishmentStoreOrder(order);
+            }
+        }
+
+        public List<Replenishment> GetNewAndUpdatedReplenishments()
+        {
+            // Get all orders
+            var replenishments = _replenRepository.GetReplenishments();
+            return replenishments.Select(ProcessReplenishment).Where(rec => rec != null).ToList();
+
+            //foreach (var replenishment in replenishments)
+            //{
+            //    var rec = ProcessReplenishment(replenishment);
+            //    if (rec == null) continue;
+            //    replens.Add(rec);
+            //}
+        }
+
+        public Replenishment ProcessReplenishment(Replenishment replenishment)
+        {
+            ReplenOrder storeOrder;
+            // Quantity must be greater than zero to be considered for replenishment
+            // if not, return null value
+            if (replenishment.QuantityNeeded < 0) return null;
+            if (replenishment.Item == "10-500-P")
+            {
+                var h = "Happy";
+            }
+            // now we have a valid replenishment
+            // is it already in the replenishment orders
+            var existingReplenishmentPick = GetExistingReplenishmentPick(replenishment.Item);
+            // if there is an existing pick and it is not complete
+            // either delete, adjust quantity or leave it alone
+            if (existingReplenishmentPick != null)
+            {
+                if (existingReplenishmentPick.OrderStatusId != (int)OrderStatus.Complete)
+                {
+                    // Replenishment already exists
+                    // If the quantityNeeded is zero
+                    // Remove the order
+                    if (replenishment.QuantityNeeded == 0)
+                    {
+                        RemoveExistingReplenishment(existingReplenishmentPick);
+                    }
+                    else
+                    {
+                        // update the quantity if new 
+                        // quantity is not the same as the current ordered quantity
+                        //
+                        // get the details
+                        var detail = _repoOrderDetail.FindBy(r => r.OrderId == existingReplenishmentPick.Id).FirstOrDefault();
+                        if (detail != null)
+                        {
+                            if (replenishment.QuantityNeeded != detail.Quantity)
+                            {
+                                detail.Quantity = replenishment.QuantityNeeded;
+                                _repoOrderDetail.Update(detail);
+                            }
+                        }
+                    }
+                    return null;
+                }
+                else // orderstatus is Complete
+                {
+                    // orderstatus is Complete, but has it been stored, check for open Store order
+                    storeOrder = GetExistingReplenishmentStore(replenishment.Item);
+                    // if there is a Store Order, do nothing
+                    if (storeOrder != null)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        // Create a Store Order
+                        CreateReplenishmentStoreOrder(existingReplenishmentPick);
+                        return null;
+                    }
+                }
+            }
+            else
+            {
+                // Replenishment Pick does not exist
+                // it could still be in a Store Order that has Not been put away
+                // , add it to the replenishment orders
+                if (replenishment.QuantityNeeded == 0)
+                {
+                    return null;
+                }
+                //check for the store order
+                storeOrder = GetExistingReplenishmentStore(replenishment.Item);
+                if (storeOrder != null)
+                {
+                    // there is a store order that has not been picked
+                    return null;
+                }
+            }
+
+            return replenishment;
+
+        }
+
+        private void RemoveExistingReplenishment(Order existingReplenishment)
+        {
+            try
+            {
+                // have to delete the OrderDetail first
+                // get the OrderDetail
+                var orderDetail = _repoOrderDetail.FindBy(o => o.OrderId == existingReplenishment.Id).FirstOrDefault();
+                if (orderDetail != null)
+                {
+                    // _repoOrderDetail.Delete(orderDetail.Id);
+                }
+                // _repoOrder.Delete(existingReplenishment.Id);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Returns a Replenishment Pick order, even if it is complete
+        /// 
+        /// </summary>
+        /// <param name="replenishmentOrder"></param>
+        /// <returns></returns>
+        private Order GetExistingReplenishmentPick(string replenishmentOrder)
+        {
+            var rec = _repoOrder.FindBy(r => r.Ord1 == replenishmentOrder && r.Ord2.Contains("=>")).FirstOrDefault();
+            return rec;
+        }
+        /// <summary>
+        /// Returns a Store Order if it is NOT Complete
+        /// </summary>
+        /// <param name="replenishmentOrder"></param>
+        /// <returns></returns>
+        private ReplenOrder GetExistingReplenishmentStore(string replenishmentOrder)
+        {
+            var rec = _repoReplenOrder.FindBy(r => r.Ord1 == replenishmentOrder && r.Ord2.Contains("=>") && r.OrderStatusId != (int)OrderStatus.Complete).FirstOrDefault();
+            return rec;
+        }
+
+        private void CreateReplenishmentStoreOrder(Order pickOrder)
+        {
+            if (pickOrder == null) return;
+            var possibleAreas = new List<int> { 1, 2, 3, 4 };
+            
+            try
+            {
+                var a = pickOrder.Ord2.Last();
+                var storeArea = a - '0';
+                if (!possibleAreas.Contains(storeArea)) return;
+                var storeItemDefinition = GetStoreItemDefinition(pickOrder.Ord1, storeArea);
+                var replenOrder = new ReplenOrder()
+                {
+                    Ord1 = pickOrder.Ord1,
+                    Ord2 = pickOrder.Ord2,
+                    LoadDate = DateTime.Now,
+                    OrderStatusId = (int)OrderStatus.Hold,
+                    Priority = 0,
+                    ShipMethodId = 1,
+                    ShipperId = 1,
+                    OrderInfo = string.Empty
+                };
+                _repoReplenOrder.Insert(replenOrder);
+                var detail = pickOrder.OrderDetails.FirstOrDefault();
+                if (detail == null) return;
+
+                var replenOrderDetail = new ReplenOrderDetail()
+                {
+                    ReplenOrderId = replenOrder.Id,
+                    AreaId = storeArea,
+                    DateTime = DateTime.Now.ToShortDateString(),
+                    ItemDefinitionId = storeItemDefinition.Id,
+                    Quantity = detail.PickedQuantity,
+                    PartNum = detail.PartNum,
+                    PartDesc = detail.PartDesc,
+                    LineStatusId = (int)LineStatus.Available,
+                };
+                _repoReplenOrderDetail.Insert(replenOrderDetail);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync(
+                    $"Create Store Order From Replenishment Pick Order. {Environment.NewLine}{ex.Message} ");
+
+            }
+        }
+
+        private ItemDefinition GetStoreItemDefinition(string item, int areaId)
+        {
+            var itemDefinition =
+                _repoItemDefinitions.FindBy(r => r.Item == item && r.AreaId == areaId).FirstOrDefault();
+            return itemDefinition;
+        }
+    }
+}

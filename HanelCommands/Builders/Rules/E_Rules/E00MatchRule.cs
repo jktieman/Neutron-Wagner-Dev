@@ -34,8 +34,9 @@ namespace HanelCommands.Builders.Rules.E_Rules
                                 input = commandSegments[3];
                             }
 
-                            device.InMotion = true;
+                            //device.InMotion = true;
                             device.CommandAccepted = true;
+                            //device.CurrentTray = 0;
                             device.StatusMessage = $"E00 Command Accepted  Input: {input}";
                         }
                     }

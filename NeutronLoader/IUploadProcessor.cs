@@ -1,9 +1,11 @@
-﻿namespace NeutronLoader
+﻿using System.Threading.Tasks;
+
+namespace NeutronLoader
 {
     public interface IUploadProcessor
     {
         void StartProcessingUploadFiles();
         void StopProcessingUploadFiles();
-        void RunUploadOnce();
+        Task RunUploadOnce();
     }
 }

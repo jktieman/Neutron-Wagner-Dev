@@ -19,5 +19,8 @@ namespace NeutronData.ModelViews
         public Order Order { get; set; }
         public int FirstStation { get; set; }
         public int NextStation { get; set; }
+        public string Route { get; set; }
+        public int OcLines { get; set; }
+        public int OcPieces { get; set; }
     }
 }

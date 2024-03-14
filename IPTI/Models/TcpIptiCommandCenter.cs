@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using AlliedLogger;
 using JsonManager;
+using NeutronData.Interfaces;
+using NeutronData.Models;
+using NeutronData.ModelViews;
 
 namespace IPTI.Models
 {
@@ -16,7 +19,12 @@ namespace IPTI.Models
     {
         private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
+        private readonly WorkstationView _workStationView;
         public List<BayController> BayControllers = new List<BayController>();
+        public List<BayController> BlastBayControllers = new List<BayController>();
+        public BayController BatchBayController = null;
+
+
         private string _turnOff = "14";
         private string _turnAllOff = "1400";
         private string _ledState = "2";
@@ -27,17 +35,38 @@ namespace IPTI.Models
             set => _ledState = value;
         }
 
-        public TcpIptiCommandCenter(IJsonData jsonData, IDynamicLogger logger)
+        public TcpIptiCommandCenter(IJsonData jsonData, IDynamicLogger logger, WorkstationView workStationView)
         {
             _jsonData = jsonData;
             _logger = logger;
-            _iptiConfig = _jsonData.LoadFile<IptiConfig>();
-            LoadBayControllers();
+            _workStationView = workStationView;
+            Init();
+
         }
+
+        private void Init()
+        {
+            _logger.LogDetailAsync($"Init Start");
+
+            _iptiConfig = _jsonData.LoadFile<IptiConfig>();
+
+            _logger.LogDetailAsync($"IptiConfig: {_iptiConfig.OrderControlButton}");
+
+            LoadBayControllers();
+
+        }
+
         public BayController GetBayController(string bayId)
         {
             var bay = bayId.PadLeft(2, '0');
-            
+
+            return BayControllers.FirstOrDefault(bc => bc.BayId == bay);
+        }
+
+        public BayController GetBayController(int bayId)
+        {
+            var bay = bayId.ToString().PadLeft(2, '0');
+
             return BayControllers.FirstOrDefault(bc => bc.BayId == bay);
         }
 
@@ -52,7 +81,7 @@ namespace IPTI.Models
             //var bayController = GetBayController(bayId);
             //var text  = bayController.TurnOnDisplay(displayId, text);
             //return text;
-
+            //var display = displayId.ToString().PadLeft(2, '0');
             return GetBayController(bayId).TurnOffDisplay(displayId);
         }
         public string TurnOnDisplay(string bayId, int displayId, string text)
@@ -76,18 +105,59 @@ namespace IPTI.Models
 
         public void LoadBayControllers()
         {
-            var buttonColorOne = string.IsNullOrEmpty(_iptiConfig.ButtonColorOne) ? "2" : GetButtonColorId(_iptiConfig.ButtonColorOne);
-            var buttonColorTwo = string.IsNullOrEmpty(_iptiConfig.ButtonColorTwo) ? "2" : GetButtonColorId(_iptiConfig.ButtonColorTwo);
-            var onTime = string.IsNullOrEmpty(_iptiConfig.ButtonOnTime) ? "300" : _iptiConfig.ButtonOnTime;
-            var offTime = string.IsNullOrEmpty(_iptiConfig.ButtonOffTime) ? "300" : _iptiConfig.ButtonOffTime;
-            var orderControlButton = string.IsNullOrEmpty(_iptiConfig.OrderControlButton) ? "0" : GetOrderControlButton(_iptiConfig.OrderControlButton);
-            BayControllers = new List<BayController>
+
+            _logger.LogDetailAsync($"Start");
+            try
             {
-                new BayController("Blast", "01", 32, "Micro", _iptiConfig), 
-                new BayController("Blast", "02", 32, "Micro", _iptiConfig),
-                new BayController("Blast", "03", 64, "Micro", _iptiConfig),
-                new BayController("Batch", "04", 16, "Max4", _iptiConfig)
-            };
+                var buttonColorOne = string.IsNullOrEmpty(_iptiConfig.ButtonColorOne) ? "2" : GetButtonColorId(_iptiConfig.ButtonColorOne);
+                var buttonColorTwo = string.IsNullOrEmpty(_iptiConfig.ButtonColorTwo) ? "2" : GetButtonColorId(_iptiConfig.ButtonColorTwo);
+                var onTime = string.IsNullOrEmpty(_iptiConfig.ButtonOnTime) ? "300" : _iptiConfig.ButtonOnTime;
+                var offTime = string.IsNullOrEmpty(_iptiConfig.ButtonOffTime) ? "300" : _iptiConfig.ButtonOffTime;
+                var orderControlButton = string.IsNullOrEmpty(_iptiConfig.OrderControlButton) ? "0" : GetOrderControlButton(_iptiConfig.OrderControlButton);
+
+                if (_workStationView.Blastzones.Any())
+                {
+                    foreach (var blastzone in _workStationView.Blastzones)
+                    {
+                        var bayId = blastzone.DeviceNumber.ToString().PadLeft(2, '0');
+                        var numberOfDisplays = blastzone.NumberOfCarriers;
+                        var newBlastzone = new BayController("Blast", bayId, numberOfDisplays, "Micro", _iptiConfig, blastzone.Enabled);
+                        BlastBayControllers.Add(newBlastzone);
+                        BayControllers.Add(newBlastzone);
+                    }
+                }
+
+                if (_workStationView.BatchTable != null)
+                {
+                    var bayId = _workStationView.BatchTable.DeviceNumber.ToString().PadLeft(2, '0');
+                    var numberOfDisplays = _workStationView.BatchTable.NumberOfCarriers;
+                    var newBatchBayController = new BayController("Batch", bayId, numberOfDisplays, "Max4", _iptiConfig, _workStationView.BatchTable.Enabled);
+                    BatchBayController = newBatchBayController;
+                    BayControllers.Add(newBatchBayController);
+                }
+
+                //BayControllers = new List<BayController>
+                //{
+                //    new BayController("Blast", "01", 32, "Micro", _iptiConfig, _workStationView.Blastzones[0].Enabled),
+                //    new BayController("Blast", "02", 32, "Micro", _iptiConfig, _workStationView.Blastzones[1].Enabled),
+                //    new BayController("Blast", "03", 64, "Micro", _iptiConfig, _workStationView.Blastzones[2].Enabled),
+                //    new BayController("Batch", "04", 16, "Max4", _iptiConfig, _workStationView.BatchTable.Enabled)
+                //};
+
+                //BatchBayController = new BayController("Batch", "04", 16, "Max4", _iptiConfig, _workStationView.BatchTable.Enabled);
+
+                //BlastBayControllers = new List<BayController>
+                //{
+                //    new BayController("Blast", "01", 32, "Micro", _iptiConfig, _workStationView.Blastzones[0].Enabled),
+                //    new BayController("Blast", "02", 32, "Micro", _iptiConfig, _workStationView.Blastzones[1].Enabled),
+                //    new BayController("Blast", "03", 64, "Micro", _iptiConfig, _workStationView.Blastzones[2].Enabled)
+                //};
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Exception: {ex.Message}");
+            }
+            _logger.LogDetailAsync($"End");
         }
 
         private string GetButtonColorId(string buttonColor)
@@ -96,28 +166,20 @@ namespace IPTI.Models
             {
                 case "Off":
                     return "0";
-                    break;
                 case "Green":
                     return "1";
-                break;
                 case "Red":
                     return "2";
-                break;
                 case "Blue":
                     return "3";
-                break;
                 case "Cyan":
                     return "4";
-                break;
                 case "Magenta":
                     return "5";
-                    break;
                 case "Orange":
                     return "6";
-                    break;
                 case "White":
                     return "7";
-                    break;
                 default:
                     return "0";
             }
@@ -129,16 +191,12 @@ namespace IPTI.Models
             {
                 case "Off":
                     return "0";
-                    break;
                 case "Blue Flash Fast":
                     return "1";
-                    break;
                 case "Blue Flash Slow":
                     return "2";
-                    break;
                 case "Blue Solid":
                     return "3";
-                    break;
                 default:
                     return "0";
             }

@@ -1,10 +1,12 @@
-﻿namespace NeutronLoader
+﻿using System.Threading.Tasks;
+
+namespace NeutronLoader
 {
     public interface IInterfaceProcessor
     {
-        void StartProcessingInterfaceFiles();
+        Task StartProcessingInterfaceFiles();
         void StopProcessingInterfaceFiles();
-        void RunLoaderOnce();
+        Task RunLoaderOnce();
         void ErrorAlert(string err);
     }
 }

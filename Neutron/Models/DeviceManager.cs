@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using Hart_DeviceControllers;
 
 namespace Neutron.Models
@@ -48,46 +49,46 @@ namespace Neutron.Models
 
         }
 
-        private void PrintCurrentLocations()
-        {
-         _ = _logger.LogDetailAsync($"");
-            var location = _currentLocations[1];
-         _ = _logger.LogDetailAsync(location != null
-                ? $"Current Location 1: {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
-                : $"Current Location 1:  NULL");
-         _ = _logger.LogDetailAsync($"");
+        //private void PrintCurrentLocations()
+        //{
+        // Task.Run(() => _logger.LogDetailAsync($""));
+        //    var location = _currentLocations[1];
+        // Task.Run(() =>  _logger.LogDetailAsync(location != null
+        //        ? $"Current Location 1: {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
+        //        : $"Current Location 1:  NULL"));
+        // Task.Run(() =>  _logger.LogDetailAsync($""));
 
-            location = _currentLocations[2];
-         _ = _logger.LogDetailAsync(location != null
-                ? $"Current Location 2: {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
-                : $"Current Location 2:  NULL");
-         _ = _logger.LogDetailAsync($"");
+        //    location = _currentLocations[2];
+        // Task.Run(() =>  _logger.LogDetailAsync(location != null
+        //        ? $"Current Location 2: {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
+        //        : $"Current Location 2:  NULL"));
+        // Task.Run(() =>  _logger.LogDetailAsync($""));
 
-            location = _currentLocations[3];
-         _ = _logger.LogDetailAsync(location != null
-                ? $"Current Location 3 {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
-                : $"Current Location 3:  NULL");
-         _ = _logger.LogDetailAsync($"");
+        //    location = _currentLocations[3];
+        // Task.Run(() =>  _logger.LogDetailAsync(location != null
+        //        ? $"Current Location 3 {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
+        //        : $"Current Location 3:  NULL"));
+        // Task.Run(() =>  _logger.LogDetailAsync($""));
 
-            location = _currentLocations[4];
-         _ = _logger.LogDetailAsync(location != null
-                ? $"Current Location 4 {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
-                : $"Current Location 4:  NULL");
-         _ = _logger.LogDetailAsync($"");
-        }
+        //    location = _currentLocations[4];
+        // Task.Run(() =>  _logger.LogDetailAsync(location != null
+        //        ? $"Current Location 4 {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
+        //        : $"Current Location 4:  NULL"));
+        // Task.Run(() =>  _logger.LogDetailAsync($""));
+        //}
 
         private void PrintCarLists()
         {
             foreach (var deviceMover in _deviceMovers)
             {
-             _ = _logger.LogDetailAsync($"");
-             _ = _logger.LogDetailAsync($"Device Mover Number: {deviceMover.MoverNumber}");
-             _ = _logger.LogDetailAsync($"Current Position: {deviceMover.Position}");
+             Task.Run(() =>  _logger.LogDetailAsync($""));
+             Task.Run(() =>  _logger.LogDetailAsync($"Device Mover Number: {deviceMover.MoverNumber}"));
+             Task.Run(() =>  _logger.LogDetailAsync($"Current Position: {deviceMover.Position}"));
                 foreach (var location in deviceMover.Locations)
                 {
-                 _ = _logger.LogDetailAsync(location != null
+                 Task.Run(() =>  _logger.LogDetailAsync(location != null
                         ? $"Current Location {location.Loc1}-{location.Loc2}-{location.Loc3}-{location.Loc4}"
-                        : $"Current Location :  NULL");
+                        : $"Current Location :  NULL"));
                 }
             }
         }
@@ -105,7 +106,7 @@ namespace Neutron.Models
                     firstLocation = false;
                 }
             }
-            return new DeviceMover(deviceNumber, locs);
+            return new DeviceMover(deviceNumber, locs, _logger);
         }
 
         //public async Task FirstMoveAsync()
@@ -216,7 +217,7 @@ namespace Neutron.Models
                             {
                                 sb.AppendLine($"Device {deviceMover.MoverNumber} is in Motion.");
                                 var sb1 = sb;
-                             _ = _logger.LogDetailAsync($"{sb1.ToString()}");
+                             _logger.LogDetailAsync($"{sb1.ToString()}").SafeFireAndForget();
                                 await Task.Run(() => ProcessInMotion(deviceMover.MoverNumber, loc2));
                             }
                             else
@@ -232,18 +233,18 @@ namespace Neutron.Models
                                 sb.AppendLine();
                                 sb.AppendLine($"Device {deviceMover.MoverNumber} is in Stopped.");
                                 var sb1 = sb;
-                             _ = _logger.LogDetailAsync($"{sb1}");
+                             _logger.LogDetailAsync($"{sb1}").SafeFireAndForget();
                                 await Task.Run(() => VerifyMoveLocation(deviceMover.MoverNumber, status.Current_Tray, loc2));
                             }
                             var sb2 = sb;
-                         _ = _logger.LogDetailAsync($"{sb2}");
+                         _logger.LogDetailAsync($"{sb2}").SafeFireAndForget();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                _ = Task.Run(() => _logger.LogDetailAsync($"Device Manager Move Next Error: {ex.Message} {Environment.NewLine} {ex.InnerException}"));
+               _logger.LogDetailAsync($"Device Manager Move Next Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             //Task.Run(() => _logger.LogDetailAsync($"{sb.ToString()}"));
@@ -283,7 +284,7 @@ namespace Neutron.Models
             {
                 sb.AppendLine($"VML-Verify Move Location: Carousel in Position. {deviceMoverMoverNumber}--{currentTray}--{loc2}");
             }
-         _ = _logger.LogDetailAsync($"{sb}");
+         _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
         }
 
         private void ProcessInMotion(int deviceMoverMoverNumber, int loc2)
@@ -347,7 +348,7 @@ namespace Neutron.Models
                 sb.AppendLine($"PIM-Process In Motion - Carousel in Position. {deviceMoverMoverNumber}--{loc2}");
             }
             EXITNOW:
-         _ = _logger.LogDetailAsync($"{sb}");
+         _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
         }
 
         public void Reset()
@@ -397,7 +398,7 @@ namespace Neutron.Models
                     }
                 }
             }
-         _ = _logger.LogDetailAsync($"{sb}");
+         _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
         }
     }
 }

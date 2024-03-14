@@ -128,14 +128,17 @@ namespace SAPServer
                                 context.NOVA_INPUT.Add(input);
                                 context.SaveChanges();
                                 row.Processed = true;
-                               
-                                _ = _logger.LogDetailAsync($"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
+
+                                _ = _logger.LogDetailAsync(
+                                    $"Saving TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT");
                             }
                             catch (Exception e)
                             {
-                                _ = _logger.LogDetailAsync($"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
-                                
-                                Mediator.GetInstance().OnSendEmailMessage(this,$"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
+                                _ = _logger.LogDetailAsync(
+                                    $"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
+
+                                Mediator.GetInstance().OnSendEmailMessage(this,
+                                    $"Error writing Goods Issue TaskNo: {input.TASKNO} SKU: {input.SKU} DESC: {input.SKUDESC} to INPUT Table. {Environment.NewLine}  {e.Message} {Environment.NewLine} {e.InnerException}");
 
                             }
                         }

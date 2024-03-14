@@ -3,25 +3,23 @@ using NeutronCore.Global;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using static System.Int32;
-using Timer = System.Threading.Timer;
+using System.Timers;
 using NeutronData.Repositories;
 using NeutronCore.Extensions;
+using AsyncAwaitBestPractices;
 
 namespace NeutronLoader
 {
     // ReSharper disable once InconsistentNaming
     public class UploadProcessorWAG : IUploadProcessor
     {
-        // private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly IDynamicLogger _logger;
-        // private readonly WorkstationView _workstationView;
-        // private readonly IWorkstationRepository _workstationRepository;
         private Timer _timer;
         private bool _uploadBusy;
         private readonly GenericRepository<NOVA_INPUT> _repoNovaInput = new GenericRepository<NOVA_INPUT>(new NeutronDb());
@@ -30,37 +28,33 @@ namespace NeutronLoader
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
 
-        // private DirectoryInfo _hostUploadDirectory;
-
-        //public UploadProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-        //    IDynamicLogger logger, WorkstationView workstationView, IWorkstationRepository workstationRepository)
         public UploadProcessorWAG(NeutronVariables neutronVariables, IDynamicLogger logger)
         {
-            // _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
-            // _workstationView = workstationView;
-            // _workstationRepository = workstationRepository;
         }
 
-        public void RunUploadOnce()
+        public async Task RunUploadOnce()
         {
-            _ = _logger.LogDetailAsync("RunUploadOnce Start");
+            _logger.LogDetailAsync("RunUploadOnce Start").SafeFireAndForget();
 
-            CreateHostFile();
+            await CreateHostFile();
         }
 
         public void StartProcessingUploadFiles()
         {
-            _ = _logger.LogDetailAsync("StartProcessingUploadFiles Start");
-            var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
-            _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
+            _logger.LogDetailAsync("StartProcessingUploadFiles Start").SafeFireAndForget();
+           // var startTimeSpan = TimeSpan.Zero;
+           // var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
+            //_timer = new Timer(s => { CreateHostFile().SafeFireAndForget(); }, null, startTimeSpan, periodTimeSpan);
+            _timer = new Timer(_neutronVariables.UploadDelay * 1000);
+            _timer.Elapsed += async (sender, e) => await CreateHostFile();
+            _timer.Start();
         }
 
         public void StopProcessingUploadFiles()
         {
-            _ = _logger.LogDetailAsync("StopProcessingUploadFiles Dispose of Timer");
+            _logger.LogDetailAsync("StopProcessingUploadFiles Dispose of Timer").SafeFireAndForget();
             _timer.Dispose();
         }
 
@@ -76,16 +70,18 @@ namespace NeutronLoader
         /// After processing all records, it sets the upload process to not busy.
         /// If an exception occurs during the process, it logs the exception message and sets the upload process to not busy.
         /// </remarks>
-        public void CreateHostFile()
+        public async Task CreateHostFile()
         {
-
+            _timer?.Stop();
+            
             if (_uploadBusy)
             {
-                _ = _logger.LogDetailAsync($"Upload currently busy.  Exiting CreateHostFile");
+                _logger.LogDetailAsync($"Upload currently busy.  Exiting CreateHostFile").SafeFireAndForget();
                 return;
             }
 
-            _ = _logger.LogDetailAsync("CreateHostFile Start");
+            _logger.LogDetailAsync("CreateHostFile Start").SafeFireAndForget();
+
             // <summary>
             // The list of action codes derived from the NeutronVariables.ActionCodes property.
             // </summary>
@@ -96,7 +92,7 @@ namespace NeutronLoader
             var actionCodes = _neutronVariables.ActionCodes.Split(',').Select(Parse).ToList();
             if (actionCodes.Count == 0)
             {
-                _ = Task.Run(() => _logger.LogDetailAsync($"No Upload Codes Defined.  ActionCodes: {actionCodes}"));
+                _logger.LogDetailAsync($"No Upload Codes Defined.  ActionCodes: {actionCodes}").SafeFireAndForget();
                 return;
             }
 
@@ -104,21 +100,16 @@ namespace NeutronLoader
 
             try
             {
-                // recs;
-                //using (var db = new NeutronDb())
-                //{
-
+                await _logger.LogDetailAsync(
+                    $"Find History Records where the Requested and Issued Quantities are equal");
                 var recs = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue
                                                      && actionCodes.Contains(h.ActionCode)
                     && h.RequestedQuantity == h.IssuedQuantity)
                       .ToList();
 
-                //recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode))
-                //    .ToList();
-                //}
-
                 if (recs.Any())
                 {
+                    await _logger.LogDetailAsync($"Found {recs.Count} History Records");
                     //var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository);
                     //var result = hostFile.CreateHostFile(recs);
                     // for each record, get the TransId from the OrderDetailInfo field (rec.OrderDetailInfo)
@@ -128,17 +119,21 @@ namespace NeutronLoader
                     // and the ending quantity QTY = (rec.IssuedQuantity)
                     // then set the NOVA_OUTPUT record to PROCESSED = "N"  (the SAP process will set it to "Y" when it is processed)
 
-                    //using (var db = new WagnerDb())
-
-                    //using (var db = new NeutronDb())
-                    //{
                     foreach (var history in recs)
                     {
-                        // var history = db.History.FirstOrDefault(h => h.Id == rec.Id);
-                        //var history =_repoHistory.FindBy(h => h.Id == rec.Id).FirstOrDefault();
-
                         if (history == null) continue;
-                        if (string.IsNullOrEmpty(history.OrderDetailInfo)) continue;
+
+                        await _logger.LogDetailAsync(
+                            $"History Record Order Detail Item: {history.Item} Info: {history.OrderDetailInfo}");
+
+                        if (string.IsNullOrEmpty(history.OrderDetailInfo))
+                        {
+                            await _logger.LogDetailAsync(
+                                $"History Record Order Detail Info is Null or Empty.  Continue to Next Item");
+                            continue;
+                        }
+
+
                         var orderDetailInfo = history.OrderDetailInfo.Split('|');
                         var transId = orderDetailInfo[0];
                         // convert transId to decimal
@@ -146,9 +141,12 @@ namespace NeutronLoader
 
                         var input = _repoNovaInput.FindBy(n => n.TRANSID == transIdDec).FirstOrDefault();
 
-                        // var input = db.NOVA_INPUT.FirstOrDefault(n => n.TRANSID == transIdDec);
                         if (input != null)
                         {
+
+                            await _logger.LogDetailAsync($"Record Found in NOVA_INPUT.  TransId: {transIdDec}");
+
+                            _logger.LogDetailAsync($"Build NOVA_OUTPUT record.").SafeFireAndForget();
                             var output = new NOVA_OUTPUT
                             {
                                 TRANSID = input.TRANSID,
@@ -163,7 +161,8 @@ namespace NeutronLoader
                                 PROCESSED = "N",
                                 EXPLANATION = string.Empty
                             };
-                            _repoNovaOutput.InsertAsync(output);
+                            await LogInput(input, history);
+                            await _repoNovaOutput.InsertAsync(output);
                         }
 
                         history.TransmitDateTime = DateTime.Now;
@@ -172,26 +171,26 @@ namespace NeutronLoader
                 }
                 // Check for orphan records
                 // for each kind of pick(1) or putaway(2)
+                _logger.LogDetailAsync($"Check for Orphans.").SafeFireAndForget();
+
                 foreach (var actionCode in actionCodes)
                 {
 
                     if (actionCode == 1)
                     {
-                        ProcessPickOrphans();
+                        await ProcessPickOrphans();
                     }
                     else if (actionCode == 2)
                     {
-                        ProcessReplenOrphans();
+                        await ProcessReplenOrphans();
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    $@"Upload Process Failed, see Log file in UploadManager. {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                _ = _logger.LogDetailAsync(
-                    $"Upload Process Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync(
+                    $"Upload Process Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
             finally
             {
@@ -199,15 +198,38 @@ namespace NeutronLoader
             }
 
             _uploadBusy = false;
+            _timer?.Start();
         }
-        private void ProcessPickOrphans()
+
+        private async Task LogInput(NOVA_INPUT input, History history)
         {
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"Output.TRANSID = {input.TRANSID}{Environment.NewLine}");
+            sb.AppendLine($"Output.TASKNO = {input.TASKNO}{Environment.NewLine}");
+            sb.AppendLine($"Output.TOTENO = {input.TOTENO}{Environment.NewLine}");
+            sb.AppendLine($"Output.BP = {input.BP}{Environment.NewLine}");
+            sb.AppendLine($"Output.SKU = {input.SKU}{Environment.NewLine}");
+            sb.AppendLine($"Output.BEGINNINGQTY = {history.RequestedQuantity}{Environment.NewLine}");
+            sb.AppendLine($"Output.QTY = {history.IssuedQuantity}{Environment.NewLine}");
+            sb.AppendLine($"Output.TRANSDATE = {history.ActionDateTime}{Environment.NewLine}");
+            sb.AppendLine($"Output.TRANSTYPE = {input.TRANSTYPE}{Environment.NewLine}");
+            sb.AppendLine($"Output.PROCESSED = N {Environment.NewLine}");
+            sb.AppendLine($"Output.EXPLANATION = {string.Empty}{Environment.NewLine}");
+
+            await _logger.LogDetailAsync($"Output Values From Input Values{Environment.NewLine}{sb}");
+        }
+
+        private async Task ProcessPickOrphans()
+        {
+            _logger.LogDetailAsync($"Process Pick Orphans").SafeFireAndForget();
             // Are there any History records where the RequestedQuantity and IssuedQuantity aren't the same
             var orphans = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue
                                                    && h.ActionCode == 1
                                                    && h.RequestedQuantity != h.IssuedQuantity).ToList();
             if (orphans.Any())
             {
+                _logger.LogDetailAsync($"Found {orphans.Count} Orphan Pick Records").SafeFireAndForget();
                 // get a list of the TransId's 
                 // we can use it to see if the OrderDetail record is complete and use the quantities from OrderDetail
                 // to send to SAP
@@ -229,12 +251,15 @@ namespace NeutronLoader
                         var orderDetail = _repoOrderDetails.FindBy(od => od.TransId == transId).FirstOrDefault();
                         if (orderDetail != null)
                         {
+                            _logger.LogDetailAsync(
+                                 $"Order Detail Item: {orderDetail.PartNum}  Line Status: {orderDetail.LineStatusId}").SafeFireAndForget();
                             // 6 means that the line is complete
                             if (orderDetail.LineStatusId == 6)
                             {
                                 // Get the information needed to send back to SAP
-                                SendToSap(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
-
+                                await SendToSap(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
+                                _logger.LogDetailAsync(
+                                    $"Send to SAP: TransId: {orderDetail.TransId}  Quantity: {orderDetail.Quantity}  Picked: {orderDetail.PickedQuantity}").SafeFireAndForget();
 
                                 var recs = _repoHistory
                                     .FindBy(r => r.OrderDetailInfo.StartsWith(transId.ToString())).ToList();
@@ -242,6 +267,8 @@ namespace NeutronLoader
                                 {
                                     rec.TransmitDateTime = DateTime.Now;
                                     _repoHistory.Update(rec);
+                                    _logger.LogDetailAsync(
+                                        $"Set Transmit DateTime Item: {rec.Item} DateTime: {rec.TransmitDateTime}").SafeFireAndForget();
                                 }
                             }
                         }
@@ -251,14 +278,16 @@ namespace NeutronLoader
         }
 
 
-        private void ProcessReplenOrphans()
+        private async Task ProcessReplenOrphans()
         {
+            _logger.LogDetailAsync($"Process Replen Orphans").SafeFireAndForget();
             // Are there any History records where the RequestedQuantity and IssuedQuantity aren't the same
             var orphans = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue
                                                    && h.ActionCode == 2
                                                    && h.RequestedQuantity != h.IssuedQuantity).ToList();
             if (orphans.Any())
             {
+                _logger.LogDetailAsync($"Found {orphans.Count} Orphan Replen Records").SafeFireAndForget();
                 // get a list of the TransId's 
                 // we can use it to see if the OrderDetail record is complete and use the quantities from OrderDetail
                 // to send to SAP
@@ -280,18 +309,23 @@ namespace NeutronLoader
                         var orderDetail = _repoReplenOrderDetails.FindBy(od => od.TransId == transId).FirstOrDefault();
                         if (orderDetail != null)
                         {
+                            _logger.LogDetailAsync(
+                                $"Order Detail Item: {orderDetail.PartNum}  Line Status: {orderDetail.LineStatusId}").SafeFireAndForget();
                             // 6 means that the line is complete
                             if (orderDetail.LineStatusId == 6)
                             {
                                 // Get the information needed to send back to SAP
-                                SendToSap(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
-
+                                await SendToSap(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
+                                _logger.LogDetailAsync(
+                                    $"Send to SAP: TransId: {orderDetail.TransId}  Quantity: {orderDetail.Quantity}  Picked: {orderDetail.PickedQuantity}").SafeFireAndForget();
                                 var recs = _repoHistory
                                     .FindBy(r => r.OrderDetailInfo.StartsWith(transId.ToString())).ToList();
                                 foreach (var rec in recs)
                                 {
                                     rec.TransmitDateTime = DateTime.Now;
                                     _repoHistory.Update(rec);
+                                    _logger.LogDetailAsync(
+                                        $"Set Transmit DateTime Item: {rec.Item} DateTime: {rec.TransmitDateTime}").SafeFireAndForget();
                                 }
                             }
                         }
@@ -300,8 +334,10 @@ namespace NeutronLoader
             }
         }
 
-        private void SendToSap(int transId, int requested, int issued)
+        private async Task SendToSap(int transId, int requested, int issued)
         {
+            _logger.LogDetailAsync($"Process Replen Orphans TransId: {transId}  Requested: {requested}  Issued: {issued}").SafeFireAndForget();
+            
             var transIdDec = Convert.ToDecimal(transId);
 
             var input = _repoNovaInput.FindBy(n => n.TRANSID == transIdDec).FirstOrDefault();
@@ -322,7 +358,7 @@ namespace NeutronLoader
                     PROCESSED = "N",
                     EXPLANATION = string.Empty
                 };
-                _repoNovaOutput.InsertAsync(output);
+                await _repoNovaOutput.InsertAsync(output);
             }
         }
     }

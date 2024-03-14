@@ -124,5 +124,25 @@ namespace NeutronData.ModelViews
                 _repoOrders.Update(order);
             }
         }
+
+        public void UpdatePickView(ReplenPickView pickView, User user)
+        {
+            var pickLocation = new PickLocation
+            {
+                Inventory = CurrentInventoryLocation
+                ,
+                Quantity = pickView.QuantityToBePicked
+                ,
+                PickDate = DateTime.Now
+                ,
+                RequestedQuantity = pickView.QuantityToBePicked
+                ,
+                User = user
+            };
+            pickView.PickLocations.Add(pickLocation);
+            pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
+            pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty;
+
+        }
     }
 }

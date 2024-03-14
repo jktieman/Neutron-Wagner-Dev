@@ -5,6 +5,7 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using ProliteController;
 using SlotNameFactory;
+using IDisplayController = IPTI.Models.IDisplayController;
 
 namespace Neutron.Global
 {

@@ -103,6 +103,13 @@ namespace NeutronEvents
             AcceptButtonPressed?.Invoke(sender, new AcceptButtonPressedEventArgs { PickStop = pickStop });
         }
 
+        public event EventHandler<TrayInPositionEventArgs> TrayInPosition;
+
+        public void OnTrayInPosition(object sender, InPositionInfo inPositionInfo)
+        {
+            TrayInPosition?.Invoke(sender, new TrayInPositionEventArgs { InPositionInfo = inPositionInfo });
+        }
+
 
 
         public event EventHandler<OrderCompleteEventArgs> OrderComplete;
@@ -204,6 +211,12 @@ namespace NeutronEvents
         public void OnProLiteMessage(object sender, int proLiteNumber, string message)
         {
             ProLiteMessage?.Invoke(this, new ProLiteMessageEventArgs() {ProLiteNumber = proLiteNumber, Message = message });
+        }
+
+        public event EventHandler<IsClientConnectedEventArgs> IsClientConnected;
+        public void OnIsClientConnected(object sender, bool isClientConnected)
+        {
+            IsClientConnected?.Invoke(this, new IsClientConnectedEventArgs() { IsClientConnected = isClientConnected });
         }
     }
 }

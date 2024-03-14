@@ -31,6 +31,7 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                         {
                             device.CommandExecuted = true;
                             device.InMotion = false;
+                            device.CurrentTray = device.TargetTray;
                             device.StatusMessage = "XA A20 E00 Command was Executed";
                         }
                     }

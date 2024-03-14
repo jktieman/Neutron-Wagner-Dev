@@ -16,6 +16,7 @@ using NeutronData.Interfaces;
 using Logger = NeutronCore.Global.Logger;
 using NeutronData.Models.Lookups;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
+using System.Web.Routing;
 
 namespace NeutronData.Repositories
 {
@@ -77,6 +78,110 @@ namespace NeutronData.Repositories
                     parameters.Add(param);
 
                     recs = context.Database.SqlQuery<OrderView>("usp_GetOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList(); // SQL Tested
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+            return recs;
+        }
+
+        public IEnumerable<OrderView> GetAvailableOrderViews(string orderStatus = "1,2,3,4,5,7,8", string searchField = "")
+        {
+            var recs = new List<OrderView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@OrderStatus", value: orderStatus);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SearchField", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<OrderView>("usp_GetAvailableOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList(); // SQL Tested
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+            return recs;
+        }
+
+        public IEnumerable<OrderView> GetCompletedOrderViews(string orderStatus = "6", string searchField = "")
+        {
+            var recs = new List<OrderView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@OrderStatus", value: orderStatus);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SearchField", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<OrderView>("usp_GetCompletedOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList(); // SQL Tested
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+
+            return recs;
+        }
+
+        public IEnumerable<OrderView> GetReplenOrderViews(string orderStatus = "1,2,3,4,5,7,8", string searchField = "")
+        {
+            var recs = new List<OrderView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@OrderStatus", value: orderStatus);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SearchField", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<OrderView>("usp_GetReplenOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList(); // SQL Tested
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+
+
+            return recs;
+        }
+
+        public IEnumerable<OrderView> GetReplenPickOrderViews(string orderStatus = "1,2,3,4,5,6,7,8,9", string searchField = "")
+        {
+            var recs = new List<OrderView>();
+
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@OrderStatus", value: orderStatus);
+                    parameters.Add(param);
+                    param = new SqlParameter(parameterName: "@SearchField", value: searchField);
+                    parameters.Add(param);
+
+                    recs = context.Database.SqlQuery<OrderView>("usp_GetReplenPickOrderViews @OrderStatus, @SearchField", parameters.ToArray()).ToList(); // SQL Tested
 
                 }
             }
@@ -644,32 +749,26 @@ namespace NeutronData.Repositories
         //    return recs;
         //}
 
-        public IEnumerable<OrderView> GetCompletedOrders(string find = "")
+        public IEnumerable<Order> GetCompletedOrders()
         {
-            IEnumerable<OrderView> recs = _repoOrders.All().Select(s => new OrderView
+            var recs = new List<Order>();
+
+            try
             {
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                OrderStatusName = s.OrderStatus.Name,
-                ShipMethodName = s.ShipMethod.Name,
-                Priority = s.Priority,
-                Order = s,
-                Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.OrderDetails),
-                Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.OrderDetails),
-                Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.OrderDetails),
-                Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.OrderDetails),
-                Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.OrderDetails),
-                Station_6_HasPicks = HasPicks(_pickStationIds, 6, s.OrderDetails),
-                Station_7_HasPicks = HasPicks(_pickStationIds, 7, s.OrderDetails),
-                Station_8_HasPicks = HasPicks(_pickStationIds, 8, s.OrderDetails),
-                LoadDate = s.LoadDate,
-                OrderStatusId = s.OrderStatusId,
-                ShipMethodId = s.ShipMethodId
-            }).Where(r => r.OrderStatusId == (int)OrderStatus.Complete)
-                .OrderByDescending(o => o.Priority).ToList();
-            var result = recs.Where(s => s.SearchField.Contains(find));
-            return result;
+                //var parameters = new List<object>();
+                using var context = new NeutronDb();
+                //var param = new SqlParameter(parameterName: "@ORDERID", value: orderId);
+                //parameters.Add(param);
+                //param = new SqlParameter(parameterName: "@AREAID", value: areaId);
+                //parameters.Add(param);
+
+                recs = context.Database.SqlQuery<Order>("usp_GetCompletedOrders").ToList(); // SQL Tested
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Orders Error. " + ex.Message + " " + ex.InnerException);
+            }
+            return recs;
         }
 
         public Order GetOrder()
@@ -1167,6 +1266,34 @@ namespace NeutronData.Repositories
         //    return stationOrderDetails;
         //}
 
+        public IEnumerable<OrderView> GetReplenishmentOrders(string search = "")
+        {
+            IEnumerable<OrderView> recs = _repoOrders.AllInclude(r => r.OrderDetails)
+                .Where(r => r.OrderStatusId != (int)NeutronCore.Enums.OrderStatus.Complete)
+                .Select(s => new OrderView
+                {
+                    Id = s.Id,
+                    Ord1 = s.Ord1,
+                    Ord2 = s.Ord2,
+                    OrderStatusName = s.OrderStatus.Name,
+                    ShipMethodName = s.ShipMethod.Name,
+                    Priority = s.Priority,
+                    Order = s,
+                    Station_1_HasPicks = HasPicks(_pickStationIds, 1, s.OrderDetails),
+                    Station_2_HasPicks = HasPicks(_pickStationIds, 2, s.OrderDetails),
+                    Station_3_HasPicks = HasPicks(_pickStationIds, 3, s.OrderDetails),
+                    Station_4_HasPicks = HasPicks(_pickStationIds, 4, s.OrderDetails),
+                    Station_5_HasPicks = HasPicks(_pickStationIds, 5, s.OrderDetails),
+                    Station_6_HasPicks = HasPicks(_pickStationIds, 6, s.OrderDetails),
+                    Station_7_HasPicks = HasPicks(_pickStationIds, 7, s.OrderDetails),
+                    Station_8_HasPicks = HasPicks(_pickStationIds, 8, s.OrderDetails),
+                    LoadDate = s.LoadDate,
+                    OrderStatusId = s.OrderStatusId,
+                    ShipMethodId = s.ShipMethodId
+                }).OrderByDescending(o => o.Priority).ToList();
+            return !string.IsNullOrEmpty(search) ? recs.Where(s => s.SearchField.Contains(search)) : recs;
+        }
+
         //Tested
         public IEnumerable<OrderView> GetRackOrders(string search = "")
         {
@@ -1355,28 +1482,6 @@ namespace NeutronData.Repositories
                 {
                     order.OrderDetails.Add(orderDetail);
                 }
-
-                //     ord.OrderDetails = det;
-
-                // set the order details to a new list because all we want are the details for this area
-                //ord.OrderDetails = new List<OrderDetail>();
-                // get the order details for this order and area
-                // todo  Change this into a Stored Procedure
-
-
-
-                //var orderDetails = _repoOrderDetails.FindBy(x => x.OrderId == orderId && x.AreaId == areaId && availableSkip.Contains(x.LineStatusId)).ToList();
-
-
-
-
-                //if (orderDetails.Count > 0)
-                //{
-                //    foreach (var detail in orderDetails)
-                //    {
-                //        ord.OrderDetails.Add(detail);
-                //    }
-                //}
             }
             return order;
         }
@@ -1418,8 +1523,8 @@ namespace NeutronData.Repositories
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SERIALPICKING", value: serialPicking);
                     parameters.Add(param);
-                    _ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreen. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
-                    recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreen @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
+                    _ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreenWithRoute. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
+                    recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreenWithRoute @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
                 }
             }
             catch (Exception ex)
@@ -1429,6 +1534,48 @@ namespace NeutronData.Repositories
 
 
             return recs;
+        }
+
+        public string GetRoute(int orderId)
+        {
+            string route = string.Empty;
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@ORDERID", value: orderId);
+                    parameters.Add(param);
+                    _ = _logger.LogDetailAsync($"Get Route  OrderId: {orderId} ");
+                   route = context.Database.SqlQuery<string>("usp_GetRoute @ORDERID", parameters.ToArray()).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Route Error. " + ex.Message + " " + ex.InnerException);
+            }
+            return route;
+        }
+
+        public IEnumerable<int> GetSizeCodesByArea(int areaId)
+        {
+            IEnumerable<int> sizeCodes = new List<int>();
+            try
+            {
+                var parameters = new List<object>();
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter(parameterName: "@AREAID", value: areaId);
+                    parameters.Add(param);
+                    _ = _logger.LogDetailAsync($"Get SizeCodeIds: {areaId} ");
+                    sizeCodes = context.Database.SqlQuery<int>("usp_GetSizeCodesByArea @AREAID", parameters.ToArray()).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Route Error. " + ex.Message + " " + ex.InnerException);
+            }
+            return sizeCodes;
         }
     }
 }

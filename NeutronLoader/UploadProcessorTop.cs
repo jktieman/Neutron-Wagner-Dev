@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AsyncAwaitBestPractices;
+using NeutronCore.Extensions;
 using Timer = System.Threading.Timer;
 using static System.Int32;
 using NeutronData.DataContexts;
@@ -34,16 +36,16 @@ namespace NeutronLoader
         }
 
 
-        public void RunUploadOnce()
+        public async Task RunUploadOnce()
         {
-            CreateHostFile();
+           await CreateHostFile();
         }
 
         public void StartProcessingUploadFiles()
         {
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
-            _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
+            _timer = new Timer(t => { CreateHostFile().SafeFireAndForget(); }, null, startTimeSpan, periodTimeSpan);
         }
 
         public void StopProcessingUploadFiles()
@@ -51,12 +53,12 @@ namespace NeutronLoader
             _timer?.Dispose();
         }
 
-        public void CreateHostFile()
+        public async Task CreateHostFile()
         {
             var counter = 0;
             while (_uploadBusy)
             {
-                Task.Delay(200);
+               await Task.Delay(200);
                 ++counter;
                 if (counter >= 20) return;
             }
@@ -78,18 +80,17 @@ namespace NeutronLoader
                         {
                             rec.TransmitDateTime = DateTime.Now;
                         }
-                        db.SaveChanges();
+                       await db.SaveChangesAsync();
                     }
                     else
                     {
-                        MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
+                        _logger.LogDetailAsync(@"Upload Process Failed, see Log file in HostFile.").SafeFireAndForget();
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Upload Process Failed, see Log file in HostFile.");
-                _ = _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             _uploadBusy = false;

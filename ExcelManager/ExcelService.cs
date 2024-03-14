@@ -63,7 +63,7 @@ public class ExcelService
     /// Creates an Excel file using the data from the DataTable provided
     /// </summary>
     /// <param name="dataTable"></param>
-    public async void Generate(DataTable dataTable)
+    public void Generate(DataTable dataTable)
     {
         if (dataTable == null) return;
         var fileName = GetFileName(dataTable.TableName);
@@ -74,7 +74,7 @@ public class ExcelService
         //GenerateExcel(file, dataTable);
         // Export the DataTable to Excel
         ExportDataTableToExcel(dataTable, file);
-        await _logger.LogDetailAsync($"Excel file created: {file}");
+       // Task.Run(() => _logger.LogDetailAsync($"Excel file created: {file}");
     }
 
     private string GetFileName(string tableName)
@@ -367,10 +367,10 @@ public class ExcelService
 
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //MessageBox.Show($@"Error opening file. {Environment.NewLine} {ex.Message}");
-            _ = _logger.LogDetailAsync($"Error opening file. {Environment.NewLine} {ex.Message}");
+            //Task.Run(() =>  _logger.LogDetailAsync($"Error opening file. {Environment.NewLine} {ex.Message}");
         }
         return dataTable;
     }
@@ -396,18 +396,18 @@ public class ExcelService
     {
         if (cellName == null)
         {
-            _ = _logger.LogDetailAsync("GetColumnHeading: cellName is null");
+            //Task.Run(() =>  _logger.LogDetailAsync("GetColumnHeading: cellName is null");
             return string.Empty;
         }
         if (worksheetName == null)
         {
-            _ = _logger.LogDetailAsync("GetColumnHeading: worksheetName is null");
+           // Task.Run(() =>  _logger.LogDetailAsync("GetColumnHeading: worksheetName is null");
             return string.Empty;
         }
         if (docName == null)
         {
 
-            _ = _logger.LogDetailAsync("GetColumnHeading: docName is null");
+           // Task.Run(() =>  _logger.LogDetailAsync("GetColumnHeading: docName is null");
             return string.Empty;
         }
 
@@ -421,7 +421,7 @@ public class ExcelService
                 if (!sheets.Any())
                 {
                     // The specified worksheet does not exist.
-                    _ = _logger.LogDetailAsync("The specified worksheet does not exist.");
+                    //Task.Run(() =>  _logger.LogDetailAsync("The specified worksheet does not exist."));
                     return string.Empty;
                 }
 
@@ -488,30 +488,34 @@ public class ExcelService
     }
     public DataTable ReadExcelFile()
     {
-        DataTable dt = new DataTable();
+        var dt = new DataTable();
         var errorMessage = "File Open Error";
         try
         {
-            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(_filePath, false))
+            using (var spreadsheetDocument = SpreadsheetDocument.Open(_filePath, false))
             {
-                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-                IEnumerable<Sheet> sheets = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                string relationshipId = sheets.First().Id.Value;
-                WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(relationshipId);
-                Worksheet worksheet = worksheetPart.Worksheet;
-                SheetData sheetData = worksheet.GetFirstChild<SheetData>();
-                IEnumerable<Row> rows = sheetData.Descendants<Row>();
+
+                var workbookPart = spreadsheetDocument.WorkbookPart;
+                if (workbookPart == null) return dt;
+                var sheets = workbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+                var relationshipId = sheets.First().Id.Value;
+                if (relationshipId == null) return dt;
+                
+                var worksheetPart = (WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(relationshipId);
+                var worksheet = worksheetPart.Worksheet;
+                var sheetData = worksheet.GetFirstChild<SheetData>();
+                var rows = sheetData.Descendants<Row>();
 
                 foreach (Cell cell in rows.ElementAt(0))
                 {
                     dt.Columns.Add(GetCellValue(spreadsheetDocument, cell));
                 }
 
-                foreach (Row row in rows.Skip(1))
+                foreach (var row in rows.Skip(1))
                 {
-                    DataRow tempRow = dt.NewRow();
-                    int columnIndex = 0;
-                    foreach (Cell cell in row.Descendants<Cell>())
+                    var tempRow = dt.NewRow();
+                    var columnIndex = 0;
+                    foreach (var cell in row.Descendants<Cell>())
                     {
                         if (cell.CellReference == null) errorMessage = "File was not opened in Excel.  Be sure to edit the file before trying to load changes.";
                         var idx = GetColumnIndex(GetColumnName(cell.CellReference));
@@ -541,8 +545,8 @@ public class ExcelService
 
     private static string GetCellValue(SpreadsheetDocument document, Cell cell)
     {
-        SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
-        string value = cell.CellValue.InnerXml;
+        var stringTablePart = document.WorkbookPart.SharedStringTablePart;
+        var value = cell.CellValue.InnerXml;
 
         if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
         {
@@ -556,10 +560,10 @@ public class ExcelService
 
     private static int GetColumnIndex(string columnName)
     {
-        int index = 0;
-        int mulitplier = 1;
+        var index = 0;
+        var mulitplier = 1;
 
-        foreach (char c in columnName.ToUpper().Reverse())
+        foreach (var c in columnName.ToUpper().Reverse())
         {
             index += mulitplier * ((int)c - 64);
             mulitplier *= 26;
@@ -570,8 +574,8 @@ public class ExcelService
 
     private static string GetColumnName(string cellReference)
     {
-        Regex regex = new Regex("[A-Za-z]+");
-        Match match = regex.Match(cellReference);
+        var regex = new Regex("[A-Za-z]+");
+        var match = regex.Match(cellReference);
         return match.Value;
     }
 

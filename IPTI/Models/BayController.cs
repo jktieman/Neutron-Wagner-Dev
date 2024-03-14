@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 
 namespace IPTI.Models
 {
@@ -81,6 +82,8 @@ namespace IPTI.Models
         /// </remarks>
         private string _bayControllerType;
 
+        private bool _enabled;
+        
         private int _numberOfDisplays;
 
         /// <summary>
@@ -94,17 +97,23 @@ namespace IPTI.Models
         /// <remarks>
         /// The constructor initializes the BayController with the provided parameters, creates a new OrderControlModule, and loads the displays.
         /// </remarks>
-        public BayController(string bayControllerType, string bayId, int numberOfDisplays, string displayType, IptiConfig iptiConfig)
+        public BayController(string bayControllerType, string bayId, int numberOfDisplays, string displayType, IptiConfig iptiConfig, bool enabled = true )
         {
             BayId = bayId;
             _bayControllerType = bayControllerType;
             _displayType = displayType;
-
+            _enabled = enabled; 
             _numberOfDisplays = numberOfDisplays;
             _orderControlModule = new OrderControlModule("01", iptiConfig.OrderControlButton);
             LoadDisplays(iptiConfig);
         }
 
+        public bool Enabled
+        {
+            get => _enabled;
+            set => _enabled = value;
+        }
+        
         /// <summary>
         /// Initializes the list of displays for the bay controller based on the specified display type and number of displays.
         /// </summary>
@@ -147,6 +156,14 @@ namespace IPTI.Models
             return BayId + display.TurnOn(quantity);
         }
 
+        public string TurnOnDisplayEnd(int displayId)
+        {
+            var display = _displays.FirstOrDefault(d => d.DisplayId == displayId.ToString().PadLeft(2, '0'));
+            if (display == null)
+                return string.Empty;
+            return BayId + display.TurnOnEnd();
+        }
+
         /// <summary>
         /// Turns off the specified display in the bay.
         /// </summary>
@@ -167,7 +184,7 @@ namespace IPTI.Models
         
         public string ClearDisplays()
         {
-            return BayId + "14";
+            return BayId + "1400";
         }
 
         public string TurnOffOrderControlModule()

@@ -31,8 +31,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AsyncAwaitBestPractices, Version=7.0.0.0, Culture=neutral, PublicKeyToken=532360cfd341384d, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncAwaitBestPractices.7.0.0\lib\netstandard2.0\AsyncAwaitBestPractices.dll</HintPath>
+    </Reference>
+    <Reference Include="EthernetTransmitter">
+      <HintPath>..\EthernetTransmitter\bin\Debug\EthernetTransmitter.dll</HintPath>
+    </Reference>
+    <Reference Include="NeutronCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NeutronCore\bin\Release\NeutronCore.dll</HintPath>
+    </Reference>
+    <Reference Include="NeutronEvents, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NeutronEvents\bin\Debug\NeutronEvents.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,17 +62,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\BayControllerBuilder.cs" />
+    <Compile Include="Builders\InterfaceControllerBuilder.cs" />
+    <Compile Include="Builders\Interfaces\IBayControllerBuilder.cs" />
+    <Compile Include="Builders\Interfaces\IBayControllerRule.cs" />
+    <Compile Include="Builders\Interfaces\IControllerTypeRule.cs" />
+    <Compile Include="Builders\Interfaces\IInterfaceControllerBuilder.cs" />
+    <Compile Include="Builders\Interfaces\IInterfaceControllerRule.cs" />
+    <Compile Include="Builders\Interfaces\IResponseBuilder.cs" />
+    <Compile Include="Builders\ResponseBuilder.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_01.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_14.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_17.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_27.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_33.cs" />
+    <Compile Include="Builders\Rules\BayControllerRules\BayControllerRule_39.cs" />
+    <Compile Include="Builders\Rules\ControllerTypeRules\ControllerTypeRule_Bay.cs" />
+    <Compile Include="Builders\Rules\ControllerTypeRules\ControllerTypeRule_Error.cs" />
+    <Compile Include="Builders\Rules\ControllerTypeRules\ControllerTypeRule_Interface.cs" />
+    <Compile Include="Builders\Rules\InterfaceControllerRules\InterfaceControllerRule_01.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Models\BayController.cs" />
     <Compile Include="Models\DisplayType.cs" />
+    <Compile Include="Models\Global.cs" />
+    <Compile Include="Models\IDisplayController.cs" />
     <Compile Include="Models\IIptiDisplay.cs" />
+    <Compile Include="Models\IIptiDisplayFunctions.cs" />
     <Compile Include="Models\IptiConfig.cs" />
     <Compile Include="Models\IptiDisplayBase.cs" />
+    <Compile Include="Models\IptiDisplayFunctions.cs" />
     <Compile Include="Models\IptiMax4.cs" />
     <Compile Include="Models\IptiMicro.cs" />
+    <Compile Include="Models\IptiBli.cs" />
+    <Compile Include="Models\IptiShi.cs" />
     <Compile Include="Models\ITcpIptiCommandCenter.cs" />
+    <Compile Include="Models\MyDataReceivedEventArgs.cs" />
     <Compile Include="Models\OrderControlModule.cs" />
+    <Compile Include="Models\IptiResponseManager.cs" />
+    <Compile Include="Models\RuleResult.cs" />
     <Compile Include="Models\TcpIptiCommandCenter.cs" />
+    <Compile Include="Models\TcpIptiController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +113,13 @@
       <Project>{41E13F41-40DC-4F3A-BA34-43008EF8A4B8}</Project>
       <Name>JsonManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronData\NeutronData.csproj">
+      <Project>{E325F3E2-6660-451F-B9B2-D8866447BE4D}</Project>
+      <Name>NeutronData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

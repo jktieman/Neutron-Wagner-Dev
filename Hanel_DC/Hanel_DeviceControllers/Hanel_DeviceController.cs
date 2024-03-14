@@ -554,6 +554,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
         /// </remarks>
         public List<HanelDeviceStatus> Get_Device_Status()
         {
+            
             var str = ObjectID + " Get_Device_Status()";
             _logger.LogDetailAsync($"{str}");
             var hanelDeviceStatusList = new List<HanelDeviceStatus>();
@@ -826,7 +827,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                             status.TargetTray = int.Parse(hanelCommand.Tray);
                         }
 
-                        status.CommandAccepted = false;
+                        //status.CommandAccepted = false;
                         status.StatusMessage = "Displaying Text!!!";
 
 
@@ -851,14 +852,14 @@ namespace Hanel_DC.Hanel_DeviceControllers
                             str1 = "Machine error message: " + cError2;
                         }
 
-                        status.GoodStatus = true;
-                        status.LastStatus = DateTime.Now;
-                        status.CurrentTray = status.TargetTray;
-                        status.InMotion = false;
-                        status.InAlignment = true;
-                        status.StatusMessage = "";
-                        status.CommandAccepted = false;
-                        status.CommandExecuted = false;
+                       // status.GoodStatus = true;
+                       // status.LastStatus = DateTime.Now;
+                       //// status.CurrentTray = status.TargetTray;
+                       // status.InMotion = false;
+                       // status.InAlignment = true;
+                       // status.StatusMessage = "";
+                       // status.CommandAccepted = false;
+                       // status.CommandExecuted = false;
                     }
 
 
@@ -895,110 +896,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     Thread.Sleep(nThreadSleepMilliseconds);
                     continue;
                 }
-                //_logger.LogDetailAsync(thisProc + "Ignore the request in the queue and fall through to obtaining status, it has been awhile...");
-
-
-                //num1 = 0;
-                //     _ = _logger.LogDetailAsync(thisProc + "Request status from the controller for each device & update the controller status collection.");
-                //foreach (HanelDeviceStatus currentHanelDeviceStatus in _currentHanelDeviceStatusList)
-                //{
-                //    //IDynamicLogger logger14 = Logger;
-                //    string str28 = thisProc;
-                //    num2 = currentHanelDeviceStatus.Device;
-                //    string str29 = num2.ToString();
-                //    var lineToWrite14 = str28 + $"14-Calling Machine Controller GetDeviceStatus() for Unit {str29}";
-                //    //logger14.Log(LineToWrite14);
-                //    //         _ = _logger.LogDetailAsync(lineToWrite14);
-                //    var deviceStatus = _MyDeviceController.GetDeviceStatus(currentHanelDeviceStatus.Device, ref nTray, ref nInMotion, ref nInAlignment, ref cError2);
-                //    if (!_Machine_SimulationMode)
-                //    {
-                //        if (deviceStatus)
-                //        {
-                //            //IDynamicLogger logger15 = Logger;
-                //            var strArray = new string[9];
-                //            strArray[0] = thisProc;
-                //            strArray[1] = "Unit ";
-                //            num2 = currentHanelDeviceStatus.Device;
-                //            strArray[2] = num2.ToString();
-                //            strArray[3] = " Tray:";
-                //            strArray[4] = nTray.ToString();
-                //            strArray[5] = " Motion:";
-                //            strArray[6] = nInMotion.ToString();
-                //            strArray[7] = " Alignment:";
-                //            strArray[8] = nInAlignment.ToString();
-                //            var lineToWrite15 = string.Concat(strArray);
-                //            //logger15.Log(LineToWrite15);
-                //         _ = _logger.LogDetailAsync($"15-{lineToWrite15}");
-
-                //            currentHanelDeviceStatus.GoodStatus = true;
-                //            currentHanelDeviceStatus.LastStatus = DateTime.Now;
-                //            currentHanelDeviceStatus.CurrentTray = nTray;
-                //            currentHanelDeviceStatus.InMotion = nInMotion;
-                //            currentHanelDeviceStatus.InAlignment = nInAlignment;
-                //            currentHanelDeviceStatus.StatusMessage = "";
-                //        }
-                //        else
-                //        {
-                //            //IDynamicLogger logger16 = Logger;
-                //            string[] strArray = new string[7];
-                //            strArray[0] = thisProc;
-                //            strArray[1] = "Machine Controller GetDeviceStatus() Device Unit ";
-                //            num2 = currentHanelDeviceStatus.Device;
-                //            strArray[2] = num2.ToString();
-                //            strArray[3] = " Count: ";
-                //            num2 = currentHanelDeviceStatus.ActiveErrorCount;
-                //            strArray[4] = num2.ToString();
-                //            strArray[5] = " Error: ";
-                //            strArray[6] = cError2;
-                //            string LineToWrite16 = string.Concat(strArray);
-                //            //logger16.Log(LineToWrite16);
-                //            //_logger.LogDetailAsync(LineToWrite16);
-                //            if (currentHanelDeviceStatus.ActiveErrorCount < MaximumStatusErrors)
-                //            {
-                //                num2 = currentHanelDeviceStatus.ActiveErrorCount++;
-                //            }
-                //            else
-                //            {
-                //                currentHanelDeviceStatus.GoodStatus = false;
-                //                currentHanelDeviceStatus.StatusMessage = cError2;
-                //                currentHanelDeviceStatus.ActiveErrorCount = 0;
-                //            }
-                //        }
-                //    }
-                //    for (int index2 = _Notifications_CallersRequestsList.Count - 1; index2 >= 0; --index2)
-                //    {
-                //        bool flag2 = false;
-                //        HanelDeviceNotificationType notificationsCallersRequests = _Notifications_CallersRequestsList[index2];
-                //        if (notificationsCallersRequests.TimeOutSeconds > 0 && DateTime.Compare(DateTime.Now, notificationsCallersRequests.Expiry) > 0)
-                //            notificationsCallersRequests.Expired = true;
-                //        else if (currentHanelDeviceStatus.GoodStatus && currentHanelDeviceStatus.CurrentTray == notificationsCallersRequests.TargetTray)
-                //        {
-                //            if (notificationsCallersRequests.RequestedMotionStatus == 0)
-                //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
-                //            else if (notificationsCallersRequests.RequestedMotionStatus < 0 && !currentHanelDeviceStatus.InMotion)
-                //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
-                //            else if (notificationsCallersRequests.RequestedMotionStatus > 0 && currentHanelDeviceStatus.InMotion)
-                //                flag2 = AlignmentQualificationsHaveBeenMet(notificationsCallersRequests.RequestedAlignmentStatus, currentHanelDeviceStatus.InAlignment);
-                //        }
-                //        if (flag2)
-                //        {
-                //            notificationsCallersRequests.AlignmentStatusUponNotification = _currentHanelDeviceStatusList[index1].InAlignment;
-                //            notificationsCallersRequests.MotionStatusUponNotification = _currentHanelDeviceStatusList[index1].InMotion;
-                //            notificationsCallersRequests.Message = str1;
-                //            str1 = "";
-                //        }
-                //        if (flag2 || notificationsCallersRequests.Expired)
-                //        {
-                //            if (notificationsCallersRequests.AutoDeregister)
-                //                _Notifications_CallersRequestsList.RemoveAt(index2);
-                //            if (notificationsCallersRequests.CallBack != null && notificationsCallersRequests.CallersObject != null)
-                //            {
-                //                _Notification_Current = notificationsCallersRequests;
-                //                notificationsCallersRequests.CallersContext.Post(_Notifications_DelegateHandler, notificationsCallersRequests.CallersObject);
-                //            }
-                //        }
-                //    }
-                //}
+                
                 Thread.Sleep(nThreadSleepMilliseconds);
             }
             //});

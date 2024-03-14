@@ -75,5 +75,27 @@
 
         public override string TurnOff() => TurnOffCommand + DisplayId;
 
+        /// <summary>
+        /// Turns on the IptiMax4 display with the word "END".
+        /// </summary>
+
+        /// <returns>A string representing the state of the IptiMax4 display after being turned on.</returns>
+        public override string TurnOnEnd() => TurnOnCommand + DisplayId
+                                                                        + _fourSpaces
+                                                                        + " END"
+                                                                        + Arrows
+                                                                        + _recall
+                                                                        + _extended
+                                                                        + _infrared
+                                                                        + _flash
+                                                                        + _displayColor
+                                                                        + _handSensor
+                                                                        + "1"
+                                                                        + OnTime
+                                                                        + "1"
+                                                                        + OffTime
+                                                                        + _optional;
+
+
     }
 }

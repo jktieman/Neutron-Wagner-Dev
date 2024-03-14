@@ -2,6 +2,7 @@
 using NeutronData.Models;
 using System.Collections.Generic;
 using NeutronCore.Enums;
+using NeutronData.Interfaces;
 
 namespace NeutronData.ModelViews
 {

@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
@@ -14,7 +16,7 @@ using NeutronCore.Models;
 using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronEvents;
-using Timer = System.Threading.Timer;
+using Timer = System.Timers.Timer;
 
 #endregion
 
@@ -26,12 +28,12 @@ namespace NeutronLoader
         private static BackgroundWorker _backgroundWorker;
         private DirectoryInfo _hostOrderDirectory;
         private string _inputFileFilter;
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
-        private Timer _downTimer;
+        private Timer _timer;
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
@@ -39,16 +41,18 @@ namespace NeutronLoader
         public InterfaceProcessorTmg(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
-             Initialize();           
+          
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
-            _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
+             Init();             
         }
 
-        private void Initialize()
+        private void Init()
         {
+             _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
+           
             _interfaceFileQueue = new BlockingCollection<FileInfo>();
             LoaderSettings.Init();
             _hostOrderDirectory = new DirectoryInfo(LoaderSettings.GetHostOrderDirectory());
@@ -60,12 +64,16 @@ namespace NeutronLoader
         {
             Mediator.GetInstance().OnLoaderError(this, err);
         }
-        public void StartProcessingInterfaceFiles()
+        public async Task StartProcessingInterfaceFiles()
         {
             InitBackgroundWorker();
-            var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(5);
-            _downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
+            //var startTimeSpan = TimeSpan.Zero;
+            //var periodTimeSpan = TimeSpan.FromMinutes(5);
+            //_downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
+            _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
+            _timer.Elapsed += async (sender, e) => await LoadOrders();
+            _timer.Start();
+            await Task.Delay(10);
 
             ////Don't run watcher at Saint Francis Hospital
             //if (_neutronLicense.CompanyCode != "SFH")
@@ -97,11 +105,13 @@ namespace NeutronLoader
 
         }
 
-        private void LoadOrders()
+        private async Task LoadOrders()
         {
             if (_loadOrdersBusy) return;
+            _timer?.Stop();
+            
             _loadOrdersBusy = true;
-            _ = _logger.LogDetailAsync("Load Orders");
+            _logger.LogDetailAsync("Load Orders").SafeFireAndForget();
 
 
             try
@@ -110,24 +120,24 @@ namespace NeutronLoader
 
                 foreach (var file in files)
                 {
-                    _ = _logger.LogDetailAsync($"Add File to Interface File Queue: {file.FullName} ");
+                    _logger.LogDetailAsync($"Add File to Interface File Queue: {file.FullName} ").SafeFireAndForget();
 
                     _interfaceFileQueue.TryAdd(file);
 
-                    Thread.Sleep(100);
+                    await Task.Delay(100);
                 }
             }
             catch (ObjectDisposedException oex)
             {
-                _ = _logger.LogDetailAsync($"LoadOrders Object Disposed Exception {Environment.NewLine} {oex.Message}");
+                _logger.LogDetailAsync($"LoadOrders Object Disposed Exception {Environment.NewLine} {oex.Message}").SafeFireAndForget();
             }
             catch (InvalidOperationException iex)
             {
-                _ = _logger.LogDetailAsync($"LoadOrders Invalid Operation Exception {Environment.NewLine} {iex.Message}");
+                _logger.LogDetailAsync($"LoadOrders Invalid Operation Exception {Environment.NewLine} {iex.Message}").SafeFireAndForget();
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"LoadOrders Exception {Environment.NewLine} {ex.Message}");
+                _logger.LogDetailAsync($"LoadOrders Exception {Environment.NewLine} {ex.Message}").SafeFireAndForget();
             }
 
             _loadOrdersBusy = false;
@@ -142,10 +152,8 @@ namespace NeutronLoader
 
         }
 
-        public void RunLoaderOnce()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task RunLoaderOnce() => await LoadOrders();
+
 
         public void RunLoaderContinuously()
         {
@@ -154,7 +162,7 @@ namespace NeutronLoader
 
         public FileInfo[] GetFiles()
         {
-            _ = _logger.LogDetailAsync("Call to Get Files Function.");
+            _logger.LogDetailAsync("Call to Get Files Function.").SafeFireAndForget();
             var result = new FileInfo[] { };
             try
             {
@@ -162,8 +170,8 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync(
-                    $"Get Files Error.  {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException?.Message} {Environment.NewLine}  {ex.InnerException?.InnerException?.Message}");
+                _logger.LogDetailAsync(
+                    $"Get Files Error.  {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException?.Message} {Environment.NewLine}  {ex.InnerException?.InnerException?.Message}").SafeFireAndForget();
             }
 
             return result;
@@ -188,10 +196,10 @@ namespace NeutronLoader
 
         private void BackgroundWorkerDoWork(object sender, DoWorkEventArgs e)
         {
-            _ = _logger.LogDetailAsync("Queue Processor Do Work");
+             _logger.LogDetailAsync("Queue Processor Do Work").SafeFireAndForget();
             if (_backgroundWorker.CancellationPending)
             {
-                _ = _logger.LogDetailAsync($"BackgroundWorker Cancel.");
+                _logger.LogDetailAsync($"BackgroundWorker Cancel.").SafeFireAndForget();
                 e.Cancel = true;
                 return;
             }
@@ -199,13 +207,13 @@ namespace NeutronLoader
             Thread.Sleep(millisecondsTimeout: 100);
             foreach (var fileInfo in _interfaceFileQueue.GetConsumingEnumerable())
             {
-                _ = _logger.LogDetailAsync($"Queue Processor Do Work: {fileInfo.FullName} License: {_neutronLicense.CompanyCode} ");
+                _logger.LogDetailAsync($"Queue Processor Do Work: {fileInfo.FullName} License: {_neutronLicense.CompanyCode} ").SafeFireAndForget();
                 var files = new List<FileInfo>();
                 if (!File.Exists(fileInfo.FullName)) continue;
                 files.Add(fileInfo);
                 Thread.Sleep(millisecondsTimeout: 100);
 
-                _ = _logger.LogDetailAsync($"TMGFileProcessor: Number of Files: {files.Count}");
+                _logger.LogDetailAsync($"TMGFileProcessor: Number of Files: {files.Count}").SafeFireAndForget();
                 _fileProcessor.LoadFiles(files);
             }
         }

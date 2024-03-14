@@ -14,10 +14,12 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using JsonManager;
 using Neutron.Global;
 using Timer = System.Timers.Timer;
 using NeutronData.Interfaces;
+using NeutronData.Models;
 
 namespace Neutron.Classes
 {
@@ -30,7 +32,7 @@ namespace Neutron.Classes
         private readonly IOrdersRepository _ordersRepository;
         private readonly IReplenOrdersRepository _replenOrdersRepository;
         private IDynamicLogger _logger;
-        private static System.Timers.Timer _compressTimer = new System.Timers.Timer();
+        private Timer _compressTimer;
 
         public bool CompressRunning { get; private set; }
 
@@ -43,6 +45,11 @@ namespace Neutron.Classes
             _historyManager = historyManager;
             _ordersRepository = ordersRepository;
             _replenOrdersRepository = replenOrdersRepository;
+            Init();
+        }
+
+        private void Init()
+        {
             _logger = NeutronCore.Global.Logger.SetupLogger("Compress");
         }
 
@@ -55,10 +62,8 @@ namespace Neutron.Classes
             // interval is set to seconds for testing
             // set back to hours for production
 
-            // var interval = _neutronVariables.RunCompressInterval * 60 * 60 * 1000;
-            var interval = _neutronVariables.RunCompressInterval * 1000;
-
-            _compressTimer.Interval = interval;
+            var interval = _neutronVariables.RunCompressInterval * 60 * 1000;
+            _compressTimer = new Timer(interval);
             _compressTimer.Elapsed += async (sender, e) => await OnRunCompress();
             _compressTimer.AutoReset = true;
             _compressTimer.Enabled = true;
@@ -79,13 +84,13 @@ namespace Neutron.Classes
 
         private async Task OnRunCompress()
         {
-            await _logger.LogDetailAsync($"On Run Compress: {_compressTimer.Interval}");
+            _logger.LogDetailAsync($"On Run Compress: {_compressTimer.Interval}").SafeFireAndForget();
             // Do not run if already running
             if (CompressRunning) return;
-
+            _compressTimer?.Stop();
             try
             {
-                await _logger.LogDetailAsync("Compress Started");
+                _logger.LogDetailAsync("Compress Started").SafeFireAndForget();
                 CompressRunning = true;
                 var compressLastRunDate = _jsonData.LoadFile<CompressLastRunDate>();
                 var days = (DateTime.Now.Date - compressLastRunDate.DateTime.Date).Days;
@@ -97,7 +102,7 @@ namespace Neutron.Classes
 
                     await CompressOrders(compressBefore);
 
-                    Thread.Sleep(2000);
+                    await Task.Delay(2000);
                     await CompressReplenOrders(compressBefore);
 
                     compressLastRunDate = new CompressLastRunDate { DateTime = DateTime.Now };
@@ -108,66 +113,78 @@ namespace Neutron.Classes
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Error Running Compress {ex.Message}");
+                _logger.LogDetailAsync($"Error Running Compress {ex.Message}").SafeFireAndForget();
             }
             finally
             {
-                await _logger.LogDetailAsync("Compress Finished");
+                _logger.LogDetailAsync("Compress Finished").SafeFireAndForget();
                 CompressRunning = false;
             }
+            _compressTimer?.Stop();
         }
 
         private async Task CompressOrders(DateTime compressBefore)
         {
             CompressRunning = true;
             // Compress Normal Orders
-            await _logger.LogDetailAsync($"Compress Orders Before: {compressBefore}");
-            var completedOrders = _ordersRepository.GetOrderViews("6", "").ToList();
-            var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
-            await _logger.LogDetailAsync($"Orders to Compress: {ordersToCompress.Count}");
-            if (!ordersToCompress.Any()) return;
-            var orderType = "PICK";
-            var sb = new StringBuilder();
-            var firstTime = true;
-            foreach (var order in ordersToCompress)
+            _logger.LogDetailAsync($"Compress Orders Before: {compressBefore}").SafeFireAndForget();
+            //var completedOrders = _ordersRepository.GetOrderViews("6", "").ToList();
+            while (true)
             {
-                if (firstTime)
-                {
-                    sb.Append(order.Id);
-                    firstTime = false;
-                }
-                else
-                {
-                    sb.Append(", " + order.Id);
-                }
-            }
+                var completedOrders = _ordersRepository.GetCompletedOrders().ToList();
 
-            var orderIds = sb.ToString();
+                if (!completedOrders.Any()) break;
 
-            try
-            {
-                using (var context = new NeutronDb())
+                var ordersToCompress = completedOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
+
+                _logger.LogDetailAsync($"Orders to Compress: {ordersToCompress.Count}").SafeFireAndForget();
+                if (!ordersToCompress.Any()) break;
+                var orderType = "PICK";
+                var sb = new StringBuilder();
+                var firstTime = true;
+                foreach (var order in ordersToCompress)
                 {
-                    var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
-                    var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
-                    var parameters = new object[] { paramOrderIds, paramOrderType };
-                    await context.Database.ExecuteSqlCommandAsync("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
-                        paramOrderType);
+                    if (firstTime)
+                    {
+                        sb.Append(order.Id);
+                        firstTime = false;
+                    }
+                    else
+                    {
+                        sb.Append(", " + order.Id);
+                    }
                 }
 
-                await ArchiveOrders(ordersToCompress);
-            }
-            catch (Exception ex)
-            {
-                await _logger.LogDetailAsync($"Error Compressing Orders {Environment.NewLine}{ex.Message}");
+                var orderIds = sb.ToString();
+
+                try
+                {
+                    using (var context = new NeutronDb())
+                    {
+                        var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
+                        var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
+                        var parameters = new object[] { paramOrderIds, paramOrderType };
+                        await context.Database.ExecuteSqlCommandAsync("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
+                            paramOrderType);
+                    }
+
+                    await ArchiveOrders(ordersToCompress);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDetailAsync($"Error Compressing Orders {Environment.NewLine}{ex.Message}").SafeFireAndForget();
+                }
+
+                await Task.Delay(3000);
             }
         }
 
-        private async Task ArchiveOrders(IEnumerable<OrderView> orders)
+        private async Task ArchiveOrders(IEnumerable<Order> orders)
         {
+            await Task.Delay(10);
             foreach (var order in orders)
             {
-                await _logger.LogDetailAsync($"Archive Order ID: {order.Id}  Order: {order.Ord1}");
+                _logger.LogDetailAsync($"Archive Order ID: {order.Id}  Order: {order.Ord1}").SafeFireAndForget();
                 _historyManager.SaveHistory(ActionCode.OrderArchived, order);
             }
         }
@@ -176,46 +193,54 @@ namespace Neutron.Classes
         {
             CompressRunning = true;
             // Compress Replenishment Orders
-            await _logger.LogDetailAsync($"Compress Replen Orders Before: {compressBefore}");
-            var completedReplenOrders = _replenOrdersRepository.GetReplenOrderViews("6", "").ToList();
-            var replenOrdersToCompress = completedReplenOrders.Where(r => r.LoadDate < compressBefore).ToList();
-            await _logger.LogDetailAsync($"Replen Orders to Compress: {replenOrdersToCompress.Count}");
-            if (!replenOrdersToCompress.Any()) return;
-            var orderType = "REPLEN";
-            var sb = new StringBuilder();
-            var firstTime = true;
-            foreach (var order in replenOrdersToCompress)
+            _logger.LogDetailAsync($"Compress Replen Orders Before: {compressBefore}").SafeFireAndForget();
+
+            while (true)
             {
-                if (firstTime)
+                var completedReplenOrders = _replenOrdersRepository.GetReplenOrderViews("6", "").ToList();
+
+                var replenOrdersToCompress = completedReplenOrders.Where(r => r.LoadDate < compressBefore).Take(50).ToList();
+                _logger.LogDetailAsync($"Replen Orders to Compress: {replenOrdersToCompress.Count}").SafeFireAndForget();
+                if (!replenOrdersToCompress.Any()) break;
+                var orderType = "REPLEN";
+                var sb = new StringBuilder();
+                var firstTime = true;
+                foreach (var order in replenOrdersToCompress)
                 {
-                    sb.Append(order.Id);
-                    firstTime = false;
+                    if (firstTime)
+                    {
+                        sb.Append(order.Id);
+                        firstTime = false;
+                    }
+                    else
+                    {
+                        sb.Append(", " + order.Id);
+                    }
                 }
-                else
+
+                var orderIds = sb.ToString();
+
+                try
                 {
-                    sb.Append(", " + order.Id);
+
+                    await ArchiveReplenOrders(replenOrdersToCompress);
+
+                    using (var context = new NeutronDb())
+                    {
+                        var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
+                        var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
+                        var parameters = new object[] { paramOrderIds, paramOrderType };
+                        await context.Database.ExecuteSqlCommandAsync("usp_CompressOrders @ORDERIDS, @ORDERTYPE",
+                            paramOrderIds,
+                            paramOrderType);
+                    }
                 }
-            }
-
-            var orderIds = sb.ToString();
-
-            try
-            {
-
-                await ArchiveReplenOrders(replenOrdersToCompress);
-
-                using (var context = new NeutronDb())
+                catch (Exception ex)
                 {
-                    var paramOrderIds = new SqlParameter("@ORDERIDS", orderIds);
-                    var paramOrderType = new SqlParameter("@ORDERTYPE", orderType);
-                    var parameters = new object[] { paramOrderIds, paramOrderType };
-                    await context.Database.ExecuteSqlCommandAsync("usp_CompressOrders @ORDERIDS, @ORDERTYPE", paramOrderIds,
-                        paramOrderType);
+                    _logger.LogDetailAsync(
+                        $"Error Compressing Replenishment Orders {Environment.NewLine}{ex.Message}").SafeFireAndForget();
                 }
-            }
-            catch (Exception ex)
-            {
-                await _logger.LogDetailAsync($"Error Compressing Replenishment Orders {Environment.NewLine}{ex.Message}");
+                await Task.Delay(3000);
             }
         }
 
@@ -223,7 +248,7 @@ namespace Neutron.Classes
         {
             foreach (var order in orders)
             {
-                await _logger.LogDetailAsync($"Archive Replen Order ID: {order.Id}  Order: {order.Ord1}");
+                _logger.LogDetailAsync($"Archive Replen Order ID: {order.Id}  Order: {order.Ord1}").SafeFireAndForget();
                 _historyManager.SaveHistory(ActionCode.OrderArchived, order);
             }
         }

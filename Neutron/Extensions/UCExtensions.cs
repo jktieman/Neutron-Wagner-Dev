@@ -18,7 +18,8 @@ namespace Neutron.Extensions
             label.AutoSize = false;
             label.Font = new Font("Tahoma", 50F);
             label.Size = size;
-            label.SizeLabelFont();
+            //label.SizeLabelFont();
+            label.Font = new Font(label.Font.FontFamily.Name, 12, FontStyle.Bold);
             label.TextAlign = ContentAlignment.MiddleCenter;
             label.Location = point;
             label.BorderStyle = BorderStyle.None;
@@ -129,38 +130,49 @@ namespace Neutron.Extensions
             {
                 case PanelType.OrderInduction:
                 {
-                    textBox.Text = "88888888888";
+                    textBox.Text = "";
+                    //textBox.Text = "88888888888";
                     textBox.Name = $@"TextBoxPos{pickPosition}";
                     textBox.BackColor = Color.White;
                     textBox.Multiline = true;
-                    textBox.SizeTextBoxFont(2);
+                    // set the font size of the textbox
+                    textBox.Font = new Font(textBox.Font.FontFamily.Name, 16F);
+                    //textBox.SizeTextBoxFont(2);
                         break;
                 }
                 case PanelType.OrderSelection:
                 {
-                    textBox.Text = "8888";
-                    textBox.Name = $@"TextBoxPickPos{pickPosition}";
+                    //textBox.Text = "8888";
+                    textBox.Text = "";
+
+                        textBox.Name = $@"TextBoxPickPos{pickPosition}";
                     textBox.BackColor = Color.White;
                     textBox.Multiline = true;
-                    textBox.SizeTextBoxFont(1);
+                        //textBox.SizeTextBoxFont(1);
+                        textBox.Font = new Font(textBox.Font.FontFamily.Name, 26F);
                         break;
                 }
                 case PanelType.ReplenOrderInduction:
                 {
-                    textBox.Text = "88888888888";
-                    textBox.Name = $@"TextBoxPos{pickPosition}";
+                    //textBox.Text = "88888888888";
+                    textBox.Text = "";
+
+                        textBox.Name = $@"TextBoxPos{pickPosition}";
                     textBox.BackColor = Color.White;
                     textBox.Multiline = true;
-                    textBox.SizeTextBoxFont(2);
+                    textBox.Font = new Font(textBox.Font.FontFamily.Name, 16F);
+                       // textBox.SizeTextBoxFont(2);
                         break;
                 }
                 case PanelType.ReplenOrderSelection:
                 {
-                    textBox.Text = "8888";
+                    //textBox.Text = "8888";
+                    textBox.Text = "";
                     textBox.Name = $@"TextBoxPickPos{pickPosition}";
                     textBox.BackColor = Color.White;
                     textBox.Multiline = true;
-                    textBox.SizeTextBoxFont(1);
+                    textBox.Font = new Font(textBox.Font.FontFamily.Name, 26F);
+                        // textBox.SizeTextBoxFont(1);
                         break;
                 }
             }

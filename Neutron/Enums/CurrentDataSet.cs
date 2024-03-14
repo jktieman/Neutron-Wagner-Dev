@@ -4,6 +4,8 @@
     {
         Available,
         Complete,
-        Rack
+        Rack,
+        Replen,
+        Putaway
     }
 }

@@ -21,16 +21,17 @@ namespace AlliedLogger
         private string _folderName;
         private static readonly object MyLock = new object();
         private ConcurrentQueue<string> _messages = new ConcurrentQueue<string>();
+        private BlockingCollection<string> _bcMessages = new BlockingCollection<string>();
 
         //public string FolderName { get; set; }
         //public bool LogActivity { get; set; }
         public string LogActivity { get; set; }
 
         public string FileName { get; set; }
-        
-        
+
+
         [DebuggerStepThrough]
-        public DynamicLogger(string logFileDir = "", string folderName = @"General", string logActivity = "true")
+        public DynamicLogger(string logFileDir = "", string folderName = "General", string logActivity = "true")
         {
             // Send all logs to the same file
             //LogFileDir = null;
@@ -46,15 +47,48 @@ namespace AlliedLogger
             // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
             LogActivity = logActivity;
             IsValidLocation(FilePath);
-           // IsValidLocation(TempFilePath);
+            // IsValidLocation(TempFilePath);
+            Init();
+
+        }
+        private static readonly object StreamLock = new object();
+        private void Init()
+        {
+            var loggerThread = Task.Factory.StartNew(() =>
+            {
+                var ci = CultureInfo.InvariantCulture;
+                //Loop will continue as long as IsCompleted returns false
+                while (!_bcMessages.IsCompleted)
+                {
+
+                    try
+                    {
+                        foreach (var message in _bcMessages.GetConsumingEnumerable())
+                        {
+                            using (var sw = new StreamWriter(FilePath, true))
+                            {
+
+                                lock (StreamLock)
+
+                                    sw.WriteLine(
+                                        $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {message} {Environment.NewLine}");
+                                sw.Flush();
+
+                            }
+
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //throw new Exception($"Detail Async Error: {ex.Message}");
+                    }
+                }
+            });
         }
 
         public string LogFileDir
         {
-            get
-            {
-                return _baseFolder;
-            }
+            get => _baseFolder;
             set
             {
                 _baseFolder = string.IsNullOrEmpty(value) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : value;
@@ -76,7 +110,7 @@ namespace AlliedLogger
 
 
         public string FilePath => _baseFolder + _folderName + GetFileName();
-      //  public string TempFilePath => $"{_baseFolder}{_folderName}Temp\\{GetFileName()}";
+        //  public string TempFilePath => $"{_baseFolder}{_folderName}Temp\\{GetFileName()}";
 
 
         private void IsValidLocation(string filePath)
@@ -109,7 +143,7 @@ namespace AlliedLogger
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
-         //   IsValidLocation(TempFilePath);
+            //   IsValidLocation(TempFilePath);
             if (!_validLocation) return;
             lock (_myLock)
             {
@@ -139,7 +173,7 @@ namespace AlliedLogger
             var time = DateTime.Now.ToString("HH:mm:ss.fff");
             var ci = CultureInfo.InvariantCulture;
             IsValidLocation(FilePath);
-         //   IsValidLocation(TempFilePath);
+            //   IsValidLocation(TempFilePath);
             if (!_validLocation) return;
             if (msg.Length > 0)
             {
@@ -164,21 +198,21 @@ namespace AlliedLogger
             , [CallerLineNumber] int lineNumber = 0)
         {
             var ci = CultureInfo.InvariantCulture;
-            IsValidLocation(FilePath);
-         //   IsValidLocation(TempFilePath);
-            if (!_validLocation) return;
+            //IsValidLocation(FilePath);
+            //   IsValidLocation(TempFilePath);
+            // if (!_validLocation) return;
 
             if (msg.Length <= 0) return;
             try
             {
-                using (var sw = File.AppendText(FilePath))
-                {
-                    var message =
-                        $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
-
-                    sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {message} {Environment.NewLine}");
-                    sw.FlushAsync();
-                }
+                // using (var sw = File.AppendText(FilePath))
+                // {
+                var message =
+                    $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+                _bcMessages.Add(message);
+                //sw.WriteLineAsync($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {message} {Environment.NewLine}");
+                //sw.FlushAsync();
+                // }
             }
             catch (Exception ex)
             {
@@ -186,74 +220,98 @@ namespace AlliedLogger
                 Log($"Detail Error: {ex.Message}");
             }
         }
-        private bool _inProcess = false;
-        
+
+        // private bool _inProcess = false;
+
+        //[DebuggerStepThrough]
+        //public async Task LogDetailAsync(string msg = ""
+        //, [CallerMemberName] string origin = ""
+        //, [CallerFilePath] string filePath = ""
+        //, [CallerLineNumber] int lineNumber = 0)
+        //{
+
+        //    var ci = CultureInfo.InvariantCulture;
+        //    IsValidLocation(FilePath);
+        // //   IsValidLocation(TempFilePath);
+        //    if (!_validLocation) return;
+
+        //    if (msg.Length <= 0) return;
+
+        //    var message =
+        //        $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+
+        //    _messages.Enqueue(message);
+
+        //    try
+        //    {
+        //        if (!_inProcess)
+        //        {
+        //            if (!IsFileLocked(FilePath, 5))
+        //            {
+        //                _inProcess = true;
+        //                using (var sw = new StreamWriter(FilePath, true))
+        //                {
+        //                    try
+        //                    {
+        //                        while (!_messages.IsEmpty)
+        //                        {
+        //                            _messages.TryDequeue(out msg);
+
+        //                            await sw.WriteLineAsync(
+        //                                $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
+        //                            await sw.FlushAsync();
+        //                        }
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        throw new Exception($"Detail Async Error: {ex.Message}");
+        //                    }
+        //                    finally
+        //                    {
+        //                        _inProcess = false;
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                throw new Exception("File is locked");
+        //            }
+        //            _inProcess = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _messages.Enqueue($"Detail Async Error: {ex.Message}");
+        //    }
+        //}
+
+
         [DebuggerStepThrough]
-        public async Task LogDetailAsync(string msg = ""
-        , [CallerMemberName] string origin = ""
-        , [CallerFilePath] string filePath = ""
-        , [CallerLineNumber] int lineNumber = 0)
+        public Task LogDetailAsync(string msg = ""
+, [CallerMemberName] string origin = ""
+, [CallerFilePath] string filePath = ""
+, [CallerLineNumber] int lineNumber = 0)
         {
-
-            var ci = CultureInfo.InvariantCulture;
-            IsValidLocation(FilePath);
-         //   IsValidLocation(TempFilePath);
-            if (!_validLocation) return;
-
-            if (msg.Length <= 0) return;
-
-            var message =
-                $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
-
-            _messages.Enqueue(message);
+            if (msg.Length <= 0) return Task.CompletedTask;
 
             try
             {
-                if (!_inProcess)
-                {
-                    if (!IsFileLocked(FilePath, 5))
-                    {
-                        _inProcess = true;
-                        using (var sw = new StreamWriter(FilePath, true))
-                        {
-                            try
-                            {
-                                while (!_messages.IsEmpty)
-                                {
-                                    _messages.TryDequeue(out msg);
+                var message =
+                $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
 
-                                    await sw.WriteLineAsync(
-                                        $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToString("hh:mm:ss.FFF", ci)}: {msg} {Environment.NewLine}");
-                                    await sw.FlushAsync();
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception($"Detail Async Error: {ex.Message}");
-                            }
-                            finally
-                            {
-                                _inProcess = false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("File is locked");
-                    }
-                    _inProcess = false;
-                }
+                _bcMessages.Add(message);
             }
             catch (Exception ex)
             {
-                _messages.Enqueue($"Detail Async Error: {ex.Message}");
+                _bcMessages.Add($"Detail Async Error: {ex.Message}");
             }
+            return Task.CompletedTask;
         }
 
         public bool IsFileLocked(string filePath, int secondsToWait)
         {
-            bool isLocked = true;
-            int i = 0;
+            var isLocked = true;
+            var i = 0;
 
             while (isLocked && ((i < secondsToWait) || (secondsToWait == 0)))
             {
@@ -353,7 +411,7 @@ namespace AlliedLogger
                 return true;
             }
         }
-        
+
         private void CloseFile(string filePath)
         {
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite))

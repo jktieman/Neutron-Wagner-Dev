@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>546</ApplicationRevision>
+    <ApplicationRevision>574</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -95,6 +95,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\AlliedLicenseGenerator\AlliedLicenseGenerator\bin\Debug\AlliedLicenseVerifier.dll</HintPath>
     </Reference>
+    <Reference Include="AsyncAwaitBestPractices, Version=7.0.0.0, Culture=neutral, PublicKeyToken=532360cfd341384d, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncAwaitBestPractices.7.0.0\lib\netstandard2.0\AsyncAwaitBestPractices.dll</HintPath>
+    </Reference>
     <Reference Include="CurrentDeviceIndicator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\CurrentDeviceIndicator\CurrentDeviceIndicator\bin\Release\CurrentDeviceIndicator.dll</HintPath>
@@ -141,6 +144,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ReplenService">
+      <HintPath>..\ReplenService\bin\Debug\ReplenService.dll</HintPath>
+    </Reference>
     <Reference Include="RJCP.SerialPortStream, Version=2.4.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
       <HintPath>..\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
@@ -159,6 +165,9 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -180,7 +189,6 @@
     <Compile Include="Classes\ICompressService.cs" />
     <Compile Include="Classes\PanelManager.cs" />
     <Compile Include="Controllers\BlastzoneDisplayController.cs" />
-    <Compile Include="Controllers\TCP_IPTIController.cs" />
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
     <Compile Include="Extensions\FormUtilities.cs" />
@@ -196,6 +204,18 @@
     </Compile>
     <Compile Include="Forms\FrmQuantity.Designer.cs">
       <DependentUpon>FrmQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmReplenPickViewAdjustment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReplenPickViewAdjustment.Designer.cs">
+      <DependentUpon>FrmReplenPickViewAdjustment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmScanTransId.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmScanTransId.Designer.cs">
+      <DependentUpon>FrmScanTransId.cs</DependentUpon>
     </Compile>
     <Compile Include="Global\IHistoryManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
@@ -227,7 +247,6 @@
     <Compile Include="Controllers\C2000.cs" />
     <Compile Include="Controllers\C3000.cs" />
     <Compile Include="Controllers\IDisplayController.cs" />
-    <Compile Include="Controllers\IPTIController.cs" />
     <Compile Include="Controllers\Ipti_BLI.cs" />
     <Compile Include="Controllers\Ipti_SHI.cs" />
     <Compile Include="Controllers\RCC2.cs" />
@@ -532,6 +551,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmQuantity.resx">
       <DependentUpon>FrmQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmReplenPickViewAdjustment.resx">
+      <DependentUpon>FrmReplenPickViewAdjustment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmScanTransId.resx">
+      <DependentUpon>FrmScanTransId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\InductionPosition.resx">
       <DependentUpon>InductionPosition.cs</DependentUpon>

@@ -32,8 +32,8 @@ namespace Neutron.Global
         void SaveHistory(ActionCode actionCode, ReplenOrderDetail value, int workstationId);
         void SaveHistory(ActionCode actionCode, ReplenOrder order, int workstationId);
         void SaveHistory(ActionCode actionCode, SkipView skipView);
-        void SaveHistoryAsync(ActionCode actionCode, Location location);
-        void SaveHistoryAsync(ActionCode actionCode, ItemDefinition itemDefinition);
+        Task SaveHistoryAsync(ActionCode actionCode, Location location);
+        Task SaveHistoryAsync(ActionCode actionCode, ItemDefinition itemDefinition);
         List<HistoryView> GetHistoryRecordsByUser(string empId);
         List<HistoryView> GetHistoryRecords();
         List<HistoryView> GetHistoryRecords(string codes, DateTime fromDate, DateTime toDate, string find);

@@ -24,7 +24,7 @@ namespace ProliteController
         /// <param name="enabled"></param>
         public Prolite(int id, string name, int deviceNumber, bool enabled)
         {
-            _logger = Logger.SetupLogger("Prolite");
+           // _logger = Logger.SetupLogger("Prolite");
             
             Id = id;
             Name = name;
@@ -57,7 +57,7 @@ namespace ProliteController
 
             var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
 
-            _ = _logger.LogDetailAsync($"TurnOn: {cmd}");
+            //_ = _logger.LogDetailAsync($"TurnOn: {cmd}");
 
             return cmd;
         }
@@ -69,7 +69,7 @@ namespace ProliteController
         public string Clear()
         {
             var cmd = string.Empty;
-         _ = _logger.LogDetailAsync($"Clear");
+         //_logger.LogDetailAsync($"Clear");
            
             if (Enabled)
             {
@@ -86,7 +86,7 @@ namespace ProliteController
 
             var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
 
-            _ = _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
+            //_ = _logger.LogDetailAsync($"TurnOn Blind Cycle: {cmd}");
 
             return cmd;
         }
@@ -98,10 +98,22 @@ namespace ProliteController
 
             var cmd = $"{_proliteNumber}<PA><FQ><CC>{work}{Environment.NewLine}";
 
-         _ = _logger.LogDetailAsync($"TurnOn HOT: {cmd}");
+         //_ = _logger.LogDetailAsync($"TurnOn HOT: {cmd}");
 
             return cmd;
         }
 
+        public string TurnOnLocation(int tray, int level, int part)
+        {
+            var work = $"<CN>T:<CE>{tray}";
+            work += $"<CN> W:<CC>{level}";
+            work += $"<CN> D:<CC>{part}";
+            
+            var cmd = $"{_proliteNumber}<PA><FC>{work}{Environment.NewLine}";
+
+           // _ = _logger.LogDetailAsync($"TurnOnLocation: {cmd}");
+
+            return cmd;
+        }
     }
 }

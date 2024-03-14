@@ -194,6 +194,7 @@
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
             this.BackgroundWorkerInventory = new System.ComponentModel.BackgroundWorker();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
@@ -272,6 +273,7 @@
             this.tabPage1.Controls.Add(this.ProgressBarInventory);
             this.tabPage1.Controls.Add(this.ButtonLoadFromExcel);
             this.tabPage1.Controls.Add(this.ButtonSaveToExcel);
+            this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.LabelFindDescription);
             this.tabPage1.Controls.Add(this.TextBoxFind);
             this.tabPage1.Controls.Add(this.MButtonNew);
@@ -290,9 +292,9 @@
             // 
             // LabelSelectArea
             // 
-            this.LabelSelectArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelSelectArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSelectArea.ForeColor = System.Drawing.Color.White;
-            this.LabelSelectArea.Location = new System.Drawing.Point(284, 47);
+            this.LabelSelectArea.Location = new System.Drawing.Point(284, 53);
             this.LabelSelectArea.Name = "LabelSelectArea";
             this.LabelSelectArea.Size = new System.Drawing.Size(149, 20);
             this.LabelSelectArea.TabIndex = 31;
@@ -363,13 +365,13 @@
             // 
             // LabelFindDescription
             // 
-            this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFindDescription.ForeColor = System.Drawing.Color.White;
-            this.LabelFindDescription.Location = new System.Drawing.Point(647, 43);
+            this.LabelFindDescription.Location = new System.Drawing.Point(647, 42);
             this.LabelFindDescription.Name = "LabelFindDescription";
-            this.LabelFindDescription.Size = new System.Drawing.Size(267, 20);
+            this.LabelFindDescription.Size = new System.Drawing.Size(219, 22);
             this.LabelFindDescription.TabIndex = 18;
-            this.LabelFindDescription.Text = "Search For";
+            this.LabelFindDescription.Text = "Search For Any Part Of the";
             this.LabelFindDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TextBoxFind
@@ -1518,7 +1520,7 @@
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridViewInventoryNewLocations.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.DataGridViewInventoryNewLocations.RowTemplate.Height = 28;
-            this.DataGridViewInventoryNewLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.DataGridViewInventoryNewLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewInventoryNewLocations.Size = new System.Drawing.Size(1210, 345);
             this.DataGridViewInventoryNewLocations.TabIndex = 0;
             this.DataGridViewInventoryNewLocations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewInventoryAddDetailLocations_CellClick);
@@ -2152,6 +2154,17 @@
             this.BackgroundWorkerInventory.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorkerItemDefinitions_ProgressChanged);
             this.BackgroundWorkerInventory.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorkerItemDefinitions_RunWorkerCompleted);
             // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(647, 62);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(219, 22);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "SKU, Description or Slot";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FrmInventory
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2359,5 +2372,6 @@
         private System.Windows.Forms.CheckBox CheckBoxUseSelectedItems;
         private System.Windows.Forms.Label LabelSelectArea;
         private System.ComponentModel.BackgroundWorker BackgroundWorkerInventory;
+        private System.Windows.Forms.Label label1;
     }
 }

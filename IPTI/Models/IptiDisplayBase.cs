@@ -14,6 +14,7 @@
         protected string LedState = "4";
 
         public abstract string TurnOn(string quantity);
+        public abstract string TurnOnEnd();
         public abstract string TurnOff();
     }
 }

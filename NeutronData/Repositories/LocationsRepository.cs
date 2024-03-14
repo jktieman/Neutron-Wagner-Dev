@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using AlliedLogger;
@@ -21,7 +22,7 @@ namespace NeutronData.Repositories
 
     public class LocationsRepository : ILocationsRepository
     {
-    
+
         private readonly GenericRepository<Location> _repo = new GenericRepository<Location>(new NeutronDb());
         private readonly IDynamicLogger _logger;
 
@@ -33,7 +34,7 @@ namespace NeutronData.Repositories
 
         #region Area Related Querys
 
-       
+
         #endregion
 
         public IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId,
@@ -90,6 +91,18 @@ namespace NeutronData.Repositories
             return recs;
         }
 
+        public int GetMaxSizeCodeByArea(int areaId)
+        {
+            var result = 9;
+            using (var context = new NeutronDb())
+            {
+                result = context.Locations.Where(r => r.AreaId == areaId).Max(r => r.SizeCodeId);
+            }
+
+            return result;
+            // return _repo.All().Where(r => r.AreaId == areaId && r.InUse == false).Max(r => r.SizeCodeId);
+        }
+
         public IEnumerable<LocationView> FindLocationViewsByArea(int areaId)
         {
             var recs = new List<LocationView>();
@@ -114,30 +127,30 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-       public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse )
-       {
-           var recs = new List<LocationView>();
+        public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse)
+        {
+            var recs = new List<LocationView>();
 
-           _ = _logger.LogDetailAsync(@"Get All Location Views Start");
-           try
-           {
-               using (var context = new NeutronDb())
-               {
-                   var paramAreaId = new SqlParameter("@AREAID", areaId);
-                   var paramInUse = new SqlParameter("@INUSE", inUse);
-                   recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByAreaAndInUse @AREAID, @INUSE", paramAreaId, paramInUse).ToList();
-               }
-           }
-           catch (Exception ex)
-           {
-               _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
-           }
+            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramAreaId = new SqlParameter("@AREAID", areaId);
+                    var paramInUse = new SqlParameter("@INUSE", inUse);
+                    recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByAreaAndInUse @AREAID, @INUSE", paramAreaId, paramInUse).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+            }
 
-           _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
+            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
 
 
-           return recs;
-       }
+            return recs;
+        }
         public IEnumerable<LocationView> FindLocationViewsByAreaAndSlot(int areaId, string slot)
         {
             var recs = new List<LocationView>();
@@ -221,10 +234,18 @@ namespace NeutronData.Repositories
         /// <param name="b">The true or false value</param>
         public void SetLocationInUse(int locationId, bool b)
         {
+            var defaultLocationId = 10954;
             try
             {
                 var location = _repo.FindByKey(locationId);
-                location.InUse = b;
+                if (locationId == defaultLocationId)
+                {
+                    location.InUse = false;
+                }
+                else
+                {
+                    location.InUse = b;
+                }
                 _repo.Update(location);
             }
             catch (Exception ex)
@@ -298,17 +319,21 @@ namespace NeutronData.Repositories
             {
                 using (var context = new NeutronDb())
                 {
-                    var param = new SqlParameter{ParameterName = "@LOCATIONID"
-                        ,SqlDbType = SqlDbType.Int
-                        , Value    = locationId
+                    var param = new SqlParameter
+                    {
+                        ParameterName = "@LOCATIONID"
+                        ,
+                        SqlDbType = SqlDbType.Int
+                        ,
+                        Value = locationId
                     };
                     parameters.Add(param);
-                   
+
                     var rec = await context.Database.SqlQuery<Inventory>("usp_IsLocationInInventory @LOCATIONID "
                         , parameters.ToArray<object>()).FirstOrDefaultAsync();
-                    
+
                     if (rec != null) result = true;
-                    
+
                 }
             }
             catch (Exception ex)

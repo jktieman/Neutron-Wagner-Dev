@@ -1,10 +1,10 @@
 ﻿using AlliedLogger;
 using AlliedPostOffice;
+using IPTI.Models;
 using Ninject.Modules;
 using JsonManager;
 using Neutron.Interfaces;
 using Neutron.Classes;
-using Neutron.Controllers;
 using Neutron.Forms;
 using Neutron.Global;
 using Neutron.Models;
@@ -17,6 +17,7 @@ using NeutronMaintenance;
 using SqlSchemaManager;
 using ProliteController;
 using SAPServer;
+using IDisplayController = IPTI.Models.IDisplayController;
 
 
 namespace Neutron.Ninject
@@ -101,6 +102,7 @@ namespace Neutron.Ninject
             Bind<ILocationsRepository>().To<LocationsRepository>().InSingletonScope();
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
+            Bind<IDisplayController>().To<TcpIptiController>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
             //Bind<ISapService>().To<SAPService>().InSingletonScope();
         }

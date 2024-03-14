@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AsyncAwaitBestPractices;
 using NeutronCore;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
@@ -37,24 +38,24 @@ namespace NeutronLoader
             _workstationRepository = workstationRepository;
         }
 
-        public void RunUploadOnce()
+        public async Task RunUploadOnce()
         {
-         _ = _logger.LogDetailAsync("RunUploadOnce Start");
+         _logger.LogDetailAsync("RunUploadOnce Start").SafeFireAndForget();
 
-            CreateHostFile();
+            await CreateHostFile();
         }
 
         public void StartProcessingUploadFiles()
         {
-         _ = _logger.LogDetailAsync("StartProcessingUploadFiles Start");
+         _logger.LogDetailAsync("StartProcessingUploadFiles Start").SafeFireAndForget();
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
-            _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
+            _timer = new Timer(t => { CreateHostFile().SafeFireAndForget(); }, null, startTimeSpan, periodTimeSpan);
         }
 
         public void StopProcessingUploadFiles()
         {
-             _ = _logger.LogDetailAsync("StopProcessingUploadFiles Dispose of Timer");
+             _logger.LogDetailAsync("StopProcessingUploadFiles Dispose of Timer").SafeFireAndForget();
             _timer.Dispose();
         }
 
@@ -69,9 +70,9 @@ namespace NeutronLoader
             return result;
         }
 
-        public void CreateHostFile()
+        public async Task CreateHostFile()
         {
-         _ = _logger.LogDetailAsync("CreateHostFile Start");
+         _logger.LogDetailAsync("CreateHostFile Start").SafeFireAndForget();
 
             var appendFile = Convert.ToBoolean(LoaderSettings.AppendFile);
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
@@ -83,14 +84,12 @@ namespace NeutronLoader
             if (!string.IsNullOrEmpty(fileName))
             {
                 var fullName = Path.Combine(_hostUploadDirectory.FullName, fileName);
-             _ = _logger.LogDetailAsync($"CreateHostFile: {fullName}");
+             _logger.LogDetailAsync($"CreateHostFile: {fullName}").SafeFireAndForget();
                 if (File.Exists(fullName))
                 {
                     if(!appendFile)
                     {
-                        MessageBox.Show(@"Upload file exists.  Append file set to False.", @"File Exists", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                     _ = _logger.LogDetailAsync($"Upload file exists: {fullName}    Append file set to False.");
+                     _logger.LogDetailAsync($"Upload file exists: {fullName}    Append file set to False.").SafeFireAndForget();
                         return;
                     }
                 }
@@ -99,7 +98,7 @@ namespace NeutronLoader
             var counter = 0;
             while (_uploadBusy)
             {
-                Task.Delay(200);
+                await Task.Delay(200);
                 ++counter;
                 if (counter >= 20) return;
             }
@@ -121,20 +120,18 @@ namespace NeutronLoader
                             {
                                 rec.TransmitDateTime = DateTime.Now;
                             }
-                            db.SaveChanges();
+                           await db.SaveChangesAsync();
                         }
                         else
                         {
-                            MessageBox.Show(@"Create Host File Failed, see Log file in UploadManager.");
-                         _ = _logger.LogDetailAsync($"Create Host File Failed, see Log file in UploadManager.");
+                         _logger.LogDetailAsync($"Create Host File Failed, see Log file in UploadManager.").SafeFireAndForget();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Upload Process Failed, see Log file in UploadManager.");
-             _ = _logger.LogDetailAsync($"Upload Process Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+             _logger.LogDetailAsync($"Upload Process Failed: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             _uploadBusy = false;

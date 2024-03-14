@@ -35,7 +35,7 @@ namespace Neutron.Forms
             var publicKeyFile = Path.Combine(currentPath, @"PublicKey.xml");
             var licenseManager = new AlliedLicenseManager();
             var result = licenseManager.ExamineLicense(licenseFile, assembly.GetName(), publicKeyFile);
-         _ = _logger.LogDetailAsync("{result.LicenseStatus.GetDescription()}");
+         Task.Run(() =>  _logger.LogDetailAsync("{result.LicenseStatus.GetDescription()}"));
             MessageBox.Show($"{result.LicenseStatus.GetDescription()}");
         }
 
@@ -68,7 +68,7 @@ namespace Neutron.Forms
                 LabelRackStations.Visible = false;
             }
 
-         _ = _logger.LogDetailAsync($"License Status: {LabelLicensee.Text}");
+         Task.Run(() =>  _logger.LogDetailAsync($"License Status: {LabelLicensee.Text}"));
 
         }
 

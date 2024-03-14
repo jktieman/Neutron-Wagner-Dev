@@ -311,7 +311,7 @@ namespace HanelCommands
             return hanelCommand;
         }
 
-        public IHanelCommand GetTray(int lift, int accessPoint)
+        public IHanelCommand GetTray(int lift, int accessPoint = 1)
         {
             var hanelCommand = new XR_E12Command(lift.ToString(), accessPoint.ToString());
             return hanelCommand;

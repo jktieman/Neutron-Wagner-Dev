@@ -120,12 +120,12 @@ namespace DeviceIndicatorService
         /// </summary>
         private void AddDeviceIndicatorsToPanel(int loc = 0)
         {
-            foreach (var hardwareDevice in _hardwareDevices)
+            foreach (var hardwareDevice in _workstationView.Hanels)
             {
-                if (hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12D &&
-                    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12N &&
-                    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Carousel &&
-                    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Shuttle) continue;
+                //if (hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12D &&
+                //    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12N &&
+                //    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Carousel &&
+                //    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Shuttle) continue;
 
                 var device = new DeviceIndicator(hardwareDevice.DeviceNumber, _flashRate, Color.Yellow
                     , Color.Transparent);

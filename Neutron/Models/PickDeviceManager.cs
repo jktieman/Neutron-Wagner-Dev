@@ -31,7 +31,7 @@ namespace Neutron.Models
 
         private DeviceMover CreateDeviceMover(int deviceNumber, IEnumerable<PickStop> carList)
         {
-         _ = _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
+         _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
             var firstLocation = true;
             var locs = new List<NeutronData.Models.Location>();
             foreach (var pickStop in carList)
@@ -41,17 +41,26 @@ namespace Neutron.Models
                 _currentLocations[deviceNumber] = pickStop.CurrentInventoryLocation.Location;
                 firstLocation = false;
             }
-            return new DeviceMover(deviceNumber, locs);
+            return new DeviceMover(deviceNumber, locs, _logger);
         }
 
         public void MoveNext(int deviceNumber)
         {
-         _ = _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}");
-            var deviceMover = _deviceMovers.FirstOrDefault(r => r.MoverNumber == deviceNumber);
+         _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}");
+            
+         
+         var deviceMover = _deviceMovers.FirstOrDefault(r => r.MoverNumber == deviceNumber);
+         _logger.LogDetailAsync($"MoveNext 1");
+
+
             if (deviceMover != null)
             {
                 var location = deviceMover.MoveNext();
-             _ = _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}");
+               
+
+
+
+                _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}");
                 _currentLocations[deviceNumber] = location;
                 if (location != null)
                 {

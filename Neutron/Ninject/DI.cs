@@ -15,6 +15,8 @@ using Neutron.Forms;
 using NeutronData.Interfaces;
 using NeutronData.PrintModels;
 using AlliedLogger;
+using IPTI.Models;
+
 
 namespace Neutron.Ninject
 {
@@ -60,6 +62,21 @@ namespace Neutron.Ninject
                 , new ConstructorArgument("historyManager", historyManager));
         }
 
+        // FrmPick and FrmHotAction with Injected Display Driver
+        public static T Create<T>(NeutronVariables neutronVariables
+            , NeutronLicense neutronLicense
+            , WorkstationView workstationView
+            , HistoryManager historyManager
+            , IDisplayController tcpIptiController)
+        {
+            return _kernel.Get<T>(
+                new ConstructorArgument("neutronVariables", neutronVariables)
+                , new ConstructorArgument("neutronLicense", neutronLicense)
+                , new ConstructorArgument("workstationView", workstationView)
+                , new ConstructorArgument("historyManager", historyManager)
+                , new ConstructorArgument("tcpIptiController", tcpIptiController));
+        }
+
         //public static T Create<T>(IJsonData jsonData, NeutronVariables neutronVariables
         //    , NeutronLicense neutronLicense
         //    , WorkstationView workstationView, IWorkstationRepository workstationRepository)
@@ -97,7 +114,19 @@ namespace Neutron.Ninject
         {
             return _kernel.Get<T>(
                 new ConstructorArgument("workstationView", workstationView)
-                , new ConstructorArgument("neutronVariables", neutronVariables));
+                , new ConstructorArgument("neutronVariables", neutronVariables)
+                );
+        }
+
+        public static T Create<T>(
+            WorkstationView workstationView
+            , NeutronVariables neutronVariables
+            , IDisplayController tcpIptiController)
+        {
+            return _kernel.Get<T>(
+                new ConstructorArgument("workstationView", workstationView)
+                , new ConstructorArgument("neutronVariables", neutronVariables)
+                , new ConstructorArgument("tcpIptiController", tcpIptiController));
         }
 
         public static T Create<T>(
@@ -112,12 +141,14 @@ namespace Neutron.Ninject
         public static FrmUtilities CreateUtilitiesForm(
             NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
-            , WorkstationView workstationView)
+            , WorkstationView workstationView
+            , IDisplayController tcpIptiController)
         {
             return _kernel.Get<FrmUtilities>(
                 new ConstructorArgument("neutronVariables", neutronVariables)
                 , new ConstructorArgument("neutronLicense", neutronLicense)
-                , new ConstructorArgument("workstationView", workstationView));
+                , new ConstructorArgument("workstationView", workstationView)
+                , new ConstructorArgument("tcpIptiController", tcpIptiController));
         }
 
 

@@ -34,7 +34,7 @@ namespace SAPServer
             try
             {
                 _sapVariables = _jsonData.LoadFile<SapVariables>();
-                //Mediator.GetInstance().OnSendEmailMessage(this, "Neutron/SAP Loader Started");
+                Mediator.GetInstance().OnSendEmailMessage(this, "Neutron/SAP Loader Started");
             }
             catch (Exception ex)
             {
@@ -73,6 +73,7 @@ namespace SAPServer
                 if (string.IsNullOrEmpty(_sapVariables.SapServer)) return;
 
                 if (!RunProgramNow(_sapVariables)) return;
+                
                 if (_neutronBusyFile.EnsurePathExists())
                 {
                     _ = _logger.LogDetailAsync(

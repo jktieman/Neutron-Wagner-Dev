@@ -22,6 +22,9 @@ public class WorkstationView
     public int Sequence { get; set; }
     public List<HardwareDevice> HardwareDevices { get; set; } = new();
     public List<HardwareDevice> Hanels { get; set; } = new();
+    public List<HardwareDevice> Prolites { get; set; } = new();
+    public List<HardwareDevice> Blastzones { get; set; } = new();
+    public HardwareDevice BatchTable { get; set; } = new();
 
     public IReadOnlyCollection<int> EnabledDevices
     {

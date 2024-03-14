@@ -120,6 +120,7 @@
             this.DataGridViewOrderDetails = new System.Windows.Forms.DataGridView();
             this.MBOrderDetailsBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
+            this.MBSkipPick = new MetroFramework.Controls.MetroButton();
             this.TextBoxSlot = new System.Windows.Forms.TextBox();
             this.MBShortCut = new MetroFramework.Controls.MetroButton();
             this.LabelPickMessages = new System.Windows.Forms.Label();
@@ -183,7 +184,9 @@
             this.MBGo2 = new MetroFramework.Controls.MetroButton();
             this.MBAvailableOrdersBack = new MetroFramework.Controls.MetroButton();
             this.OrderListing = new System.Windows.Forms.TabPage();
-            this.MBShowRackOrders = new MetroFramework.Controls.MetroButton();
+            this.MBDeleteOrder = new MetroFramework.Controls.MetroButton();
+            this.MBShowPutawayOrders = new MetroFramework.Controls.MetroButton();
+            this.MBShowReplenOrders = new MetroFramework.Controls.MetroButton();
             this.MBCompress = new MetroFramework.Controls.MetroButton();
             this.MBPrintOrderListing = new MetroFramework.Controls.MetroButton();
             this.MBPriority = new MetroFramework.Controls.MetroButton();
@@ -197,7 +200,6 @@
             this.ButtonClear = new System.Windows.Forms.Button();
             this.MButtonClose = new MetroFramework.Controls.MetroButton();
             this.MButtonSearch = new MetroFramework.Controls.MetroButton();
-            this.MBDeleteOrder = new MetroFramework.Controls.MetroButton();
             this.Main = new System.Windows.Forms.TabPage();
             this.MBMainClose = new MetroFramework.Controls.MetroButton();
             this.MBMainNewOrder = new MetroFramework.Controls.MetroButton();
@@ -208,6 +210,7 @@
             this.DataGridViewAdjust = new System.Windows.Forms.DataGridView();
             this.MBAdjustOrderSave = new MetroFramework.Controls.MetroButton();
             this.MBAdjustOrderBack = new MetroFramework.Controls.MetroButton();
+            this.RadioButtonClientConnected = new System.Windows.Forms.RadioButton();
             this.AvailableRack.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrdersRack)).BeginInit();
             this.NewOrder.SuspendLayout();
@@ -989,6 +992,7 @@
             this.MBKillLine.TabIndex = 10;
             this.MBKillLine.Text = "Kill Line";
             this.MBKillLine.UseSelectable = true;
+            this.MBKillLine.Visible = false;
             this.MBKillLine.Click += new System.EventHandler(this.MBKillLine_Click);
             // 
             // MBChangeLineStatus
@@ -1077,7 +1081,7 @@
             this.DataGridViewOrderDetails.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewOrderDetails.RowTemplate.Height = 28;
             this.DataGridViewOrderDetails.RowTemplate.ReadOnly = true;
-            this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.DataGridViewOrderDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewOrderDetails.Size = new System.Drawing.Size(1196, 564);
             this.DataGridViewOrderDetails.TabIndex = 5;
             this.DataGridViewOrderDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewOrderDetails_CellClick);
@@ -1098,6 +1102,8 @@
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.Green;
+            this.PickScreen.Controls.Add(this.RadioButtonClientConnected);
+            this.PickScreen.Controls.Add(this.MBSkipPick);
             this.PickScreen.Controls.Add(this.TextBoxSlot);
             this.PickScreen.Controls.Add(this.MBShortCut);
             this.PickScreen.Controls.Add(this.LabelPickMessages);
@@ -1131,12 +1137,25 @@
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
+            // MBSkipPick
+            // 
+            this.MBSkipPick.Enabled = false;
+            this.MBSkipPick.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBSkipPick.Location = new System.Drawing.Point(848, 585);
+            this.MBSkipPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBSkipPick.Name = "MBSkipPick";
+            this.MBSkipPick.Size = new System.Drawing.Size(150, 76);
+            this.MBSkipPick.TabIndex = 175;
+            this.MBSkipPick.Text = "S&kip Pick";
+            this.MBSkipPick.UseSelectable = true;
+            this.MBSkipPick.Click += new System.EventHandler(this.MBSkipPick_Click);
+            // 
             // TextBoxSlot
             // 
-            this.TextBoxSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxSlot.Location = new System.Drawing.Point(361, 12);
+            this.TextBoxSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxSlot.Location = new System.Drawing.Point(297, 8);
             this.TextBoxSlot.Name = "TextBoxSlot";
-            this.TextBoxSlot.Size = new System.Drawing.Size(512, 116);
+            this.TextBoxSlot.Size = new System.Drawing.Size(640, 116);
             this.TextBoxSlot.TabIndex = 0;
             this.TextBoxSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxSlot.Visible = false;
@@ -1170,7 +1189,7 @@
             this.panel11.Controls.Add(this.ButtonStopMoveFirst);
             this.panel11.Controls.Add(this.ButtonStopMovePrevious);
             this.panel11.Controls.Add(this.LabelLineOfLines);
-            this.panel11.Location = new System.Drawing.Point(983, 106);
+            this.panel11.Location = new System.Drawing.Point(1060, 101);
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(158, 22);
             this.panel11.TabIndex = 172;
@@ -1597,7 +1616,7 @@
             // 
             this.MBPickChangeQuantity.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickChangeQuantity.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickChangeQuantity.Location = new System.Drawing.Point(666, 587);
+            this.MBPickChangeQuantity.Location = new System.Drawing.Point(692, 587);
             this.MBPickChangeQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickChangeQuantity.Name = "MBPickChangeQuantity";
             this.MBPickChangeQuantity.Size = new System.Drawing.Size(150, 76);
@@ -1853,7 +1872,7 @@
             this.DataGridViewAvailableOrders.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewAvailableOrders.RowTemplate.Height = 28;
             this.DataGridViewAvailableOrders.RowTemplate.ReadOnly = true;
-            this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.DataGridViewAvailableOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridViewAvailableOrders.Size = new System.Drawing.Size(1222, 298);
             this.DataGridViewAvailableOrders.TabIndex = 5;
             this.DataGridViewAvailableOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewAvailableOrders_CellClick);
@@ -1936,7 +1955,9 @@
             // OrderListing
             // 
             this.OrderListing.BackColor = System.Drawing.Color.Green;
-            this.OrderListing.Controls.Add(this.MBShowRackOrders);
+            this.OrderListing.Controls.Add(this.MBDeleteOrder);
+            this.OrderListing.Controls.Add(this.MBShowPutawayOrders);
+            this.OrderListing.Controls.Add(this.MBShowReplenOrders);
             this.OrderListing.Controls.Add(this.MBCompress);
             this.OrderListing.Controls.Add(this.MBPrintOrderListing);
             this.OrderListing.Controls.Add(this.MBJobDetails);
@@ -1951,7 +1972,6 @@
             this.OrderListing.Controls.Add(this.ButtonClear);
             this.OrderListing.Controls.Add(this.MButtonClose);
             this.OrderListing.Controls.Add(this.MButtonSearch);
-            this.OrderListing.Controls.Add(this.MBDeleteOrder);
             this.OrderListing.Location = new System.Drawing.Point(4, 22);
             this.OrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.OrderListing.Name = "OrderListing";
@@ -1960,17 +1980,41 @@
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
-            // MBShowRackOrders
+            // MBDeleteOrder
             // 
-            this.MBShowRackOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShowRackOrders.Location = new System.Drawing.Point(276, 10);
-            this.MBShowRackOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBShowRackOrders.Name = "MBShowRackOrders";
-            this.MBShowRackOrders.Size = new System.Drawing.Size(120, 79);
-            this.MBShowRackOrders.TabIndex = 2;
-            this.MBShowRackOrders.Text = "Off";
-            this.MBShowRackOrders.UseSelectable = true;
-            this.MBShowRackOrders.Click += new System.EventHandler(this.MBShowRackOrders_Click);
+            this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBDeleteOrder.Location = new System.Drawing.Point(308, 583);
+            this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBDeleteOrder.Name = "MBDeleteOrder";
+            this.MBDeleteOrder.Size = new System.Drawing.Size(125, 77);
+            this.MBDeleteOrder.TabIndex = 19;
+            this.MBDeleteOrder.Text = "Delete";
+            this.MBDeleteOrder.UseSelectable = true;
+            this.MBDeleteOrder.Click += new System.EventHandler(this.MBDeleteOrder_Click);
+            // 
+            // MBShowPutawayOrders
+            // 
+            this.MBShowPutawayOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBShowPutawayOrders.Location = new System.Drawing.Point(141, 10);
+            this.MBShowPutawayOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBShowPutawayOrders.Name = "MBShowPutawayOrders";
+            this.MBShowPutawayOrders.Size = new System.Drawing.Size(120, 79);
+            this.MBShowPutawayOrders.TabIndex = 2;
+            this.MBShowPutawayOrders.Text = "Putaway";
+            this.MBShowPutawayOrders.UseSelectable = true;
+            this.MBShowPutawayOrders.Click += new System.EventHandler(this.MBShowPutawayOrders_Click);
+            // 
+            // MBShowReplenOrders
+            // 
+            this.MBShowReplenOrders.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBShowReplenOrders.Location = new System.Drawing.Point(7, 10);
+            this.MBShowReplenOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBShowReplenOrders.Name = "MBShowReplenOrders";
+            this.MBShowReplenOrders.Size = new System.Drawing.Size(120, 79);
+            this.MBShowReplenOrders.TabIndex = 2;
+            this.MBShowReplenOrders.Text = "Replen";
+            this.MBShowReplenOrders.UseSelectable = true;
+            this.MBShowReplenOrders.Click += new System.EventHandler(this.MBShowReplenOrders_Click);
             // 
             // MBCompress
             // 
@@ -1982,6 +2026,7 @@
             this.MBCompress.TabIndex = 11;
             this.MBCompress.Text = "Compress";
             this.MBCompress.UseSelectable = true;
+            this.MBCompress.Visible = false;
             this.MBCompress.Click += new System.EventHandler(this.MBCompress_Click);
             // 
             // MBPrintOrderListing
@@ -2035,7 +2080,7 @@
             // MBCompleted
             // 
             this.MBCompleted.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBCompleted.Location = new System.Drawing.Point(142, 10);
+            this.MBCompleted.Location = new System.Drawing.Point(275, 10);
             this.MBCompleted.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBCompleted.Name = "MBCompleted";
             this.MBCompleted.Size = new System.Drawing.Size(120, 79);
@@ -2047,7 +2092,7 @@
             // LabelFindDescription
             // 
             this.LabelFindDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelFindDescription.Location = new System.Drawing.Point(483, 52);
+            this.LabelFindDescription.Location = new System.Drawing.Point(545, 52);
             this.LabelFindDescription.Name = "LabelFindDescription";
             this.LabelFindDescription.Size = new System.Drawing.Size(260, 25);
             this.LabelFindDescription.TabIndex = 18;
@@ -2057,10 +2102,10 @@
             // TextBoxFind
             // 
             this.TextBoxFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFind.Location = new System.Drawing.Point(407, 10);
+            this.TextBoxFind.Location = new System.Drawing.Point(536, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(344, 38);
+            this.TextBoxFind.Size = new System.Drawing.Size(278, 38);
             this.TextBoxFind.TabIndex = 3;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
@@ -2106,7 +2151,7 @@
             this.DataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridView1.RowTemplate.Height = 28;
             this.DataGridView1.RowTemplate.ReadOnly = true;
-            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1221, 478);
             this.DataGridView1.TabIndex = 16;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);
@@ -2114,7 +2159,7 @@
             // MBOrderListingAvailable
             // 
             this.MBOrderListingAvailable.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBOrderListingAvailable.Location = new System.Drawing.Point(8, 10);
+            this.MBOrderListingAvailable.Location = new System.Drawing.Point(409, 10);
             this.MBOrderListingAvailable.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBOrderListingAvailable.Name = "MBOrderListingAvailable";
             this.MBOrderListingAvailable.Size = new System.Drawing.Size(120, 79);
@@ -2126,7 +2171,7 @@
             // ButtonClear
             // 
             this.ButtonClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClear.Location = new System.Drawing.Point(758, 10);
+            this.ButtonClear.Location = new System.Drawing.Point(820, 10);
             this.ButtonClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(34, 38);
@@ -2151,7 +2196,7 @@
             // MButtonSearch
             // 
             this.MButtonSearch.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MButtonSearch.Location = new System.Drawing.Point(800, 10);
+            this.MButtonSearch.Location = new System.Drawing.Point(862, 10);
             this.MButtonSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MButtonSearch.Name = "MButtonSearch";
             this.MButtonSearch.Size = new System.Drawing.Size(135, 79);
@@ -2159,18 +2204,6 @@
             this.MButtonSearch.Text = "Search";
             this.MButtonSearch.UseSelectable = true;
             this.MButtonSearch.Click += new System.EventHandler(this.MButtonSearch_Click);
-            // 
-            // MBDeleteOrder
-            // 
-            this.MBDeleteOrder.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBDeleteOrder.Location = new System.Drawing.Point(746, 689);
-            this.MBDeleteOrder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBDeleteOrder.Name = "MBDeleteOrder";
-            this.MBDeleteOrder.Size = new System.Drawing.Size(125, 36);
-            this.MBDeleteOrder.TabIndex = 12;
-            this.MBDeleteOrder.Text = "Delete";
-            this.MBDeleteOrder.UseSelectable = true;
-            this.MBDeleteOrder.Click += new System.EventHandler(this.MBDeleteOrder_Click);
             // 
             // Main
             // 
@@ -2319,6 +2352,17 @@
             this.MBAdjustOrderBack.Text = "Back";
             this.MBAdjustOrderBack.UseSelectable = true;
             this.MBAdjustOrderBack.Click += new System.EventHandler(this.MBAdjustOrderBack_Click);
+            // 
+            // RadioButtonClientConnected
+            // 
+            this.RadioButtonClientConnected.AutoSize = true;
+            this.RadioButtonClientConnected.Location = new System.Drawing.Point(20, 377);
+            this.RadioButtonClientConnected.Name = "RadioButtonClientConnected";
+            this.RadioButtonClientConnected.Size = new System.Drawing.Size(159, 17);
+            this.RadioButtonClientConnected.TabIndex = 176;
+            this.RadioButtonClientConnected.TabStop = true;
+            this.RadioButtonClientConnected.Text = "Display Interface Connected";
+            this.RadioButtonClientConnected.UseVisualStyleBackColor = true;
             // 
             // FrmReplen
             // 
@@ -2491,7 +2535,6 @@
         private System.Windows.Forms.Button ButtonClear;
         private MetroFramework.Controls.MetroButton MButtonClose;
         private MetroFramework.Controls.MetroButton MButtonSearch;
-        private MetroFramework.Controls.MetroButton MBDeleteOrder;
         private System.Windows.Forms.TabPage Main;
         private MetroFramework.Controls.MetroButton MBMainClose;
         private MetroFramework.Controls.MetroButton MBMainNewOrder;
@@ -2500,7 +2543,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Label LabelNotify;
         private MetroFramework.Controls.MetroButton MBCompress;
-        private MetroFramework.Controls.MetroButton MBShowRackOrders;
+        private MetroFramework.Controls.MetroButton MBShowReplenOrders;
         private System.Windows.Forms.TextBox TextBoxNewOrderDescription;
         private System.Windows.Forms.TextBox TextBoxNewOrderItem;
         private System.Windows.Forms.Label LabelNewOrderStationNumber;
@@ -2531,5 +2574,9 @@
         private System.Windows.Forms.TextBox TextBoxSlot;
         private MetroFramework.Controls.MetroButton MBKillLine;
         private MetroFramework.Controls.MetroButton MBChangeLineStatus;
+        private MetroFramework.Controls.MetroButton MBSkipPick;
+        private MetroFramework.Controls.MetroButton MBDeleteOrder;
+        private MetroFramework.Controls.MetroButton MBShowPutawayOrders;
+        private System.Windows.Forms.RadioButton RadioButtonClientConnected;
     }
 }

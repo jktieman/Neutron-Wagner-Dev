@@ -15,6 +15,7 @@ namespace NeutronData.ModelViews
         public DateTime LoadDate { get; set; }
         public ReplenOrder Order { get; set; }
         public int FirstStation { get; set; }
-        public int NextStation { get; set; } 
+        public int NextStation { get; set; }
+        public string TransId { get; set; }
     }
 }

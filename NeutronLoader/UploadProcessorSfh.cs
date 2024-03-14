@@ -5,6 +5,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AsyncAwaitBestPractices;
+using NeutronCore.Extensions;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
@@ -32,16 +34,16 @@ namespace NeutronLoader
             _workstationView = workstationView;
         }
 
-        public void RunUploadOnce()
+        public async Task RunUploadOnce()
         {
-            CreateHostFile();
+           await CreateHostFile();
         }
 
         public void StartProcessingUploadFiles()
         {
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
-            _timer = new Timer(t => { CreateHostFile(); }, null, startTimeSpan, periodTimeSpan);
+            _timer = new Timer(t => { CreateHostFile().SafeFireAndForget(); }, null, startTimeSpan, periodTimeSpan);
         }
 
         public void StopProcessingUploadFiles()
@@ -49,13 +51,13 @@ namespace NeutronLoader
             _timer.Dispose();
         }
 
-        public void CreateHostFile()
+        public async Task CreateHostFile()
         {
-         _ = _logger.LogDetailAsync($"Upload Processor - Creating Host File.");
+         _logger.LogDetailAsync($"Upload Processor - Creating Host File.").SafeFireAndForget();
             var counter = 0;
             while (_uploadBusy)
             {
-                Task.Delay(200);
+                await Task.Delay(200);
                 ++counter;
                 if (counter >= 20) return;
             }
@@ -70,7 +72,7 @@ namespace NeutronLoader
 
             if (string.IsNullOrWhiteSpace(_neutronVariables.ActionCodes))
             {
-                MessageBox.Show(@"No Action Codes are defined.", @"Action Code Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _logger.LogDetailAsync($"No Action Codes are defined. Action Code Error").SafeFireAndForget();
                 return;
             }
 
@@ -90,20 +92,18 @@ namespace NeutronLoader
                             {
                                 rec.TransmitDateTime = DateTime.Now;
                             }
-                            db.SaveChanges();
+                           await db.SaveChangesAsync();
                         }
                         else
                         {
-                            MessageBox.Show($"Upload Process Failed, see Log file in HostFile. Result value is: {result} ");
+                            _logger.LogDetailAsync($"Upload Process Failed, see Log file in HostFile.").SafeFireAndForget();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Upload Process Exception, see Log file in HostFile.");
-             _ = _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine} " +
-                            $"{ex.InnerException.Message} {Environment.NewLine}{ex.StackTrace}");
+             _logger.LogDetailAsync($"Create Host File Failed: {ex.Message} {Environment.NewLine}").SafeFireAndForget();
             }
 
             _uploadBusy = false;
@@ -126,7 +126,7 @@ namespace NeutronLoader
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+             _logger.LogDetailAsync($"Remove Duplicate History Files Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
         }
     }

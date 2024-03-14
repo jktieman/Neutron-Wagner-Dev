@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AlliedLogger;
 
 namespace Neutron.Models
 {
@@ -15,9 +16,11 @@ namespace Neutron.Models
         private readonly List<DeviceMover> _deviceMovers = new List<DeviceMover>();
         private readonly bool _shuttleEnabled = true;
         private Dictionary<int, Location> _currentLocations = new Dictionary<int, Location>();
+        private readonly IDynamicLogger _logger;
 
         public ReplenDeviceManager(List<List<ReplenPickStop>> carList, bool shuttleEnabled)
         {
+            _logger = NeutronCore.Global.Logger.SetupLogger(@"PickDeviceManager");
             for (int i = 0; i < carList.Count; i++)
             {
                 var mover = CreateDeviceMover(deviceNumber: i + 1, carList: carList[i]);
@@ -40,7 +43,7 @@ namespace Neutron.Models
                     firstLocation = false;
                 }
             }
-            return new DeviceMover(deviceNumber, locs);
+            return new DeviceMover(deviceNumber, locs, _logger);
         }
 
         public void MoveNext(int deviceNumber)
@@ -106,6 +109,46 @@ namespace Neutron.Models
                         }
                     }
                 }
+            }
+        }
+
+        public void ResetMoveNext(int moveNext = default(int))
+        {
+            _ = _logger.LogDetailAsync($"Reset MoveNext: {moveNext}");
+            foreach (var kvp in _currentLocations)
+            {
+                if (kvp.Value != null)
+                {
+                    var loc1 = kvp.Value.Loc1;
+                    var loc2 = kvp.Value.Loc2;
+                    var loc3 = kvp.Value.Loc3;
+                    var loc4 = kvp.Value.Loc4;
+
+                    if (loc1 == moveNext)
+                    {
+                        _ = _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
+                        continue;
+                    }
+
+                    _ = _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                    if (_shuttleEnabled)
+                    {
+                        if (GlobalVar.Shuttle != null)
+                        {
+                            GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                        }
+                        if (GlobalVar.Hanel != null)
+                        {
+                            GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
+                        }
+                    }
+                }
+            }
+
+            if (moveNext != default(int))
+            {
+                _ = _logger.LogDetailAsync($"Reset MoveNext Device: {moveNext}");
+                MoveNext(moveNext);
             }
         }
     }

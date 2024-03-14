@@ -262,6 +262,7 @@
             this.TextBoxFind.Size = new System.Drawing.Size(220, 29);
             this.TextBoxFind.TabIndex = 5;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxFind.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxFind_KeyPress);
             // 
             // MButtonClose
             // 

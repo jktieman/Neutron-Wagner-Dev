@@ -24,5 +24,6 @@ namespace NeutronData.Interfaces
         int GetMaxRows(int areaId, int device, int tray);
         Task<bool> IsInInventory(int locationId);
         void SetLocationCode(int locationId, string locationCode);
+        int GetMaxSizeCodeByArea(int areaId);
     }
 }

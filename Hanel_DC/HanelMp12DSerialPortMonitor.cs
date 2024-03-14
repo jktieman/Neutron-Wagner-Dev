@@ -162,7 +162,7 @@ namespace Hanel_DC
                     {
                         try
                         {
-                            ShowData($"---------------------Complete MP12D Response------------------------");
+                           // ShowData($"---------------------Complete MP12D Response------------------------");
                             _ = _logger.LogDetailAsync($"MP12D Response: {_dataIn.ByteArrayToHexString()}");
 
                             ProcessDataIn(_dataIn);
@@ -416,72 +416,6 @@ namespace Hanel_DC
                 //response = $"{AST}{CR}{LF}";
                 //SendData(response.StringToByteArray());
             }
-
-            //if (arr.Contains("XS"))
-            //{
-            //    var lift = arr.Substring(2, 2);
-            //    var accessPoint = arr.Substring(4, 1);
-            // _ = _logger.LogDetailAsync($"Contains XS");
-            //    if (arr.Contains("E02"))
-            //    {
-            //     _ = _logger.LogDetailAsync($"Contains E02");
-            //        SendData(_lastMessageSent);
-            //    }
-            //    if (arr.Contains("E00"))
-            //    {
-            //     _ = _logger.LogDetailAsync($"Contains E00");
-
-            //        if (!_pollingActive) Task.Run(StartPollingAsync);
-
-            //        var lft = int.Parse(lift);
-            //        var status = _currentTrayStatusList.FirstOrDefault(r => r.DeviceNumber == lft);
-            //        var status2 = _hanelCommandService.GetDeviceStatus(lift); // .HanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == lft);
-            //        //if (status != null)
-            //        //{
-            //        //    status.LastHanelCommand.Accepted = true;
-            //        //}
-            //        //response = $"{AST}{CR}{LF}";
-            //        //SendData(response.StringToByteArray());
-            //    }
-            //}
-
-            //if (commandString.Contains("XA"))
-            //{
-            //    var lift = arr.Substring(2, 2);
-            //    var accessPoint = arr.Substring(4, 1);
-
-            //    if (arr.Contains("A12"))
-            //    {
-            //        var commandSegments = arr.Split('$');
-            //        var tray = GetSegmentValue(commandSegments, "T");
-            //        // _mainForm.UpdateCurrentTray(tray);
-            //        UpdateCurrentTray(lift, accessPoint, tray);
-            //    }
-
-
-
-            // _ = _logger.LogDetailAsync($"Contains XA");
-            //    _lastMessageSent = new byte[] { };
-            //   // CancelPolling = true;
-            //    var lft = int.Parse(lift);
-            //    //var status = _currentTrayStatusList.FirstOrDefault(r => r.DeviceNumber == lft);
-            //    var status = _hanelCommandService.HanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == lft);
-            //    if (status != null)
-            //    {
-            //        status.PreviousHanelCommand = status.LastHanelCommand;
-            //        status.LastHanelCommand = null;
-            //        if (status.PreviousHanelCommand != null)
-            //        {
-            //            status.PreviousHanelCommand.Executed = true;
-            //        }
-
-            //        // no need to set CommandExecuted to true
-            //        // when you set CommandAccepted to true and reach this 
-            //        // line in the program, you know it has been executed
-            //        // and it's time for a new command.
-            //    }
-            //    // do nothing
-            //}
         }
         private void DumpStatus()
         {
@@ -510,7 +444,7 @@ namespace Hanel_DC
 
                 _logger.LogDetailAsync(sb.ToString());
 
-                ShowData($"{sb.ToString()}");
+                //ShowData($"{sb.ToString()}");
             }
             //ShowData($"Device #{deviceStatus.DeviceNumber} Status Message: {deviceStatus.StatusMessage}");
         }
@@ -552,17 +486,32 @@ namespace Hanel_DC
 
                 if (statusList.Any())
                 {
-                    var activeStatus = statusList.Where(r => r.CommandAccepted && r.CommandExecuted == false).ToList();
-                    if (activeStatus.Any())
+                    var acceptedStatus = statusList.Where(r => r.CommandAccepted && r.CommandExecuted == false).ToList();
+                    var executedStatus = statusList.Where(r => r.CommandAccepted && r.CommandExecuted).ToList();
+                    var readyStatus = statusList.Where(r => r.CommandAccepted == false && r.CommandExecuted == false).ToList();
+                    if (executedStatus.Any())
                     {
+                        var executed = true;
+                        //CancelPolling = false;
+                        Mediator.GetInstance().OnTrayInPosition(this, new InPositionInfo() { OneInPosition = true, TwoInPosition = false, ThreeInPosition = false });
+                    }
+                   
+                    if (acceptedStatus.Any())
+                    {
+                        var accepted = true;
                         activePoll = true;
                         //CancelPolling = false;
                     }
-                    else
+                    //else
+                    //{
+                    //    //CancelPolling = true;
+                    //    //break;
+                    //    activePoll = false;
+                    //    Mediator.GetInstance().OnTrayInPosition(this, new InPositionInfo(){OneInPosition = true, TwoInPosition = false, ThreeInPosition = false});
+                    //}
+                    if (readyStatus.Any())
                     {
-                        //CancelPolling = true;
-                        //break;
-                        activePoll = false;
+                        var ready = true;
                     }
 
                 }
@@ -579,11 +528,11 @@ namespace Hanel_DC
                     var response = $"{AST}{CR}{LF}";
                     SendData(response.StringToByteArray());
                     ShowData($"Neutron Polling : {response}");
-                    await Task.Delay(2000);
+                    //await Task.Delay(2000);
                     await _logger.LogDetailAsync($"Neutron Polling : {response}");
                     //}
                 }
-                await Task.Delay(5000);
+                await Task.Delay(10000);
                 await _logger.LogDetailAsync($"Active Polling Wait 2 seconds ActivePoll : {activePoll}");
 
                 //if (CancelPolling) break;

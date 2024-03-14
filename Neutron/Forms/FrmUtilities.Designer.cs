@@ -75,6 +75,7 @@
             this.LabelLoftwareStation = new System.Windows.Forms.Label();
             this.TextBoxLoftwareFilePath = new System.Windows.Forms.TextBox();
             this.LabelLoftwareFilePath = new System.Windows.Forms.Label();
+            this.CheckBoxPrintPreviewTesting = new System.Windows.Forms.CheckBox();
             this.CheckBoxUseLoftwareFile = new System.Windows.Forms.CheckBox();
             this.CheckBoxLandscape = new System.Windows.Forms.CheckBox();
             this.MBPrintSetUpSave = new MetroFramework.Controls.MetroButton();
@@ -109,6 +110,7 @@
             this.LabelCheckPrinter = new System.Windows.Forms.Label();
             this.MBPrintSetUpBack = new MetroFramework.Controls.MetroButton();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.CheckBoxAutoLoadReplenishments = new System.Windows.Forms.CheckBox();
             this.numericUpDownBliControllerId = new System.Windows.Forms.NumericUpDown();
             this.LabelBliControllerId = new System.Windows.Forms.Label();
             this.ButtonRefreshSlotNames = new System.Windows.Forms.Button();
@@ -526,12 +528,25 @@
             this.ButtonSaveIptiConfig = new MetroFramework.Controls.MetroButton();
             this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
             this.PanelBatchLightTesterBottom = new System.Windows.Forms.Panel();
+            this.ButtonClearBatch = new System.Windows.Forms.Button();
+            this.ButtonTurnOffBatchOrderControl = new System.Windows.Forms.Button();
+            this.ButtonTurnAllOff = new System.Windows.Forms.Button();
+            this.ButtonTurnOffBatchDisplay = new System.Windows.Forms.Button();
+            this.ButtonTurnAllOn = new System.Windows.Forms.Button();
+            this.ButtonTurnOnBatchOrderControl = new System.Windows.Forms.Button();
+            this.ButtonTurnOnBatchDisplay = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.TextBoxBatchOrderControlText = new System.Windows.Forms.TextBox();
+            this.TextBoxBatchText = new System.Windows.Forms.TextBox();
+            this.TextBoxBatchPosition = new System.Windows.Forms.TextBox();
             this.ComboBoxButtonOffTime = new System.Windows.Forms.ComboBox();
             this.LabelButtonOffTime = new System.Windows.Forms.Label();
             this.ComboBoxButtonColorTwo = new System.Windows.Forms.ComboBox();
             this.ButtonColorTwo = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.LabelLine1 = new System.Windows.Forms.Label();
             this.ComboBoxButtonOnTime = new System.Windows.Forms.ComboBox();
             this.LabelButtonOnTime = new System.Windows.Forms.Label();
@@ -540,27 +555,28 @@
             this.NumericUpDownBayId = new System.Windows.Forms.NumericUpDown();
             this.PanelBatchLightTesterTop = new System.Windows.Forms.Panel();
             this.LabelBatchLightTester = new System.Windows.Forms.Label();
-            this.ButtonClearAll = new System.Windows.Forms.Button();
-            this.ButtonTurnOffOrderControl = new System.Windows.Forms.Button();
-            this.ButtonBatchLightTurnOff = new System.Windows.Forms.Button();
-            this.ButtonTurnOnOrderControl = new System.Windows.Forms.Button();
-            this.ButtonBatchLightTurnOn = new System.Windows.Forms.Button();
+            this.ButtonBlastzoneClearAll = new System.Windows.Forms.Button();
+            this.ButtonTurnOffBlastzoneOrderControl = new System.Windows.Forms.Button();
+            this.ButtonTurnOffBlastzoneDisplay = new System.Windows.Forms.Button();
+            this.ButtonTurnOnBlastzoneOrderControl = new System.Windows.Forms.Button();
+            this.ButtonTurnOnBlastzoneDisplay = new System.Windows.Forms.Button();
             this.LabelOrderControlButton = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.LabelBatchLightQuantity = new System.Windows.Forms.Label();
             this.LabelButtonColorOne = new System.Windows.Forms.Label();
             this.LabelBayId = new System.Windows.Forms.Label();
             this.LabelOrderControlText = new System.Windows.Forms.Label();
             this.LabelBatchPosition = new System.Windows.Forms.Label();
-            this.TextBoxOrderControlText = new System.Windows.Forms.TextBox();
-            this.TextBoxBatchLightQuantity = new System.Windows.Forms.TextBox();
-            this.TextBoxBatchLightPosition = new System.Windows.Forms.TextBox();
+            this.TextBoxBlastzoneOrderControlText = new System.Windows.Forms.TextBox();
+            this.TextBoxBlastzoneText = new System.Windows.Forms.TextBox();
+            this.TextBoxBlastzoneDisplay = new System.Windows.Forms.TextBox();
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.CheckBoxPrintPreviewTesting = new System.Windows.Forms.CheckBox();
+            this.RadioButtonClientConnected = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -969,6 +985,20 @@
             this.LabelLoftwareFilePath.TabIndex = 0;
             this.LabelLoftwareFilePath.Text = "Loftware File Path";
             // 
+            // CheckBoxPrintPreviewTesting
+            // 
+            this.CheckBoxPrintPreviewTesting.AutoSize = true;
+            this.CheckBoxPrintPreviewTesting.Checked = true;
+            this.CheckBoxPrintPreviewTesting.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckBoxPrintPreviewTesting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxPrintPreviewTesting.Location = new System.Drawing.Point(581, 72);
+            this.CheckBoxPrintPreviewTesting.Name = "CheckBoxPrintPreviewTesting";
+            this.CheckBoxPrintPreviewTesting.Size = new System.Drawing.Size(202, 20);
+            this.CheckBoxPrintPreviewTesting.TabIndex = 55;
+            this.CheckBoxPrintPreviewTesting.Text = "Use Print Preview For Testing";
+            this.CheckBoxPrintPreviewTesting.UseVisualStyleBackColor = true;
+            this.CheckBoxPrintPreviewTesting.CheckedChanged += new System.EventHandler(this.CheckBoxUseLoftwareFile_CheckedChanged);
+            // 
             // CheckBoxUseLoftwareFile
             // 
             this.CheckBoxUseLoftwareFile.AutoSize = true;
@@ -1318,6 +1348,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Settings.Controls.Add(this.CheckBoxAutoLoadReplenishments);
             this.Settings.Controls.Add(this.numericUpDownBliControllerId);
             this.Settings.Controls.Add(this.LabelBliControllerId);
             this.Settings.Controls.Add(this.ButtonRefreshSlotNames);
@@ -1409,6 +1440,17 @@
             this.Settings.Size = new System.Drawing.Size(1227, 636);
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
+            // 
+            // CheckBoxAutoLoadReplenishments
+            // 
+            this.CheckBoxAutoLoadReplenishments.AutoSize = true;
+            this.CheckBoxAutoLoadReplenishments.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxAutoLoadReplenishments.Location = new System.Drawing.Point(601, 591);
+            this.CheckBoxAutoLoadReplenishments.Name = "CheckBoxAutoLoadReplenishments";
+            this.CheckBoxAutoLoadReplenishments.Size = new System.Drawing.Size(187, 20);
+            this.CheckBoxAutoLoadReplenishments.TabIndex = 55;
+            this.CheckBoxAutoLoadReplenishments.Text = "Auto Load Replenishments";
+            this.CheckBoxAutoLoadReplenishments.UseVisualStyleBackColor = true;
             // 
             // numericUpDownBliControllerId
             // 
@@ -6442,12 +6484,26 @@
             // PanelBatchLightTesterBottom
             // 
             this.PanelBatchLightTesterBottom.BackColor = System.Drawing.Color.LightGray;
+            this.PanelBatchLightTesterBottom.Controls.Add(this.RadioButtonClientConnected);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonClearBatch);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffBatchOrderControl);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnAllOff);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffBatchDisplay);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnAllOn);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOnBatchOrderControl);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOnBatchDisplay);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label9);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label12);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label14);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label15);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchOrderControlText);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchText);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchPosition);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonOffTime);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonOffTime);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonColorTwo);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonColorTwo);
             this.PanelBatchLightTesterBottom.Controls.Add(this.label10);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.label9);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelLine1);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonOnTime);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonOnTime);
@@ -6455,24 +6511,174 @@
             this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonColorOne);
             this.PanelBatchLightTesterBottom.Controls.Add(this.NumericUpDownBayId);
             this.PanelBatchLightTesterBottom.Controls.Add(this.PanelBatchLightTesterTop);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonClearAll);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffOrderControl);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBatchLightTurnOff);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOnOrderControl);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBatchLightTurnOn);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonBlastzoneClearAll);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffBlastzoneOrderControl);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffBlastzoneDisplay);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOnBlastzoneOrderControl);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOnBlastzoneDisplay);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelOrderControlButton);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.label11);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBatchLightQuantity);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonColorOne);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBayId);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelOrderControlText);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelBatchPosition);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxOrderControlText);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchLightQuantity);
-            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchLightPosition);
-            this.PanelBatchLightTesterBottom.Location = new System.Drawing.Point(303, 95);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBlastzoneOrderControlText);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBlastzoneText);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBlastzoneDisplay);
+            this.PanelBatchLightTesterBottom.Location = new System.Drawing.Point(190, 39);
             this.PanelBatchLightTesterBottom.Name = "PanelBatchLightTesterBottom";
-            this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(620, 446);
+            this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(733, 555);
             this.PanelBatchLightTesterBottom.TabIndex = 6;
+            // 
+            // ButtonClearBatch
+            // 
+            this.ButtonClearBatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonClearBatch.Location = new System.Drawing.Point(258, 336);
+            this.ButtonClearBatch.Name = "ButtonClearBatch";
+            this.ButtonClearBatch.Size = new System.Drawing.Size(111, 31);
+            this.ButtonClearBatch.TabIndex = 33;
+            this.ButtonClearBatch.Text = "Clear";
+            this.ButtonClearBatch.UseVisualStyleBackColor = true;
+            this.ButtonClearBatch.Click += new System.EventHandler(this.ButtonClearBatch_Click);
+            // 
+            // ButtonTurnOffBatchOrderControl
+            // 
+            this.ButtonTurnOffBatchOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOffBatchOrderControl.Location = new System.Drawing.Point(557, 336);
+            this.ButtonTurnOffBatchOrderControl.Name = "ButtonTurnOffBatchOrderControl";
+            this.ButtonTurnOffBatchOrderControl.Size = new System.Drawing.Size(92, 31);
+            this.ButtonTurnOffBatchOrderControl.TabIndex = 34;
+            this.ButtonTurnOffBatchOrderControl.Text = "Turn Off";
+            this.ButtonTurnOffBatchOrderControl.UseVisualStyleBackColor = true;
+            this.ButtonTurnOffBatchOrderControl.Click += new System.EventHandler(this.ButtonTurnOffBatchOrderControl_Click);
+            // 
+            // ButtonTurnAllOff
+            // 
+            this.ButtonTurnAllOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnAllOff.Location = new System.Drawing.Point(207, 373);
+            this.ButtonTurnAllOff.Name = "ButtonTurnAllOff";
+            this.ButtonTurnAllOff.Size = new System.Drawing.Size(116, 31);
+            this.ButtonTurnAllOff.TabIndex = 35;
+            this.ButtonTurnAllOff.Text = "Turn All Off";
+            this.ButtonTurnAllOff.UseVisualStyleBackColor = true;
+            this.ButtonTurnAllOff.Click += new System.EventHandler(this.ButtonTurnAllOff_Click);
+            // 
+            // ButtonTurnOffBatchDisplay
+            // 
+            this.ButtonTurnOffBatchDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOffBatchDisplay.Location = new System.Drawing.Point(156, 336);
+            this.ButtonTurnOffBatchDisplay.Name = "ButtonTurnOffBatchDisplay";
+            this.ButtonTurnOffBatchDisplay.Size = new System.Drawing.Size(92, 31);
+            this.ButtonTurnOffBatchDisplay.TabIndex = 35;
+            this.ButtonTurnOffBatchDisplay.Text = "Turn Off";
+            this.ButtonTurnOffBatchDisplay.UseVisualStyleBackColor = true;
+            this.ButtonTurnOffBatchDisplay.Click += new System.EventHandler(this.ButtonTurnOffBatchDisplay_Click);
+            // 
+            // ButtonTurnAllOn
+            // 
+            this.ButtonTurnAllOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnAllOn.Location = new System.Drawing.Point(70, 373);
+            this.ButtonTurnAllOn.Name = "ButtonTurnAllOn";
+            this.ButtonTurnAllOn.Size = new System.Drawing.Size(118, 31);
+            this.ButtonTurnAllOn.TabIndex = 37;
+            this.ButtonTurnAllOn.Text = "Turn All On";
+            this.ButtonTurnAllOn.UseVisualStyleBackColor = true;
+            this.ButtonTurnAllOn.Click += new System.EventHandler(this.ButtonTurnAllOn_Click);
+            // 
+            // ButtonTurnOnBatchOrderControl
+            // 
+            this.ButtonTurnOnBatchOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOnBatchOrderControl.Location = new System.Drawing.Point(455, 336);
+            this.ButtonTurnOnBatchOrderControl.Name = "ButtonTurnOnBatchOrderControl";
+            this.ButtonTurnOnBatchOrderControl.Size = new System.Drawing.Size(94, 31);
+            this.ButtonTurnOnBatchOrderControl.TabIndex = 36;
+            this.ButtonTurnOnBatchOrderControl.Text = "Turn On";
+            this.ButtonTurnOnBatchOrderControl.UseVisualStyleBackColor = true;
+            this.ButtonTurnOnBatchOrderControl.Click += new System.EventHandler(this.ButtonTurnOnBatchOrderControl_Click);
+            // 
+            // ButtonTurnOnBatchDisplay
+            // 
+            this.ButtonTurnOnBatchDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOnBatchDisplay.Location = new System.Drawing.Point(45, 336);
+            this.ButtonTurnOnBatchDisplay.Name = "ButtonTurnOnBatchDisplay";
+            this.ButtonTurnOnBatchDisplay.Size = new System.Drawing.Size(94, 31);
+            this.ButtonTurnOnBatchDisplay.TabIndex = 37;
+            this.ButtonTurnOnBatchDisplay.Text = "Turn On";
+            this.ButtonTurnOnBatchDisplay.UseVisualStyleBackColor = true;
+            this.ButtonTurnOnBatchDisplay.Click += new System.EventHandler(this.ButtonTurnOnBatchDisplay_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label9.Location = new System.Drawing.Point(265, 250);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(161, 20);
+            this.label9.TabIndex = 28;
+            this.label9.Text = "Batch Table Tester";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label12.Location = new System.Drawing.Point(254, 279);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(43, 20);
+            this.label12.TabIndex = 29;
+            this.label12.Text = "Text";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(451, 279);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(208, 20);
+            this.label14.TabIndex = 31;
+            this.label14.Text = "Batch Order Control Text";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(112, 279);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(73, 20);
+            this.label15.TabIndex = 32;
+            this.label15.Text = "Position";
+            // 
+            // TextBoxBatchOrderControlText
+            // 
+            this.TextBoxBatchOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBatchOrderControlText.Location = new System.Drawing.Point(472, 304);
+            this.TextBoxBatchOrderControlText.Name = "TextBoxBatchOrderControlText";
+            this.TextBoxBatchOrderControlText.Size = new System.Drawing.Size(159, 26);
+            this.TextBoxBatchOrderControlText.TabIndex = 26;
+            this.TextBoxBatchOrderControlText.Text = "123456";
+            this.TextBoxBatchOrderControlText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxBatchText
+            // 
+            this.TextBoxBatchText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBatchText.Location = new System.Drawing.Point(249, 304);
+            this.TextBoxBatchText.Name = "TextBoxBatchText";
+            this.TextBoxBatchText.Size = new System.Drawing.Size(56, 26);
+            this.TextBoxBatchText.TabIndex = 25;
+            this.TextBoxBatchText.Text = "21";
+            this.TextBoxBatchText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxBatchPosition
+            // 
+            this.TextBoxBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBatchPosition.Location = new System.Drawing.Point(116, 304);
+            this.TextBoxBatchPosition.Name = "TextBoxBatchPosition";
+            this.TextBoxBatchPosition.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxBatchPosition.TabIndex = 27;
+            this.TextBoxBatchPosition.Text = "1";
+            this.TextBoxBatchPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ComboBoxButtonOffTime
             // 
@@ -6485,7 +6691,7 @@
             "300",
             "400",
             "500"});
-            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(475, 365);
+            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(491, 470);
             this.ComboBoxButtonOffTime.Name = "ComboBoxButtonOffTime";
             this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 28);
             this.ComboBoxButtonOffTime.TabIndex = 24;
@@ -6494,7 +6700,7 @@
             // 
             this.LabelButtonOffTime.AutoSize = true;
             this.LabelButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelButtonOffTime.Location = new System.Drawing.Point(333, 368);
+            this.LabelButtonOffTime.Location = new System.Drawing.Point(349, 473);
             this.LabelButtonOffTime.Name = "LabelButtonOffTime";
             this.LabelButtonOffTime.Size = new System.Drawing.Size(136, 20);
             this.LabelButtonOffTime.TabIndex = 23;
@@ -6513,7 +6719,7 @@
             "Magenta",
             "Orange",
             "White"});
-            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(474, 332);
+            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(490, 437);
             this.ComboBoxButtonColorTwo.Name = "ComboBoxButtonColorTwo";
             this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxButtonColorTwo.TabIndex = 22;
@@ -6522,7 +6728,7 @@
             // 
             this.ButtonColorTwo.AutoSize = true;
             this.ButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonColorTwo.Location = new System.Drawing.Point(320, 335);
+            this.ButtonColorTwo.Location = new System.Drawing.Point(336, 440);
             this.ButtonColorTwo.Name = "ButtonColorTwo";
             this.ButtonColorTwo.Size = new System.Drawing.Size(147, 20);
             this.ButtonColorTwo.TabIndex = 21;
@@ -6532,27 +6738,18 @@
             // 
             this.label10.BackColor = System.Drawing.Color.Black;
             this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label10.Location = new System.Drawing.Point(22, 310);
+            this.label10.Location = new System.Drawing.Point(22, 416);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(575, 1);
+            this.label10.Size = new System.Drawing.Size(675, 1);
             this.label10.TabIndex = 20;
-            // 
-            // label9
-            // 
-            this.label9.BackColor = System.Drawing.Color.Black;
-            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label9.Location = new System.Drawing.Point(22, 259);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(575, 1);
-            this.label9.TabIndex = 19;
             // 
             // LabelLine1
             // 
             this.LabelLine1.BackColor = System.Drawing.Color.Black;
             this.LabelLine1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LabelLine1.Location = new System.Drawing.Point(24, 163);
+            this.LabelLine1.Location = new System.Drawing.Point(24, 241);
             this.LabelLine1.Name = "LabelLine1";
-            this.LabelLine1.Size = new System.Drawing.Size(575, 1);
+            this.LabelLine1.Size = new System.Drawing.Size(675, 1);
             this.LabelLine1.TabIndex = 18;
             // 
             // ComboBoxButtonOnTime
@@ -6566,7 +6763,7 @@
             "300",
             "400",
             "500"});
-            this.ComboBoxButtonOnTime.Location = new System.Drawing.Point(180, 365);
+            this.ComboBoxButtonOnTime.Location = new System.Drawing.Point(196, 470);
             this.ComboBoxButtonOnTime.Name = "ComboBoxButtonOnTime";
             this.ComboBoxButtonOnTime.Size = new System.Drawing.Size(76, 28);
             this.ComboBoxButtonOnTime.TabIndex = 17;
@@ -6575,7 +6772,7 @@
             // 
             this.LabelButtonOnTime.AutoSize = true;
             this.LabelButtonOnTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelButtonOnTime.Location = new System.Drawing.Point(40, 368);
+            this.LabelButtonOnTime.Location = new System.Drawing.Point(56, 473);
             this.LabelButtonOnTime.Name = "LabelButtonOnTime";
             this.LabelButtonOnTime.Size = new System.Drawing.Size(134, 20);
             this.LabelButtonOnTime.TabIndex = 16;
@@ -6590,7 +6787,7 @@
             "Blue Flash Fast",
             "Blue Flash Slow",
             "Blue Solid"});
-            this.ComboBoxOrderControlButton.Location = new System.Drawing.Point(323, 404);
+            this.ComboBoxOrderControlButton.Location = new System.Drawing.Point(339, 509);
             this.ComboBoxOrderControlButton.Name = "ComboBoxOrderControlButton";
             this.ComboBoxOrderControlButton.Size = new System.Drawing.Size(178, 28);
             this.ComboBoxOrderControlButton.TabIndex = 15;
@@ -6608,7 +6805,7 @@
             "Magenta",
             "Orange",
             "White"});
-            this.ComboBoxButtonColorOne.Location = new System.Drawing.Point(180, 332);
+            this.ComboBoxButtonColorOne.Location = new System.Drawing.Point(196, 437);
             this.ComboBoxButtonColorOne.Name = "ComboBoxButtonColorOne";
             this.ComboBoxButtonColorOne.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxButtonColorOne.TabIndex = 15;
@@ -6616,9 +6813,9 @@
             // NumericUpDownBayId
             // 
             this.NumericUpDownBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NumericUpDownBayId.Location = new System.Drawing.Point(161, 80);
+            this.NumericUpDownBayId.Location = new System.Drawing.Point(38, 130);
             this.NumericUpDownBayId.Maximum = new decimal(new int[] {
-            4,
+            3,
             0,
             0,
             0});
@@ -6644,7 +6841,7 @@
             this.PanelBatchLightTesterTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.PanelBatchLightTesterTop.Location = new System.Drawing.Point(0, 0);
             this.PanelBatchLightTesterTop.Name = "PanelBatchLightTesterTop";
-            this.PanelBatchLightTesterTop.Size = new System.Drawing.Size(620, 62);
+            this.PanelBatchLightTesterTop.Size = new System.Drawing.Size(733, 62);
             this.PanelBatchLightTesterTop.TabIndex = 13;
             // 
             // LabelBatchLightTester
@@ -6657,87 +6854,98 @@
             this.LabelBatchLightTester.TabIndex = 8;
             this.LabelBatchLightTester.Text = "IPTI Configuration and Tester";
             // 
-            // ButtonClearAll
+            // ButtonBlastzoneClearAll
             // 
-            this.ButtonClearAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClearAll.Location = new System.Drawing.Point(156, 269);
-            this.ButtonClearAll.Name = "ButtonClearAll";
-            this.ButtonClearAll.Size = new System.Drawing.Size(309, 31);
-            this.ButtonClearAll.TabIndex = 11;
-            this.ButtonClearAll.Text = "Turn All Off by Bay Id";
-            this.ButtonClearAll.UseVisualStyleBackColor = true;
-            this.ButtonClearAll.Click += new System.EventHandler(this.ButtonClearAll_Click);
+            this.ButtonBlastzoneClearAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonBlastzoneClearAll.Location = new System.Drawing.Point(258, 162);
+            this.ButtonBlastzoneClearAll.Name = "ButtonBlastzoneClearAll";
+            this.ButtonBlastzoneClearAll.Size = new System.Drawing.Size(99, 31);
+            this.ButtonBlastzoneClearAll.TabIndex = 11;
+            this.ButtonBlastzoneClearAll.Text = "Clear All";
+            this.ButtonBlastzoneClearAll.UseVisualStyleBackColor = true;
+            this.ButtonBlastzoneClearAll.Click += new System.EventHandler(this.ButtonBlastzoneClearAll_Click);
             // 
-            // ButtonTurnOffOrderControl
+            // ButtonTurnOffBlastzoneOrderControl
             // 
-            this.ButtonTurnOffOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonTurnOffOrderControl.Location = new System.Drawing.Point(314, 218);
-            this.ButtonTurnOffOrderControl.Name = "ButtonTurnOffOrderControl";
-            this.ButtonTurnOffOrderControl.Size = new System.Drawing.Size(92, 31);
-            this.ButtonTurnOffOrderControl.TabIndex = 11;
-            this.ButtonTurnOffOrderControl.Text = "Turn Off";
-            this.ButtonTurnOffOrderControl.UseVisualStyleBackColor = true;
-            this.ButtonTurnOffOrderControl.Click += new System.EventHandler(this.ButtonTurnOffOrderControl_ClickAsync);
+            this.ButtonTurnOffBlastzoneOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOffBlastzoneOrderControl.Location = new System.Drawing.Point(557, 162);
+            this.ButtonTurnOffBlastzoneOrderControl.Name = "ButtonTurnOffBlastzoneOrderControl";
+            this.ButtonTurnOffBlastzoneOrderControl.Size = new System.Drawing.Size(92, 31);
+            this.ButtonTurnOffBlastzoneOrderControl.TabIndex = 11;
+            this.ButtonTurnOffBlastzoneOrderControl.Text = "Turn Off";
+            this.ButtonTurnOffBlastzoneOrderControl.UseVisualStyleBackColor = true;
+            this.ButtonTurnOffBlastzoneOrderControl.Click += new System.EventHandler(this.ButtonTurnOffBlastzoneOrderControl_Click);
             // 
-            // ButtonBatchLightTurnOff
+            // ButtonTurnOffBlastzoneDisplay
             // 
-            this.ButtonBatchLightTurnOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBatchLightTurnOff.Location = new System.Drawing.Point(314, 122);
-            this.ButtonBatchLightTurnOff.Name = "ButtonBatchLightTurnOff";
-            this.ButtonBatchLightTurnOff.Size = new System.Drawing.Size(92, 31);
-            this.ButtonBatchLightTurnOff.TabIndex = 11;
-            this.ButtonBatchLightTurnOff.Text = "Turn Off";
-            this.ButtonBatchLightTurnOff.UseVisualStyleBackColor = true;
-            this.ButtonBatchLightTurnOff.Click += new System.EventHandler(this.ButtonBatchLightTurnOff_Click);
+            this.ButtonTurnOffBlastzoneDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOffBlastzoneDisplay.Location = new System.Drawing.Point(151, 162);
+            this.ButtonTurnOffBlastzoneDisplay.Name = "ButtonTurnOffBlastzoneDisplay";
+            this.ButtonTurnOffBlastzoneDisplay.Size = new System.Drawing.Size(92, 31);
+            this.ButtonTurnOffBlastzoneDisplay.TabIndex = 11;
+            this.ButtonTurnOffBlastzoneDisplay.Text = "Turn Off";
+            this.ButtonTurnOffBlastzoneDisplay.UseVisualStyleBackColor = true;
+            this.ButtonTurnOffBlastzoneDisplay.Click += new System.EventHandler(this.ButtonTurnOffBlastzoneDisplay_Click);
             // 
-            // ButtonTurnOnOrderControl
+            // ButtonTurnOnBlastzoneOrderControl
             // 
-            this.ButtonTurnOnOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonTurnOnOrderControl.Location = new System.Drawing.Point(214, 218);
-            this.ButtonTurnOnOrderControl.Name = "ButtonTurnOnOrderControl";
-            this.ButtonTurnOnOrderControl.Size = new System.Drawing.Size(94, 31);
-            this.ButtonTurnOnOrderControl.TabIndex = 12;
-            this.ButtonTurnOnOrderControl.Text = "Turn On";
-            this.ButtonTurnOnOrderControl.UseVisualStyleBackColor = true;
-            this.ButtonTurnOnOrderControl.Click += new System.EventHandler(this.ButtonTurnOnOrderControl_ClickAsync);
+            this.ButtonTurnOnBlastzoneOrderControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOnBlastzoneOrderControl.Location = new System.Drawing.Point(455, 162);
+            this.ButtonTurnOnBlastzoneOrderControl.Name = "ButtonTurnOnBlastzoneOrderControl";
+            this.ButtonTurnOnBlastzoneOrderControl.Size = new System.Drawing.Size(94, 31);
+            this.ButtonTurnOnBlastzoneOrderControl.TabIndex = 12;
+            this.ButtonTurnOnBlastzoneOrderControl.Text = "Turn On";
+            this.ButtonTurnOnBlastzoneOrderControl.UseVisualStyleBackColor = true;
+            this.ButtonTurnOnBlastzoneOrderControl.Click += new System.EventHandler(this.ButtonTurnOnBlastzoneOrderControl_Click);
             // 
-            // ButtonBatchLightTurnOn
+            // ButtonTurnOnBlastzoneDisplay
             // 
-            this.ButtonBatchLightTurnOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBatchLightTurnOn.Location = new System.Drawing.Point(214, 122);
-            this.ButtonBatchLightTurnOn.Name = "ButtonBatchLightTurnOn";
-            this.ButtonBatchLightTurnOn.Size = new System.Drawing.Size(94, 31);
-            this.ButtonBatchLightTurnOn.TabIndex = 12;
-            this.ButtonBatchLightTurnOn.Text = "Turn On";
-            this.ButtonBatchLightTurnOn.UseVisualStyleBackColor = true;
-            this.ButtonBatchLightTurnOn.Click += new System.EventHandler(this.ButtonBatchLightTurnOn_ClickAsync);
+            this.ButtonTurnOnBlastzoneDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonTurnOnBlastzoneDisplay.Location = new System.Drawing.Point(40, 162);
+            this.ButtonTurnOnBlastzoneDisplay.Name = "ButtonTurnOnBlastzoneDisplay";
+            this.ButtonTurnOnBlastzoneDisplay.Size = new System.Drawing.Size(94, 31);
+            this.ButtonTurnOnBlastzoneDisplay.TabIndex = 12;
+            this.ButtonTurnOnBlastzoneDisplay.Text = "Turn On";
+            this.ButtonTurnOnBlastzoneDisplay.UseVisualStyleBackColor = true;
+            this.ButtonTurnOnBlastzoneDisplay.Click += new System.EventHandler(this.ButtonTurnOnBlastzoneDisplay_Click);
             // 
             // LabelOrderControlButton
             // 
             this.LabelOrderControlButton.AutoSize = true;
             this.LabelOrderControlButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOrderControlButton.Location = new System.Drawing.Point(131, 407);
+            this.LabelOrderControlButton.Location = new System.Drawing.Point(147, 512);
             this.LabelOrderControlButton.Name = "LabelOrderControlButton";
             this.LabelOrderControlButton.Size = new System.Drawing.Size(176, 20);
             this.LabelOrderControlButton.TabIndex = 9;
             this.LabelOrderControlButton.Text = "Order Control Button";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label11.Location = new System.Drawing.Point(294, 73);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(145, 20);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "Blastzone Tester";
             // 
             // LabelBatchLightQuantity
             // 
             this.LabelBatchLightQuantity.AutoSize = true;
             this.LabelBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelBatchLightQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(387, 83);
+            this.LabelBatchLightQuantity.Location = new System.Drawing.Point(301, 105);
             this.LabelBatchLightQuantity.Name = "LabelBatchLightQuantity";
-            this.LabelBatchLightQuantity.Size = new System.Drawing.Size(76, 20);
+            this.LabelBatchLightQuantity.Size = new System.Drawing.Size(43, 20);
             this.LabelBatchLightQuantity.TabIndex = 8;
-            this.LabelBatchLightQuantity.Text = "Quantity";
+            this.LabelBatchLightQuantity.Text = "Text";
             // 
             // LabelButtonColorOne
             // 
             this.LabelButtonColorOne.AutoSize = true;
             this.LabelButtonColorOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelButtonColorOne.Location = new System.Drawing.Point(26, 335);
+            this.LabelButtonColorOne.Location = new System.Drawing.Point(42, 440);
             this.LabelButtonColorOne.Name = "LabelButtonColorOne";
             this.LabelButtonColorOne.Size = new System.Drawing.Size(148, 20);
             this.LabelButtonColorOne.TabIndex = 9;
@@ -6747,7 +6955,7 @@
             // 
             this.LabelBayId.AutoSize = true;
             this.LabelBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBayId.Location = new System.Drawing.Point(95, 82);
+            this.LabelBayId.Location = new System.Drawing.Point(41, 105);
             this.LabelBayId.Name = "LabelBayId";
             this.LabelBayId.Size = new System.Drawing.Size(60, 20);
             this.LabelBayId.TabIndex = 9;
@@ -6757,51 +6965,51 @@
             // 
             this.LabelOrderControlText.AutoSize = true;
             this.LabelOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOrderControlText.Location = new System.Drawing.Point(150, 184);
+            this.LabelOrderControlText.Location = new System.Drawing.Point(434, 105);
             this.LabelOrderControlText.Name = "LabelOrderControlText";
-            this.LabelOrderControlText.Size = new System.Drawing.Size(156, 20);
+            this.LabelOrderControlText.Size = new System.Drawing.Size(241, 20);
             this.LabelOrderControlText.TabIndex = 9;
-            this.LabelOrderControlText.Text = "Order Control Text";
+            this.LabelOrderControlText.Text = "Blastzone Order Control Text";
             // 
             // LabelBatchPosition
             // 
             this.LabelBatchPosition.AutoSize = true;
             this.LabelBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBatchPosition.Location = new System.Drawing.Point(238, 83);
+            this.LabelBatchPosition.Location = new System.Drawing.Point(158, 105);
             this.LabelBatchPosition.Name = "LabelBatchPosition";
             this.LabelBatchPosition.Size = new System.Drawing.Size(73, 20);
             this.LabelBatchPosition.TabIndex = 9;
             this.LabelBatchPosition.Text = "Position";
             // 
-            // TextBoxOrderControlText
+            // TextBoxBlastzoneOrderControlText
             // 
-            this.TextBoxOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxOrderControlText.Location = new System.Drawing.Point(312, 181);
-            this.TextBoxOrderControlText.Name = "TextBoxOrderControlText";
-            this.TextBoxOrderControlText.Size = new System.Drawing.Size(159, 26);
-            this.TextBoxOrderControlText.TabIndex = 5;
-            this.TextBoxOrderControlText.Text = "123456";
-            this.TextBoxOrderControlText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxBlastzoneOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBlastzoneOrderControlText.Location = new System.Drawing.Point(472, 130);
+            this.TextBoxBlastzoneOrderControlText.Name = "TextBoxBlastzoneOrderControlText";
+            this.TextBoxBlastzoneOrderControlText.Size = new System.Drawing.Size(159, 26);
+            this.TextBoxBlastzoneOrderControlText.TabIndex = 5;
+            this.TextBoxBlastzoneOrderControlText.Text = "123456";
+            this.TextBoxBlastzoneOrderControlText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxBatchLightQuantity
+            // TextBoxBlastzoneText
             // 
-            this.TextBoxBatchLightQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxBatchLightQuantity.Location = new System.Drawing.Point(469, 80);
-            this.TextBoxBatchLightQuantity.Name = "TextBoxBatchLightQuantity";
-            this.TextBoxBatchLightQuantity.Size = new System.Drawing.Size(56, 26);
-            this.TextBoxBatchLightQuantity.TabIndex = 4;
-            this.TextBoxBatchLightQuantity.Text = "21";
-            this.TextBoxBatchLightQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxBlastzoneText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBlastzoneText.Location = new System.Drawing.Point(295, 130);
+            this.TextBoxBlastzoneText.Name = "TextBoxBlastzoneText";
+            this.TextBoxBlastzoneText.Size = new System.Drawing.Size(56, 26);
+            this.TextBoxBlastzoneText.TabIndex = 4;
+            this.TextBoxBlastzoneText.Text = "21";
+            this.TextBoxBlastzoneText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TextBoxBatchLightPosition
+            // TextBoxBlastzoneDisplay
             // 
-            this.TextBoxBatchLightPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxBatchLightPosition.Location = new System.Drawing.Point(317, 80);
-            this.TextBoxBatchLightPosition.Name = "TextBoxBatchLightPosition";
-            this.TextBoxBatchLightPosition.Size = new System.Drawing.Size(62, 26);
-            this.TextBoxBatchLightPosition.TabIndex = 5;
-            this.TextBoxBatchLightPosition.Text = "1";
-            this.TextBoxBatchLightPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxBlastzoneDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxBlastzoneDisplay.Location = new System.Drawing.Point(162, 130);
+            this.TextBoxBlastzoneDisplay.Name = "TextBoxBlastzoneDisplay";
+            this.TextBoxBlastzoneDisplay.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxBlastzoneDisplay.TabIndex = 5;
+            this.TextBoxBlastzoneDisplay.Text = "1";
+            this.TextBoxBlastzoneDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelFormTitle
             // 
@@ -6847,19 +7055,17 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // CheckBoxPrintPreviewTesting
+            // RadioButtonClientConnected
             // 
-            this.CheckBoxPrintPreviewTesting.AutoSize = true;
-            this.CheckBoxPrintPreviewTesting.Checked = true;
-            this.CheckBoxPrintPreviewTesting.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckBoxPrintPreviewTesting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPrintPreviewTesting.Location = new System.Drawing.Point(581, 72);
-            this.CheckBoxPrintPreviewTesting.Name = "CheckBoxPrintPreviewTesting";
-            this.CheckBoxPrintPreviewTesting.Size = new System.Drawing.Size(202, 20);
-            this.CheckBoxPrintPreviewTesting.TabIndex = 55;
-            this.CheckBoxPrintPreviewTesting.Text = "Use Print Preview For Testing";
-            this.CheckBoxPrintPreviewTesting.UseVisualStyleBackColor = true;
-            this.CheckBoxPrintPreviewTesting.CheckedChanged += new System.EventHandler(this.CheckBoxUseLoftwareFile_CheckedChanged);
+            this.RadioButtonClientConnected.AutoSize = true;
+            this.RadioButtonClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RadioButtonClientConnected.Location = new System.Drawing.Point(505, 70);
+            this.RadioButtonClientConnected.Name = "RadioButtonClientConnected";
+            this.RadioButtonClientConnected.Size = new System.Drawing.Size(170, 20);
+            this.RadioButtonClientConnected.TabIndex = 38;
+            this.RadioButtonClientConnected.TabStop = true;
+            this.RadioButtonClientConnected.Text = "Interface Box Connected";
+            this.RadioButtonClientConnected.UseVisualStyleBackColor = true;
             // 
             // FrmUtilities
             // 
@@ -7443,12 +7649,12 @@
         private System.Windows.Forms.Panel PanelBatchLightTesterBottom;
         private System.Windows.Forms.Panel PanelBatchLightTesterTop;
         private System.Windows.Forms.Label LabelBatchLightTester;
-        private System.Windows.Forms.Button ButtonBatchLightTurnOff;
-        private System.Windows.Forms.Button ButtonBatchLightTurnOn;
+        private System.Windows.Forms.Button ButtonTurnOffBlastzoneDisplay;
+        private System.Windows.Forms.Button ButtonTurnOnBlastzoneDisplay;
         private System.Windows.Forms.Label LabelBatchLightQuantity;
         private System.Windows.Forms.Label LabelBatchPosition;
-        private System.Windows.Forms.TextBox TextBoxBatchLightQuantity;
-        private System.Windows.Forms.TextBox TextBoxBatchLightPosition;
+        private System.Windows.Forms.TextBox TextBoxBlastzoneText;
+        private System.Windows.Forms.TextBox TextBoxBlastzoneDisplay;
         private System.Windows.Forms.GroupBox GroupBoxLoftwareInformation;
         private System.Windows.Forms.CheckBox CheckBoxUseLoftwareFile;
         private System.Windows.Forms.TextBox TextBoxLoftwareFilePath;
@@ -7468,16 +7674,15 @@
         private System.Windows.Forms.NumericUpDown NumericUpDownBayId;
         private System.Windows.Forms.Label LabelBayId;
         private System.Windows.Forms.Label LabelOrderControlText;
-        private System.Windows.Forms.TextBox TextBoxOrderControlText;
-        private System.Windows.Forms.Button ButtonClearAll;
-        private System.Windows.Forms.Button ButtonTurnOnOrderControl;
-        private System.Windows.Forms.Button ButtonTurnOffOrderControl;
+        private System.Windows.Forms.TextBox TextBoxBlastzoneOrderControlText;
+        private System.Windows.Forms.Button ButtonBlastzoneClearAll;
+        private System.Windows.Forms.Button ButtonTurnOnBlastzoneOrderControl;
+        private System.Windows.Forms.Button ButtonTurnOffBlastzoneOrderControl;
         private System.Windows.Forms.ComboBox ComboBoxButtonOnTime;
         private System.Windows.Forms.Label LabelButtonOnTime;
         private System.Windows.Forms.ComboBox ComboBoxButtonColorOne;
         private System.Windows.Forms.Label LabelButtonColorOne;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label LabelLine1;
         private MetroFramework.Controls.MetroButton ButtonSaveIptiConfig;
         private System.Windows.Forms.ComboBox ComboBoxOrderControlButton;
@@ -7487,5 +7692,22 @@
         private System.Windows.Forms.ComboBox ComboBoxButtonOffTime;
         private System.Windows.Forms.Label LabelButtonOffTime;
         private System.Windows.Forms.CheckBox CheckBoxPrintPreviewTesting;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button ButtonClearBatch;
+        private System.Windows.Forms.Button ButtonTurnOffBatchOrderControl;
+        private System.Windows.Forms.Button ButtonTurnOffBatchDisplay;
+        private System.Windows.Forms.Button ButtonTurnOnBatchOrderControl;
+        private System.Windows.Forms.Button ButtonTurnOnBatchDisplay;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox TextBoxBatchOrderControlText;
+        private System.Windows.Forms.TextBox TextBoxBatchText;
+        private System.Windows.Forms.TextBox TextBoxBatchPosition;
+        private System.Windows.Forms.Button ButtonTurnAllOff;
+        private System.Windows.Forms.Button ButtonTurnAllOn;
+        private System.Windows.Forms.CheckBox CheckBoxAutoLoadReplenishments;
+        private System.Windows.Forms.RadioButton RadioButtonClientConnected;
     }
 }

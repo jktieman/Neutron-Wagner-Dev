@@ -19,6 +19,7 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronData.Repositories;
 using NeutronEvents;
+using MyDataReceivedEventArgs = Neutron.Models.MyDataReceivedEventArgs;
 
 
 namespace Neutron.Controllers
@@ -33,7 +34,7 @@ namespace Neutron.Controllers
         private const string TurnAllOn06 = "06";
         private const string TurnAllOff07 = "07";
 
-        private TcpIptiCommandCenter _tcpIptiCommandCenter;
+        // private TcpIptiCommandCenter _tcpIptiCommandCenter;
 
 
         public CancellationTokenSource Token = new CancellationTokenSource();
@@ -102,7 +103,7 @@ namespace Neutron.Controllers
                     ReceivedBlockingCollection)
             { Transmit = false };
 
-            _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger);
+            //_tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView );
 
             IptiControllerInit();
         }
@@ -115,8 +116,12 @@ namespace Neutron.Controllers
 
             if (_transmitter.IsClientConnected)
             {
-            _transmitter.SendData(text);
-}
+                _transmitter.SendData(text);
+            }
+            else
+            {
+                MessageBox.Show($"Interface Client is Not Connected.");
+            }
             _ = _logger.LogDetailAsync($"IPTI Controller - SendText - END");
         }
 
@@ -274,15 +279,15 @@ namespace Neutron.Controllers
         }
         public void ShowBli(Ipti_BLI bli)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - START");
-            if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"Ipti BLI-Show:  BayController: {bli.BLI_BayController}  Address: {bli.BLI_Address} " +
-                                       $"Text: {bli.BLI_Text}");
-            var cmd = _tcpIptiCommandCenter.TurnOnDisplay(bli.BLI_BayController, bli.BLI_Address, bli.BLI_Text);
+            //_ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - START");
+            //if (!_bliEnabled) return;
+            //_ = _logger.LogDetailAsync($"Ipti BLI-Show:  BayController: {bli.BLI_BayController}  Address: {bli.BLI_Address} " +
+            //                           $"Text: {bli.BLI_Text}");
+            //var cmd = _tcpIptiCommandCenter.TurnOnDisplay(bli.BLI_BayController, bli.BLI_Address, bli.BLI_Text);
 
-            _transmitter.SendData(cmd);
-            // await _transmitter.SendData(bli.TurnOn);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - END");
+            //_transmitter.SendData(cmd);
+            //// await _transmitter.SendData(bli.TurnOn);
+            //_ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - END");
         }
         public void ClearOcAsync(int bayControllerId, int address)
         {
@@ -408,6 +413,7 @@ namespace Neutron.Controllers
         }
         public void IptiControllerInit()
         {
+            _ = _logger.LogDetailAsync($"Begin Init Controller");
             var loggingMessage = string.Empty;
 
             var displayDevice = _hardwareDevice;

@@ -30,7 +30,7 @@
             Arrows = "0";
             LedState = "4";
         }
-        
+
         /// <summary>
         /// Gets the unique identifier for the Micro IPTI display.
         /// </summary>
@@ -44,10 +44,30 @@
         /// </summary>
         /// <param name="quantity">The quantity to be displayed on the Micro IPTI display.</param>
         /// <returns>A string representing the state of the Micro IPTI display after being turned on.</returns>
-        public override string TurnOn(string quantity) =>  TurnOnCommand + DisplayId
-                                                       + LedState + AStateColor + OnTime
-                                                       + BStateColor + OffTime + ButtonControl + Arrows 
-                                                       + quantity.PadLeft(2, '0');
+        public override string TurnOn(string quantity)
+        {
+            if (quantity.Length > 2)
+            {
+                quantity = "00";
+            }
+            return TurnOnCommand + DisplayId
+                                 + LedState + AStateColor + OnTime
+                                 + BStateColor + OffTime + ButtonControl + Arrows
+                                 + quantity.PadLeft(2, '0');
+        }
+
+        public override string TurnOnEnd()
+        {
+            var aColor = "1";
+            var bColor = "1";
+            var quantity = "00";
+
+            return TurnOnCommand + DisplayId
+                                 + LedState + aColor + OnTime
+                                 + bColor + OffTime + ButtonControl + Arrows
+                                 + quantity.PadLeft(2, '0');
+        }
+
         /// <summary>
         /// Turns off the Micro IPTI display.
         /// </summary>

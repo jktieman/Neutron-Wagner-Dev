@@ -6,6 +6,12 @@ namespace NeutronData.ModelViews
 {
     public class ReplenPickView
     {
+        public ReplenPickView()
+        {
+            Inventory = new List<Inventory>();
+            Images = new List<ItemImage>();
+            PickLocations = new List<PickLocation>();
+        }
         public int Sequence { get; set; }
         public int PickPosition { get; set; }
         public int OrderId { get; set; }
@@ -17,6 +23,7 @@ namespace NeutronData.ModelViews
         public string Description { get; set; }
         public string UnitOfIssue { get; set; }
         public int Quantity { get; set; }
+        public int QuantityThisPick { get; set; }
         public int QuantityToBePicked { get; set; }
         public int PickedQty { get; set; }
         public string Slot { get; set; }
@@ -30,7 +37,7 @@ namespace NeutronData.ModelViews
         public List<PickLocation> PickLocations { get; set; } = [];
         public DateTime ReceivedDate { get; set; }
         public int AreaId { get; set; }
-
+        public int PreviousLineStatusId { get; set; }
         public int GetQuantityToBePicked()
         {
             int result = Quantity - PickedQty;

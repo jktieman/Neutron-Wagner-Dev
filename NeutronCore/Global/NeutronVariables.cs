@@ -35,6 +35,7 @@
         public bool UsePr1StyleOutputProcessor = false;
         public string FieldDelimiter = @"|";
         public bool AutoEnlargeImage { get; set; }
+        public bool AutoLoadReplenishments { get; set; }
         public bool IptiDisplays { get; set; }
         public bool LoadRackOrders { get; set; }
         public bool SerialPicking { get; set; }

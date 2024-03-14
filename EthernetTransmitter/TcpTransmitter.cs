@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronCore.Extensions;
 using NeutronCore.StaticClasses;
+using NeutronEvents;
 using SuperSimpleTcp;
+using AsyncAwaitBestPractices;
+
 
 namespace EthernetTransmitter
 {
@@ -19,7 +25,9 @@ namespace EthernetTransmitter
     /// </remarks>
     public class TcpTransmitter
     {
-       
+        private readonly string _ipAddress;
+        private readonly int _port;
+
         public string ClientIpPort;
         /// <summary>
         /// Gets a value indicating whether a client is currently connected to the TCP transmitter.
@@ -32,9 +40,11 @@ namespace EthernetTransmitter
         /// </remarks>
         public bool IsClientConnected;
 
-        private readonly SimpleTcpServer _server;
+        private string _currentCommand;
 
-        private readonly IDynamicLogger _logger;
+        private SimpleTcpServer _server;
+
+        private IDynamicLogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TcpTransmitter"/> class.
@@ -49,27 +59,48 @@ namespace EthernetTransmitter
         /// </remarks>
         public TcpTransmitter(string ipAddress, int port)
         {
-            _logger = NeutronCore.Global.Logger.SetupLogger("TcpTransmitter");
+            _ipAddress = ipAddress;
+            _port = port;
 
-            if (string.IsNullOrWhiteSpace(ipAddress))
-                throw new ArgumentException("IP address cannot be null or whitespace.", nameof(ipAddress));
-            if (port == 0)
-                throw new ArgumentException("Port cannot be zero.", nameof(port));
+            Init();
+        }
+
+        private void Init()
+        {
             _logger = NeutronCore.Global.Logger.SetupLogger("TcpTransmitter");
+            _currentCommand = string.Empty;
+
+
+
+            if (string.IsNullOrWhiteSpace(_ipAddress))
+                throw new ArgumentException("IP address cannot be null or whitespace.", nameof(_ipAddress));
+
+            _logger.LogDetailAsync($"IP address cannot be null or whitespace. {nameof(_ipAddress)}").SafeFireAndForget();
+            if (_port == 0)
+                throw new ArgumentException("Port cannot be zero.", nameof(_port));
+
+            _logger.LogDetailAsync($"Port cannot be zero. {nameof(_ipAddress)}").SafeFireAndForget();
             try
             {
-                _logger.LogDetailAsync($"Startup: {ipAddress}:{port}").Wait();
-                _server = new SimpleTcpServer(ipAddress, port);
+                _logger.LogDetailAsync($"Startup: {_ipAddress}:{_port}").SafeFireAndForget();
+
+                _server = new SimpleTcpServer(_ipAddress, _port);
                 _server.Events.ClientConnected += Events_ClientConnected;
                 _server.Events.ClientDisconnected += Events_ClientDisconnected;
                 _server.Events.DataReceived += Events_DataReceived;
                 _server.Events.DataSent += Events_DataSent;
                 _server.Start();
+
+                //if (_server.IsListening)
+                //{
+                //    MonitorIsClientConnected();    
+                //}
+
             }
+
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Startup: {ex.Message}").Wait();
-              //   throw; rethrow the exception after logging it
+                _logger.LogDetailAsync($"Startup Exception: {ex.Message}").SafeFireAndForget();
             }
         }
 
@@ -87,7 +118,7 @@ namespace EthernetTransmitter
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"{ex}");
+                _logger.LogDetailAsync($"{ex}").SafeFireAndForget();
             }
         }
 
@@ -95,11 +126,11 @@ namespace EthernetTransmitter
         {
             try
             {
-                await _logger.LogDetailAsync($"Data Sent: {e.BytesSent}");
+                _logger.LogDetailAsync($"Data Sent: {e.BytesSent}").SafeFireAndForget();
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Exception in Events_DataSent: {ex}");
+                _logger.LogDetailAsync($"Exception in Events_DataSent: {ex}").SafeFireAndForget();
             }
         }
         /// <summary>
@@ -117,9 +148,9 @@ namespace EthernetTransmitter
             var data = e.Data.ToArray();
             var text = Encoding.UTF8.GetString(data);
 
-            await _logger.LogDetailAsync($"IP Port: [{e.IpPort}]  Data: {text}");
+            _logger.LogDetailAsync($"IP Port: [{e.IpPort}]  Data: {text}").SafeFireAndForget();
 
-            ProcessDataReceived(text);
+            await ProcessDataReceived(text);
         }
         /// <summary>
         /// Processes the received data from the TCP connection.
@@ -131,115 +162,212 @@ namespace EthernetTransmitter
         /// This method checks for specific patterns in the received data and responds accordingly.
         /// It logs the details of the received data and sends an acknowledgement if necessary.
         /// </remarks>
-        private void ProcessDataReceived(string text)
+        private async Task ProcessDataReceived(string text)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            var character = ControlCharacters.ACK;  //  '\x06'; // instead of Convert.ToChar(6)
-
-            var index = text.IndexOf(character);
-            if (index != -1)
-            {
-                _ = _logger.LogDetailAsync($"ACK INDEX: {index}");
-            }
-
-            _ = _logger.LogDetailAsync($"ProcessDataReceived TEXT: {text}  LENGTH: {text.Length}");
-
-            if (text.Length >= 7)
-            {
-                var command = text.Substring(1, 6);
-
-                if (text.Contains("OC"))
-                {
-                    _ = _logger.LogDetailAsync($"Text Contains OC Send Response Command: {command}");
-                    SendAck(command);
-                }
-
-                if (text.Contains("33") && text.Length > 10)
-                {
-                    _ = _logger.LogDetailAsync($"Text Contains 33 Send Response Command: {command}");
-                    SendAck(command);
-                }
-            }
-        }
-
-        private void Events_ClientDisconnected(object sender, ConnectionEventArgs e)
-        {
-            _ = _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Disconnected Reason: {e.Reason}");
-            IsClientConnected = false;
-        }
-
-        private void Events_ClientConnected(object sender, ConnectionEventArgs e)
-        {
-            ClientIpPort = e.IpPort;
-            _ = _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Connected -- Disconnect Reason: {e.Reason}");
-            IsClientConnected = true;
-        }
-
-        public void SendData(string value)
-        {
+            var now = DateTime.Now;
+            _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED TEXT: {text}").SafeFireAndForget();
+            if (string.IsNullOrEmpty(text)) return;
 
             try
             {
-                // once a client has connected...
-                var command = new Put2LightCommand().GetCommand(value);
-                _ = _logger.LogDetailAsync($"SEND DATA SEND DATA SEND DATA COMMAND: {command}");
+                _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED _currentCommand Value = text: {_currentCommand} = {text}").SafeFireAndForget();
 
-                if (_server.IsListening)
+                if (!string.IsNullOrEmpty(_currentCommand))
                 {
-                    if (IsClientConnected)
+                    if (text.Contains(_currentCommand))
                     {
-                        _server.SendAsync(ClientIpPort, command);
-                        // await Task to let the displays turn on before sending the next command
-                        //await Task.Delay(100);
-                        _ = _logger.LogDetailAsync($"SendData Command: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}");
+                        _currentCommand = string.Empty;
+                    }
+                }
+
+                now = DateTime.Now;
+
+                _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED _currentCommand Value: {_currentCommand}").SafeFireAndForget();
+
+                //var character = ControlCharacters.ACK;  //  '\x06'; // instead of Convert.ToChar(6)
+
+                //var index = text.IndexOf(character);
+                //if (index != -1)
+                //{
+                //    await _logger.LogDetailAsync($"ACK INDEX: {index}");
+                //}
+
+                //await _logger.LogDetailAsync($"ProcessDataReceived TEXT: {text}  LENGTH: {text.Length}");
+
+                //if (text.Length >= 7)
+                //{
+                //    var command = text.Substring(1, 4);
+
+                //    if (text.Contains("OC"))
+                //    {
+                //        await _logger.LogDetailAsync($"Text Contains OC Send Response Command: {command}");
+                //        await SendAck(command);
+                //    }
+
+                //    if (text.Contains("33") && text.Length > 10)
+                //    {
+                //        await _logger.LogDetailAsync($"Text Contains 33 Send Response Command: {command}");
+                //        await SendAck(command);
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Exception: {ex.Message}").SafeFireAndForget();
+                Mediator.GetInstance().OnGeneralError(this, $"Error Processing Received Data: {Environment.NewLine}{ex.Message}");
+            }
+        }
+
+        private async void Events_ClientDisconnected(object sender, ConnectionEventArgs e)
+        {
+            _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Disconnected Reason: {e.Reason}").SafeFireAndForget();
+            IsClientConnected = false;
+            Mediator.GetInstance().OnTransmitStateChanged(this, false);
+        }
+
+        private async void Events_ClientConnected(object sender, ConnectionEventArgs e)
+        {
+            ClientIpPort = e.IpPort;
+            _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Connected -- Disconnect Reason: {e.Reason}").SafeFireAndForget();
+            IsClientConnected = true;
+            Mediator.GetInstance().OnTransmitStateChanged(this, true);
+        }
+
+        public async Task SendDataAsync(string value, bool isAck = false)
+        {
+            var timeOut = 200;
+            var counter = 0;
+            _logger.LogDetailAsync($"Send Data Value: {value}").SafeFireAndForget();
+            try
+            {
+                while (true)
+                {
+                    if (string.IsNullOrEmpty(_currentCommand))
+                    {
+                        // once a client has connected...
+
+                        var command = new Put2LightCommand().GetCommand(value);
+                        _currentCommand = SetCurrentCommand(value);
+                        _logger.LogDetailAsync($"PROCESS DATA RECEIVED Put2LightCommand: {command}")
+                            .SafeFireAndForget();
+
+                        // NO ACK as of 03/07/2024
+                        //  Will need ACK processing when push buttons are enabled
+
+                        //if (isAck)
+                        //{
+                        //    command = new Put2LightCommand().GetAck(value);
+                        //    _currentCommand = string.Empty;
+                        //    _ = _logger.LogDetailAsync($"Send ACK: {command}{Environment.NewLine}");
+                        //}
+                        //else
+                        //{
+                        //    command = new Put2LightCommand().GetCommand(value);
+                        //    _currentCommand = SetCurrentCommand(value);
+                        //    _ = _logger.LogDetailAsync($"PROCESS DATA RECEIVED Put2LightCommand: {command}");
+                        //}
+
+                        if (_server.IsListening)
+                        {
+                            _logger.LogDetailAsync($"Server is Listening: TRUE").SafeFireAndForget();
+
+                            if (IsClientConnected)
+                            {
+                                _logger.LogDetailAsync($"Client is Connected: TRUE  IP:PORT: {ClientIpPort}")
+                                    .SafeFireAndForget();
+                                await _server.SendAsync(ClientIpPort, command);
+
+                                _logger.LogDetailAsync(
+                                        $"SendData Command: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}")
+                                    .SafeFireAndForget();
+                            }
+                            else
+                            {
+                                _logger.LogDetailAsync($"Client is Connected: FALSE").SafeFireAndForget();
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogDetailAsync($"Server is Listening: FALSE").SafeFireAndForget();
+                        }
+                        break;
                     }
                     else
                     {
-                        _ = _logger.LogDetailAsync($"Client is NOT Connected.");
+                        var now = DateTime.Now;
+                        _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED _currentCommand Still has Value: {_currentCommand}.  New Command Value: {value}  -- Waiting 20MS").SafeFireAndForget();
+                        await Task.Delay(20);
+                        counter += 20;
+                        if (counter >= timeOut)
+                        {
+                            // Mediator.GetInstance().OnGeneralError(this, $"Display Number {_currentCommand} is not responding.");
+                            _currentCommand = string.Empty;
+                            now = DateTime.Now;
+                            _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED _currentCommand Still has Value: {_currentCommand}. Breaking Out of Process.").SafeFireAndForget();
+                           // break;
+                        }
                     }
-                }
-                else
-                {
-                    _ = _logger.LogDetailAsync($"Server is NOT Listening.");
+
+                    
                 }
             }
             catch (SocketException ex)
             {
-                _ = _logger.LogDetailAsync($"SendData SocketException: {ex.Message}");
+                _logger.LogDetailAsync($"SendData SocketException: {ex.Message}").SafeFireAndForget();
                 throw;
             }
-            catch (IOException ex)  
+            catch (IOException ex)
             {
-                _ = _logger.LogDetailAsync($"SendData IOException: {ex.Message}");
+                _logger.LogDetailAsync($"SendData IOException: {ex.Message}").SafeFireAndForget();
                 throw;
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"SendData Exception: {ex.Message}");
-                    throw;
+                _logger.LogDetailAsync($"SendData Exception: {ex.Message}").SafeFireAndForget();
+                throw;
             }
-            _ = _logger.LogDetailAsync($"SendData END");
+            _logger.LogDetailAsync($"Send Data END").SafeFireAndForget();
         }
 
-        private void SendAck(string cmd)
+        private string SetCurrentCommand(string value)
         {
-            _ = _logger.LogDetailAsync($"Send ACK: {cmd}");
-            
-            var command = new Put2LightCommand().GetAck(cmd);
-            
-            _ = _logger.LogDetailAsync($"Send ACK: {command}{Environment.NewLine}");
+            var currentCommand = string.Empty;
+            if (value.Length < 6) return currentCommand;
 
-            if (_server != null && ClientIpPort != null)
+            var now = DateTime.Now;
+            _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED SETCURRENTCOMMAND IN_VALUE: {value}").SafeFireAndForget();
+
+            if (value.Substring(2, 2) == "14"
+                || value.Substring(2, 2) == "27"
+                || value.Substring(2, 2) == "10")
             {
-                _server.SendAsync(ClientIpPort, command);
+                currentCommand = value.Substring(0, 4);
+            }
+            else
+            {
+                currentCommand = value.Substring(0, 6);
             }
 
-            _ = _logger.LogDetailAsync($"Send ACK: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}");
+            now = DateTime.Now;
+            _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED SETCURRENTCOMMAND OUT_VALUE: {currentCommand}").SafeFireAndForget();
+            return currentCommand;
         }
 
+        private async Task SendAck(string cmd)
+        {
+            _logger.LogDetailAsync($"Send ACK: {cmd}").SafeFireAndForget();
+
+            await SendDataAsync(cmd, true);
+        }
+
+        private async Task MonitorIsClientConnected()
+        {
+            while (_server.IsListening)
+            {
+                // Simulate some work or condition to check the variable
+                Thread.Sleep(5000);
+                Mediator.GetInstance().OnIsClientConnected(this, IsClientConnected);
+            }
+        }
     }
 }

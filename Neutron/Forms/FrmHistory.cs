@@ -406,9 +406,9 @@ namespace Neutron.Forms
             var toDate = _currentToDateTime;
             var codes = GetCodes();
             var findWhat = TextBoxFind.Text.Trim().ToLower();
-            var find = _akaRepository.Get(findWhat);
-            TextBoxFind.Text = find;
-            var history = _historyManager.GetHistoryRecords(codes, fromDate, toDate, find);
+            //var find = _akaRepository.Get(findWhat);
+            //TextBoxFind.Text = find;
+            var history = _historyManager.GetHistoryRecords(codes, fromDate, toDate, findWhat);
             _bindingSourceEquin = new BindingListView<HistoryView>(history);
             DataGridView1.DataSource = _bindingSourceEquin;
         }
@@ -614,6 +614,14 @@ namespace Neutron.Forms
         private void DateTimePickerTo_Enter(object sender, EventArgs e)
         {
             RadioButtonDateRange.Checked = true;
+        }
+
+        private void TextBoxFind_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                Run();
+            }
         }
     }
 }

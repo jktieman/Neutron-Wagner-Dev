@@ -41,6 +41,7 @@ namespace Neutron.Controllers
         {
             _previousTray = new int[10];
             _workstationView = workstationView ?? throw new ArgumentNullException(nameof(workstationView));
+            // FrmMain passed in
             _currentForm = frm;
 
             Init();
@@ -86,6 +87,14 @@ namespace Neutron.Controllers
                     if (serialConfiguration != null)
                     {
                         var deviceCount = _workstationView.Hanels.Count;
+                        // an int array that keeps track of the last tray on each Hanel
+                        // _previousTray[0] doesn't hold anything, it's just a filler so the
+                        // array element aligns with the Hanel Number
+                        //
+                        // _previousTray[1] may be Tray 12, 
+                        // _previousTray[2] may be Tray 2, 
+                        // _previousTray[3] may be Tray 24, 
+
                         _previousTray = new int[deviceCount + 1];
                         _notificationTimeOutSeconds = serialConfiguration.NotificationTimeout;
                         var simulationMode = firstDevice.SimulationMode;
@@ -256,18 +265,21 @@ namespace Neutron.Controllers
 
                             if (status.GoodStatus)
                             {
+                                status.TargetTray = trayNumber;
                                 loopCounter = 0;
                                 // Command Executed should indicate that the tray has arrived
                                 if (!status.InMotion)
                                 {
                                     if (status.CurrentTray != trayNumber)
                                     {
-                                        if (_previousTray[deviceNumber] != 0)
+                                        var previousTray = _previousTray[deviceNumber];
+                                        if (previousTray != 0)
                                         {
+                                            // here's where the CurrentTray should be the same as the previousTray
                                             if (status.CurrentTray != _previousTray[deviceNumber])
                                             {
                                                 Task.Run(() => _logger.LogDetailAsync($"Tray did NOT arrive."));
-                                                Task.Run(() => _logger.LogDetailAsync($"Status.Current_Tray: {status.CurrentTray}  Tray Number: {trayNumber}"));
+                                                Task.Run(() => _logger.LogDetailAsync($"Status.Current_Tray: {status.CurrentTray} Tray Number: {trayNumber}"));
                                                 Task.Run(() => _logger.LogDetailAsync($"PreviousTray: {_previousTray[deviceNumber]}"));
                                                 deviceResponse = DeviceResponse.TrayDidNotArrive;
                                                 _previousTray[deviceNumber] = 0;
@@ -284,9 +296,12 @@ namespace Neutron.Controllers
                                             deviceResponse = DeviceResponse.Success;
                                             _previousTray[deviceNumber] = trayNumber;
                                             
+
+                                           // status.TargetTray = trayNumber;
+                                            //status.CurrentTray = trayNumber;
                                             status.CommandExecuted = false;
                                             status.CommandAccepted = false;
-                                            status.InMotion = true;
+                                            status.InMotion = false;
                                             
                                             Task.Run(() => _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}"));
                                         }
@@ -411,11 +426,11 @@ namespace Neutron.Controllers
         {
             var msg = string.Empty;
             var deviceStatus = new HanelDeviceStatus();
-            _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!_hanel.Init_Success)
             {
-                _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
-                _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+                _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
+               _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
@@ -431,7 +446,7 @@ namespace Neutron.Controllers
                 if (myDeviceStatusList.Any())
                 {
                     // At this point, you have current status for every device in your list
-                    _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
+                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
 
                     deviceStatus = myDeviceStatusList.FirstOrDefault(item => item.Device == deviceNumber);
                     if (deviceStatus != null)
@@ -452,11 +467,11 @@ namespace Neutron.Controllers
 
                     }
 
-                    _ = _logger.LogDetailAsync(msg);
+                    _logger.LogDetailAsync(msg);
                 }
                 else
                 {
-                    _ = _logger.LogDetailAsync("Get Device Status request aborted...");
+                    _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
 

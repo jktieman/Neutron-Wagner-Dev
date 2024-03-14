@@ -63,6 +63,7 @@
     <Compile Include="Builders\Rules\A12_Rules\A12E01MatchRule.cs" />
     <Compile Include="Builders\Rules\A12_Rules\A12E02MatchRule.cs" />
     <Compile Include="Builders\Rules\A12_Rules\A12MatchRule.cs" />
+    <Compile Include="Builders\Rules\A20_Rules\A20E96MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\A20E00MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\A20E01MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\A20E02MatchRule.cs" />
@@ -114,6 +115,10 @@
     <ProjectReference Include="..\..\..\..\VS2022\Projects\Neutron-Wagner-Dev\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
+      <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
+      <Name>NeutronEvents</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

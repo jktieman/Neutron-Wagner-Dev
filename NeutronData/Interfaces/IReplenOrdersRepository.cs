@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Neutron.Models;
 using NeutronData.Models;
+using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 
 namespace NeutronData.Interfaces
@@ -8,6 +9,9 @@ namespace NeutronData.Interfaces
     public interface IReplenOrdersRepository
     {
         ReplenOrder GetOrder(int id);
+        IEnumerable<SizeCode> GetSizeCodesByArea(int areaId);
+        IEnumerable<VelocityCode> GetVelocityCodesByArea(int areaId);
+        IEnumerable<HeightCode> GetHeightCodesByArea(int areaId);
         List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField);
         IEnumerable<ReplenOrderView> GetReplenOrderViews(string orderStatus, string searchField);
         IEnumerable<ReplenOrderView> GetOrderView();
@@ -22,5 +26,9 @@ namespace NeutronData.Interfaces
         IEnumerable<ReplenOrderView> GetRackOrders(string search);
         IEnumerable<RackReplenOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
         ReplenOrder GetOrderAndOrderDetails(int orderId, int areaId);
+        IEnumerable<ReplenOrderView> GetAvailableReplenOrderViews(string orderStatus, string findWhat);
+        IEnumerable<ReplenOrderView> GetReplenStoreOrderViews(string orderStatus, string searchfield);
+        IEnumerable<ReplenOrderView> GetPutawayOrderViews(string orderStatus, string searchField);
+        IEnumerable<ReplenOrderView> GetCompletedReplenOrderViews(string orderStatus = "6", string searchField = "");
     }
 }

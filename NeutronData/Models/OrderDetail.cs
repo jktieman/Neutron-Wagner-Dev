@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NeutronData.Models
 {
-    public class OrderDetail : IHostOrder, IEntity
+    public class OrderDetail : IHostOrder, IEntity, IOrderDetail
     {
         public int Id { get; set; }
         public int OrderId {get; set; }

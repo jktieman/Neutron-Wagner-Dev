@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Neutron.Global;
 using NeutronCore;
@@ -73,12 +74,12 @@ namespace Neutron.Forms
             Close();
         }
 
-        private void ButtonSave_Click(object sender, EventArgs e)
+        private async void ButtonSave_Click(object sender, EventArgs e)
         {
-            UpdateLocation();
+           await UpdateLocation();
         }
 
-        private void UpdateLocation()
+        private async Task UpdateLocation()
         {
             var rec = _repoLocation.FindByKey(_location.Id);
 
@@ -96,7 +97,7 @@ namespace Neutron.Forms
             rec.LocationCode = TextBoxViewEditLocationCode.Text;
             rec.InUse = CheckBoxViewEditInUse.Checked;
             _repoLocation.Update(rec);
-            _historyManager.SaveHistoryAsync(ActionCode.LocationModify, rec);
+           await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, rec);
             _location = rec;
         }
 

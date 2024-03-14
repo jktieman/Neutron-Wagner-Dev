@@ -12,6 +12,7 @@ namespace HanelCommands.Builders.A_Processors
             new A20E00MatchRule(),
             new A20E01MatchRule(),
             new A20E02MatchRule(),
+            new A20E96MatchRule(),
         };
 
         public void Process(string[] commandSegments, ref List<HanelDeviceStatus> hanelDeviceStatusList)

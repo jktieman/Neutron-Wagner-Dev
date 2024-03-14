@@ -409,10 +409,10 @@ namespace Neutron.Forms
         {
             tabControl1.SelectedTab = Listing;
         }
-        private void MbViewEditSave_Click(object sender, EventArgs e)
+        private async void MbViewEditSave_Click(object sender, EventArgs e)
         {
             MbViewEditSave.Enabled = false;
-            UpdateViewEdit();
+           await UpdateViewEdit();
             MbViewEditSave.Enabled = true;
         }
         private void MbNewListing_Click(object sender, EventArgs e)
@@ -423,10 +423,10 @@ namespace Neutron.Forms
         {
             tabControl1.SelectedTab = ViewEdit;
         }
-        private void MbNewSave_Click(object sender, EventArgs e)
+        private async void MbNewSave_Click(object sender, EventArgs e)
         {
             MbNewSave.Enabled = false;
-            SaveNew();
+           await SaveNew();
             MbNewSave.Enabled = true;
         }
         private void MbNewClose_Click(object sender, EventArgs e)
@@ -437,7 +437,7 @@ namespace Neutron.Forms
         /// <summary>
         /// Save a New Item Definition
         /// </summary>
-        private  void SaveNew()
+        private async Task SaveNew()
         {
 
             if (!string.IsNullOrEmpty(TextBoxNewItem.Text.Trim()))
@@ -491,8 +491,8 @@ namespace Neutron.Forms
                         };
                         try
                         {
-                             _repoItemDefinition.InsertAsync(rec);
-                            _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
+                            await _repoItemDefinition.InsertAsync(rec);
+                           await _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
                         }
                         catch (Exception ex)
                         {
@@ -516,7 +516,7 @@ namespace Neutron.Forms
                 MessageBox.Show(_resourceManager.GetString("Message3"));
             }
         }
-        private void UpdateViewEdit()
+        private async Task UpdateViewEdit()
         {
 
             var id = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object.Id;
@@ -579,7 +579,7 @@ namespace Neutron.Forms
                             try
                             {
                                 _repoItemDefinition.Update(itemDef);
-                                _historyManager.SaveHistoryAsync(ActionCode.ItemModify, itemDef);
+                               await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, itemDef);
 
                                 var recs = _repoOrderDetails.All()
                                     .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != (int)LineStatus.Available).ToList();
@@ -1089,14 +1089,14 @@ namespace Neutron.Forms
             }
         }
         #endregion
-        private void MbViewEditDelete_Click(object sender, EventArgs e)
+        private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
             var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionView.Id);
             if (itemDefinition is null) return;
 
             if (CheckForInventory(itemDefinition.Id)) return;
-            _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
+           await _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
             _repoItemDefinition.Delete(itemDefinition.Id);
 
             TextBoxFind.Text = string.Empty;
@@ -1485,7 +1485,7 @@ namespace Neutron.Forms
 
         private void SaveToExcel()
         {
-            _ = _logger.LogDetailAsync("Saving records to Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync("Saving records to Excel spreadsheet"));
 
             DataTable dataTable;
             // Initialize the Excel Service
@@ -1504,7 +1504,7 @@ namespace Neutron.Forms
 
             // Generate the Excel file
             excelService.Generate(dataTable);
-            _ = _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet"));
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
             Cursor.Current = Cursors.Default;
@@ -1520,7 +1520,7 @@ namespace Neutron.Forms
 
         private void LoadFromExcel()
         {
-            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync("Loading records from Excel spreadsheet"));
             var excelService = new ExcelService();
             var dataTable = excelService.Update();
             BackgroundWorkerItemDefinitions.RunWorkerAsync(dataTable);
@@ -1574,7 +1574,7 @@ namespace Neutron.Forms
             var rowCount = dataTable.Rows.Count;
             var processedCount = 0;
             // loop over the rows in the DataTable
-            _ = _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet"));
 
             try
             {
@@ -1656,7 +1656,7 @@ namespace Neutron.Forms
                     var progressPercentage = (int)((double)processedCount / rowCount * 100);
                     if (progressPercentage % 25 == 0)
                     {
-                        _ = _logger.LogDetailAsync($"Loading {progressPercentage}% complete");
+                        Task.Run(() => _logger.LogDetailAsync($"Loading {progressPercentage}% complete"));
                         worker.ReportProgress(progressPercentage);
                     }
                 }
@@ -1680,7 +1680,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
-            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet complete");
+            Task.Run(() => _logger.LogDetailAsync("Loading records from Excel spreadsheet complete"));
         }
 
         private void TextBoxFind_MouseDown(object sender, MouseEventArgs e)

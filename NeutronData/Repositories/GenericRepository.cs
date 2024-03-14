@@ -6,13 +6,15 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using AlliedLogger;
+using AsyncAwaitBestPractices;
 
 namespace NeutronData.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IEntity
     {
         private readonly DbContext _context;
+        private IDynamicLogger _logger;
         private readonly DbSet<TEntity> _dbSet;
 
 
@@ -20,7 +22,14 @@ namespace NeutronData.Repositories
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
+            Init();
         }
+
+        private void Init()
+        {
+            _logger = NeutronCore.Global.Logger.SetupLogger("GenericRepository");
+        }
+
         public IEnumerable<TEntity> All()
         {
             return _dbSet.ToList();
@@ -62,8 +71,6 @@ namespace NeutronData.Repositories
 
         public void Insert(TEntity entity)
         {
-            var t = typeof(TEntity);
-
             try
             {
                 var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
@@ -77,13 +84,12 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
         }
 
-        public void InsertAsync(TEntity entity)
+        public async Task InsertAsync(TEntity entity)
         {
-
             try
             {
                 var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
@@ -93,11 +99,11 @@ namespace NeutronData.Repositories
                 }
 
                 _dbSet.Add(entity);
-                _context.SaveChanges();
+              await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Insert Error.  {ex.Message} {Environment.NewLine} {ex.InnerException} {Environment.NewLine}");
+                _logger.LogDetailAsync($"Insert Async Error.  {ex.Message} {Environment.NewLine} {ex.InnerException} {Environment.NewLine}").SafeFireAndForget();
             }
         }
 
@@ -115,7 +121,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Update Error.  {ex.Message} \r\n {ex.InnerException} \r\n {ex.InnerException.Message} \r\n {ex.InnerException.InnerException.Message}");
+                _logger.LogDetailAsync($"Update Error.  {ex.Message}{Environment.NewLine} {ex.InnerException} {Environment.NewLine}{ex.InnerException?.Message}{Environment.NewLine} {ex.InnerException?.InnerException?.Message}").SafeFireAndForget();
             }
         }
 
@@ -137,7 +143,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Delete Error.  " + ex.Message);
+                _logger.LogDetailAsync("Delete Error.  " + ex.Message).SafeFireAndForget();
             }
         }
 

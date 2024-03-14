@@ -84,11 +84,11 @@ namespace Neutron.Forms
         private HeaderTextManager _headerTextManager;
         private List<LocationView> _currentList;
         private bool _startup = true;
-        private readonly TcpIptiCommandCenter _tcpIptiCommandCenter;
+        private readonly IptiDisplayFunctions _iptiDisplayFunctions;
 
         public FrmLocations(IJsonData jsonData, IWorkstationRepository workstationRepository,
             WorkstationView workstationView, NeutronVariables neutronVariables, ILacProcessor lacProcessor,
-            IHistoryManager historyManager, TcpIptiCommandCenter tcpIptiCommandCenter)
+            IHistoryManager historyManager, IDisplayController tcpIptiController)
         {
             InitializeComponent();
             _workstationRepository = workstationRepository;
@@ -99,7 +99,9 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
             _historyManager = historyManager;
-            _tcpIptiCommandCenter = tcpIptiCommandCenter;
+
+            _iptiDisplayFunctions =
+                new IptiDisplayFunctions(_jsonData, _neutronVariables, _workstationView, tcpIptiController);
             InitForm();
         }
 
@@ -111,10 +113,7 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             _headerTextManager = new HeaderTextManager();
             SetupGrid();
-            //SetupTabControl();
             HideTabControlTabs();
-            //SetupNewForm();
-            //SetupViewEditForm();
             SetupPrinters();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             _locationRepository = new LocationsRepository();
@@ -134,20 +133,12 @@ namespace Neutron.Forms
             {
                 ComboBoxAreaNumber.SelectedValue = _workstationView.AreaId;
             }
-          
+
             _startup = false;
             RefreshData();
         }
 
         public bool CloseButtonPressed { get; set; }
-
-        //private void CreateLog()
-        //{
-        //    var logFileDir = LoaderSettings.GetLogFileDirectory();
-        //    var folderName = $"Locations_{_workstationView.WorkstationId.ToString()}";
-        //    var logActivity = LoaderSettings.EnableLogging;
-        //    _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-        //}
 
         private void SetupPrinters()
         {
@@ -262,31 +253,18 @@ namespace Neutron.Forms
             return count;
         }
 
-        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            _logger.LogDetailAsync($"Cell Click");
+           await _logger.LogDetailAsync($"Cell Click").ConfigureAwait(false);
 
             var grid = sender as DataGridView;
             var rowIndex = e.RowIndex;
             var colIndex = e.ColumnIndex;
 
-            //if (_bindingSource.Current == null) return;
-            //var location = ((ObjectView<LocationView>)_bindingSource.Current).Object;
-
-            //_logger.LogDetailAsync($"Cell Click 2");
-            //if (_workstationView.AreaId != location.AreaId)
-            //{
-            //    MessageBox.Show($"The Location is not in this Area.");
-            //    return;
-            //}
-
-            //_logger.LogDetailAsync($"Cell Click 3");
-
-            // ----------------------------------------------------------------
-            // DataGridViewPosition((DataGridView)sender, e.RowIndex);
+            var quantity = "00";
             var qty = 0;
             var display = string.Empty;
-            _ = _logger.LogDetailAsync($"DataGridViewPosition");
+            await _logger.LogDetailAsync($"DataGridViewPosition").ConfigureAwait(false);
             try
             {
                 if (rowIndex < 0) return;
@@ -303,23 +281,61 @@ namespace Neutron.Forms
                 if (!grid.Columns.Contains(columnName: "Loc4")) return;
                 var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
 
+                // if there are Hanels on this station
+                // check to see if this lift is already moving before trying to move again
+                if (_workstationView.Hanels.Any())
+                {
+                    if (GlobalVar.Hanel == null)
+                    {
+                        return;
+                    }
+                    var status = GlobalVar.Hanel.GetDeviceStatus(deviceNumber);
 
-                //if (grid.Columns.Contains(columnName: "Quantity"))
-                //{
-                //    qty = grid["Quantity", rowIndex].Value.ToString().ParseInt();
-                //}
+                    if (status.CommandAccepted && !status.CommandExecuted)
+                    {
+                        var message =
+                            $"Unable to move Tower {deviceNumber}.{Environment.NewLine}It is currently moving Tray {status.TargetTray} into position.";
+                        MessageBox.Show(message, "Lift Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                }
 
-                //if (_workstationView.StationType.Id == (int)StationType.EBin)
-                //{
-                //    var eBinDisplayManager = new EBinDisplayManager();
-                //    var response = eBinDisplayManager.TurnOnDisplay(deviceNumber, trayNumber, level, part, qty, display);
-                //    MessageBox.Show($"{response}", "EBin Display Command", MessageBoxButtons.OK);
-                //}
-                MoveDevice(deviceNumber, trayNumber, level, part, qty, display);
+                // if it's a Blastzone, turn on the Location
+                // and turn on the Prolite, if they're Enabled
+
+                if (_workstationView.Blastzones.Any())
+                {
+                    await _iptiDisplayFunctions.ClearBlastzone();
+
+                   await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
+                   
+                   await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
+                }
+
+                if (_workstationView.Prolites.Any())
+                {
+                    var proliteNumber = 1;
+                    if (_workstationView.Prolites.Count > 1)
+                    {
+                        proliteNumber = deviceNumber;
+                    }
+                    // only one Prolite, so it doesn't matter what device number
+                    // just light up the first Prolite
+                    _workstationView.ProLiteManager?.ClearProlite(proliteNumber);
+                    Thread.Sleep(500);
+                    _workstationView.ProLiteManager?.TurnOnLocation(proliteNumber, trayNumber, level, part, qty);
+
+                }
+
+                // if there are Hanels on this station
+                if (_workstationView.Hanels.Any())
+                {
+                    MoveDevice(deviceNumber, trayNumber, level, part, qty, display);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Unable to move device. {Environment.NewLine} {ex.Message}");
+                MessageBox.Show($"Error: {Environment.NewLine} {ex.Message}");
             }
 
 
@@ -336,9 +352,9 @@ namespace Neutron.Forms
             //var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
             //var partition = grid["Loc4", e.RowIndex].Value.ToString();
             //var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
-            //_ = _logger.LogDetailAsync(
+            //Task.Run(() => _logger.LogDetailAsync(
             //       $"Storage Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
-            //_ = _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
+            //Task.Run(() => _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
             //MoveDevice(deviceNumber, trayNumber, level, part);
             //TurnOnShi(deviceNumber, trayNumber, level, partition);
         }
@@ -347,7 +363,7 @@ namespace Neutron.Forms
         {
             var qty = 0;
             var display = string.Empty;
-            _ = _logger.LogDetailAsync($"DataGridViewPosition");
+            Task.Run(() => _logger.LogDetailAsync($"DataGridViewPosition"));
             try
             {
                 if (rowIndex < 0) return;
@@ -363,19 +379,7 @@ namespace Neutron.Forms
                 var level = grid["Loc3", rowIndex].Value.ToString().ParseInt();
                 if (!grid.Columns.Contains(columnName: "Loc4")) return;
                 var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
-                
-                
-                //if (grid.Columns.Contains(columnName: "Quantity"))
-                //{
-                //    qty = grid["Quantity", rowIndex].Value.ToString().ParseInt();
-                //}
 
-                //if (_workstationView.StationType.Id == (int)StationType.EBin)
-                //{
-                //    var eBinDisplayManager = new EBinDisplayManager();
-                //    var response = eBinDisplayManager.TurnOnDisplay(deviceNumber, trayNumber, level, part, qty, display);
-                //    MessageBox.Show($"{response}", "EBin Display Command", MessageBoxButtons.OK);
-                //}
                 MoveDevice(deviceNumber, trayNumber, level, part, qty, display);
             }
             catch (Exception ex)
@@ -389,12 +393,11 @@ namespace Neutron.Forms
                 if (GlobalVar.Displays != null)
                     GlobalVar.Displays.ClearAllShi();
         }
-
         private void TurnOnShi(int deviceNumber, int trayNumber, int level, string partition)
         {
             string lArrow;
             string rArrow;
-           // ClearAllShi();
+            // ClearAllShi();
             if (_neutronVariables.DisplaysEnabled)
                 if (GlobalVar.Displays != null)
                 {
@@ -419,19 +422,19 @@ namespace Neutron.Forms
                     GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
                 }
         }
-
         private void MoveDevice(int deviceNumber, int trayNumber, int level, int part, int quantity = 0, string display = "")
         {
             try
             {
-                //_workstationView.ProLiteManager?.ClearAllProlites();
                 Thread.Sleep(100);
                 if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, deviceNumber, trayNumber))
                 {
                     if (_neutronVariables.ShuttleEnabled)
                     {
-                        var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
-                        var hanel = hanels.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+                        //var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
+                        //var hanel = hanels.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+
+                        var hanel = _workstationView.Hanels.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
 
                         //var hardwareDevice =
                         //    _workstationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
@@ -442,12 +445,11 @@ namespace Neutron.Forms
                             {
                                 if (GlobalVar.Shuttle != null)
                                 {
-                                    var response = Task.Run(() =>
-                                        GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
-                                            display));
-                                    if (response.Result != DeviceResponse.Success)
+                                    var response = GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
+                                            display);
+                                    if (response != DeviceResponse.Success)
                                     {
-                                        MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                                        MessageBox.Show(response.AsString(EnumFormat.Description),
                                             caption: string.Empty, buttons: MessageBoxButtons.OK,
                                             icon: MessageBoxIcon.Error);
                                     }
@@ -455,12 +457,12 @@ namespace Neutron.Forms
                                 else if (GlobalVar.Hanel != null)
                                 {
                                     _logger.LogDetailAsync($"Call Hanel.Position Device");
-                                    var response = Task.Run(() =>
-                                        GlobalVar.Hanel.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
-                                            display));
-                                    if (response.Result != DeviceResponse.Success)
+                                    var response = GlobalVar.Hanel.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
+                                            display);
+
+                                    if (response != DeviceResponse.Success)
                                     {
-                                        MessageBox.Show(response.Result.AsString(EnumFormat.Description),
+                                        MessageBox.Show(response.AsString(EnumFormat.Description),
                                             caption: string.Empty, buttons: MessageBoxButtons.OK,
                                             icon: MessageBoxIcon.Error);
                                     }
@@ -481,169 +483,23 @@ namespace Neutron.Forms
                             MessageBox.Show(_resourceManager.GetString("Message13"));
                         }
                     }
-
-                    if (_neutronVariables.DisplaysEnabled)
-                    {
-                        if (GlobalVar.Displays != null)
-                        {
-                          //  ClearAllShi();
-                            var blastzones = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone).ToList();
-                            var blastzone = blastzones.Any();
-
-                            if (_neutronVariables.IptiDisplays && blastzone)
-
-                            {
-                                ClearBlastzone();
-
-                                var qty = quantity > 100 ? "--" : quantity.ToString();
-
-                                TurnOnIptiDisplayAsync(trayNumber, part, qty);
-
-
-                                TurnOnIptiOrderControlAsync(trayNumber, $"Qty: {quantity}");
-                            }
-
-                            //var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
-                            //var prolite = prolites.Any();
-                            //if (prolite)
-                            //{
-                            _ = _logger.LogDetailAsync($"Task Run Turn On Prolite");
-                            Task.Run(() => _workstationView.ProLiteManager?.TurnOn(deviceNumber, level, part, quantity));
-                            //}
-                        }
-                    }
-
                 }
                 else
                 {
-                    _ = _logger.LogDetailAsync($"Location Access Denied");
+                    Task.Run(() => _logger.LogDetailAsync($"Location Access Denied"));
                     MessageBox.Show($"Location Access Denied");
                 }
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Move Device - Inventory Module: {Environment.NewLine}{ex.Message}");
+                Task.Run(() => _logger.LogDetailAsync($"Move Device - Location Module: {Environment.NewLine}{ex.Message}"));
 
             }
 
-            _ = _logger.LogDetailAsync($"MoveDevice Done.");
+            Task.Run(() => _logger.LogDetailAsync($"MoveDevice END."));
         }
-
-
-        private void TurnOnIptiDisplayAsync(int bayController, int position, string text)
-        {
-            if (_neutronVariables.DisplaysEnabled)
-            {
-                if (_neutronVariables.IptiDisplays)
-                {
-                    if (GlobalVar.Displays == null) return;
-                    var command = _tcpIptiCommandCenter.TurnOnDisplay(bayController.ToString(), position, text);
-                    GlobalVar.Displays.SendText(command);
-                }
-            }
-        }
-
-        private void TurnOnIptiOrderControlAsync(int bayController, string text)
-        {
-            if (_neutronVariables.DisplaysEnabled)
-            {
-                if (_neutronVariables.IptiDisplays)
-                {
-                    if (GlobalVar.Displays == null) return;
-
-                    var bayId = bayController.ToString().PadLeft(2, '0');
-                    var command = _tcpIptiCommandCenter.GetBayController(bayId)
-                        .TurnOnOrderControlModule(text);
-                    GlobalVar.Displays.SendText(command);
-                }
-            }
-        }
-
-        private void ClearBlastzone()
-        {
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - START");
-            try
-            {
-                if (_neutronVariables.DisplaysEnabled)
-                {
-                    if (_neutronVariables.IptiDisplays)
-                    {
-                        if (GlobalVar.Displays == null) return;
-
-                        var blastzoneBayControllers = _tcpIptiCommandCenter.BayControllers
-                            .Where(r => r.BayControllerType == "Blast").ToList();
-                        foreach (var blastzoneBayId in blastzoneBayControllers)
-                        {
-                            var command = _tcpIptiCommandCenter.ClearBayController(blastzoneBayId.BayId);
-                            GlobalVar.Displays.SendText(command);
-                            command = _tcpIptiCommandCenter.GetBayController(blastzoneBayId.BayId).TurnOffOrderControlModule();
-                            GlobalVar.Displays.SendText(command);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _ = _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}");
-
-            }
-            _ = _logger.LogDetailAsync($"ClearBlastzone Function - END");
-        }
-
-        //------------
-        //private void MoveDevice(int deviceNumber, int trayNumber, int level = 0, int partition = 0, int quantity = 0,
-        //    string display = "")
-        //{
-        //    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, deviceNumber, trayNumber))
-        //    {
-        //        if (_neutronVariables.ShuttleEnabled)
-        //        {
-        //            var hardwareDevice =
-        //                _workstationView.HardwareDevices.FirstOrDefault(s => s.DeviceNumber == deviceNumber);
-        //            if (hardwareDevice != null)
-        //            {
-        //                if (hardwareDevice.Enabled)
-        //                {
-        //                    if (GlobalVar.Shuttle != null)
-        //                    {
-        //                        var response = GlobalVar.Shuttle.PositionDevice(deviceNumber, trayNumber, level,
-        //                            partition, quantity, display);
-        //                        if (response != DeviceResponse.Success)
-        //                            MessageBox.Show(response.AsString(EnumFormat.Description), string.Empty,
-        //                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                    }
-        //                    else if (GlobalVar.Hanel != null)
-        //                    {
-        //                        var response = GlobalVar.Hanel.PositionDevice(deviceNumber, trayNumber, level,
-        //                            partition, quantity, display);
-        //                        if (response != DeviceResponse.Success)
-        //                            MessageBox.Show(response.AsString(EnumFormat.Description), string.Empty,
-        //                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                    }
-        //                    else
-        //                    {
-        //                        MessageBox.Show(_resourceManager.GetString("Message0"));
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    MessageBox.Show($"{_resourceManager.GetString("Message1")}{hardwareDevice.Name}");
-        //                }
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show(_resourceManager.GetString("Message2"));
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show($"Location Access Denied");
-        //    }
-        //}
-
-
-        private void SaveNew()
+       
+        private async Task SaveNew()
         {
             var area = (Area)ComboBoxNewArea.SelectedItem;
             if (area == null) return;
@@ -679,8 +535,8 @@ namespace Neutron.Forms
                         LocationCode = TextBoxNewLocationCode.Text,
                         InUse = CheckBoxInUseNew.Checked
                     };
-                    _repoLocation.Insert(loc);
-                    _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                   await _repoLocation.InsertAsync(loc);
+                   await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
 
                 }
                 else
@@ -731,8 +587,8 @@ namespace Neutron.Forms
                                     TextBoxNewSlot.Text = slotName;
                                     try
                                     {
-                                        _repoLocation.Insert(loc);
-                                        _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                                       await _repoLocation.InsertAsync(loc);
+                                       await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
                                     }
                                     catch (Exception ex)
                                     {
@@ -771,7 +627,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void UpdateViewEdit()
+        private async Task UpdateViewEdit()
         {
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
             if (locationView == null) return;
@@ -809,7 +665,7 @@ namespace Neutron.Forms
                 loc.InUse = CheckBoxInUse.Checked;
 
                 _repoLocation.Update(loc);
-                _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+               await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
             }
             else
             {
@@ -848,7 +704,7 @@ namespace Neutron.Forms
                                 try
                                 {
                                     _repoLocation.Update(loc);
-                                    _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+                                   await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
                                 }
                                 catch (Exception ex)
                                 {
@@ -952,7 +808,7 @@ namespace Neutron.Forms
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
                 _repoLocation.Delete(loc.Id);
-                _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
+               await _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
                 RefreshData();
                 tabControl1.SelectedTab = tabPage1;
             }
@@ -1163,10 +1019,11 @@ namespace Neutron.Forms
             TextBoxFind.Focus();
         }
 
-        private void MButtonClose_Click(object sender, EventArgs e)
+        private async void MButtonClose_Click(object sender, EventArgs e)
         {
-            Task.Run(() => _workstationView.ProLiteManager?.ClearAllProlites());
-            Task.Run(() => ClearBlastzone());
+            _workstationView.ProLiteManager?.ClearAllProlites();
+            await _iptiDisplayFunctions.ClearBlastzone();
+           // Task.Run(() => ClearBlastzone());
             CloseButtonPressed = true;
             Close();
         }
@@ -1244,9 +1101,9 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = tabPage1;
         }
 
-        private void MbViewEditSave_Click(object sender, EventArgs e)
+        private async void MbViewEditSave_Click(object sender, EventArgs e)
         {
-            UpdateViewEdit();
+           await UpdateViewEdit();
             RefreshData();
             tabControl1.SelectedTab = tabPage1;
         }
@@ -1261,9 +1118,9 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = tabPage2;
         }
 
-        private void MbNewSave_Click(object sender, EventArgs e)
+        private async void MbNewSave_Click(object sender, EventArgs e)
         {
-            SaveNew();
+           await SaveNew();
             RefreshData();
             tabControl1.SelectedTab = tabPage1;
         }
@@ -1293,9 +1150,9 @@ namespace Neutron.Forms
                 Text = _gridResourceManager.GetString("Position"),
                 UseColumnTextForButtonValue = true,
             };
-            
-            
-            
+
+
+
             DataGridView1.Columns.Add(bCol);
             var xcol = new DataGridViewCheckBoxColumn
             {
@@ -1720,7 +1577,7 @@ namespace Neutron.Forms
             var level = TextBoxViewEditLoc3.Text.ParseInt();
             if (!IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt())) return;
             var part = TextBoxViewEditLoc4.Text.ParseInt();
-             _ = _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
+            Task.Run(() => _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
             MoveDevice(deviceNumber, trayNumber, level, part);
         }
 
@@ -1738,7 +1595,7 @@ namespace Neutron.Forms
             if (string.IsNullOrEmpty(TextBoxNewLoc4.Text) || TextBoxNewLoc4.Text == "0") return;
             if (!IntegerValidator(TextBoxNewLoc4.Text.ParseInt())) return;
             var part = TextBoxNewLoc4.Text.ParseInt();
-             _ = _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}");
+            Task.Run(() => _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
             MoveDevice(deviceNumber, trayNumber, level, part);
         }
 
@@ -1909,7 +1766,7 @@ namespace Neutron.Forms
 
         private void SaveToExcel()
         {
-            _ = _logger.LogDetailAsync("Saving records to Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync("Saving records to Excel spreadsheet"));
 
             DataTable dataTable;
             // Initialize the Excel Service
@@ -1928,7 +1785,7 @@ namespace Neutron.Forms
 
             // Generate the Excel file
             excelService.Generate(dataTable);
-            _ = _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet"));
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
             Cursor.Current = Cursors.Default;
@@ -1944,7 +1801,7 @@ namespace Neutron.Forms
 
         private void LoadFromExcel()
         {
-            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync("Loading records from Excel spreadsheet"));
             var excelService = new ExcelService();
             var dataTable = excelService.Update();
             BackgroundWorkerLocations.RunWorkerAsync(dataTable);
@@ -1967,7 +1824,7 @@ namespace Neutron.Forms
             // so we need to add it first, before the other columns
             var action = new DataColumn("Action", typeof(string));
             dataTable.Columns.Add(action);
-            
+
             foreach (var prop in props)
             {
                 //Setting column names as Property names
@@ -2014,7 +1871,7 @@ namespace Neutron.Forms
             var processedCount = 0;
             // loop over the rows in the DataTable
 
-            _ = _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet");
+            Task.Run(() => _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet"));
             try
             {
 
@@ -2096,14 +1953,12 @@ namespace Neutron.Forms
                         _repoLocation.Update(location);
                     }
 
-
-
                     // Update the progress
                     processedCount++;
                     var progressPercentage = (int)((double)processedCount / rowCount * 100);
                     if (progressPercentage % 25 == 0)
                     {
-                        _ = _logger.LogDetailAsync($"Loading {progressPercentage}% complete");
+                        Task.Run(() => _logger.LogDetailAsync($"Loading {progressPercentage}% complete"));
                         worker.ReportProgress(progressPercentage);
                     }
 
@@ -2128,7 +1983,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
-            _ = _logger.LogDetailAsync("Loading records from Excel spreadsheet complete");
+            Task.Run(() => _logger.LogDetailAsync("Loading records from Excel spreadsheet complete"));
         }
     }
 }

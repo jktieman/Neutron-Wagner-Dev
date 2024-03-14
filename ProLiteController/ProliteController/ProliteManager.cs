@@ -11,6 +11,7 @@ using NeutronCore.Enums;
 using NeutronData.ModelViews;
 using System.Threading.Tasks;
 using NeutronEvents;
+using System.Reflection;
 
 
 namespace ProliteController
@@ -41,6 +42,7 @@ namespace ProliteController
         private IList<Prolite> _prolites;
         private string _lastCommand = string.Empty;
         public bool ProliteManagerEnabled = true;
+        private bool _proliteBusy = false;
 
         /// <summary>
         /// Takes a string and returns the corresponding Parity enum value.
@@ -152,6 +154,27 @@ namespace ProliteController
                 _ = _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}");
             }
         }
+
+        private void SerialPortWrite(string cmd)
+        {
+            _logger.LogDetailAsync($"Start: {cmd}");
+            //var counter = 0;
+            //while (_proliteBusy)
+            //{
+            //    counter += 100;
+            //    _ = _logger.LogDetailAsync($"Counter: {counter}");
+            //    Thread.Sleep(100);
+            //    if (counter >= 1000)
+            //    {
+            //        _ = _logger.LogDetailAsync("Timeout waiting for ProLite to become available.");
+            //        break;
+            //    }
+            //}
+
+            // _proliteBusy = true;
+            _serialPort.Write(cmd);
+           _logger.LogDetailAsync($"Start: {cmd}");
+        }
         public void TurnOn(int deviceNumber, int level, int part, int quantity)
         {
             _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
@@ -163,7 +186,27 @@ namespace ProliteController
                 
                 var cmd = prolite.TurnOn(level, part, quantity);
                 _lastCommand = cmd;
-                _serialPort.Write(cmd);
+                SerialPortWrite(cmd);
+
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
+            }
+        }
+
+        public void TurnOnLocation(int deviceNumber, int tray, int level, int part, int quantity)
+        {
+            _ = _logger.LogDetailAsync($"Turn ON Prolite Location -  Device Number: {deviceNumber}  Tray: {tray}  Level: {level}  Part: {part}  Quantity: {quantity}");
+            try
+            {
+                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                if (prolite == null) return;
+                if (prolite.Enabled == false) return;
+
+                var cmd = prolite.TurnOnLocation(tray, level, part);
+                _lastCommand = cmd;
+                SerialPortWrite(cmd);
 
             }
             catch (Exception ex)
@@ -182,7 +225,7 @@ namespace ProliteController
                 if (prolite.Enabled == false) return;
                 var cmd = prolite.TurnOnHot();
                 _lastCommand = cmd;
-                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
+                if (!string.IsNullOrEmpty(cmd)) SerialPortWrite(cmd);
             }
             catch (Exception ex)
             {
@@ -200,7 +243,7 @@ namespace ProliteController
                 if (prolite.Enabled == false) return;
                 var cmd = prolite.TurnOnBlindCycle(level, part);
                 _lastCommand = cmd;
-                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
+                if (!string.IsNullOrEmpty(cmd)) SerialPortWrite(cmd);
             }
             catch (Exception ex)
             {
@@ -220,7 +263,7 @@ namespace ProliteController
                 if (prolite.Enabled == false) return;
                 var cmd = prolite.Clear();
                 _lastCommand = cmd;
-                if (!string.IsNullOrEmpty(cmd)) _serialPort.Write(cmd);
+                if (!string.IsNullOrEmpty(cmd)) SerialPortWrite(cmd);
             }
             catch (Exception ex)
             {
@@ -231,21 +274,22 @@ namespace ProliteController
         // turn off the all prolite displays
         public void ClearAllProlites()
         {
-            _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites");
+            //_ = _logger.LogDetailAsync($"Turn OFF ALL Prolites");
             try
             {
                 foreach (var prolite in _prolites)
                 {
-                    if (prolite.Enabled == false) return;
-                    _serialPort.Write(prolite.Clear());
+                    if (prolite.Enabled == false) continue;
+                    SerialPortWrite(prolite.Clear());
+                    //_logger.LogDetailAsync($"Serial Port Write: {prolite.DeviceNumber}");
                     Thread.Sleep(100);
                 }
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
+               // _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
             }
-            _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites Complete");
+           // _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites Complete");
         }
 
         bool IProLiteManager.IsProliteManagerEnabled()
@@ -384,25 +428,27 @@ namespace ProliteController
             {
                 existing = serialPort.ReadExisting();
                 data += existing;
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
                 if (string.IsNullOrEmpty(existing)) break;
             }
 
             if (data.Length > 0)
             {
                 _ = _logger.LogDetailAsync($"Pro-Lite Serial Data Received: {data}");
-               // ProcessSerialData(data);
+                ProcessSerialData(data);
             }
         }
 
         private void ProcessSerialData(string data)
         {
-            if (data.Length < 11)
-            {
-                
-                _serialPort.Write(_lastCommand);
-                _ = _logger.LogDetailAsync($"Pro-Lite Write Data: {_lastCommand}");
-            }
+            _proliteBusy = false;
+
+            //if (data.Length < 11)
+            //{
+
+            //    _serialPort.Write(_lastCommand);
+            //    _ = _logger.LogDetailAsync($"Pro-Lite Write Data: {_lastCommand}");
+            //}
         }
 
         public bool IsPortOpen => _serialPort?.IsOpen ?? false;

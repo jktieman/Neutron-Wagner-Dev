@@ -5,6 +5,7 @@ using System.Text;
 using AlliedPostOffice.Abstract;
 using System.Net.Mail;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
 
@@ -104,7 +105,7 @@ namespace AlliedPostOffice.Concrete
                             {
                                 MessageBox.Show($"Email written to file: {_emailSettings.FileLocation}" +
                                                 $"{Environment.NewLine}{mailMessage.Body}");
-                             _ = _logger.LogDetailAsync($"Email written to file: {_emailSettings.FileLocation}{Environment.NewLine}{mailMessage.Body}");
+                             Task.Run(() =>  _logger.LogDetailAsync($"Email written to file: {_emailSettings.FileLocation}{Environment.NewLine}{mailMessage.Body}"));
                                 mailMessage.BodyEncoding = Encoding.ASCII;
                                 File.WriteAllText(_emailSettings.FileLocation, mailMessage.Body);
                             }
@@ -115,12 +116,12 @@ namespace AlliedPostOffice.Concrete
                         }
                         catch (SmtpException ex)
                         {
-                         _ = _logger.LogDetailAsync($"Error Sending Email: {ex.Message}");
+                         Task.Run(() =>  _logger.LogDetailAsync($"Error Sending Email: {ex.Message}"));
                             throw new SmtpException($"SMTP Error Sending Email: {ex.Message}");
                         }
                         catch (Exception ex)
                         {
-                         _ = _logger.LogDetailAsync($"Error Sending Email: {ex.Message}");
+                         Task.Run(() =>  _logger.LogDetailAsync($"Error Sending Email: {ex.Message}"));
                             throw new Exception($"Error Sending Email: {ex.Message}");
                         }
                     }

@@ -19,16 +19,16 @@ namespace NeutronData.Models
         public int Priority { get; set; }
         public string OrderInfo { get; set; }
         public DateTime LoadDate { get; set; }
-        //public int ShipperId { get; set; }
-        //public int ShipMethodId { get; set; }
+        public int ShipperId { get; set; }
+        public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
         public virtual ICollection<ReplenOrderDetail> ReplenOrderDetails { get; set; }
         public virtual ICollection<Container> Containers { get; set; }
-        //[ForeignKey("ShipperId")]
-        //public virtual Shipper Shipper { get; set; }
-        //[ForeignKey("ShipMethodId")]
-        //public virtual ShipMethod ShipMethod { get; set; }
-        
+        [ForeignKey("ShipperId")]
+        public virtual Shipper Shipper { get; set; }
+        [ForeignKey("ShipMethodId")]
+        public virtual ShipMethod ShipMethod { get; set; }
+
         [ForeignKey("OrderStatusId")]
         public virtual OrderStatus OrderStatus { get; set; }
 
