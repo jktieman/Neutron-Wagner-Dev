@@ -63,7 +63,6 @@ namespace NeutronLoader
             _ordersRepository = ordersRepository;
             
             Init();
-
         }
 
         private void Init()
