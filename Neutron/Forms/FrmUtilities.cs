@@ -128,12 +128,10 @@ namespace Neutron.Forms
         private IDynamicLogger _logger;
         private readonly WorkstationView _workstationView;
         private readonly IEnumManager _enumManager;
-        private readonly IDisplayController _tcpIptiController;
-        private TcpIptiCommandCenter _tcpIptiCommandCenter;
-        private IptiDisplayFunctions _iptiDisplayFunctions;
+        private IIptiDisplayFunctions _iptiDisplayFunctions;
 
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , WorkstationView workstationView, IEnumManager enumManager, IDisplayController tcpIptiController)
+            , WorkstationView workstationView, IEnumManager enumManager, IIptiDisplayFunctions iptiDisplayFunctions)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -144,9 +142,7 @@ namespace Neutron.Forms
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
             _enumManager = enumManager;
-            _tcpIptiController = tcpIptiController;
-            _iptiDisplayFunctions =
-    new IptiDisplayFunctions(_jsonData, _neutronVariables, _workstationView, _tcpIptiController);
+            _iptiDisplayFunctions = iptiDisplayFunctions;
             Init();
         }
 
@@ -155,7 +151,7 @@ namespace Neutron.Forms
             HideTabControlTabs();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             CloseButtonPressed = false;
-            SetupLogger();
+            _logger = NeutronCore.Global.Logger.SetupLogger("Utilities");
             SetupGrids();
             LoadEmailServer();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
@@ -186,23 +182,20 @@ namespace Neutron.Forms
 
         private void FrmUtilities_IsClientConnected(object sender, IsClientConnectedEventArgs e)
         {
-            var isClientConnected = e.IsClientConnected;
-            UpdateClientConnected(isClientConnected);
+            if (_isClientConnected.Equals(e.IsClientConnected)) return;
+            _isClientConnected = e.IsClientConnected;
+            UpdateClientConnected(_isClientConnected);
         }
 
         private void UpdateClientConnected(bool state)
         {
             if (InvokeRequired)
             {
-                RadioButtonClientConnected.BeginInvoke(new MethodInvoker(delegate
-                {
-                    RadioButtonClientConnected.Checked = state;
-                }));
+                Invoke(new Action<bool>(UpdateClientConnected), state);
+                return;
             }
-            else
-            {
-                RadioButtonClientConnected.Checked = state;
-            }
+
+            CheckBoxClientConnected.Checked = state;
         }
 
         private void SetupDeviceForms()
@@ -253,14 +246,6 @@ namespace Neutron.Forms
             CheckBoxEnableLabelPrinter.Enabled = GetCurrentLabelPrinter();
 
 
-        }
-
-        private void SetupLogger()
-        {
-            var logFileDir = LoaderSettings.GetLogFileDirectory();
-            var folderName = @"Utilities";
-            var logActivity = LoaderSettings.EnableLogging;
-            _logger = new DynamicLogger(logFileDir, folderName, logActivity);
         }
 
         protected override CreateParams CreateParams
@@ -842,75 +827,83 @@ namespace Neutron.Forms
 
         private void SaveVariables()
         {
-            _neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
-            _neutronVariables.ShuttleEnabled = CheckBoxShuttleEnabled.Checked;
-            _neutronVariables.SendAllPicksToHost = CheckBoxSendAllPicksToHost.Checked;
-            _neutronVariables.UsePrimeBin = CheckBoxUsePrimeBin.Checked;
-            _neutronVariables.PickMethod = GetPickMethod();
-            _neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
-            _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
-            _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
-            _neutronVariables.WorkstationId = ((Workstation)ComboBoxStationNumber.SelectedItem).Id;
-            _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
-            _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
-            _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
-            _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
-            _neutronVariables.CheckForUsedItem = CheckBoxCheckForUsedItem.Checked;
-            _neutronVariables.RunLoaderOnStartup = CheckBoxRunLoaderOnStartup.Checked;
-            _neutronVariables.RunUploadOnStartup = CheckBoxRunUploadOnStartup.Checked;
-            _neutronVariables.DisplaysEnabled = CheckBoxDisplaysEnabled.Checked;
-            _neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
-            _neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
-            _neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
-            _neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();
-            _neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt();
-            _neutronVariables.PickBatchRows = TextBoxPickBatchRows.Text.ParseInt();
-            _neutronVariables.StoreBatchRows = TextBoxStoreBatchRows.Text.ParseInt();
-            _neutronVariables.BliEnabled = CheckBoxBliEnabled.Checked;
-            _neutronVariables.ShiEnabled = CheckBoxShiEnabled.Checked;
-            _neutronVariables.ParkPositionAfterBatch = CheckBoxParkPositionAfterBatch.Checked;
-            _neutronVariables.UsePr1Processor = CheckBoxUsePr1Processor.Checked;
-            _neutronVariables.UsePr1StyleInputProcessor = CheckBoxUsePr1StyleInputProcessor.Checked;
-            _neutronVariables.UsePr1StyleOutputProcessor = CheckBoxUsePr1StyleOutputProcessor.Checked;
-            _neutronVariables.FieldDelimiter = TextBoxFieldDelimiter.Text;
-            _neutronVariables.AutoEnlargeImage = CheckBoxAutoEnlargeImage.Checked;
-            _neutronVariables.AutoLoadReplenishments = CheckBoxAutoLoadReplenishments.Checked;
-            _neutronVariables.IptiDisplays = CheckBoxIptiDisplays.Checked;
-            _neutronVariables.LoadRackOrders = CheckBoxLoadRackOrders.Checked;
-            _neutronVariables.SerialPicking = CheckBoxSerialPicking.Checked;
-            _neutronVariables.PrintPreview = CheckBoxPrintPreview.Checked;
-            _neutronVariables.UpdateItemDefinitionDescription = CheckBoxUpdateItemDefinitionDescription.Checked;
-            _neutronVariables.PrintPackingListStart = CheckBoxPrintPackingListStart.Checked;
-            _neutronVariables.PrintPackingListEnd = CheckBoxPrintPackingListEnd.Checked;
-            _neutronVariables.PrintPackingListManual = CheckBoxPrintPackingListManual.Checked;
-            _neutronVariables.LoaderDelay = TextBoxLoaderDelay.Text.ParseInt();
-            _neutronVariables.UploadDelay = TextBoxUploadDelay.Text.ParseInt();
-            _neutronVariables.ActionCodes = TextBoxActionCodes.Text;
-            _neutronVariables.UseCostCenter = CheckBoxUseCostCenter.Checked;
-            _neutronVariables.UseImages = CheckBoxUseImages.Checked;
-            _neutronVariables.DefaultLanguage = ((Language)ComboBoxDefaultLanguage.SelectedItem).CultureInfo;
-            _neutronVariables.DeviceFlashRate = TextBoxDeviceFlashRate.Text.ParseInt();
-            _neutronVariables.DefaultStorageTypeId = ((StorageType)ComboBoxDefaultStorageType.SelectedItem).Id;
-            _neutronVariables.UseAutoCompress = CheckBoxUseAutoCompress.Checked;
-            _neutronVariables.SpecialBackOrder = CheckBoxSpecialBackorder.Checked;
-            _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
-            _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
-            _neutronVariables.EnableEmailNotification = CheckBoxEnableEmailNotification.Checked;
-            _neutronVariables.LoaderStation = ((Workstation)ComboBoxLoaderStation.SelectedItem).Id;
-            _neutronVariables.RfidEnabledInventory = CheckBoxRfidEnabledInventory.Checked;
-            _neutronVariables.RfidEnabledPicking = CheckBoxRfidEnabledPicking.Checked;
-            _neutronVariables.BliController = Convert.ToInt32(numericUpDownBliControllerId.Value);
-
-            if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
+            try
             {
-                _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
+                _neutronVariables.CreateStoreOrderWithRts = CheckBoxCreateStoreOrderWithRts.Checked;
+                _neutronVariables.ShuttleEnabled = CheckBoxShuttleEnabled.Checked;
+                _neutronVariables.SendAllPicksToHost = CheckBoxSendAllPicksToHost.Checked;
+                _neutronVariables.UsePrimeBin = CheckBoxUsePrimeBin.Checked;
+                _neutronVariables.PickMethod = GetPickMethod();
+                _neutronVariables.UseLAC = CheckBoxUseLAC.Checked;
+                _neutronVariables.UseMenuSecurity = CheckBoxUseMenuSecurity.Checked;
+                _neutronVariables.UseReturnToStock = CheckBoxUseReturnToStock.Checked;
+                _neutronVariables.WorkstationId = ((Workstation)ComboBoxStationNumber.SelectedItem).Id;
+                _neutronVariables.DeviceDriver = ComboBoxDeviceDriver.SelectedItem.ToString();
+                _neutronVariables.LogLevel = Convert.ToInt32(NumericUpDownLogLevel.Value);
+                _neutronVariables.SlotNameType = ComboBoxSlotFormat.SelectedItem.ToString();
+                _neutronVariables.AutoLogOff = CheckBoxAutoLogOff.Checked;
+                _neutronVariables.CheckForUsedItem = CheckBoxCheckForUsedItem.Checked;
+                _neutronVariables.RunLoaderOnStartup = CheckBoxRunLoaderOnStartup.Checked;
+                _neutronVariables.RunUploadOnStartup = CheckBoxRunUploadOnStartup.Checked;
+                _neutronVariables.DisplaysEnabled = CheckBoxDisplaysEnabled.Checked;
+                _neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
+                _neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
+                _neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
+                _neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();
+                _neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt();
+                _neutronVariables.PickBatchRows = TextBoxPickBatchRows.Text.ParseInt();
+                _neutronVariables.StoreBatchRows = TextBoxStoreBatchRows.Text.ParseInt();
+                _neutronVariables.BliEnabled = CheckBoxBliEnabled.Checked;
+                _neutronVariables.ShiEnabled = CheckBoxShiEnabled.Checked;
+                _neutronVariables.ParkPositionAfterBatch = CheckBoxParkPositionAfterBatch.Checked;
+                _neutronVariables.UsePr1Processor = CheckBoxUsePr1Processor.Checked;
+                _neutronVariables.UsePr1StyleInputProcessor = CheckBoxUsePr1StyleInputProcessor.Checked;
+                _neutronVariables.UsePr1StyleOutputProcessor = CheckBoxUsePr1StyleOutputProcessor.Checked;
+                _neutronVariables.FieldDelimiter = TextBoxFieldDelimiter.Text;
+                _neutronVariables.AutoEnlargeImage = CheckBoxAutoEnlargeImage.Checked;
+                _neutronVariables.AutoLoadReplenishments = CheckBoxAutoLoadReplenishments.Checked;
+                _neutronVariables.IptiDisplays = CheckBoxIptiDisplays.Checked;
+                _neutronVariables.LoadRackOrders = CheckBoxLoadRackOrders.Checked;
+                _neutronVariables.SerialPicking = CheckBoxSerialPicking.Checked;
+                _neutronVariables.PrintPreview = CheckBoxPrintPreview.Checked;
+                _neutronVariables.UpdateItemDefinitionDescription = CheckBoxUpdateItemDefinitionDescription.Checked;
+                _neutronVariables.PrintPackingListStart = CheckBoxPrintPackingListStart.Checked;
+                _neutronVariables.PrintPackingListEnd = CheckBoxPrintPackingListEnd.Checked;
+                _neutronVariables.PrintPackingListManual = CheckBoxPrintPackingListManual.Checked;
+                _neutronVariables.LoaderDelay = TextBoxLoaderDelay.Text.ParseInt();
+                _neutronVariables.UploadDelay = TextBoxUploadDelay.Text.ParseInt();
+                _neutronVariables.ActionCodes = TextBoxActionCodes.Text;
+                _neutronVariables.UseCostCenter = CheckBoxUseCostCenter.Checked;
+                _neutronVariables.UseImages = CheckBoxUseImages.Checked;
+                _neutronVariables.DefaultLanguage = ((Language)ComboBoxDefaultLanguage.SelectedItem).CultureInfo;
+                _neutronVariables.DeviceFlashRate = TextBoxDeviceFlashRate.Text.ParseInt();
+                _neutronVariables.DefaultStorageTypeId = ((StorageType)ComboBoxDefaultStorageType.SelectedItem).Id;
+                _neutronVariables.UseAutoCompress = CheckBoxUseAutoCompress.Checked;
+                _neutronVariables.SpecialBackOrder = CheckBoxSpecialBackorder.Checked;
+                _neutronVariables.CompressDays = TextBoxCompressDays.Text.ParseInt();
+                _neutronVariables.RunCompressInterval = double.Parse(TextBoxRunCompressInterval.Text);
+                _neutronVariables.EnableEmailNotification = CheckBoxEnableEmailNotification.Checked;
+                _neutronVariables.LoaderStation = ((Workstation)ComboBoxLoaderStation.SelectedItem).Id;
+                _neutronVariables.RfidEnabledInventory = CheckBoxRfidEnabledInventory.Checked;
+                _neutronVariables.RfidEnabledPicking = CheckBoxRfidEnabledPicking.Checked;
+                _neutronVariables.BliController = Convert.ToInt32(numericUpDownBliControllerId.Value);
+                _neutronVariables.LogFilesDaysToKeep = Convert.ToUInt32(TextBoxLogFilesDaysToKeep.Text);
 
-                _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
+                if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
+                {
+                    _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
+
+                    _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
+                }
+                else
+                {
+                    MessageBox.Show("The License Code is required. ", "License Code Missing", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("The License Code is required. ", "License Code Missing", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show($"Save Variables Error: {ex.Message}");
             }
         }
 
@@ -989,6 +982,7 @@ namespace Neutron.Forms
             CheckBoxRfidEnabledInventory.Checked = _neutronVariables.RfidEnabledInventory;
             CheckBoxRfidEnabledPicking.Checked = _neutronVariables.RfidEnabledPicking;
             numericUpDownBliControllerId.Value = _neutronVariables.BliController == 0 ? 1 : _neutronVariables.BliController;
+            TextBoxLogFilesDaysToKeep.Text = _neutronVariables.LogFilesDaysToKeep.ToString();
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -1036,10 +1030,15 @@ namespace Neutron.Forms
 
             if (!CheckBoxUseLoftwareFile.Checked) return;
             {
+                var pathWithSlash = TextBoxLoftwareFilePath.Text;
+                if (!pathWithSlash.EndsWith(@"\"))
+                {
+                    pathWithSlash = pathWithSlash + @"\";
+                }
                 LoftwareLabelPrinter = new LoftwarePrinterPreferences
                 {
                     UseLoftwareFile = CheckBoxUseLoftwareFile.Checked,
-                    LoftwareFilePath = TextBoxLoftwareFilePath.Text,
+                    LoftwareFilePath = pathWithSlash,
                     LoftwarePrinter = TextBoxLoftwarePrinter.Text,
                     LoftwareStation = TextBoxLoftwareStation.Text,
                 };
@@ -3163,34 +3162,32 @@ namespace Neutron.Forms
             _jsonData.SaveFile<SapVariables>(sapVariables);
         }
 
-        private void ButtonBatchLightTurnOn_ClickAsync(object sender, EventArgs e)
-        {
+        //private void ButtonBatchLightTurnOn_ClickAsync(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
-        private void TurnOnOrderControlAsync(string bayId)
-        {
-            var text = _tcpIptiCommandCenter.GetBayController(bayId)
-                .TurnOnOrderControlModule(TextBoxBlastzoneOrderControlText.Text);
-            GlobalVar.Displays.SendText(text);
-        }
+        //private void TurnOnOrderControlAsync(string bayId)
+        //{
+        //    _iptiDisplayFunctions?.TurnOnBlastzoneOrderControl(bayId.ParseInt(),TextBoxBlastzoneOrderControlText.Text);
+        //}
 
-        private void ButtonBatchLightTurnOff_Click(object sender, EventArgs e)
-        {
-            // var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
-            var text = _tcpIptiCommandCenter.BatchBayController.TurnOffDisplay(TextBoxBlastzoneDisplay.Text.ParseInt());
-            GlobalVar.Displays.SendText(text);
-        }
+        //private void ButtonBatchLightTurnOff_Click(object sender, EventArgs e)
+        //{
+        //    // var bayId = ((int)NumericUpDownBayId.Value).ToString().PadLeft(2, '0');
+        //    var text = _tcpIptiCommandCenter.BatchBayController.TurnOffDisplay(TextBoxBlastzoneDisplay.Text.ParseInt());
+        //    _iptiDisplayFunctions?.SendText(text);
+        //}
 
         private void MBBatchLightTester_Click(object sender, EventArgs e)
         {
             LabelFormTitle.Text = "IPTI Light Tester";
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
 
-            if (_tcpIptiCommandCenter == null)
-            {
-                _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
-            }
+            //if (_tcpIptiCommandCenter == null)
+            //{
+            //    _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
+            //}
 
 
             var ipti = _jsonData.LoadFile<IptiConfig>();
@@ -3201,6 +3198,7 @@ namespace Neutron.Forms
                 ComboBoxButtonOnTime.SelectedIndex = ComboBoxButtonOnTime.FindStringExact("300");
                 ComboBoxButtonOffTime.SelectedIndex = ComboBoxButtonOffTime.FindStringExact("300");
                 ComboBoxOrderControlButton.SelectedIndex = ComboBoxOrderControlButton.FindStringExact("Blue Solid");
+                TextBoxTransmitDelay.Text = "20";
             }
             else
             {
@@ -3209,11 +3207,11 @@ namespace Neutron.Forms
                 ComboBoxButtonOnTime.SelectedIndex = ComboBoxButtonOnTime.FindStringExact(ipti.ButtonOnTime);
                 ComboBoxButtonOffTime.SelectedIndex = ComboBoxButtonOffTime.FindStringExact(ipti.ButtonOffTime);
                 ComboBoxOrderControlButton.SelectedIndex = ipti.OrderControlButton.ParseInt();
-
+                TextBoxTransmitDelay.Text = ipti.TransmitDelay.ToString();
             }
 
 
-            if (GlobalVar.Displays == null)
+            if (_iptiDisplayFunctions == null)
             {
                 ButtonTurnOnBlastzoneDisplay.Enabled = false;
                 ButtonTurnOffBlastzoneDisplay.Enabled = false;
@@ -3224,7 +3222,7 @@ namespace Neutron.Forms
                 ButtonTurnOffBlastzoneDisplay.Enabled = true;
                 ButtonProLiteTurnOnHot.Enabled = true;
                 ButtonProLiteTurnOnCycleCount.Enabled = true;
-
+                CheckBoxClientConnected.Checked = _iptiDisplayFunctions.IsClientConnected();
             }
 
             tabControl1.SelectedTab = BatchLights;
@@ -3697,7 +3695,7 @@ namespace Neutron.Forms
             "Quantity"
         };
 
-
+        private bool _isClientConnected;
 
         #endregion
 
@@ -3747,13 +3745,12 @@ namespace Neutron.Forms
                 ButtonColorTwo = ComboBoxButtonColorTwo.SelectedIndex.ToString(),
                 ButtonOnTime = ComboBoxButtonOnTime.SelectedItem.ToString(),
                 ButtonOffTime = ComboBoxButtonOffTime.SelectedItem.ToString(),
-                OrderControlButton = ComboBoxOrderControlButton.SelectedIndex.ToString()
+                OrderControlButton = ComboBoxOrderControlButton.SelectedIndex.ToString(),
+                TransmitDelay = TextBoxTransmitDelay.Text.ParseInt()
             };
 
             // save the json iptiConfig file
             _jsonData.SaveFile(iptiConfig);
-            _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
-
         }
 
         private List<PickSlip> GetPickSlipData(int orderId)
@@ -3765,196 +3762,8 @@ namespace Neutron.Forms
                 outs = context.Database.SqlQuery<PickSlip>("usp_GetPickSlipData @ORDERID", new object[] { paramOrderId }).ToList();
             }
             return outs;
+
         }
-        #region IPTI Display Functions
-
-        //private void TurnOnBlastzoneDisplay(int bayController, int position, string text)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (!_workstationView.Blastzones.Any()) return;
-        //        var bayId = bayController.ToString().PadLeft(2, '0');
-        //        var controller = _tcpIptiCommandCenter.BlastBayControllers.FirstOrDefault(r => r.BayId == bayId);
-        //        if (controller == null) return;
-        //        if (!controller.Enabled) return;
-
-        //        var command = controller.TurnOnDisplay(position, text);
-        //        GlobalVar.Displays.SendText(command);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn On Blastzone Display Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOffBlastzoneDisplay(int bayController, int position)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (!_workstationView.Blastzones.Any()) return;
-        //        var bayId = bayController.ToString().PadLeft(2, '0');
-        //        var controller = _tcpIptiCommandCenter.BlastBayControllers.FirstOrDefault(r => r.BayId == bayId);
-        //        if (controller == null) return;
-        //        if (!controller.Enabled) return;
-        //        var command = controller.TurnOffDisplay(position);
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn Off Blastzone Display Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOnBlastzoneOrderControl(int bayController, string text)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (!_workstationView.Blastzones.Any()) return;
-        //        var bayId = bayController.ToString().PadLeft(2, '0');
-        //        var controller = _tcpIptiCommandCenter.BlastBayControllers.FirstOrDefault(r => r.BayId == bayId);
-        //        if (controller == null) return;
-        //        if (!controller.Enabled) return;
-        //        var command = controller.TurnOnOrderControlModule(text);
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn On Blastzone Order Control Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOffBlastzoneOrderControl(int bayController)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (!_workstationView.Blastzones.Any()) return;
-        //        var bayId = bayController.ToString().PadLeft(2, '0');
-        //        var controller = _tcpIptiCommandCenter.BlastBayControllers.FirstOrDefault(r => r.BayId == bayId);
-        //        if (controller == null) return;
-        //        if (!controller.Enabled) return;
-        //        var command = controller.TurnOffOrderControlModule();
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn Off Blastzone Order Control Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void ClearBlastzone()
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (!_workstationView.Blastzones.Any()) return;
-
-        //        foreach (var bayController in _tcpIptiCommandCenter.BlastBayControllers)
-        //        {
-        //            if (!bayController.Enabled) continue;
-        //            var text = bayController.ClearDisplays();
-        //            GlobalVar.Displays.SendText(text);
-        //            text = bayController.TurnOffOrderControlModule();
-        //            GlobalVar.Displays.SendText(text);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Clear Blastzone Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void ClearBatchTable()
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable == null) return;
-        //        if (!_workstationView.BatchTable.Enabled) return;
-        //        var command = _tcpIptiCommandCenter.BatchBayController.ClearDisplays();
-        //        GlobalVar.Displays.SendText(command);
-        //        Thread.Sleep(100);
-        //        command = _tcpIptiCommandCenter.BatchBayController.TurnOffOrderControlModule();
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Clear Batch Table Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOnBatchDisplay(int position, string text)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable == null) return;
-        //        if (!_workstationView.BatchTable.Enabled) return;
-        //        var command = _tcpIptiCommandCenter.BatchBayController.TurnOnDisplay(position, text);
-        //        GlobalVar.Displays.SendText(command);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn On Batch Display Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOffBatchDisplay(int position)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable == null) return;
-        //        if (!_workstationView.BatchTable.Enabled) return;
-        //        var command = _tcpIptiCommandCenter.BatchBayController.TurnOffDisplay(position);
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn Off Batch Display Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOnBatchOrderControl(string text)
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable == null) return;
-        //        if (!_workstationView.BatchTable.Enabled) return;
-        //        var command = _tcpIptiCommandCenter.BatchBayController.TurnOnOrderControlModule(text);
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn On Batch Order Control Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-        //private void TurnOffBatchOrderControl()
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"START"));
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable == null) return;
-        //        if (!_workstationView.BatchTable.Enabled) return;
-        //        var command = _tcpIptiCommandCenter.BatchBayController.TurnOffOrderControlModule();
-        //        GlobalVar.Displays.SendText(command);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"Turn Off Batch Order Control Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"END"));
-        //}
-
-        #endregion
-
 
         private async void ButtonTurnOnBlastzoneDisplay_Click(object sender, EventArgs e)
         {
@@ -3962,8 +3771,10 @@ namespace Neutron.Forms
             var bayId = NumericUpDownBayId.Text.ParseInt();
             var display = TextBoxBlastzoneDisplay.Text.ParseInt();
             var text = TextBoxBlastzoneText.Text;
-
-            await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayId, display, text);
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayId, display, text);
+            }
 
         }
         private async void ButtonTurnOffBlastzoneDisplay_Click(object sender, EventArgs e)
@@ -3971,53 +3782,77 @@ namespace Neutron.Forms
             // TurnOffBlastzoneDisplay(NumericUpDownBayId.Text.ParseInt(), TextBoxBlastzoneDisplay.Text.ParseInt());
             var bayId = NumericUpDownBayId.Text.ParseInt();
             var display = TextBoxBlastzoneDisplay.Text.ParseInt();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOffBlastzoneDisplay(bayId, display);
 
-            await _iptiDisplayFunctions.TurnOffBlastzoneDisplay(bayId, display);
+            }
         }
         private async void ButtonBlastzoneClearAll_Click(object sender, EventArgs e)
         {
-            // ClearBlastzone();
-            var bayId = NumericUpDownBayId.Text.ParseInt();
-            await _iptiDisplayFunctions.ClearBlastzone(bayId);
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBlastzone();
+            }
+
         }
         private async void ButtonTurnOnBlastzoneOrderControl_Click(object sender, EventArgs e)
         {
             var bayId = NumericUpDownBayId.Text.ParseInt();
-            //TurnOnBlastzoneOrderControl(bayId, TextBoxBlastzoneOrderControlText.Text);
-            await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayId, TextBoxBlastzoneOrderControlText.Text);
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayId, TextBoxBlastzoneOrderControlText.Text);
+
+            }
         }
         private async void ButtonTurnOffBlastzoneOrderControl_Click(object sender, EventArgs e)
         {
             var bayId = NumericUpDownBayId.Text.ParseInt();
-            //TurnOffBlastzoneOrderControl(bayId);
-            await _iptiDisplayFunctions.TurnOffBlastzoneOrderControl(bayId);
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOffBlastzoneOrderControl(bayId);
+            }
 
         }
         private async void ButtonTurnOnBatchDisplay_Click(object sender, EventArgs e)
         {
-            // TurnOnBatchDisplay(TextBoxBatchPosition.Text.ParseInt(), TextBoxBatchText.Text);
-            await _iptiDisplayFunctions.TurnOnBatchDisplay(TextBoxBatchPosition.Text.ParseInt(), TextBoxBatchText.Text);
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBatchDisplay(TextBoxBatchPosition.Text.ParseInt(), TextBoxBatchText.Text);
+            }
         }
         private async void ButtonTurnOffBatchDisplay_Click(object sender, EventArgs e)
         {
-            // TurnOffBatchDisplay(TextBoxBatchPosition.Text.ParseInt());
-            await _iptiDisplayFunctions.TurnOffBatchDisplay(TextBoxBatchPosition.Text.ParseInt());
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOffBatchDisplay(TextBoxBatchPosition.Text.ParseInt());
+
+            }
 
         }
         private async void ButtonClearBatch_Click(object sender, EventArgs e)
         {
-            // ClearBatchTable();
-            await _iptiDisplayFunctions.ClearBatchTable();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+
+            }
         }
         private async void ButtonTurnOnBatchOrderControl_Click(object sender, EventArgs e)
         {
-            // TurnOnBatchOrderControl(TextBoxBatchOrderControlText.Text);
-            await _iptiDisplayFunctions.TurnOnBatchOrderControl(TextBoxBatchOrderControlText.Text);
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBatchOrderControl(TextBoxBatchOrderControlText.Text);
+
+            }
         }
         private async void ButtonTurnOffBatchOrderControl_Click(object sender, EventArgs e)
         {
-            // TurnOffBatchOrderControl();
-            await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+
+            }
         }
 
         private async void ButtonTurnAllOn_Click(object sender, EventArgs e)
@@ -4026,7 +3861,10 @@ namespace Neutron.Forms
             {
                 var num = i + 1;
                 var text = $"{num}{num}{num}{num}";
-                await _iptiDisplayFunctions.TurnOnBatchDisplay(num, text);
+                if (_iptiDisplayFunctions != null)
+                {
+                    await _iptiDisplayFunctions.TurnOnBatchDisplay(num, text);
+                }
                 Thread.Sleep(100);
             }
         }
@@ -4036,7 +3874,11 @@ namespace Neutron.Forms
             for (var i = 0; i < 7; i++)
             {
                 var num = i + 1;
-                await _iptiDisplayFunctions.TurnOffBatchDisplay(num);
+                if (_iptiDisplayFunctions != null)
+                {
+                    await _iptiDisplayFunctions.TurnOffBatchDisplay(num);
+
+                }
                 Thread.Sleep(100);
             }
         }

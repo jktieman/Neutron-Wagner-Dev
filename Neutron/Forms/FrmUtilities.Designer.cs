@@ -110,6 +110,8 @@
             this.LabelCheckPrinter = new System.Windows.Forms.Label();
             this.MBPrintSetUpBack = new MetroFramework.Controls.MetroButton();
             this.Settings = new System.Windows.Forms.TabPage();
+            this.LabelLogFilesDaysToKeep = new System.Windows.Forms.Label();
+            this.TextBoxLogFilesDaysToKeep = new System.Windows.Forms.TextBox();
             this.CheckBoxAutoLoadReplenishments = new System.Windows.Forms.CheckBox();
             this.numericUpDownBliControllerId = new System.Windows.Forms.NumericUpDown();
             this.LabelBliControllerId = new System.Windows.Forms.Label();
@@ -528,6 +530,7 @@
             this.ButtonSaveIptiConfig = new MetroFramework.Controls.MetroButton();
             this.MBBatchLightBack = new MetroFramework.Controls.MetroButton();
             this.PanelBatchLightTesterBottom = new System.Windows.Forms.Panel();
+            this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             this.ButtonClearBatch = new System.Windows.Forms.Button();
             this.ButtonTurnOffBatchOrderControl = new System.Windows.Forms.Button();
             this.ButtonTurnAllOff = new System.Windows.Forms.Button();
@@ -539,10 +542,12 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.TextBoxTransmitDelay = new System.Windows.Forms.TextBox();
             this.TextBoxBatchOrderControlText = new System.Windows.Forms.TextBox();
             this.TextBoxBatchText = new System.Windows.Forms.TextBox();
             this.TextBoxBatchPosition = new System.Windows.Forms.TextBox();
             this.ComboBoxButtonOffTime = new System.Windows.Forms.ComboBox();
+            this.LabelTransmitDelay = new System.Windows.Forms.Label();
             this.LabelButtonOffTime = new System.Windows.Forms.Label();
             this.ComboBoxButtonColorTwo = new System.Windows.Forms.ComboBox();
             this.ButtonColorTwo = new System.Windows.Forms.Label();
@@ -576,7 +581,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.RadioButtonClientConnected = new System.Windows.Forms.RadioButton();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -1348,6 +1353,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Settings.Controls.Add(this.LabelLogFilesDaysToKeep);
+            this.Settings.Controls.Add(this.TextBoxLogFilesDaysToKeep);
             this.Settings.Controls.Add(this.CheckBoxAutoLoadReplenishments);
             this.Settings.Controls.Add(this.numericUpDownBliControllerId);
             this.Settings.Controls.Add(this.LabelBliControllerId);
@@ -1441,6 +1448,26 @@
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
             // 
+            // LabelLogFilesDaysToKeep
+            // 
+            this.LabelLogFilesDaysToKeep.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLogFilesDaysToKeep.Location = new System.Drawing.Point(838, 592);
+            this.LabelLogFilesDaysToKeep.Name = "LabelLogFilesDaysToKeep";
+            this.LabelLogFilesDaysToKeep.Size = new System.Drawing.Size(170, 16);
+            this.LabelLogFilesDaysToKeep.TabIndex = 57;
+            this.LabelLogFilesDaysToKeep.Text = "Log Files Days To Keep";
+            this.LabelLogFilesDaysToKeep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // TextBoxLogFilesDaysToKeep
+            // 
+            this.TextBoxLogFilesDaysToKeep.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxLogFilesDaysToKeep.Location = new System.Drawing.Point(1013, 589);
+            this.TextBoxLogFilesDaysToKeep.Name = "TextBoxLogFilesDaysToKeep";
+            this.TextBoxLogFilesDaysToKeep.Size = new System.Drawing.Size(40, 22);
+            this.TextBoxLogFilesDaysToKeep.TabIndex = 58;
+            this.TextBoxLogFilesDaysToKeep.Text = "14";
+            this.TextBoxLogFilesDaysToKeep.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // CheckBoxAutoLoadReplenishments
             // 
             this.CheckBoxAutoLoadReplenishments.AutoSize = true;
@@ -1523,7 +1550,7 @@
             // 
             // ButtonUploadActionCodes
             // 
-            this.ButtonUploadActionCodes.Location = new System.Drawing.Point(847, 305);
+            this.ButtonUploadActionCodes.Location = new System.Drawing.Point(838, 305);
             this.ButtonUploadActionCodes.Name = "ButtonUploadActionCodes";
             this.ButtonUploadActionCodes.Size = new System.Drawing.Size(153, 23);
             this.ButtonUploadActionCodes.TabIndex = 49;
@@ -1699,7 +1726,7 @@
             this.LabelUploadDelay.Size = new System.Drawing.Size(166, 16);
             this.LabelUploadDelay.TabIndex = 19;
             this.LabelUploadDelay.Text = "Upload Delay (Seconds)";
-            this.LabelUploadDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelUploadDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelCompressHours
             // 
@@ -1729,7 +1756,7 @@
             this.LabelCompressInterval.Size = new System.Drawing.Size(150, 16);
             this.LabelCompressInterval.TabIndex = 19;
             this.LabelCompressInterval.Text = "Run Compress Every";
-            this.LabelCompressInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelCompressInterval.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelCompress1
             // 
@@ -1739,7 +1766,7 @@
             this.LabelCompress1.Size = new System.Drawing.Size(150, 16);
             this.LabelCompress1.TabIndex = 19;
             this.LabelCompress1.Text = "Compress Older Than";
-            this.LabelCompress1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelCompress1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelFlashRate
             // 
@@ -1749,7 +1776,7 @@
             this.LabelFlashRate.Size = new System.Drawing.Size(166, 16);
             this.LabelFlashRate.TabIndex = 19;
             this.LabelFlashRate.Text = "Device Flash Rate (MS)";
-            this.LabelFlashRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelFlashRate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelLoaderDelay
             // 
@@ -1759,7 +1786,7 @@
             this.LabelLoaderDelay.Size = new System.Drawing.Size(166, 16);
             this.LabelLoaderDelay.TabIndex = 40;
             this.LabelLoaderDelay.Text = "Loader Delay (Seconds)";
-            this.LabelLoaderDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelLoaderDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelFieldDelimiter
             // 
@@ -1975,7 +2002,7 @@
             this.CheckBoxSpecialBackorder.Checked = true;
             this.CheckBoxSpecialBackorder.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxSpecialBackorder.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxSpecialBackorder.Location = new System.Drawing.Point(841, 559);
+            this.CheckBoxSpecialBackorder.Location = new System.Drawing.Point(838, 559);
             this.CheckBoxSpecialBackorder.Name = "CheckBoxSpecialBackorder";
             this.CheckBoxSpecialBackorder.Size = new System.Drawing.Size(138, 20);
             this.CheckBoxSpecialBackorder.TabIndex = 35;
@@ -2349,7 +2376,7 @@
             // 
             this.CheckBoxUseAutoCompress.AutoSize = true;
             this.CheckBoxUseAutoCompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseAutoCompress.Location = new System.Drawing.Point(841, 448);
+            this.CheckBoxUseAutoCompress.Location = new System.Drawing.Point(838, 448);
             this.CheckBoxUseAutoCompress.Name = "CheckBoxUseAutoCompress";
             this.CheckBoxUseAutoCompress.Size = new System.Drawing.Size(146, 20);
             this.CheckBoxUseAutoCompress.TabIndex = 45;
@@ -2361,7 +2388,7 @@
             // 
             this.CheckBoxUseImages.AutoSize = true;
             this.CheckBoxUseImages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseImages.Location = new System.Drawing.Point(841, 379);
+            this.CheckBoxUseImages.Location = new System.Drawing.Point(838, 379);
             this.CheckBoxUseImages.Name = "CheckBoxUseImages";
             this.CheckBoxUseImages.Size = new System.Drawing.Size(99, 20);
             this.CheckBoxUseImages.TabIndex = 45;
@@ -2372,7 +2399,7 @@
             // 
             this.CheckBoxUseCostCenter.AutoSize = true;
             this.CheckBoxUseCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxUseCostCenter.Location = new System.Drawing.Point(841, 343);
+            this.CheckBoxUseCostCenter.Location = new System.Drawing.Point(838, 343);
             this.CheckBoxUseCostCenter.Name = "CheckBoxUseCostCenter";
             this.CheckBoxUseCostCenter.Size = new System.Drawing.Size(176, 20);
             this.CheckBoxUseCostCenter.TabIndex = 44;
@@ -2383,7 +2410,7 @@
             // 
             this.CheckBoxPrintPackingListManual.AutoSize = true;
             this.CheckBoxPrintPackingListManual.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPrintPackingListManual.Location = new System.Drawing.Point(841, 200);
+            this.CheckBoxPrintPackingListManual.Location = new System.Drawing.Point(838, 200);
             this.CheckBoxPrintPackingListManual.Name = "CheckBoxPrintPackingListManual";
             this.CheckBoxPrintPackingListManual.Size = new System.Drawing.Size(184, 20);
             this.CheckBoxPrintPackingListManual.TabIndex = 39;
@@ -2416,7 +2443,7 @@
             // 
             this.CheckBoxPrintPackingListEnd.AutoSize = true;
             this.CheckBoxPrintPackingListEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPrintPackingListEnd.Location = new System.Drawing.Point(841, 164);
+            this.CheckBoxPrintPackingListEnd.Location = new System.Drawing.Point(838, 164);
             this.CheckBoxPrintPackingListEnd.Name = "CheckBoxPrintPackingListEnd";
             this.CheckBoxPrintPackingListEnd.Size = new System.Drawing.Size(221, 20);
             this.CheckBoxPrintPackingListEnd.TabIndex = 38;
@@ -2427,7 +2454,7 @@
             // 
             this.CheckBoxPrintPackingListStart.AutoSize = true;
             this.CheckBoxPrintPackingListStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxPrintPackingListStart.Location = new System.Drawing.Point(841, 128);
+            this.CheckBoxPrintPackingListStart.Location = new System.Drawing.Point(838, 128);
             this.CheckBoxPrintPackingListStart.Name = "CheckBoxPrintPackingListStart";
             this.CheckBoxPrintPackingListStart.Size = new System.Drawing.Size(222, 20);
             this.CheckBoxPrintPackingListStart.TabIndex = 37;
@@ -3603,7 +3630,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DataGridViewStations.DefaultCellStyle = dataGridViewCellStyle8;
-            this.DataGridViewStations.Location = new System.Drawing.Point(192, 96);
+            this.DataGridViewStations.Location = new System.Drawing.Point(145, 96);
             this.DataGridViewStations.MultiSelect = false;
             this.DataGridViewStations.Name = "DataGridViewStations";
             this.DataGridViewStations.ReadOnly = true;
@@ -3621,7 +3648,7 @@
             this.DataGridViewStations.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewStations.RowTemplate.Height = 28;
             this.DataGridViewStations.RowTemplate.ReadOnly = true;
-            this.DataGridViewStations.Size = new System.Drawing.Size(835, 500);
+            this.DataGridViewStations.Size = new System.Drawing.Size(928, 500);
             this.DataGridViewStations.TabIndex = 2;
             this.DataGridViewStations.DoubleClick += new System.EventHandler(this.ViewEditStation);
             // 
@@ -6484,7 +6511,7 @@
             // PanelBatchLightTesterBottom
             // 
             this.PanelBatchLightTesterBottom.BackColor = System.Drawing.Color.LightGray;
-            this.PanelBatchLightTesterBottom.Controls.Add(this.RadioButtonClientConnected);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.CheckBoxClientConnected);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonClearBatch);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnOffBatchOrderControl);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonTurnAllOff);
@@ -6496,10 +6523,12 @@
             this.PanelBatchLightTesterBottom.Controls.Add(this.label12);
             this.PanelBatchLightTesterBottom.Controls.Add(this.label14);
             this.PanelBatchLightTesterBottom.Controls.Add(this.label15);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxTransmitDelay);
             this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchOrderControlText);
             this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchText);
             this.PanelBatchLightTesterBottom.Controls.Add(this.TextBoxBatchPosition);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonOffTime);
+            this.PanelBatchLightTesterBottom.Controls.Add(this.LabelTransmitDelay);
             this.PanelBatchLightTesterBottom.Controls.Add(this.LabelButtonOffTime);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ComboBoxButtonColorTwo);
             this.PanelBatchLightTesterBottom.Controls.Add(this.ButtonColorTwo);
@@ -6530,6 +6559,17 @@
             this.PanelBatchLightTesterBottom.Name = "PanelBatchLightTesterBottom";
             this.PanelBatchLightTesterBottom.Size = new System.Drawing.Size(733, 555);
             this.PanelBatchLightTesterBottom.TabIndex = 6;
+            // 
+            // CheckBoxClientConnected
+            // 
+            this.CheckBoxClientConnected.AutoSize = true;
+            this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxClientConnected.Location = new System.Drawing.Point(287, 205);
+            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
+            this.CheckBoxClientConnected.Size = new System.Drawing.Size(158, 24);
+            this.CheckBoxClientConnected.TabIndex = 39;
+            this.CheckBoxClientConnected.Text = "Transmitter Ready";
+            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
             // 
             // ButtonClearBatch
             // 
@@ -6650,6 +6690,16 @@
             this.label15.TabIndex = 32;
             this.label15.Text = "Position";
             // 
+            // TextBoxTransmitDelay
+            // 
+            this.TextBoxTransmitDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTransmitDelay.Location = new System.Drawing.Point(542, 504);
+            this.TextBoxTransmitDelay.Name = "TextBoxTransmitDelay";
+            this.TextBoxTransmitDelay.Size = new System.Drawing.Size(76, 26);
+            this.TextBoxTransmitDelay.TabIndex = 26;
+            this.TextBoxTransmitDelay.Text = "10";
+            this.TextBoxTransmitDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // TextBoxBatchOrderControlText
             // 
             this.TextBoxBatchOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -6691,16 +6741,26 @@
             "300",
             "400",
             "500"});
-            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(491, 470);
+            this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(542, 470);
             this.ComboBoxButtonOffTime.Name = "ComboBoxButtonOffTime";
             this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 28);
             this.ComboBoxButtonOffTime.TabIndex = 24;
+            // 
+            // LabelTransmitDelay
+            // 
+            this.LabelTransmitDelay.AutoSize = true;
+            this.LabelTransmitDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelTransmitDelay.Location = new System.Drawing.Point(370, 507);
+            this.LabelTransmitDelay.Name = "LabelTransmitDelay";
+            this.LabelTransmitDelay.Size = new System.Drawing.Size(166, 20);
+            this.LabelTransmitDelay.TabIndex = 23;
+            this.LabelTransmitDelay.Text = "Transmit Delay(MS)";
             // 
             // LabelButtonOffTime
             // 
             this.LabelButtonOffTime.AutoSize = true;
             this.LabelButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelButtonOffTime.Location = new System.Drawing.Point(349, 473);
+            this.LabelButtonOffTime.Location = new System.Drawing.Point(400, 473);
             this.LabelButtonOffTime.Name = "LabelButtonOffTime";
             this.LabelButtonOffTime.Size = new System.Drawing.Size(136, 20);
             this.LabelButtonOffTime.TabIndex = 23;
@@ -6719,7 +6779,7 @@
             "Magenta",
             "Orange",
             "White"});
-            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(490, 437);
+            this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(541, 437);
             this.ComboBoxButtonColorTwo.Name = "ComboBoxButtonColorTwo";
             this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxButtonColorTwo.TabIndex = 22;
@@ -6728,7 +6788,7 @@
             // 
             this.ButtonColorTwo.AutoSize = true;
             this.ButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonColorTwo.Location = new System.Drawing.Point(336, 440);
+            this.ButtonColorTwo.Location = new System.Drawing.Point(387, 440);
             this.ButtonColorTwo.Name = "ButtonColorTwo";
             this.ButtonColorTwo.Size = new System.Drawing.Size(147, 20);
             this.ButtonColorTwo.TabIndex = 21;
@@ -6787,9 +6847,9 @@
             "Blue Flash Fast",
             "Blue Flash Slow",
             "Blue Solid"});
-            this.ComboBoxOrderControlButton.Location = new System.Drawing.Point(339, 509);
+            this.ComboBoxOrderControlButton.Location = new System.Drawing.Point(196, 504);
             this.ComboBoxOrderControlButton.Name = "ComboBoxOrderControlButton";
-            this.ComboBoxOrderControlButton.Size = new System.Drawing.Size(178, 28);
+            this.ComboBoxOrderControlButton.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxOrderControlButton.TabIndex = 15;
             // 
             // ComboBoxButtonColorOne
@@ -6848,7 +6908,7 @@
             // 
             this.LabelBatchLightTester.AutoSize = true;
             this.LabelBatchLightTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBatchLightTester.Location = new System.Drawing.Point(150, 19);
+            this.LabelBatchLightTester.Location = new System.Drawing.Point(206, 19);
             this.LabelBatchLightTester.Name = "LabelBatchLightTester";
             this.LabelBatchLightTester.Size = new System.Drawing.Size(321, 25);
             this.LabelBatchLightTester.TabIndex = 8;
@@ -6913,7 +6973,7 @@
             // 
             this.LabelOrderControlButton.AutoSize = true;
             this.LabelOrderControlButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOrderControlButton.Location = new System.Drawing.Point(147, 512);
+            this.LabelOrderControlButton.Location = new System.Drawing.Point(4, 507);
             this.LabelOrderControlButton.Name = "LabelOrderControlButton";
             this.LabelOrderControlButton.Size = new System.Drawing.Size(176, 20);
             this.LabelOrderControlButton.TabIndex = 9;
@@ -7054,18 +7114,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // RadioButtonClientConnected
-            // 
-            this.RadioButtonClientConnected.AutoSize = true;
-            this.RadioButtonClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonClientConnected.Location = new System.Drawing.Point(505, 70);
-            this.RadioButtonClientConnected.Name = "RadioButtonClientConnected";
-            this.RadioButtonClientConnected.Size = new System.Drawing.Size(170, 20);
-            this.RadioButtonClientConnected.TabIndex = 38;
-            this.RadioButtonClientConnected.TabStop = true;
-            this.RadioButtonClientConnected.Text = "Interface Box Connected";
-            this.RadioButtonClientConnected.UseVisualStyleBackColor = true;
             // 
             // FrmUtilities
             // 
@@ -7708,6 +7756,11 @@
         private System.Windows.Forms.Button ButtonTurnAllOff;
         private System.Windows.Forms.Button ButtonTurnAllOn;
         private System.Windows.Forms.CheckBox CheckBoxAutoLoadReplenishments;
-        private System.Windows.Forms.RadioButton RadioButtonClientConnected;
+        private System.Windows.Forms.TextBox TextBoxTransmitDelay;
+        private System.Windows.Forms.Label LabelTransmitDelay;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.CheckBox CheckBoxClientConnected;
+        private System.Windows.Forms.Label LabelLogFilesDaysToKeep;
+        private System.Windows.Forms.TextBox TextBoxLogFilesDaysToKeep;
     }
 }

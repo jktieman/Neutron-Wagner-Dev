@@ -5,20 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 
 namespace NeutronData.Repositories
 {
     public class AkaRepository : IAkaRepository
     {
         private readonly NeutronDb _context = new NeutronDb();
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
 
         public AkaRepository()
         {
+            Init();
+        }
+
+        private void Init()
+        {
             _logger = NeutronCore.Global.Logger.SetupLogger(@"AKARepository");
         }
-        
-        
+
         /// <summary>
         /// Takes an AKA and returns the Item or an Empty String 
         /// </summary>
@@ -26,7 +31,7 @@ namespace NeutronData.Repositories
         /// <returns>Item or an Empty String</returns>
         public string Get(string aka)
         {
-            _ = _logger.LogDetailAsync($@"AKA Get: {aka}");
+            _logger.LogDetailAsync($@"AKA Get: {aka}").SafeFireAndForget();
             var item = string.Empty;
             try
             {
@@ -38,7 +43,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             return item;
@@ -52,7 +57,7 @@ namespace NeutronData.Repositories
         /// <returns>first AKA or an Empty String</returns>
         public string GetUpc(string item)
         {
-            _ = _logger.LogDetailAsync($@"AKA GetUPC: {item}");
+            _logger.LogDetailAsync($@"AKA GetUPC: {item}").SafeFireAndForget();
             var upc = string.Empty;
             try
             {
@@ -67,7 +72,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             return upc;
@@ -80,24 +85,25 @@ namespace NeutronData.Repositories
         /// <returns>List of AKA's</returns>
         public List<string> GetAkas(string item)
         {
-            _ = _logger.LogDetailAsync($@"AKA GetAKAs: {item}");
+            _logger.LogDetailAsync($@"AKA GetAKAs: {item}").SafeFireAndForget();
+
             var list = new List<string>();
+
+            // check to see if item is null or empty
+            if (string.IsNullOrEmpty(item)) return list;
+
             try
             {
-                if (!string.IsNullOrEmpty(item))
+                var recs = _context.AkaTypes.Where(r => r.Item == item);
+                if (recs.Any())
                 {
-                    var recs = _context.AkaTypes.Where(r => r.Item == item);
-                    if (recs != null)
-                    {
-                        list.AddRange(recs.Select(rec => rec.Aka));
-                    }
+                    list.AddRange(recs.Select(rec => rec.Aka));
                 }
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
-
             return list;
         }
 
@@ -105,91 +111,112 @@ namespace NeutronData.Repositories
         // Get an AKA record
         public AkaType GetAka(string aka)
         {
-            _ = _logger.LogDetailAsync($@"AKA GetAka: {aka}");
+            _logger.LogDetailAsync($@"AKA GetAka: {aka}").SafeFireAndForget();
+            if (string.IsNullOrEmpty(aka)) return null;
+
             AkaType rec = null;
             try
             {
-                if (!string.IsNullOrEmpty(aka))
-                {
-                    rec = _context.AkaTypes.FirstOrDefault(r => r.Aka == aka);
-                }
+                rec = _context.AkaTypes.FirstOrDefault(r => r.Aka == aka);
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             return rec;
         }
 
-        
-
         public void Insert(AkaType aka)
         {
-            _ = _logger.LogDetailAsync($@"AKA Insert Item: {aka.Item}  AKA: {aka.Aka}");   
-            if (aka == null) return;
+                if (aka == null)
+                {
+                    _logger.LogDetailAsync("Attempted to insert null AkaType").SafeFireAndForget();
+                    return;
+                }
+                try
+                {
+                    _context.AkaTypes.Add(aka);
+                    _context.SaveChanges();
+                    _logger.LogDetailAsync($@"Successfully inserted AKA Item: {aka.Item}, AKA: {aka.Aka}").SafeFireAndForget();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDetailAsync($@"Error inserting AKA: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+                }
+        }
+
+        // delete aka
+        public void Delete(AkaType aka)
+        {
+            _logger.LogDetailAsync($"AKA Delete: {aka}").SafeFireAndForget();
+            if (aka == null)
+            {
+                _logger.LogDetailAsync("AKA Delete: Attempted to delete null AKA").SafeFireAndForget();
+                return;
+            }
             try
             {
-                _context.AkaTypes.Add(aka);
+                var rec = _context.AkaTypes.Find(aka.Aka);
+                if (rec != null)
+                {
+                    _context.AkaTypes.Remove(rec);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    _logger.LogDetailAsync($"AKA Delete: No AKA found with AKA: {aka.Aka}").SafeFireAndForget();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+        }
+
+
+        public void Update(AkaType aka)
+        {
+            if (aka == null)
+            {
+                throw new ArgumentNullException(nameof(aka), @"Provided AKA type is null.");
+            }
+            try
+            {
+                var rec = _context.AkaTypes.Find(aka.Aka);
+                if (rec != null)
+                {
+                    rec.Item = aka.Item;
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    _logger.LogDetailAsync($"AKA Update: No record found for AKA: {aka.Aka}").SafeFireAndForget();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"AKA Update Error: {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+        }
+
+
+        public void Save()
+        {
+            try
+            {
                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                var errorMessage = $"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}";
+                _logger.LogDetailAsync(errorMessage).SafeFireAndForget();
             }
         }
 
-       // delete aka
-       public void Delete(AkaType aka)
-       {
-           _ = _logger.LogDetailAsync($@"AKA Delete: {aka}");
-           try
-           {
-               var rec = _context.AkaTypes.Find(aka.Aka);
-               if (rec != null)
-               {
-                   _context.AkaTypes.Remove(rec);
-                   _context.SaveChanges();
-               }
-           }
-           catch (Exception ex)
-           {
-               _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
-            }
-        }
-
-       public void Update(AkaType aka)
-       {
-           try
-           {
-               var rec = _context.AkaTypes.Find(aka.Aka);
-               if (rec != null)
-               {
-                   rec.Item = aka.Item;
-                   _context.SaveChanges();
-               }
-           }
-           catch (Exception ex)
-           {
-               _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
-            }
-        }
-
-       public void Save()
-       {
-           try
-           {
-               _context.SaveChanges();
-           }
-           catch (Exception ex)
-           {
-               _ = _logger.LogDetailAsync($@"AKA Error: {ex.Message} {Environment.NewLine} {ex.InnerException}");
-            }
-        }
-
-       public void Dispose()
-       {
+        public void Dispose()
+        {
             _context?.Dispose();
-       }
+        }
     }
 }

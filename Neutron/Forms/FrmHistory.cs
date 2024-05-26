@@ -16,6 +16,9 @@ using Equin.ApplicationFramework;
 using NeutronCore;
 using NeutronCore.Enums;
 using Neutron.Models;
+using NeutronData.Repositories;
+using NeutronData.DataContexts;
+using NeutronData.Models;
 
 namespace Neutron.Forms
 {
@@ -33,6 +36,7 @@ namespace Neutron.Forms
         private DateTime _currentFromDateTime;
         private DateTime _currentToDateTime;
         private readonly HeaderTextManager _headerTextManager;
+        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
 
         public FrmHistory(IAkaRepository akaRepository, HistoryManager historyManager, WorkstationView workstationView)
         {
@@ -96,7 +100,7 @@ namespace Neutron.Forms
         {
 
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.DefaultCellStyle.ForeColor = Color.Black;
             DataGridView1.DefaultCellStyle.BackColor = Color.White;
             var col = new DataGridViewTextBoxColumn
@@ -621,6 +625,23 @@ namespace Neutron.Forms
             if (e.KeyChar == (char)Keys.Enter)
             {
                 Run();
+            }
+        }
+
+        private void MBHistoryTransmitSelected_Click(object sender, EventArgs e)
+        {
+            TransmitSelectedRecords();
+        }
+
+        private void TransmitSelectedRecords()
+        {
+            foreach (DataGridViewRow row in  DataGridView1.SelectedRows)
+            {
+                var id = (int)row.Cells["Id"].Value;
+                var history = _repoHistory.FindByKey(id);
+                history.TransmitDateTime = null;
+                _repoHistory.Update(history);
+
             }
         }
     }

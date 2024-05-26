@@ -51,7 +51,7 @@ namespace NeutronData.Repositories
             _logger = NeutronCore.Global.Logger.SetupLogger(@"LocationsRepository");
             //_moveablePickStationIds = _workstationRepository.GetMoveablePickStationIds();
             //_rackStation = _workstationRepository.GetRackStation(8);
-            _pickStations = _workstationRepository.GetAllPickStations();
+           // _pickStations = _workstationRepository.GetAllPickStations();
             _allPickableAreaIds = _areaRepository.GetAllAreaIds(); // .GetAllPickStationIds();
             _totalOrderDetailCount = 0;
             _runningOrderDetailCount = 0;

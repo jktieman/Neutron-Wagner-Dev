@@ -56,8 +56,7 @@ namespace DeviceIndicatorService
             {
                 _hardwareDevices = _workstationView.Hanels;
             }
-            
-            if (_hardwareDevices.Count == 0)
+            else
             {
                 return;
             }
@@ -110,7 +109,7 @@ namespace DeviceIndicatorService
         private void RemovePanelControls()
         {
             // Removes the DeviceIndicators from the Panel  
-            DeviceIndicatorPanel.Controls.Clear();
+            DeviceIndicatorPanel?.Controls.Clear();
 
         }
 
@@ -139,7 +138,7 @@ namespace DeviceIndicatorService
                 DeviceIndicatorPanel.Controls.Add(device);
 
             }
-            DeviceIndicatorPanel.Refresh();
+            DeviceIndicatorPanel?.Refresh();
         }
 
         public async void UpdateCurrentDeviceIndicator(int loc)

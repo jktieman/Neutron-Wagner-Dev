@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using JsonManager;
 using NeutronData.Interfaces;
 using NeutronData.Models;
@@ -50,8 +51,8 @@ namespace IPTI.Models
 
             _iptiConfig = _jsonData.LoadFile<IptiConfig>();
 
-            _logger.LogDetailAsync($"IptiConfig: {_iptiConfig.OrderControlButton}");
-
+            _logger.LogDetailAsync($"IptiConfig: {_iptiConfig.OrderControlButton}").SafeFireAndForget();
+            
             LoadBayControllers();
 
         }
@@ -135,23 +136,6 @@ namespace IPTI.Models
                     BatchBayController = newBatchBayController;
                     BayControllers.Add(newBatchBayController);
                 }
-
-                //BayControllers = new List<BayController>
-                //{
-                //    new BayController("Blast", "01", 32, "Micro", _iptiConfig, _workStationView.Blastzones[0].Enabled),
-                //    new BayController("Blast", "02", 32, "Micro", _iptiConfig, _workStationView.Blastzones[1].Enabled),
-                //    new BayController("Blast", "03", 64, "Micro", _iptiConfig, _workStationView.Blastzones[2].Enabled),
-                //    new BayController("Batch", "04", 16, "Max4", _iptiConfig, _workStationView.BatchTable.Enabled)
-                //};
-
-                //BatchBayController = new BayController("Batch", "04", 16, "Max4", _iptiConfig, _workStationView.BatchTable.Enabled);
-
-                //BlastBayControllers = new List<BayController>
-                //{
-                //    new BayController("Blast", "01", 32, "Micro", _iptiConfig, _workStationView.Blastzones[0].Enabled),
-                //    new BayController("Blast", "02", 32, "Micro", _iptiConfig, _workStationView.Blastzones[1].Enabled),
-                //    new BayController("Blast", "03", 64, "Micro", _iptiConfig, _workStationView.Blastzones[2].Enabled)
-                //};
             }
             catch (Exception ex)
             {

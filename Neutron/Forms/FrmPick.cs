@@ -1,54 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AlliedLogger;
+﻿using AlliedLogger;
+using AsyncAwaitBestPractices;
+using DeviceIndicatorService;
 using EnumsNET;
 using Equin.ApplicationFramework;
+using IPTI.Models;
 using JsonManager;
 using MetroFramework.Forms;
 using Neutron.Classes;
+using Neutron.Enums;
 using Neutron.Global;
+using Neutron.Interfaces;
 using Neutron.Models;
+using Neutron.Ninject;
+using Neutron.UserControls;
 using NeutronCore;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronData.PrintModels;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
-using NeutronData.ModelViews;
 using NeutronData.Models;
+using NeutronData.ModelViews;
+using NeutronData.PrintModels;
 using NeutronData.Repositories;
-using NeutronCore.Enums;
-using Neutron.Interfaces;
+using NeutronDllu;
+using NeutronEvents;
+using NeutronLoader;
+using ReplenService;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Threading;
-using System.Data.SqlClient;
-using DeviceIndicatorService;
-using Neutron.Enums;
-using Neutron.Ninject;
-using Neutron.UserControls;
-using NeutronCore.Extensions;
-using NeutronEvents;
-using NeutronDllu;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
-using Label = System.Windows.Forms.Label;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Panel = System.Windows.Forms.Panel;
 using ScrollBars = System.Windows.Forms.ScrollBars;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 using TextBox = System.Windows.Forms.TextBox;
-using IPTI.Models;
-using NeutronLoader;
-using ReplenService;
-using AsyncAwaitBestPractices;
 
 
 namespace Neutron.Forms
@@ -60,7 +60,7 @@ namespace Neutron.Forms
 
         private readonly IAreaRepository _areaRepository;
         private readonly IInventoryRepository _inventoryRepository;
-        private readonly IDisplayController _tcpIptiController;
+        // private readonly IDisplayController _tcpIptiController;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         private ResourceManager _gridResourceManager;
@@ -119,8 +119,8 @@ namespace Neutron.Forms
         // private string _imagesDirectory;
         private PickDeviceManager _deviceManager;
         private DocumentToPrint _documentToPrint;
-        private DocumentPrinterPreferences _documentPrinter;
-        private LabelPrinterPreferences _labelPrinter;
+        private DocumentPrinterPreferences _documentPrinterPreferences;
+        private LabelPrinterPreferences _labelPrinterPreferences;
 
         private readonly IJsonData _jsonData;
 
@@ -152,6 +152,7 @@ namespace Neutron.Forms
 
         //private readonly List<Workstation> _pickStations;
         private readonly WorkstationView _workstationView;
+        private readonly int _areaEight = 8;
         private int[] _areaIdsForThisWorkstation;
 
         private List<Inventory> _currentInventory;
@@ -164,13 +165,13 @@ namespace Neutron.Forms
         private bool _useCostCenter = false;
 
         // Hardware Flags to indicate if hardware device/devices are attached...
-        private bool _blastzone = false;
-        private bool _batchTable = false;
-        private bool _prolite = false;
-        private bool _hanel = false;
+        //private bool _blastzone = false;
+        //private bool _batchTable = false;
+        //private bool _prolite = false;
+        //private bool _hanel = false;
+        private bool _isClientConnected = false;
 
-        private TcpIptiCommandCenter _tcpIptiCommandCenter;
-        private IptiDisplayFunctions _iptiDisplayFunctions;
+        private IIptiDisplayFunctions _iptiDisplayFunctions;
         private SynchronizationContext _synchronizationContext;
 
         public delegate void UpdatePickAcceptDelegate(bool b);
@@ -183,7 +184,7 @@ namespace Neutron.Forms
             , IItemDefinitionsRepository itemDefinitionsRepository, HistoryManager historyManager
             , ILocationsRepository locationsRepository
             , IAreaRepository areaRepository, IInventoryRepository inventoryRepository
-            , IDisplayController tcpIptiController)
+            , IIptiDisplayFunctions iptiDisplayFunctions)
         {
 
             InitializeComponent();
@@ -205,8 +206,7 @@ namespace Neutron.Forms
             _locationsRepository = locationsRepository;
             _areaRepository = areaRepository;
             _inventoryRepository = inventoryRepository;
-            _tcpIptiController = tcpIptiController;
-
+            _iptiDisplayFunctions = iptiDisplayFunctions;
             InitForm();
         }
 
@@ -214,8 +214,8 @@ namespace Neutron.Forms
         {
             KeyPreview = true;
             _logger = NeutronCore.Global.Logger.SetupLogger("Pick");
-            _iptiDisplayFunctions =
-                new IptiDisplayFunctions(_jsonData, _neutronVariables, _workstationView, _tcpIptiController);
+            //_iptiDisplayFunctions =
+            //    new IptiDisplayFunctions(_jsonData, _neutronVariables, _workstationView, _tcpIptiController);
 
             _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}").SafeFireAndForget();
 
@@ -231,11 +231,6 @@ namespace Neutron.Forms
             SetLoaderButtonText();
             SetUploadButtonText();
             FillComboBoxAreaNumbers();
-
-            if (_tcpIptiCommandCenter == null)
-            {
-                _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
-            }
 
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
@@ -264,24 +259,24 @@ namespace Neutron.Forms
 
             // set up the hardware on this Pick Station
             // if there is a defined Blastzone then set the global variable _blastzone to true
-            var blastzone = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone);
+            // var blastzone = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone);
             // quick reference flag shows if a Blastzone is used
-            if (blastzone != null) _blastzone = true;
+            // if (blastzone != null) _blastzone = true;
 
             // if there is a defined BatchTable then set the global variable _batchTable to true
-            var batchTable = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.IptiDisplays);
+            //  var batchTable = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.IptiDisplays);
             // quick reference flag shows if a BatchTable is used
-            if (batchTable != null) _batchTable = true;
+            //  if (batchTable != null) _batchTable = true;
 
             // Represents a collection of ProLite hardware devices associated with the current workstation view.
-            var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
+            //  var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
             // quick reference flag shows if Prolites are used
-            _prolite = prolites.Any();
+            //  _prolite = prolites.Any();
 
             // Represents a collection of Hanel hardware devices associated with the current workstation view.
-            var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
+            //  var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
             // quick reference flag shows if Hanels are used
-            _hanel = hanels.Any();
+            //  _hanel = hanels.Any();
 
             MBMainAvailableOrders.Text = $"{_resourceManager.GetString($"AvailableOrders")} - {_workstationView.Area.Name}";
 
@@ -310,23 +305,21 @@ namespace Neutron.Forms
 
         private void FrmPick_IsClientConnected(object sender, IsClientConnectedEventArgs e)
         {
-            var isClientConnected = e.IsClientConnected;
-            UpdateClientConnected(isClientConnected);
+            if (_isClientConnected.Equals(e.IsClientConnected)) return;
+            _isClientConnected = e.IsClientConnected;
+            UpdateClientConnected(_isClientConnected);
         }
 
         private void UpdateClientConnected(bool state)
         {
+            _logger.LogDetailAsync("Client connection state updated: " + state).SafeFireAndForget();
             if (InvokeRequired)
             {
-                RadioButtonClientConnected.BeginInvoke(new MethodInvoker(delegate
-                {
-                    RadioButtonClientConnected.Checked = state;
-                }));
+                Invoke(new Action<bool>(UpdateClientConnected), state);
+                return;
             }
-            else
-            {
-                RadioButtonClientConnected.Checked = state;
-            }
+
+            CheckBoxClientConnected.Checked = state;
         }
         private void UpdateTraysInPosition(InPositionInfo inPositionInfo)
         {
@@ -350,7 +343,7 @@ namespace Neutron.Forms
             int id = Thread.CurrentThread.ManagedThreadId;
             Trace.WriteLine("FrmPick thread: " + id);
 
-            Console.WriteLine("Start Load Grids");
+            _logger.LogDetailAsync("Start Load Grids").SafeFireAndForget();
 
             if (!_availableOrdersGridReady)
             {
@@ -452,7 +445,7 @@ namespace Neutron.Forms
         {
             if (PickScreen.Controls.ContainsKey("PanelDeviceIndicators")) return;
 
-            Task.Run(() => _logger.LogDetailAsync("Initialize Device Indicators - Create New DeviceIndicatorManager"));
+            _logger.LogDetailAsync("Initialize Device Indicators - Create New DeviceIndicatorManager").SafeFireAndForget();
 
             _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(189, 0),
                 new Size(769, 127), _neutronVariables);
@@ -526,7 +519,7 @@ namespace Neutron.Forms
 
         private void ShowOrderComplete(Order order)
         {
-            _logger.LogDetailAsync($"Show Order Complete Event: Order Number _ {order.Ord1} -- {order.Ord2}");
+            _logger.LogDetailAsync($"Show Order Complete Event: Order Number _ {order.Ord1} -- {order.Ord2}").SafeFireAndForget();
             var bp = _ordersToPick.FirstOrDefault(o => o.OrderId == order.Id);
             if (bp == null) return;
             string pos = bp.PositionNumber.ToString();
@@ -588,7 +581,7 @@ namespace Neutron.Forms
             if (e.KeyChar == (char)Keys.Return)
             {
                 SendKeys.Send(keys: "{Tab}");
-                NextButtonEnabled();
+               // NextButtonEnabled();
                 e.Handled = true;
             }
         }
@@ -625,8 +618,8 @@ namespace Neutron.Forms
 
         public async Task IptiButtonPickAccept(ResponseInfo responseInfo)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($"IptiButtonPickAccept Display Number:  {responseInfo.DisplayNumber}"));
-           await PickAccept();
+            _logger.LogDetailAsync($"IptiButtonPickAccept Display Number:  {responseInfo.DisplayNumber}").SafeFireAndForget();
+            await PickAccept();
         }
 
         private void StartStopLoaderAction(string startStop)
@@ -730,8 +723,8 @@ namespace Neutron.Forms
         }
         private void SetupPrinters()
         {
-            _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
-            _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
+            _documentPrinterPreferences = _jsonData.LoadFile<DocumentPrinterPreferences>();
+            _labelPrinterPreferences = _jsonData.LoadFile<LabelPrinterPreferences>();
         }
 
         private void FrmPick_Load(object sender, EventArgs e)
@@ -851,7 +844,7 @@ namespace Neutron.Forms
         private int ShowReplenOrders(int recId = 0)
         {
 
-            Task.Run(() => _logger.LogDetailAsync($"Show Replen Orders Start: [{DateTime.Now.ToString(CultureInfo.CurrentCulture)}]"));
+            _logger.LogDetailAsync($"Show Replen Orders Start: [{DateTime.Now.ToString(CultureInfo.CurrentCulture)}]").SafeFireAndForget();
             var idx = 0;
 
             var findWhat = TextBoxFind.Text.Trim().ToLower();
@@ -916,7 +909,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrdersRack Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                _logger.LogDetailAsync($"ShowAvailableOrdersRack Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
             }
 
 
@@ -970,7 +963,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
@@ -1026,7 +1019,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]"));
+                _logger.LogDetailAsync($"ShowAvailableOrders Error: {ex.Message} {Environment.NewLine} {ex.InnerException} [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
             }
 
             DataGridViewAvailableOrders.DataSource = _bindingSourceAvailableOrders;
@@ -1099,7 +1092,7 @@ namespace Neutron.Forms
             // Loop over Orders to Pick to set the first on available
 
             // first empty using Linq
-            var batchPosition = _ordersToPick.FirstOrDefault(r => r.OrderId == 0);
+            var batchPosition = _ordersToPick.OrderBy(o => o.PositionNumber).FirstOrDefault(r => r.OrderId == 0);
             if (batchPosition != null)
             {
                 SetCurrentTextBoxPos(batchPosition.PositionNumber);
@@ -1141,6 +1134,8 @@ namespace Neutron.Forms
         /// <returns>The count of records in the provided BindingSource.</returns>
         private int GetRecordCount(BindingSource bs)
         {
+            if (bs == null) return 0;
+
             var count = bs.Count;
             var records = _resourceManager.GetString($"Records");
             LabelRecordCount.Text = $"{records}: {count}";
@@ -2781,7 +2776,7 @@ namespace Neutron.Forms
             ShowAvailableStagingOrders();
             LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
-            NextButtonEnabled();
+           // NextButtonEnabled();
             tabControl1.SelectedTab = AvailableOrders;
         }
 
@@ -2798,14 +2793,14 @@ namespace Neutron.Forms
 
         private async Task AvailableOrdersBack()
         {
-
-            await _iptiDisplayFunctions.ClearBatchTable();
-
-            await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+                await _iptiDisplayFunctions.ClearBlastzone();
+            }
 
             GlobalVar.Hanel?.ResetHanelDeviceStatus();
-
-            await _iptiDisplayFunctions.ClearBlastzone();
 
             // Clear all the ProLites using the ProLiteManager
 
@@ -2820,33 +2815,36 @@ namespace Neutron.Forms
 
         private async void MBGo_Click(object sender, EventArgs e)
         {
+            if (!CheckForValidOrders()) return;
+
+            
             _spaceBarDisabled = true;
-            DisableNextButtons();
+          //  DisableNextButtons();
             MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"ShowJobs");
             Cursor.Current = Cursors.WaitCursor;
             await Go();
             Cursor.Current = Cursors.Default;
             _spaceBarDisabled = false;
-            EnableNextButtons();
+          //  EnableNextButtons();
         }
 
-        private void DisableNextButtons()
-        {
-            MBGo.Enabled = false;
-            MBGo2.Enabled = false;
-        }
+        //private void DisableNextButtons()
+        //{
+        //    MBGo.Enabled = false;
+        //    MBGo2.Enabled = false;
+        //}
 
-        private void EnableNextButtons()
-        {
-            MBGo.Enabled = true;
-            MBGo2.Enabled = true;
-        }
+        //private void EnableNextButtons()
+        //{
+        //    MBGo.Enabled = true;
+        //    MBGo2.Enabled = true;
+        //}
 
         private async Task Go()
         {
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START Before FinalCheckOfOrdersToPick"));
 
-            if (FinalCheckOfOrdersToPick() == false) { return; }
+            //if (FinalCheckOfOrdersToPick() == 0) return;
 
 
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START after FinalCheckOfOrdersToPick"));
@@ -2855,7 +2853,7 @@ namespace Neutron.Forms
             try
             {
 
-                var numOrders = _ordersToPick.Count(o => o.OrderId != 0);
+                var numOrders = FinalCheckOfOrdersToPick(); // _ordersToPick.Count(o => o.OrderId != 0);
                 if (numOrders > 0)
                 {
                     LabelFormTitle.Text = _resourceManager.GetString($"PickList");
@@ -2865,8 +2863,9 @@ namespace Neutron.Forms
 
                     if (pickableViews.Count > 0)
                     {
-                        _bindingSourcePickViews.DataSource = pickableViews;
-                        DataGridPickView.DataSource = _bindingSourcePickViews;
+                        //_bindingSourcePickViews.DataSource = pickableViews;
+                        //DataGridPickView.DataSource = _bindingSourcePickViews;
+                        
                         // ---         Task.Run(() => _logger.LogDetailAsync($"bindingSourcePickViews Count:{_bindingSourcePickViews.Count.ToString()}"));
                         GetRecordCount(_bindingSourcePickViews);
                         // Check for items with insufficient inventory
@@ -2883,7 +2882,7 @@ namespace Neutron.Forms
                             // At this point we have a list of PickViews that have sufficient inventory
                             // and we have checked for short items
                             // so we can go ahead and start the batch
-                            await Start();
+                            await Start(pickableViews);
                         }
                     }
                     else
@@ -2909,7 +2908,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Exception: {ex.Message}");
+                _logger.LogDetailAsync($"Exception: {ex.Message}").SafeFireAndForget();
             }
 
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START Complete"));
@@ -2918,12 +2917,14 @@ namespace Neutron.Forms
         /// Check to see if TextBoxPosx.Text doesn't match OrdersToPick.Order
         /// Clear invalid OrdersToPick
         /// </summary>
-        private bool FinalCheckOfOrdersToPick()
+        private int FinalCheckOfOrdersToPick()
         {
             // loop over all TextBoxPosx
             // and check for TextBoxPosx.Text that doesn't match OrdersToPick.Order
             // Clear invalid OrdersToPick
-            _ = _logger.LogDetailAsync($"[{DateTime.Now}]  Start FinalCheckOfOrdersToPick");
+            var validOrdersToPick = 0;
+            var available = 1;
+            _logger.LogDetailAsync($"[{DateTime.Now}]  Start FinalCheckOfOrdersToPick").SafeFireAndForget();
             try
             {
                 //ClearBatchPositions();
@@ -2931,60 +2932,72 @@ namespace Neutron.Forms
                 foreach (var bp in _ordersToPick)
                 {
                     var pos = bp.PositionNumber.ToString();
-                    var c = Controls.Find($"TextBoxPos{pos}", true).First();
-                    if (c != null)
+
+                    var controls = Controls.Find($"TextBoxPos{pos}", true);
+                    if (!controls.Any()) continue;
+                    var control = controls.First();
+                    var textBox = (TextBox)control;
+                    if (textBox == null) continue;
+                    var order = textBox.Text.Trim();
+                    //Is this a real order
+                    if (!string.IsNullOrEmpty(order))
                     {
-                        var textBox = ((TextBox)c);
-                        var order = textBox.Text.Trim();
-                        //Is this a real order
-                        if (!string.IsNullOrEmpty(order))
+                        var isRealOrder = _repoOrders.FindBy(r => r.Ord1 == order && r.OrderStatusId == available).FirstOrDefault();
+                        if (isRealOrder == null)
                         {
-                            var isRealOrder = _repoOrders.FindBy(r => r.Ord1 == order && r.OrderStatusId == 1).FirstOrDefault();
-                            if (isRealOrder == null)
-                            {
-                                MessageBox.Show($"The Delivery {order} in Position {pos} does not exist.");
-                                ClearItemFromBatchByPosition(bp.PositionNumber);
-                                return false;
-                            }
-                            else
-                            {
-                                // create the Batch Position
-                                bp.OrderId = isRealOrder.Id;
-                                bp.Ord1 = isRealOrder.Ord1;
-                                bp.Ord2 = isRealOrder.Ord2;
-                                bp.OrderComplete = false;
-                            }
+                            // NOT a valid order
+                            Mediator.GetInstance().OnDisplayMessage(this, $"The Delivery {order} in Position {pos} does not exist.");
+                            ClearItemFromBatchByPosition(bp.PositionNumber);
                         }
                         else
                         {
-                            bp.OrderId = 0;
-                            bp.Ord1 = string.Empty;
-                            bp.Ord2 = string.Empty;
+                            // This is a valid order
+                            validOrdersToPick++;
+                            // create the Batch Position
+                            bp.OrderId = isRealOrder.Id;
+                            bp.Ord1 = isRealOrder.Ord1;
+                            bp.Ord2 = isRealOrder.Ord2;
                             bp.OrderComplete = false;
-                            ClearPickPosition(pos);
                         }
+                    }
+                    else
+                    {
+                        bp.OrderId = 0;
+                        bp.Ord1 = string.Empty;
+                        bp.Ord2 = string.Empty;
+                        bp.OrderComplete = false;
+                        ClearPickPosition(pos);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Error: {ex.Message}"));
-                MessageBox.Show($"The Final Check of Orders to Pick has failed. {Environment.NewLine}" +
-                                $"{ex.Message}");
-                return false;
+                _logger.LogDetailAsync($"Error: {ex.Message}").SafeFireAndForget();
+                Mediator.GetInstance().OnDisplayMessage(this, $"The Final Check of Orders to Pick has failed. {Environment.NewLine}{ex.Message}");
+
+                return 0;
             }
-            DumpOrdersToPick(2848);
-            _ = _logger.LogDetailAsync($"[{DateTime.Now}]  End FinalCheckOfOrdersToPick");
-            return true;
-
+            _logger.LogDetailAsync($"[{DateTime.Now}]  End FinalCheckOfOrdersToPick  {validOrdersToPick} valid orders.").SafeFireAndForget();
+            return validOrdersToPick;
         }
-
-        private bool CheckForValidOrder()
+        /// <summary>
+        /// Checks for valid orders in the _ordersToPick list.
+        /// </summary>
+        /// <remarks>
+        /// This method loops over all TextBoxPosx and checks for TextBoxPosx.Text that doesn't match OrdersToPick.Order.
+        /// If an invalid order is found, it is cleared from the OrdersToPick list.
+        /// </remarks>
+        /// <returns>
+        /// Returns true if a valid order is found, otherwise false.
+        /// </returns>
+        /// <exception cref="Exception">Thrown when the check for valid orders fails.</exception>
+        private bool CheckForValidOrders()
         {
             // loop over all TextBoxPosx
             // and check for TextBoxPosx.Text that doesn't match OrdersToPick.Order
             // Clear invalid OrdersToPick
-            Task.Run(() => _logger.LogDetailAsync($"Start"));
+            // _logger.LogDetailAsync($"Start").SafeFireAndForget();
+            var validOrders = 0;
             try
             {
                 foreach (var bp in _ordersToPick)
@@ -2993,13 +3006,17 @@ namespace Neutron.Forms
                     var c = Controls.Find($"TextBoxPos{pos}", true).First();
                     if (c != null)
                     {
-                        var textBox = ((TextBox)c);
+                        var textBox = (TextBox)c;
                         var order = textBox.Text.Trim();
                         //Is this a real order
                         if (!string.IsNullOrEmpty(order))
                         {
                             var isRealOrder = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
-                            if (isRealOrder != null) return true;
+                            if (isRealOrder != null)
+                            {
+                                validOrders++;
+                                continue;
+                            }
 
                             MessageBox.Show($"The Delivery {order} in Position {pos} does not exist.");
                             ClearItemFromBatchByPosition(bp.PositionNumber);
@@ -3010,29 +3027,28 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Error: {ex.Message}"));
+                _logger.LogDetailAsync($"Error: {ex.Message}").SafeFireAndForget();
                 MessageBox.Show($"The Check for Valid Orders has failed. {Environment.NewLine}" +
                                 $"{ex.Message}");
                 return false;
             }
 
-            Task.Run(() => _logger.LogDetailAsync($"End "));
-            return false;
+            _logger.LogDetailAsync($"End: {validOrders} Valid Orders.").SafeFireAndForget();
+            return validOrders > 0;
 
         }
 
-        private void DumpOrdersToPick(int lineNumber)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("DUMP ORDERS TO PICK");
-            foreach (var bp in _ordersToPick)
-            {
-                sb.AppendLine(
-                    $"Pos:{bp.PositionNumber} ID:{bp.OrderId} Order:{bp.Ord1} Invoice:{bp.Ord2} Complete:{bp.OrderComplete}");
-            }
-            Task.Run(() => _logger.LogDetailAsync($"[{DateTime.Now}]  Line Number: {lineNumber} {Environment.NewLine}" +
-                                                  $"{sb}"));
-        }
+        //private void DumpOrdersToPick(int lineNumber)
+        //{
+        //    var sb = new StringBuilder();
+        //    sb.AppendLine("DUMP ORDERS TO PICK");
+        //    foreach (var bp in _ordersToPick)
+        //    {
+        //        sb.AppendLine(
+        //            $"Pos:{bp.PositionNumber} ID:{bp.OrderId} Order:{bp.Ord1} Invoice:{bp.Ord2} Complete:{bp.OrderComplete}");
+        //    }
+        //    _logger.LogDetailAsync($"[{DateTime.Now}]  Line Number: {lineNumber} {Environment.NewLine}{sb}").SafeFireAndForget();
+        //}
 
         //private void UpdateOrdersToPickingStatus(List<BatchPosition> ordersToPick)
         //{
@@ -3081,7 +3097,7 @@ namespace Neutron.Forms
             // get the areaId from the WorkstationView
             var areaId = _workstationView.AreaId;
 
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory For PickViews START");
+            _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory For PickViews START").SafeFireAndForget();
             // get a distinct list of ItemIds from the pickviews
             var itemIds = pickViews.Select(r => r.ItemId).Distinct().ToList();
 
@@ -3089,7 +3105,7 @@ namespace Neutron.Forms
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                 .Where(f => itemIds.Contains(f.ItemDefinitionId) && f.AreaId == areaId).ToList();
 
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory For PickViews END");
+            _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory For PickViews END").SafeFireAndForget();
         }
 
         /// <summary>
@@ -3097,17 +3113,17 @@ namespace Neutron.Forms
         /// </summary>
         private void LoadInventory()
         {
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory START");
+            _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory START").SafeFireAndForget();
             var pickableLocations = _repoStorageTypes.FindBy(r => r.Pickable == true).Select(r => r.Id).ToList();  // new int[] { 1, 2 };  // 4 is an EBin
                                                                                                                    // var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
             _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
                 .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory END");
+            _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory END").SafeFireAndForget();
         }
 
         private List<PickView> PickListLoad()
         {
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Pick List Load Start");
+            _logger.LogDetailAsync($"{DateTime.Now}  Pick List Load Start").SafeFireAndForget();
             // Get the PickViews for the OrdersToPick with added ItemKey
             var pickViews = GetPickViews();
             // ---         Task.Run(() => _logger.LogDetailAsync($"Pickviews Count: {pickViews.Count}"));
@@ -3118,14 +3134,14 @@ namespace Neutron.Forms
 
             // Loads the currentInventory for just the working PickViews
             LoadInventoryForPickViews(pickViews);
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory for PickViews Complete");
+            _logger.LogDetailAsync($"{DateTime.Now}  Load Inventory for PickViews Complete").SafeFireAndForget();
             foreach (var item in pickViews)
             {
                 var orderDetail = item.OrderDetail;
                 //TODO  commented out because I'm not handling something correctly
                 // and items are getting stuck in Pick status
-                orderDetail.LineStatusId = (int)LineStatus.Picking;
-                _repoOrderDetails.Update(orderDetail);
+                //orderDetail.LineStatusId = (int)LineStatus.Picking;
+               // _repoOrderDetails.Update(orderDetail);
 
                 List<Inventory> exactInventorySequence;
                 if (item.Ord1.Equals("TRANSFER", StringComparison.CurrentCultureIgnoreCase))
@@ -3153,11 +3169,6 @@ namespace Neutron.Forms
                             break;
                     }
                 }
-
-
-
-
-                // ---         Task.Run(() => _logger.LogDetailAsync($"item.SlotQty: {item.SlotQty}"));
 
                 if (exactInventorySequence.Count > 0)
                 {
@@ -3206,7 +3217,7 @@ namespace Neutron.Forms
             }
 
             CreateSkipZeroSummary(skipPickableViews, zeroPickableViews);
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  PickListLoad End: [{DateTime.Now.ToLongTimeString()}]");
+            _logger.LogDetailAsync($"{DateTime.Now}  PickListLoad End: [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
 
             return pickableViews;
         }
@@ -3233,11 +3244,11 @@ namespace Neutron.Forms
 
         private List<Inventory> PrimeBinFirst(PickView item)
         {
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Prime Bin First Item:  {item.Item}");
+            _logger.LogDetailAsync($"{DateTime.Now} Prime Bin First Item:  {item.Item}").SafeFireAndForget();
             List<Inventory> sortedRecs;
             var inventorySequence = new List<Inventory>();
             var recs = GetInventory(item.ItemId);
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Prime Bin First Inventory Rec Count:  {recs.Count}");
+            _logger.LogDetailAsync($"{DateTime.Now} Prime Bin First Inventory Rec Count:  {recs.Count}").SafeFireAndForget();
 
             if (recs.Count <= 0) return inventorySequence;
             if (recs.Count == 1) return recs;
@@ -3264,7 +3275,7 @@ namespace Neutron.Forms
             }
 
             inventorySequence.AddRange(sortedRecs);
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Prime Bin First Inventory Extra Processing Item:  {item.Item}");
+            _logger.LogDetailAsync($"{DateTime.Now} Prime Bin First Inventory Extra Processing Item:  {item.Item}").SafeFireAndForget();
             return inventorySequence;
         }
 
@@ -3362,9 +3373,9 @@ namespace Neutron.Forms
 
         private List<PickView> GetPickViews()
         {
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Get Pick Views START");
+            _logger.LogDetailAsync($"{DateTime.Now}  Get Pick Views START").SafeFireAndForget();
             var prevPartNum = "";
-            var orderAndDetails = new Order();
+        //    Order orderAndDetails = new Order();
             var pickViews = new List<PickView>();
 
             try
@@ -3375,9 +3386,9 @@ namespace Neutron.Forms
                 {
                     if (bp.OrderId == 0) continue;
                     // find the Index of the Order in the AvailableOrders BindingSource
-                    var itemFound = _bindingSourceAvailableOrders.Find("Id", bp.OrderId);
+                    var orderIndex = _bindingSourceAvailableOrders.Find("Id", bp.OrderId);
                     // set the Position of the BindingSource to the Index of the Order
-                    if (itemFound > -1) _bindingSourceAvailableOrders.Position = itemFound;
+                    if (orderIndex > -1) _bindingSourceAvailableOrders.Position = orderIndex;
                     // get the current Order
                     var currentOrder = ((ObjectView<AvailableOrdersView>)_bindingSourceAvailableOrders.Current).Object;
                     // set the firstTime flag to true to indicate this is the first time through the loop
@@ -3387,7 +3398,7 @@ namespace Neutron.Forms
                     // will be picked separately
                     var counter = 0;
                     // get the Order and OrderDetails for the current Order and Area
-                    orderAndDetails = _ordersRepository.GetOrderWithOrderDetails(bp.OrderId, _workstationView.AreaId);
+                   var orderAndDetails = _ordersRepository.GetOrderWithOrderDetails(bp.OrderId, _workstationView.AreaId);
 
                     //var order = _ordersRepository.GetOrder(bp.OrderId);
                     //var orderDetails = _ordersRepository.GetOrderDetailsByOrderAndArea(bp.OrderId, _workstationView.AreaId);
@@ -3411,32 +3422,32 @@ namespace Neutron.Forms
                         //key builder makes each line of orderdetails unique so that an order with the same item
                         // will be picked separately
                         // PickStops will be grouped by key, not item number
-                        detail.Order = (Order)orderAndDetails;
+                        detail.Order = orderAndDetails;
                         var key = "";
                         if (firstTime)
                         {
                             // if this is the first time through the loop for this Order
                             // set the prevPartNum to the current OrderDetail.PartNum
-                            prevPartNum = detail.PartNum;
+                            prevPartNum = detail.PartNum.Trim();
                             // set the key to the current OrderDetail.PartNum
-                            key = detail.PartNum;
+                            key = detail.PartNum.Trim();
                             // set the firstTime flag to false to indicate this is not the first time through the loop
                             firstTime = false;
                         }
                         // if the prevPartNum is the same as the current OrderDetail.PartNum
-                        else if (prevPartNum == detail.PartNum)
+                        else if (prevPartNum == detail.PartNum.Trim())
                         {
                             // increment the counter
                             counter++;
                             // set the key to the current OrderDetail.PartNum + the counter
-                            key = $"{detail.PartNum}{counter}";
+                            key = $"{detail.PartNum.Trim()}{counter}";
                         }
                         // else prevPartNum != detail.PartNum
                         else //prevPartNum != detail.PartNum
                         {
-                            prevPartNum = detail.PartNum;
+                            prevPartNum = detail.PartNum.Trim();
                             // set the key to the current OrderDetail.PartNum
-                            key = detail.PartNum;
+                            key = detail.PartNum.Trim();
                             // reset the counter to 0
                             counter = 0;
                         }
@@ -3452,12 +3463,12 @@ namespace Neutron.Forms
                         var pickView = new PickView()
                         {
                             PickPosition = bp.PositionNumber,
-                            OrderId = detail.Order.Id,
+                            OrderId = detail.OrderId,
                             Ord1 = detail.Order.Ord1,
                             Ord2 = detail.Order.Ord2,
                             ItemId = detail.ItemDefinitionId,
-                            Item = detail.PartNum,
-                            Description = detail.PartDesc,
+                            Item = detail.PartNum.Trim(),
+                            Description = detail.PartDesc.Trim(),
                             UnitOfIssue = unitOfIssue,
                             Quantity = detail.Quantity,
                             QuantityToBePicked = detail.Quantity,
@@ -3475,22 +3486,10 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Exception: {ex.Message}"));
+                _logger.LogDetailAsync($"Exception: {ex.Message}").SafeFireAndForget();
             }
-            // Task.Run(() => _logger.LogDetailAsync($"Get Pick Views END"));
 
-
-            //Add Item definition
-            //foreach (var item in pickViews)
-            //{
-            //    var def = _repoItemDefinition.FindBy(f => f.Id == item.ItemId).FirstOrDefault();
-            //    if (def != null)
-            //    {
-            //        item.Item = def.Item;
-            //        item.Description = def.Description;
-            //    }
-            //}
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  GetPickViews End: [{DateTime.Now.ToLongTimeString()}]");
+            _logger.LogDetailAsync($"{DateTime.Now}  GetPickViews End: [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
             return pickViews;
         }
 
@@ -3577,26 +3576,26 @@ namespace Neutron.Forms
             pickView.InventoryIndex = 0;
             pickView.ReceivedDate = pickView.CurrentInventoryLocation.ReceivedDate;
 
-            Task.Run(() => _logger.LogDetailAsync($"CreatePickView End: [{DateTime.Now.ToLongTimeString()}]"));
+            _logger.LogDetailAsync($"CreatePickView End: [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
             return pickView;
         }
 
         private List<Inventory> GetTransferInventory(int itemId)
         {
             // ---         Task.Run(() => _logger.LogDetailAsync($"Get Transfer Inventory Item: {itemId} START"));
-            var recs = _currentInventory.FindAll(r => r.ItemDefinitionId == itemId && r.PrimeBin == false && r.AreaId == 8);
+            var recs = _currentInventory.FindAll(r => r.ItemDefinitionId == itemId && r.PrimeBin == false && r.AreaId == _areaEight);
             // ---         Task.Run(() => _logger.LogDetailAsync($"Get Transfer Inventory Item: {itemId} END"));
             return recs;
         }
 
         private List<Inventory> GetInventory(int itemId)
         {
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Get Inventory Item: {itemId} START");
+            _logger.LogDetailAsync($"{DateTime.Now}  Get Inventory Item: {itemId} START").SafeFireAndForget();
             var recs = _currentInventory.FindAll(r => r.ItemDefinitionId == itemId);
             //var pickableLocations = new[] { 1, 2 };
             //recs = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
             //    .Where(f => f.ItemDefinitionId == itemId && pickableLocations.Contains(f.StorageTypeId)).ToList();
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Get Inventory Item: {itemId} END");
+            _logger.LogDetailAsync($"{DateTime.Now}  Get Inventory Item: {itemId} END").SafeFireAndForget();
             return recs;
         }
 
@@ -3617,46 +3616,47 @@ namespace Neutron.Forms
             ManualOverrideCurrentTextBoxPos = false;
             if (e.RowIndex < 0) return;
             var id = Convert.ToInt32(DataGridViewAvailableOrders.Rows[e.RowIndex].Cells["Id"].Value);
-            var idx = await AddRemoveOrdersFromInductionScreen(id);
+            var idx = await AddRemoveOrderFromInductionScreen(id);
         }
 
-        private async Task<int> AddRemoveOrdersFromInductionScreen(int orderId)
+        private async Task<int> AddRemoveOrderFromInductionScreen(int orderId)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Grid Click Start Row Index: {e.RowIndex}"));
 
-            // var chk = (DataGridViewCheckBoxCell)DataGridViewAvailableOrders.Rows[e.RowIndex].Cells[0];
             var idx = -1;
-            if (orderId != 0)
+            if (orderId == 0) return idx;
+            var orderToProcess = _ordersToPick.FirstOrDefault(r => r.OrderId == orderId);
+            if (orderToProcess != null)
             {
-                var orderToProcess = _ordersToPick.FirstOrDefault(r => r.OrderId == orderId);
-               
-                if (orderToProcess != null)
+                // return orderToProcess.PositionNumber;
+                // already inducted, so remove the order
+                if (_workstationView.BatchTable != null)
                 {
-                    return orderToProcess.PositionNumber;
-                    // already inducted, so remove the order
-                    if (_workstationView.BatchTable != null)
+                    if (_iptiDisplayFunctions != null)
                     {
                         await _iptiDisplayFunctions.TurnOffBatchDisplay(orderToProcess.PositionNumber);
                     }
-
-                    RemoveItemFromBatch(orderToProcess.OrderId);
                 }
-                else //must be an add order
+
+                RemoveItemFromBatch(orderToProcess.OrderId);
+            }
+            else //must be an add order
+            {
+                var order = _repoOrders.FindByKey(orderId);
+                var ord1 = order.Ord1;
+                var ord2 = order.Ord2;
+
+                idx = AddItemToBatch(orderId, ord1, ord2);
+                // ---         Task.Run(() => _logger.LogDetailAsync($"AddItemToBatch RETURN"));
+
+                if (idx != -1)
                 {
-                    var order = _repoOrders.FindByKey(orderId);
-                    var ord1 = order.Ord1;
-                    var ord2 = order.Ord2;
 
-                    idx = AddItemToBatch(orderId, ord1, ord2);
-                    // ---         Task.Run(() => _logger.LogDetailAsync($"AddItemToBatch RETURN"));
-
-                    if (idx != -1)
+                    if (_workstationView.BatchTable != null)
                     {
-
-                        if (_workstationView.BatchTable != null)
+                        var ord = ord1.Substring(ord1.Length - 4);
+                        var position = _ordersToPick[idx].PositionNumber;
+                        if (_iptiDisplayFunctions != null)
                         {
-                            var ord = ord1.Substring(ord1.Length - 4);
-                            var position = _ordersToPick[idx].PositionNumber;
                             await _iptiDisplayFunctions.TurnOnBatchDisplay(position, ord);
                         }
                     }
@@ -3669,7 +3669,7 @@ namespace Neutron.Forms
         private void NextButtonEnabled()
         {
 
-            var enabled = CheckForValidOrder();
+            var enabled = CheckForValidOrders();
 
 
             if (!enabled)
@@ -3744,7 +3744,7 @@ namespace Neutron.Forms
                     // ClearTextBoxPosBackColor();
                     // ---         Task.Run(() => _logger.LogDetailAsync($" Back with the idx:{idx} it could be -1"));
 
-                    NextButtonEnabled();
+                   // NextButtonEnabled();
                 }
                 else
                 {
@@ -3756,10 +3756,15 @@ namespace Neutron.Forms
 
             return idx;
         }
-
+        /// <summary>
+        /// Determines if the order with the specified ID is already in the batch.
+        /// </summary>
+        /// <param name="orderId">The ID of the order to check.</param>
+        /// <returns>true if the order is in the batch; otherwise, false.</returns>
         private bool OrderInBatch(int orderId)
         {
             var result = _ordersToPick.FirstOrDefault(r => r.OrderId == orderId);
+
             return result != null;
         }
 
@@ -3804,24 +3809,21 @@ namespace Neutron.Forms
 
         private void UpdateTextBoxPosition(BatchPosition bp)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($"UpdateTextBoxPosition Start: [{DateTime.Now.ToLongTimeString()}]"));
             var orderNumber = bp.Ord1;
-            var pos = bp.PositionNumber;
-
-            Control c = Controls.Find($"TextBoxPos{pos}", true).Single() as TextBox;
-            if (c != null) c.Text = orderNumber;
-            // ---         Task.Run(() => _logger.LogDetailAsync($"UpdateTextBoxPosition End: [{DateTime.Now.ToLongTimeString()}]"));
+            var position = bp.PositionNumber;
+            // Find the TextBox control based on the position number
+            TextBox textBox = (TextBox)Controls.Find($"TextBoxPos{position}", true).SingleOrDefault();
+            // Update the TextBox text with the order number if the TextBox is found
+            if (textBox != null)
+            {
+                textBox.Text = orderNumber;
+            }
+            // Log the operation details
+            LogOperationDetails(position, orderNumber);
         }
-
-        private void UpdateTextBoxPositionQuantity(BatchPosition bp, int quantity)
+        private void LogOperationDetails(int position, string orderNumber)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($"UpdateTextBoxPosition Quantity Start: [{DateTime.Now.ToLongTimeString()}]"));
-            var orderNumber = bp.Ord1;
-            var pos = bp.PositionNumber;
-
-            Control c = Controls.Find($"TextBoxPos{pos}", true).Single() as TextBox;
-            if (c != null) c.Text = quantity.ToString();
-            // ---         Task.Run(() => _logger.LogDetailAsync($"UpdateTextBoxPosition Quantity End: [{DateTime.Now.ToLongTimeString()}]"));
+            _logger.LogDetailAsync($"UpdateTextBoxPosition BatchPosition: {position}  Order Number: {orderNumber}").SafeFireAndForget();
         }
 
         /// <summary>
@@ -3845,100 +3847,161 @@ namespace Neutron.Forms
             }
         }
 
-        private void ShowPosition(int position)
-        {
-            // var font = new Font("Microsoft Sans Serif", 20);
-            var pos = position.ToString();
+        //private void ShowPosition(int position)
+        //{
+        //    // var font = new Font("Microsoft Sans Serif", 20);
+        //    var pos = position.ToString();
 
-            Control c = Controls.Find("LabelPickPos" + pos, true).Single() as Label;
-            if (c != null) c.Visible = true;
+        //    Control c = Controls.Find("LabelPickPos" + pos, true).Single() as Label;
+        //    if (c != null) c.Visible = true;
 
-            c = Controls.Find("LabelPos" + pos, true).Single() as Label;
-            if (c != null) c.Visible = true;
+        //    c = Controls.Find("LabelPos" + pos, true).Single() as Label;
+        //    if (c != null) c.Visible = true;
 
-            c = Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
-            if (c != null)
-            {
-                // c.Font = font;
-                c.Visible = true;
-            }
+        //    c = Controls.Find("TextBoxPickPos" + pos, true).Single() as TextBox;
+        //    if (c != null)
+        //    {
+        //        // c.Font = font;
+        //        c.Visible = true;
+        //    }
 
-            c = Controls.Find("TextBoxPos" + pos, true).Single() as TextBox;
-            if (c != null) c.Visible = true;
+        //    c = Controls.Find("TextBoxPos" + pos, true).Single() as TextBox;
+        //    if (c != null) c.Visible = true;
 
-            c = Controls.Find("Pos" + pos + "Display", true).Single();
-            if (c != null) ((Panel)c).Visible = true;
+        //    c = Controls.Find("Pos" + pos + "Display", true).Single();
+        //    if (c != null) ((Panel)c).Visible = true;
 
-            c = Controls.Find("AvailablePos" + pos + "Display", true).Single();
-            if (c != null) ((Panel)c).Visible = true;
-        }
+        //    c = Controls.Find("AvailablePos" + pos + "Display", true).Single();
+        //    if (c != null) ((Panel)c).Visible = true;
+        //}
 
         private async Task ShowOrderOnBatchDisplay()
         {
-            var font = new Font(Font.FontFamily, 26);
-            if (_workstationView.AreaId == 8)
-            {
-                font = new Font(Font.FontFamily, 26);
-            }
-
-            var batchPositions = _ordersToPick.Where(r => r.Ord1 != string.Empty).ToList();
+            // var fontSize = _workstationView.AreaId == _areaEight ? 26 : Font.Size;
+            var fontSize = 26;
+            var font = new Font(Font.FontFamily, fontSize);
+            var batchPositions = _ordersToPick.Where(r => !string.IsNullOrEmpty(r.Ord1)).ToList();
             foreach (var batchPosition in batchPositions)
             {
-                TextBox textBox = Controls.Find($"TextBoxPickPos{batchPosition.PositionNumber}", true).First() as TextBox;
+                var textBox = Controls.Find($"TextBoxPickPos{batchPosition.PositionNumber}", true).FirstOrDefault() as TextBox;
                 if (textBox == null) continue;
-                // set the font size of the textbox
-
-                textBox.Font = font;  // new Font(textBox.Font.FontFamily, 26);
-                //textBox.SizeTextBoxFont(2);
-                var len = batchPosition.Ord1.Trim().Length;
-                var text = batchPosition.Ord1.Substring(len - 4);
-
-                //textBox.Text = $"{batchPosition.Ord1.Trim()}{Environment.NewLine}{batchPosition.Ord2.Trim()}";
-                textBox.Text = text;  // $"{batchPosition.Ord1.Trim()}";
-                await _iptiDisplayFunctions.TurnOnBatchDisplay(batchPosition.PositionNumber, text);
-                Thread.Sleep(50);
+                textBox.Font = font;
+                var text = batchPosition.Ord1.Trim().Substring(batchPosition.Ord1.Trim().Length - 4);
+                textBox.Text = text;
+                if (_iptiDisplayFunctions != null)
+                {
+                    await _iptiDisplayFunctions.TurnOnBatchDisplay(batchPosition.PositionNumber, text);
+                }
             }
         }
 
+        //private async Task ShowOrderOnBatchDisplay()
+        //{
+        //    var font = new Font(Font.FontFamily, 26);
+        //    if (_workstationView.AreaId == _areaEight)
+        //    {
+        //        font = new Font(Font.FontFamily, 26);
+        //    }
+
+        //    var batchPositions = _ordersToPick.Where(r => r.Ord1 != string.Empty).ToList();
+        //    foreach (var batchPosition in batchPositions)
+        //    {
+        //        TextBox textBox = Controls.Find($"TextBoxPickPos{batchPosition.PositionNumber}", true).First() as TextBox;
+        //        if (textBox == null) continue;
+        //        // set the font size of the textbox
+
+        //        textBox.Font = font;  // new Font(textBox.Font.FontFamily, 26);
+        //        //textBox.SizeTextBoxFont(2);
+        //        var len = batchPosition.Ord1.Trim().Length;
+        //        var text = batchPosition.Ord1.Substring(len - 4);
+
+        //        //textBox.Text = $"{batchPosition.Ord1.Trim()}{Environment.NewLine}{batchPosition.Ord2.Trim()}";
+        //        textBox.Text = text;  // $"{batchPosition.Ord1.Trim()}";
+        //        await _iptiDisplayFunctions?.TurnOnBatchDisplay(batchPosition.PositionNumber, text);
+
+        //    }
+        //}
         private async Task ShowQuantityOnBatchDisplay()
         {
-            await _iptiDisplayFunctions.ClearBatchTable();
-
-            var batchPositions = _ordersToPick.Where(r => r.Ord1 != string.Empty).ToList();
-            foreach (var batchPosition in batchPositions)
+            if (_iptiDisplayFunctions != null)
             {
-                TextBox textBox = Controls.Find($"TextBoxPickPos{batchPosition.PositionNumber}", true).First() as TextBox;
-                if (textBox == null) continue;
-                textBox.Text = string.Empty;
-                if (batchPosition.OrderComplete)
-                {
-                    textBox.Text = "END";
-                    await _iptiDisplayFunctions.TurnOnBatchDisplayEnd(batchPosition.PositionNumber);
-                }
+                await _iptiDisplayFunctions.ClearBatchTable();
             }
 
+            var batchPositions = _ordersToPick.Where(r => !string.IsNullOrEmpty(r.Ord1)).ToList();
+            foreach (var batchPosition in batchPositions)
+            {
+                var textBox = Controls.Find($"TextBoxPickPos{batchPosition.PositionNumber}", true).FirstOrDefault() as TextBox;
+                if (textBox == null) continue;
+                textBox.Text = batchPosition.OrderComplete ? "END" : string.Empty;
+                if (batchPosition.OrderComplete)
+                {
+                    if (_iptiDisplayFunctions != null)
+                    {
+                        await _iptiDisplayFunctions.TurnOnBatchDisplayEnd(batchPosition.PositionNumber);
+                    }
+
+                }
+            }
             foreach (var pickView in _currentPickStop.PickViews)
             {
                 var pos = pickView.PickPosition;
-                var textBox = (TextBox)Controls.Find($"TextBoxPickPos{pos}", true).First();
-                if (textBox != null)
+                var textBox = Controls.Find($"TextBoxPickPos{pos}", true).FirstOrDefault() as TextBox;
+                if (textBox != null && string.IsNullOrEmpty(textBox.Text))
                 {
                     textBox.Font = new Font(textBox.Font.FontFamily, 26);
-                    //textBox.SizeTextBoxFont(1);
-                    if (textBox.Text == string.Empty)
+                    textBox.Text = pickView.QuantityToBePicked.ToString();
+                    if (_iptiDisplayFunctions != null)
                     {
-                        textBox.Text = pickView.QuantityToBePicked.ToString();
                         await _iptiDisplayFunctions.TurnOnBatchDisplay(pos, pickView.QuantityToBePicked.ToString());
                     }
                 }
-
-                var panel = (Panel)Controls.Find($"Pos{pos}Display", true).First();
+                var panel = Controls.Find($"Pos{pos}Display", true).FirstOrDefault() as Panel;
                 if (panel != null)
                 {
                     panel.BackColor = Color.Red;
                 }
             }
         }
+        //private async Task ShowQuantityOnBatchDisplay()
+        //{
+        //    await _iptiDisplayFunctions?.ClearBatchTable();
+
+        //    var batchPositions = _ordersToPick.Where(r => r.Ord1 != string.Empty).ToList();
+        //    foreach (var batchPosition in batchPositions)
+        //    {
+        //        TextBox textBox = Controls.Find($"TextBoxPickPos{batchPosition.PositionNumber}", true).First() as TextBox;
+        //        if (textBox == null) continue;
+        //        textBox.Text = string.Empty;
+        //        if (batchPosition.OrderComplete)
+        //        {
+        //            textBox.Text = "END";
+        //            await _iptiDisplayFunctions?.TurnOnBatchDisplayEnd(batchPosition.PositionNumber);
+        //        }
+        //    }
+
+        //    foreach (var pickView in _currentPickStop.PickViews)
+        //    {
+        //        var pos = pickView.PickPosition;
+        //        var textBox = (TextBox)Controls.Find($"TextBoxPickPos{pos}", true).First();
+        //        if (textBox != null)
+        //        {
+        //            textBox.Font = new Font(textBox.Font.FontFamily, 26);
+        //            //textBox.SizeTextBoxFont(1);
+        //            if (textBox.Text == string.Empty)
+        //            {
+        //                textBox.Text = pickView.QuantityToBePicked.ToString();
+        //                await _iptiDisplayFunctions?.TurnOnBatchDisplay(pos, pickView.QuantityToBePicked.ToString());
+        //            }
+        //        }
+
+        //        var panel = (Panel)Controls.Find($"Pos{pos}Display", true).First();
+        //        if (panel != null)
+        //        {
+        //            panel.BackColor = Color.Red;
+        //        }
+        //    }
+        //}
         private async void MBShowOrderOrQuantityToggle_Click(object sender, EventArgs e)
         {
             await ShowOrderOrQuantityToggle();
@@ -3960,199 +4023,148 @@ namespace Neutron.Forms
 
         private async void MBPickBack_Click(object sender, EventArgs e)
         {
-            await PickBack();
+            await ExecutePickBackProcess();
         }
 
-        //Back button on Pick Screen
-        private async Task PickBack()
+        private async Task ExecutePickBackProcess()
         {
-            await _iptiDisplayFunctions.ClearBatchTable();
-
-            await _iptiDisplayFunctions.TurnOffBatchOrderControl();
-
-            GlobalVar.Hanel?.ResetHanelDeviceStatus();
-
-            await _iptiDisplayFunctions.ClearBlastzone();
-
-            // Clear all the ProLites using the ProLiteManager
-
+            await ClearDisplayFunctions();
+            ResetHanelDeviceStatus();
+            ClearProLites();
+            ClearActiveDeviceIndicators();
+           // EnableNextButton();
+            UpdateOrdersStatus();
+            UpdateFormTitleAndTab();
+        }
+        private async Task ClearDisplayFunctions()
+        {
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+                await _iptiDisplayFunctions.ClearBlastzone();
+            }
+        }
+        private void ResetHanelDeviceStatus()
+        {
+            if (GlobalVar.Hanel != null)
+            {
+                GlobalVar.Hanel.ResetHanelDeviceStatus();
+            }
+        }
+        private void ClearProLites()
+        {
             _workstationView.ProLiteManager?.ClearAllProlites();
-
-
+        }
+        private void ClearActiveDeviceIndicators()
+        {
             _deviceIndicatorManager?.ClearActiveDeviceIndicators();
-
-
-            NextButtonEnabled();
-
+        }
+        private void EnableNextButton()
+        {
+          //  NextButtonEnabled();
+        }
+        private void UpdateOrdersStatus()
+        {
             UpdateOrdersToAvailableStatus(_ordersToPick);
-
+        }
+        private void UpdateFormTitleAndTab()
+        {
             LabelFormTitle.Text = _resourceManager.GetString($"PickList");
             LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
             tabControl1.SelectedTab = PickList;
-            // --- _ =         Task.Run(() => _logger.LogDetailAsync($"PickBack END"));
         }
 
-        //TODO  commented out because I'm not handling something correctly
-        // and items are getting stuck in Pick status
         private void UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
         {
-            var batchPositions = ordersToPick.Where(r => r.OrderId != 0 && r.OrderComplete == false).ToList();
+            var batchPositions = GetIncompleteBatchPositions(ordersToPick);
             foreach (var batchPosition in batchPositions)
             {
-                var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking);
-                foreach (var orderDetail in orderDetails)
-                {
-                    orderDetail.LineStatusId = (int)LineStatus.Available;
-                    _repoOrderDetails.Update(orderDetail);
-                }
+                UpdateOrderDetailsStatus(batchPosition);
             }
         }
+        private List<BatchPosition> GetIncompleteBatchPositions(List<BatchPosition> ordersToPick)
+        {
+            return ordersToPick.Where(r => r.OrderId != 0 && r.OrderComplete == false).ToList();
+        }
+        private void UpdateOrderDetailsStatus(BatchPosition batchPosition)
+        {
+            var orderDetails = GetPickingOrderDetails(batchPosition);
+            foreach (var orderDetail in orderDetails)
+            {
+                SetOrderDetailStatusToAvailable(orderDetail);
+            }
+        }
+        private IEnumerable<OrderDetail> GetPickingOrderDetails(BatchPosition batchPosition)
+        {
+            return _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking);
+        }
+        private void SetOrderDetailStatusToAvailable(OrderDetail orderDetail)
+        {
+            orderDetail.LineStatusId = (int)LineStatus.Available;
+            _repoOrderDetails.Update(orderDetail);
+        }
+
+
+        //private void UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
+        //{
+        //    var batchPositions = ordersToPick.Where(r => r.OrderId != 0 && r.OrderComplete == false).ToList();
+        //    foreach (var batchPosition in batchPositions)
+        //    {
+        //        var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking);
+        //        foreach (var orderDetail in orderDetails)
+        //        {
+        //            orderDetail.LineStatusId = (int)LineStatus.Available;
+        //            _repoOrderDetails.Update(orderDetail);
+        //        }
+        //    }
+        //}
 
         private async void MBStart_Click(object sender, EventArgs e)
         {
             MBShowOrderOrQuantityToggle.Text = _resourceManager.GetString($"ShowJobs");
             var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
             if (pickViews == null) return;
-            await Start();
+            await Start(pickViews.ToList());
         }
-        private async Task Start()
+        private async Task Start(List<PickView> pickableViews)
         {
-            _ = _logger.LogDetailAsync($"{DateTime.Now} START");
-            GlobalVar.Hanel?.ResetHanelDeviceStatus();
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Finished Resetting Hanel Device Status");
-
+            _logger.LogDetailAsync($"{DateTime.Now} START").SafeFireAndForget();
+            ResetHanelDeviceStatus();
             _spaceBarDisabled = true;
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Call Printing Start: [{DateTime.Now.ToLongTimeString()}]"));
-
-            //  PrintAllToteLabels();
-            if (_neutronVariables.EnableDocumentPrinter)
-            {
-                if (_neutronVariables.PrintPackingListStart)
-                {
-                    PrintAllDocuments();
-                }
-            }
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Printing complete");
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Call Printing End: [{DateTime.Now.ToLongTimeString()}]"));
-
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Start_Click Start: [{DateTime.Now.ToLongTimeString()}]"));
+            PrintAllDocuments();
+            _logger.LogDetailAsync($"{DateTime.Now} Printing complete").SafeFireAndForget();
 
             // a final check to make sure we have PickViews to pick
-            if (_bindingSourcePickViews.Count == 0) return;
-            var pickViews = (IList<PickView>)_bindingSourcePickViews.DataSource;
+            //if (_bindingSourcePickViews.Count == 0) return;
+            var pickViews = SortPickViews(pickableViews);
+            if (pickViews == null) return;
 
-            // set the sort order based on Location Type
-            // LocationType 3 is a Rack location and 
-            // should be sorted using the PickSequence
-            //var locationType = _workstationView.Area.LocationTypeId;
-            if (_workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
-            {
-                // Sort by PickSequence
-                pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.PickSequence).ToList();
-            }
-            else
-            {
-                // Sort by Location
-                pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation.Location.Loc1)
-                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc2)
-                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
-                    .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4).ToList();
-            }
-            _ = _logger.LogDetailAsync($"{DateTime.Now} PickView Ordering Complete");
-            //TODO SetOrderStatusToPicking(pickViews);
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Start_Click 1: [{DateTime.Now.ToLongTimeString()}]"));
+            _bindingSourcePickViews.DataSource = pickViews;
+            DataGridPickView.DataSource = _bindingSourcePickViews;
+
+
             // time to create the PickStops
-            var pickStops = new List<PickStop>();
-            IEnumerable<IGrouping<string, PickView>> pickViewGroups = pickViews.GroupBy(r => r.ItemKey).ToList();
-            var sequence = 0;
-            foreach (var pickViewGroup in pickViewGroups) //for each Item in the group of Items
-            {
-                var total = 0;
-                // a PickStop is of One Item that may be on One to All Pick Positions
-                // a PickView is an individual pick at a single Pick Position
-                // so a PickStop is has One or Multiple PickViews that are concerned 
-                // with picking One Item.
-                // a PickStop is a summary of all the PickViews 
-                // and some of the information in a PickStop is the same as in a PickView
-                // that is why the First PickView is used to provide most of the data to the PickStop
-                var firstPickView = pickViewGroup.First();
-
-                var pickStop = new PickStop
-                {
-                    Sequence = sequence += 1,
-                    OrderId = firstPickView.OrderId,
-                    Ord1 = firstPickView.Ord1,
-                    Ord2 = firstPickView.Ord2,
-                    ItemId = firstPickView.ItemId,
-                    Item = firstPickView.Item,
-                    Description = firstPickView.Description,
-                    UnitOfIssue = firstPickView.UnitOfIssue,
-                    PickedQty = firstPickView.PickedQty,
-                    Images = firstPickView.Images,
-                    Inventory = firstPickView.Inventory,
-                    InventoryIndex = firstPickView.InventoryIndex,
-                    Slot = firstPickView.Slot,
-                    SlotQty = firstPickView.SlotQty,
-                    CurrentInventoryLocation = firstPickView.CurrentInventoryLocation,
-                    TotalQuantityInInventory = firstPickView.TotalQuantityInInventory,
-                    ItemKey = firstPickView.ItemKey
-                };
-
-                // now that we have a PickStop, we need to add the PickViews to it
-                // and add up the total quantity to be picked
-                foreach (var pickView in pickViewGroup)
-                {
-                    pickStop.PickViews.Add(pickView);
-                    total += pickView.Quantity;
-                }
-                // set the total quantity to be picked
-                // and the quantity to be picked
-                // to the PickStops List
-                pickStop.Quantity = total;
-                pickStop.QuantityToBePicked = total;
-                pickStops.Add(pickStop);
-
-
-
-            }
-
-            foreach (var stop in pickStops)
-            {
-                _ = _logger.LogDetailAsync($"STOP Sequence: {stop.Sequence} " +
-                                        $" SKU: {stop.CurrentInventoryLocation.ItemDefinition.Item}" +
-                                        $" Location: {stop.CurrentInventoryLocation.Location.Loc1}" +
-                                        $"-{stop.CurrentInventoryLocation.Location.Loc2}" +
-                                        $"-{stop.CurrentInventoryLocation.Location.Loc3}" +
-                                        $"-{stop.CurrentInventoryLocation.Location.Loc2}" +
-                                        $"  Slot:  {stop.CurrentInventoryLocation.Location.Slot}" +
-                                        $"  Sequence:  {stop.CurrentInventoryLocation.Location.PickSequence}");
-
-            }
-
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Creating PickStops Complete");
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Start_Click 2: [{DateTime.Now.ToLongTimeString()}]"));
-
+            var pickStops = CreatePickStops(pickViews);
+            LogPickStops(pickStops);
 
             // FinalPickSequence sorts the Pickstops to be picked 1,2,3,4 across all devices
             // If this is not a pick workstation with devices
             // Sort the Picks in PickSequence order
             // Blastzone is a single device
 
-            var finalPickSequence =
-                _workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack ? FinalPickSequenceRack(pickStops) : FinalPickSequence(pickStops);
+            var finalPickSequence = SortFinalPickSequence(pickStops);
+
             // set the BindingSourcePickStops to the finalPickSequence
             _bindingSourcePickStops.DataSource = null;
             _bindingSourcePickStops.DataSource = finalPickSequence;
 
-            _ = _logger.LogDetailAsync($"{DateTime.Now} PickStops Order Set Across Devices");
+            _logger.LogDetailAsync($"{DateTime.Now} PickStops Order Set Across Devices").SafeFireAndForget();
 
             // ---         Task.Run(() => _logger.LogDetailAsync($"Start_Click 3 Run GetFirstStop?: [{DateTime.Now.ToLongTimeString()}]"));
             // The PickStop BindingSource is now set
             // GetFirstStop();
-            // Move to the first PickStop in the BindingSource
-            _bindingSourcePickStops.MoveFirst();
-            // set the currentPickStop variable to the first PickStop in the BindingSource
-            _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
+            MoveToFirstPickStop();
 
             // PickStops are built from PickViews
             // it's time to print the labels for the first PickStop
@@ -4160,6 +4172,47 @@ namespace Neutron.Forms
             // TODO  This is a hack to get the labels to print for the Rack Station
             // TODO  Need to figure out how to get the labels to print for the Rack Station
             // TODO  by adding a variable to NeutronVariables like PrintAllLabels.
+            PrintLabelsForPickStops(finalPickSequence);
+            _logger.LogDetailAsync($"{DateTime.Now} Label/Labels on OC have Printed").SafeFireAndForget();
+            // To here
+            // document printing is done
+            // labels are printed
+            // PickStops are built and the BindingSourcePickStops is set
+            // the currentPickStop is set to the first PickStop in the BindingSourcePickStops
+            // the currentPickStop is the PickStop that will be picked
+            // the currentPickStop is the PickStop that will be displayed on the Pick Screen
+
+            UpdatePickScreen();
+            _logger.LogDetailAsync($"{DateTime.Now} Update Pick Screen Complete").SafeFireAndForget();
+            //UpdateCurrentDeviceIndicator();
+
+            if (_workstationView.AreaId != _areaEight)
+            {
+                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+            }
+
+            _logger.LogDetailAsync($"{DateTime.Now} Device Indicator Update Complete").SafeFireAndForget();
+
+            await UpdatePickPosition();
+            _logger.LogDetailAsync($"{DateTime.Now} Update Pick Position Complete").SafeFireAndForget();
+
+            UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
+            _logger.LogDetailAsync($"{DateTime.Now} Update GroupBox Location Complete").SafeFireAndForget();
+            // UpdateTowerDisplay();
+
+            tabControl1.SelectedTab = PickScreen;
+            MBPickAccept.Focus();
+
+            //feels good to here
+            // ---         Task.Run(() => _logger.LogDetailAsync($"Start_Click End: [{DateTime.Now.ToLongTimeString()}]"));
+            // StartSpaceBarEnableTimer();
+            _spaceBarDisabled = false;
+            _logger.LogDetailAsync($"{DateTime.Now} START module Complete").SafeFireAndForget();
+        }
+
+        private void PrintLabelsForPickStops(IEnumerable<PickStop> finalPickSequence)
+        {
+
             if (_neutronVariables.EnableLabelPrinter)
             {
                 if (_workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
@@ -4174,51 +4227,241 @@ namespace Neutron.Forms
                     PrintLabels(_currentPickStop);
                 }
             }
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Label/Labels on OC have Printed");
-            // To here
-            // document printing is done
-            // labels are printed
-            // PickStops are built and the BindingSourcePickStops is set
-            // the currentPickStop is set to the first PickStop in the BindingSourcePickStops
-            // the currentPickStop is the PickStop that will be picked
-            // the currentPickStop is the PickStop that will be displayed on the Pick Screen
+        }
 
-            UpdatePickScreen();
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Update Pick Screen Complete");
-            //UpdateCurrentDeviceIndicator();
+        /// <summary>
+        /// Moves to the first PickStop in the BindingSource and sets the currentPickStop variable to it.
+        /// </summary>
+        private void MoveToFirstPickStop()
+        {
+            _bindingSourcePickStops.MoveFirst();
+            _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
+        }
+        /// <summary>
+        /// Sorts the final pick sequence based on the area ID of the workstation view.
+        /// </summary>
+        /// <param name="pickStops">A list of pick stops to be sorted.</param>
+        /// <returns>Returns a sorted sequence of pick stops.</returns>
+        private IEnumerable<PickStop> SortFinalPickSequence(List<PickStop> pickStops)
+        {
+            return _workstationView.AreaId == _areaEight
+                ? FinalPickSequenceAreaEight(pickStops)
+                : FinalPickSequence(pickStops);
+        }
 
-            if (_workstationView.AreaId != 8)
+        private void LogPickStops(List<PickStop> pickStops)
+        {
+            foreach (var stop in pickStops)
             {
-                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                _logger.LogDetailAsync($"STOP Sequence: {stop.Sequence} " +
+                                       $" SKU: {stop.CurrentInventoryLocation.ItemDefinition.Item}" +
+                                       $" Location: {stop.CurrentInventoryLocation.Location.Loc1}" +
+                                       $"-{stop.CurrentInventoryLocation.Location.Loc2}" +
+                                       $"-{stop.CurrentInventoryLocation.Location.Loc3}" +
+                                       $"-{stop.CurrentInventoryLocation.Location.Loc2}" +
+                                       $"  Slot:  {stop.CurrentInventoryLocation.Location.Slot}" +
+                                       $"  Sequence:  {stop.CurrentInventoryLocation.Location.PickSequence}").SafeFireAndForget();
+
             }
 
-
-
-
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Device Indicator Update Complete");
-
-            await UpdatePickPosition();
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Update Pick Position Complete");
-
-            UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
-            _ = _logger.LogDetailAsync($"{DateTime.Now} Update GroupBox Location Complete");
-            // UpdateTowerDisplay();
-
-            tabControl1.SelectedTab = PickScreen;
-            MBPickAccept.Focus();
-
-            //feels good to here
-            // ---         Task.Run(() => _logger.LogDetailAsync($"Start_Click End: [{DateTime.Now.ToLongTimeString()}]"));
-            // StartSpaceBarEnableTimer();
-            _spaceBarDisabled = false;
-            _ = _logger.LogDetailAsync($"{DateTime.Now} START module Complete");
+            _logger.LogDetailAsync($"{DateTime.Now} Creating PickStops Complete").SafeFireAndForget();
         }
+        /// <summary>
+        /// Creates a list of PickStop objects from the provided collection of PickView objects.
+        /// </summary>
+        /// <param name="pickViews">The collection of PickView objects to be processed.</param>
+        /// <returns>A list of PickStop objects created from the provided PickView objects.</returns>
+        private List<PickStop> CreatePickStops(IEnumerable<PickView> pickViews)
+        {
+            var pickStops = new List<PickStop>();
+            var pickViewGroups = GroupPickViewsByItemKey(pickViews);
+            var sequence = 0;
+            foreach (var pickViewGroup in pickViewGroups)
+            {
+                var pickStop = CreatePickStopFromFirstPickView(pickViewGroup, ref sequence);
+                AddPickViewsToPickStop(pickViewGroup, pickStop);
+                pickStops.Add(pickStop);
+            }
+            return pickStops;
+        }
+        /// <summary>
+        /// Groups the provided collection of PickView instances by their ItemKey property.
+        /// </summary>
+        /// <param name="pickViews">The collection of PickView instances to be grouped.</param>
+        /// <returns>A collection of groups where each group represents a set of PickView instances that share the same ItemKey.</returns>
+        private IEnumerable<IGrouping<string, PickView>> GroupPickViewsByItemKey(IEnumerable<PickView> pickViews)
+        {
+            return pickViews.GroupBy(r => r.ItemKey).ToList();
+        }
+        /// <summary>
+        /// Creates a new instance of the <see cref="PickStop"/> class from the first <see cref="PickView"/> in the provided group.
+        /// </summary>
+        /// <param name="pickViewGroup">The group of <see cref="PickView"/> instances from which to create the <see cref="PickStop"/>.</param>
+        /// <param name="sequence">A reference to the sequence number, which is incremented in this method.</param>
+        /// <returns>A new instance of the <see cref="PickStop"/> class.</returns>
+        private PickStop CreatePickStopFromFirstPickView(IGrouping<string, PickView> pickViewGroup, ref int sequence)
+        {
+            var firstPickView = pickViewGroup.First();
+            return new PickStop
+            {
+                Sequence = sequence += 1,
+                OrderId = firstPickView.OrderId,
+                Ord1 = firstPickView.Ord1,
+                Ord2 = firstPickView.Ord2,
+                ItemId = firstPickView.ItemId,
+                Item = firstPickView.Item,
+                Description = firstPickView.Description,
+                UnitOfIssue = firstPickView.UnitOfIssue,
+                PickedQty = firstPickView.PickedQty,
+                Images = firstPickView.Images,
+                Inventory = firstPickView.Inventory,
+                InventoryIndex = firstPickView.InventoryIndex,
+                Slot = firstPickView.Slot,
+                SlotQty = firstPickView.SlotQty,
+                CurrentInventoryLocation = firstPickView.CurrentInventoryLocation,
+                TotalQuantityInInventory = firstPickView.TotalQuantityInInventory,
+                ItemKey = firstPickView.ItemKey
+            };
+        }
+        /// <summary>
+        /// Adds the PickViews from the specified group to the provided PickStop.
+        /// </summary>
+        /// <param name="pickViewGroup">The group of PickViews to be added to the PickStop.</param>
+        /// <param name="pickStop">The PickStop to which the PickViews will be added.</param>
+        /// <remarks>
+        /// This method also updates the total quantity and the quantity to be picked for the PickStop based on the quantities of the PickViews.
+        /// </remarks>
+        private void AddPickViewsToPickStop(IGrouping<string, PickView> pickViewGroup, PickStop pickStop)
+        {
+            var total = 0;
+            foreach (var pickView in pickViewGroup)
+            {
+                pickStop.PickViews.Add(pickView);
+                total += pickView.Quantity;
+            }
+            pickStop.Quantity = total;
+            pickStop.QuantityToBePicked = total;
+        }
+
+
+
+        //private List<PickStop> CreatePickStops(IEnumerable<PickView> pickViews)
+        //{
+        //    var pickStops = new List<PickStop>();
+        //    IEnumerable<IGrouping<string, PickView>> pickViewGroups = pickViews.GroupBy(r => r.ItemKey).ToList();
+        //    var sequence = 0;
+        //    foreach (var pickViewGroup in pickViewGroups) //for each Item in the group of Items
+        //    {
+        //        var total = 0;
+        //        // a PickStop is of One Item that may be on One to All Pick Positions
+        //        // a PickView is an individual pick at a single Pick Position
+        //        // so a PickStop is has One or Multiple PickViews that are concerned 
+        //        // with picking One Item.
+        //        // a PickStop is a summary of all the PickViews 
+        //        // and some of the information in a PickStop is the same as in a PickView
+        //        // that is why the First PickView is used to provide most of the data to the PickStop
+        //        var firstPickView = pickViewGroup.First();
+
+        //        var pickStop = new PickStop
+        //        {
+        //            Sequence = sequence += 1,
+        //            OrderId = firstPickView.OrderId,
+        //            Ord1 = firstPickView.Ord1,
+        //            Ord2 = firstPickView.Ord2,
+        //            ItemId = firstPickView.ItemId,
+        //            Item = firstPickView.Item,
+        //            Description = firstPickView.Description,
+        //            UnitOfIssue = firstPickView.UnitOfIssue,
+        //            PickedQty = firstPickView.PickedQty,
+        //            Images = firstPickView.Images,
+        //            Inventory = firstPickView.Inventory,
+        //            InventoryIndex = firstPickView.InventoryIndex,
+        //            Slot = firstPickView.Slot,
+        //            SlotQty = firstPickView.SlotQty,
+        //            CurrentInventoryLocation = firstPickView.CurrentInventoryLocation,
+        //            TotalQuantityInInventory = firstPickView.TotalQuantityInInventory,
+        //            ItemKey = firstPickView.ItemKey
+        //        };
+
+        //        // now that we have a PickStop, we need to add the PickViews to it
+        //        // and add up the total quantity to be picked
+        //        foreach (var pickView in pickViewGroup)
+        //        {
+        //            pickStop.PickViews.Add(pickView);
+        //            total += pickView.Quantity;
+        //        }
+        //        // set the total quantity to be picked
+        //        // and the quantity to be picked
+        //        // to the PickStops List
+        //        pickStop.Quantity = total;
+        //        pickStop.QuantityToBePicked = total;
+        //        pickStops.Add(pickStop);
+        //    }
+        //    return pickStops;
+        //}
+
+        /// <summary>
+        /// Sorts the PickViews based on the workstation area and location.
+        /// </summary>
+        /// <param name="pickableViews"></param>
+        /// <returns>
+        /// A sorted list of PickViews. If the data source is not a list of PickViews, it logs an error and returns null.
+        /// </returns>
+        /// <remarks>
+        /// If the workstation area is Area Eight, the PickViews are sorted by PickSequence.
+        /// Otherwise, they are sorted by location (Loc1, Loc2, Loc3, Loc4).
+        /// </remarks>
+        private IList<PickView> SortPickViews(List<PickView> pickableViews)
+        {
+            IList<PickView> pickViews = null;
+
+            //var list = (IList<PickView>)_bindingSourcePickViews.DataSource;
+            //if (list != null)
+            //{
+            //    pickViews = list;
+            //}
+            //else
+            //{
+            //    // Handle the error appropriately, e.g., log it, throw an exception, etc.
+            //    _logger.LogDetailAsync($"{DateTime.Now} Invalid data source").SafeFireAndForget();
+            //    return null;
+            //}
+            try
+            {
+                // set the sort order based on Location Type
+                // LocationType 3 is a Rack location and 
+                // should be sorted using the PickSequence
+                //var locationType = _workstationView.Area.LocationTypeId;
+                if (_workstationView.AreaId == _areaEight)
+                {
+                    // Sort by PickSequence in Area Eight
+                    pickViews = pickableViews.OrderBy(p => p.CurrentInventoryLocation?.Location?.PickSequence).ToList();
+                }
+                else
+                {
+                    // Sort by Location
+                    pickViews = pickableViews.OrderBy(p => p.CurrentInventoryLocation?.Location?.Loc1)
+                        .ThenBy(p => p.CurrentInventoryLocation?.Location?.Loc2)
+                        .ThenBy(p => p.CurrentInventoryLocation?.Location?.Loc3)
+                        .ThenBy(p => p.CurrentInventoryLocation?.Location?.Loc4).ToList();
+                }
+                _logger.LogDetailAsync($"{DateTime.Now} PickView Ordering Complete").SafeFireAndForget();
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                _logger.LogDetailAsync($"{DateTime.Now} Error while sorting PickViews: {ex.Message}").SafeFireAndForget();
+            }
+            return pickViews;
+        }
+
+
         /// <summary>
         /// Sorts the PickStops based on the Location's Pick Sequence
         /// </summary>
         /// <param name="pickStops">The List of PickStops to be sorted</param>
         /// <returns></returns>
-        private List<PickStop> FinalPickSequenceRack(List<PickStop> pickStops)
+        private List<PickStop> FinalPickSequenceAreaEight(List<PickStop> pickStops)
         {
             //foreach (var pickStop in pickStops)
             //{
@@ -4230,11 +4473,75 @@ namespace Neutron.Forms
             return pickStops;
         }
 
+        //------------------------------------------
+        //private List<PickStop> FinalPickSequence(List<PickStop> pickStops)
+        //{
+        //    var pickableDevices = GetPickableDevices();
+        //    var pickStopGroups = GroupPickStopsByDevice(pickStops, pickableDevices);
+        //    var totalPickStops = pickStops.Count;
+        //    for (var i = 0; i < totalPickStops; i++)
+        //    {
+        //        ProcessPickStopGroups(pickStopGroups);
+        //    }
+        //    _deviceManager = new PickDeviceManager(pickStopGroups, _neutronVariables.ShuttleEnabled);
+        //    MoveDevicesToNextPickStop();
+        //    return new List<PickStop>();
+        //}
+        //private List<HardwareDevice> GetPickableDevices()
+        //{
+        //    return _workstationView.HardwareDevices.Where(r => r.DeviceType.Pickable).ToList();
+        //}
+        //private List<List<PickStop>> GroupPickStopsByDevice(List<PickStop> pickStops, List<HardwareDevice> hardwareDevices)
+        //{
+        //    var pickStopGroups = new List<List<PickStop>>();
+        //    if (!pickStops.Any() || !hardwareDevices.Any()) return pickStopGroups;
+
+        //    for (var i = 0; i < hardwareDevices.Count; i++)
+        //    {
+        //        var pickStopGroup = pickStops
+        //            .Where(p => p.CurrentInventoryLocation.Location.Loc1 == i + 1)
+        //            .OrderBy(p => p.CurrentInventoryLocation.Location.Loc2)
+        //            .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
+        //            .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
+        //            .ToList();
+        //        pickStopGroups.Add(pickStopGroup);
+        //    }
+        //    return pickStopGroups;
+        //}
+        //private void ProcessPickStopGroups(List<List<PickStop>> pickStopGroups)
+        //{
+        //    var seq = 1;
+
+        //    for (var i = 0; i < pickStopGroups.Count; i++)
+        //    {
+        //        // Process each pick stop group
+        //        for (var j = 0; j < newCarList.Count; j++)
+        //        {
+        //            if (newCarList[j].Count >= i + 1)
+        //            {
+        //                newCarList[j][i].Sequence = seq;
+        //                seq += 1;
+        //                newList.Add(newCarList[j][i]);
+        //            }
+        //        }
+        //    }
+        //}
+        //private void MoveDevicesToNextPickStop()
+        //{
+        //    for (var i = 1; i <= _workstationView.Hanels.Count; i++)
+        //    {
+        //        _deviceManager.MoveNext(i);
+        //    }
+        //}
+
+
+
+
+        //------------------------------------------
+
 
         /// <summary>
         /// FinalPickSequence sorts the Pickstops to be picked 1,2,3,4 across all devices
-        /// If this is not a pick workstation with devices
-        /// Sort the Picks in PickSequence order
         /// </summary>
         /// <param name="pickStops"></param>
         /// <returns>A list of PickStops in Machine Pick Order</returns>
@@ -4290,10 +4597,6 @@ namespace Neutron.Forms
 
             _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
 
-            //for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
-            //var pickableHardware = _workstationView.HardwareDevices.Where(r => r.DeviceType.Pickable).ToList();
-
-            //for (var i = 1; i <= pickableHardware.Count; i++)
             for (var i = 1; i <= _workstationView.Hanels.Count; i++)
 
             {
@@ -4309,21 +4612,16 @@ namespace Neutron.Forms
 
         private void PositionDevice(int loc1, int loc2, int loc3, int loc4, bool moveDevice)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($"PositionDevice"));
-            if (_neutronVariables.ShuttleEnabled)
+            if (!_neutronVariables.ShuttleEnabled) return;
+            if (GlobalVar.Shuttle != null)
             {
-                // ---         Task.Run(() => _logger.LogDetailAsync($"PositionDevice - Shuttle Enabled"));
-                if (GlobalVar.Shuttle != null)
-                {
-                    // ---         Task.Run(() => _logger.LogDetailAsync($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}"));
-                    GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4);
-                }
-                if (GlobalVar.Hanel != null)
-                {
-                    // ---         Task.Run(() => _logger.LogDetailAsync($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}"));
-                    GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
-                }
+                _logger.LogDetailAsync($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}").SafeFireAndForget();
+                GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4);
             }
+
+            if (GlobalVar.Hanel == null) return;
+            _logger.LogDetailAsync($"PositionDevice Loc1:{loc1} Loc2:{loc2} Loc3:{loc3} Loc4:{loc4}").SafeFireAndForget();
+            GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
         }
 
         private async Task GetFirstStop(bool moveDevice = true)
@@ -4467,8 +4765,7 @@ namespace Neutron.Forms
             // ---         Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen Start: [{DateTime.Now.ToLongTimeString()}]"));
             // Topura has the option to ask for a new item
             MBPickNewItem.Visible = _neutronLicense.CompanyCode == "TOP" ? true : false;
-            // If the workstation is configured to use images
-            if (_neutronVariables.UseImages) PictureBoxItemImage.LoadAsync(_imageManager.GetImageFile(_currentPickStop.Item));
+            
             // Set the Pick Screen Labels
             LabelFormTitle.Text = _resourceManager.GetString($"Selection");
             LabelPickDescription.Text = _currentPickStop.Description;
@@ -4484,6 +4781,9 @@ namespace Neutron.Forms
             var quantityToBePicked = _currentPickStop.QuantityToBePicked;
             LabelPickQty.Text = quantityToBePicked.ToString();
             // ---         Task.Run(() => _logger.LogDetailAsync($"UpdatePickScreen End: [{DateTime.Now.ToLongTimeString()}]"));
+
+            // If the workstation is configured to use images
+            if (_neutronVariables.UseImages) PictureBoxItemImage.LoadAsync(_imageManager.GetImageFile(_currentPickStop.Item));
 
             MBPickAccept.Enabled = quantityToBePicked > 0;
             MBPickChangeQuantity.Enabled = quantityToBePicked > 0;
@@ -4647,91 +4947,120 @@ namespace Neutron.Forms
             // ---         Task.Run(() => _logger.LogDetailAsync($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]"));
         }
 
-        //private void ShowShi(int loc1, int loc2, int loc3, string loc4, string text)
-        //{
-        //    if (_neutronVariables.DisplaysEnabled)
-        //    {
-        //        if (_tcpIptiController != null)
-        //        {
-        //            if (_neutronVariables.ShiEnabled)
-        //            {
-        //                // ClearAllShi();
-        //                _ = // ---         Task.Run(() => _logger.LogDetailAsync($"Show SHI function {loc1}-{loc2}-{loc3}-{loc4}{Environment.NewLine}{text}"));
+        //------------------------------------------
+        private async Task UpdatePickPosition()
+        {
+            LogStartOfUpdate();
+            SetOrderCompleteThisArea();
+            ClearPickPositions();
+            ClearPickDisplays();
+            await ClearIptiDisplayFunctions();
+            ClearAllProlites();
+            await UpdatePickViews();
+            await UpdateBlastzoneDisplay();
+            TurnOnProlites();
+            LogEndOfUpdate();
+        }
 
-        //                _tcpIptiController.ShowShi(loc1, loc2, loc3, loc4, text);
-        //            }
-        //        }
-        //    }
-        //}
+        private void TurnOnProlites()
+        {
+            var device = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+            var bayController = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
+            var display = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+            _workstationView.ProLiteManager?.TurnOn(device, bayController, display, _currentPickStop.GetTotalQuantityToBePicked());
+        }
 
-        //private void ClearAllShi()
-        //{
-        //    if (_neutronVariables.DisplaysEnabled)
-        //    {
-        //        if (_neutronVariables.ShiEnabled)
-        //        {
-        //            if (_tcpIptiController == null) return;
-        //            // --- _ =         Task.Run(() => _logger.LogDetailAsync($"ClearAllShi Function"));
-        //            _tcpIptiController.ClearAllShi();
-        //        }
-        //    }
-        //}
+        private void LogStartOfUpdate()
+        {
+            _logger.LogDetailAsync($"UpdatePickPosition START").SafeFireAndForget();
+        }
+        private void LogEndOfUpdate()
+        {
+            _logger.LogDetailAsync($"UpdatePickPosition END").SafeFireAndForget();
+        }
+        private async Task ClearIptiDisplayFunctions()
+        {
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.ClearBlastzone();
+                await _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentPickStop.Item.Trim());
+            }
 
-        //private void ClearAllBli()
-        //{
-        //    // ---  _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - START"));
-        //    if (_neutronVariables.DisplaysEnabled)
-        //    {
-        //        if (_neutronVariables.BliEnabled)
-        //        {
-        //            if (_tcpIptiController == null) return;
-        //            // ---_ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - ClearAllBli Function Call"));
-        //            _tcpIptiController.ClearAllBli();
-        //            // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - Clear Order Control Function Return"));
-        //        }
-        //    }
-        //    // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear All BLI - END"));
-        //}
+        }
+        private void ClearAllProlites()
+        {
+            _workstationView.ProLiteManager?.ClearAllProlites();
+        }
+        private async Task UpdatePickViews()
+        {
+            foreach (var pickView in _currentPickStop.PickViews)
+            {
+                await UpdatePickView(pickView);
+            }
+        }
+        private async Task UpdatePickView(PickView pickView)
+        {
+            var pos = pickView.PickPosition;
+            var textBox = (TextBox)Controls.Find($"TextBoxPickPos{pos}", true).First();
+            if (textBox != null)
+            {
+                textBox.Font = new Font(textBox.Font.FontFamily, 26);
+                textBox.Text = pickView.QuantityToBePicked.ToString();
+            }
+            var panel = (Panel)Controls.Find($"Pos{pos}Display", true).First();
+            if (panel != null)
+            {
+                panel.BackColor = Color.Red;
+            }
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBatchDisplay(pos, pickView.QuantityToBePicked.ToString());
+            }
+        }
+        private async Task UpdateBlastzoneDisplay()
+        {
+            var device = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
+            var bayController = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
+            var display = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayController, display,
+                    _currentPickStop.GetTotalQuantityToBePicked().ToString());
+                await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayController, _currentPickStop.Item.Trim());
+            }
 
-        //private void ClearOc()
-        //{
-        //    // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear Order Control Module - START"));
-        //    if (_neutronVariables.DisplaysEnabled)
-        //    {
-        //        if (_neutronVariables.BliEnabled)
-        //        {
-        //            if (_tcpIptiController == null) return;
-        //            // ---   _ =         Task.Run(() => _logger.LogDetailAsync($"Pick Form - Clear Order Control Module Function Call"));
-        //            _tcpIptiController.ClearOcAsync(_neutronVariables.BliController, 1);
-        //            // ---   _ =         Task.Run(() => _logger.LogDetailAsync($"Pick Form - Order Control Module - Clear Order Control Function Return"));
-        //        }
-        //    }
-        //    // ---      _ =      Task.Run(() => _logger.LogDetailAsync($"Pick Form - Order Control Module - END"));
-        //}
+        }
+
+
+
+
+        //------------------------------------------
 
         /// <summary>
         /// Updates the Pick Positions on the screen
         /// </summary>
-        private async Task UpdatePickPosition()
+        private async Task UpdatePickPositionOld()
         {
-            _ = _logger.LogDetailAsync($"UpdatePickPosition START");
+            _logger.LogDetailAsync($"UpdatePickPosition START").SafeFireAndForget();
             // Sets the OrderComplete flag in the OrderToPick batch file
             SetOrderCompleteThisArea();
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Sets the OrderComplete flag in the OrderToPick batch file");
+            _logger.LogDetailAsync($"{DateTime.Now}  Sets the OrderComplete flag in the OrderToPick batch file").SafeFireAndForget();
             // Clear the Pick Positions
             ClearPickPositions();
-            _ = _logger.LogDetailAsync($"{DateTime.Now}   Clear the Pick Positions");
+            _logger.LogDetailAsync($"{DateTime.Now}   Clear the Pick Positions").SafeFireAndForget();
             // Clear the Pick Displays
             ClearPickDisplays();
-            _ = _logger.LogDetailAsync($"{DateTime.Now}  Clear the Pick Displays");
+            _logger.LogDetailAsync($"{DateTime.Now}  Clear the Pick Displays").SafeFireAndForget();
 
-            await _iptiDisplayFunctions.ClearBatchTable();
-
-            await _iptiDisplayFunctions.ClearBlastzone();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.ClearBlastzone();
+                await _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentPickStop.Item.Trim());
+            }
 
             _workstationView.ProLiteManager?.ClearAllProlites();
-
-            await _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentPickStop.Item.Trim());
 
             foreach (var pickView in _currentPickStop.PickViews)
             {
@@ -4749,7 +5078,10 @@ namespace Neutron.Forms
                     panel.BackColor = Color.Red;
                 }
 
-                await _iptiDisplayFunctions.TurnOnBatchDisplay(pos, pickView.QuantityToBePicked.ToString());
+                if (_iptiDisplayFunctions != null)
+                {
+                    await _iptiDisplayFunctions.TurnOnBatchDisplay(pos, pickView.QuantityToBePicked.ToString());
+                }
             }
 
             var device = _currentPickStop.CurrentInventoryLocation.Location.Loc1;
@@ -4757,159 +5089,19 @@ namespace Neutron.Forms
             var display = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
 
 
-            await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayController, display, _currentPickStop.GetTotalQuantityToBePicked().ToString());
-            await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayController, _currentPickStop.Item.Trim());
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayController, display,
+                    _currentPickStop.GetTotalQuantityToBePicked().ToString());
+                await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayController, _currentPickStop.Item.Trim());
+            }
 
             _workstationView.ProLiteManager?.TurnOn(device, bayController, display, _currentPickStop.GetTotalQuantityToBePicked());
 
-            _ = _logger.LogDetailAsync($"UpdatePickPosition END");
+            _logger.LogDetailAsync($"UpdatePickPosition END").SafeFireAndForget();
         }
 
-        //private void TurnOnBatchDisplay(int bayControllerId, int position, int beacon, string text)
-        //{
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable != null)
-        //        {
-        //            var command = _tcpIptiCommandCenter.BatchBayController.TurnOnDisplay(position, text);
-        //            _tcpIptiController.SendText(command);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"TurnOn Batch Display Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //}
-        //private void TurnOnBatchOrderControl(string text)
-        //{
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable != null)
-        //        {
-        //            var command = _tcpIptiCommandCenter.BatchBayController.TurnOnOrderControlModule(text);
-        //            _tcpIptiController.SendText(command);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"TurnOn Batch Order Control Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //}
 
-        ///// <summary>
-        ///// Done
-        ///// </summary>
-        ///// <param name="bayController"></param>
-        ///// <param name="position"></param>
-        ///// <param name="text"></param>
-        //private void TurnOnBlastzoneDisplay(int bayController, int position, string text)
-        //{
-        //    try
-        //    {
-        //        if (_workstationView.Blastzones.Any())
-        //        {
-        //            var bayId = bayController.ToString().PadLeft(2, '0');
-        //            var controller = _tcpIptiCommandCenter.BlastBayControllers.FirstOrDefault(r => r.BayId == bayId);
-        //            if (controller == null) return;
-        //            var command = controller.TurnOnDisplay(position, text);
-        //            _tcpIptiController.SendText(command);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"TurnOn Blastzone Display Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //}
-
-        //private void TurnOnBlastzoneOrderControl(int bayController, string text)
-        //{
-        //    try
-        //    {
-        //        if (_workstationView.Blastzones.Any())
-        //        {
-        //            var bayId = bayController.ToString().PadLeft(2, '0');
-        //            var controller = _tcpIptiCommandCenter.BlastBayControllers.FirstOrDefault(r => r.BayId == bayId);
-        //            if (controller == null) return;
-        //            var command =  controller.TurnOnOrderControlModule(text);
-        //            _tcpIptiController.SendText(command);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"TurnOn Blastzone Order Control Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //}
-
-        //private void ClearBatchTable()
-        //{
-        //    try
-        //    {
-        //        if (_workstationView.BatchTable != null)
-        //        {
-        //            var command = _tcpIptiCommandCenter.BatchBayController.ClearDisplays();
-        //            _tcpIptiController.SendText(command);
-        //            Thread.Sleep(100);
-        //            command = _tcpIptiCommandCenter.BatchBayController.TurnOffOrderControlModule();
-
-        //            _tcpIptiController.SendText(command);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"ClearBatchTable Function Failed:{Environment.NewLine}{ex.Message}"));
-        //    }
-        //}
-
-
-        ///// <summary>
-        ///// Done
-        ///// </summary>
-        ///// <param name="bayController"></param>
-        ///// <param name="position"></param>
-        ///// <param name="beacon"></param>
-        ///// <param name="text"></param>
-        //private void TurnOnBlastzoneAsync(int bayController, int position, string text)
-        //{
-        //    if (_neutronVariables.DisplaysEnabled)
-        //    {
-        //        if (_neutronVariables.IptiDisplays)
-        //        {
-        //            if (_tcpIptiController == null) return;
-        //            var command = _tcpIptiCommandCenter.TurnOnDisplay(bayController.ToString(), position, text);
-
-        //            //          _ = _logger.LogDetailAsync($"_tcpIptiController.SendText --  Command: {command}");
-        //            _tcpIptiController.SendText(command);
-        //            // _tcpIptiController.ShowBlastzone(bayController, position, beacon, text);
-        //        }
-        //    }
-        //}
-        ///// <summary>
-        ///// Done
-        ///// </summary>
-        //private void ClearBlastzone()
-        //{
-        //    Task.Run(() => _logger.LogDetailAsync($"ClearBlastzone Function - START"));
-        //    try
-        //    {
-        //        if (_workstationView.Blastzones.Any())
-        //        {
-        //            foreach (var bayController in _tcpIptiCommandCenter.BlastBayControllers)
-        //            {
-        //                var text = bayController.ClearDisplays();
-        //                _tcpIptiController.SendText(text);
-
-        //                text = bayController.TurnOffOrderControlModule();
-        //                _tcpIptiController.SendText(text);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Task.Run(() => _logger.LogDetailAsync($"ClearBlastzone Function Failed:{Environment.NewLine}{ex.Message}"));
-
-        //    }
-        //    Task.Run(() => _logger.LogDetailAsync($"ClearBlastzone Function - END"));
-        //}
         /// <summary>
         /// Clear and Reset all Order Positions
         /// </summary>
@@ -4927,18 +5119,6 @@ namespace Neutron.Forms
             }
         }
 
-        //private void SetOrderCompleteThisArea()
-        //{
-        //    foreach (var bp in _ordersToPick)
-        //    {
-        //        if (bp.OrderId == 0) continue;
-        //        var linesNotComplete = _repoOrderDetails
-        //            .FindBy(r => r.OrderId == bp.OrderId && _areaIdsForThisWorkstation.Contains(r.AreaId))
-        //            .Where(r => r.LineStatusId != (int)LineStatus.Complete).ToList();
-        //        if (linesNotComplete.Any()) continue;
-        //        bp.OrderComplete = true;
-        //    }
-        //}
         /// <summary>
         /// When all lines have been picked for an order in this area
         /// The OrderComplete flag in the OrderToPick batch file is set to true
@@ -4958,41 +5138,66 @@ namespace Neutron.Forms
             }
         }
         /// <summary>
-        /// Clears the pick position in the user interface.
+        /// Clears the text of the TextBox control associated with the specified pick position.
         /// </summary>
-        /// <param name="pos">The position to be cleared, represented as an integer.</param>
-        private void ClearPickPosition(string pos)
+        /// <param name="position">The position of the pick to be cleared. This is used to find the TextBox control.</param>
+        private void ClearPickPosition(string position)
         {
-            var c = Controls.Find($"TextBoxPickPos{pos}", true).First();
-            if (c != null)
+            Control control = Controls.Find($"TextBoxPickPos{position}", true).FirstOrDefault();
+            if (control != null)
             {
-                var textBox = ((TextBox)c);
-                // if the order is complete, show END in the position box
-                // else show nothing
-                textBox.Text = string.Empty;
+                TextBox textBox = control as TextBox;
+                if (textBox != null)
+                {
+                    textBox.Text = string.Empty;
+                }
             }
+        }
+
+
+        private void ClearPickPositions()
+        {
+            var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+            foreach (var order in ordersToPick)
+            {
+                UpdateOrderDisplay(order);
+            }
+        }
+        private void UpdateOrderDisplay(BatchPosition order)
+        {
+            var control = FindOrderControl(order);
+            if (control is TextBox textBox)
+            {
+                textBox.Text = order.OrderComplete ? "END" : string.Empty;
+            }
+        }
+        private Control FindOrderControl(BatchPosition order)
+        {
+            var position = order.PositionNumber.ToString();
+            var controlName = $"TextBoxPickPos{position}";
+            return Controls.Find(controlName, true).FirstOrDefault();
         }
 
         /// <summary>
         /// Clears all the Pick Positions
         /// </summary>
-        private void ClearPickPositions()
-        {
-            var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
-            // var font = new Font("Microsoft San Serif", 24);
-            foreach (var bp in ordersToPick)
-            {
-                var pos = bp.PositionNumber.ToString();
-                var c = Controls.Find($"TextBoxPickPos{pos}", true).First();
-                if (c != null)
-                {
-                    var textBox = ((TextBox)c);
-                    // if the order is complete, show END in the position box
-                    // else show nothing
-                    textBox.Text = bp.OrderComplete ? "END" : string.Empty;
-                }
-            }
-        }
+        //private void ClearPickPositions()
+        //{
+        //    var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+        //    // var font = new Font("Microsoft San Serif", 24);
+        //    foreach (var bp in ordersToPick)
+        //    {
+        //        var pos = bp.PositionNumber.ToString();
+        //        var c = Controls.Find($"TextBoxPickPos{pos}", true).First();
+        //        if (c != null)
+        //        {
+        //            var textBox = ((TextBox)c);
+        //            // if the order is complete, show END in the position box
+        //            // else show nothing
+        //            textBox.Text = bp.OrderComplete ? "END" : string.Empty;
+        //        }
+        //    }
+        //}
         /// <summary>
         /// Clear the Pick Displays
         /// </summary>
@@ -5006,7 +5211,7 @@ namespace Neutron.Forms
                 var c = Controls.Find($"Pos{pos}Display", true).First();
                 if (c != null)
                 {
-                    var panel = ((Panel)c);
+                    var panel = (Panel)c;
                     // if the order is complete, turn the panel back color green
                     panel.BackColor = bp.OrderComplete ? Color.Green : Color.Transparent;
                 }
@@ -5090,10 +5295,12 @@ namespace Neutron.Forms
             // ClearAllShi();
             // ClearAllBli();
             // ClearOc();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+            }
 
-            await _iptiDisplayFunctions.ClearBatchTable();
-
-            await _iptiDisplayFunctions.TurnOffBatchOrderControl();
 
             ClearOrderPositions();
 
@@ -5105,7 +5312,7 @@ namespace Neutron.Forms
 
             //if (_neutronLicense.CompanyCode == "SFH")
             //{
-            //    var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinter);
+            //    var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinterPreferences);
             //}
 
             ParkPositionAfterBatch();
@@ -5168,7 +5375,7 @@ namespace Neutron.Forms
             //Thread.Sleep(500);
 
 
-            _ = _logger.LogDetailAsync($"Pick Accept Button Pressed");
+            _logger.LogDetailAsync($"Pick Accept Button Pressed").SafeFireAndForget();
 
             //if (InvokeRequired)
             //{
@@ -5192,27 +5399,27 @@ namespace Neutron.Forms
 
             var enoughInventory = _currentPickStop.CurrentInventoryLocation.Quantity >= _currentPickStop.QuantityToBePicked;
 
-            _ = _logger.LogDetailAsync($"Check Inventory End");
+            _logger.LogDetailAsync($"Check Inventory End").SafeFireAndForget();
 
 
             if (enoughInventory) //there is enough inventory at this location
             {
-                _ = _logger.LogDetailAsync($"Update Pick Views - 1");
+                _logger.LogDetailAsync($"Update Pick Views - 1").SafeFireAndForget();
                 _currentPickStop.UpdatePickViews(GlobalVar.User); //good
-                _ = _logger.LogDetailAsync($"Update Pick Views - 2");
+                _logger.LogDetailAsync($"Update Pick Views - 2").SafeFireAndForget();
                 _currentPickStop.PickedQty = GetPickedSoFar(_currentPickStop.PickViews);
-                _ = _logger.LogDetailAsync($"Update Pick Views - 3");
+                _logger.LogDetailAsync($"Update Pick Views - 3").SafeFireAndForget();
                 _currentPickStop.QuantityToBePicked =
                     GetTotalQuantityToBePicked(_currentPickStop.PickViews); // QuantityToBePicked on ALL PickViews
-                _ = _logger.LogDetailAsync($"Update Pick Views - 4");
+                _logger.LogDetailAsync($"Update Pick Views - 4").SafeFireAndForget();
                 var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
-                _ = _logger.LogDetailAsync($"Update Pick Views - 5");
+                _logger.LogDetailAsync($"Update Pick Views - 5").SafeFireAndForget();
                 _currentPickStop.TotalQuantityInInventory = total;
-                _ = _logger.LogDetailAsync($"Update Pick Views - 6");
+                _logger.LogDetailAsync($"Update Pick Views - 6").SafeFireAndForget();
                 TextBoxTotalQuantity.Text = total.ToString();
 
 
-                _ = _logger.LogDetailAsync($"Update PickViews End");
+                _logger.LogDetailAsync($"Update PickViews End").SafeFireAndForget();
                 // ---         Task.Run(() => _logger.LogDetailAsync($"PickAccept 1 : [{DateTime.Now.ToLongTimeString()}]"));
 
                 bool stopComplete;
@@ -5231,21 +5438,21 @@ namespace Neutron.Forms
 
                 if (stopComplete)
                 {
-                    _ = _logger.LogDetailAsync($"PickAccept 2 Stop Complete Start ");
+                    _logger.LogDetailAsync($"PickAccept 2 Stop Complete Start ").SafeFireAndForget();
 
                     //Getting next location on the current device/ the one that was just picked from.
                     // ---         Task.Run(() => _logger.LogDetailAsync($"PickAccept 2 Stop Complete Start "));
 
                     UpdateInventoryQuantity(_currentPickStop);
 
-                    _ = _logger.LogDetailAsync($"Update Inventory Quantity End");
+                    _logger.LogDetailAsync($"Update Inventory Quantity End").SafeFireAndForget();
 
                     // ---         Task.Run(() => _logger.LogDetailAsync($"UpdateInventoryQuantity"));
 
                     // ---         Task.Run(() => _logger.LogDetailAsync($"History Done"));
 
                     _currentPickStop.SetPickViewsComplete(GlobalVar.User, _logger);
-                    _ = _logger.LogDetailAsync($" Set Pick Views Complete End");
+                    _logger.LogDetailAsync($" Set Pick Views Complete End").SafeFireAndForget();
 
                     foreach (var pickView in _currentPickStop.PickViews)
                     {
@@ -5257,7 +5464,7 @@ namespace Neutron.Forms
                             }
                         }
                     }
-                    _ = _logger.LogDetailAsync($"Check for Order Complete End");
+                    _logger.LogDetailAsync($"Check for Order Complete End").SafeFireAndForget();
                     // ---         Task.Run(() => _logger.LogDetailAsync($"PickAccept Stop Complete End "));
 
                     var numberOfStops = _bindingSourcePickStops.Count;
@@ -5291,9 +5498,9 @@ namespace Neutron.Forms
                             //Use the first carousel location for the movenext in case multiple picks are required for stop
                             if (_deviceManager != null)
                             {
-                                _ = _logger.LogDetailAsync($"MoveNext Start");
+                                _logger.LogDetailAsync($"MoveNext Start").SafeFireAndForget();
                                 _deviceManager.MoveNext(_currentPickStop.Inventory[0].Location.Loc1);
-                                _ = _logger.LogDetailAsync($"MoveNext End");
+                                _logger.LogDetailAsync($"MoveNext End").SafeFireAndForget();
                             }
                         }
 
@@ -5303,19 +5510,19 @@ namespace Neutron.Forms
                         {
                             PrintLabels(_currentPickStop);
                         }
-                        _ = _logger.LogDetailAsync($"Print Labels End");
+                        _logger.LogDetailAsync($"Print Labels End").SafeFireAndForget();
 
                         UpdatePickScreen();
                         // UpdateCurrentDeviceIndicator();
-                        _ = _logger.LogDetailAsync($"Update Pick Screen End");
+                        _logger.LogDetailAsync($"Update Pick Screen End").SafeFireAndForget();
                         await UpdatePickPosition();
 
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         // UpdateTowerDisplay();
-                        _ = _logger.LogDetailAsync($"Update Group Box End");
+                        _logger.LogDetailAsync($"Update Group Box End").SafeFireAndForget();
 
                         _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
-                        _ = _logger.LogDetailAsync($"Update Current Device Indicator End");
+                        _logger.LogDetailAsync($"Update Current Device Indicator End").SafeFireAndForget();
                     }
                     else
                     {
@@ -5355,7 +5562,7 @@ namespace Neutron.Forms
                     icon: MessageBoxIcon.Stop);
             }
 
-            _ = _logger.LogDetailAsync($"PickAccept End : [{DateTime.Now.ToLongTimeString()}]");
+            _logger.LogDetailAsync($"PickAccept End : [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
             Cursor.Current = Cursors.Default;
             //EnablePickAccept(true);
             MBPickAccept.Focus();
@@ -5526,55 +5733,112 @@ namespace Neutron.Forms
             foreach (var pickView in currentPickStop.PickViews)
             {
                 PrintLabel(1, pickView.PickPosition, pickView);
-                //// if testing, just display the label
-                //if (GlobalVar.Testing)
-                //{
-                //    Mediator.GetInstance().OnDisplayMessage(this, $"Printing Label: {labelDetail.Item}");
-                //}
-                //else
-                //{
-                //    ToteToPrint.Print(reqFunc, pickView.PickPosition, labelDetail, upc, _labelPrinter);
-                //}
             }
         }
+        //-----------------------------
 
         private void PrintLabel(int reqFunc, int pos, PickView pickView)
         {
-            var orderDetail = new string[5] { "", "", "", "", "" };
-
+            var orderDetail = GetOrderDetail(pickView);
             if (_neutronLicense.CompanyCode == "WAG")
             {
-
-                var input = pickView.OrderDetail.OrderDetailInfo;
-                if (!string.IsNullOrEmpty(input))
-                {
-                    var splitInput = input.Split('|');
-                    if (splitInput.Length == 5)
-                    {
-                        orderDetail = splitInput;
-                    }
-                }
-
-                var printPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
-
-                var upc = orderDetail[4].Trim();
-                var aItem = pickView.Item.Trim();
-                var cItem = pickView.Item.Trim();
-                var quantity = pickView.QuantityToBePicked.ToString();
-                var desc = pickView.Description.Trim();
-                var division = orderDetail[1];
-
-                // --- _ =          Task.Run(() => _logger.LogDetailAsync($"Loftware Label: UPC:{upc} Desc:{desc} Item:{aItem}"));
-
-                ToteToPrint.PrintLoftwareLabel(printPreferences.LoftwareFilePath, printPreferences.LoftwarePrinter, upc, aItem, cItem, quantity, desc, division);
+                PrintLoftwareLabel(pickView, orderDetail);
             }
             else
             {
-                var upc = _repoAka.GetUpc(pickView.Item);
-                var labelDetail = GetLabelDetail(pickView.OrderDetail);
-                ToteToPrint.Print(reqFunc, pos, labelDetail, upc, _labelPrinter);
+                PrintLabelWithPreferences(reqFunc, pos, pickView);
             }
         }
+        private string[] GetOrderDetail(PickView pickView)
+        {
+            var orderDetail = new string[5] { "", "", "", "", "" };
+            var input = pickView.OrderDetail.OrderDetailInfo;
+            if (!string.IsNullOrEmpty(input))
+            {
+                var splitInput = input.Split('|');
+                if (splitInput.Length == 5)
+                {
+                    orderDetail = splitInput;
+                }
+            }
+            return orderDetail;
+        }
+        private void PrintLoftwareLabel(PickView pickView, string[] orderDetail)
+        {
+            var loftwarePrinterPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
+            if (string.IsNullOrEmpty(loftwarePrinterPreferences.LoftwareFilePath)) return;
+            var upc = orderDetail[4].Trim();
+            var aItem = pickView.Item.Trim();
+            var cItem = pickView.Item.Trim();
+            var quantity = pickView.QuantityToBePicked.ToString();
+            var desc = pickView.Description.Trim();
+            var division = orderDetail[1];
+            Task.Run(() => _logger.LogDetailAsync($"Loftware Label: UPC:{upc} Desc:{desc} Item:{aItem}")).SafeFireAndForget();
+            ToteToPrint.PrintLoftwareLabel(loftwarePrinterPreferences.LoftwareFilePath
+                , loftwarePrinterPreferences.LoftwarePrinter
+                , upc
+                , aItem
+                , cItem
+                , quantity
+                , desc
+                , division);
+        }
+        private void PrintLabelWithPreferences(int reqFunc, int pos, PickView pickView)
+        {
+            if (string.IsNullOrEmpty(_labelPrinterPreferences.PrinterName)) return;
+            var upc = _repoAka.GetUpc(pickView.Item);
+            var labelDetail = GetLabelDetail(pickView.OrderDetail);
+            ToteToPrint.Print(reqFunc, pos, labelDetail, upc, _labelPrinterPreferences);
+        }
+
+
+        //-----------------------------
+        //private void PrintLabel(int reqFunc, int pos, PickView pickView)
+        //{
+        //    var orderDetail = new string[5] { "", "", "", "", "" };
+
+        //    if (_neutronLicense.CompanyCode == "WAG")
+        //    {
+
+        //        var input = pickView.OrderDetail.OrderDetailInfo;
+        //        if (!string.IsNullOrEmpty(input))
+        //        {
+        //            var splitInput = input.Split('|');
+        //            if (splitInput.Length == 5)
+        //            {
+        //                orderDetail = splitInput;
+        //            }
+        //        }
+
+        //        var loftwarePrinterPreferences = _jsonData.LoadFile<LoftwarePrinterPreferences>();
+        //        if (string.IsNullOrEmpty(loftwarePrinterPreferences.LoftwareFilePath)) return;
+
+        //        var upc = orderDetail[4].Trim();
+        //        var aItem = pickView.Item.Trim();
+        //        var cItem = pickView.Item.Trim();
+        //        var quantity = pickView.QuantityToBePicked.ToString();
+        //        var desc = pickView.Description.Trim();
+        //        var division = orderDetail[1];
+
+        //        Task.Run(() => _logger.LogDetailAsync($"Loftware Label: UPC:{upc} Desc:{desc} Item:{aItem}")).SafeFireAndForget();
+
+        //        ToteToPrint.PrintLoftwareLabel(loftwarePrinterPreferences.LoftwareFilePath
+        //            , loftwarePrinterPreferences.LoftwarePrinter
+        //            , upc
+        //            , aItem
+        //            , cItem
+        //            , quantity
+        //            , desc
+        //            , division);
+        //    }
+        //    else
+        //    {
+        //        if (string.IsNullOrEmpty(_labelPrinterPreferences.PrinterName)) return;
+        //        var upc = _repoAka.GetUpc(pickView.Item);
+        //        var labelDetail = GetLabelDetail(pickView.OrderDetail);
+        //        ToteToPrint.Print(reqFunc, pos, labelDetail, upc, _labelPrinterPreferences);
+        //    }
+        //}
 
         private LabelDetail GetLabelDetail(OrderDetail orderDetail)
         {
@@ -5732,14 +5996,16 @@ namespace Neutron.Forms
             //ClearOc();
 
             GlobalVar.Hanel?.ResetHanelDeviceStatus();
-
-            await _iptiDisplayFunctions.ClearBatchTable();
-            await _iptiDisplayFunctions.TurnOffBatchOrderControl();
-            await _iptiDisplayFunctions.ClearBlastzone();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+                await _iptiDisplayFunctions.ClearBlastzone();
+            }
 
             ClearOrderPositions();
             ClearBatchPositions();
-            _ = _logger.LogDetailAsync($"Clear All Device Indicators - Close Batch");
+            _logger.LogDetailAsync($"Clear All Device Indicators - Close Batch").SafeFireAndForget();
 
             _deviceIndicatorManager?.ClearAllDeviceIndicators();
 
@@ -5802,6 +6068,8 @@ namespace Neutron.Forms
         /// </summary>
         private void PrintAllDocuments()
         {
+            if (!_neutronVariables.EnableDocumentPrinter) return;
+            if (!_neutronVariables.PrintPackingListStart) return;
             // loop through all the orders in the batch/ OrdersToPick
             foreach (var bp in _ordersToPick)
             {
@@ -5899,7 +6167,7 @@ namespace Neutron.Forms
         //        var workstationId = IntegerExtensions.ParseInt(comboBoxValue);
         //        anticipatedOuts = anticipatedOuts.Where(r => r.Workstation == workstationId).ToList();
         //    }
-        //    _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+        //    _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         //}
 
         private void MBPrintPick_Click(object sender, EventArgs e)
@@ -5943,7 +6211,7 @@ namespace Neutron.Forms
             //{
             //    pack.BatchPosition = batchPosition;
             //}
-            _documentToPrint.PrintPickSlipData(pickSlips, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintPickSlipData(pickSlips, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         }
         /// <summary>
         /// Uses a stored Procedure to get the Packing list data from the database
@@ -6019,7 +6287,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var pickList = GetPickList(orderId);
-            _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintPickList(pickList, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         }
 
         private List<PickList> GetPickList(int orderId)
@@ -6037,7 +6305,7 @@ namespace Neutron.Forms
         //{
         //    if (!_neutronVariables.EnableDocumentPrinter) return;
         //    var pickList = GetPickListByWorkstation(orderId, workstationId);
-        //    _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
+        //    _documentToPrint.PrintPickList(pickList, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         //}
 
         //private List<PickList> GetPickListByWorkstation(int orderId, int workstationId)
@@ -6058,7 +6326,7 @@ namespace Neutron.Forms
         {
             if (!_neutronVariables.EnableDocumentPrinter) return;
             var pickList = GetPickListByArea(orderId, areaId);
-            _documentToPrint.PrintPickList(pickList, _documentPrinter, _neutronVariables.PrintPreview);
+            _documentToPrint.PrintPickList(pickList, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         }
 
         private List<PickList> GetPickListByArea(int orderId, int areaId)
@@ -6079,7 +6347,7 @@ namespace Neutron.Forms
             // ---         Task.Run(() => _logger.LogDetailAsync($"Printing Document. {order.Ord1}"));
             if (_neutronVariables.EnableDocumentPrinter)
             {
-                Task.Run(() => _documentToPrint.Print(positionNumber, order.Ord1, _documentPrinter, order.Ord2));
+                Task.Run(() => _documentToPrint.Print(positionNumber, order.Ord1, _documentPrinterPreferences, order.Ord2));
             }
         }
 
@@ -6127,7 +6395,7 @@ namespace Neutron.Forms
             // ---         Task.Run(() => _logger.LogDetailAsync($"Printing Tote Label. {order.Ord1}"));
             if (_neutronVariables.EnableLabelPrinter)
             {
-                Task.Run(() => ToteToPrint.Print(positionNumber, order, _labelPrinter));
+                Task.Run(() => ToteToPrint.Print(positionNumber, order, _labelPrinterPreferences));
             }
         }
 
@@ -6305,7 +6573,7 @@ namespace Neutron.Forms
             // UpdateTowerDisplay();
             if (_workstationView.AreaId == 8) return;
 
-            _ = _logger.LogDetailAsync($"5331 PositionDevice Button MOVE");
+            _logger.LogDetailAsync($"5331 PositionDevice Button MOVE").SafeFireAndForget();
 
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
         }
@@ -6593,7 +6861,7 @@ namespace Neutron.Forms
 
         public void AvailableOrdersScreen()
         {
-            Task.Run(() => _logger.LogDetailAsync("Available Orders Screen START"));
+            _logger.LogDetailAsync("Available Orders Screen START").SafeFireAndForget();
             ShowAvailableOrders();
             Cursor.Current = Cursors.WaitCursor;
             InitOrdersToPick(_neutronVariables.PickBatchSize);
@@ -6605,9 +6873,9 @@ namespace Neutron.Forms
             _showSkipped = true;
             tabControl1.TabPages["AvailableOrders"].BringToFront();
             tabControl1.SelectedTab = AvailableOrders;
-            NextButtonEnabled();
+          //  NextButtonEnabled();
             Cursor.Current = Cursors.Default;
-            Task.Run(() => _logger.LogDetailAsync("Available Orders Screen END"));
+            _logger.LogDetailAsync("Available Orders Screen END").SafeFireAndForget();
         }
 
         private void MBAvailableOrdersRack_Click(object sender, EventArgs e)
@@ -6737,7 +7005,7 @@ namespace Neutron.Forms
             var prevQty = inv.Quantity;
             inv.Quantity = qty;
             _repoInventory.Update(inv);
-            _historyManager.SaveHistory(ActionCode.InventoryModify, inv);
+            _historyManager.SaveHistory(ActionCode.InventoryModify, inv, prevQty, true);
 
             var locationCount = new LocationCount()
             {
@@ -7105,14 +7373,14 @@ namespace Neutron.Forms
                 {
                     if (form.AuthCode == "topura")
                     {
-                        UpdatePickViews();
+                        UpdatePickViewsTopura();
                         UpdatePickScreen();
                         //UpdateCurrentDeviceIndicator();
 
                         _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
 
 
-                       await UpdatePickPosition();
+                        await UpdatePickPosition();
 
                         UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                         // UpdateTowerDisplay();
@@ -7121,7 +7389,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void UpdatePickViews()
+        private void UpdatePickViewsTopura()
         {
             var success = false;
             foreach (var pickView in _currentPickStop.PickViews)
@@ -7422,7 +7690,7 @@ namespace Neutron.Forms
                 bp.OrderComplete = false;
                 UpdateTextBoxPosition(bp);
             }
-            NextButtonEnabled();
+         //   NextButtonEnabled();
         }
 
         private void TextBoxFindAvailableOrders_KeyDown(object sender, KeyEventArgs e)
@@ -7519,9 +7787,8 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync(
-                    $"An error occurred while searching the dataset.{Environment.NewLine}{ex.Message}");
-                MessageBox.Show("", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _logger.LogDetailAsync($"An error occurred while searching the dataset.{Environment.NewLine}{ex.Message}").SafeFireAndForget();
+                //MessageBox.Show("", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -7866,7 +8133,7 @@ namespace Neutron.Forms
 
         private async void MBPickScreenHotPick_Click(object sender, EventArgs e)
         {
-           await HotAction();
+            await HotAction();
         }
 
         private async Task HotAction()
@@ -7890,12 +8157,12 @@ namespace Neutron.Forms
 
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                                           , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                                          , _neutronLicense, _workstationView, _historyManager, _locationsRepository, item))
+                                          , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, item))
                 {
                     //frm.Item = item;
                     var result = frm.ShowDialog();
                     Show();
-                    _deviceManager.Reset();
+                    _deviceManager?.Reset();
                     // ---         Task.Run(() => _logger.LogDetailAsync($"Reset After Hot Action : [{DateTime.Now.ToLongTimeString()}]"));
                 }
                 // UpdatePickViews();
@@ -7924,7 +8191,7 @@ namespace Neutron.Forms
         private int ShowCompleted(int recId = 0)
         {
 
-            Task.Run(() => _logger.LogDetailAsync($"Show Completed Orders Start: [{DateTime.Now.ToString(CultureInfo.CurrentCulture)}]"));
+            _logger.LogDetailAsync($"Show Completed Orders Start: [{DateTime.Now.ToString(CultureInfo.CurrentCulture)}]").SafeFireAndForget();
             var idx = 0;
             var searchField = TextBoxFind.Text.Trim().ToLower();
             var orderStatus = "6";
@@ -8038,9 +8305,9 @@ namespace Neutron.Forms
 
         private async void MBFillStarters_Click(object sender, EventArgs e)
         {
-           
-            
-            
+
+
+
             var totalRows = DataGridViewAvailableOrders.Rows.Count;
             if (totalRows <= 0) return;
 
@@ -8051,7 +8318,7 @@ namespace Neutron.Forms
                 if (starterValue)
                 {
                     var id = Convert.ToInt32(row.Cells["Id"].Value);
-                    var idx = await AddRemoveOrdersFromInductionScreen(id);
+                    var idx = await AddRemoveOrderFromInductionScreen(id);
                     if (idx == -1)
                     {
                         //no more locations
@@ -8069,7 +8336,7 @@ namespace Neutron.Forms
             {
                 ManualOverrideCurrentTextBoxPos = false;
                 var id = Convert.ToInt32(row.Cells["Id"].Value);
-                var idx = await AddRemoveOrdersFromInductionScreen(id);
+                var idx = await AddRemoveOrderFromInductionScreen(id);
                 if (idx == -1)
                 {
                     //no more locations
@@ -8362,14 +8629,14 @@ namespace Neutron.Forms
         //        foreach (var pickStation in _pickStations)
         //        {
         //            anticipatedOuts = GetAnticipatedOutsByWorkstation(pickStation.Id);
-        //            _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+        //            _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         //        }
         //    }
         //    else
         //    {
         //        var workstationId =  ((Workstation)ComboBoxStationNumber.SelectedItem).Id;
         //        anticipatedOuts = GetAnticipatedOutsByWorkstation(workstationId);
-        //        _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+        //        _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinterPreferences, _neutronVariables.PrintPreview);
         //    }
         //}
         /// <summary>
@@ -8389,7 +8656,7 @@ namespace Neutron.Forms
                     anticipatedOuts = GetAnticipatedOutsByArea(area.Id);
                     if (anticipatedOuts.Any())
                     {
-                        _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter, _neutronVariables.PrintPreview);
+                        _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinterPreferences, _neutronVariables.PrintPreview);
                     }
                     else
                     {
@@ -8404,7 +8671,7 @@ namespace Neutron.Forms
                 anticipatedOuts = GetAnticipatedOutsByArea(areaId);
                 if (anticipatedOuts.Any())
                 {
-                    _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinter,
+                    _documentToPrint.PrintAnticipatedOuts(anticipatedOuts, _documentPrinterPreferences,
                         _neutronVariables.PrintPreview);
                 }
                 else
@@ -8865,7 +9132,7 @@ namespace Neutron.Forms
 
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                        , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository))
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions))
 
             {
                 var result = frm.ShowDialog();
@@ -9067,7 +9334,7 @@ namespace Neutron.Forms
 
         private async void FrmPick_KeyDown(object sender, KeyEventArgs e)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown"));
+            _logger.LogDetailAsync($"FrmPick_KeyDown").SafeFireAndForget();
 
 
 
@@ -9075,49 +9342,49 @@ namespace Neutron.Forms
             {
                 case "PickScreen":
                     {
-                        // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: TabControl Name: PickScreen"));
+                        _logger.LogDetailAsync($"FrmPick_KeyDown: TabControl Name: PickScreen").SafeFireAndForget();
                         switch (e.KeyCode)
                         {
                             case Keys.Enter:
                                 {
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: ENTER Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: ENTER Key").SafeFireAndForget();
                                     e.Handled = true;
                                     //PickAccept();
                                     break;
                                 }
                             case Keys.Space:
                                 {
-                                    _ = _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key");
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key").SafeFireAndForget();
                                     e.Handled = true;
                                     if (!_spaceBarDisabled)
                                     {
-                                        _ = _ = _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key ENABLED");
+                                        _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key ENABLED").SafeFireAndForget();
                                         await PickAccept();
                                     }
                                     else
                                     {
-                                        _ = _ = _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key DISABLED");
+                                        _logger.LogDetailAsync($"FrmPick_KeyDown: SPACE Key DISABLED").SafeFireAndForget();
                                     }
 
                                     break;
                                 }
                             case Keys.L:
                                 {
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: L  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: L  Key").SafeFireAndForget();
                                     LocationCount();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.A:
                                 {
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: A  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: A  Key").SafeFireAndForget();
                                     await HotAction();
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.S:
                                 {
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: S  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: S  Key").SafeFireAndForget();
                                     await ShowOrderOrQuantityToggle();
                                     e.Handled = true;
                                     break;
@@ -9125,7 +9392,7 @@ namespace Neutron.Forms
                             case Keys.Q:
                                 {
 
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: Q  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: Q  Key").SafeFireAndForget();
                                     await ChangeQuantity();
                                     e.Handled = true;
                                     break;
@@ -9133,7 +9400,7 @@ namespace Neutron.Forms
                             case Keys.B:
                                 {
                                     e.Handled = true;
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: B  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: B  Key").SafeFireAndForget();
                                     await ShortPick();
 
                                     break;
@@ -9141,20 +9408,20 @@ namespace Neutron.Forms
                             case Keys.H:
                                 {
                                     e.Handled = true;
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: H  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: H  Key").SafeFireAndForget();
                                     await SkipPick();
 
                                     break;
                                 }
                             case Keys.F2:
                                 {
-                                    // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: F2  Key"));
+                                    _logger.LogDetailAsync($"FrmPick_KeyDown: F2  Key").SafeFireAndForget();
                                     PrintLabels(_currentPickStop, 2);
                                     e.Handled = true;
                                     break;
                                 }
                             case Keys.OemQuestion:
-                                // ---         Task.Run(() => _logger.LogDetailAsync($"FrmPick_KeyDown: OEM QUESTION Key"));
+                                _logger.LogDetailAsync($"FrmPick_KeyDown: OEM QUESTION Key").SafeFireAndForget();
                                 ShowShortCutForm();
                                 e.Handled = true;
                                 break;
@@ -9229,7 +9496,7 @@ namespace Neutron.Forms
                 var id = Convert.ToInt32(row.Cells["Id"].Value);
                 var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
                 var ord2 = Convert.ToString(row.Cells["Ord2"].Value);
-                var idx = await AddRemoveOrdersFromInductionScreen(id);
+                var idx = await AddRemoveOrderFromInductionScreen(id);
                 if (idx == -1)
                 {
                     //no more locations
@@ -9430,16 +9697,20 @@ namespace Neutron.Forms
 
         private void ClearItemFromBatchByPosition(int position)
         {
-            // ---         Task.Run(() => _logger.LogDetailAsync($" Start ClearItemFromBatchByPosition: {position}"));
-            var bp = _ordersToPick.FirstOrDefault(o => o.PositionNumber == position);
-            if (bp != null)
+            _logger.LogDetailAsync($" Start ClearItemFromBatchByPosition: {position}").SafeFireAndForget();
+            try
             {
+                var bp = _ordersToPick.FirstOrDefault(o => o.PositionNumber == position);
+                if (bp == null) return;
                 bp.OrderId = 0;
                 bp.Ord1 = string.Empty;
                 bp.Ord2 = string.Empty;
                 bp.OrderComplete = false;
                 UpdateTextBoxPosition(bp);
-                // ---         Task.Run(() => _logger.LogDetailAsync($" Start ClearItemFromBatchByPosition: {position} After UpdateTextBoxPosition"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Exception: {ex.Message}").SafeFireAndForget();
             }
         }
 
@@ -9624,8 +9895,12 @@ namespace Neutron.Forms
         {
             ClearAllSelectOrdersToPick();
             ClearBatchPositions();
-            await _iptiDisplayFunctions.ClearBatchTable();
-            await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBatchTable();
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+            }
+
         }
     }
 }

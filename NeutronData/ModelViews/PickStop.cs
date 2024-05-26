@@ -21,7 +21,7 @@ namespace NeutronData.ModelViews
         {
             Inventory = new List<Inventory>();
             Images = new List<ItemImage>();
-            PickViews = new List<PickView>();
+            PickViews = [];
         }
         public List<PickView> PickViews { get; set; }
         public int Sequence { get; set; }

@@ -7,6 +7,7 @@ using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
 using NeutronEvents;
+using AsyncAwaitBestPractices;
 
 namespace ReplenService
 {
@@ -26,16 +27,16 @@ namespace ReplenService
             Init();
         }
 
-        public ReplenProcessor(GenericRepository<Order> genericRepository, GenericRepository<OrderDetail> o, GenericRepository<ReplenOrder> genericRepository1, GenericRepository<ReplenOrderDetail> o1, GenericRepository<ItemDefinition> genericRepository2, ReplenRepository replenRepository, IDynamicLogger mockLoggerObject)
-        {
-            _repoOrder = genericRepository;
-            _repoOrderDetail = o;
-            _repoReplenOrder = genericRepository1;
-            _repoReplenOrderDetail = o1;
-            _repoItemDefinitions = genericRepository2;
-            _replenRepository = replenRepository;
-            _logger = mockLoggerObject;
-        }
+        //public ReplenProcessor(GenericRepository<Order> genericRepository, GenericRepository<OrderDetail> o, GenericRepository<ReplenOrder> genericRepository1, GenericRepository<ReplenOrderDetail> o1, GenericRepository<ItemDefinition> genericRepository2, ReplenRepository replenRepository, IDynamicLogger mockLoggerObject)
+        //{
+        //    _repoOrder = genericRepository;
+        //    _repoOrderDetail = o;
+        //    _repoReplenOrder = genericRepository1;
+        //    _repoReplenOrderDetail = o1;
+        //    _repoItemDefinitions = genericRepository2;
+        //    _replenRepository = replenRepository;
+        //    _logger = mockLoggerObject;
+        //}
 
         private void Init()
         {
@@ -185,7 +186,7 @@ namespace ReplenService
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Error {ex.Message}");
+                _logger.LogDetailAsync($"Error {ex.Message}").SafeFireAndForget();
                 throw;
             }
         }
@@ -270,7 +271,7 @@ namespace ReplenService
             catch (Exception ex)
             {
                 _logger.LogDetailAsync(
-                    $"Create Store Order From Replenishment Pick Order. {Environment.NewLine}{ex.Message} ");
+                    $"Create Store Order From Replenishment Pick Order. {Environment.NewLine}{ex.Message} ").SafeFireAndForget();
 
             }
         }

@@ -15,7 +15,6 @@ using EnumsNET;
 using Equin.ApplicationFramework;
 using JsonManager;
 using MetroFramework.Forms;
-using Neutron.Classes;
 using Neutron.Enums;
 using NeutronCore.Extensions;
 using Neutron.Global;
@@ -30,7 +29,6 @@ using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using NeutronData.PrintModels;
 using NeutronData.Repositories;
-using NeutronDllu;
 using SlotNameFactory;
 using NeutronData.Interfaces;
 using StationType = NeutronCore.Enums.StationType;
@@ -38,8 +36,7 @@ using ExcelManager;
 using System.Reflection;
 using NeutronEvents;
 using IPTI.Models;
-using NeutronData.SqlModelViews;
-//using System.Windows.Controls;
+using AsyncAwaitBestPractices;
 
 namespace Neutron.Forms
 {
@@ -84,11 +81,11 @@ namespace Neutron.Forms
         private HeaderTextManager _headerTextManager;
         private List<LocationView> _currentList;
         private bool _startup = true;
-        private readonly IptiDisplayFunctions _iptiDisplayFunctions;
+        private readonly IIptiDisplayFunctions _iptiDisplayFunctions;
 
         public FrmLocations(IJsonData jsonData, IWorkstationRepository workstationRepository,
             WorkstationView workstationView, NeutronVariables neutronVariables, ILacProcessor lacProcessor,
-            IHistoryManager historyManager, IDisplayController tcpIptiController)
+            IHistoryManager historyManager, IIptiDisplayFunctions iptiDisplayFunctions)
         {
             InitializeComponent();
             _workstationRepository = workstationRepository;
@@ -99,9 +96,9 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
             _historyManager = historyManager;
+            _iptiDisplayFunctions = iptiDisplayFunctions;
 
-            _iptiDisplayFunctions =
-                new IptiDisplayFunctions(_jsonData, _neutronVariables, _workstationView, tcpIptiController);
+
             InitForm();
         }
 
@@ -214,7 +211,7 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 var message = $"Error Loading Data: {Environment.NewLine}{ex.Message}";
-                _logger.LogDetailAsync(message);
+                _logger.LogDetailAsync(message).SafeFireAndForget();
                 Mediator.GetInstance().OnGeneralError(this, message);
             }
             finally
@@ -255,7 +252,7 @@ namespace Neutron.Forms
 
         private async void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-           await _logger.LogDetailAsync($"Cell Click").ConfigureAwait(false);
+            _logger.LogDetailAsync($"Cell Click").SafeFireAndForget();
 
             var grid = sender as DataGridView;
             var rowIndex = e.RowIndex;
@@ -264,14 +261,14 @@ namespace Neutron.Forms
             var quantity = "00";
             var qty = 0;
             var display = string.Empty;
-            await _logger.LogDetailAsync($"DataGridViewPosition").ConfigureAwait(false);
+            _logger.LogDetailAsync($"DataGridViewPosition").SafeFireAndForget();
             try
             {
                 if (rowIndex < 0) return;
+                if (grid == null) return;
+
                 if (!grid.Columns.Contains("Position")) return;
-                if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
-
-
+                if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"]?.Index) return;
                 if (!grid.Columns.Contains(columnName: "Loc1")) return;
                 var deviceNumber = grid["Loc1", rowIndex].Value.ToString().ParseInt();
                 if (!grid.Columns.Contains(columnName: "Loc2")) return;
@@ -305,11 +302,12 @@ namespace Neutron.Forms
 
                 if (_workstationView.Blastzones.Any())
                 {
-                    await _iptiDisplayFunctions.ClearBlastzone();
-
-                   await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
-                   
-                   await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
+                    if (_iptiDisplayFunctions != null)
+                    {
+                        await _iptiDisplayFunctions.ClearBlastzone();
+                        await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
+                        await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
+                    }
                 }
 
                 if (_workstationView.Prolites.Any())
@@ -337,38 +335,18 @@ namespace Neutron.Forms
             {
                 MessageBox.Show($"Error: {Environment.NewLine} {ex.Message}");
             }
-
-
-
-            // ----------------------------------------------------------
-
-            //var grid = (DataGridView)sender;
-            //if (e.RowIndex < 0) return;
-            //if (!grid.Columns.Contains("Position")) return;
-            //if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
-
-            //var deviceNumber = grid["Loc1", e.RowIndex].Value.ToString().ParseInt();
-            //var trayNumber = grid["Loc2", e.RowIndex].Value.ToString().ParseInt();
-            //var level = grid["Loc3", e.RowIndex].Value.ToString().ParseInt();
-            //var partition = grid["Loc4", e.RowIndex].Value.ToString();
-            //var part = grid["Loc4", e.RowIndex].Value.ToString().ParseInt();
-            //Task.Run(() => _logger.LogDetailAsync(
-            //       $"Storage Device Number: {deviceNumber}  Tray: {trayNumber}  Level: {level}  Part: {partition}");
-            //Task.Run(() => _logger.LogDetailAsync($"Shuttle Enabled - {_neutronVariables.ShuttleEnabled}");
-            //MoveDevice(deviceNumber, trayNumber, level, part);
-            //TurnOnShi(deviceNumber, trayNumber, level, partition);
         }
 
         private void DataGridViewPosition(DataGridView grid, int rowIndex)
         {
             var qty = 0;
             var display = string.Empty;
-            Task.Run(() => _logger.LogDetailAsync($"DataGridViewPosition"));
+            _logger.LogDetailAsync($"DataGridViewPosition").SafeFireAndForget();
             try
             {
                 if (rowIndex < 0) return;
                 if (!grid.Columns.Contains("Position")) return;
-                if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"].Index) return;
+                if (grid.CurrentCell.ColumnIndex != grid.Columns["Position"]?.Index) return;
 
 
                 if (!grid.Columns.Contains(columnName: "Loc1")) return;
@@ -387,41 +365,41 @@ namespace Neutron.Forms
                 MessageBox.Show($"Unable to move device. {Environment.NewLine} {ex.Message}");
             }
         }
-        private void ClearAllShi()
-        {
-            if (_neutronVariables.DisplaysEnabled)
-                if (GlobalVar.Displays != null)
-                    GlobalVar.Displays.ClearAllShi();
-        }
-        private void TurnOnShi(int deviceNumber, int trayNumber, int level, string partition)
-        {
-            string lArrow;
-            string rArrow;
-            // ClearAllShi();
-            if (_neutronVariables.DisplaysEnabled)
-                if (GlobalVar.Displays != null)
-                {
-                    if (deviceNumber == 2 || deviceNumber == 4)
-                    {
-                        lArrow = "";
-                        rArrow = ">";
-                    }
-                    else
-                    {
-                        lArrow = "<";
-                        rArrow = "";
-                    }
+        //private void ClearAllShi()
+        //{
+        //    if (_neutronVariables.DisplaysEnabled)
+        //        if (GlobalVar.Displays != null)
+        //           // GlobalVar.Displays.ClearAllShi();
+        //}
+        //private void TurnOnShi(int deviceNumber, int trayNumber, int level, string partition)
+        //{
+        //    string lArrow;
+        //    string rArrow;
+        //    // ClearAllShi();
+        //    if (_neutronVariables.DisplaysEnabled)
+        //        if (GlobalVar.Displays != null)
+        //        {
+        //            if (deviceNumber == 2 || deviceNumber == 4)
+        //            {
+        //                lArrow = "";
+        //                rArrow = ">";
+        //            }
+        //            else
+        //            {
+        //                lArrow = "<";
+        //                rArrow = "";
+        //            }
 
-                    if (deviceNumber == 3 && _workstationView.WorkstationId == 3)
-                    {
-                        lArrow = "";
-                        rArrow = ">";
-                    }
+        //            if (deviceNumber == 3 && _workstationView.WorkstationId == 3)
+        //            {
+        //                lArrow = "";
+        //                rArrow = ">";
+        //            }
 
-                    var text = $"{lArrow}-----{rArrow}";
-                    GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
-                }
-        }
+        //            var text = $"{lArrow}-----{rArrow}";
+        //          //  GlobalVar.Displays.ShowShi(deviceNumber, trayNumber, level, partition, text);
+        //        }
+        //}
         private void MoveDevice(int deviceNumber, int trayNumber, int level, int part, int quantity = 0, string display = "")
         {
             try
@@ -456,7 +434,7 @@ namespace Neutron.Forms
                                 }
                                 else if (GlobalVar.Hanel != null)
                                 {
-                                    _logger.LogDetailAsync($"Call Hanel.Position Device");
+                                    _logger.LogDetailAsync($"Call Hanel.Position Device").SafeFireAndForget();
                                     var response = GlobalVar.Hanel.PositionDevice(deviceNumber, trayNumber, level, part, quantity,
                                             display);
 
@@ -486,19 +464,19 @@ namespace Neutron.Forms
                 }
                 else
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Location Access Denied"));
+                    _logger.LogDetailAsync($"Location Access Denied").SafeFireAndForget();
                     MessageBox.Show($"Location Access Denied");
                 }
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Move Device - Location Module: {Environment.NewLine}{ex.Message}"));
+                _logger.LogDetailAsync($"Move Device - Location Module: {Environment.NewLine}{ex.Message}").SafeFireAndForget();
 
             }
 
-            Task.Run(() => _logger.LogDetailAsync($"MoveDevice END."));
+            _logger.LogDetailAsync($"MoveDevice END.").SafeFireAndForget();
         }
-       
+
         private async Task SaveNew()
         {
             var area = (Area)ComboBoxNewArea.SelectedItem;
@@ -535,8 +513,8 @@ namespace Neutron.Forms
                         LocationCode = TextBoxNewLocationCode.Text,
                         InUse = CheckBoxInUseNew.Checked
                     };
-                   await _repoLocation.InsertAsync(loc);
-                   await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                    await _repoLocation.InsertAsync(loc);
+                    await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
 
                 }
                 else
@@ -587,8 +565,8 @@ namespace Neutron.Forms
                                     TextBoxNewSlot.Text = slotName;
                                     try
                                     {
-                                       await _repoLocation.InsertAsync(loc);
-                                       await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                                        await _repoLocation.InsertAsync(loc);
+                                        await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
                                     }
                                     catch (Exception ex)
                                     {
@@ -665,7 +643,7 @@ namespace Neutron.Forms
                 loc.InUse = CheckBoxInUse.Checked;
 
                 _repoLocation.Update(loc);
-               await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+                await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
             }
             else
             {
@@ -704,7 +682,7 @@ namespace Neutron.Forms
                                 try
                                 {
                                     _repoLocation.Update(loc);
-                                   await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+                                    await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
                                 }
                                 catch (Exception ex)
                                 {
@@ -808,7 +786,7 @@ namespace Neutron.Forms
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
                 _repoLocation.Delete(loc.Id);
-               await _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
+                await _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
                 RefreshData();
                 tabControl1.SelectedTab = tabPage1;
             }
@@ -986,47 +964,101 @@ namespace Neutron.Forms
         /// <returns></returns>
         private bool WorkstationCanPositionDevice()
         {
-            return _workstationView.StationTypeId == (int)StationType.Carousel ||
-                   _workstationView.StationTypeId == (int)StationType.Vertical ||
-                   _workstationView.StationTypeId == (int)StationType.Blastzone;
+            return _workstationView.AreaId != 8 && _workstationView.AreaId == ((Area)ComboBoxAreaNumber.SelectedItem).AreaNumber;
         }
 
         #region Find Functions
-
+        /// <summary>
+        /// Handles the Click event of the MButtonFind control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void MButtonFind_Click(object sender, EventArgs e)
         {
             RefreshData();
         }
 
-        private void FindRecord(string s)
+        /// <summary>
+        /// Handles the KeyDown event of the Find TextBox control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">A <see cref="KeyEventArgs"/> that contains the event data.</param>
+        /// <remarks>
+        /// If the Return key is pressed, the data is refreshed.
+        /// </remarks>
+        private void HandleFindTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            RefreshData();
+            if (IsReturnKeyPressed(e.KeyCode))
+            {
+                RefreshData();
+            }
         }
-
-        private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
+        private bool IsReturnKeyPressed(Keys key)
         {
-            if (e.KeyCode == Keys.Return) RefreshData();
+            return key == Keys.Return;
         }
 
         #endregion
 
         #region Button Clicks
 
+        /// <summary>
+        /// Handles the Click event of the Clear button.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">An EventArgs that contains the event data.</param>
+        /// <remarks>
+        /// When the Clear button is clicked, this method clears the search box, refreshes the data, and sets the focus back to the search box.
+        /// </remarks>
         private void ButtonClear_Click(object sender, EventArgs e)
         {
-            TextBoxFind.Text = string.Empty;
+            ClearSearchBox();
             RefreshData();
+            SetFocusToSearchBox();
+        }
+
+        // Clears the text in the search box
+        private void ClearSearchBox()
+        {
+            TextBoxFind.Text = string.Empty;
+        }
+        // Sets the focus to the search box
+        private void SetFocusToSearchBox()
+        {
             TextBoxFind.Focus();
         }
 
+        /// <summary>
+        /// Handles the Click event of the MButtonClose control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This method is asynchronous and will close the form when invoked.
+        /// </remarks>
         private async void MButtonClose_Click(object sender, EventArgs e)
         {
-            _workstationView.ProLiteManager?.ClearAllProlites();
-            await _iptiDisplayFunctions.ClearBlastzone();
-           // Task.Run(() => ClearBlastzone());
+            await CloseFormAsync();
+        }
+
+        /// <summary>
+        /// Closes the form and performs necessary cleanup operations.
+        /// </summary>
+        private async Task CloseFormAsync()
+        {
+            // Indicate that the close button was pressed
             CloseButtonPressed = true;
+            // Clear all Prolites if the ProLiteManager is available
+            _workstationView?.ProLiteManager?.ClearAllProlites();
+            // Clear the Blastzone if the IPTI Display Functions are available
+            if (_iptiDisplayFunctions != null)
+            {
+                await _iptiDisplayFunctions.ClearBlastzone().ConfigureAwait(false);
+            }
+            // Close the form
             Close();
         }
+
 
         private void MButtonViewEdit_Click(object sender, EventArgs e)
         {
@@ -1046,36 +1078,36 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = tabPage2;
         }
 
-        private void LoadViewEditData()
-        {
+        //private void LoadViewEditData()
+        //{
 
-            var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
-            var location = _repoLocation.FindByKey(id);
-            if (location is null) return;
+        //    var id = ((ObjectView<LocationView>)_bindingSource.Current).Object.Id;
+        //    var location = _repoLocation.FindByKey(id);
+        //    if (location is null) return;
 
-            var device = _repoDevices.FindBy(r => r.StorageDeviceNumber == location.Loc1
-                                                    && r.AreaId == location.AreaId).FirstOrDefault();
-            if (device is null) return;
+        //    var device = _repoDevices.FindBy(r => r.StorageDeviceNumber == location.Loc1
+        //                                            && r.AreaId == location.AreaId).FirstOrDefault();
+        //    if (device is null) return;
 
-            var area = _repoArea.FindBy(r => r.Id == location.AreaId).FirstOrDefault();
-            if (area is null) return;
+        //    var area = _repoArea.FindBy(r => r.Id == location.AreaId).FirstOrDefault();
+        //    if (area is null) return;
 
-            ComboBoxViewEditArea.SelectedValue = area.Id;
-            ComboBoxViewEditDevice.SelectedValue = device.Id;
-            TextBoxViewEditLoc2.Text = location.Loc2.ToString();
-            TextBoxViewEditLoc3.Text = location.Loc3.ToString();
-            TextBoxViewEditLoc4.Text = location.Loc4.ToString();
-            TextBoxViewEditLoc5.Text = location.Loc5.ToString();
-            TextBoxViewEditSlot.Text = location.Slot;
-            TextBoxViewEditPickSequence.Text = location.PickSequence.ToString();
-            ComboBoxViewEditSizeCode.SelectedValue = location.SizeCodeId;
-            ComboBoxViewEditVelocityCode.SelectedValue = location.VelocityCodeId;
-            ComboBoxViewEditHeightCode.SelectedValue = location.HeightCodeId;
-            TextBoxViewEditLocationCode.Text = location.LocationCode;
-            CheckBoxInUse.Checked = location.InUse;
+        //    ComboBoxViewEditArea.SelectedValue = area.Id;
+        //    ComboBoxViewEditDevice.SelectedValue = device.Id;
+        //    TextBoxViewEditLoc2.Text = location.Loc2.ToString();
+        //    TextBoxViewEditLoc3.Text = location.Loc3.ToString();
+        //    TextBoxViewEditLoc4.Text = location.Loc4.ToString();
+        //    TextBoxViewEditLoc5.Text = location.Loc5.ToString();
+        //    TextBoxViewEditSlot.Text = location.Slot;
+        //    TextBoxViewEditPickSequence.Text = location.PickSequence.ToString();
+        //    ComboBoxViewEditSizeCode.SelectedValue = location.SizeCodeId;
+        //    ComboBoxViewEditVelocityCode.SelectedValue = location.VelocityCodeId;
+        //    ComboBoxViewEditHeightCode.SelectedValue = location.HeightCodeId;
+        //    TextBoxViewEditLocationCode.Text = location.LocationCode;
+        //    CheckBoxInUse.Checked = location.InUse;
 
-            ButtonPositionDevice.Visible = WorkstationCanPositionDevice();
-        }
+        //    ButtonPositionDevice.Visible = WorkstationCanPositionDevice();
+        //}
 
         private void MButtonNew_Click(object sender, EventArgs e)
         {
@@ -1090,10 +1122,10 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = tabPage1;
         }
 
-        private void MbViewEditNew_Click(object sender, EventArgs e)
-        {
-            tabControl1.SelectedTab = tabPage3;
-        }
+        //private void MbViewEditNew_Click(object sender, EventArgs e)
+        //{
+        //    tabControl1.SelectedTab = tabPage3;
+        //}
 
         private void MbViewEditClose_Click(object sender, EventArgs e)
         {
@@ -1103,7 +1135,7 @@ namespace Neutron.Forms
 
         private async void MbViewEditSave_Click(object sender, EventArgs e)
         {
-           await UpdateViewEdit();
+            await UpdateViewEdit();
             RefreshData();
             tabControl1.SelectedTab = tabPage1;
         }
@@ -1113,14 +1145,14 @@ namespace Neutron.Forms
             tabControl1.SelectedTab = tabPage1;
         }
 
-        private void MbNewViewEdit_Click(object sender, EventArgs e)
-        {
-            tabControl1.SelectedTab = tabPage2;
-        }
+        //private void MbNewViewEdit_Click(object sender, EventArgs e)
+        //{
+        //    tabControl1.SelectedTab = tabPage2;
+        //}
 
         private async void MbNewSave_Click(object sender, EventArgs e)
         {
-           await SaveNew();
+            await SaveNew();
             RefreshData();
             tabControl1.SelectedTab = tabPage1;
         }
@@ -1138,7 +1170,7 @@ namespace Neutron.Forms
         {
 
             DataGridView1.AutoGenerateColumns = false;
-            DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             var bCol = new DataGridViewButtonColumn
             {
@@ -1270,13 +1302,13 @@ namespace Neutron.Forms
         }
 
 
-        private void SetupTabControl()
-        {
-            tabControl1.Appearance = TabAppearance.FlatButtons;
-            tabControl1.ItemSize = new Size(0, 1);
-            tabControl1.SizeMode = TabSizeMode.Fixed;
-            foreach (TabPage tab in tabControl1.TabPages) tab.Text = string.Empty;
-        }
+        //private void SetupTabControl()
+        //{
+        //    tabControl1.Appearance = TabAppearance.FlatButtons;
+        //    tabControl1.ItemSize = new Size(0, 1);
+        //    tabControl1.SizeMode = TabSizeMode.Fixed;
+        //    foreach (TabPage tab in tabControl1.TabPages) tab.Text = string.Empty;
+        //}
 
         private void HideTabControlTabs()
         {
@@ -1422,75 +1454,75 @@ namespace Neutron.Forms
 
         #region Return Key Functions
 
-        private void ComboBoxNewDevice_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxNewLoc2.Focus();
-        }
+        //private void ComboBoxNewDevice_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxNewLoc2.Focus();
+        //}
 
-        private void TextBoxNewLoc2_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxNewLoc3.Focus();
-        }
+        //private void TextBoxNewLoc2_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxNewLoc3.Focus();
+        //}
 
-        private void TextBoxNewLoc3_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxNewLoc4.Focus();
-        }
+        //private void TextBoxNewLoc3_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxNewLoc4.Focus();
+        //}
 
-        private void TextBoxNewLoc4_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxNewLoc5.Focus();
-        }
+        //private void TextBoxNewLoc4_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxNewLoc5.Focus();
+        //}
 
-        private void TextBoxNewLoc5_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) ComboBoxNewSizeCode.Focus();
-        }
+        //private void TextBoxNewLoc5_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) ComboBoxNewSizeCode.Focus();
+        //}
 
-        private void ComboBoxNewSizeCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) ComboBoxNewVelocityCode.Focus();
-        }
+        //private void ComboBoxNewSizeCode_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) ComboBoxNewVelocityCode.Focus();
+        //}
 
-        private void ComboBoxNewVelocityCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) ComboBoxNewHeightCode.Focus();
-        }
+        //private void ComboBoxNewVelocityCode_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) ComboBoxNewHeightCode.Focus();
+        //}
 
-        private void ComboBoxViewEditDevice_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxViewEditLoc2.Focus();
-        }
+        //private void ComboBoxViewEditDevice_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxViewEditLoc2.Focus();
+        //}
 
-        private void TextBoxViewEditLoc2_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxViewEditLoc3.Focus();
-        }
+        //private void TextBoxViewEditLoc2_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxViewEditLoc3.Focus();
+        //}
 
-        private void TextBoxViewEditLoc3_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxViewEditLoc4.Focus();
-        }
+        //private void TextBoxViewEditLoc3_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxViewEditLoc4.Focus();
+        //}
 
-        private void TextBoxViewEditLoc4_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) TextBoxViewEditLoc5.Focus();
-        }
+        //private void TextBoxViewEditLoc4_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) TextBoxViewEditLoc5.Focus();
+        //}
 
-        private void TextBoxViewEditLoc5_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) ComboBoxViewEditSizeCode.Focus();
-        }
+        //private void TextBoxViewEditLoc5_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) ComboBoxViewEditSizeCode.Focus();
+        //}
 
-        private void ComboBoxViewEditSizeCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) ComboBoxViewEditVelocityCode.Focus();
-        }
+        //private void ComboBoxViewEditSizeCode_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) ComboBoxViewEditVelocityCode.Focus();
+        //}
 
-        private void ComboBoxViewEditVelocityCode_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Return) ComboBoxViewEditHeightCode.Focus();
-        }
+        //private void ComboBoxViewEditVelocityCode_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Return) ComboBoxViewEditHeightCode.Focus();
+        //}
 
         private void tabControl1_Enter(object sender, EventArgs e)
         {
@@ -1577,7 +1609,7 @@ namespace Neutron.Forms
             var level = TextBoxViewEditLoc3.Text.ParseInt();
             if (!IntegerValidator(TextBoxViewEditLoc4.Text.ParseInt())) return;
             var part = TextBoxViewEditLoc4.Text.ParseInt();
-            Task.Run(() => _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+            _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}").SafeFireAndForget();
             MoveDevice(deviceNumber, trayNumber, level, part);
         }
 
@@ -1595,7 +1627,7 @@ namespace Neutron.Forms
             if (string.IsNullOrEmpty(TextBoxNewLoc4.Text) || TextBoxNewLoc4.Text == "0") return;
             if (!IntegerValidator(TextBoxNewLoc4.Text.ParseInt())) return;
             var part = TextBoxNewLoc4.Text.ParseInt();
-            Task.Run(() => _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}"));
+            _logger.LogDetailAsync($"Storage Device: {deviceNumber} Tray: {trayNumber} Level: {level} Part: {part}").SafeFireAndForget();
             MoveDevice(deviceNumber, trayNumber, level, part);
         }
 
@@ -1755,18 +1787,42 @@ namespace Neutron.Forms
             }
             return selectedList;
         }
-
-        private void ButtonSaveToExcel_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the Click event of the SaveToExcel button.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">An EventArgs that contains the event data.</param>
+        /// <remarks>
+        /// This method disables the LoadFromExcel and SaveToExcel buttons, sets the cursor to a wait cursor, and then asynchronously saves the data to Excel.
+        /// </remarks>
+        private async void ButtonSaveToExcel_Click(object sender, EventArgs e)
         {
             ButtonLoadFromExcel.Enabled = false;
             ButtonSaveToExcel.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
-            SaveToExcel();
+            await SaveToExcelAsync();
         }
+        private async Task SaveToExcelAsync()
+        {
+            await _logger.LogDetailAsync("Saving records to Excel spreadsheet");
+            var listToExport = CheckBoxUseSelectedItems.Checked ? GetSelectedItems(DataGridView1) : _currentList;
+            var dataTable = ToDataTable(listToExport);
+            var excelService = new ExcelService();
+            excelService.Generate(dataTable);
+            await _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet");
+            ResetUi();
+        }
+        private void ResetUi()
+        {
+            ButtonLoadFromExcel.Enabled = true;
+            ButtonSaveToExcel.Enabled = true;
+            Cursor.Current = Cursors.Default;
+        }
+
 
         private void SaveToExcel()
         {
-            Task.Run(() => _logger.LogDetailAsync("Saving records to Excel spreadsheet"));
+            _logger.LogDetailAsync("Saving records to Excel spreadsheet").SafeFireAndForget();
 
             DataTable dataTable;
             // Initialize the Excel Service
@@ -1775,17 +1831,17 @@ namespace Neutron.Forms
             {
                 var selectedList = GetSelectedItems(DataGridView1);
                 // Create a DataTable from the List(Of T) (LocationView)
-                dataTable = ToDataTable<LocationView>(selectedList);
+                dataTable = ToDataTable(selectedList);
             }
             else
             {
                 // Create a DataTable from the List(Of T) (LocationView)
-                dataTable = ToDataTable<LocationView>(_currentList);
+                dataTable = ToDataTable(_currentList);
             }
 
             // Generate the Excel file
             excelService.Generate(dataTable);
-            Task.Run(() => _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet"));
+            _logger.LogDetailAsync($"Saved {dataTable.Rows.Count} records to Excel spreadsheet").SafeFireAndForget();
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
             Cursor.Current = Cursors.Default;
@@ -1793,15 +1849,19 @@ namespace Neutron.Forms
 
         private void ButtonLoadFromExcel_Click(object sender, EventArgs e)
         {
-            ButtonLoadFromExcel.Enabled = false;
-            ButtonSaveToExcel.Enabled = false;
-            Cursor.Current = Cursors.WaitCursor;
+            SetLoadingState(true);
             LoadFromExcel();
+        }
+        private void SetLoadingState(bool isLoading)
+        {
+            ButtonLoadFromExcel.Enabled = !isLoading;
+            ButtonSaveToExcel.Enabled = !isLoading;
+            Cursor.Current = isLoading ? Cursors.WaitCursor : Cursors.Default;
         }
 
         private void LoadFromExcel()
         {
-            Task.Run(() => _logger.LogDetailAsync("Loading records from Excel spreadsheet"));
+            _logger.LogDetailAsync("Loading records from Excel spreadsheet").SafeFireAndForget();
             var excelService = new ExcelService();
             var dataTable = excelService.Update();
             BackgroundWorkerLocations.RunWorkerAsync(dataTable);
@@ -1858,6 +1918,8 @@ namespace Neutron.Forms
         {
             if (!_startup)
             {
+                DataGridView1.Columns[0].Visible = _workstationView.AreaId != 8 &&
+                                                   _workstationView.AreaId == (int)ComboBoxAreaNumber.SelectedValue;
                 RefreshData();
             }
         }
@@ -1871,7 +1933,7 @@ namespace Neutron.Forms
             var processedCount = 0;
             // loop over the rows in the DataTable
 
-            Task.Run(() => _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet"));
+            _logger.LogDetailAsync($"Loading {rowCount} records from Excel spreadsheet").SafeFireAndForget();
             try
             {
 
@@ -1958,7 +2020,7 @@ namespace Neutron.Forms
                     var progressPercentage = (int)((double)processedCount / rowCount * 100);
                     if (progressPercentage % 25 == 0)
                     {
-                        Task.Run(() => _logger.LogDetailAsync($"Loading {progressPercentage}% complete"));
+                        _logger.LogDetailAsync($"Loading {progressPercentage}% complete").SafeFireAndForget();
                         worker.ReportProgress(progressPercentage);
                     }
 
@@ -1983,7 +2045,7 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
             ButtonLoadFromExcel.Enabled = true;
             ButtonSaveToExcel.Enabled = true;
-            Task.Run(() => _logger.LogDetailAsync("Loading records from Excel spreadsheet complete"));
+            _logger.LogDetailAsync("Loading records from Excel spreadsheet complete").SafeFireAndForget();
         }
     }
 }

@@ -31,12 +31,6 @@ namespace Neutron
         /// 
         public static NeutronLicense NeutronLicense = new NeutronLicense();
 
-
-
-
-
-
-
         private static Mutex _mutex = null;
 
         [STAThread]
@@ -47,7 +41,7 @@ namespace Neutron
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
             
-            const string appName = "Neutron";
+            const string appName = "NeutronTest";
 
             //var assembly = Assembly.GetExecutingAssembly();
             //var currentPath = AppDomain.CurrentDomain.BaseDirectory;

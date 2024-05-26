@@ -527,7 +527,7 @@ namespace NeutronData.Repositories
 
             var result = new List<Workstation>();
 
-            var stations = _repoWorkstation.All()
+            var stations = _repoWorkstation.AllInclude(r => r.StationType)
                 .Where(r => r.StationType.Name != StationType.Supervisor.ToString()).ToList();
 
             if (stations.Count > 0)

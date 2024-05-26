@@ -1,24 +1,13 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using AlliedFileSystemWatcher;
 using AlliedLogger;
 using NeutronCore;
-using NeutronCore.Extensions;
-using NeutronCore.Global;
-using NeutronData.DataContexts;
-using NeutronData.Models;
-using NeutronData.Repositories;
-using JsonManager;
-using NeutronCore.Models;
 using System.Windows.Forms;
-using NeutronData.Interfaces;
 using NeutronMaintenance.Models;
+using AsyncAwaitBestPractices;
 
 namespace NeutronMaintenance
 {
@@ -47,7 +36,7 @@ namespace NeutronMaintenance
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"INIT Master Maintenance Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
+                _logger.LogDetailAsync($"INIT Master Maintenance Files Error. {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException?.Message} {Environment.NewLine}  {ex.InnerException?.InnerException?.Message}").SafeFireAndForget();
             }
         }
 
@@ -69,7 +58,7 @@ namespace NeutronMaintenance
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get Master Maintenance Files Error.  \r\n {ex.Message} \r\n {ex.InnerException.Message} \r\n  {ex.InnerException.InnerException.Message}");
+                _logger.LogDetailAsync($"Get Master Maintenance Files Error.  {Environment.NewLine} {ex.Message}{Environment.NewLine} {ex.InnerException?.Message} {Environment.NewLine}  {ex.InnerException?.InnerException?.Message}").SafeFireAndForget();
             }
             return result;
         }
@@ -80,7 +69,7 @@ namespace NeutronMaintenance
             {
                 try
                 {
-                    _ = _logger.LogDetailAsync($"File Name: {file.FullName}");
+                    _logger.LogDetailAsync($"File Name: {file.FullName}").SafeFireAndForget();
                     var allLines = File.ReadAllLines(file.FullName);
                     foreach (var line in allLines)
                     {
@@ -88,7 +77,7 @@ namespace NeutronMaintenance
                         //What kind of line is it>
                         if (line.Contains("RANDOMLOCATION"))
                         {
-                            Task.Run(() => _logger.LogDetailAsync($"RANDOMLOCATION: {line}"));
+                            _logger.LogDetailAsync($"RANDOMLOCATION: {line}").SafeFireAndForget();
                             var randomLocation = CreateRandomLocation(line);
                             if (randomLocation != null)
                             {
@@ -97,32 +86,32 @@ namespace NeutronMaintenance
                         }
                         else if (line.Contains("RANDOMSKU"))
                         {
-                            _ = _logger.LogDetailAsync($"RANDOMSKU");
+                            _logger.LogDetailAsync($"RANDOMSKU").SafeFireAndForget();
                             ProcessRandomSku(line);
                         }
                         else if (line.Contains("OFFCARDEFSKU"))
                         {
-                            _ = _logger.LogDetailAsync($"OFFCARDEFSKU");
+                            _logger.LogDetailAsync($"OFFCARDEFSKU").SafeFireAndForget();
                             ProcessOffCarSku(line);
                         }
                         else if (line.Contains("OFFCARDEFSLOT"))
                         {
-                            _ = _logger.LogDetailAsync($"OFFCARDEFSLOT");
+                            _logger.LogDetailAsync($"OFFCARDEFSLOT").SafeFireAndForget(); 
                             ProcessOffCarLocation(line);
                         }
                         else if (line.Contains("OFFCARRESERVE"))
                         {
-                            _ = _logger.LogDetailAsync($"OFFCARRESERVE");
+                            _logger.LogDetailAsync($"OFFCARRESERVE").SafeFireAndForget();
                             ProcessOffCarInventory(line);
                         }
                         else if (line.Contains("AKADEFINITION"))
                         {
-                            _ = _logger.LogDetailAsync($"AKADEFINITION");
+                            _logger.LogDetailAsync($"AKADEFINITION").SafeFireAndForget();
                             ProcessAka(line);
                         }
                         else
                         {
-                            _ = _logger.LogDetailAsync($"Last Else");
+                            _logger.LogDetailAsync($"Last Else").SafeFireAndForget();
                             //if the line doesn't have any of these, it's Inventory
                             // Sku and Location with quantity
                             ProcessInventory(line);
@@ -131,7 +120,8 @@ namespace NeutronMaintenance
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error Reading Maintenance Lines. {ex.Message} \r\n {ex.InnerException}");
+                    MessageBox.Show($@"Error Reading Maintenance Lines. {ex.Message} 
+ {ex.InnerException}");
                 }
             }
         }
@@ -169,14 +159,14 @@ namespace NeutronMaintenance
             var akaRecords = new List<AkaLoad>();
             var akaDefinitionUpdate = new AkaDefinitionUpdate();
 
-            _ = _logger.LogDetailAsync($"AKA: {line}");
-            _ = _logger.LogDetailAsync($"Line Length: {line.Length}");
+            _logger.LogDetailAsync($"AKA: {line}").SafeFireAndForget();
+            _logger.LogDetailAsync($"Line Length: {line.Length}").SafeFireAndForget();
             if (line.Length > 49)
             {
                 var akaSku = line.Substring(50).Trim();
-                _ = _logger.LogDetailAsync($"AKA: {akaSku} Length: {akaSku.Length}");
+                _logger.LogDetailAsync($"AKA: {akaSku} Length: {akaSku.Length}").SafeFireAndForget();
                 var sku = line.Substring(0, 35).Trim();
-                _ = _logger.LogDetailAsync($"AKA: {sku} Length: {sku.Length}");
+                _logger.LogDetailAsync($"AKA: {sku} Length: {sku.Length}").SafeFireAndForget();
                 if (akaSku.Length > 0 && sku.Length > 0)
                 {
                     var rec = new AkaLoad();
@@ -233,7 +223,7 @@ namespace NeutronMaintenance
 
             try
             {
-                _ = _logger.LogDetailAsync($"RandomSku: {line}");
+                _logger.LogDetailAsync($"RandomSku: {line}").SafeFireAndForget();
 
                 var rec = new ItemDefinitionLoad();
                 rec.Station = line.Substring(126, 1);
@@ -306,7 +296,7 @@ namespace NeutronMaintenance
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync("Archive Master Maintenance File Error: " + ex.Message);
+                _logger.LogDetailAsync("Archive Master Maintenance File Error: " + ex.Message).SafeFireAndForget();
             }
         }
 

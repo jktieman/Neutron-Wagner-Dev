@@ -20,6 +20,7 @@ using Neutron.Global;
 using Timer = System.Timers.Timer;
 using NeutronData.Interfaces;
 using NeutronData.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace Neutron.Classes
 {
@@ -33,7 +34,7 @@ namespace Neutron.Classes
         private readonly IReplenOrdersRepository _replenOrdersRepository;
         private IDynamicLogger _logger;
         private Timer _compressTimer;
-
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         public bool CompressRunning { get; private set; }
 
         public CompressService(IJsonData jsonData, WorkstationView workstationView, NeutronVariables neutronVariables
@@ -64,7 +65,24 @@ namespace Neutron.Classes
 
             var interval = _neutronVariables.RunCompressInterval * 60 * 1000;
             _compressTimer = new Timer(interval);
-            _compressTimer.Elapsed += async (sender, e) => await OnRunCompress();
+           // _compressTimer.Elapsed += async (sender, e) => await OnRunCompress();
+            _compressTimer.Elapsed += async (sender, e) =>
+            {
+                if (_semaphore.CurrentCount == 0)
+                {
+                    return;
+                }
+                await _semaphore.WaitAsync();
+                try
+                {
+                    await OnRunCompress();
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            };
+
             _compressTimer.AutoReset = true;
             _compressTimer.Enabled = true;
             _compressTimer.Start();
@@ -87,7 +105,7 @@ namespace Neutron.Classes
             _logger.LogDetailAsync($"On Run Compress: {_compressTimer.Interval}").SafeFireAndForget();
             // Do not run if already running
             if (CompressRunning) return;
-            _compressTimer?.Stop();
+           // _compressTimer?.Stop();
             try
             {
                 _logger.LogDetailAsync("Compress Started").SafeFireAndForget();
@@ -120,7 +138,7 @@ namespace Neutron.Classes
                 _logger.LogDetailAsync("Compress Finished").SafeFireAndForget();
                 CompressRunning = false;
             }
-            _compressTimer?.Stop();
+           // _compressTimer?.Stop();
         }
 
         private async Task CompressOrders(DateTime compressBefore)
@@ -250,6 +268,7 @@ namespace Neutron.Classes
             {
                 _logger.LogDetailAsync($"Archive Replen Order ID: {order.Id}  Order: {order.Ord1}").SafeFireAndForget();
                 _historyManager.SaveHistory(ActionCode.OrderArchived, order);
+                await Task.Delay(10);
             }
         }
 

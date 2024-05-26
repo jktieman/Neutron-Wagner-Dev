@@ -78,7 +78,6 @@
     <Compile Include="InterfaceProcessorMET.cs" />
     <Compile Include="InterfaceProcessorPr1.cs" />
     <Compile Include="InterfaceProcessorTop.cs" />
-    <Compile Include="InterfaceProcessorVidir.cs" />
     <Compile Include="IUploadProcessor.cs" />
     <Compile Include="METFileProcessor.cs" />
     <Compile Include="WAGFileProcessor.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="UploadProcessorSfh.cs" />
     <Compile Include="UploadProcessorTop.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
-    <Compile Include="VidirFileProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

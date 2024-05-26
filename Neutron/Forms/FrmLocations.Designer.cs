@@ -261,7 +261,7 @@
             this.TextBoxFind.Size = new System.Drawing.Size(221, 29);
             this.TextBoxFind.TabIndex = 5;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
+            this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HandleFindTextBoxKeyDown);
             // 
             // MButtonNew
             // 
@@ -395,6 +395,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.DataGridView1.RowTemplate.Height = 24;
+            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1225, 514);
             this.DataGridView1.TabIndex = 10;
             this.DataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick);

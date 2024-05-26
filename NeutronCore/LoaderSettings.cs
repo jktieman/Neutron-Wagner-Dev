@@ -31,13 +31,14 @@ namespace NeutronCore
 
         static LoaderSettings()
         {
-            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\");
 
             if (!Directory.Exists(_rootDirectory))
             {
                 _rootDirectory = string.Empty;
+                MessageBox.Show($"Root Directory does not exists: {_rootDirectory}");
             }
-
+            
             Init();
         }
         public static string ConfigFilePath => $"{GetRootDirectory()}{SubDirectory}{FileName}";
@@ -194,6 +195,7 @@ namespace NeutronCore
             var result = false;
 
             var path = $"{GetRootDirectory()}{SubDirectory}";
+           
             if (PathExists(path))
             {
                 try
@@ -263,6 +265,7 @@ namespace NeutronCore
         public static bool PathExists(string path)
         {
             var result = false;
+           
             try
             {
                 if (path.Length > 0)
@@ -271,11 +274,16 @@ namespace NeutronCore
                     {
                         result = true;
                     }
+                    else
+                    {
+                        MessageBox.Show($"[ {path} ] Path does NOT Exists");
+                    }
+                    
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Directory does not exists. Add in System Interface. " + ex.Message + " " + ex.InnerException);
+                MessageBox.Show($"[ {path} ] Directory does not exists. Add in System Interface. " + ex.Message + " " + ex.InnerException);
                 result = false;
             }
             return result;
@@ -297,7 +305,7 @@ namespace NeutronCore
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Directory does not exists. Add in System Interface. " + ex.Message + " " + ex.InnerException);
+                MessageBox.Show($"[ {path} ] Directory does not exists. Add in System Interface. " + ex.Message + " " + ex.InnerException);
                 result = false;
             }
             return result;

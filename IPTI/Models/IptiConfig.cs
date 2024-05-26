@@ -13,5 +13,6 @@ namespace IPTI.Models
         public string ButtonOnTime { get; set; }
         public string ButtonOffTime { get; set; }
         public string OrderControlButton { get; set; }
+        public int TransmitDelay { get; set; }
     }
 }

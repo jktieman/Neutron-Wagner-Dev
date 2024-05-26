@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NeutronData.Models;
 
 namespace NeutronData.Interfaces
 {
-    public interface IAkaRepository
+    public interface IAkaRepository : IDisposable
     {
         string Get(string aka);
         string GetUpc(string item);
@@ -13,6 +14,5 @@ namespace NeutronData.Interfaces
         void Delete(AkaType aka);
         void Update(AkaType aka);
         void Save();
-        void Dispose();
     }
 }

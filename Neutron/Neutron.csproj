@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Neutron</RootNamespace>
-    <AssemblyName>Neutron</AssemblyName>
+    <AssemblyName>NeutronTest</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -17,7 +17,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>\\10.5.20.200\software\NeutronWagnerInstallation\</PublishUrl>
+    <PublishUrl>\\10.5.20.200\software\NeutronTestInstallation\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -27,14 +27,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <UpdateUrl>\\usot-neutron\Software\NeutronWagnerInstallation\</UpdateUrl>
+    <UpdateUrl>\\usot-neutron\Software\NeutronTestInstallation\</UpdateUrl>
     <SupportUrl>http://www.put2light.com</SupportUrl>
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>574</ApplicationRevision>
+    <ApplicationRevision>592</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -124,6 +124,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Hart_DC.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=4242.42.42.42, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2023.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
       <Private>True</Private>
@@ -144,9 +147,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ReplenService">
-      <HintPath>..\ReplenService\bin\Debug\ReplenService.dll</HintPath>
-    </Reference>
     <Reference Include="RJCP.SerialPortStream, Version=2.4.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
       <HintPath>..\packages\SerialPortStream.2.4.1\lib\net45\RJCP.SerialPortStream.dll</HintPath>
     </Reference>
@@ -198,6 +198,12 @@
     </Compile>
     <Compile Include="Forms\FrmChangeReplenLineStatus.Designer.cs">
       <DependentUpon>FrmChangeReplenLineStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmCostCenter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmCostCenter.Designer.cs">
+      <DependentUpon>FrmCostCenter.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmQuantity.cs">
       <SubType>Form</SubType>
@@ -526,6 +532,7 @@
     <Compile Include="UserControls\UserControlPickPosition.Designer.cs">
       <DependentUpon>UserControlPickPosition.cs</DependentUpon>
     </Compile>
+    <None Include="Images\TEST.png" />
     <Content Include="NeutronAtomLogo.ico" />
     <Content Include="Neutron_Logo32.ico" />
     <Content Include="PickLightTest.EXE">
@@ -545,6 +552,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangeReplenLineStatus.resx">
       <DependentUpon>FrmChangeReplenLineStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmCostCenter.resx">
+      <DependentUpon>FrmCostCenter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
       <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
@@ -592,9 +602,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmSkipZeroSummary.resx">
       <DependentUpon>FrmSkipZeroSummary.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Language\ResGen.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmChangePriority.resx">
       <DependentUpon>FrmChangePriority.cs</DependentUpon>
@@ -681,45 +688,6 @@
     <Content Include="Hart_DC.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Language\FrmMain.fr-CA.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmMain.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPick.fr-CA.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPick.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPin.es-MX.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPin.fr-CA.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPin.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmReplen.fr-CA.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmReplen.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\GreetingResources.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\MyResource.fr-CA.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\MyResource.fr-FR.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\MyResource.resources">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -736,54 +704,6 @@
     <None Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
     </None>
-    <Content Include="Json\ActionIdString.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\DocumentPrinterPreferences.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\HardwareDevice.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\ItemDefinition.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\LabelPrinterPreferences.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\Location.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\NeutronLicense.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\NeutronVariables.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\Nomenclature.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\PrintRequestFileName.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\ProductivityGroups.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\UserId.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\UserIds.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Json\UserIdString.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\BuildLanguageFiles.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Configuration\ConfigFile.Csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Neutron_1_TemporaryKey.pfx" />
     <None Include="Neutron_2_TemporaryKey.pfx" />
     <None Include="Neutron_TemporaryKey.pfx" />
@@ -806,36 +726,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Language\FrmMain.fr-CA.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmMain.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPick.fr-CA.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPick.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPin.es-MX.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPin.fr-CA.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmPin.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmReplen.fr-CA.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\FrmReplen.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Language\GreetingResources.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\Neutron_Logo32.png" />
     <None Include="Images\Neutron_Logo.png" />
     <None Include="Icons\glyphicons-171-step-backward.png" />
@@ -917,6 +807,10 @@
       <Project>{41e13f41-40dc-4f3a-ba34-43008ef8a4b8}</Project>
       <Name>JsonManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LogFileMaintenance\LogFileMaintenance.csproj">
+      <Project>{66326536-a1d8-49e7-9380-1a4c97edf278}</Project>
+      <Name>LogFileMaintenance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeutronLoader\NeutronLoader.csproj">
       <Project>{2748bdf0-d6ed-48c5-9230-f18e33779e67}</Project>
       <Name>NeutronLoader</Name>
@@ -944,6 +838,10 @@
     <ProjectReference Include="..\ProLiteController\ProliteController\ProLiteController.csproj">
       <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
       <Name>ProLiteController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReplenService\ReplenService.csproj">
+      <Project>{93bf7d7c-0f65-4490-b653-34fe740559ac}</Project>
+      <Name>ReplenService</Name>
     </ProjectReference>
     <ProjectReference Include="..\SAPServer\SAPServer.csproj">
       <Project>{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}</Project>

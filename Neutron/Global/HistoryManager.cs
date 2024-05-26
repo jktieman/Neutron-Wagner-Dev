@@ -26,6 +26,7 @@ namespace Neutron.Global
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
 
 
         public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView)
@@ -664,6 +665,39 @@ namespace Neutron.Global
                 Slot = inventory.Location.Slot,
                 EmpId = GlobalVar.User.EmpId,
                 CostCenter = costCenter,
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+            };
+            Save(history);
+        }
+
+        //Inventory Modify Action With Beginning Quantity in RequestedQuantity field
+        public void SaveHistory(ActionCode actionCode, Inventory inv, int beginningQty, bool invMod)
+        {
+            var inventory = _repoInventory.FindByKey(inv.Id);
+            var orderText = "  INV MOD";
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = orderText,
+                Ord2 = orderText,
+                OrderId = 0,
+                Item = inventory.ItemDefinition.Item,
+                Description = inventory.ItemDefinition.Description,
+                IssuedQuantity = inv.Quantity,
+                RequestedQuantity = beginningQty,
+                AreaId = inventory.AreaId,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,

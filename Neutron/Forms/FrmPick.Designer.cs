@@ -107,6 +107,7 @@ namespace Neutron.Forms
             this.TextBoxErrorProvider = new System.Windows.Forms.TextBox();
             this.MBGo2 = new MetroFramework.Controls.MetroButton();
             this.MBFillOptimized = new MetroFramework.Controls.MetroButton();
+            this.MBClear = new MetroFramework.Controls.MetroButton();
             this.MBFillStarters = new MetroFramework.Controls.MetroButton();
             this.MBFill = new MetroFramework.Controls.MetroButton();
             this.PanelOrderInduction = new System.Windows.Forms.Panel();
@@ -124,7 +125,7 @@ namespace Neutron.Forms
             this.MBStart = new MetroFramework.Controls.MetroButton();
             this.MBPickListBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
-            this.RadioButtonClientConnected = new System.Windows.Forms.RadioButton();
+            this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             this.LabelPickMessages = new System.Windows.Forms.Label();
             this.MBShortCut = new MetroFramework.Controls.MetroButton();
             this.LabelNotify = new System.Windows.Forms.Label();
@@ -275,7 +276,6 @@ namespace Neutron.Forms
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.ToolTipPickScreen = new System.Windows.Forms.ToolTip(this.components);
             this.ErrorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.MBClear = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.OrderListing.SuspendLayout();
@@ -889,7 +889,6 @@ namespace Neutron.Forms
             // MBGo2
             // 
             this.MBGo2.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBGo2.Enabled = false;
             this.MBGo2.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.MBGo2.Location = new System.Drawing.Point(1093, 584);
             this.MBGo2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -911,6 +910,18 @@ namespace Neutron.Forms
             this.MBFillOptimized.Text = "Fill Optimized";
             this.MBFillOptimized.UseSelectable = true;
             this.MBFillOptimized.Click += new System.EventHandler(this.MBFillOptimized_Click);
+            // 
+            // MBClear
+            // 
+            this.MBClear.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBClear.Location = new System.Drawing.Point(546, 586);
+            this.MBClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBClear.Name = "MBClear";
+            this.MBClear.Size = new System.Drawing.Size(155, 76);
+            this.MBClear.TabIndex = 8;
+            this.MBClear.Text = "Clear";
+            this.MBClear.UseSelectable = true;
+            this.MBClear.Click += new System.EventHandler(this.MBClear_Click);
             // 
             // MBFillStarters
             // 
@@ -1048,7 +1059,6 @@ namespace Neutron.Forms
             // MBGo
             // 
             this.MBGo.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.MBGo.Enabled = false;
             this.MBGo.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.MBGo.Location = new System.Drawing.Point(150, 10);
             this.MBGo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1172,7 +1182,7 @@ namespace Neutron.Forms
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.PickScreen.Controls.Add(this.RadioButtonClientConnected);
+            this.PickScreen.Controls.Add(this.CheckBoxClientConnected);
             this.PickScreen.Controls.Add(this.LabelPickMessages);
             this.PickScreen.Controls.Add(this.MBShortCut);
             this.PickScreen.Controls.Add(this.LabelNotify);
@@ -1212,17 +1222,17 @@ namespace Neutron.Forms
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
-            // RadioButtonClientConnected
+            // CheckBoxClientConnected
             // 
-            this.RadioButtonClientConnected.AutoSize = true;
-            this.RadioButtonClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonClientConnected.Location = new System.Drawing.Point(9, 378);
-            this.RadioButtonClientConnected.Name = "RadioButtonClientConnected";
-            this.RadioButtonClientConnected.Size = new System.Drawing.Size(193, 20);
-            this.RadioButtonClientConnected.TabIndex = 199;
-            this.RadioButtonClientConnected.TabStop = true;
-            this.RadioButtonClientConnected.Text = "Display Interface Connected";
-            this.RadioButtonClientConnected.UseVisualStyleBackColor = true;
+            this.CheckBoxClientConnected.AutoSize = true;
+            this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxClientConnected.Location = new System.Drawing.Point(7, 374);
+            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
+            this.CheckBoxClientConnected.Size = new System.Drawing.Size(158, 24);
+            this.CheckBoxClientConnected.TabIndex = 200;
+            this.CheckBoxClientConnected.Text = "Transmitter Ready";
+            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
+            this.CheckBoxClientConnected.Visible = false;
             // 
             // LabelPickMessages
             // 
@@ -3230,18 +3240,6 @@ namespace Neutron.Forms
             // 
             this.ErrorProvider1.ContainerControl = this;
             // 
-            // MBClear
-            // 
-            this.MBClear.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBClear.Location = new System.Drawing.Point(546, 586);
-            this.MBClear.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBClear.Name = "MBClear";
-            this.MBClear.Size = new System.Drawing.Size(155, 76);
-            this.MBClear.TabIndex = 8;
-            this.MBClear.Text = "Clear";
-            this.MBClear.UseSelectable = true;
-            this.MBClear.Click += new System.EventHandler(this.MBClear_Click);
-            // 
             // FrmPick
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -3519,7 +3517,7 @@ namespace Neutron.Forms
         private System.Windows.Forms.Label LabelPickMessages;
         private MetroFramework.Controls.MetroButton MBShortCut;
         private System.Windows.Forms.TextBox TextBoxPickSlot;
-        private System.Windows.Forms.RadioButton RadioButtonClientConnected;
         private MetroFramework.Controls.MetroButton MBClear;
+        private System.Windows.Forms.CheckBox CheckBoxClientConnected;
     }
 }

@@ -15,5 +15,7 @@ namespace IPTI.Models
         Task TurnOnBatchOrderControl(string text);
         Task TurnOffBatchOrderControl();
         Task TurnOnBatchDisplayEnd(int positionNumber);
+        void DisposeServer();
+        bool IsClientConnected();
     }
 }

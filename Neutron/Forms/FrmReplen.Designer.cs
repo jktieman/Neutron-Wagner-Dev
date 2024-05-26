@@ -120,6 +120,7 @@
             this.DataGridViewOrderDetails = new System.Windows.Forms.DataGridView();
             this.MBOrderDetailsBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
+            this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             this.MBSkipPick = new MetroFramework.Controls.MetroButton();
             this.TextBoxSlot = new System.Windows.Forms.TextBox();
             this.MBShortCut = new MetroFramework.Controls.MetroButton();
@@ -210,7 +211,6 @@
             this.DataGridViewAdjust = new System.Windows.Forms.DataGridView();
             this.MBAdjustOrderSave = new MetroFramework.Controls.MetroButton();
             this.MBAdjustOrderBack = new MetroFramework.Controls.MetroButton();
-            this.RadioButtonClientConnected = new System.Windows.Forms.RadioButton();
             this.AvailableRack.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrdersRack)).BeginInit();
             this.NewOrder.SuspendLayout();
@@ -1102,7 +1102,7 @@
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.Green;
-            this.PickScreen.Controls.Add(this.RadioButtonClientConnected);
+            this.PickScreen.Controls.Add(this.CheckBoxClientConnected);
             this.PickScreen.Controls.Add(this.MBSkipPick);
             this.PickScreen.Controls.Add(this.TextBoxSlot);
             this.PickScreen.Controls.Add(this.MBShortCut);
@@ -1136,6 +1136,18 @@
             this.PickScreen.Size = new System.Drawing.Size(1234, 676);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
+            // 
+            // CheckBoxClientConnected
+            // 
+            this.CheckBoxClientConnected.AutoSize = true;
+            this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxClientConnected.Location = new System.Drawing.Point(9, 374);
+            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
+            this.CheckBoxClientConnected.Size = new System.Drawing.Size(158, 24);
+            this.CheckBoxClientConnected.TabIndex = 201;
+            this.CheckBoxClientConnected.Text = "Transmitter Ready";
+            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
+            this.CheckBoxClientConnected.Visible = false;
             // 
             // MBSkipPick
             // 
@@ -2353,17 +2365,6 @@
             this.MBAdjustOrderBack.UseSelectable = true;
             this.MBAdjustOrderBack.Click += new System.EventHandler(this.MBAdjustOrderBack_Click);
             // 
-            // RadioButtonClientConnected
-            // 
-            this.RadioButtonClientConnected.AutoSize = true;
-            this.RadioButtonClientConnected.Location = new System.Drawing.Point(20, 377);
-            this.RadioButtonClientConnected.Name = "RadioButtonClientConnected";
-            this.RadioButtonClientConnected.Size = new System.Drawing.Size(159, 17);
-            this.RadioButtonClientConnected.TabIndex = 176;
-            this.RadioButtonClientConnected.TabStop = true;
-            this.RadioButtonClientConnected.Text = "Display Interface Connected";
-            this.RadioButtonClientConnected.UseVisualStyleBackColor = true;
-            // 
             // FrmReplen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -2577,6 +2578,6 @@
         private MetroFramework.Controls.MetroButton MBSkipPick;
         private MetroFramework.Controls.MetroButton MBDeleteOrder;
         private MetroFramework.Controls.MetroButton MBShowPutawayOrders;
-        private System.Windows.Forms.RadioButton RadioButtonClientConnected;
+        private System.Windows.Forms.CheckBox CheckBoxClientConnected;
     }
 }

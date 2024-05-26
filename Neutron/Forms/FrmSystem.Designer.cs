@@ -116,6 +116,12 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.SqlServer.SuspendLayout();
@@ -150,6 +156,12 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Main.Controls.Add(this.label20);
+            this.Main.Controls.Add(this.label19);
+            this.Main.Controls.Add(this.label18);
+            this.Main.Controls.Add(this.label21);
+            this.Main.Controls.Add(this.label22);
+            this.Main.Controls.Add(this.label17);
             this.Main.Controls.Add(this.MBMainClose);
             this.Main.Controls.Add(this.MBRunUploadOnce);
             this.Main.Controls.Add(this.MBStartUpload);
@@ -1063,6 +1075,66 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(884, 275);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(236, 108);
+            this.label17.TabIndex = 7;
+            this.label17.Text = "Test";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(87, 131);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(236, 108);
+            this.label18.TabIndex = 7;
+            this.label18.Text = "Test";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(87, 275);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(236, 108);
+            this.label19.TabIndex = 7;
+            this.label19.Text = "Test";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(87, 413);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(236, 108);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Test";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(884, 131);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(236, 108);
+            this.label21.TabIndex = 7;
+            this.label21.Text = "Test";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(884, 413);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(236, 108);
+            this.label22.TabIndex = 7;
+            this.label22.Text = "Test";
+            // 
             // FrmSystem
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1081,6 +1153,7 @@
             this.Load += new System.EventHandler(this.FrmSystem_Load);
             this.tabControl1.ResumeLayout(false);
             this.Main.ResumeLayout(false);
+            this.Main.PerformLayout();
             this.SqlServer.ResumeLayout(false);
             this.PanelSql.ResumeLayout(false);
             this.PanelSql.PerformLayout();
@@ -1183,5 +1256,11 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox CommonDirectory;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label17;
     }
 }

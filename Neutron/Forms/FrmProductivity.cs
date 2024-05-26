@@ -315,11 +315,11 @@ namespace Neutron.Forms
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Workstation",
-                HeaderText = _gridResourceManager.GetString("Workstation"),
+                DataPropertyName = "AreaId",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                Name = "Workstation",
+                Name = "AreaId",
                 Visible = true
             };
             DataGridView1.Columns.Add(col);
@@ -343,16 +343,16 @@ namespace Neutron.Forms
                 Visible = false
             };
             DataGridView1.Columns.Add(col);
-            col = new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "WorkstationId",
-                HeaderText = _gridResourceManager.GetString("WorkstationId"),
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                Name = "WorkstationId",
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                Visible = false
-            };
-            DataGridView1.Columns.Add(col);
+            //col = new DataGridViewTextBoxColumn
+            //{
+            //    DataPropertyName = "WorkstationId",
+            //    HeaderText = _gridResourceManager.GetString("WorkstationId"),
+            //    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+            //    Name = "WorkstationId",
+            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            //    Visible = false
+            //};
+            //DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCode",
@@ -470,11 +470,11 @@ namespace Neutron.Forms
             DataGridView2.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "Workstation",
-                HeaderText = _gridResourceManager.GetString("Workstation"),
+                DataPropertyName = "AreaId",
+                HeaderText = _gridResourceManager.GetString("Area"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                Name = "Workstation",
+                Name = "AreaId",
                 Visible = true
             };
             DataGridView2.Columns.Add(col);
@@ -702,7 +702,7 @@ namespace Neutron.Forms
         {
             var currentItem = ((ObjectView<ProductivitySummary>)_bindingSourceSummary.Current).Object;
             var recs = GetProductivityDetailRecords(currentItem.ActionCodeId, _fromDate, _toDate, currentItem.UserId,
-                currentItem.WorkstationId);
+                currentItem.AreaId);
             var blv = new BindingListView<ProductivityDetail>(recs);
             _bindingSourceDetail = new BindingSource { DataSource = blv };
             DataGridView2.DataSource = _bindingSourceDetail;
@@ -720,7 +720,7 @@ namespace Neutron.Forms
             TextBoxTotalOrdersDetail.Text = recs.Select(r => r.OrderId).Distinct().Count().ToString();
         }
         private List<ProductivityDetail> GetProductivityDetailRecords(int currentItemActionCodeId, DateTime fromDate,
-            DateTime toDate, int currentItemUserId, int currentItemStationId)
+            DateTime toDate, int currentItemUserId, int currentItemAreaId)
         {
             var details = new List<ProductivityDetail>();
             using (var context = new NeutronDb())
@@ -729,12 +729,12 @@ namespace Neutron.Forms
                 var paramFromDate = new SqlParameter("@FromDate", fromDate);
                 var paramToDate = new SqlParameter("@ToDate", toDate);
                 var paramFind = new SqlParameter("@UserId", currentItemUserId);
-                var paramStation = new SqlParameter("@StationId", currentItemStationId);
+                var paramStation = new SqlParameter("@AreaId", currentItemAreaId);
                 var parameters = new object[] { paramCodes, paramFromDate, paramToDate, paramFind, paramStation };
                 try
                 {
                     var det = context.Database.SqlQuery<ProductivityDetail>(
-                        "usp_GetProductivityDetail @CodeId, @FromDate, @ToDate, @UserId, @StationId", parameters);
+                        "usp_GetProductivityDetail @CodeId, @FromDate, @ToDate, @UserId, @AreaId", parameters);
                     if (det != null)
                     {
                         details = det.ToList();
@@ -776,7 +776,7 @@ namespace Neutron.Forms
         }
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // UpdateDetailGrid();
+            UpdateDetailGrid();
         }
         private void SplitContainer1_SplitterMoving(object sender, SplitterCancelEventArgs e)
         {

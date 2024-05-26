@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using AlliedFileSystemWatcher;
 using AlliedLogger;
 using NeutronCore;
 using NeutronCore.Global;

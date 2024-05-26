@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 using AlliedLogger;
 using NeutronCore.Global;
-using NeutronCore.Enums;
 using NeutronData.ModelViews;
 using System.Threading.Tasks;
 using NeutronEvents;
-using System.Reflection;
+using AsyncAwaitBestPractices;
+using System.IO;
 
 
 namespace ProliteController
@@ -25,8 +23,18 @@ namespace ProliteController
     }
 
     /// <summary>
-    /// The ProLiteManager class is responsible for managing the Prolite devices.
-    /// The Prolite devices are HardwareDevices of type Prolite.
+    /// The `ProLiteManager` class in the `ProliteController` namespace is a crucial component
+    /// for managing Prolite devices in your application.It implements the `IProLiteManager` interface.
+    /// This class provides functionality to interact with Prolite devices, which are a type of HardwareDevice.
+    /// It allows you to add and remove Prolite devices, turn them on or off, clear them, and perform
+    /// other operations.The class also maintains a list of Prolite devices for easy management.
+    /// The `ProLiteManager` class is initialized with parameters such as `portName`, `baudRate`
+    /// , `parity`, `dataBits`, `stopBits`, `neutronVariables`, and `workstationView`.
+    /// These parameters are likely used to establish and manage a connection with the Prolite devices.
+    ///   The class also includes logging capabilities, as seen with the `_logger` instance,
+    /// which is used to log details about operations performed on the Prolite devices.
+    ///In summary, the `ProLiteManager` class is a comprehensive manager for Prolite devices,
+    /// providing a range of functionalities to interact with and control these devices.
     /// </summary>
     public class ProLiteManager : IProLiteManager
     {
@@ -37,7 +45,7 @@ namespace ProliteController
         private readonly int _stopBits;
         private readonly NeutronVariables _neutronVariables;
         private readonly WorkstationView _workstationView;
-        private readonly IDynamicLogger _logger;
+        private IDynamicLogger _logger;
         private SerialPort _serialPort;
         private IList<Prolite> _prolites;
         private string _lastCommand = string.Empty;
@@ -87,7 +95,6 @@ namespace ProliteController
             }
         }
 
-
         public ProLiteManager(string portName, int baudRate, Parity parity, int dataBits, int stopBits,
             NeutronVariables neutronVariables, WorkstationView workstationView)
         {
@@ -99,17 +106,96 @@ namespace ProliteController
 
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
-            _prolites = new List<Prolite>();
-            _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
-            
-            Init();
-           
+
+            _ = Init();
         }
 
-        private void Init()
+        private async Task Init()
         {
-             InitSerialPort();
+            _prolites = new List<Prolite>();
+            _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
+           await InitSerialPort();
         }
+
+        private async Task InitSerialPort()
+        {
+            _logger.LogDetailAsync($"Initializing Serial Port").SafeFireAndForget();
+            var stopBits = GetStopBits();
+            _serialPort = new SerialPort(_portName, _baudRate, _parity, _dataBits, stopBits)
+            {
+                WriteTimeout = 200
+            };
+            if (_serialPort == null) return;
+            _serialPort.DataReceived += SerialPortOnDataReceived;
+            await TryOpenSerialPort();
+            if (!IsPortOpen)
+            {
+                var message = $"Prolite Port is NOT Open. Disabling All Prolites.";
+                _logger.LogDetailAsync(message).SafeFireAndForget();
+                Mediator.GetInstance().OnGeneralError(this, message);
+                ProliteManagerEnabled = false;
+            }
+        }
+        private async Task TryOpenSerialPort()
+        {
+            for (var i = 0; i <= 6; i++)
+            {
+                try
+                {
+                    _serialPort?.Open();
+                    if (_serialPort != null && _serialPort.IsOpen)
+                    {
+                        _logger.LogDetailAsync("Startup Success").SafeFireAndForget();
+                        ProliteManagerEnabled = true;
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await HandleSerialPortExceptionAsync(i, ex);
+                    await Task.Delay(500);
+                }
+            }
+        }
+
+
+        //private async Task InitSerialPort()
+        //{
+        //    _logger.LogDetailAsync($"Init Serial Port").SafeFireAndForget();
+        //    var stopBits = GetStopBits();
+        //    _serialPort = new SerialPort(_portName, _baudRate, _parity, _dataBits, stopBits)
+        //    {
+        //        WriteTimeout = 200
+        //    };
+        //    if (_serialPort == null) return;
+        //    _serialPort.DataReceived += SerialPortOnDataReceived;
+        //    for (var i = 0; i <= 6; i++)
+        //    {
+        //        try
+        //        {
+        //            _serialPort?.Open();
+        //            if (_serialPort != null && _serialPort.IsOpen)
+        //            {
+        //                _logger.LogDetailAsync("Startup Success").SafeFireAndForget();
+        //                ProliteManagerEnabled = true;
+        //                break;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            await HandleSerialPortExceptionAsync(i, ex);
+        //            await Task.Delay(500);
+        //        }
+        //    }
+        //    if (!IsPortOpen)
+        //    {
+        //        var message = $"Prolite Port is NOT Open  Disable All Prolites.";
+        //        _logger.LogDetailAsync(message).SafeFireAndForget();
+        //        Mediator.GetInstance().OnGeneralError(this, message);
+        //        ProliteManagerEnabled = false;
+        //    }
+        //}
+
 
         /// <summary>
         /// Add a ProLite device to the list of Prolites.
@@ -121,7 +207,7 @@ namespace ProliteController
         /// <param name="enabled"></param>
         public void AddProlite(int id, string name, int deviceNumber, bool enabled)
         {
-            _ = _logger.LogDetailAsync($"Add Prolite Id: {deviceNumber} - {name}");
+            _logger.LogDetailAsync($"Add Prolite Id: {deviceNumber} - {name}").SafeFireAndForget();
             try
             {
                 var pro = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -134,12 +220,12 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Add Prolite Error: {ex.Message}");
+                _logger.LogDetailAsync($"Add Prolite Error: {ex.Message}").SafeFireAndForget();
             }
         }
         public void RemoveProlite(int deviceNumber)
         {
-            _ = _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}");
+            _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}").SafeFireAndForget();
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -151,39 +237,39 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}");
+                _logger.LogDetailAsync($"Remove Prolite Error: {ex.Message}").SafeFireAndForget();
             }
         }
 
         private void SerialPortWrite(string cmd)
         {
-            _logger.LogDetailAsync($"Start: {cmd}");
+            _logger.LogDetailAsync($"Start: {cmd}").SafeFireAndForget();
             //var counter = 0;
             //while (_proliteBusy)
             //{
             //    counter += 100;
-            //    _ = _logger.LogDetailAsync($"Counter: {counter}");
+            //    _logger.LogDetailAsync($"Counter: {counter}").SafeFireAndForget();
             //    Thread.Sleep(100);
             //    if (counter >= 1000)
             //    {
-            //        _ = _logger.LogDetailAsync("Timeout waiting for ProLite to become available.");
+            //        _logger.LogDetailAsync("Timeout waiting for ProLite to become available.").SafeFireAndForget();
             //        break;
             //    }
             //}
 
             // _proliteBusy = true;
             _serialPort.Write(cmd);
-           _logger.LogDetailAsync($"Start: {cmd}");
+            _logger.LogDetailAsync($"Start: {cmd}").SafeFireAndForget();
         }
         public void TurnOn(int deviceNumber, int level, int part, int quantity)
         {
-            _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}");
+            _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}").SafeFireAndForget();
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (prolite == null) return;
                 if (prolite.Enabled == false) return;
-                
+
                 var cmd = prolite.TurnOn(level, part, quantity);
                 _lastCommand = cmd;
                 SerialPortWrite(cmd);
@@ -191,13 +277,13 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
+                _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}").SafeFireAndForget();
             }
         }
 
         public void TurnOnLocation(int deviceNumber, int tray, int level, int part, int quantity)
         {
-            _ = _logger.LogDetailAsync($"Turn ON Prolite Location -  Device Number: {deviceNumber}  Tray: {tray}  Level: {level}  Part: {part}  Quantity: {quantity}");
+            _logger.LogDetailAsync($"Turn ON Prolite Location -  Device Number: {deviceNumber}  Tray: {tray}  Level: {level}  Part: {part}  Quantity: {quantity}").SafeFireAndForget();
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -211,13 +297,13 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}");
+                _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}").SafeFireAndForget();
             }
         }
 
         public void TurnOnHot(int deviceNumber)
         {
-            _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT");
+            _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT").SafeFireAndForget();
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -229,13 +315,13 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
+                _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}").SafeFireAndForget();
             }
         }
 
         public void TurnOnBlindCycle(int deviceNumber, int level, int part)
         {
-            _ = _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle");
+            _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle").SafeFireAndForget();
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -247,15 +333,15 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}");
+                _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}").SafeFireAndForget();
             }
         }
 
         // clear the prolite display
         public void ClearProlite(int deviceNumber)
         {
-            _ = _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}");
-            
+            _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}").SafeFireAndForget();
+
             try
             {
                 var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
@@ -267,29 +353,49 @@ namespace ProliteController
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}");
+                _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}").SafeFireAndForget();
             }
         }
-
-        // turn off the all prolite displays
-        public void ClearAllProlites()
+        /// <summary>
+        /// Asynchronously clears all enabled Prolite devices managed by this instance.
+        /// </summary>
+        /// <remarks>
+        /// This method iterates over all Prolite devices managed by this instance and sends a clear command to each enabled device.
+        /// If a device is not enabled, it is skipped. If an error occurs while trying to clear a device, an error message is logged.
+        /// </remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="IOException">
+        /// Thrown when an I/O error occurs while trying to clear a Prolite device.
+        /// </exception>
+        /// <exception cref="Exception">
+        /// Thrown when an unspecified error occurs while trying to clear a Prolite device.
+        /// </exception>
+        public async Task ClearAllProlites()
         {
-            //_ = _logger.LogDetailAsync($"Turn OFF ALL Prolites");
-            try
+            if (_prolites == null)
             {
-                foreach (var prolite in _prolites)
+                _logger.LogDetailAsync($"_prolites is null").SafeFireAndForget();
+                return;
+            }
+            foreach (var prolite in _prolites)
+            {
+                if (prolite.Enabled == false) continue;
+                try
                 {
-                    if (prolite.Enabled == false) continue;
                     SerialPortWrite(prolite.Clear());
-                    //_logger.LogDetailAsync($"Serial Port Write: {prolite.DeviceNumber}");
-                    Thread.Sleep(100);
+                    await Task.Delay(100);
+                }
+                catch (IOException ex)
+                {
+                    await _logger.LogDetailAsync($"An error occurred while trying to clear Prolite {prolite.DeviceNumber}: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    await _logger.LogDetailAsync($"Turn OFF Prolite {prolite.DeviceNumber} Error: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-               // _ = _logger.LogDetailAsync($"Turn OFF Prolite Error: {ex.Message}");
-            }
-           // _ = _logger.LogDetailAsync($"Turn OFF ALL Prolites Complete");
         }
 
         bool IProLiteManager.IsProliteManagerEnabled()
@@ -315,41 +421,6 @@ namespace ProliteController
             }
         }
 
-        private void InitSerialPort()
-        {
-            _ = _logger.LogDetailAsync($"Init Serial Port");
-            var stopBits = GetStopBits();
-            _serialPort = new SerialPort(_portName, _baudRate, _parity, _dataBits, stopBits)
-            {
-                WriteTimeout = 200
-            };
-            _serialPort.DataReceived += SerialPortOnDataReceived;
-            for (var i = 0; i <= 6; i++)
-            {
-                try
-                {
-                    _serialPort?.Open();
-                    if (_serialPort != null && _serialPort.IsOpen)
-                    {
-                        _ = _logger.LogDetailAsync("Startup Success");
-                        ProliteManagerEnabled = true;
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Task.Run(() => HandleSerialPortExceptionAsync(i, ex));
-                    _ = Task.Delay(500);
-                }
-            }
-            if (!IsPortOpen)
-            {
-                var message = $"Prolite Port is NOT Open  Disable All Prolites.";
-               _ = _logger.LogDetailAsync(message);
-                Mediator.GetInstance().OnGeneralError(this, message);
-                ProliteManagerEnabled = false;
-            }
-        }
         private async Task HandleSerialPortExceptionAsync(int i, Exception ex)
         {
             try
@@ -358,7 +429,7 @@ namespace ProliteController
             }
             catch (Exception e)
             {
-                _ = _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}");
+                _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}").SafeFireAndForget();
             }
             var error = $"SerialPort Open Exception Number {i}: {ex.Message}";
             await _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
@@ -367,7 +438,7 @@ namespace ProliteController
 
         //private void InitSerialPort()
         //{
-        //    _ = _logger.LogDetailAsync($"Init Serial Port");
+        //    _logger.LogDetailAsync($"Init Serial Port").SafeFireAndForget();
 
         //    var stopBits = GetStopBits(); // StopBits.One;
 
@@ -383,7 +454,7 @@ namespace ProliteController
         //            _serialPort?.Open();
         //            if (_serialPort != null && _serialPort.IsOpen)
         //            {
-        //                _ = _logger.LogDetailAsync("Startup Success");
+        //                _logger.LogDetailAsync("Startup Success").SafeFireAndForget();
         //                //ShowData("Startup Success");
         //                //_readMp12DThread = new Thread(ReadMp12D);
         //                //RaiseSerialDataEvent += ProcessMp12DData;
@@ -401,20 +472,20 @@ namespace ProliteController
         //            catch (Exception e)
         //            {
         //                MessageBox.Show($"{ex}");
-        //                _ = _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}");
+        //                _logger.LogDetailAsync($"Close Exception Number {i}: {e.Message}").SafeFireAndForget();
         //            }
 
         //            Thread.Sleep(500);
 
         //            var error = $"SerialPort Open Exception Number {i}: {ex.Message}";
-        //            _ = _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
+        //            _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}").SafeFireAndForget();
         //        }
         //    }
 
 
         //    if (!IsPortOpen)
         //    {
-        //        _ = _logger.LogDetailAsync($"Port is NOT Open.  Number of fails: {i}");
+        //        _logger.LogDetailAsync($"Port is NOT Open.  Number of fails: {i}").SafeFireAndForget();
         //    }
         //}
 
@@ -422,11 +493,10 @@ namespace ProliteController
         {
             var serialPort = (SerialPort)sender;
             var data = string.Empty;
-            string existing;
 
             while (true)
             {
-                existing = serialPort.ReadExisting();
+                var existing = serialPort.ReadExisting();
                 data += existing;
                 Thread.Sleep(100);
                 if (string.IsNullOrEmpty(existing)) break;
@@ -434,7 +504,7 @@ namespace ProliteController
 
             if (data.Length > 0)
             {
-                _ = _logger.LogDetailAsync($"Pro-Lite Serial Data Received: {data}");
+                _logger.LogDetailAsync($"Pro-Lite Serial Data Received: {data}").SafeFireAndForget();
                 ProcessSerialData(data);
             }
         }
@@ -447,7 +517,7 @@ namespace ProliteController
             //{
 
             //    _serialPort.Write(_lastCommand);
-            //    _ = _logger.LogDetailAsync($"Pro-Lite Write Data: {_lastCommand}");
+            //    _logger.LogDetailAsync($"Pro-Lite Write Data: {_lastCommand}").SafeFireAndForget();
             //}
         }
 

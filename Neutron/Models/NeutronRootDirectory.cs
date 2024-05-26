@@ -15,7 +15,7 @@ namespace Neutron.Models
         
         public string SetRootDirectory()
         {
-            var alternateRootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+            var alternateRootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\");
             RootDirectory = !Directory.Exists(alternateRootDirectory) ? string.Empty : alternateRootDirectory;
             return RootDirectory;
         }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
@@ -39,7 +40,8 @@ namespace NeutronLoader
         private readonly GenericRepository<Shipper> _repoShippers = new GenericRepository<Shipper>(new NeutronDb());
         private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
         private ReplenProcessor _replenProcessor;
-
+        private ItemDefinitionProcessor _itemDefinitionProcessor;
+        private const int AreaEight = 8;
         private IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
@@ -51,6 +53,7 @@ namespace NeutronLoader
         private readonly IOrdersRepository _ordersRepository;
         private DocumentToPrint _documentToPrint;
         private DocumentPrinterPreferences _documentPrinter;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView, ISapService sapService, IOrdersRepository ordersRepository)
@@ -61,7 +64,7 @@ namespace NeutronLoader
             _workstationView = workstationView;
             _sapService = sapService;
             _ordersRepository = ordersRepository;
-            
+
             Init();
         }
 
@@ -71,6 +74,7 @@ namespace NeutronLoader
             _replenProcessor = new ReplenProcessor();
             _documentToPrint = new DocumentToPrint();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
+            _itemDefinitionProcessor = new ItemDefinitionProcessor(_jsonData);
             try
             {
                 _sapService.Init();
@@ -92,7 +96,7 @@ namespace NeutronLoader
         /// Finally, it sets the loading process to not busy.
         /// </remarks>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        public async Task  StartProcessingInterfaceFiles()
+        public async Task StartProcessingInterfaceFiles()
         {
             try
             {
@@ -100,7 +104,24 @@ namespace NeutronLoader
                 //var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.LoaderDelay);
                 //_timer = new Timer(t => { _ = LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
                 _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
-                _timer.Elapsed += async (sender, e) => await LoadOrders();
+                //_timer.Elapsed += async (sender, e) => await LoadOrders();
+                _timer.Elapsed += async (sender, e) =>
+                {
+                    if (_semaphore.CurrentCount == 0)
+                    {
+                        return;
+                    }
+                    await _semaphore.WaitAsync();
+                    try
+                    {
+                        await LoadOrders();
+                    }
+                    finally
+                    {
+                        _semaphore.Release();
+                    }
+                };
+
                 _timer.Start();
                 await Task.Delay(10);
             }
@@ -123,8 +144,7 @@ namespace NeutronLoader
         /// <returns>A Task representing the asynchronous operation.</returns>
         private async Task LoadOrders()
         {
-            _timer?.Stop();
-            
+
             if (_loadOrdersBusy)
             {
                 _logger.LogDetailAsync("Load Orders is currently busy.").SafeFireAndForget();
@@ -136,15 +156,13 @@ namespace NeutronLoader
                 _loadOrdersBusy = true;
                 _logger.LogDetailAsync("Load Orders Testing Waiting 2 Seconds").SafeFireAndForget();
 
-
-                // MessageBox.Show($"Bypassing call to SAP Server during Testing", "Test Loader",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 _sapService.Run();
 
                 var hostOrderLines = await GetNewOrdersFromSap();
 
                 if (hostOrderLines.Any())
                 {
-                    UpdateNeutronOrders(hostOrderLines);
+                    await UpdateNeutronOrders(hostOrderLines);
                 }
 
                 // process the 02 / Replen orders
@@ -178,8 +196,6 @@ namespace NeutronLoader
             {
                 _loadOrdersBusy = false;
             }
-
-            _timer?.Start();
         }
 
         private async Task<List<NeutronInput>> GetNewReplenOrdersFromSap()
@@ -199,7 +215,7 @@ namespace NeutronLoader
                 if (recs.Any())
                 {
 
-                    _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
+                    _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.").SafeFireAndForget();
 
                     foreach (var rec in recs)
                     {
@@ -370,12 +386,12 @@ namespace NeutronLoader
             // that is also the Area that the ItemDefinition needs to point to
 
             // Let's get all the Areas where the ItemDefinition might be.
-            var itemDef = _repoItemDefinition.FindBy(r => r.Item == line.Sku && r.AreaId == 8).FirstOrDefault();
+            var itemDef = _repoItemDefinition.FindBy(r => r.Item == line.Sku && r.AreaId == AreaEight).FirstOrDefault();
 
             return itemDef;
         }
 
-        private void UpdateNeutronOrders(List<NeutronInput> hostOrderLines)
+        private async Task UpdateNeutronOrders(List<NeutronInput> hostOrderLines)
         {
             var shipperId = 0;
             var shipMethodId = 0;
@@ -407,14 +423,14 @@ namespace NeutronLoader
 
                 try
                 {
-                    _repoOrder.Insert(order);
+                    await _repoOrder.InsertAsync(order);
                     var orderId = order.Id;
                     var orderDetails = hostOrderLines.Where(r => r.Order == orderNumber).ToList();
                     if (orderDetails.Any())
                     {
                         foreach (var orderDetail in orderDetails)
                         {
-                            var itemDef = GetItemDefinition(orderDetail);
+                            var itemDef = await GetItemDefinition(orderDetail);
 
                             if (itemDef != null)
                             {
@@ -424,8 +440,8 @@ namespace NeutronLoader
                                     PartDesc = orderDetail.Des,
                                     Quantity = orderDetail.Qty,
                                     LineStatusId = (int)LineStatus.Available,
-                                    AreaId = itemDef.AreaId,            
-                                    OrderDetailInfo = $"{orderDetail.TransId}|{rec.Priority}|{rec.Division}|{@"Route"}|{rec.Upc}",
+                                    AreaId = itemDef.AreaId,
+                                    OrderDetailInfo = $"{orderDetail.TransId}|{rec.Priority}|{rec.Division}|{@"Route"}|{orderDetail.Upc}",
                                     OrderId = orderId,
                                     JobNum = orderDetail.Order,
                                     ItemDefinitionId = itemDef.Id,
@@ -458,43 +474,118 @@ namespace NeutronLoader
             }
         }
 
-        private ItemDefinition GetItemDefinition(NeutronInput line)
+        private async Task<ItemDefinition> GetItemDefinition(NeutronInput line)
         {
+            _logger.LogDetailAsync($"NeutronInput --  Delivery: {line.Order} Item: {line.Sku} Qty: {line.Qty}").SafeFireAndForget();
+            
             ItemDefinition itemDef = null;
+            
             // the ItemDefinition could be in multiple Areas and rules determine what Area to pick from.
             // If there are multiple Areas that have the ItemDefinition
             // There is a PickMax value in the ItemDefinition that determines where to pick from.
             // that is also the Area that the ItemDefinition needs to point to
-
-            // Let's get all the Areas where the ItemDefinition might be.
-            var itemDefs = _repoItemDefinition.FindBy(r => r.Item == line.Sku).OrderBy(o => o.AreaId).ToList();
-            // All ItemDefinitions have a PickMax value unless it is in Area 8
-            // Area 8 is the option if the PickMax number is reached
-            // If there are multiple ItemDefinitions
-            // We need to know if there is a PickMax rule to follow
-            // If no PickMax rule, pick All from the lowest/first Area
-            if (itemDefs.Count > 0)
+            try
             {
-                var firstItemDef = itemDefs[0];
-                // More than one ItemDefinition
-                // Get the first one
-                itemDef = firstItemDef;
 
-                // PickMax has a value, now we need to see if the Qty to Pick
-                // is larger than the PickMax value
-                // if it is, we'll us the ItemDefinition from the Last ItemDefinition
+                // Let's get all the Areas where the ItemDefinition might be.
+                // For Example it could be in Area 2 with more in Area 8
+                // Return them in Area Order
+                var itemDefs = _repoItemDefinition.FindBy(r => r.Item == line.Sku).OrderBy(o => o.AreaId).ToList();
 
-                if (firstItemDef.PickMax > 0)
+                var tasks = new List<Task>();
+
+                if (itemDefs.Any())
                 {
-                    if (line.Qty > firstItemDef.PickMax)
+                    if (_neutronVariables.UpdateItemDefinitionDescription)
                     {
-                        // It is larger, so Pick from the last ItemDefinition
-                        itemDef = itemDefs.Last();
+                        foreach (var def in itemDefs)
+                        {
+                            if (!def.Description.Equals(line.Des))
+                            {
+                                tasks.Add(_logger.LogDetailAsync($"Update Item Definition Description: {def.Description} TO {line.Des}"));
+                                tasks.Add(_itemDefinitionProcessor.UpdateDescriptionAsync(def, line.Des));
+                            }
+                        }
                     }
                 }
+                await Task.WhenAll(tasks);
 
+                // All ItemDefinitions have a PickMax value unless it is in Area 8
+                // Area 8 is the option if the PickMax number is reached
+                // If there are multiple ItemDefinitions
+                // We need to know if there is a PickMax rule to follow
+                // If no PickMax rule, pick All from the lowest/first Area
+
+                // Create a switch statement based on the number of itemDefs
+                switch (itemDefs.Count)
+                {
+                    case 0:  // No ItemDefinitions found
+                        {
+                            // Create a new ItemDefinition using default values
+                            itemDef = _itemDefinitionProcessor.GetOrCreate(line.Sku, line.Des, AreaEight);
+                            _logger.LogDetailAsync($"New Item Definition: {itemDef.Item} Area: {itemDef.AreaId}").SafeFireAndForget();
+                            break;
+                        }
+                    case 1:
+                        {
+                            // Only one ItemDefinition found, so use it
+                            itemDef = itemDefs.First();
+                            _logger.LogDetailAsync($"One Item Definition: {itemDef.Item} Area: {itemDef.AreaId}").SafeFireAndForget();
+
+                            break;
+                        }
+                    case 2:  // two ItemDefinitions, one should be in Area 1,2,3, or 4
+                             // and one should be in Area 8
+                        {
+                            foreach (var itemDefinition in itemDefs)
+                            {
+                                _logger.LogDetailAsync(
+                                    $"Two Item Definitions -- ItemDefinition Id: {itemDefinition.Id}  Area: {itemDefinition.AreaId}").SafeFireAndForget();
+                            }
+                            // Areas with PickMax parameter
+                            var areaIds = new int[] { 1, 2, 3, 4 };
+                            // The first item in the list of ItemDefinitions (sorted by AreaId)
+                            var itemDefFirst = itemDefs.FirstOrDefault(r => areaIds.Contains(r.AreaId));
+                            if (itemDefFirst != null)
+                            {
+                                itemDef = itemDefFirst;
+                                if (itemDefFirst.PickMax > 0)
+                                {
+                                    // That means we need to see if the quantity to pick 
+                                    // is greater than the PickMax variable
+                                    if (line.Qty > itemDefFirst.PickMax)
+                                    {
+                                        // If it is, then we need to pick from Area Eight
+                                        var areaEightItemDef = itemDefs.FirstOrDefault(r => r.AreaId == AreaEight);
+                                        if (areaEightItemDef != null)
+                                        {
+                                            itemDef = areaEightItemDef;
+                                        }
+                                    }
+                                }
+
+                            }
+                            break;
+                        }
+                    default:
+                        _logger.LogDetailAsync($"Multiple Item Definitions: {itemDefs.Count}").SafeFireAndForget();
+                        foreach (var itemDefinition in itemDefs)
+                        {
+                            _logger.LogDetailAsync(
+                                $"ItemDefinition Id: {itemDefinition.Id}  Area: {itemDefinition.AreaId}").SafeFireAndForget();
+                        }
+
+                        itemDef = itemDefs.FirstOrDefault();
+                        break;
+                }
             }
-
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error getting Item Definition: {ex.Message}").SafeFireAndForget();
+            }
+            
+            _logger.LogDetailAsync(
+                $"Final Answer => Item: {itemDef.Item} ItemDefinition Id: {itemDef.Id}  Area: {itemDef.AreaId}").SafeFireAndForget();
             return itemDef;
         }
 
@@ -509,35 +600,40 @@ namespace NeutronLoader
             // Let's get all the Areas where the ItemDefinition might be.
             var itemDefs = _repoItemDefinition.FindBy(r => r.Item == line.Sku).OrderBy(o => o.AreaId).ToList();
 
-            if (itemDefs.Count == 0)
-            {
-                // create a new ItemDefinition in Area 8 
-                // using default values
-                var newItemDefinition = _jsonData.LoadFile<ItemDefinition>();
-                if (newItemDefinition != null)
-                {
-                    newItemDefinition.Item = line.Sku;
-                    newItemDefinition.Description = line.Des;
+            //if (itemDefs.Count == 0)
+            //{
+            //    // create a new ItemDefinition in Area 8 
+            //    // using default values
+            //    var newItemDefinition = _jsonData.LoadFile<ItemDefinition>();
+            //    if (newItemDefinition != null)
+            //    {
+            //        newItemDefinition.Item = line.Sku;
+            //        newItemDefinition.Description = line.Des;
+            //        newItemDefinition.AreaId = AreaEight;
 
-                }
-                _repoItemDefinition.Insert(newItemDefinition);
-                itemDef = newItemDefinition;
+            //    }
+            //    _repoItemDefinition.Insert(newItemDefinition);
+            //    itemDef = newItemDefinition;
+            //}
+
+            // Create a switch statement based on the number of itemDefs
+            switch (itemDefs.Count)
+            {
+                case 0:
+                    // No ItemDefinitions found
+                    itemDef = _itemDefinitionProcessor.GetOrCreate(line.Sku, line.Des, AreaEight);
+                    break;
+                case 1:
+                    // Only one ItemDefinition found
+                    itemDef = itemDefs.First();
+                    break;
+                default:
+                    // Multiple ItemDefinitions found
+                    itemDef = itemDefs.Last();
+                    break;
             }
 
 
-            // All ItemDefinitions have a PickMax value unless it is in Area 8
-            // Area 8 is the option if the PickMax number is reached
-            // If there are multiple ItemDefinitions
-            // We need to know if there is a PickMax rule to follow
-            // If no PickMax rule, pick All from the lowest/first Area
-            if (itemDefs.Count > 1)
-            {
-                itemDef = itemDefs[1];
-            }
-            else if (itemDefs.Count == 1)
-            {
-                itemDef = itemDefs[0];
-            }
             return itemDef;
         }
 
@@ -552,7 +648,7 @@ namespace NeutronLoader
                 if (recs.Any())
                 {
 
-                    _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
+                    _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.").SafeFireAndForget();
                     foreach (var rec in recs)
                     {
                         var h = new NeutronInput();
@@ -605,7 +701,7 @@ namespace NeutronLoader
                 if (recs.Any())
                 {
 
-                    _ = _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.");
+                    _logger.LogDetailAsync("Counts Match.  " + recs.Count + " Records to Process.").SafeFireAndForget();
                     foreach (var rec in recs)
                     {
                         // Check for existing order
@@ -661,7 +757,7 @@ namespace NeutronLoader
                         outBound.PROCESSED = "Y";
                     }
                     context.SaveChanges();
-                    _ = _logger.LogDetailAsync("Update Outbound to Processed was Successful.");
+                    _logger.LogDetailAsync("Update Outbound to Processed was Successful.").SafeFireAndForget();
                 }
             }
             catch (Exception ex)

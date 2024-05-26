@@ -22,13 +22,13 @@ namespace NeutronData.Repositories
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
-            Init();
+           // Init();
         }
 
-        private void Init()
-        {
-            _logger = NeutronCore.Global.Logger.SetupLogger("GenericRepository");
-        }
+        //private void Init()
+        //{
+        //    _logger = NeutronCore.Global.Logger.SetupLogger("GenericRepository");
+        //}
 
         public IEnumerable<TEntity> All()
         {
@@ -125,6 +125,23 @@ namespace NeutronData.Repositories
             }
         }
 
+        public async Task UpdateAsync(TEntity entity)
+        {
+            try
+            {
+                var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                if (local != null)
+                {
+                    _context.Entry(local).State = EntityState.Detached;
+                }
+                _context.Set<TEntity>().AddOrUpdate(entity);
+               await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Update Error.  {ex.Message}{Environment.NewLine} {ex.InnerException} {Environment.NewLine}{ex.InnerException?.Message}{Environment.NewLine} {ex.InnerException?.InnerException?.Message}").SafeFireAndForget();
+            }
+        }
 
         public void Delete(int id)
         {

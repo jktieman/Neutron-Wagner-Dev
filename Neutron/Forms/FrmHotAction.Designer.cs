@@ -235,7 +235,7 @@
             this.HotPick.Controls.Add(this.DataGridViewHot);
             this.HotPick.Location = new System.Drawing.Point(4, 22);
             this.HotPick.Name = "HotPick";
-            this.HotPick.Size = new System.Drawing.Size(1235, 682);
+            this.HotPick.Size = new System.Drawing.Size(1235, 674);
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
             // 
@@ -248,26 +248,29 @@
             this.LabelScanLocation.TabIndex = 33;
             this.LabelScanLocation.Text = "Scan Location";
             this.LabelScanLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelScanLocation.Visible = false;
             // 
             // LabelStationName2
             // 
-            this.LabelStationName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName2.Location = new System.Drawing.Point(905, 113);
+            this.LabelStationName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStationName2.Location = new System.Drawing.Point(827, 113);
             this.LabelStationName2.Name = "LabelStationName2";
-            this.LabelStationName2.Size = new System.Drawing.Size(315, 40);
+            this.LabelStationName2.Size = new System.Drawing.Size(393, 40);
             this.LabelStationName2.TabIndex = 32;
             this.LabelStationName2.Text = "Floor Supervisor";
             this.LabelStationName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelStationName2.Click += new System.EventHandler(this.LabelStationName2_Click);
             // 
             // LabelStationName
             // 
-            this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelStationName.Location = new System.Drawing.Point(12, 113);
             this.LabelStationName.Name = "LabelStationName";
-            this.LabelStationName.Size = new System.Drawing.Size(315, 40);
+            this.LabelStationName.Size = new System.Drawing.Size(393, 40);
             this.LabelStationName.TabIndex = 32;
             this.LabelStationName.Text = "Floor Supervisor";
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelStationName.Click += new System.EventHandler(this.LabelStationName_Click);
             // 
             // CheckBoxAll
             // 
@@ -331,6 +334,7 @@
             this.TextBoxScanLocation.Size = new System.Drawing.Size(165, 29);
             this.TextBoxScanLocation.TabIndex = 10;
             this.TextBoxScanLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxScanLocation.Visible = false;
             this.TextBoxScanLocation.Click += new System.EventHandler(this.TextBoxScanLocation_Click);
             this.TextBoxScanLocation.TextChanged += new System.EventHandler(this.TextBoxScanLocation_TextChanged);
             this.TextBoxScanLocation.Enter += new System.EventHandler(this.TextBoxScanLocation_Enter);
@@ -486,7 +490,6 @@
             this.HotAction.Size = new System.Drawing.Size(1235, 674);
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
-            this.HotAction.Enter += new System.EventHandler(this.HotAction_Enter);
             // 
             // GroupBoxHotPickLocation
             // 
@@ -681,7 +684,6 @@
             this.TextBoxLocationCode.Size = new System.Drawing.Size(149, 22);
             this.TextBoxLocationCode.TabIndex = 5;
             this.TextBoxLocationCode.TabStop = false;
-            this.TextBoxLocationCode.Text = "1231231231231239";
             this.TextBoxLocationCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxHotPickLocationQuantity
@@ -897,9 +899,9 @@
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonScrap);
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonWarranty);
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonPick);
-            this.GroupBoxHotActions.Location = new System.Drawing.Point(15, 152);
+            this.GroupBoxHotActions.Location = new System.Drawing.Point(1180, 130);
             this.GroupBoxHotActions.Name = "GroupBoxHotActions";
-            this.GroupBoxHotActions.Size = new System.Drawing.Size(914, 93);
+            this.GroupBoxHotActions.Size = new System.Drawing.Size(34, 93);
             this.GroupBoxHotActions.TabIndex = 0;
             this.GroupBoxHotActions.TabStop = false;
             this.GroupBoxHotActions.Text = "Transaction Type";
@@ -921,9 +923,6 @@
             this.TextBoxFindCostCenter.Name = "TextBoxFindCostCenter";
             this.TextBoxFindCostCenter.Size = new System.Drawing.Size(138, 29);
             this.TextBoxFindCostCenter.TabIndex = 0;
-            this.TextBoxFindCostCenter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindCostCenter_KeyDown);
-            this.TextBoxFindCostCenter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxFindCostCenter_KeyPress);
-            this.TextBoxFindCostCenter.Leave += new System.EventHandler(this.TextBoxFindCostCenter_Leave);
             // 
             // ComboBoxCostCenter
             // 
@@ -936,7 +935,6 @@
             this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
             this.ComboBoxCostCenter.Size = new System.Drawing.Size(497, 32);
             this.ComboBoxCostCenter.TabIndex = 1;
-            this.ComboBoxCostCenter.TextChanged += new System.EventHandler(this.ComboBoxCostCenter_TextChanged);
             // 
             // RadioButtonCostCenter
             // 
@@ -963,7 +961,6 @@
             this.RadioButtonOther.Tag = "Other";
             this.RadioButtonOther.Text = "Other";
             this.RadioButtonOther.UseVisualStyleBackColor = false;
-            this.RadioButtonOther.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
             // 
             // RadioButtonScrap
             // 
@@ -976,7 +973,6 @@
             this.RadioButtonScrap.Tag = "Scrap";
             this.RadioButtonScrap.Text = "Scrap";
             this.RadioButtonScrap.UseVisualStyleBackColor = false;
-            this.RadioButtonScrap.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
             // 
             // RadioButtonWarranty
             // 
@@ -989,7 +985,6 @@
             this.RadioButtonWarranty.Tag = "Warranty";
             this.RadioButtonWarranty.Text = "Warranty";
             this.RadioButtonWarranty.UseVisualStyleBackColor = false;
-            this.RadioButtonWarranty.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
             // 
             // RadioButtonPick
             // 
@@ -1002,7 +997,6 @@
             this.RadioButtonPick.Tag = "Pick";
             this.RadioButtonPick.Text = "Pick";
             this.RadioButtonPick.UseVisualStyleBackColor = false;
-            this.RadioButtonPick.CheckedChanged += new System.EventHandler(this.RadioButtonHotAction);
             // 
             // TextBoxHotPickQuantity
             // 

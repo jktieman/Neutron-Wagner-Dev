@@ -27,6 +27,10 @@ namespace EthernetTransmitter
     {
         private readonly string _ipAddress;
         private readonly int _port;
+        private readonly int _transmitDelay;
+        public CancellationTokenSource _cancellationTokenSource { get; set; }
+        public CancellationToken _cancellationToken { get; set; }
+        public object sendLock { get; set; }
 
         public string ClientIpPort;
         /// <summary>
@@ -51,16 +55,18 @@ namespace EthernetTransmitter
         /// </summary>
         /// <param name="ipAddress">The IP address of the server.</param>
         /// <param name="port">The port number on which the server is listening.</param>
+        /// <param name="transmitDelay"></param>
         /// <remarks>
         /// This constructor sets up a TCP server at the specified IP address and port.
         /// It also subscribes to various server events such as ClientConnected, ClientDisconnected, DataReceived, and DataSent.
         /// If the IP address is null or whitespace, or if the port is 0, the constructor returns without setting up the server.
         /// Any exceptions that occur during the setup are logged and then rethrown.
         /// </remarks>
-        public TcpTransmitter(string ipAddress, int port)
+        public TcpTransmitter(string ipAddress, int port, int transmitDelay)
         {
             _ipAddress = ipAddress;
             _port = port;
+            _transmitDelay = transmitDelay;
 
             Init();
         }
@@ -89,12 +95,13 @@ namespace EthernetTransmitter
                 _server.Events.ClientDisconnected += Events_ClientDisconnected;
                 _server.Events.DataReceived += Events_DataReceived;
                 _server.Events.DataSent += Events_DataSent;
-                _server.Start();
 
-                //if (_server.IsListening)
-                //{
-                //    MonitorIsClientConnected();    
-                //}
+                _server.Keepalive.EnableTcpKeepAlives = true;
+                _server.Keepalive.TcpKeepAliveInterval = 5;      // seconds to wait before sending subsequent keepalive
+                _server.Keepalive.TcpKeepAliveTime = 5;          // seconds to wait before sending a keepalive
+                _server.Keepalive.TcpKeepAliveRetryCount = 5;    // number of failed keepalive probes before terminating connection
+
+                _server.Start();
 
             }
 
@@ -103,7 +110,6 @@ namespace EthernetTransmitter
                 _logger.LogDetailAsync($"Startup Exception: {ex.Message}").SafeFireAndForget();
             }
         }
-
 
         public void CloseConnection()
         {
@@ -165,7 +171,7 @@ namespace EthernetTransmitter
         private async Task ProcessDataReceived(string text)
         {
             var now = DateTime.Now;
-            _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED TEXT: {text}").SafeFireAndForget();
+            await _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED TEXT: {text}");
             if (string.IsNullOrEmpty(text)) return;
 
             try
@@ -220,22 +226,23 @@ namespace EthernetTransmitter
 
         private async void Events_ClientDisconnected(object sender, ConnectionEventArgs e)
         {
-            _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Disconnected Reason: {e.Reason}").SafeFireAndForget();
+            _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Disconnected ").SafeFireAndForget();
             IsClientConnected = false;
+            await Task.Delay(10, _cancellationToken);
             Mediator.GetInstance().OnTransmitStateChanged(this, false);
         }
 
         private async void Events_ClientConnected(object sender, ConnectionEventArgs e)
         {
             ClientIpPort = e.IpPort;
-            _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Connected -- Disconnect Reason: {e.Reason}").SafeFireAndForget();
+            _logger.LogDetailAsync($"IP Port: [{e.IpPort}] Client Connected ").SafeFireAndForget();
             IsClientConnected = true;
+            await Task.Delay(10, _cancellationToken);
             Mediator.GetInstance().OnTransmitStateChanged(this, true);
         }
 
         public async Task SendDataAsync(string value, bool isAck = false)
         {
-            var timeOut = 200;
             var counter = 0;
             _logger.LogDetailAsync($"Send Data Value: {value}").SafeFireAndForget();
             try
@@ -275,7 +282,7 @@ namespace EthernetTransmitter
                             {
                                 _logger.LogDetailAsync($"Client is Connected: TRUE  IP:PORT: {ClientIpPort}")
                                     .SafeFireAndForget();
-                                await _server.SendAsync(ClientIpPort, command);
+                                await _server.SendAsync(ClientIpPort, command, _cancellationToken);
 
                                 _logger.LogDetailAsync(
                                         $"SendData Command: {command.StringToByteArray().ByteArrayToHexString()}{Environment.NewLine}")
@@ -296,19 +303,17 @@ namespace EthernetTransmitter
                     {
                         var now = DateTime.Now;
                         _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED _currentCommand Still has Value: {_currentCommand}.  New Command Value: {value}  -- Waiting 20MS").SafeFireAndForget();
-                        await Task.Delay(20);
-                        counter += 20;
-                        if (counter >= timeOut)
+                        await Task.Delay(10, _cancellationToken);
+                        counter += 10;
+                        if (counter >= _transmitDelay)
                         {
                             // Mediator.GetInstance().OnGeneralError(this, $"Display Number {_currentCommand} is not responding.");
                             _currentCommand = string.Empty;
                             now = DateTime.Now;
                             _logger.LogDetailAsync($"{now.Second}:{now.Millisecond}  PROCESS DATA RECEIVED _currentCommand Still has Value: {_currentCommand}. Breaking Out of Process.").SafeFireAndForget();
-                           // break;
+                            // break;
                         }
                     }
-
-                    
                 }
             }
             catch (SocketException ex)
@@ -362,10 +367,11 @@ namespace EthernetTransmitter
 
         private async Task MonitorIsClientConnected()
         {
-            while (_server.IsListening)
+            // while (_server.IsListening)
+            while (IsClientConnected)
             {
                 // Simulate some work or condition to check the variable
-                Thread.Sleep(5000);
+                await Task.Delay(5000, _cancellationToken);
                 Mediator.GetInstance().OnIsClientConnected(this, IsClientConnected);
             }
         }

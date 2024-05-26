@@ -13,6 +13,7 @@ using RJCP.IO.Ports;
 using HanelCommands;
 using HanelCommands.Builders;
 using NeutronEvents;
+using AsyncAwaitBestPractices;
 
 namespace Hanel_DC
 {
@@ -76,7 +77,7 @@ namespace Hanel_DC
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("SerialPortData");
-            _ = _logger.LogDetailAsync("Hanel MP12D Serial Port Monitor Startup");
+            _logger.LogDetailAsync("Hanel MP12D Serial Port Monitor Startup").SafeFireAndForget();
             InitSerialPort();
             _hanelCommandService = new HanelCommandService(_currentHanelDeviceStatusList.Count, _currentHanelDeviceStatusList);
             Task.Run(StartPollingAsync);
@@ -110,7 +111,7 @@ namespace Hanel_DC
                     _serialPort?.Open();
                     if (_serialPort != null && _serialPort.IsOpen)
                     {
-                        _ = _logger.LogDetailAsync("Startup Success");
+                        _logger.LogDetailAsync("Startup Success").SafeFireAndForget();
                         ShowData("Startup Success");
                         _readMp12DThread = new Thread(ReadMp12D);
                         RaiseSerialDataEvent += ProcessMp12DData;
@@ -120,20 +121,20 @@ namespace Hanel_DC
                 }
                 catch (Exception ex)
                 {
-                    _ = _logger.LogDetailAsync($"Open Serial Port Exception: {ex.Message}");
+                    _logger.LogDetailAsync($"Open Serial Port Exception: {ex.Message}").SafeFireAndForget();
                     try
                     {
                         _serialPort?.Close();
                     }
                     catch (Exception e)
                     {
-                        _ = _logger.LogDetailAsync($"Close Exception: {e.Message}");
+                        _logger.LogDetailAsync($"Close Exception: {e.Message}").SafeFireAndForget();
                     }
 
                     Thread.Sleep(500);
 
                     _cError = $"TRY: {i}  :SerialPort Open Exception: {ex.Message}";
-                    _ = _logger.LogDetailAsync($"Startup Fail: {Environment.NewLine} {_cError}");
+                    _logger.LogDetailAsync($"Startup Fail: {Environment.NewLine} {_cError}").SafeFireAndForget();
                 }
             }
 
@@ -163,7 +164,7 @@ namespace Hanel_DC
                         try
                         {
                            // ShowData($"---------------------Complete MP12D Response------------------------");
-                            _ = _logger.LogDetailAsync($"MP12D Response: {_dataIn.ByteArrayToHexString()}");
+                            _logger.LogDetailAsync($"MP12D Response: {_dataIn.ByteArrayToHexString()}").SafeFireAndForget();
 
                             ProcessDataIn(_dataIn);
                             //  var response = ProcessResponse(_dataIn);
@@ -183,7 +184,7 @@ namespace Hanel_DC
                         catch (Exception ex)
                         {
                             ShowData($"04 Error Message: {ex.Message}");
-                            _ = _logger.LogDetailAsync("04 Error Message: {ex.Message}");
+                            _logger.LogDetailAsync("04 Error Message: {ex.Message}").SafeFireAndForget();
                         }
                     }
 
@@ -280,7 +281,7 @@ namespace Hanel_DC
 
         private void ShowData(string message)
         {
-            Mediator.GetInstance().OnWorkItMessageChng(new WorkItEventArgs(message));
+           // Mediator.GetInstance().OnWorkItMessageChng(new WorkItEventArgs(message));
 
 
 
@@ -303,7 +304,7 @@ namespace Hanel_DC
                 {
                     _lastMessageSent = message;
                 }
-                _ = _logger.LogDetailAsync($"Send to Hanel: {message.ByteArrayToHexString()}");
+                _logger.LogDetailAsync($"Send to Hanel: {message.ByteArrayToHexString()}").SafeFireAndForget();
                 ShowData(message.ByteArrayToString());
                 if (IsPortOpen)
                 {
@@ -312,13 +313,13 @@ namespace Hanel_DC
                 }
                 else
                 {
-                    _ = _logger.LogDetailAsync("Serial Port is Closed.");
+                    _logger.LogDetailAsync("Serial Port is Closed.").SafeFireAndForget();
                 }
 
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"SendData Error: {ex.Message}");
+                _logger.LogDetailAsync($"SendData Error: {ex.Message}").SafeFireAndForget();
                 throw;
             }
             return result;
@@ -333,18 +334,18 @@ namespace Hanel_DC
         {
             try
             {
-                _ = _logger.LogDetailAsync("Begin Stop");
+                _logger.LogDetailAsync("Begin Stop").SafeFireAndForget();
                 _continue = false;
                 CancelPolling = true;
                 _readMp12DThread?.Abort();
                 _serialPort?.Close();
 
-                _ = _logger.LogDetailAsync("End Stop");
+                _logger.LogDetailAsync("End Stop").SafeFireAndForget();
                 ShowData("End Stop");
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Exception: {ex.Message}");
+                _logger.LogDetailAsync($"Exception: {ex.Message}").SafeFireAndForget();
 
             }
         }
@@ -375,7 +376,7 @@ namespace Hanel_DC
 
                 if (commandString.Contains("BE"))
                 {
-                    _ = _logger.LogDetailAsync($"Contains BE: {commandString}");
+                    _logger.LogDetailAsync($"Contains BE: {commandString}").SafeFireAndForget();
                     //_cancelPolling = true;
                     //Thread.Sleep(500);
                     // var response = $"{AST}{CR}{LF}";
@@ -385,7 +386,7 @@ namespace Hanel_DC
                 }
                 else
                 {
-                    _ = _logger.LogDetailAsync($"Does NOT Contain BE: {commandString}");
+                    _logger.LogDetailAsync($"Does NOT Contain BE: {commandString}").SafeFireAndForget();
                     return;
                 }
             }
@@ -405,13 +406,13 @@ namespace Hanel_DC
             //device = _currentTrayStatusList.FirstOrDefault(r => r.DeviceNumber == int.Parse(lift));
             DumpStatus();
 
-            _ = _logger.LogDetailAsync($"DataIn to Process: {commandString}");
+            _logger.LogDetailAsync($"DataIn to Process: {commandString}").SafeFireAndForget();
             var sb = new StringBuilder();
             //var response = _hanelCommandService.GetResponse(dataIn);
 
             if (commandString.Contains("BE"))
             {
-                _ = _logger.LogDetailAsync($"Contains BE");
+                _logger.LogDetailAsync($"Contains BE").SafeFireAndForget();
                 //_cancelPolling = true;
                 //response = $"{AST}{CR}{LF}";
                 //SendData(response.StringToByteArray());
@@ -442,7 +443,7 @@ namespace Hanel_DC
                 sb.AppendLine($"--------------------------------------------------");
                 sb.AppendLine();
 
-                _logger.LogDetailAsync(sb.ToString());
+                _logger.LogDetailAsync(sb.ToString()).SafeFireAndForget(); 
 
                 //ShowData($"{sb.ToString()}");
             }
@@ -519,21 +520,21 @@ namespace Hanel_DC
 
                 if (activePoll)
                 {
-                    await _logger.LogDetailAsync($"Active Polling Started");
+                    _logger.LogDetailAsync($"Active Polling Started").SafeFireAndForget(); 
                     //while (true)
                     //{
-                    await _logger.LogDetailAsync($"Neutron Polling : Start While Loop ActivePoll: {activePoll}");
+                    _logger.LogDetailAsync($"Neutron Polling : Start While Loop ActivePoll: true").SafeFireAndForget();
 
 
                     var response = $"{AST}{CR}{LF}";
                     SendData(response.StringToByteArray());
                     ShowData($"Neutron Polling : {response}");
                     //await Task.Delay(2000);
-                    await _logger.LogDetailAsync($"Neutron Polling : {response}");
+                    _logger.LogDetailAsync($"Neutron Polling : {response}").SafeFireAndForget();
                     //}
                 }
                 await Task.Delay(10000);
-                await _logger.LogDetailAsync($"Active Polling Wait 2 seconds ActivePoll : {activePoll}");
+                _logger.LogDetailAsync($"Active Polling Wait 2 seconds ActivePoll : {activePoll}").SafeFireAndForget();
 
                 //if (CancelPolling) break;
             }
@@ -544,11 +545,11 @@ namespace Hanel_DC
 
         public void Dispose()
         {
-            _ = _logger.LogDetailAsync($"Dispose of SerialPort Begin");
+            _logger.LogDetailAsync($"Dispose of SerialPort Begin").SafeFireAndForget();
 
             _serialPort?.Dispose();
 
-            _ = _logger.LogDetailAsync($"Dispose of SerialPort End");
+            _logger.LogDetailAsync($"Dispose of SerialPort End").SafeFireAndForget();
 
         }
     }

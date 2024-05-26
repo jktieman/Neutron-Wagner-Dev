@@ -12,7 +12,7 @@ namespace JsonManager
         
         public JsonData()
         {
-            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\");
+            _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\");
            
             if (!Directory.Exists(_rootDirectory))
             {

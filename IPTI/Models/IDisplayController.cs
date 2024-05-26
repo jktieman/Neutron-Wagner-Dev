@@ -23,12 +23,13 @@ namespace IPTI.Models
         
         Task ShowBli(IptiBli bli);
         Task ClearBli(IptiBli bli);
-        int GetInitStatus();
+        bool GetInitStatus();
        // void ShowOc(int address, int beacon, string text);
         Task ShowOc(int bayControllerId, int address, int beacon, string text);
         Task ClearOcAsync(int bayControllerId, int address);
         Task ShowShi(int device, int bin, int level, string part, string text);
         Task ShowShiAsync(IptiShi shi);
         Task ClearShi(IptiShi shi);
+        void DisposeServer();
     }
 }

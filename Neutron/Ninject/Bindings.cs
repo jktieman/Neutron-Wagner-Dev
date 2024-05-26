@@ -103,6 +103,7 @@ namespace Neutron.Ninject
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
             Bind<IDisplayController>().To<TcpIptiController>().InSingletonScope();
+           // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
             //Bind<ISapService>().To<SAPService>().InSingletonScope();
         }

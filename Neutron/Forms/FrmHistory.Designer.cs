@@ -278,17 +278,15 @@
             // 
             // MBHistoryTransmitSelected
             // 
-            this.MBHistoryTransmitSelected.Enabled = false;
             this.MBHistoryTransmitSelected.FontSize = MetroFramework.MetroButtonSize.Tall;
             this.MBHistoryTransmitSelected.Location = new System.Drawing.Point(489, 47);
             this.MBHistoryTransmitSelected.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBHistoryTransmitSelected.Name = "MBHistoryTransmitSelected";
             this.MBHistoryTransmitSelected.Size = new System.Drawing.Size(206, 37);
             this.MBHistoryTransmitSelected.TabIndex = 4;
-            this.MBHistoryTransmitSelected.Text = "Transmit Selected";
+            this.MBHistoryTransmitSelected.Text = "Re-Transmit Selected";
             this.MBHistoryTransmitSelected.UseSelectable = true;
-            this.MBHistoryTransmitSelected.Visible = false;
-            this.MBHistoryTransmitSelected.Click += new System.EventHandler(this.MBSaveHistory_Click);
+            this.MBHistoryTransmitSelected.Click += new System.EventHandler(this.MBHistoryTransmitSelected_Click);
             // 
             // MBSaveHistory
             // 
@@ -326,6 +324,7 @@
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
             this.DataGridView1.RowTemplate.Height = 24;
+            this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1000, 500);
             this.DataGridView1.TabIndex = 0;
             // 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using EthernetTransmitter;
 using JsonManager;
 using NeutronCore.Extensions;
@@ -48,9 +49,9 @@ namespace IPTI.Models
         private readonly NeutronVariables _neutronVariables;
         private readonly HardwareDevice _hardwareDevice;
         private readonly TcpConfiguration _tcpConfiguration;
+        private readonly IptiConfig _iptiConfig;
+
         private readonly IJsonData _jsonData;
-        //private readonly GenericRepository<TcpConfiguration> _repoTcp = new GenericRepository<TcpConfiguration>(new NeutronDb());
-        // private readonly GenericRepository<HardwareDevice> _repoHardwareDevice = new GenericRepository<HardwareDevice>(new NeutronDb());
 
         private IptiResponseManager _responseManager;
 
@@ -61,7 +62,9 @@ namespace IPTI.Models
 
         private IDynamicLogger _logger;
 
-        private TcpTransmitter _transmitter;
+       // private TcpTransmitter _transmitter;
+
+        private TcpServer _tcpServer;
 
         public bool TcpIptiControllerEnabled = true;
 
@@ -74,12 +77,13 @@ namespace IPTI.Models
         public event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         public bool Ready { get; set; }
         public TcpIptiController(IJsonData jsonData, WorkstationView workstationView, NeutronVariables neutronVariables,
-            HardwareDevice hardwareDevice, TcpConfiguration tcpConfiguration)
+            HardwareDevice hardwareDevice, TcpConfiguration tcpConfiguration, IptiConfig iptiConfig)
         {
             _workstationView = workstationView;
             _neutronVariables = neutronVariables;
-            _hardwareDevice = hardwareDevice;
+            _hardwareDevice = _workstationView.BatchTable;  
             _tcpConfiguration = tcpConfiguration;
+            _iptiConfig = iptiConfig;
             _jsonData = jsonData;
             _bliEnabled = _hardwareDevice.Enabled;
             _shiEnabled = _neutronVariables.ShiEnabled;
@@ -99,27 +103,27 @@ namespace IPTI.Models
                     ReceivedBlockingCollection)
             { Transmit = false };
 
-            //_tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView );
-
             IptiControllerInit();
         }
 
-        public async Task SendText(string text)
+        public Task SendText(string text)
         {
-            if (!_bliEnabled) return;
 
-            _ = _logger.LogDetailAsync($"IPTI Controller - Text: {text}");
+            _logger.LogDetailAsync($"IPTI Controller - Text: {text}").SafeFireAndForget();
 
-            if (_transmitter.IsClientConnected)
+
+            if (_tcpServer != null)
             {
-               await _transmitter.SendDataAsync(text);
+                _tcpServer.SendData(text);
+                Task.Delay(_iptiConfig.TransmitDelay).Wait();
             }
             else
             {
-                _ = _logger.LogDetailAsync($"Interface Client is Not Connected.");
+                _logger.LogDetailAsync($"Interface Client is Not Connected.").SafeFireAndForget();
 
             }
-            _ = _logger.LogDetailAsync($"IPTI Controller - SendText - END");
+            _logger.LogDetailAsync($"IPTI Controller - SendText - END").SafeFireAndForget();
+            return Task.CompletedTask;
         }
 
         public void SetTransmit(bool value)
@@ -136,48 +140,46 @@ namespace IPTI.Models
                 ReceivedBlockingCollection.CompleteAdding();
                 ResponseBlockingCollection.CompleteAdding();
                 RequestBlockingCollection.CompleteAdding();
-                _transmitter.CloseConnection();
             }
             catch (Exception ex)
             {
-                _ = Task.Run(() => _logger.LogDetailAsync($"Close TCP Port Exception: {ex.Message}{Environment.NewLine}{ex.InnerException}"));
+                _logger.LogDetailAsync($"Close TCP Port Exception: {ex.Message}{Environment.NewLine}{ex.InnerException}").SafeFireAndForget();
             }
         }
         public async Task TurnOnAllBli()
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - START");
-            await _transmitter.SendDataAsync($"{_bliController}{TurnAllOn02}");
-            _ = _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END");
+            _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - START").SafeFireAndForget();
+            //await _transmitter.SendDataAsync($"{_bliController}{TurnAllOn02}");
+            _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END").SafeFireAndForget();
         }
         public async Task TurnOnAllBlastzones()
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - START");
+            _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - START").SafeFireAndForget();
             foreach (var bayController in _blastzoneControllers)
             {
                 var bayId = bayController.ToString().PadLeft(2, '0');
                 // await _transmitter.SendData($"{bayId}{TurnAllOn02}");
 
-               await _transmitter.SendDataAsync($"{bayId}{TurnAllOn02}");
+                //await _transmitter.SendDataAsync($"{bayId}{TurnAllOn02}");
 
             }
-            _ = _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END");
+            _logger.LogDetailAsync($"IPTI Controller - Turn On All BLI - END").SafeFireAndForget();
         }
-
         public async Task ClearAllBli()
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START  {DateTime.Now.ToLongTimeString()}");
+            _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - START  {DateTime.Now.ToLongTimeString()}").SafeFireAndForget();
             if (!_bliEnabled)
             {
-                _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI NOT Enabled");
+                _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - BLI NOT Enabled").SafeFireAndForget();
                 return;
             }
             var bayIds = new List<string> { "01", "02", "03", "04" };
 
             foreach (var bayId in bayIds)
             {
-               await _transmitter.SendDataAsync($"{bayId}{TurnAllOff14}");
+               // await _transmitter.SendDataAsync($"{bayId}{TurnAllOff14}");
             }
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END  {DateTime.Now.ToLongTimeString()}");
+            _logger.LogDetailAsync($"IPTI Controller - Clear All BLI - END  {DateTime.Now.ToLongTimeString()}").SafeFireAndForget();
         }
         public async Task ClearAllShi()
         {
@@ -187,78 +189,78 @@ namespace IPTI.Models
                 for (var j = 1; j < 5; j++)
                 {
                     var cmd = i.ToString().PadLeft(2, '0') + "39" + j.ToString().PadLeft(2, '0');
-                    await _transmitter.SendDataAsync(cmd);
+                   // await _transmitter.SendDataAsync(cmd);
                 }
             }
         }
         public async Task ShowShiAsync(IptiShi shi)
         {
-           await _transmitter.SendDataAsync(shi.TurnOn());
-            _ = _logger.LogDetailAsync($"ShowShi  Turning ON BayId: {shi.BayId}  Display: {shi.DisplayId}");
+           // await _transmitter.SendDataAsync(shi.TurnOn());
+            _logger.LogDetailAsync($"ShowShi  Turning ON BayId: {shi.BayId}  Display: {shi.DisplayId}").SafeFireAndForget();
         }
         public async Task ClearShi(IptiShi shi)
         {
             if (_shiEnabled)
             {
-               await _transmitter.SendDataAsync(shi.TurnOff());
-                _ = _logger.LogDetailAsync($"ClearShi Turning OFF BayId: {shi.BayId}  Display: {shi.DisplayId}");
+               // await _transmitter.SendDataAsync(shi.TurnOff());
+                _logger.LogDetailAsync($"ClearShi Turning OFF BayId: {shi.BayId}  Display: {shi.DisplayId}").SafeFireAndForget();
             }
         }
         public async Task ShowBlastzone(int bayControllerId, int address, int beacon, string text)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show Blastzone - START");
+            _logger.LogDetailAsync($"IPTI Controller - Show Blastzone - START").SafeFireAndForget();
             if (!_bliEnabled) return;
             var bli = new IptiBli(bayControllerId, address, beacon, text);
             await ShowBli(bli);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show Blastzone - END");
+            _logger.LogDetailAsync($"IPTI Controller - Show Blastzone - END").SafeFireAndForget();
         }
         public async Task ClearBlastzone()
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone - START");
+            _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone - START").SafeFireAndForget();
             if (!_bliEnabled) return;
             foreach (var bayController in _blastzoneControllers)
             {
                 var bayId = bayController.ToString().PadLeft(2, '0');
-               await _transmitter.SendDataAsync($"{bayId}{TurnAllOff14}");
+              //  await _transmitter.SendDataAsync($"{bayId}{TurnAllOff14}");
                 Thread.Sleep(100);
             }
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone - END");
+            _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone - END").SafeFireAndForget();
         }
         public async Task ShowBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show Blastzone OC - START");
+            _logger.LogDetailAsync($"IPTI Controller - Show Blastzone OC - START").SafeFireAndForget();
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
             if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}");
+            _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}").SafeFireAndForget();
             var cmd = bayId + DisplayOc + "0100" + text;
-            await _transmitter.SendDataAsync(cmd);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show Blastzone OC - END");
+           // await _transmitter.SendDataAsync(cmd);
+            _logger.LogDetailAsync($"IPTI Controller - Show Blastzone OC - END").SafeFireAndForget();
         }
         public async Task ClearBlastzoneOc(int bayControllerId, int address, int beacon, string text)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone OC - START");
+            _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone OC - START").SafeFireAndForget();
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
             if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}");
+            _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}").SafeFireAndForget();
             var cmd = bayId + DisplayOc + "0100" + "            ";
-           await _transmitter.SendDataAsync(cmd);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone OC - END");
+         //   await _transmitter.SendDataAsync(cmd);
+            _logger.LogDetailAsync($"IPTI Controller - Clear Blastzone OC - END").SafeFireAndForget();
         }
         public async Task ShowBli(int bayControllerId, int address, int beacon, string text)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - START");
+            _logger.LogDetailAsync($"IPTI Controller - Show BLI - START").SafeFireAndForget();
             if (!_bliEnabled) return;
             var bli = new IptiBli(bayControllerId, address, beacon, text);
             await ShowBli(bli);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - END");
+            _logger.LogDetailAsync($"IPTI Controller - Show BLI - END").SafeFireAndForget();
         }
         public async Task ShowBli(int address, int beacon, string text)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - START");
+            _logger.LogDetailAsync($"IPTI Controller - Show BLI - START").SafeFireAndForget();
             if (!_bliEnabled) return;
             var bli = new IptiBli(_bliController.ParseInt(), address, beacon, text);
             await ShowBli(bli);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show BLI - END");
+            _logger.LogDetailAsync($"IPTI Controller - Show BLI - END").SafeFireAndForget();
         }
         public async Task ShowBli(IptiBli bli)
         {
@@ -274,48 +276,49 @@ namespace IPTI.Models
         }
         public async Task ClearOcAsync(int bayControllerId, int address)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear OC - START");
+            _logger.LogDetailAsync($"IPTI Controller - Clear OC - START").SafeFireAndForget();
 
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
             if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}");
+            _logger.LogDetailAsync($"Ipti OC Clear: BayController: {bayControllerId} Address: {address}").SafeFireAndForget();
             var cmd = bayId + DisplayOc + "0100" + "            ";
-             await _transmitter.SendDataAsync(cmd);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear OC - END");
+          //  await _transmitter.SendDataAsync(cmd);
+            _logger.LogDetailAsync($"IPTI Controller - Clear OC - END").SafeFireAndForget();
         }
         public async Task ShowOc(int bayControllerId, int address, int beacon, string text)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show OC - START");
+            _logger.LogDetailAsync($"IPTI Controller - Show OC - START").SafeFireAndForget();
             var bayId = bayControllerId.ToString().PadLeft(2, '0');
             if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}");
+            _logger.LogDetailAsync($"Ipti OC Show:  BayController: {bayControllerId} Address: {address}").SafeFireAndForget();
             var cmd = bayId + DisplayOc + "0100" + text;
-            await _transmitter.SendDataAsync(cmd);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Show OC - END");
+          //  await _transmitter.SendDataAsync(cmd);
+            _logger.LogDetailAsync($"IPTI Controller - Show OC - END").SafeFireAndForget();
         }
         public async Task ShowShi(int device, int bin, int level, string part, string text)
         {
             if (!_shiEnabled) return;
-            _ = _logger.LogDetailAsync($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}");
+            _logger.LogDetailAsync($"ShowShi -- Device: {device}  Bin: {bin}  Level: {level}  Part: {part}  Text: {text}").SafeFireAndForget();
             var towerLevelInfo = GetShiAddress(device, level);
             var shi = new IptiShi(towerLevelInfo, _lBeacon, _rBeacon, part, text);
-            await _transmitter.SendDataAsync(shi.TurnOn());
+           // await _transmitter.SendDataAsync(shi.TurnOn());
         }
         public async Task ClearBli(IptiBli bli)
         {
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear BLI - START");
+            _logger.LogDetailAsync($"IPTI Controller - Clear BLI - START").SafeFireAndForget();
             if (!_bliEnabled) return;
-            _ = _logger.LogDetailAsync($"BLI Clear Single Display:  BayController: {bli.BLI_BayController}  {bli.BLI_Address}");
-            await _transmitter.SendDataAsync(bli.TurnOff);
-            _ = _logger.LogDetailAsync($"IPTI Controller - Clear BLI - END");
+            _logger.LogDetailAsync($"BLI Clear Single Display:  BayController: {bli.BLI_BayController}  {bli.BLI_Address}").SafeFireAndForget();
+          //  await _transmitter.SendDataAsync(bli.TurnOff);
+            _logger.LogDetailAsync($"IPTI Controller - Clear BLI - END").SafeFireAndForget();
         }
-        public int GetInitStatus()
+
+        public bool GetInitStatus()
         {
-            if (_transmitter.IsClientConnected)
-            {
-                return 0;
-            }
-            return 1;
+            if (_tcpServer == null) return false;
+
+            // if (_transmitter.IsClientConnected)
+            var clientList = _tcpServer.ListClients();
+            return clientList.Any();
         }
         private void FillBliList()
         {
@@ -324,67 +327,67 @@ namespace IPTI.Models
                 _bliList.Add(new IptiBli(_bliController.ParseInt(), i, 0, i.ToString()));
             }
         }
-        private async Task StartTransmission()
-        {
-            _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
+        //private async Task StartTransmission()
+        //{
+        //    _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - Start");
 
-            while (Transmit)
-            {
-                try
-                {
-                    if (_transmitter.IsClientConnected)
-                    {
-                        foreach (var request in RequestBlockingCollection.GetConsumingEnumerable(Token.Token))
-                        {
-                            if (Token.IsCancellationRequested)
-                            {
-                                _ = _logger.LogDetailAsync($"Start Transmission Cancellation Requested.");
-                                return;
-                            }
+        //    while (Transmit)
+        //    {
+        //        try
+        //        {
+        //            if (_transmitter.IsClientConnected)
+        //            {
+        //                foreach (var request in RequestBlockingCollection.GetConsumingEnumerable(Token.Token))
+        //                {
+        //                    if (Token.IsCancellationRequested)
+        //                    {
+        //                        _ = _logger.LogDetailAsync($"Start Transmission Cancellation Requested.");
+        //                        return;
+        //                    }
 
-                            _ = _logger.LogDetailAsync($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
+        //                    _ = _logger.LogDetailAsync($"IPTI Controller - Start Transmission - RequestBlockingCollection Loop: {request.ByteArrayToStringX2()}");
 
-                            //for (var i = 1; i <= 100; i++)
-                            //{
-                            //    if (!_responseManager.Transmitting)
-                            //    {
+        //                    //for (var i = 1; i <= 100; i++)
+        //                    //{
+        //                    //    if (!_responseManager.Transmitting)
+        //                    //    {
 
-                            var trans = _responseManager.Transmitting;
+        //                    var trans = _responseManager.Transmitting;
 
-                            Mediator.GetInstance().OnSerialPortWrite(this, $"Write Command:  {trans.ToString()} - {request.ByteArrayToStringX2()}");
-                            _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - TCP Transmitter Write {request}");
-                            await _transmitter.SendDataAsync(request.ByteArrayToString());
-                            _responseManager.Transmitting = true;
-                            Thread.Sleep(50);
-
-
-                            // break;
-                            //    }
-                            //    Thread.Sleep(i * 20);
-                            //    if (i != 100) continue;
-                            //    Mediator.GetInstance().OnSerialPortWrite(this, "Serial Timeout.");
-                            //    _ = _logger.LogDetailAsync("SerialPort Write Request Time Out.");
-                            //}
+        //                    Mediator.GetInstance().OnSerialPortWrite(this, $"Write Command:  {trans.ToString()} - {request.ByteArrayToStringX2()}");
+        //                    _ = _logger.LogDetailAsync($"IPTI Controller - StartTransmission - TCP Transmitter Write {request}");
+        //                  //  await _transmitter.SendDataAsync(request.ByteArrayToString());
+        //                    _responseManager.Transmitting = true;
+        //                    Thread.Sleep(50);
 
 
+        //                    // break;
+        //                    //    }
+        //                    //    Thread.Sleep(i * 20);
+        //                    //    if (i != 100) continue;
+        //                    //    Mediator.GetInstance().OnSerialPortWrite(this, "Serial Timeout.");
+        //                    //    _ = _logger.LogDetailAsync("SerialPort Write Request Time Out.");
+        //                    //}
 
-                        }
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    _ = _logger.LogDetailAsync($"CATCH - Start Transmission Operation Canceled Requested.");
-                    return;
-                }
 
-                Thread.Sleep(50);
-            }
 
-            _ = _logger.LogDetailAsync($"EXITING Start Transmission.");
-        }
+        //                }
+        //            }
+        //        }
+        //        catch (OperationCanceledException)
+        //        {
+        //            _ = _logger.LogDetailAsync($"CATCH - Start Transmission Operation Canceled Requested.");
+        //            return;
+        //        }
+
+        //        Thread.Sleep(50);
+        //    }
+
+        //    _ = _logger.LogDetailAsync($"EXITING Start Transmission.");
+        //}
         public void IptiControllerInit()
         {
-            _ = _logger.LogDetailAsync($"Begin Init Controller");
+            _logger.LogDetailAsync($"Begin Init Controller").SafeFireAndForget();
             var loggingMessage = string.Empty;
 
             var displayDevice = _hardwareDevice;
@@ -398,50 +401,58 @@ namespace IPTI.Models
                         //var tcpConfiguration = _repoTcp.FindBy(r => r.Id == displayDevice.TcpConfiguration.Id).FirstOrDefault();
                         if (_tcpConfiguration != null)
                         {
-                            Task.Run(() => _logger.LogDetailAsync($"Hardware Device: {displayDevice.Name}"));
-                            Task.Run(() => _logger.LogDetailAsync($"TCP Address: {_tcpConfiguration.IPAddress} Port: {_tcpConfiguration.Port}"));
-                            _transmitter = new TcpTransmitter(_tcpConfiguration.IPAddress, _tcpConfiguration.Port);
+                            _logger.LogDetailAsync($"Hardware Device: {displayDevice.Name}").SafeFireAndForget();
+                            _logger.LogDetailAsync($"TCP Address: {_tcpConfiguration.IPAddress} Port: {_tcpConfiguration.Port}").SafeFireAndForget();
+                            //_transmitter = new TcpTransmitter(_tcpConfiguration.IPAddress, _tcpConfiguration.Port, _iptiConfig.TransmitDelay);
 
-                            if (_transmitter.IsClientConnected)
-                            {
-                                SetTransmit(true);
-                                //Task.Factory.StartNew(StartTransmission, CancellationToken.None, TaskCreationOptions.None,
-                                //    TaskScheduler.Default);
+                            _tcpServer = new TcpServer(_tcpConfiguration.IPAddress, _tcpConfiguration.Port, _iptiConfig.TransmitDelay);
 
-                                //Task.Factory.StartNew(() => _responseManager.StartResponseProcessor(), CancellationToken.None,
-                                //    TaskCreationOptions.None, TaskScheduler.Default);
 
-                                //Task.Factory.StartNew(() => _responseManager.Start(), CancellationToken.None,
-                                //    TaskCreationOptions.None, TaskScheduler.Default);
+                            //if (_transmitter.IsClientConnected)
+                            //{
+                            //    SetTransmit(true);
+                            //    //Task.Factory.StartNew(StartTransmission, CancellationToken.None, TaskCreationOptions.None,
+                            //    //    TaskScheduler.Default);
 
-                            }
-                            else
-                            {
-                                SetTransmit(false);
-                            }
+                            //    //Task.Factory.StartNew(() => _responseManager.StartResponseProcessor(), CancellationToken.None,
+                            //    //    TaskCreationOptions.None, TaskScheduler.Default);
+
+                            //    //Task.Factory.StartNew(() => _responseManager.Start(), CancellationToken.None,
+                            //    //    TaskCreationOptions.None, TaskScheduler.Default);
+
+                            //}
+                            //else
+                            //{
+                            //    SetTransmit(false);
+                            //}
                         }
                         else
                         {
-                            _logger.LogDetailAsync("TCP Configuration not set in TCP Configuration.");
+                            _logger.LogDetailAsync("TCP Configuration not set in TCP Configuration.").SafeFireAndForget();
                         }
                     }
                     else
                     {
-                        _logger.LogDetailAsync("Display device not set to TCP in Hardware Devices.");
+                        _logger.LogDetailAsync("Display device not set to TCP in Hardware Devices.").SafeFireAndForget();
                     }
                 }
                 else
                 {
-                    _logger.LogDetailAsync("Display device not found in Hardware Devices.");
+                    _logger.LogDetailAsync("Display device not found in Hardware Devices.").SafeFireAndForget();
                 }
             }
             catch (Exception ex)
             {
                 var message = $"Error loading IPTI Light Controller. {Environment.NewLine}{ex.Message}";
-                _logger.LogDetailAsync(message);
+                _logger.LogDetailAsync(message).SafeFireAndForget();
                 Mediator.GetInstance().OnGeneralError(this, message);
                 TcpIptiControllerEnabled = false;
             }
+        }
+
+        public void DisposeServer()
+        {
+            _tcpServer?.DisposeServer();
         }
 
         #region Tower Code
@@ -472,7 +483,7 @@ namespace IPTI.Models
                     break;
             }
 
-            Task.Run(() => _logger.LogDetailAsync($"Get Address Returned: {address}"));
+            _logger.LogDetailAsync($"Get Address Returned: {address}").SafeFireAndForget();
 
             return address;
         }

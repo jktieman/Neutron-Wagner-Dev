@@ -12,6 +12,7 @@ using System.Timers;
 using NeutronData.Repositories;
 using NeutronCore.Extensions;
 using AsyncAwaitBestPractices;
+using System.Threading;
 
 namespace NeutronLoader
 {
@@ -20,7 +21,8 @@ namespace NeutronLoader
     {
         private readonly NeutronVariables _neutronVariables;
         private readonly IDynamicLogger _logger;
-        private Timer _timer;
+        private System.Timers.Timer _timer;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private bool _uploadBusy;
         private readonly GenericRepository<NOVA_INPUT> _repoNovaInput = new GenericRepository<NOVA_INPUT>(new NeutronDb());
         private readonly GenericRepository<NOVA_OUTPUT> _repoNovaOutput = new GenericRepository<NOVA_OUTPUT>(new NeutronDb());
@@ -47,8 +49,25 @@ namespace NeutronLoader
            // var startTimeSpan = TimeSpan.Zero;
            // var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.UploadDelay);
             //_timer = new Timer(s => { CreateHostFile().SafeFireAndForget(); }, null, startTimeSpan, periodTimeSpan);
-            _timer = new Timer(_neutronVariables.UploadDelay * 1000);
-            _timer.Elapsed += async (sender, e) => await CreateHostFile();
+            _timer = new System.Timers.Timer(_neutronVariables.UploadDelay * 1000);
+            //_timer.Elapsed += async (sender, e) => await CreateHostFile();
+            _timer.Elapsed += async (sender, e) =>
+            {
+                if (_semaphore.CurrentCount == 0)
+                {
+                    return;
+                }
+                await _semaphore.WaitAsync();
+                try
+                {
+                    await CreateHostFile();
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            };
+
             _timer.Start();
         }
 
@@ -72,7 +91,6 @@ namespace NeutronLoader
         /// </remarks>
         public async Task CreateHostFile()
         {
-            _timer?.Stop();
             
             if (_uploadBusy)
             {
@@ -80,6 +98,7 @@ namespace NeutronLoader
                 return;
             }
 
+            
             _logger.LogDetailAsync("CreateHostFile Start").SafeFireAndForget();
 
             // <summary>
@@ -100,8 +119,8 @@ namespace NeutronLoader
 
             try
             {
-                await _logger.LogDetailAsync(
-                    $"Find History Records where the Requested and Issued Quantities are equal");
+                _logger.LogDetailAsync(
+                    $"Find History Records where the Requested and Issued Quantities are equal").SafeFireAndForget();
                 var recs = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue
                                                      && actionCodes.Contains(h.ActionCode)
                     && h.RequestedQuantity == h.IssuedQuantity)
@@ -109,7 +128,7 @@ namespace NeutronLoader
 
                 if (recs.Any())
                 {
-                    await _logger.LogDetailAsync($"Found {recs.Count} History Records");
+                    _logger.LogDetailAsync($"Found {recs.Count} History Records").SafeFireAndForget();
                     //var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository);
                     //var result = hostFile.CreateHostFile(recs);
                     // for each record, get the TransId from the OrderDetailInfo field (rec.OrderDetailInfo)
@@ -123,13 +142,13 @@ namespace NeutronLoader
                     {
                         if (history == null) continue;
 
-                        await _logger.LogDetailAsync(
-                            $"History Record Order Detail Item: {history.Item} Info: {history.OrderDetailInfo}");
+                        _logger.LogDetailAsync(
+                            $"History Record Order Detail Item: {history.Item} Info: {history.OrderDetailInfo}").SafeFireAndForget();
 
                         if (string.IsNullOrEmpty(history.OrderDetailInfo))
                         {
-                            await _logger.LogDetailAsync(
-                                $"History Record Order Detail Info is Null or Empty.  Continue to Next Item");
+                            _logger.LogDetailAsync(
+                                $"History Record Order Detail Info is Null or Empty.  Continue to Next Item").SafeFireAndForget();
                             continue;
                         }
 
@@ -144,7 +163,7 @@ namespace NeutronLoader
                         if (input != null)
                         {
 
-                            await _logger.LogDetailAsync($"Record Found in NOVA_INPUT.  TransId: {transIdDec}");
+                            _logger.LogDetailAsync($"Record Found in NOVA_INPUT.  TransId: {transIdDec}").SafeFireAndForget();
 
                             _logger.LogDetailAsync($"Build NOVA_OUTPUT record.").SafeFireAndForget();
                             var output = new NOVA_OUTPUT
@@ -198,7 +217,7 @@ namespace NeutronLoader
             }
 
             _uploadBusy = false;
-            _timer?.Start();
+           // _timer?.Start();
         }
 
         private async Task LogInput(NOVA_INPUT input, History history)

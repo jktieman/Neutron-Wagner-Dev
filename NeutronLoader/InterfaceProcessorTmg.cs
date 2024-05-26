@@ -37,6 +37,7 @@ namespace NeutronLoader
         private bool _loadOrdersBusy;
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public InterfaceProcessorTmg(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
@@ -71,7 +72,23 @@ namespace NeutronLoader
             //var periodTimeSpan = TimeSpan.FromMinutes(5);
             //_downTimer = new Timer(t => { LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
             _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
-            _timer.Elapsed += async (sender, e) => await LoadOrders();
+            //_timer.Elapsed += async (sender, e) => await LoadOrders();
+            _timer.Elapsed += async (sender, e) =>
+            {
+                if (_semaphore.CurrentCount == 0)
+                {
+                    return;
+                }
+                await _semaphore.WaitAsync();
+                try
+                {
+                    await LoadOrders();
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            };
             _timer.Start();
             await Task.Delay(10);
 
@@ -108,7 +125,7 @@ namespace NeutronLoader
         private async Task LoadOrders()
         {
             if (_loadOrdersBusy) return;
-            _timer?.Stop();
+           // _timer?.Stop();
             
             _loadOrdersBusy = true;
             _logger.LogDetailAsync("Load Orders").SafeFireAndForget();

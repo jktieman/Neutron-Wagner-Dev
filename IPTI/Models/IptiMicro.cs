@@ -17,7 +17,8 @@
         /// <param name="bStateColor">The color of the B state. Default is "0".</param>
         /// <param name="onTime"></param>
         /// <param name="offTime"></param>
-        public IptiMicro(int displayId, string aStateColor = "3", string bStateColor = "0", string onTime = "300", string offTime = "300")
+        public IptiMicro(int displayId, string aStateColor = "3", string bStateColor = "0", string onTime = "300",
+            string offTime = "300")
         {
             DisplayId = displayId.ToString().PadLeft(2, '0');
             AStateColor = aStateColor;

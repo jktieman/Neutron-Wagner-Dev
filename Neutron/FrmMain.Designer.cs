@@ -60,6 +60,7 @@ namespace Neutron
             this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
+            this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.metroPanelMain.SuspendLayout();
             this.GroupBoxLanguage.SuspendLayout();
@@ -314,16 +315,23 @@ namespace Neutron
             // 
             // PictureBoxLogo
             // 
-            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
+            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.TEST;
             resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
             this.PictureBoxLogo.Name = "PictureBoxLogo";
             this.PictureBoxLogo.TabStop = false;
+            // 
+            // CheckBoxClientConnected
+            // 
+            resources.ApplyResources(this.CheckBoxClientConnected, "CheckBoxClientConnected");
+            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
+            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
             // 
             // FrmMain
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             resources.ApplyResources(this, "$this");
+            this.Controls.Add(this.CheckBoxClientConnected);
             this.Controls.Add(this.GroupBoxLanguage);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.ButtonPark);
@@ -346,6 +354,7 @@ namespace Neutron
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -379,6 +388,7 @@ namespace Neutron
         private System.Windows.Forms.GroupBox GroupBoxLanguage;
         private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;
         private System.Windows.Forms.RadioButton RadioButtonEnglish;
+        private System.Windows.Forms.CheckBox CheckBoxClientConnected;
     }
 }
 

@@ -37,6 +37,7 @@
             // 
             // PanelQuantity
             // 
+            this.PanelQuantity.BackColor = System.Drawing.SystemColors.ControlDark;
             this.PanelQuantity.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PanelQuantity.Controls.Add(this.LabelQuantity);
             this.PanelQuantity.Controls.Add(this.ButtonOk);
@@ -49,7 +50,7 @@
             // LabelQuantity
             // 
             this.LabelQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelQuantity.Location = new System.Drawing.Point(87, 126);
+            this.LabelQuantity.Location = new System.Drawing.Point(87, 116);
             this.LabelQuantity.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.LabelQuantity.Name = "LabelQuantity";
             this.LabelQuantity.Size = new System.Drawing.Size(148, 28);
@@ -86,10 +87,11 @@
             this.AcceptButton = this.ButtonOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(377, 339);
             this.ControlBox = false;
             this.Controls.Add(this.PanelQuantity);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmQuantity";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Enter Quantity";

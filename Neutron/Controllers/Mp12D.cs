@@ -15,6 +15,7 @@ using Hanel_DC.Hanel_DeviceControllers;
 using HanelCommands;
 using NeutronCore;
 using NeutronCore.Enums;
+using AsyncAwaitBestPractices;
 
 namespace Neutron.Controllers
 {
@@ -50,11 +51,11 @@ namespace Neutron.Controllers
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("Mp12D");
-            Task.Run(() => _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}"));
+            _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
             _callBackHandlerInit = MyInitProgressDelegate;
             _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D());
+            _logger.LogDetailAsync(@"Hanel Device Controller has been created: ").SafeFireAndForget();
 
-            Task.Run(() => _logger.LogDetailAsync(@"Hanel Device Controller has been created: "));
             Init2();
         }
 
@@ -64,10 +65,15 @@ namespace Neutron.Controllers
             set
             {
                 _currentForm = value;
-                Task.Run(() => _logger.LogDetailAsync($"Changed Form - {_currentForm}"));
+                _logger.LogDetailAsync($"Changed Form - {_currentForm}").SafeFireAndForget();
             }
         }
-
+        /// <summary>
+        /// Resets the array that stores the previous tray states.
+        /// </summary>
+        /// <remarks>
+        /// The size of the array is determined by the number of Hanel devices in the workstation view plus one.
+        /// </remarks>
         public void ResetPreviousTray()
         {
             var deviceCount = _workstationView.Hanels.Count;
@@ -101,7 +107,7 @@ namespace Neutron.Controllers
                         var logLevel = firstDevice.LogLevel;
                         var enabledUnitNumbers = _workstationView.Hanels.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
 
-                        Task.Run(() => _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()} Device Count: {serialConfiguration.DeviceCount}"));
+                        _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()} Device Count: {serialConfiguration.DeviceCount}").SafeFireAndForget();
 
                         // _hanel is a Hanel_DeviceController
                         var success = _hanel.Init_Controller(serialConfiguration.ControllerId
@@ -119,27 +125,27 @@ namespace Neutron.Controllers
 
                         if (success)
                         {
-                            Task.Run(() => _logger.LogDetailAsync("Initialization Requested"));
+                            _logger.LogDetailAsync("Initialization Requested").SafeFireAndForget();
                         }
                         else
                         {
-                            Task.Run(() => _logger.LogDetailAsync("Problem requesting initialization. " + cError));
+                            _logger.LogDetailAsync("Problem requesting initialization. " + cError).SafeFireAndForget();
                         }
                     }
                     else
                     {
-                        Task.Run(() => _logger.LogDetailAsync("SerialConfiguration is null "));
+                        _logger.LogDetailAsync("SerialConfiguration is null ").SafeFireAndForget();
                     }
                 }
                 else
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Unknown Serial Configuration."));
+                    _logger.LogDetailAsync($"Unknown Serial Configuration.").SafeFireAndForget();
                     MessageBox.Show($"Unknown Serial Configuration.");
                 }
             }
             else
             {
-                Task.Run(() => _logger.LogDetailAsync("Workstation is null or empty "));
+                _logger.LogDetailAsync("Workstation is null or empty ").SafeFireAndForget();
             }
         }
         public int InitStatus()
@@ -149,23 +155,23 @@ namespace Neutron.Controllers
             var initCode = _hanel.LastStatus_Code;
             var initMsg = _hanel.LastStatus_Message;
 
-            Task.Run(() => _logger.LogDetailAsync($"InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}"));
+            _logger.LogDetailAsync($"InitStatus: Success: {success} initCode: {initCode} initMsg: {initMsg}").SafeFireAndForget();
             if (success)
             {
                 // life is good, you can drive the device
-                Task.Run(() => _logger.LogDetailAsync("InitStatus: success is true."));
+                _logger.LogDetailAsync("InitStatus: success is true.").SafeFireAndForget();
                 if (initCode == 0)
                 {
                     // life is good, no warning messages
-                    Task.Run(() => _logger.LogDetailAsync($"Initialization is complete and was successful initCode is {initCode}"));
+                    _logger.LogDetailAsync($"Initialization is complete and was successful initCode is {initCode}").SafeFireAndForget();
                 }
                 else
                 {
                     // You need to report the warning to the operator or to a log that is monitored frequently
-                    Task.Run(() => _logger.LogDetailAsync($"Hanel Controller Warning - Initialization was successful but there is a warning." + Environment.NewLine +
+                    _logger.LogDetailAsync($"Hanel Controller Warning - Initialization was successful but there is a warning." + Environment.NewLine +
                     "Please provide the following information to your IT support." + Environment.NewLine +
                     "Code is: " + initCode.ToString() + Environment.NewLine +
-                    "Message is: " + initMsg));
+                    "Message is: " + initMsg).SafeFireAndForget();
                 }
             }
             else
@@ -173,16 +179,16 @@ namespace Neutron.Controllers
                 // Darn, cannot drive the device at this time
                 if (_hanel.Get_Init_PercentageComplete() == 0)
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    _logger.LogDetailAsync($"Not Initialized.  Code is: {initCode.ToString()}  Message is: {initMsg}").SafeFireAndForget();
                 }
                 else if (_hanel.Get_Init_PercentageComplete() < 100)
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Initialization is in progress.  Init {_hanel.Get_Init_PercentageComplete().ToString()}% complete..."));
-                    Task.Run(() => _logger.LogDetailAsync($"Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    _logger.LogDetailAsync($"Initialization is in progress.  Init {_hanel.Get_Init_PercentageComplete().ToString()}% complete...").SafeFireAndForget();
+                    _logger.LogDetailAsync($"Code is: {initCode.ToString()}  Message is: {initMsg}").SafeFireAndForget();
                 }
                 else
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}"));
+                    _logger.LogDetailAsync($"Initialization was unsuccessful.  Code is: {initCode.ToString()}  Message is: {initMsg}").SafeFireAndForget();
                 }
             }
             return initCode;
@@ -249,7 +255,7 @@ namespace Neutron.Controllers
         public DeviceResponse PositionDevice(int deviceNumber, int trayNumber, int facing = 0, int depth = 0, int quantity = 0, string display = "")
         {
             var deviceResponse = DeviceResponse.UnknownFailure;
-            Task.Run(() => _logger.LogDetailAsync($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}"));
+            _logger.LogDetailAsync($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}").SafeFireAndForget();
             var continueLoop = true;
             var loopCounter = 0;
             var device = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
@@ -278,9 +284,9 @@ namespace Neutron.Controllers
                                             // here's where the CurrentTray should be the same as the previousTray
                                             if (status.CurrentTray != _previousTray[deviceNumber])
                                             {
-                                                Task.Run(() => _logger.LogDetailAsync($"Tray did NOT arrive."));
-                                                Task.Run(() => _logger.LogDetailAsync($"Status.Current_Tray: {status.CurrentTray} Tray Number: {trayNumber}"));
-                                                Task.Run(() => _logger.LogDetailAsync($"PreviousTray: {_previousTray[deviceNumber]}"));
+                                                _logger.LogDetailAsync($"Tray did NOT arrive.").SafeFireAndForget();
+                                                _logger.LogDetailAsync($"Status.Current_Tray: {status.CurrentTray} Tray Number: {trayNumber}").SafeFireAndForget();
+                                                _logger.LogDetailAsync($"PreviousTray: {_previousTray[deviceNumber]}").SafeFireAndForget();
                                                 deviceResponse = DeviceResponse.TrayDidNotArrive;
                                                 _previousTray[deviceNumber] = 0;
                                                 break;
@@ -290,24 +296,24 @@ namespace Neutron.Controllers
                                         cError = "";
                                         if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
                                         {
-                                            Task.Run(() => _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}"));
-                                            
+                                            _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}").SafeFireAndForget();
+
                                             continueLoop = false;
                                             deviceResponse = DeviceResponse.Success;
                                             _previousTray[deviceNumber] = trayNumber;
-                                            
 
-                                           // status.TargetTray = trayNumber;
+
+                                            // status.TargetTray = trayNumber;
                                             //status.CurrentTray = trayNumber;
                                             status.CommandExecuted = false;
                                             status.CommandAccepted = false;
                                             status.InMotion = false;
-                                            
-                                            Task.Run(() => _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}"));
+
+                                            _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}").SafeFireAndForget();
                                         }
                                         else
                                         {
-                                            Task.Run(() => _logger.LogDetailAsync($"Problem submitting drive request.  {cError}"));
+                                            _logger.LogDetailAsync($"Problem submitting drive request.  {cError}").SafeFireAndForget();
                                             continueLoop = false;
                                         }
                                     }
@@ -315,7 +321,7 @@ namespace Neutron.Controllers
                                     {
                                         continueLoop = false;
                                         deviceResponse = DeviceResponse.Success;
-                                        Task.Run(() => _logger.LogDetailAsync($"Pick is on the same tray: Current Tray:  {status.CurrentTray.ToString()}  Tray Number:  {trayNumber.ToString()}"));
+                                        _logger.LogDetailAsync($"Pick is on the same tray: Current Tray:  {status.CurrentTray.ToString()}  Tray Number:  {trayNumber.ToString()}").SafeFireAndForget();
                                     }
                                 }
                                 else //Waiting for Command to execute
@@ -330,7 +336,7 @@ namespace Neutron.Controllers
                                         loopCounter += 1;
                                         Thread.Sleep(millisecondsTimeout: 50);
                                         var counter = loopCounter;
-                                        Task.Run(() => _logger.LogDetailAsync($"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.CurrentTray} CommandExecuted: {status.CommandExecuted}  Loop Count: {counter.ToString()}"));
+                                        _logger.LogDetailAsync($"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.CurrentTray} CommandExecuted: {status.CommandExecuted}  Loop Count: {counter.ToString()}").SafeFireAndForget();
                                     }
                                 }
                             }
@@ -346,26 +352,26 @@ namespace Neutron.Controllers
                                     loopCounter += 1;
                                     Thread.Sleep(millisecondsTimeout: 100);
                                     var counter = loopCounter;
-                                    Task.Run(() => _logger.LogDetailAsync($"Device Response was Bad Status  LoopCounter: {counter}"));
+                                    _logger.LogDetailAsync($"Device Response was Bad Status  LoopCounter: {counter}").SafeFireAndForget();
                                 }
                             }
                         } //while continue loop
                     }
                     else
                     {
-                        Task.Run(() => _logger.LogDetailAsync($"Device Not Initialized.  Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()} Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}"));
+                        _logger.LogDetailAsync($"Device Not Initialized.  Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()} Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
                         deviceResponse = DeviceResponse.DeviceNotInitialized;
                     }
                 }
                 else
                 {
-                    Task.Run(() => _logger.LogDetailAsync($"Position Device: Device not Enabled."));
+                    _logger.LogDetailAsync($"Position Device: Device not Enabled.").SafeFireAndForget();
                     deviceResponse = DeviceResponse.DeviceNotEnabled;
                 }
             }
             else
             {
-                Task.Run(() => _logger.LogDetailAsync($"Position Device: Device not Found."));
+                _logger.LogDetailAsync($"Position Device: Device not Found.").SafeFireAndForget();
                 deviceResponse = DeviceResponse.DeviceNotFound;
             }
 
@@ -376,14 +382,14 @@ namespace Neutron.Controllers
         {
             if (!_hanel.Init_Success)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Not Initialized.  Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}"));
+                _logger.LogDetailAsync($"Not Initialized.  Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
                 return;
             }
             cError = "";
             if (_hanel.Notification_DeRegister(_myNotificationHandle, ref cError))
-                Task.Run(() => _logger.LogDetailAsync($"Notification aborted successfully..."));
+                _logger.LogDetailAsync($"Notification aborted successfully...").SafeFireAndForget();
             else
-                Task.Run(() => _logger.LogDetailAsync($"De-registration Error...  {cError}"));
+                _logger.LogDetailAsync($"De-registration Error...  {cError}").SafeFireAndForget();
         }
 
         public DeviceResponse Park()
@@ -413,76 +419,82 @@ namespace Neutron.Controllers
             {
                 _hanel.Close_Controller(ref cError);
 
-                Task.Run(() => _logger.LogDetailAsync($"Close Hanel MP12D Controller - Success {cError}"));
+                _logger.LogDetailAsync($"Close Hanel MP12D Controller - Success {cError}").SafeFireAndForget();
             }
             catch (Exception ex)
             {
-                Task.Run(() => _logger.LogDetailAsync($"Close Hanel MP12D Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}"));
+                _logger.LogDetailAsync($"Close Hanel MP12D Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
         }
 
         public HanelDeviceStatus GetDeviceStatus(int deviceNumber)
         {
+            string error = string.Empty;
             var msg = string.Empty;
-            var deviceStatus = new HanelDeviceStatus();
-            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+
+            _logger.LogDetailAsync($"Device Number Status: {deviceNumber}").SafeFireAndForget();
             if (!_hanel.Init_Success)
             {
-                _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}");
-               _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+                LogDeviceNotInitialized();
+                return new HanelDeviceStatus();
             }
-            else
+
+            // When you request device status, you get status for all devices. That is the reason for the list.
+            // Even if there is only a single device, it comes back in a list.
+            // var deviceStatusList = new List<HanelDeviceStatus>();
+
+            var deviceStatusList = _hanel.Get_Device_Status();
+            if (!deviceStatusList.Any())
             {
-                cError = "";
-                // When you request device status, you get status for all devices. That is the reason for the list.
-                // Even if there is only a single device, it comes back in a list.
-                // var myDeviceStatusList = new List<HanelDeviceStatus>();
-
-                var myDeviceStatusList = _hanel.Get_Device_Status();
-
-
-                // if (_hanel.Get_Device_Status(ref myDeviceStatusList, ref cError))
-                if (myDeviceStatusList.Any())
-                {
-                    // At this point, you have current status for every device in your list
-                    _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}");
-
-                    deviceStatus = myDeviceStatusList.FirstOrDefault(item => item.Device == deviceNumber);
-                    if (deviceStatus != null)
-                    {
-                        msg = "Device: \t" + deviceStatus.Device + "\n" +
-                              "Device Number: \t" + deviceStatus.DeviceNumber + "\n" +
-
-                              "Target Tray: \t" + deviceStatus.TargetTray + "\n" +
-                              "Current Tray: \t" + deviceStatus.CurrentTray + "\n" +
-                              "In Motion: \t" + deviceStatus.InMotion + "\n" +
-                              "Good Status: \t" + deviceStatus.GoodStatus + "\n" +
-                              "In Alignment: \t" + deviceStatus.InAlignment + "\n" +
-                              "Last Command: \t" + deviceStatus.LastCommand + "\n" +
-                              "Last Status: \t" + deviceStatus.LastStatus + "\n" +
-                              "Command Accepted: \t" + deviceStatus.CommandAccepted + "\n" +
-                              "Command Executed: \t" + deviceStatus.CommandExecuted + "\n" +
-                              "Message: \t" + deviceStatus.StatusMessage;
-
-                    }
-
-                    _logger.LogDetailAsync(msg);
-                }
-                else
-                {
-                    _logger.LogDetailAsync("Get Device Status request aborted...");
-                }
+                _logger.LogDetailAsync("Get Device Status request aborted...").SafeFireAndForget();
+                return new HanelDeviceStatus();
             }
+            LogDeviceStatus(deviceNumber);
+            var deviceStatus = deviceStatusList.FirstOrDefault(item => item.Device == deviceNumber);
+            if (deviceStatus != null)
+            {
+                msg = "Device: \t" + deviceStatus.Device + "\n" +
+                                         "Device Number: \t" + deviceStatus.DeviceNumber + "\n" +
+
+                                         "Target Tray: \t" + deviceStatus.TargetTray + "\n" +
+                                         "Current Tray: \t" + deviceStatus.CurrentTray + "\n" +
+                                         "In Motion: \t" + deviceStatus.InMotion + "\n" +
+                                         "Good Status: \t" + deviceStatus.GoodStatus + "\n" +
+                                         "In Alignment: \t" + deviceStatus.InAlignment + "\n" +
+                                         "Last Command: \t" + deviceStatus.LastCommand + "\n" +
+                                         "Last Status: \t" + deviceStatus.LastStatus + "\n" +
+                                         "Command Accepted: \t" + deviceStatus.CommandAccepted + "\n" +
+                                         "Command Executed: \t" + deviceStatus.CommandExecuted + "\n" +
+                                         "Message: \t" + deviceStatus.StatusMessage;
+
+            }
+            _logger.LogDetailAsync(msg).SafeFireAndForget();
 
             return deviceStatus;
         }
 
-
+        private void LogDeviceNotInitialized()
+        {
+            _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {_hanel.LastStatus_Code.ToString()} Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
+            _logger.LogDetailAsync("Problem getting device status.").SafeFireAndForget();
+        }
+        private void LogDeviceStatus(int deviceNumber)
+        {
+            _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstationView.EnabledDevices.Count}").SafeFireAndForget();
+        }
+        /// <summary>
+        /// Resets the status of the Hanel device.
+        /// </summary>
+        /// <remarks>
+        /// This method performs two operations:
+        /// 1. Calls the ResetHanelDeviceStatus method of the Hanel_DeviceController instance if it is not null.
+        /// 2. Calls the ResetPreviousTray method of the current Mp12D instance.
+        /// </remarks>
         public void ResetHanelDeviceStatus()
         {
-           _hanel?.ResetHanelDeviceStatus();
-           ResetPreviousTray();
+            _hanel?.ResetHanelDeviceStatus();
+            ResetPreviousTray();
         }
     }
 }

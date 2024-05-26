@@ -20,8 +20,9 @@ namespace NeutronData.Models
         public int ShipperId { get; set; }
         public int ShipMethodId { get; set; }
         public int OrderStatusId { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-        public virtual ICollection<Container> Containers { get; set; } = new List<Container>();
+        // REMOVE VIRTUAL ON 05/24/2024
+        public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+        public ICollection<Container> Containers { get; set; } = new List<Container>();
 
         [ForeignKey("ShipperId")]
         public virtual Shipper Shipper { get; set; }

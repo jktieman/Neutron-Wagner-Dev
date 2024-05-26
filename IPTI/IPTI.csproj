@@ -37,10 +37,6 @@
     <Reference Include="EthernetTransmitter">
       <HintPath>..\EthernetTransmitter\bin\Debug\EthernetTransmitter.dll</HintPath>
     </Reference>
-    <Reference Include="NeutronCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NeutronCore\bin\Release\NeutronCore.dll</HintPath>
-    </Reference>
     <Reference Include="NeutronEvents, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NeutronEvents\bin\Debug\NeutronEvents.dll</HintPath>
@@ -96,12 +92,14 @@
     <Compile Include="Models\IptiBli.cs" />
     <Compile Include="Models\IptiShi.cs" />
     <Compile Include="Models\ITcpIptiCommandCenter.cs" />
+    <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MyDataReceivedEventArgs.cs" />
     <Compile Include="Models\OrderControlModule.cs" />
     <Compile Include="Models\IptiResponseManager.cs" />
     <Compile Include="Models\RuleResult.cs" />
     <Compile Include="Models\TcpIptiCommandCenter.cs" />
     <Compile Include="Models\TcpIptiController.cs" />
+    <Compile Include="Models\TcpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +110,10 @@
     <ProjectReference Include="..\JsonManager\JsonManager.csproj">
       <Project>{41E13F41-40DC-4F3A-BA34-43008EF8A4B8}</Project>
       <Name>JsonManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
+      <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
+      <Name>NeutronCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\NeutronData\NeutronData.csproj">
       <Project>{E325F3E2-6660-451F-B9B2-D8866447BE4D}</Project>

@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace ProliteController
 {
     public interface IProLiteManager
@@ -10,7 +12,7 @@ namespace ProliteController
         void TurnOnHot(int deviceNumber);
         void TurnOnBlindCycle(int deviceNumber, int level, int part);
         void ClearProlite(int deviceNumber);
-        void ClearAllProlites();
+        Task ClearAllProlites();
 
         bool IsProliteManagerEnabled();
     }

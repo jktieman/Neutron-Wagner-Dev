@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AlliedLogger;
 using JsonManager;
@@ -8,6 +7,7 @@ using NeutronCore.Extensions;
 using NeutronCore.Global;
 using NeutronData.ModelViews;
 using AsyncAwaitBestPractices;
+using NeutronEvents;
 
 namespace IPTI.Models
 {
@@ -17,18 +17,16 @@ namespace IPTI.Models
         private readonly NeutronVariables _neutronVariables;
         private readonly WorkstationView _workstationView;
         private TcpIptiCommandCenter _tcpIptiCommandCenter;
-        private readonly IDisplayController _tcpIptiController;
+        private IDisplayController _tcpIptiController;
         private IDynamicLogger _logger;
 
-        public IptiDisplayFunctions(IJsonData jsonData, NeutronVariables neutronVariables, WorkstationView workstationView, IDisplayController tcpIptiController)
+        public IptiDisplayFunctions(IJsonData jsonData, NeutronVariables neutronVariables, WorkstationView workstationView)
         {
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
-            _tcpIptiController = tcpIptiController;
             Init();
         }
-
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("IptiDisplayFunctions");
@@ -38,32 +36,56 @@ namespace IPTI.Models
                 _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
             }
 
+            var iptiConfig = _jsonData.LoadFile<IptiConfig>();
+            Task.Run(() => _logger.LogDetailAsync("IPTI Displays are being used."));
 
-            if (_neutronVariables.IptiDisplays)
+            _tcpIptiController = new TcpIptiController(_jsonData, _workstationView, _neutronVariables, _workstationView.BatchTable, _workstationView.BatchTable.TcpConfiguration, iptiConfig);
+
+            if (_tcpIptiController == null)
             {
-                _logger.LogDetailAsync("IPTI Displays are being used.").SafeFireAndForget();
-
-
-                //initialize the controller
-                var counter = 1;
-                while (_tcpIptiController.GetInitStatus() != 0)
-                {
-                    var seconds = 250 * counter / 1000;
-                    _logger.LogDetailAsync($"Unable to initialize display controller for {seconds} seconds.").SafeFireAndForget();
-                    if (counter >= 20)
-                    {
-                        _logger.LogDetailAsync($"Unable to initialize display controller after {seconds} seconds.").SafeFireAndForget();
-                        break;
-                    }
-
-                    Thread.Sleep(250);
-                    counter += 1;
-                }
-                _logger.LogDetailAsync($"Display Controller Initialized. Status Code: {_tcpIptiController.GetInitStatus()}").SafeFireAndForget();
+                Task.Run(() => _logger.LogDetailAsync("Batch Pick Displays were unable to initialize."));
+                Mediator.GetInstance().OnDisplayMessage(this, $"Batch Pick Displays were unable to initialize.");
             }
+           
+
+            //TODO:
+            //if (_neutronVariables.IptiDisplays)
+            //{
+            //    _logger.LogDetailAsync("IPTI Displays are being used.").SafeFireAndForget();
+
+
+            //    //initialize the controller
+            //    //var counter = 1;
+            //    //TODO
+            //    //while (_tcpIptiController.GetInitStatus() != true)
+            //    //{
+            //    //    var seconds = 250 * counter / 1000;
+            //    //    _logger.LogDetailAsync($"Unable to initialize display controller for {seconds} seconds.").SafeFireAndForget();
+            //    //    if (counter >= 20)
+            //    //    {
+            //    //        _logger.LogDetailAsync($"Unable to initialize display controller after {seconds} seconds.").SafeFireAndForget();
+            //    //        break;
+            //    //    }
+
+            //    //    Thread.Sleep(250);
+            //    //    counter += 1;
+            //    //}
+            //    //_logger.LogDetailAsync($"Display Controller Initialized. Status Code: {_tcpIptiController.GetInitStatus()}").SafeFireAndForget();
+            //}
         }
         #region IPTI Display Functions
 
+        public bool IsClientConnected()
+        {
+            var result = _tcpIptiController.GetInitStatus();
+            return result;
+        }
+
+        public void DisposeServer()
+        {
+            _tcpIptiController.DisposeServer();
+        }
+        
         public async Task TurnOnBlastzoneDisplay(int bayController, int position, string text)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
@@ -168,7 +190,7 @@ namespace IPTI.Models
                     if (!bayController.Enabled) continue;
                     var text = bayController.ClearDisplays();
                     await _tcpIptiController.SendText(text);
-                    await Task.Delay(500);
+                    //await Task.Delay(100);
                     await TurnOffBlastzoneOrderControl(bayController.BayId.ParseInt());
                 }
             }

@@ -14,7 +14,6 @@ using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
-using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronEvents;
 

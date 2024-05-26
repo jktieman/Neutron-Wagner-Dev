@@ -33,11 +33,13 @@
         /// Initializes a new instance of the <see cref="IptiMax4"/> class.
         /// </summary>
         /// <param name="displayId">The unique identifier for the display.</param>
-        /// <param name="bStateColor"></param>
         /// <param name="aStateColor"></param>
+        /// <param name="bStateColor"></param>
         /// <param name="onTime"></param>
         /// <param name="offTime"></param>
-        public IptiMax4(int displayId, string aStateColor = "3", string bStateColor = "0", string onTime = "300", string offTime = "300")
+        /// <param name="configTransmitDelay"></param>
+        public IptiMax4(int displayId, string aStateColor = "3", string bStateColor = "0", string onTime = "300",
+            string offTime = "300")
         {
             DisplayId = displayId.ToString().PadLeft(2, '0');
             AStateColor = aStateColor;
