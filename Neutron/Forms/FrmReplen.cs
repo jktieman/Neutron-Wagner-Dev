@@ -1,11 +1,6 @@
-﻿
-using Neutron.Extensions;
-
-using LabelDetail = NeutronData.PrintModels.LabelDetail;
+﻿using LabelDetail = NeutronData.PrintModels.LabelDetail;
 using IPTI.Models;
 using NeutronData.Models.Lookups;
-
-//-----------------------------------
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,14 +43,12 @@ using NeutronDllu;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
-using Label = System.Windows.Forms.Label;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Panel = System.Windows.Forms.Panel;
 using ScrollBars = System.Windows.Forms.ScrollBars;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 using TextBox = System.Windows.Forms.TextBox;
 
-//-----------------------------------
 
 namespace Neutron.Forms
 {
@@ -65,39 +58,27 @@ namespace Neutron.Forms
         private ResourceManager _resourceManager;
 
         private readonly IInventoryRepository _inventoryRepository;
-        private readonly IDisplayController _tcpIptiController;
 
         private ResourceManager _gridResourceManager;
-        //private GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-        //private StationRepository _repoStation = new StationRepository(new NeutronDb());
-        //private GenericRepository<History> repoHistory = new GenericRepository<History>(new NeutronDb());
-        // private InventoryRepository repoInv = new InventoryRepository();
-        // private GenericRepository<Order> repoOrders = new GenericRepository<Order>(new NeutronDb());
-        // private GenericRepository<OrderDetail> repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
-        //private BindingListView<ReplenOrderView> _bindingSourceOrderViewEquin;
-        //private BindingListView<ReplenOrderView> bindingSourceAvailableOrdersEquin;
-        //public bool CloseForm = false;
-        //private SqlInventoryView currentInventoryView = new SqlInventoryView();
-        //private string textToFind = string.Empty;
 
         private readonly AkaRepository _repoAka = new AkaRepository();
-
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
 
+        private readonly GenericRepository<StorageType> _repoStorageTypes = new GenericRepository<StorageType>(new NeutronDb());
+
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        
         // private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
         private readonly GenericRepository<Location> _repoLocationRepository = new GenericRepository<Location>(new NeutronDb());
 
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
 
-        private readonly GenericRepository<StorageType> _repoStorageTypes = new GenericRepository<StorageType>(new NeutronDb());
 
         private readonly GenericRepository<SizeCode> _repoSizeCodes = new GenericRepository<SizeCode>(new NeutronDb());
 
         private readonly GenericRepository<VelocityCode> _repoVelocityCodes = new GenericRepository<VelocityCode>(new NeutronDb());
 
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
 
         private readonly IReplenOrdersRepository _replenOrdersRepository;
         private ReplenOrderDetailsRepository _orderDetailsRepository;
@@ -142,7 +123,6 @@ namespace Neutron.Forms
         private readonly IAreaRepository _areaRepository;
         private readonly ILocationsRepository _locationsRepository;
         private IDynamicLogger _logger;
-        private string _imagesDirectory;
         private ReplenDeviceManager _deviceManager;
         private DocumentPrinterPreferences _documentPrinter;
         private LabelPrinterPreferences _labelPrinter;
@@ -242,7 +222,6 @@ namespace Neutron.Forms
             //_currentTextBoxPos = TextBoxPos1;
 
             //InitDataGridViewNewItems();
-            //_imagesDirectory = LoaderSettings.GetImagesDirectory();
             //_defaultStorageType = new NeutronData.Models.Lookups.StorageType { Id = 2, Name = "Release", Sequence = 20 };
         }
 
@@ -276,7 +255,6 @@ namespace Neutron.Forms
             MBPrint.Visible = _neutronVariables.PrintPackingListManual;
 
             //InitDataGridViewNewItems();
-            // _imagesDirectory = LoaderSettings.GetImagesDirectory();
 
             MBPickScreenHotPick.Enabled = _securityProcessor.SecurityProfile[(int)NeutronSecurity.HotActions];
 
@@ -290,27 +268,6 @@ namespace Neutron.Forms
 
             _defaultStorageType = _repoStorageTypes.FindByKey(_neutronVariables.DefaultStorageTypeId);
             //_tempAllocatedLocations = new List<Location>();
-
-            // set up the hardware on this Pick Station
-            // if there is a defined Blastzone then set the global variable _blastzone to true
-            var blastzone = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.Blastzone);
-            // quick reference flag shows if a Blastzone is used
-            if (blastzone != null) _blastzone = true;
-
-            // if there is a defined BatchTable then set the global variable _batchTable to true
-            var batchTable = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceTypeId == (int)DeviceTypeEnum.IptiDisplays);
-            // quick reference flag shows if a BatchTable is used
-            if (batchTable != null) _batchTable = true;
-
-            // Represents a collection of ProLite hardware devices associated with the current workstation view.
-            var prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
-            // quick reference flag shows if Prolites are used
-            _prolite = prolites.Any();
-
-            // Represents a collection of Hanel hardware devices associated with the current workstation view.
-            var hanels = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D).ToList();
-            // quick reference flag shows if Hanels are used
-            _hanel = hanels.Any();
 
             MBMainAvailableOrders.Text = $"{_resourceManager.GetString($"AvailableOrders")} - {_workstationView.Area.Name}";
 
@@ -2317,6 +2274,7 @@ namespace Neutron.Forms
             //LabelFormTitle.BackColor = Color.Green;
             //tabControl1.SelectedTab = Main;
         }
+        
         private async Task AvailableOrdersBack()
         {
             if (_iptiDisplayFunctions != null)
@@ -2325,11 +2283,8 @@ namespace Neutron.Forms
                 await _iptiDisplayFunctions.TurnOffBatchOrderControl();
                 await _iptiDisplayFunctions.ClearBlastzone();
             }
-
-
-            GlobalVar.Hanel?.ResetHanelDeviceStatus();
-
-
+            
+            GlobalVar.Hanel?.ResetHanelDeviceStatus();           
 
             // Clear all the ProLites using the ProLiteManager
 

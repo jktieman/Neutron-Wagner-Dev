@@ -190,73 +190,73 @@ namespace Neutron.Forms
         /// If a Record id is passed is the focus is on that record
         /// </summary>
         /// <param name="recId">Record Id to set the focus</param>
-        private async Task RefreshDataz(int recId = 0)
-        {
-            // Cursor.Current = Cursors.WaitCursor;
-            var aka = string.Empty;
-            var findWhat = TextBoxFind.Text.ToLower().Trim();
-            try
-            {
+        //private async Task RefreshDataz(int recId = 0)
+        //{
+        //    // Cursor.Current = Cursors.WaitCursor;
+        //    var aka = string.Empty;
+        //    var findWhat = TextBoxFind.Text.ToLower().Trim();
+        //    try
+        //    {
 
-                // If the findWhat is not empty, then look in the AKA file first
-                if (!string.IsNullOrEmpty(findWhat))
-                {
-                    aka = await Task.Run(() => _akaRepository.Get(findWhat));
-                }
+        //        // If the findWhat is not empty, then look in the AKA file first
+        //        if (!string.IsNullOrEmpty(findWhat))
+        //        {
+        //            aka = await Task.Run(() => _akaRepository.Get(findWhat));
+        //        }
 
-                var find = string.IsNullOrWhiteSpace(aka) ? findWhat : aka;
-                TextBoxFind.Text = find;
+        //        var find = string.IsNullOrWhiteSpace(aka) ? findWhat : aka;
+        //        TextBoxFind.Text = find;
 
-                if (_workstationView != null)
-                {
-                    var area = (Area)ComboBoxAreaNumber.SelectedItem;
-                    var views = area.Name == "All Areas"
-                        ? _inventoryRepository.FindInventoryViews(find).ToList()
-                        : _inventoryRepository.FindInventoryViewsByArea(find, area.Id).ToList();
+        //        if (_workstationView != null)
+        //        {
+        //            var area = (Area)ComboBoxAreaNumber.SelectedItem;
+        //            var views = area.Name == "All Areas"
+        //                ? _inventoryRepository.FindInventoryViews(find).ToList()
+        //                : _inventoryRepository.FindInventoryViewsByArea(find, area.Id).ToList();
 
-                    _currentList = views;
-                    var localViews = new List<SqlInventoryView>(views);
+        //            _currentList = views;
+        //            var localViews = new List<SqlInventoryView>(views);
 
-                    var blv = new BindingListView<SqlInventoryView>(localViews.ToList());
-                    _logger.LogDetailAsync($"Inventory Count: {blv.Count}").SafeFireAndForget();
-                    _bindingSource.DataSource = blv;
-                    DataGridView1.DataSource = _bindingSource;
+        //            var blv = new BindingListView<SqlInventoryView>(localViews.ToList());
+        //            _logger.LogDetailAsync($"Inventory Count: {blv.Count}").SafeFireAndForget();
+        //            _bindingSource.DataSource = blv;
+        //            DataGridView1.DataSource = _bindingSource;
 
-                    _logger.LogDetailAsync($"Inventory Count: Grid Done").SafeFireAndForget();
-                    if (GetRecordCount(_bindingSource) > 0)
-                    {
-                        if (recId != 0)
-                        {
-                            var idx = IndexOf(_bindingSource, recId);
-                            DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
-                            DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
-                            DataGridView1.Rows[idx].Selected = true;
-                        }
-                        SetCurrentInventoryItem();
-                        DataGridView1.Refresh();
-                        DataGridView1.ClearSelection();
-                        if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
-                    }
-                    else
-                    {
-                        CurrentItem = null;
-                        CurrentLocation = null;
-                        CurrentInventoryItem = null;
-                    }
-                }
+        //            _logger.LogDetailAsync($"Inventory Count: Grid Done").SafeFireAndForget();
+        //            if (GetRecordCount(_bindingSource) > 0)
+        //            {
+        //                if (recId != 0)
+        //                {
+        //                    var idx = IndexOf(_bindingSource, recId);
+        //                    DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
+        //                    DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
+        //                    DataGridView1.Rows[idx].Selected = true;
+        //                }
+        //                SetCurrentInventoryItem();
+        //                DataGridView1.Refresh();
+        //                DataGridView1.ClearSelection();
+        //                if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+        //            }
+        //            else
+        //            {
+        //                CurrentItem = null;
+        //                CurrentLocation = null;
+        //                CurrentInventoryItem = null;
+        //            }
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                var message = $"Error Loading Data: {Environment.NewLine}{ex.Message}";
-                _logger.LogDetailAsync(message).SafeFireAndForget();
-                Mediator.GetInstance().OnGeneralError(this, message);
-            }
-            finally
-            {
-                //  Cursor.Current = Cursors.Default;
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var message = $"Error Loading Data: {Environment.NewLine}{ex.Message}";
+        //        _logger.LogDetailAsync(message).SafeFireAndForget();
+        //        Mediator.GetInstance().OnGeneralError(this, message);
+        //    }
+        //    finally
+        //    {
+        //        //  Cursor.Current = Cursors.Default;
+        //    }
+        //}
 
         private async Task RefreshData(int recId = 0)
         {
