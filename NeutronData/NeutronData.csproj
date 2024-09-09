@@ -326,6 +326,10 @@
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
+      <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
+      <Name>NeutronEvents</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProLiteController\ProliteController\ProLiteController.csproj">
       <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
       <Name>ProLiteController</Name>

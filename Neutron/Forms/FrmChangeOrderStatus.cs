@@ -12,11 +12,11 @@ namespace Neutron.Forms
     public partial class FrmChangeOrderStatus : Form
     {
         private readonly Order _order;
-        private readonly HistoryManager _historyManager;
+        private readonly IHistoryManager _historyManager;
         private readonly GenericRepository<OrderStatus> _repoStatus = new GenericRepository<OrderStatus>(new NeutronDb());
         private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
 
-        public FrmChangeOrderStatus(Order order, HistoryManager historyManager)
+        public FrmChangeOrderStatus(Order order, IHistoryManager historyManager)
         {
             _order = order;
             _historyManager = historyManager;

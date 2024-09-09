@@ -29,12 +29,12 @@ namespace Neutron.Forms
         private bool _checkAllSecureItems;
         private SecureItem[] _secureItems;
         private readonly NeutronVariables _neutronVariables;
-        private readonly HistoryManager _historyManager;
+        private readonly IHistoryManager _historyManager;
         private User _currentUser;
         private List<User> _allUsers = new List<User>();
         public bool CloseButtonPressed { get; set; }
 
-        public FrmSecurity(NeutronVariables neutronVariables, HistoryManager historyManager)
+        public FrmSecurity(NeutronVariables neutronVariables, IHistoryManager historyManager)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;

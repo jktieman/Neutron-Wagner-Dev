@@ -3,12 +3,15 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using NeutronData.SqlModelViews;
 using System.Data.SqlClient;
 using System.Globalization;
 using AlliedLogger;
 using NeutronData.Interfaces;
+using System.Threading.Tasks;
+using NeutronCore.Enums;
 
 namespace NeutronData.Repositories
 {
@@ -17,7 +20,7 @@ namespace NeutronData.Repositories
         private readonly IDynamicLogger _logger;
 
         private readonly GenericRepository<Inventory> _repo = new GenericRepository<Inventory>(new NeutronDb());
-
+        private readonly NeutronDb _context = new NeutronDb();
 
         public InventoryRepository(IDynamicLogger logger)
         {
@@ -64,6 +67,11 @@ namespace NeutronData.Repositories
             return projection;
         }
 
+        public Inventory GetInventoryById(int id)
+        {
+            var inventory = _context.Inventory.Find(id);
+            return inventory;
+        }
         public InventoryView GetInventoryViewById(int id)
         {
             var inventoryView = new InventoryView();
@@ -286,6 +294,12 @@ namespace NeutronData.Repositories
             }
 
             return slot;
+        }
+
+        public async Task<List<Inventory>> GetInventoryWithReleaseStorageAndZeroQuantityByArea(int areaId)
+        {
+            return await _context.Inventory.Where(i => i.AreaId == areaId && i.Quantity == 0 &&
+                                                 i.StorageTypeId == (int)StorageType.Release).ToListAsync();
         }
 
         public int GetAreaNumber(int itemDefinitionId)

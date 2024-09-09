@@ -119,7 +119,7 @@ namespace Neutron.Forms
         //private InterfaceProcessorTmg _interfaceProcessorTmg;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private readonly HistoryManager _historyManager;
+        private readonly IHistoryManager _historyManager;
         private readonly IAreaRepository _areaRepository;
         private readonly ILocationsRepository _locationsRepository;
         private IDynamicLogger _logger;
@@ -172,13 +172,14 @@ namespace Neutron.Forms
         private List<VelocityCode> _velocityCodes;
         private List<HeightCode> _heightCodes;
         private bool _isClientConnected;
+        private const int AreaEight = 8;
 
         public FrmReplen(IJsonData jsonData, WorkstationView workstationView
             , IAkaRepository akaRepository, NeutronVariables neutronVariables
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
             , IReplenOrdersRepository replenOrdersRepository, NeutronLicense neutronLicense
-            , IItemDefinitionsRepository itemDefinitionsRepository, HistoryManager historyManager
+            , IItemDefinitionsRepository itemDefinitionsRepository, IHistoryManager historyManager
             , ILocationsRepository locationsRepository
             , IAreaRepository areaRepository, IInventoryRepository inventoryRepository
             , IIptiDisplayFunctions iptiDisplayFunctions)
@@ -1713,7 +1714,12 @@ namespace Neutron.Forms
         {
             _logger.LogDetailAsync("ShowAvailableOrders START").SafeFireAndForget();
             var idx = 0;
-            searchField = TextBoxFindAvailableOrders.Text.Trim().ToLower();
+
+            if (string.IsNullOrEmpty(searchField))
+            {
+                searchField = TextBoxFindAvailableOrders.Text.Trim().ToLower();
+            }
+
             try
             {
                 var views = _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreen(_workstationView.AreaId, searchField);
@@ -2621,7 +2627,7 @@ namespace Neutron.Forms
                 // LocationType 3 is a Rack location and 
                 // should be sorted using the PickSequence
                 //var locationType = _workstationView.Area.LocationTypeId;
-                if (_workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack)
+                if (_workstationView.AreaId == AreaEight) 
                 {
                     // Sort by PickSequence
                     pickViews = pickViews.OrderBy(p => p.CurrentInventoryLocation?.Location.PickSequence).ToList();
@@ -2686,7 +2692,7 @@ namespace Neutron.Forms
                 }
                 foreach (var stop in pickStops)
                 {
-                    _logger.LogDetailAsync($"STOP Sequence: {stop.Sequence} " +
+                    _logger.LogDetailAsync($"STOP SEQUENCE: {stop.Sequence} " +
                                             $" SKU: {stop.CurrentInventoryLocation.ItemDefinition.Item}" +
                                             $" Location: {stop.CurrentInventoryLocation.Location.Loc1}" +
                                             $"-{stop.CurrentInventoryLocation.Location.Loc2}" +
@@ -2703,7 +2709,7 @@ namespace Neutron.Forms
                 _logger.LogDetailAsync($"Start_Click 2: [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
                 //var finalPickSequence = FinalPickSequence(pickStops);
                 var finalPickSequence =
-            _workstationView.Area.LocationTypeId == (int)LocationTypeEnum.Rack ? FinalPickSequenceRack(pickStops) : FinalPickSequence(pickStops);
+            _workstationView.AreaId == AreaEight ? FinalPickSequenceAreaEight(pickStops) : FinalPickSequence(pickStops);
                 _bindingSourcePickStops.DataSource = null;
                 _bindingSourcePickStops.DataSource = finalPickSequence;
 
@@ -2715,7 +2721,7 @@ namespace Neutron.Forms
 
                 UpdatePickScreen();
 
-                if (_workstationView.AreaId == 8)
+                if (_workstationView.AreaId == AreaEight)
                 {
                     TextBoxSlot.Visible = true;
                     TextBoxSlot.Text = string.Empty;
@@ -2751,7 +2757,7 @@ namespace Neutron.Forms
         /// </summary>
         /// <param name="pickStops">The List of PickStops to be sorted</param>
         /// <returns></returns>
-        private List<ReplenPickStop> FinalPickSequenceRack(List<ReplenPickStop> pickStops)
+        private List<ReplenPickStop> FinalPickSequenceAreaEight(List<ReplenPickStop> pickStops)
         {
             // return pickStops.OrderBy(r => r.CurrentInventoryLocation.Location.PickSequence).ToList();
 
@@ -2781,7 +2787,7 @@ namespace Neutron.Forms
 
                     List<Inventory> exactInventorySequence;
 
-                    if (_workstationView.AreaId == 8)
+                    if (_workstationView.AreaId == AreaEight)
                     {
                         exactInventorySequence = PrimeBinFirst(pickView);
                     }
@@ -2792,7 +2798,7 @@ namespace Neutron.Forms
 
                     // if not Area 8, get 3 locations including existing locations
                     // to store into
-                    if (_workstationView.AreaId != 8)
+                    if (_workstationView.AreaId != AreaEight)
                     {
                         var neededLocations = 3 - exactInventorySequence.Count;
                         if (neededLocations > 0)
@@ -2876,7 +2882,7 @@ namespace Neutron.Forms
                 recs.Remove(prime);
             }
 
-            if (_workstationView.AreaId == 8)
+            if (_workstationView.AreaId == AreaEight)
             {
                 // sort the recs by the Location.PickSequence
                 sortedRecs = recs.OrderBy(r => r.Location.PickSequence).ToList();
@@ -2934,7 +2940,7 @@ namespace Neutron.Forms
         {
             var inventoryList = new List<Inventory>();
 
-            if (areaId != 8) return inventoryList;
+            if (areaId != AreaEight) return inventoryList;
             var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
             if (itemDefinition == null) return inventoryList;
             var location = _repoLocationRepository.FindByKey(10954);
@@ -3500,7 +3506,7 @@ namespace Neutron.Forms
         private async Task ShowOrderOnBatchDisplay()
         {
             var font = new Font(Font.FontFamily, 26);
-            if (_workstationView.AreaId == 8)
+            if (_workstationView.AreaId == AreaEight)
             {
                 font = new Font(Font.FontFamily, 26);
             }
@@ -4227,22 +4233,33 @@ namespace Neutron.Forms
 
         private async void ButtonStopMoveFirst_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             await GetFirstStop(moveDevice: false);
+            Cursor.Current = Cursors.Default;
+
         }
 
         private async void ButtonStopMovePrevious_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             await GetPreviousStop(moveDevice: false);
+            Cursor.Current = Cursors.Default;
+
         }
 
         private async void ButtonStopMoveNext_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             await GetNextStop(moveDevice: false);
+            Cursor.Current = Cursors.Default;
+
         }
 
         private async void ButtonStopMoveLast_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             await GetLastStop(moveDevice: false);
+            Cursor.Current = Cursors.Default;
         }
 
 
@@ -5120,7 +5137,7 @@ namespace Neutron.Forms
             }
             else
             {
-                if (_workstationView.AreaId == 8)
+                if (_workstationView.AreaId == AreaEight)
                 {
                     // create a default location in Area 8
                     var loc = _repoLocationRepository.FindByKey(10954);
@@ -5351,7 +5368,7 @@ namespace Neutron.Forms
         {
             bool result = false;
 
-            if (_workstationView.AreaId == 8)
+            if (_workstationView.AreaId == AreaEight)
             {
                 TextBoxSlot.Text = string.Empty;
                 TextBoxSlot.Focus();
@@ -5718,7 +5735,7 @@ namespace Neutron.Forms
             UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
 
             // UpdateTowerDisplay();
-            if (_workstationView.AreaId == 8) return;
+            if (_workstationView.AreaId == AreaEight) return;
 
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
             // UpdateCurrentDeviceIndicator();
@@ -5976,7 +5993,7 @@ namespace Neutron.Forms
             if (!lines.Any()) return;
             foreach (var line in lines)
             {
-                using (var form = new FrmChangeReplenLineStatus(line, _historyManager))
+                using (var form = new FrmChangeReplenLineStatus(line))
                 {
                     var result = form.ShowDialog();
                     if (result == DialogResult.OK)
@@ -6242,49 +6259,48 @@ namespace Neutron.Forms
 
         }
 
-        private void MBLocationCount_Click(object sender, EventArgs e)
+        private async void MBLocationCount_Click(object sender, EventArgs e)
         {
-            int inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
-            int qty = OpenLocationCountForm(inventoryId);
+            var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
+            var qty = await OpenLocationCountForm(inventoryId);
 
             if (qty >= 0)
             {
                 TextBoxLocationQuantity.Text = qty.ToString();
                 _currentPickStop.CurrentInventoryLocation.Quantity = qty;
-                int total = _currentPickStop.Inventory.Sum(r => r.Quantity);
+                var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
                 TextBoxTotalQuantity.Text = total.ToString();
                 LoadInventory();
             }
         }
 
 
-        private int OpenLocationCountForm(int inventoryId)
+        private async Task<int> OpenLocationCountForm(int inventoryId)
         {
-            int qty = -1;
+            var qty = -1;
             using (FrmLocationCount form = new FrmLocationCount())
             {
                 DialogResult result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
                     qty = (form.NewQty).ParseInt();
-                    LocationCount(inventoryId, qty);
-                }
-                else
-                {
-
+                    await LocationCount(inventoryId, qty);
                 }
             }
 
             return qty;
         }
 
-        private void LocationCount(int inventoryId, int qty)
+        private async Task LocationCount(int inventoryId, int qty)
         {
-            Inventory inv = _repoInventory.FindByKey(inventoryId);
-            int prevQty = inv.Quantity;
+            var inv = await _repoInventory.FindByKeyAsync(inventoryId);
+            if (inv == null) return;
+            await _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inv, inv.Quantity, true);
+
+            var prevQty = inv.Quantity;
             inv.Quantity = qty;
-            _repoInventory.Update(inv);
-            _historyManager.SaveHistory(ActionCode.InventoryModify, inv, prevQty, true);
+            await _repoInventory.UpdateAsync(inv);
+            await _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inv, prevQty, true);
 
             var cnt = new LocationCount()
             {
@@ -6296,8 +6312,7 @@ namespace Neutron.Forms
                 NewQty = qty,
                 CountDate = DateTime.Now,
             };
-            // _repoLocationCount.Insert(cnt);
-            _historyManager.SaveHistory(ActionCode.LocationCount, cnt);
+            await _historyManager.SaveHistoryAsync(ActionCode.LocationCount, cnt);
         }
 
         //private void SetCurrentInventoryView(int inventoryId)
@@ -7017,7 +7032,7 @@ namespace Neutron.Forms
                 ////, null))
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                            , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, item))
+                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions,_inventoryRepository, item))
                 {
                     DialogResult result = frm.ShowDialog();
                     Show();
@@ -7982,7 +7997,7 @@ namespace Neutron.Forms
             ////, pickList))
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                        , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, item, quantity, pickList))
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, _inventoryRepository ,item, quantity, pickList))
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -8555,7 +8570,7 @@ namespace Neutron.Forms
         //    // ---         _logger.LogDetailAsync($"{sb.ToString()}"));
         //}
 
-        private void UpdatePickViewInventoryQuantity(ReplenPickView pickView)
+        private async Task UpdatePickViewInventoryQuantity(ReplenPickView pickView)
         {
             var sb = new StringBuilder();
             //currentPickStop.CurrentInventoryLocation.Quantity -= currentPickStop.PickedQty;
@@ -8579,7 +8594,7 @@ namespace Neutron.Forms
 
                         _repoInventory.Update(inventory);
                         sb.AppendLine("Update Inventory");
-                        _historyManager.SaveHistory(ActionCode.StoreOrder, inventory, pickLocation.Quantity, pickView);
+                        await _historyManager.SaveHistoryAsync(ActionCode.StoreOrder, inventory, pickLocation.Quantity, pickView);
                         sb.AppendLine("Write Pick Order to History");
                     }
                     else
@@ -8593,7 +8608,7 @@ namespace Neutron.Forms
                 // no PickLocations so no inventory
                 // use the PickViews first Inventory Location by default
                 var inventory = pickView.Inventory[0];
-                _historyManager.SaveHistory(ActionCode.PickOrder, inventory, 0, pickView);
+                await _historyManager.SaveHistoryAsync(ActionCode.PickOrder, inventory, 0, pickView);
                 sb.AppendLine("Write Pick Order of zero quantity to History");
             }
 

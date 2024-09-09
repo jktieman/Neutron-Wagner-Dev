@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 using NeutronEvents;
 using AsyncAwaitBestPractices;
 using System.IO;
+using System.Text;
+using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Reflection;
 
 
 namespace ProliteController
@@ -47,10 +51,15 @@ namespace ProliteController
         private readonly WorkstationView _workstationView;
         private IDynamicLogger _logger;
         private SerialPort _serialPort;
-        private IList<Prolite> _prolites;
+        public IList<Prolite> Prolites { get; private set; }
         private string _lastCommand = string.Empty;
         public bool ProliteManagerEnabled = true;
         private bool _proliteBusy = false;
+
+        private readonly BlockingCollection<string> _proliteCommandQueue = new BlockingCollection<string>();
+        private static BackgroundWorker _proliteCommandQueueProcessor;
+        private bool _proliteBusyClearing;
+        private string _currentCommand;
 
         /// <summary>
         /// Takes a string and returns the corresponding Parity enum value.
@@ -110,12 +119,87 @@ namespace ProliteController
             _ = Init();
         }
 
-        private async Task Init()
+        private Task Init()
         {
-            _prolites = new List<Prolite>();
+            Prolites = new List<Prolite>();
             _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
-           await InitSerialPort();
+            return Task.CompletedTask;
         }
+
+        public async Task StartProcessingCommands()
+        {
+            await InitSerialPort();
+            InitBackgroundWorker();
+            _proliteCommandQueueProcessor.RunWorkerAsync();
+        }
+
+        private void StopProcessingCommands()
+        {
+            StopBackgroundWorker();
+        }
+
+        private void StopBackgroundWorker()
+        {
+            _proliteCommandQueueProcessor.CancelAsync();
+        }
+
+        private void InitBackgroundWorker()
+        {
+            _proliteCommandQueueProcessor = new BackgroundWorker
+            {
+                WorkerReportsProgress = false,
+                WorkerSupportsCancellation = true
+            };
+            _proliteCommandQueueProcessor.DoWork += ProliteCommandQueueProcessorDoWork;
+            _proliteCommandQueueProcessor.RunWorkerCompleted += ProliteCommandQueueProcessorRunWorkerCompleted;
+        }
+
+        private void ProliteCommandQueueProcessorDoWork(object sender, DoWorkEventArgs e)
+        {
+            var counter = 0;
+            //_logger.LogDetailAsync($"Command Queue Processing DoWork").SafeFireAndForget();
+            if (_proliteCommandQueueProcessor.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+
+            while (!_proliteCommandQueueProcessor.CancellationPending)
+            {                    
+                var busy = _proliteBusy;
+                Thread.Sleep(millisecondsTimeout: 100);
+                foreach (var command in _proliteCommandQueue.GetConsumingEnumerable())
+                {
+                    _currentCommand = command;
+                    busy = _proliteBusy;
+                    while (_proliteBusy)
+                    {
+                        Thread.Sleep(100);
+                        counter += 100;
+                        if (counter >= 10000) break;
+                        _logger.LogDetailAsync($"DoWork Waiting, Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
+                    }
+                    _proliteBusy = true;
+                    SerialPortWrite(command);
+
+                    _logger.LogDetailAsync($"Command Queue Processing: {command} ProliteBusy = {_proliteBusy}").SafeFireAndForget();
+                }
+            }
+
+        }
+
+        private void ProliteCommandQueueProcessorRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+
+            }
+            else
+            {
+                var result = e.Result;
+            }
+        }
+
+
 
         private async Task InitSerialPort()
         {
@@ -210,12 +294,12 @@ namespace ProliteController
             _logger.LogDetailAsync($"Add Prolite Id: {deviceNumber} - {name}").SafeFireAndForget();
             try
             {
-                var pro = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                var pro = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (pro is null)
                 {
                     var prolite = new Prolite(id, name, deviceNumber, ProliteManagerEnabled);
 
-                    _prolites.Add(prolite);
+                    Prolites.Add(prolite);
                 }
             }
             catch (Exception ex)
@@ -228,11 +312,11 @@ namespace ProliteController
             _logger.LogDetailAsync($"Remove Prolite: {deviceNumber}").SafeFireAndForget();
             try
             {
-                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                var prolite = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
 
                 if (prolite != null)
                 {
-                    _prolites.Remove(prolite);
+                    Prolites.Remove(prolite);
                 }
             }
             catch (Exception ex)
@@ -243,36 +327,43 @@ namespace ProliteController
 
         private void SerialPortWrite(string cmd)
         {
-            _logger.LogDetailAsync($"Start: {cmd}").SafeFireAndForget();
-            //var counter = 0;
-            //while (_proliteBusy)
-            //{
-            //    counter += 100;
-            //    _logger.LogDetailAsync($"Counter: {counter}").SafeFireAndForget();
-            //    Thread.Sleep(100);
-            //    if (counter >= 1000)
-            //    {
-            //        _logger.LogDetailAsync("Timeout waiting for ProLite to become available.").SafeFireAndForget();
-            //        break;
-            //    }
-            //}
-
-            // _proliteBusy = true;
+            var hexCmd = BitConverter.ToString(Encoding.Default.GetBytes(cmd));
+            _logger.LogDetailAsync($"Serial Port Write HEX => [ {hexCmd} ]").SafeFireAndForget();
+            // CHECK TO SEE IF SERIALPORT IS OPEN
+            if (!_serialPort.IsOpen)
+            {
+                var message = $"Serial Port is NOT Open. Cannot write command: {cmd}";
+                _logger.LogDetailAsync(message).SafeFireAndForget();
+                Mediator.GetInstance().OnGeneralError(this, message);
+                return;
+            }
             _serialPort.Write(cmd);
-            _logger.LogDetailAsync($"Start: {cmd}").SafeFireAndForget();
+            //_logger.LogDetailAsync($"End: {cmd}").SafeFireAndForget();
         }
         public void TurnOn(int deviceNumber, int level, int part, int quantity)
         {
-            _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity}").SafeFireAndForget();
+            _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity} ProliteBusyClearing: {_proliteBusyClearing}").SafeFireAndForget();
+
+            var counter = 0;
+            while (_proliteBusyClearing)
+            {
+                Thread.Sleep(100);
+                counter += 100;
+                if (counter >= 10000) break;
+                _logger.LogDetailAsync($"Prolite is Busy Clearing Current Wait Time: {counter}").SafeFireAndForget();
+            }
+
             try
             {
-                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                var prolite = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (prolite == null) return;
                 if (prolite.Enabled == false) return;
 
                 var cmd = prolite.TurnOn(level, part, quantity);
                 _lastCommand = cmd;
-                SerialPortWrite(cmd);
+                var hexCmd = BitConverter.ToString(Encoding.Default.GetBytes(cmd));
+                _logger.LogDetailAsync($"Adding to QUEUE: {hexCmd}").SafeFireAndForget();
+                _proliteCommandQueue.Add(cmd);
 
             }
             catch (Exception ex)
@@ -284,77 +375,162 @@ namespace ProliteController
         public void TurnOnLocation(int deviceNumber, int tray, int level, int part, int quantity)
         {
             _logger.LogDetailAsync($"Turn ON Prolite Location -  Device Number: {deviceNumber}  Tray: {tray}  Level: {level}  Part: {part}  Quantity: {quantity}").SafeFireAndForget();
+
+            var counter = 0;
+            //while (_proliteBusy)
+            //{
+            //    Thread.Sleep(100);
+            //    counter += 100;
+            //    if (counter >= 10000) break;
+            //    _logger.LogDetailAsync($"Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
+            //}
+
             try
             {
-                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                //_proliteBusy = true;
+                //_logger.LogDetailAsync($"Turn On Location Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+                var prolite = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (prolite == null) return;
                 if (prolite.Enabled == false) return;
 
                 var cmd = prolite.TurnOnLocation(tray, level, part);
                 _lastCommand = cmd;
-                SerialPortWrite(cmd);
-
+                //SerialPortWrite(cmd);
+                _logger.LogDetailAsync($"Adding to QUEUE: {cmd}").SafeFireAndForget();
+                _proliteCommandQueue.Add(cmd);
             }
             catch (Exception ex)
             {
                 _logger.LogDetailAsync($"Turn ON Prolite Error: {ex.Message}").SafeFireAndForget();
             }
+            //finally
+            //{
+            //    _proliteBusy = false;
+            //    _logger.LogDetailAsync($"Turn On Location Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+            //}
         }
 
         public void TurnOnHot(int deviceNumber)
         {
             _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT").SafeFireAndForget();
+            var counter = 0;
+            //while (_proliteBusy)
+            //{
+            //    Thread.Sleep(100);
+            //    counter += 100;
+            //    if (counter >= 10000) break;
+            //    _logger.LogDetailAsync($"Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
+            //}
+
             try
             {
-                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                //_proliteBusy = true;
+                //_logger.LogDetailAsync($"Turn On Hot Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+                var prolite = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (prolite == null) return;
                 if (prolite.Enabled == false) return;
                 var cmd = prolite.TurnOnHot();
                 _lastCommand = cmd;
-                if (!string.IsNullOrEmpty(cmd)) SerialPortWrite(cmd);
+                if (!string.IsNullOrEmpty(cmd))
+                {
+                    //SerialPortWrite(cmd);
+                    _logger.LogDetailAsync($"Adding to QUEUE: {cmd}").SafeFireAndForget();
+                    _proliteCommandQueue.Add(cmd); ;
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}").SafeFireAndForget();
             }
+            //finally
+            //{
+            //    _proliteBusy = false;
+            //    _logger.LogDetailAsync($"Turn On Hot Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+            //}
         }
 
         public void TurnOnBlindCycle(int deviceNumber, int level, int part)
         {
             _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle").SafeFireAndForget();
+
+            var counter = 0;
+            //while (_proliteBusy)
+            //{
+            //    Thread.Sleep(100);
+            //    counter += 100;
+            //    if (counter >= 10000) break;
+            //    _logger.LogDetailAsync($"Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
+            //}
+
             try
             {
-                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                //_proliteBusy = true;
+                //_logger.LogDetailAsync($"Turn On Blind Cycle Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+                var prolite = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (prolite == null) return;
                 if (prolite.Enabled == false) return;
                 var cmd = prolite.TurnOnBlindCycle(level, part);
                 _lastCommand = cmd;
-                if (!string.IsNullOrEmpty(cmd)) SerialPortWrite(cmd);
+                if (!string.IsNullOrEmpty(cmd))
+                {
+                    //SerialPortWrite(cmd);
+                    _logger.LogDetailAsync($"Adding to QUEUE: {cmd}").SafeFireAndForget();
+                    _proliteCommandQueue.Add(cmd);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogDetailAsync($"Turn ON Prolite Hot Error: {ex.Message}").SafeFireAndForget();
             }
+            //finally
+            //{
+            //    _proliteBusy = false;
+            //    _logger.LogDetailAsync($"Turn On Blind Cycle Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+            //}
         }
 
         // clear the prolite display
         public void ClearProlite(int deviceNumber)
         {
+
             _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}").SafeFireAndForget();
+
+            var counter = 0;
+            //while (_proliteBusy)
+            //{
+            //    Thread.Sleep(100);
+            //    counter += 100;
+            //    if (counter >= 10000) break;
+            //    _logger.LogDetailAsync($"Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
+            //}
 
             try
             {
-                var prolite = _prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
+                _proliteBusyClearing = true;
+                _logger.LogDetailAsync($"Clear All Prolite - Prolite Busy TRUE: {_proliteBusyClearing}").SafeFireAndForget();
+                var prolite = Prolites.FirstOrDefault(p => p.DeviceNumber == deviceNumber);
                 if (prolite is null) return;
                 if (prolite.Enabled == false) return;
                 var cmd = prolite.Clear();
                 _lastCommand = cmd;
-                if (!string.IsNullOrEmpty(cmd)) SerialPortWrite(cmd);
+                if (!string.IsNullOrEmpty(cmd))
+                {
+                    //SerialPortWrite(cmd);
+                    _logger.LogDetailAsync($"Adding to QUEUE: {cmd}").SafeFireAndForget();
+                    _proliteCommandQueue.Add(cmd);
+                    _proliteBusyClearing = false;
+                }
+
             }
             catch (Exception ex)
             {
                 _logger.LogDetailAsync($"Clear Prolite Error: {ex.Message}").SafeFireAndForget();
             }
+            //finally
+            //{
+            //    _proliteBusy = false;
+            //    _logger.LogDetailAsync($"Clear All Prolite - Prolite Busy TRUE: {_proliteBusy}").SafeFireAndForget();
+            //}
         }
         /// <summary>
         /// Asynchronously clears all enabled Prolite devices managed by this instance.
@@ -374,33 +550,60 @@ namespace ProliteController
         /// </exception>
         public async Task ClearAllProlites()
         {
-            if (_prolites == null)
+
+            _logger.LogDetailAsync($"Clear All Prolites").SafeFireAndForget();
+            //var counter = 0;
+            //while (_proliteBusy)
+            //{
+            //    Thread.Sleep(100);
+            //    counter += 100;
+            //    if (counter >= 10000) break;
+            //    _logger.LogDetailAsync($"Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
+            //}
+
+            _proliteBusyClearing = true;
+            _logger.LogDetailAsync($"Clear All Prolites - Prolite Busy Clearing: {_proliteBusyClearing}").SafeFireAndForget();
+            if (Prolites == null)
             {
-                _logger.LogDetailAsync($"_prolites is null").SafeFireAndForget();
+                _logger.LogDetailAsync($"Prolites are empty").SafeFireAndForget();
                 return;
             }
-            foreach (var prolite in _prolites)
+            foreach (var prolite in Prolites)
             {
                 if (prolite.Enabled == false) continue;
                 try
                 {
-                    SerialPortWrite(prolite.Clear());
-                    await Task.Delay(100);
+                   // _logger.LogDetailAsync($"Clear Prolite {prolite.DeviceNumber}").SafeFireAndForget();
+                    var cmd = prolite.Clear();
+
+                    //SerialPortWrite(cmd);
+                    _logger.LogDetailAsync($"Adding to QUEUE: {cmd}").SafeFireAndForget();
+                    _proliteCommandQueue.Add(cmd);
+                   // await Task.Delay(100);
                 }
                 catch (IOException ex)
                 {
-                    await _logger.LogDetailAsync($"An error occurred while trying to clear Prolite {prolite.DeviceNumber}: {ex.Message}");
+                    await _logger.LogDetailAsync(
+                        $"An error occurred while trying to clear Prolite {prolite.DeviceNumber}: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
                     await _logger.LogDetailAsync($"Turn OFF Prolite {prolite.DeviceNumber} Error: {ex.Message}");
                 }
             }
+            _proliteBusyClearing = false;
+            _logger.LogDetailAsync($"Clear All Prolites - Prolite Busy Clearing: {_proliteBusyClearing}").SafeFireAndForget();
+
         }
 
         bool IProLiteManager.IsProliteManagerEnabled()
         {
             return ProliteManagerEnabled;
+        }
+
+        public List<Prolite> GetProlites()
+        {
+            return Prolites.ToList();
         }
 
 
@@ -491,6 +694,8 @@ namespace ProliteController
 
         private void SerialPortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            //_logger.LogDetailAsync($"Pro-Lite Serial Data Received: ProliteBusy = {_proliteBusy} Current Command: {_currentCommand}").SafeFireAndForget();
+            
             var serialPort = (SerialPort)sender;
             var data = string.Empty;
 
@@ -504,14 +709,25 @@ namespace ProliteController
 
             if (data.Length > 0)
             {
-                _logger.LogDetailAsync($"Pro-Lite Serial Data Received: {data}").SafeFireAndForget();
+                // convert data to hex
+                data = data.Trim();
                 ProcessSerialData(data);
+            }
+            else
+            {
+                _logger.LogDetailAsync($"No data received from Pro-Lite").SafeFireAndForget();
             }
         }
 
         private void ProcessSerialData(string data)
         {
-            _proliteBusy = false;
+            var hexData = BitConverter.ToString(Encoding.Default.GetBytes(data));  //.Replace("-", "");
+            var hexCurrentCommand = BitConverter.ToString(Encoding.Default.GetBytes(_currentCommand));  //.Replace("-", "");
+            _logger.LogDetailAsync($"Pro-Lite Serial Data Received Current Command: {hexCurrentCommand}  Response: (Hex): [ {hexData} ] TURN OFF _proliteBusy").SafeFireAndForget();
+            _proliteBusy = false; 
+            _currentCommand = string.Empty;
+            
+            //_logger.LogDetailAsync($"Pro-Lite Serial Data Received: ProliteBusy = {_proliteBusy}").SafeFireAndForget();
 
             //if (data.Length < 11)
             //{

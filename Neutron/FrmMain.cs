@@ -67,6 +67,7 @@ namespace Neutron
         private readonly NeutronLicense _neutronLicense;
         private readonly IAreaRepository _areaRepository;
         private readonly ILocationsRepository _locationsRepository;
+        private readonly IInventoryRepository _inventoryRepository;
         private WorkstationView _workstationView;
         private readonly IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
@@ -77,7 +78,7 @@ namespace Neutron
         private SendEmail _sendEmail;
         private StartStopLoaderManager _startStopLoaderManager;
         private StartStopUploadManager _startStopUploadManager;
-        private HistoryManager _historyManager;
+        private IHistoryManager _historyManager;
         private IDisplayController _tcpIptiController;
         private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
         private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes = new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
@@ -109,7 +110,7 @@ namespace Neutron
         /// <param name="neutronLicense"></param>
         /// <param name="areaRepository"></param>
         /// <param name="locationsRepository"></param>
-
+        /// <param name="inventoryRepository"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
@@ -118,7 +119,8 @@ namespace Neutron
             , IStoredProcedureManager storedProcedureManager
             , NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , IAreaRepository areaRepository
-            , ILocationsRepository locationsRepository)
+            , ILocationsRepository locationsRepository
+            , IInventoryRepository inventoryRepository)
         {
             _jsonData = jsonData ?? throw new ArgumentNullException(nameof(jsonData));
             _akaRepository = akaRepository ?? throw new ArgumentNullException(nameof(akaRepository));
@@ -135,6 +137,7 @@ namespace Neutron
             _neutronLicense = neutronLicense ?? throw new ArgumentNullException(nameof(neutronLicense));
             _areaRepository = areaRepository ?? throw new ArgumentNullException(nameof(areaRepository));
             _locationsRepository = locationsRepository ?? throw new ArgumentNullException(nameof(locationsRepository));
+            _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             // _tcpIptiCommandCenter = null;
 
             InitializeComponent();
@@ -213,7 +216,7 @@ namespace Neutron
             if (_workstationView.WorkstationId == _neutronVariables.LoaderStation)
             {
                 if (!_neutronVariables.UseAutoCompress) return true;
-                _compressService = new CompressService(_jsonData, _workstationView, _neutronVariables, _historyManager, _ordersRepository, _replenOrdersRepository);
+                _compressService = new CompressService(_jsonData, _workstationView, _neutronVariables, _ordersRepository, _replenOrdersRepository);
                 _compressService.StartCompressService();
                 _logger.LogDetailAsync("Compress Service Started").SafeFireAndForget();
             }
@@ -298,6 +301,7 @@ namespace Neutron
                             SetupEmail();
 
                             _historyManager = DI.Create<HistoryManager>(_workstationView);
+                            GlobalVar.HistoryManager = _historyManager;  
 
                             _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}").SafeFireAndForget();
 
@@ -319,17 +323,20 @@ namespace Neutron
                             // otherwise, set up the hardware devices
                             // if (_workstationView.StationTypeId != (int)StationType.Supervisor)
                            
-                            var areas = new List<int> { 1, 2, 3, 4 };
+                           //var areas = new List<int> { 1, 2, 3, 4 };
+
+                           // var areas = _repoHardwareDevices.All().Select(r => r.WorkstationId).Distinct().ToList();
+                            
                             _workstationView.BatchTable = null;
                             
-                            if (areas.Contains(_workstationView.AreaId))
-                            {
-                                _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - Before").SafeFireAndForget();
+                            //if (areas.Contains(_workstationView.AreaId))
+                            //{
+                              //  _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - Before").SafeFireAndForget();
 
                                 SetupHardwareDevices();
 
-                                _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - After").SafeFireAndForget();
-                            }
+                               // _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - After").SafeFireAndForget();
+                           // }
 
                             // Removes old log files based on days to keep in Options/NeutronVariables
                             _logger.LogDetailAsync($"Start Log File Maintenance with Fire And Forget").SafeFireAndForget();
@@ -383,7 +390,7 @@ namespace Neutron
 
             var daysToKeep = _neutronVariables.LogFilesDaysToKeep;
             var logFileManager = new LogFileManager(logFileDir, daysToKeep, logger);
-            logFileManager.Process();
+            logFileManager.StartLogFileManagementService();
 
         }
 
@@ -583,8 +590,21 @@ namespace Neutron
                 // }
             }
 
-            // Represents a collection of ProLite hardware devices associated with the current workstation view.
-            _workstationView.Prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite).ToList();
+            if (_workstationView.ProLiteManager != null)
+            {
+                // Represents a collection of ProLite hardware devices associated with the current workstation view.
+                _workstationView.Prolites = _workstationView.HardwareDevices.Where(r => r.DeviceTypeId == (int)DeviceTypeEnum.ProLite && r.WorkstationId == _workstationView.WorkstationId).ToList();
+
+
+                // check to see if any _workstationView.Prolites are enabled
+                var prolitesEnabled = _workstationView.Prolites.FirstOrDefault(p => p.Enabled == true);
+                if (prolitesEnabled != null)
+                {
+                    _workstationView.ProLiteManager.StartProcessingCommands();
+                }
+
+            }
+            
             // quick reference flag shows if Prolites are used
             //_prolite = prolites.Any();
 
@@ -1098,7 +1118,7 @@ namespace Neutron
             Hide();
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                        , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions))
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, _inventoryRepository))
             {
                 frm.ShowDialog();
                 Show();
@@ -1128,40 +1148,87 @@ namespace Neutron
                 Show();
             }
         }
+        //private void MtPick_Click(object sender, EventArgs e)
+        //{
+        //    if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
+        //    Hide();
+        //    var counter = 0;
+        //    while (true)
+        //    {
+        //        if (_workstationView != null) break;
+        //        Thread.Sleep(100);
+        //        counter++;
+        //        if (counter > 20)
+        //        {
+        //            MessageBox.Show($"Unable to load workstation data.");
+        //            return;
+        //        }
+        //    }
+
+        //    using (var frm = DI.Create<FrmPick>(
+        //               _neutronVariables
+        //               , _neutronLicense
+        //               , _workstationView
+        //               , _historyManager
+        //               , _iptiDisplayFunctions))
+        //    {
+        //        frm.ShowDialog();
+
+        //        if (_neutronVariables.AutoLogOff)
+        //        {
+        //            SetMtLogOffText();
+        //        }
+
+        //        Show();
+        //    }
+        //}
+
         private void MtPick_Click(object sender, EventArgs e)
         {
-            if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders]) return;
-            Hide();
-            var counter = 0;
-            while (true)
+            if (!HasSecurityAccess())
             {
-                if (_workstationView != null) break;
+                return;
+            }
+            Hide();
+            if (!WaitForWorkstationData())
+            {
+                MessageBox.Show($"Unable to load workstation data.");
+                return;
+            }
+            ShowPickForm();
+            Show();
+        }
+        private bool HasSecurityAccess()
+        {
+            return _securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders];
+        }
+        private bool WaitForWorkstationData()
+        {
+            var counter = 0;
+            while (_workstationView == null && counter <= 20)
+            {
                 Thread.Sleep(100);
                 counter++;
-                if (counter > 20)
-                {
-                    MessageBox.Show($"Unable to load workstation data.");
-                    return;
-                }
             }
-
+            return _workstationView != null;
+        }
+        private void ShowPickForm()
+        {
             using (var frm = DI.Create<FrmPick>(
-                       _neutronVariables
-                       , _neutronLicense
-                       , _workstationView
-                       , _historyManager
-                       , _iptiDisplayFunctions))
+                       _neutronVariables,
+                       _neutronLicense,
+                       _workstationView,
+                       _historyManager,
+                       _iptiDisplayFunctions))
             {
                 frm.ShowDialog();
-
                 if (_neutronVariables.AutoLogOff)
                 {
                     SetMtLogOffText();
                 }
-
-                Show();
             }
         }
+
         private void MtUtilities_Click(object sender, EventArgs e)
         {
             var counter = 0;
@@ -1385,7 +1452,7 @@ namespace Neutron
             {
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                            , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions))
+                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, _inventoryRepository))
                 {
                     frm.ShowDialog();
                     Show();

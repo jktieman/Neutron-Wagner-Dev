@@ -108,11 +108,11 @@
     <Compile Include="XR_E20Command.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\VS2022\Projects\Neutron-Wagner-Dev\AlliedLogger\AlliedLogger.csproj">
+    <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">
       <Project>{ba17bdf5-4f6b-4ada-a7f0-9ae6a51a9816}</Project>
       <Name>AlliedLogger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\VS2022\Projects\Neutron-Wagner-Dev\NeutronCore\NeutronCore.csproj">
+    <ProjectReference Include="..\NeutronCore\NeutronCore.csproj">
       <Project>{8dfabb4e-0083-4930-9e48-978f4470c61d}</Project>
       <Name>NeutronCore</Name>
     </ProjectReference>

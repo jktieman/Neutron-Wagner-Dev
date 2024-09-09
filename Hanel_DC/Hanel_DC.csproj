@@ -82,8 +82,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\VS2022\Projects\Neutron-Wagner-Dev\NeutronEvents\NeutronEvents.csproj">
-      <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
+  <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
+      <Project>{fbc827af-2ce9-4d2c-b8a2-f782e27c8078}</Project>
       <Name>NeutronEvents</Name>
     </ProjectReference>
     <ProjectReference Include="..\AlliedLogger\AlliedLogger.csproj">

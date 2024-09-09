@@ -48,11 +48,10 @@
   <ItemGroup>
     <Compile Include="IJsonData.cs" />
     <Compile Include="JsonData.cs" />
+    <Compile Include="Models\CompanyName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

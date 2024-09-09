@@ -201,7 +201,7 @@ namespace Neutron.Forms
 
                 var area = (Area)ComboBoxAreaNumber.SelectedItem;
 
-                var views = area.Name == "All Areas" 
+                var views = area.Name == "All Areas"
                     ? _itemDefinitionsRepository.FindItemDefinitionViews(find).ToList()
                     : _itemDefinitionsRepository.FindItemDefinitionViewsByArea(find, area.Id).ToList();
 
@@ -412,7 +412,7 @@ namespace Neutron.Forms
         private async void MbViewEditSave_Click(object sender, EventArgs e)
         {
             MbViewEditSave.Enabled = false;
-           await UpdateViewEdit();
+            await UpdateViewEdit();
             MbViewEditSave.Enabled = true;
         }
         private void MbNewListing_Click(object sender, EventArgs e)
@@ -426,7 +426,7 @@ namespace Neutron.Forms
         private async void MbNewSave_Click(object sender, EventArgs e)
         {
             MbNewSave.Enabled = false;
-           await SaveNew();
+            await SaveNew();
             MbNewSave.Enabled = true;
         }
         private void MbNewClose_Click(object sender, EventArgs e)
@@ -468,7 +468,7 @@ namespace Neutron.Forms
                 if (!string.IsNullOrEmpty(TextBoxNewDescription.Text.Trim()))
                 {
                     var description = TextBoxNewDescription.Text.Trim();
-                    var itemDef = _repoItemDefinition.FindBy(f => f.Item == item && f.AreaId == areaId).FirstOrDefault();
+                    var itemDef = await _repoItemDefinition.FindByFirstOrDefaultAsync(f => f.Item == item && f.AreaId == areaId);
                     if (itemDef == null)
                     {
                         var rec = new ItemDefinition()
@@ -492,7 +492,7 @@ namespace Neutron.Forms
                         try
                         {
                             await _repoItemDefinition.InsertAsync(rec);
-                           await _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
+                            await _historyManager.SaveHistoryAsync(ActionCode.ItemAdd, rec);
                         }
                         catch (Exception ex)
                         {
@@ -558,9 +558,11 @@ namespace Neutron.Forms
                     if (!string.IsNullOrEmpty(TextBoxViewEditDescription.Text))
                     {
                         var description = TextBoxViewEditDescription.Text;
-                        var itemDef = _repoItemDefinition.FindByKey(id);
+                        var itemDef = await _repoItemDefinition.FindByKeyAsync(id);
                         if (itemDef != null)
                         {
+                            await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, itemDef);
+
                             itemDef.AreaId = areaId;
                             itemDef.Item = item;
                             itemDef.Description = description;
@@ -578,15 +580,18 @@ namespace Neutron.Forms
                             itemDef.Scale = CheckBoxViewEditScale.Checked;
                             try
                             {
-                                _repoItemDefinition.Update(itemDef);
-                               await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, itemDef);
+                                await _repoItemDefinition.UpdateAsync(itemDef);
+                                await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, itemDef);
 
-                                var recs = _repoOrderDetails.All()
-                                    .Where(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != (int)LineStatus.Available).ToList();
+                                var recs = await _repoOrderDetails.FindByAsync(r => r.ItemDefinitionId == itemDef.Id && r.LineStatusId != (int)LineStatus.Available);
                                 foreach (var rec in recs)
                                 {
+                                    await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
+
                                     rec.AreaId = areaId;
-                                    _repoOrderDetails.Update(rec);
+                                    await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
+
+                                    await _repoOrderDetails.UpdateAsync(rec);
 
 
                                 }
@@ -1092,12 +1097,16 @@ namespace Neutron.Forms
         private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
-            var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionView.Id);
+            var itemDefinition = await _repoItemDefinition.FindByKeyAsync(itemDefinitionView.Id);
             if (itemDefinition is null) return;
 
             if (CheckForInventory(itemDefinition.Id)) return;
-           await _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
-            _repoItemDefinition.Delete(itemDefinition.Id);
+            var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes) return;
+
+            await _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
+            var deleted = await _repoItemDefinition.DeleteAsync(itemDefinition.Id);
 
             TextBoxFind.Text = string.Empty;
             RefreshData();
@@ -1357,7 +1366,7 @@ namespace Neutron.Forms
                     $"Selection not in this Area.  If you want to view this selection, change to All Areas.");
                 return;
             }
-            
+
             _bindingSource.Position = index;
 
             ViewEditItemDefinition();

@@ -113,7 +113,7 @@ namespace NeutronLoader
                     if (recs.Count > 0)
                     {
                         var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository);
-                        var result = hostFile.CreateHostFile(recs);
+                        var result = await hostFile.CreateHostFile(recs);
                         if (result)
                         {
                             foreach (var rec in recs)

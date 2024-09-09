@@ -90,9 +90,11 @@ namespace Neutron.Forms
 
         private async Task UpdateItemDefinition()
         {
-            var rec = _repoItemDefinition.FindByKey(ItemDefinition.Id);
+            var rec = await _repoItemDefinition.FindByKeyAsync(ItemDefinition.Id);
             if (rec == null) return;
-            rec.Description = TextBoxViewEditDescription.Text;
+           await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
+
+           rec.Description = TextBoxViewEditDescription.Text;
             rec.SystemMax = Convert.ToInt32(TextBoxViewEditSystemMax.Text);
             rec.SystemMin = Convert.ToInt32(TextBoxViewEditSystemMin.Text);
             rec.LocationMax = Convert.ToInt32(TextBoxViewEditLocationMax.Text);
@@ -104,8 +106,8 @@ namespace Neutron.Forms
             rec.StorageTypeId = Convert.ToInt32(ComboBoxViewEditStorageType.SelectedValue);
             rec.Weight = Convert.ToSingle(TextBoxViewEditWeight.Text);
             rec.Scale = CheckBoxViewEditScale.Checked;
-            _repoItemDefinition.Update(rec);
-           await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, ItemDefinition);
+            await _repoItemDefinition.UpdateAsync(rec);
+           await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
             ItemDefinition = rec;  
         }
 

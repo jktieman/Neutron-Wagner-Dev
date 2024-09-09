@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq.Expressions;
+using NeutronData.Models;
 
 namespace NeutronData.SqlModelViews
 {

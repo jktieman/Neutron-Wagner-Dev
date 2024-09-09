@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplenService", "ReplenServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogFileMaintenance", "LogFileMaintenance\LogFileMaintenance.csproj", "{66326536-A1D8-49E7-9380-1A4C97EDF278}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronTest", "NeutronTest\NeutronTest.csproj", "{3D208A34-F70C-4958-B394-B84053F9042E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,6 +204,10 @@ Global
 		{66326536-A1D8-49E7-9380-1A4C97EDF278}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66326536-A1D8-49E7-9380-1A4C97EDF278}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66326536-A1D8-49E7-9380-1A4C97EDF278}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D208A34-F70C-4958-B394-B84053F9042E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D208A34-F70C-4958-B394-B84053F9042E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D208A34-F70C-4958-B394-B84053F9042E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D208A34-F70C-4958-B394-B84053F9042E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

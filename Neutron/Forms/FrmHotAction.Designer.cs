@@ -28,14 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.HotPick = new System.Windows.Forms.TabPage();
+            this.LabelOf = new System.Windows.Forms.Label();
+            this.TextBoxTotalPages = new System.Windows.Forms.TextBox();
+            this.TextBoxGoTo = new System.Windows.Forms.TextBox();
+            this.ButtonNextPage = new System.Windows.Forms.Button();
+            this.ButtonGoTo = new System.Windows.Forms.Button();
+            this.ButtonPreviousPage = new System.Windows.Forms.Button();
             this.LabelScanLocation = new System.Windows.Forms.Label();
             this.LabelStationName2 = new System.Windows.Forms.Label();
             this.LabelStationName = new System.Windows.Forms.Label();
@@ -50,7 +56,6 @@
             this.MBNewLocations = new MetroFramework.Controls.MetroButton();
             this.MBCurrentLocations = new MetroFramework.Controls.MetroButton();
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
-            this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.HotAction = new System.Windows.Forms.TabPage();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.LabelLocationCode = new System.Windows.Forms.Label();
@@ -87,15 +92,6 @@
             this.LabelMainSize = new System.Windows.Forms.Label();
             this.LabelHotPickUOI = new System.Windows.Forms.Label();
             this.LabelMainUnitOfIssue = new System.Windows.Forms.Label();
-            this.GroupBoxHotActions = new System.Windows.Forms.GroupBox();
-            this.LabelHotActionFind = new System.Windows.Forms.Label();
-            this.TextBoxFindCostCenter = new System.Windows.Forms.TextBox();
-            this.ComboBoxCostCenter = new System.Windows.Forms.ComboBox();
-            this.RadioButtonCostCenter = new System.Windows.Forms.RadioButton();
-            this.RadioButtonOther = new System.Windows.Forms.RadioButton();
-            this.RadioButtonScrap = new System.Windows.Forms.RadioButton();
-            this.RadioButtonWarranty = new System.Windows.Forms.RadioButton();
-            this.RadioButtonPick = new System.Windows.Forms.RadioButton();
             this.TextBoxHotPickQuantity = new System.Windows.Forms.TextBox();
             this.LabelHotPickDescription = new System.Windows.Forms.Label();
             this.LabelMainQuantity = new System.Windows.Forms.Label();
@@ -178,18 +174,22 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
+            this.PanelForDataGridViewHot = new System.Windows.Forms.Panel();
+            this.DataGridViewHot = new System.Windows.Forms.DataGridView();
+            this.LabelCostCenter = new System.Windows.Forms.Label();
+            this.TextBoxCostCenter = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
             this.HotAction.SuspendLayout();
             this.GroupBoxHotPickLocation.SuspendLayout();
-            this.GroupBoxHotActions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).BeginInit();
             this.HotActionTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.HotRackTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.PanelForDataGridViewHot.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -218,6 +218,13 @@
             // HotPick
             // 
             this.HotPick.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.HotPick.Controls.Add(this.PanelForDataGridViewHot);
+            this.HotPick.Controls.Add(this.LabelOf);
+            this.HotPick.Controls.Add(this.TextBoxTotalPages);
+            this.HotPick.Controls.Add(this.TextBoxGoTo);
+            this.HotPick.Controls.Add(this.ButtonNextPage);
+            this.HotPick.Controls.Add(this.ButtonGoTo);
+            this.HotPick.Controls.Add(this.ButtonPreviousPage);
             this.HotPick.Controls.Add(this.LabelScanLocation);
             this.HotPick.Controls.Add(this.LabelStationName2);
             this.HotPick.Controls.Add(this.LabelStationName);
@@ -232,12 +239,71 @@
             this.HotPick.Controls.Add(this.MBNewLocations);
             this.HotPick.Controls.Add(this.MBCurrentLocations);
             this.HotPick.Controls.Add(this.MBFindItem);
-            this.HotPick.Controls.Add(this.DataGridViewHot);
             this.HotPick.Location = new System.Drawing.Point(4, 22);
             this.HotPick.Name = "HotPick";
             this.HotPick.Size = new System.Drawing.Size(1235, 674);
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
+            // 
+            // LabelOf
+            // 
+            this.LabelOf.AutoSize = true;
+            this.LabelOf.Location = new System.Drawing.Point(714, 651);
+            this.LabelOf.Name = "LabelOf";
+            this.LabelOf.Size = new System.Drawing.Size(16, 13);
+            this.LabelOf.TabIndex = 36;
+            this.LabelOf.Text = "of";
+            // 
+            // TextBoxTotalPages
+            // 
+            this.TextBoxTotalPages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxTotalPages.Location = new System.Drawing.Point(738, 642);
+            this.TextBoxTotalPages.Name = "TextBoxTotalPages";
+            this.TextBoxTotalPages.Size = new System.Drawing.Size(47, 22);
+            this.TextBoxTotalPages.TabIndex = 35;
+            this.TextBoxTotalPages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxGoTo
+            // 
+            this.TextBoxGoTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxGoTo.Location = new System.Drawing.Point(661, 642);
+            this.TextBoxGoTo.Name = "TextBoxGoTo";
+            this.TextBoxGoTo.Size = new System.Drawing.Size(47, 22);
+            this.TextBoxGoTo.TabIndex = 35;
+            this.TextBoxGoTo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // ButtonNextPage
+            // 
+            this.ButtonNextPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonNextPage.Location = new System.Drawing.Point(801, 640);
+            this.ButtonNextPage.Name = "ButtonNextPage";
+            this.ButtonNextPage.Size = new System.Drawing.Size(133, 24);
+            this.ButtonNextPage.TabIndex = 34;
+            this.ButtonNextPage.Text = "Next Page >>";
+            this.ButtonNextPage.UseVisualStyleBackColor = true;
+            this.ButtonNextPage.Click += new System.EventHandler(this.ButtonNextPage_Click);
+            // 
+            // ButtonGoTo
+            // 
+            this.ButtonGoTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonGoTo.Location = new System.Drawing.Point(522, 640);
+            this.ButtonGoTo.Name = "ButtonGoTo";
+            this.ButtonGoTo.Size = new System.Drawing.Size(133, 24);
+            this.ButtonGoTo.TabIndex = 34;
+            this.ButtonGoTo.Text = "Go To";
+            this.ButtonGoTo.UseVisualStyleBackColor = true;
+            this.ButtonGoTo.Click += new System.EventHandler(this.ButtonGoTo_Click);
+            // 
+            // ButtonPreviousPage
+            // 
+            this.ButtonPreviousPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonPreviousPage.Location = new System.Drawing.Point(372, 640);
+            this.ButtonPreviousPage.Name = "ButtonPreviousPage";
+            this.ButtonPreviousPage.Size = new System.Drawing.Size(133, 24);
+            this.ButtonPreviousPage.TabIndex = 34;
+            this.ButtonPreviousPage.Text = "<< Prev Page";
+            this.ButtonPreviousPage.UseVisualStyleBackColor = true;
+            this.ButtonPreviousPage.Click += new System.EventHandler(this.ButtonPreviousPage_Click);
             // 
             // LabelScanLocation
             // 
@@ -416,54 +482,11 @@
             this.MBFindItem.UseSelectable = true;
             this.MBFindItem.Click += new System.EventHandler(this.MBFindItem_Click);
             // 
-            // DataGridViewHot
-            // 
-            this.DataGridViewHot.AllowUserToAddRows = false;
-            this.DataGridViewHot.AllowUserToDeleteRows = false;
-            this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle2;
-            this.DataGridViewHot.Location = new System.Drawing.Point(12, 161);
-            this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.DataGridViewHot.MultiSelect = false;
-            this.DataGridViewHot.Name = "DataGridViewHot";
-            this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowTemplate.Height = 28;
-            this.DataGridViewHot.RowTemplate.ReadOnly = true;
-            this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewHot.Size = new System.Drawing.Size(1208, 499);
-            this.DataGridViewHot.TabIndex = 5;
-            this.DataGridViewHot.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewHot_CellClick);
-            // 
             // HotAction
             // 
             this.HotAction.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.HotAction.Controls.Add(this.TextBoxCostCenter);
+            this.HotAction.Controls.Add(this.LabelCostCenter);
             this.HotAction.Controls.Add(this.GroupBoxHotPickLocation);
             this.HotAction.Controls.Add(this.ComboBoxHeightCodeItem);
             this.HotAction.Controls.Add(this.ComboBoxVelocityCodeItem);
@@ -474,7 +497,6 @@
             this.HotAction.Controls.Add(this.LabelMainSize);
             this.HotAction.Controls.Add(this.LabelHotPickUOI);
             this.HotAction.Controls.Add(this.LabelMainUnitOfIssue);
-            this.HotAction.Controls.Add(this.GroupBoxHotActions);
             this.HotAction.Controls.Add(this.TextBoxHotPickQuantity);
             this.HotAction.Controls.Add(this.LabelHotPickDescription);
             this.HotAction.Controls.Add(this.LabelMainQuantity);
@@ -841,7 +863,7 @@
             // LabelMainHeight
             // 
             this.LabelMainHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainHeight.Location = new System.Drawing.Point(14, 309);
+            this.LabelMainHeight.Location = new System.Drawing.Point(14, 311);
             this.LabelMainHeight.Name = "LabelMainHeight";
             this.LabelMainHeight.Size = new System.Drawing.Size(110, 16);
             this.LabelMainHeight.TabIndex = 9;
@@ -851,7 +873,7 @@
             // LabelMainVelocity
             // 
             this.LabelMainVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainVelocity.Location = new System.Drawing.Point(14, 283);
+            this.LabelMainVelocity.Location = new System.Drawing.Point(14, 282);
             this.LabelMainVelocity.Name = "LabelMainVelocity";
             this.LabelMainVelocity.Size = new System.Drawing.Size(110, 16);
             this.LabelMainVelocity.TabIndex = 7;
@@ -861,7 +883,7 @@
             // LabelMainSize
             // 
             this.LabelMainSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainSize.Location = new System.Drawing.Point(14, 257);
+            this.LabelMainSize.Location = new System.Drawing.Point(14, 253);
             this.LabelMainSize.Name = "LabelMainSize";
             this.LabelMainSize.Size = new System.Drawing.Size(110, 16);
             this.LabelMainSize.TabIndex = 5;
@@ -888,115 +910,6 @@
             this.LabelMainUnitOfIssue.TabIndex = 17;
             this.LabelMainUnitOfIssue.Text = "Unit of Issue";
             this.LabelMainUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // GroupBoxHotActions
-            // 
-            this.GroupBoxHotActions.Controls.Add(this.LabelHotActionFind);
-            this.GroupBoxHotActions.Controls.Add(this.TextBoxFindCostCenter);
-            this.GroupBoxHotActions.Controls.Add(this.ComboBoxCostCenter);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonCostCenter);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonOther);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonScrap);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonWarranty);
-            this.GroupBoxHotActions.Controls.Add(this.RadioButtonPick);
-            this.GroupBoxHotActions.Location = new System.Drawing.Point(1180, 130);
-            this.GroupBoxHotActions.Name = "GroupBoxHotActions";
-            this.GroupBoxHotActions.Size = new System.Drawing.Size(34, 93);
-            this.GroupBoxHotActions.TabIndex = 0;
-            this.GroupBoxHotActions.TabStop = false;
-            this.GroupBoxHotActions.Text = "Transaction Type";
-            // 
-            // LabelHotActionFind
-            // 
-            this.LabelHotActionFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotActionFind.Location = new System.Drawing.Point(185, 56);
-            this.LabelHotActionFind.Name = "LabelHotActionFind";
-            this.LabelHotActionFind.Size = new System.Drawing.Size(75, 22);
-            this.LabelHotActionFind.TabIndex = 16;
-            this.LabelHotActionFind.Text = "Find";
-            this.LabelHotActionFind.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // TextBoxFindCostCenter
-            // 
-            this.TextBoxFindCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFindCostCenter.Location = new System.Drawing.Point(266, 53);
-            this.TextBoxFindCostCenter.Name = "TextBoxFindCostCenter";
-            this.TextBoxFindCostCenter.Size = new System.Drawing.Size(138, 29);
-            this.TextBoxFindCostCenter.TabIndex = 0;
-            // 
-            // ComboBoxCostCenter
-            // 
-            this.ComboBoxCostCenter.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.ComboBoxCostCenter.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBoxCostCenter.FormattingEnabled = true;
-            this.ComboBoxCostCenter.Location = new System.Drawing.Point(411, 53);
-            this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
-            this.ComboBoxCostCenter.Size = new System.Drawing.Size(497, 32);
-            this.ComboBoxCostCenter.TabIndex = 1;
-            // 
-            // RadioButtonCostCenter
-            // 
-            this.RadioButtonCostCenter.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonCostCenter.Checked = true;
-            this.RadioButtonCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonCostCenter.Location = new System.Drawing.Point(21, 53);
-            this.RadioButtonCostCenter.Name = "RadioButtonCostCenter";
-            this.RadioButtonCostCenter.Size = new System.Drawing.Size(181, 28);
-            this.RadioButtonCostCenter.TabIndex = 2;
-            this.RadioButtonCostCenter.TabStop = true;
-            this.RadioButtonCostCenter.Tag = "Cost Center";
-            this.RadioButtonCostCenter.Text = "Cost Center";
-            this.RadioButtonCostCenter.UseVisualStyleBackColor = false;
-            // 
-            // RadioButtonOther
-            // 
-            this.RadioButtonOther.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonOther.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonOther.Location = new System.Drawing.Point(712, 17);
-            this.RadioButtonOther.Name = "RadioButtonOther";
-            this.RadioButtonOther.Size = new System.Drawing.Size(133, 28);
-            this.RadioButtonOther.TabIndex = 6;
-            this.RadioButtonOther.Tag = "Other";
-            this.RadioButtonOther.Text = "Other";
-            this.RadioButtonOther.UseVisualStyleBackColor = false;
-            // 
-            // RadioButtonScrap
-            // 
-            this.RadioButtonScrap.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonScrap.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonScrap.Location = new System.Drawing.Point(493, 17);
-            this.RadioButtonScrap.Name = "RadioButtonScrap";
-            this.RadioButtonScrap.Size = new System.Drawing.Size(133, 28);
-            this.RadioButtonScrap.TabIndex = 5;
-            this.RadioButtonScrap.Tag = "Scrap";
-            this.RadioButtonScrap.Text = "Scrap";
-            this.RadioButtonScrap.UseVisualStyleBackColor = false;
-            // 
-            // RadioButtonWarranty
-            // 
-            this.RadioButtonWarranty.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonWarranty.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonWarranty.Location = new System.Drawing.Point(240, 17);
-            this.RadioButtonWarranty.Name = "RadioButtonWarranty";
-            this.RadioButtonWarranty.Size = new System.Drawing.Size(167, 28);
-            this.RadioButtonWarranty.TabIndex = 4;
-            this.RadioButtonWarranty.Tag = "Warranty";
-            this.RadioButtonWarranty.Text = "Warranty";
-            this.RadioButtonWarranty.UseVisualStyleBackColor = false;
-            // 
-            // RadioButtonPick
-            // 
-            this.RadioButtonPick.BackColor = System.Drawing.Color.Transparent;
-            this.RadioButtonPick.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RadioButtonPick.Location = new System.Drawing.Point(21, 17);
-            this.RadioButtonPick.Name = "RadioButtonPick";
-            this.RadioButtonPick.Size = new System.Drawing.Size(133, 28);
-            this.RadioButtonPick.TabIndex = 3;
-            this.RadioButtonPick.Tag = "Pick";
-            this.RadioButtonPick.Text = "Pick";
-            this.RadioButtonPick.UseVisualStyleBackColor = false;
             // 
             // TextBoxHotPickQuantity
             // 
@@ -1969,6 +1882,82 @@
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // PanelForDataGridViewHot
+            // 
+            this.PanelForDataGridViewHot.AutoScroll = true;
+            this.PanelForDataGridViewHot.Controls.Add(this.DataGridViewHot);
+            this.PanelForDataGridViewHot.Location = new System.Drawing.Point(3, 156);
+            this.PanelForDataGridViewHot.Name = "PanelForDataGridViewHot";
+            this.PanelForDataGridViewHot.Size = new System.Drawing.Size(1227, 480);
+            this.PanelForDataGridViewHot.TabIndex = 37;
+            // 
+            // DataGridViewHot
+            // 
+            this.DataGridViewHot.AllowUserToAddRows = false;
+            this.DataGridViewHot.AllowUserToDeleteRows = false;
+            this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.DataGridViewHot.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle10;
+            this.DataGridViewHot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridViewHot.Location = new System.Drawing.Point(0, 0);
+            this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DataGridViewHot.MultiSelect = false;
+            this.DataGridViewHot.Name = "DataGridViewHot";
+            this.DataGridViewHot.ReadOnly = true;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowTemplate.Height = 28;
+            this.DataGridViewHot.RowTemplate.ReadOnly = true;
+            this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.DataGridViewHot.Size = new System.Drawing.Size(1227, 480);
+            this.DataGridViewHot.TabIndex = 6;
+            this.DataGridViewHot.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewHot_CellClick);
+            // 
+            // LabelCostCenter
+            // 
+            this.LabelCostCenter.AutoSize = true;
+            this.LabelCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCostCenter.Location = new System.Drawing.Point(37, 224);
+            this.LabelCostCenter.Name = "LabelCostCenter";
+            this.LabelCostCenter.Size = new System.Drawing.Size(87, 16);
+            this.LabelCostCenter.TabIndex = 167;
+            this.LabelCostCenter.Text = "Cost Center";
+            // 
+            // TextBoxCostCenter
+            // 
+            this.TextBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxCostCenter.Location = new System.Drawing.Point(137, 221);
+            this.TextBoxCostCenter.Name = "TextBoxCostCenter";
+            this.TextBoxCostCenter.ReadOnly = true;
+            this.TextBoxCostCenter.Size = new System.Drawing.Size(311, 22);
+            this.TextBoxCostCenter.TabIndex = 168;
+            this.TextBoxCostCenter.TabStop = false;
+            this.TextBoxCostCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // FrmHotAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1987,13 +1976,10 @@
             this.tabControl1.ResumeLayout(false);
             this.HotPick.ResumeLayout(false);
             this.HotPick.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).EndInit();
             this.HotAction.ResumeLayout(false);
             this.HotAction.PerformLayout();
             this.GroupBoxHotPickLocation.ResumeLayout(false);
             this.GroupBoxHotPickLocation.PerformLayout();
-            this.GroupBoxHotActions.ResumeLayout(false);
-            this.GroupBoxHotActions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).EndInit();
             this.HotActionTray.ResumeLayout(false);
             this.HotActionTray.PerformLayout();
@@ -2003,6 +1989,8 @@
             this.HotRackTray.ResumeLayout(false);
             this.HotRackTray.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.PanelForDataGridViewHot.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2022,9 +2010,7 @@
         private System.Windows.Forms.Button ButtonClearFindItem;
         private MetroFramework.Controls.MetroButton MBHotActionClose;
         private MetroFramework.Controls.MetroButton MBFindItem;
-        private System.Windows.Forms.DataGridView DataGridViewHot;
         private System.Windows.Forms.TabPage HotAction;
-        private System.Windows.Forms.GroupBox GroupBoxHotActions;
         private System.Windows.Forms.TextBox TextBoxHotPickQuantity;
         private System.Windows.Forms.Label LabelHotPickDescription;
         private System.Windows.Forms.Label LabelMainQuantity;
@@ -2045,18 +2031,12 @@
         private System.Windows.Forms.TextBox TextBoxHotPickLoc4;
         private System.Windows.Forms.TextBox TextBoxHotPickLocationQuantity;
         private System.Windows.Forms.TextBox TextBoxHotPickLoc5;
-        private System.Windows.Forms.RadioButton RadioButtonScrap;
-        private System.Windows.Forms.RadioButton RadioButtonWarranty;
-        private System.Windows.Forms.RadioButton RadioButtonPick;
         private System.Windows.Forms.Label LabelHotPickUOI;
         private System.Windows.Forms.Label LabelMainUnitOfIssue;
         private System.Windows.Forms.Label LabelPrimeBin;
         private System.Windows.Forms.Label LabelStaticRelease;
         private System.Windows.Forms.TextBox TextBoxHotPickReceivedDate;
         private System.Windows.Forms.Label LabelReceivedDate;
-        private System.Windows.Forms.RadioButton RadioButtonOther;
-        private System.Windows.Forms.ComboBox ComboBoxCostCenter;
-        private System.Windows.Forms.RadioButton RadioButtonCostCenter;
         private MetroFramework.Controls.MetroButton MBNewLocations;
         private MetroFramework.Controls.MetroButton MBCurrentLocations;
         private System.Windows.Forms.Label LabelHeight;
@@ -2076,7 +2056,6 @@
         private System.Windows.Forms.Label LabelLocationCode;
         private System.Windows.Forms.CheckBox CheckBoxAll;
         private MetroFramework.Controls.MetroButton MBHotActionCount;
-        private System.Windows.Forms.TextBox TextBoxFindCostCenter;
         private System.Windows.Forms.Label LabelSlot;
         private System.Windows.Forms.TabPage HotActionTray;
         private MetroFramework.Controls.MetroButton MBHotActionBackTray;
@@ -2115,7 +2094,6 @@
         private System.Windows.Forms.TextBox TextBoxScanLocation;
         private System.Windows.Forms.Label LabelStationName;
         private System.Windows.Forms.Label LabelStationName2;
-        private System.Windows.Forms.Label LabelHotActionFind;
         private System.Windows.Forms.TabPage HotRackTray;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.TextBox textBox2;
@@ -2154,5 +2132,15 @@
         private System.Windows.Forms.TextBox TextBoxHotPickLocationCodeTray;
         private System.Windows.Forms.Label LabelScanLocation;
         private System.Windows.Forms.Label LabelMainDescription;
+        private System.Windows.Forms.TextBox TextBoxGoTo;
+        private System.Windows.Forms.Button ButtonNextPage;
+        private System.Windows.Forms.Button ButtonGoTo;
+        private System.Windows.Forms.Button ButtonPreviousPage;
+        private System.Windows.Forms.Label LabelOf;
+        private System.Windows.Forms.TextBox TextBoxTotalPages;
+        private System.Windows.Forms.Panel PanelForDataGridViewHot;
+        private System.Windows.Forms.DataGridView DataGridViewHot;
+        private System.Windows.Forms.TextBox TextBoxCostCenter;
+        private System.Windows.Forms.Label LabelCostCenter;
     }
 }

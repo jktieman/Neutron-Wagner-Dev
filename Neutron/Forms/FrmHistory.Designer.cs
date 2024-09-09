@@ -203,12 +203,10 @@
             // 
             // RadioButtonDateRange
             // 
-            this.RadioButtonDateRange.Checked = true;
             this.RadioButtonDateRange.Location = new System.Drawing.Point(122, 47);
             this.RadioButtonDateRange.Name = "RadioButtonDateRange";
             this.RadioButtonDateRange.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonDateRange.TabIndex = 3;
-            this.RadioButtonDateRange.TabStop = true;
             this.RadioButtonDateRange.Text = "Date Range";
             this.RadioButtonDateRange.UseVisualStyleBackColor = true;
             this.RadioButtonDateRange.CheckedChanged += new System.EventHandler(this.RadioButtonDateRange_CheckedChanged);
@@ -235,10 +233,12 @@
             // 
             // RadioButtonToday
             // 
+            this.RadioButtonToday.Checked = true;
             this.RadioButtonToday.Location = new System.Drawing.Point(8, 14);
             this.RadioButtonToday.Name = "RadioButtonToday";
             this.RadioButtonToday.Size = new System.Drawing.Size(100, 18);
             this.RadioButtonToday.TabIndex = 0;
+            this.RadioButtonToday.TabStop = true;
             this.RadioButtonToday.Text = "Today";
             this.RadioButtonToday.UseVisualStyleBackColor = true;
             this.RadioButtonToday.CheckedChanged += new System.EventHandler(this.RadioButtonToday_CheckedChanged);

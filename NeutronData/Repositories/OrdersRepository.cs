@@ -18,6 +18,7 @@ using NeutronData.Models.Lookups;
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using System.Web.Routing;
 using AsyncAwaitBestPractices;
+using NeutronEvents;
 
 namespace NeutronData.Repositories
 {
@@ -97,7 +98,7 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public IEnumerable<OrderView> GetAvailableOrderViews(string orderStatus = "1,2,3,4,5,7,8", string searchField = "")
+        public IEnumerable<OrderView> GetAvailableOrderViews(string orderStatus = "1,2,3,4,5,6,7,8,9", string searchField = "")
         {
             var recs = new List<OrderView>();
 
@@ -1520,7 +1521,11 @@ namespace NeutronData.Repositories
                     param = new SqlParameter(parameterName: "@SERIALPICKING", value: serialPicking);
                     parameters.Add(param);
                     _ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreenWithRoute. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
+                    
                     recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreenWithRoute @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
+                    
+                    
+                    LogInvalidOrderDetails(areaId, recs);
                 }
             }
             catch (Exception ex)
@@ -1530,6 +1535,32 @@ namespace NeutronData.Repositories
 
 
             return recs;
+        }
+
+        /// <summary>
+        /// Logs the details of invalid orders.
+        /// </summary>
+        /// <param name="areaId">The identifier of the area where the orders are being processed.</param>
+        /// <param name="recs">A list of available orders views.</param>
+        /// <remarks>
+        /// This method checks the list of available orders views for any orders that should not be appearing in the Induction Screen.
+        /// If such orders are found, it logs the details of these orders and sends a message to the supervisor.
+        /// </remarks>
+        private void LogInvalidOrderDetails(int areaId, List<AvailableOrdersView> recs)
+        {
+            var recList = recs.Select(r => r.Id).ToList();
+            var detailLines = _context.OrderDetails
+                .Where(r => recList.Contains(r.OrderId) && r.AreaId < areaId && r.LineStatusId != 6)
+                .ToList();
+            if (!detailLines.Any()) return;
+            var sb = new StringBuilder();
+            sb.AppendLine($"Contact Supervisor Immediately!{Environment.NewLine}{Environment.NewLine}");
+            foreach (var line in detailLines)
+            {
+                sb.AppendLine($"This item should NOT be showing up in the Induction Screen. OrderDetail Id: {line.Id} Item: {line.PartNum} AreaId: {line.AreaId} LineStatus: {line.LineStatusId} ");
+            }
+            _logger.LogDetailAsync(sb.ToString());
+            Mediator.GetInstance().OnDisplayMessage(this, sb.ToString());
         }
 
         public string GetRoute(int orderId)

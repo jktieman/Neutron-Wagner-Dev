@@ -11,20 +11,18 @@ namespace Neutron.Forms
 {
     public partial class FrmReprint : Form
     {
-        private NeutronVariables _neutronVaribles;
         private readonly int _position;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
         public PrintData printData;
 
-        public FrmReprint(NeutronVariables neutronVaribles, int position)
+        public FrmReprint(NeutronVariables neutronVariables, int position)
         {
-            _neutronVaribles = neutronVaribles;
             _position = position;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
-            CheckBoxDocument.Visible = _neutronVaribles.EnableDocumentPrinter;
+            CheckBoxDocument.Visible = neutronVariables.EnableDocumentPrinter;
             TextBoxReprintPosition.Text = position.ToString();
         }
 

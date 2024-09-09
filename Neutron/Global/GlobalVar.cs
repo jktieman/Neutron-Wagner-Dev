@@ -21,7 +21,7 @@ namespace Neutron.Global
         public static User User { get; set; }
         public static bool LoaderRunning { get; set; }
         public static bool UploadRunning { get; set; }
-        public static HistoryManager HistoryManager { get; set; }
+        public static IHistoryManager HistoryManager { get; set; }
         public static bool Testing { get; set; }
 
     }

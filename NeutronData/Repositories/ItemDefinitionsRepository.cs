@@ -61,6 +61,7 @@ namespace NeutronData.Repositories
         public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByItem(string item)
         {
             var recs = new List<ItemDefinitionView>();
+            var paginatedResult = new List<ItemDefinitionView>();
             if (string.IsNullOrEmpty(item)) return recs;
          _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views by Item -- Start");
             try
@@ -78,11 +79,64 @@ namespace NeutronData.Repositories
          _ = _logger.LogDetailAsync("Get All Item Definition Views By Item -- End: " + recs.Count.ToString());
             return recs;
         }
+
+        public int TotalItemDefinitionViewsByArea(string find = "", int areaid = 0)
+        {
+            var count = 0;
+            if (areaid == 0) return count;
+            _ = _logger.LogDetailAsync(msg: "Get Total Item Definition Views Start");
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter("@FIND", find);
+                    var paramStation = new SqlParameter("@AREAID", areaid);
+                    count = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Area @FIND, @AREAID ", param, paramStation).Count();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = _logger.LogDetailAsync("Get Total Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+            _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + count.ToString());
+
+            return count;
+
+        }
+
+        public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByArea(string find = "", int areaid = 0, int currentPage = 1)
+        {
+            var recs = new List<ItemDefinitionView>();
+            var paginatedResult = new List<ItemDefinitionView>();
+
+            var pageSize = 15;
+            if (areaid == 0) return recs;
+         _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter("@FIND", find);
+                    var paramStation = new SqlParameter("@AREAID", areaid);
+                    recs = context.Database.SqlQuery<ItemDefinitionView>("usp_GetItemDefinitionViewFind_Area @FIND, @AREAID ", param, paramStation).ToList();
+                    paginatedResult = recs.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+             _ = _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+            }
+         _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
+         _ = _logger.LogDetailAsync("Get All Item Definition Views End Paginated: " + paginatedResult.Count.ToString());
+            //return recs;
+            return paginatedResult;
+        }
         public IEnumerable<ItemDefinitionView> FindItemDefinitionViewsByArea(string find = "", int areaid = 0)
         {
             var recs = new List<ItemDefinitionView>();
             if (areaid == 0) return recs;
-         _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
+            _ = _logger.LogDetailAsync(msg: "Get All Item Definition Views Start");
             try
             {
                 using (var context = new NeutronDb())
@@ -94,12 +148,12 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get All Item Definition Views Error. " + ex.Message + " " + ex.InnerException);
             }
-         _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
+            _ = _logger.LogDetailAsync("Get All Item Definition Views End: " + recs.Count.ToString());
+
             return recs;
         }
-
 
         /// <summary>
         /// Get all Item Definition Views for ALL Areas

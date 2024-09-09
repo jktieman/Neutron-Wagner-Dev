@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Neutron.Global;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
+using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
@@ -14,7 +15,7 @@ namespace Neutron.Forms
     public partial class FrmChangeLineStatus : Form
     {
         private readonly OrderDetail _orderDetail;
-        private readonly HistoryManager _historyManager;
+        private readonly IHistoryManager _historyManager;
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<LineStatusLookup> _repoStatus = new GenericRepository<LineStatusLookup>(new NeutronDb());
         private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
@@ -22,7 +23,7 @@ namespace Neutron.Forms
        // private readonly List<int> _statusNumbers = new List<int> { 1, 6, 9 };
         private readonly int _currentStatus;
 
-        public FrmChangeLineStatus(OrderDetail orderDetail, HistoryManager historyManager)
+        public FrmChangeLineStatus(OrderDetail orderDetail, IHistoryManager historyManager)
         {
             _orderDetail = orderDetail;
             _historyManager = historyManager;

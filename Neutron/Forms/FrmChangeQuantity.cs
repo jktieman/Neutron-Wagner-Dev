@@ -17,17 +17,14 @@ namespace Neutron.Forms
         private ResourceManager _resourceManager;
         public int NewQty { get; set; }
         public int Position { get; set; }
-        private readonly PickStop _pickStop;
-        private ReplenPickStop _replenPickStop;
-        private List<int> _validPositions = new List<int>();
+        private readonly List<int> _validPositions = new List<int>();
 
         public FrmChangeQuantity(PickStop pickStop)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
-            _pickStop = pickStop;
-            GetValidPositions(_pickStop.PickViews);
+            GetValidPositions(pickStop.PickViews);
             var pos = pickStop.PickViews.First().PickPosition;
             TextBoxChangeQuantityPosition.Text = pos.ToString();
             TextBoxNewQuantity.Text = "0";
@@ -57,8 +54,7 @@ namespace Neutron.Forms
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
-            _replenPickStop = pickStop;
-            GetValidPositions(_replenPickStop.PickViews);
+            GetValidPositions(pickStop.PickViews);
             var pos = pickStop.PickViews.First().PickPosition;
             TextBoxChangeQuantityPosition.Text = pos.ToString();
             TextBoxNewQuantity.Text = "0";

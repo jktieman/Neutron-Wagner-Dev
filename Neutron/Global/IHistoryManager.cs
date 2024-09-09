@@ -24,16 +24,29 @@ namespace Neutron.Global
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, PickView pickView);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, PickList pickList);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, OrderDetail orderDetail);
+        void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, ReplenOrderDetail orderDetail);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, string costCenter);
-        void SaveHistory(ActionCode actionCode, LocationCount cnt);
+        void SaveHistory(ActionCode actionCode, Inventory inventory, int prevQty, bool value);
+        Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int prevQty, bool value);
+
+        void SaveHistory(ActionCode actionCode, LocationCount locationCount);
+        Task SaveHistoryAsync(ActionCode actionCode, LocationCount locationCount);
         void SaveHistory(ActionCode actionCode, Location location);
         void SaveHistory(ActionCode actionCode, ItemDefinition itemDefinition);
         void SaveHistory(ActionCode actionCode, ReplenOrderDetail value, int workstationId);
         void SaveHistory(ActionCode actionCode, ReplenOrder order, int workstationId);
         void SaveHistory(ActionCode actionCode, SkipView skipView);
         Task SaveHistoryAsync(ActionCode actionCode, Location location);
+
         Task SaveHistoryAsync(ActionCode actionCode, ItemDefinition itemDefinition);
+        Task SaveHistoryAsync(ActionCode actionCode, OrderDetail orderDetail);
+        Task SaveHistoryAsync(ActionCode actionCode, Order order);
+        Task SaveHistoryAsync(ActionCode actionCode, ReplenOrder order);
+        Task SaveHistoryAsync(ActionCode actionCode, ReplenOrderView order);
+        Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickLocationQty, PickView pickView);
+        Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickLocationQty, ReplenPickView pickView);
+        Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory);
         List<HistoryView> GetHistoryRecordsByUser(string empId);
         List<HistoryView> GetHistoryRecords();
         List<HistoryView> GetHistoryRecords(string codes, DateTime fromDate, DateTime toDate, string find);

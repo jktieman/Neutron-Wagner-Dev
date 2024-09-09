@@ -1,4 +1,6 @@
-﻿using Neutron.Global;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Neutron.Global;
 using NeutronData.Models;
 using NeutronData.Repositories;
 using NeutronCore.Enums;
@@ -11,43 +13,39 @@ namespace Neutron.Models
     {
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly ILocationsRepository _locationsRepository;
-        private readonly HistoryManager _historyManager;
 
         public InventoryManager(GenericRepository<Inventory> repoInventory, ILocationsRepository locationsRepository
-        , HistoryManager historyManager)
+        )
         {
             _repoInventory = repoInventory;
             _locationsRepository = locationsRepository;
-            _historyManager = historyManager;
         }
 
-        public void DeleteInventoryRecord(int invId, bool releaseOnly = false)
+        public async Task<bool> DeleteInventoryRecordAsync(int invId, bool releaseOnly = false)
         {
-            var inventory = _repoInventory.FindByKey(invId);
-            if (inventory == null) return;
-            if (releaseOnly)
+            var inventory = await _repoInventory.FindByKeyAsync(invId);
+            if (inventory == null || (releaseOnly && inventory.StorageTypeId != (int)StorageType.Release))
             {
-                if (inventory.StorageTypeId == (int)StorageType.Release)
-                {
-                    _historyManager.SaveHistory(ActionCode.InventoryDelete, inventory);
-                    _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-                    _repoInventory.Delete(invId);
-                }
+                return false;
             }
-            else
+            await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventory);
+            var otherInventoryInLocation = await _repoInventory.FindByAsync(r => r.LocationId == inventory.LocationId);
+            if (otherInventoryInLocation.Count() == 1)
             {
-                _historyManager.SaveHistory(ActionCode.InventoryDelete, inventory);
-                _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-                _repoInventory.Delete(invId);
+                await _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
             }
+            return await _repoInventory.DeleteAsync(invId);
         }
 
-        public void ReleaseCheck(Inventory inventory)
+        public async Task<bool> ReleaseCheckAsync(Inventory inventory)
         {
-            if (inventory.Quantity <= 0 && inventory.StorageTypeId == (int)StorageType.Release)
+            var isInventoryEmpty = inventory.Quantity <= 0;
+            var isStorageTypeRelease = inventory.StorageTypeId == (int)StorageType.Release;
+            if (!isInventoryEmpty || !isStorageTypeRelease)
             {
-                DeleteInventoryRecord(inventory.Id, releaseOnly: true);
+                return false;
             }
+            return await DeleteInventoryRecordAsync(inventory.Id, releaseOnly: true);
         }
     }
 }

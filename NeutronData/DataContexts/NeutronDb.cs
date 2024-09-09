@@ -21,7 +21,7 @@ namespace NeutronData.DataContexts
         }
 
         public DbSet<OperationStatus> OperationStatuses { get; set; }
-        
+
         public DbSet<ItemDefinition> ItemDefinitions { get; set; }
         public DbSet<StorageType> StorageTypes { get; set; }
         public DbSet<UnitOfIssue> UnitOfIssues { get; set; }
@@ -71,31 +71,15 @@ namespace NeutronData.DataContexts
         public DbSet<NOVA_OUTPUT> NOVA_OUTPUT { get; set; }
         public DbSet<PriorityRecord> PriorityRecords { get; set; }
 
-
-
-
-        public override int SaveChanges()
-        {
-            try
-            {
-                return base.SaveChanges();
-            }
-            catch (DbEntityValidationException ex)
-            {
-                var errorMessages = ex.EntityValidationErrors
-                    .SelectMany(x => x.ValidationErrors)
-                    .Select(x => x.ErrorMessage);
-
-                var fullErrorMessage = string.Join("; ", errorMessages);
-
-                var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
-
-                throw new DbEntityValidationException(exceptionMessage, ex.EntityValidationErrors);
-            }
-        }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OrderDetail>()
+                .HasKey(od => od.Id);
+            
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.OrderDetails)
+                .WithRequired(od => od.Order)
+                .HasForeignKey(od => od.OrderId); ;
 
             //modelBuilder.Entity<User>()
             //    .HasMany(u => u.Groups)
@@ -138,5 +122,28 @@ namespace NeutronData.DataContexts
             base.OnModelCreating(modelBuilder);
 
         }
+
+
+        public override int SaveChanges()
+        {
+            try
+            {
+                return base.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errorMessages = ex.EntityValidationErrors
+                    .SelectMany(x => x.ValidationErrors)
+                    .Select(x => x.ErrorMessage);
+
+                var fullErrorMessage = string.Join("; ", errorMessages);
+
+                var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
+
+                throw new DbEntityValidationException(exceptionMessage, ex.EntityValidationErrors);
+            }
+        }
+
+
     }
 }

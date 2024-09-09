@@ -48,7 +48,7 @@ namespace Neutron.Forms
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
         private readonly ILacProcessor _lacProcessor;
-        private readonly IHistoryManager _historyManager;
+        //private readonly IHistoryManager _historyManager;
         private readonly WorkstationView _workstationView;
         private DocumentPrinterPreferences _documentPrinter;
         private LabelPrinterPreferences _labelPrinter;
@@ -95,7 +95,7 @@ namespace Neutron.Forms
             _workstationView = workstationView;
             _neutronVariables = neutronVariables;
             _lacProcessor = lacProcessor;
-            _historyManager = historyManager;
+            //_historyManager = historyManager;
             _iptiDisplayFunctions = iptiDisplayFunctions;
 
 
@@ -477,14 +477,15 @@ namespace Neutron.Forms
             _logger.LogDetailAsync($"MoveDevice END.").SafeFireAndForget();
         }
 
-        private async Task SaveNew()
+        private async Task<bool> SaveNew()
         {
+            var result = false;
             var area = (Area)ComboBoxNewArea.SelectedItem;
-            if (area == null) return;
+            if (area == null) return false;
             var areaId = area.Id;
 
             var device = (StorageDevice)ComboBoxNewDevice.SelectedItem;
-            if (device == null) return;
+            if (device == null) return false;
             var deviceNumber = device.StorageDeviceNumber;
 
             // if StorageDeviceType is Rack
@@ -493,7 +494,7 @@ namespace Neutron.Forms
             if (device.StorageDeviceType.Name == "Rack")
             {
                 var slot = TextBoxNewSlot.Text;
-                var rec = _repoLocation.All().FirstOrDefault(r =>
+                var rec = await _repoLocation.FindByFirstOrDefaultAsync(r =>
                     r.AreaId == areaId && r.Loc1 == deviceNumber && r.Slot == slot);
                 if (rec == null)
                 {
@@ -514,14 +515,13 @@ namespace Neutron.Forms
                         InUse = CheckBoxInUseNew.Checked
                     };
                     await _repoLocation.InsertAsync(loc);
-                    await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
-
+                    await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                    result = true;
                 }
                 else
                 {
                     MessageBox.Show(_resourceManager.GetString("Message3"));
                 }
-
             }
             else
             {
@@ -538,10 +538,10 @@ namespace Neutron.Forms
                             {
                                 var loc5 = TextBoxNewLoc5.Text.ParseInt();
 
-                                var rec = _repoLocation.All().FirstOrDefault(r =>
+                                var rec = await _repoLocation.FindByAsync(r =>
                                     r.AreaId == areaId && r.Loc1 == deviceNumber && r.Loc2 == loc2
                                     && r.Loc3 == loc3 && r.Loc4 == loc4 && r.Loc5 == loc5);
-                                if (rec == null)
+                                if (!rec.Any())
                                 {
                                     var slotName = TextBoxNewSlot.Text;
                                     //var slotName = GlobalVar.SlotNameFactory
@@ -566,7 +566,8 @@ namespace Neutron.Forms
                                     try
                                     {
                                         await _repoLocation.InsertAsync(loc);
-                                        await _historyManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                                        await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationAdd, loc);
+                                        result = true;
                                     }
                                     catch (Exception ex)
                                     {
@@ -574,8 +575,8 @@ namespace Neutron.Forms
                                                         ex.InnerException);
                                     }
 
-                                    RefreshData();
-                                    tabControl1.SelectedTab = tabPage1;
+                                    //RefreshData();
+                                    //tabControl1.SelectedTab = tabPage1;
                                 }
                                 else
                                 {
@@ -603,6 +604,8 @@ namespace Neutron.Forms
                     MessageBox.Show(_resourceManager.GetString("Message8"));
                 }
             }
+
+            return result;
         }
 
         private async Task UpdateViewEdit()
@@ -610,7 +613,7 @@ namespace Neutron.Forms
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
             if (locationView == null) return;
             var id = locationView.Id;
-            var loc = _repoLocation.FindByKey(id);
+            var loc = await _repoLocation.FindByKeyAsync(id);
             if (loc == null) return;
             var area = (Area)ComboBoxViewEditArea.SelectedItem;
             if (area == null) return;
@@ -619,6 +622,9 @@ namespace Neutron.Forms
             var device = ((StorageDevice)ComboBoxViewEditDevice.SelectedItem);
             if (device == null) return;
             var deviceNumber = device.StorageDeviceNumber;
+            // record the original values in History
+            await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+
             //-------------------------------------------------
 
             // if StorageDeviceType is Rack
@@ -642,8 +648,8 @@ namespace Neutron.Forms
                 loc.LocationCode = TextBoxViewEditLocationCode.Text;
                 loc.InUse = CheckBoxInUse.Checked;
 
-                _repoLocation.Update(loc);
-                await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+                await _repoLocation.UpdateAsync(loc);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
             }
             else
             {
@@ -681,8 +687,8 @@ namespace Neutron.Forms
                                 TextBoxViewEditSlot.Text = slotName;
                                 try
                                 {
-                                    _repoLocation.Update(loc);
-                                    await _historyManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
+                                    await _repoLocation.UpdateAsync(loc);
+                                    await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationModify, loc);
                                 }
                                 catch (Exception ex)
                                 {
@@ -779,14 +785,14 @@ namespace Neutron.Forms
         private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
-            var loc = _repoLocation.FindByKey(locationView.Id);
+            var loc = await _repoLocation.FindByKeyAsync(locationView.Id);
             if (!await LocationHasInventory(loc.Id))
             {
                 var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
-                _repoLocation.Delete(loc.Id);
-                await _historyManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
+                var deleted = await _repoLocation.DeleteAsync(loc.Id);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
                 RefreshData();
                 tabControl1.SelectedTab = tabPage1;
             }
@@ -917,7 +923,7 @@ namespace Neutron.Forms
             var area = ((Area)ComboBoxNewArea.SelectedItem);
             if (area == null) return;
 
-            ComboBoxNewDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList(); ;
+            ComboBoxNewDevice.DataSource = _repoDevices.All().Where(d => d.AreaId == area.Id).ToList();
             ComboBoxNewDevice.DisplayMember = "Name";
             ComboBoxNewDevice.ValueMember = "Id";
             ComboBoxNewDevice.Refresh();
@@ -964,7 +970,9 @@ namespace Neutron.Forms
         /// <returns></returns>
         private bool WorkstationCanPositionDevice()
         {
-            return _workstationView.AreaId != 8 && _workstationView.AreaId == ((Area)ComboBoxAreaNumber.SelectedItem).AreaNumber;
+            var moveableAreas = new int[] { 1, 2, 3, 4 };
+           // return _workstationView.AreaId != 8 && _workstationView.AreaId == ((Area)ComboBoxAreaNumber.SelectedItem).AreaNumber;
+           return moveableAreas.Contains(_workstationView.AreaId);
         }
 
         #region Find Functions
@@ -1152,7 +1160,7 @@ namespace Neutron.Forms
 
         private async void MbNewSave_Click(object sender, EventArgs e)
         {
-            await SaveNew();
+            if (!await SaveNew()) return;
             RefreshData();
             tabControl1.SelectedTab = tabPage1;
         }
@@ -1924,7 +1932,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void BackgroundWorkerLocations_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void BackgroundWorkerLocations_DoWork(object sender, DoWorkEventArgs e)
         {
 
             if (!(sender is BackgroundWorker worker)) return;

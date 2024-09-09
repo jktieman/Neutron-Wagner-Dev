@@ -39,15 +39,16 @@ namespace NeutronLoader
         public InterfaceProcessorSfh(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
-            Initialize();          
+        
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
             _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
+             Init();             
         }
 
-        private void Initialize()
+        private void Init()
         {
             _interfaceFileQueue = new BlockingCollection<FileInfo>();
             LoaderSettings.Init();

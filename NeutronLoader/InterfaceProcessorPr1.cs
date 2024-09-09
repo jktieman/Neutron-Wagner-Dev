@@ -40,12 +40,12 @@ namespace NeutronLoader
         public InterfaceProcessorPr1(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView)
         {
-            Initialize();            
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
             _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
+            Initialize();             
         }
 
         private void Initialize()

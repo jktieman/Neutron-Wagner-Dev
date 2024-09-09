@@ -14,7 +14,6 @@ namespace Neutron.Forms
     public partial class FrmChangeReplenLineStatus : Form
     {
         private readonly ReplenOrderDetail _orderDetail;
-        private readonly HistoryManager _historyManager;
         private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
         private readonly GenericRepository<LineStatusLookup> _repoStatus = new GenericRepository<LineStatusLookup>(new NeutronDb());
         private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
@@ -22,10 +21,9 @@ namespace Neutron.Forms
         // private readonly List<int> _statusNumbers = new List<int> { 1, 6, 9 };
         private readonly int _currentStatus;
 
-        public FrmChangeReplenLineStatus(ReplenOrderDetail orderDetail, HistoryManager historyManager)
+        public FrmChangeReplenLineStatus(ReplenOrderDetail orderDetail)
         {
             _orderDetail = orderDetail;
-            _historyManager = historyManager;
             _currentStatus = orderDetail.LineStatusId;
             InitializeComponent();
             SetupStatusComboBox();
@@ -71,7 +69,7 @@ namespace Neutron.Forms
                     var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
                     if (inv != null)
                     {
-                        _historyManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
                     }
 
                     CheckForOrderComplete(_orderDetail.ReplenOrder);
@@ -92,7 +90,7 @@ namespace Neutron.Forms
                     var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
                     if (inv != null)
                     {
-                        _historyManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
                     }
 
                     CheckForOrderComplete(_orderDetail.ReplenOrder);
@@ -113,7 +111,7 @@ namespace Neutron.Forms
                     var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
                     if (inv != null)
                     {
-                        _historyManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
                     }
 
                     CheckForOrderComplete(_orderDetail.ReplenOrder);
@@ -131,7 +129,7 @@ namespace Neutron.Forms
                 SetOrderAvailable(_orderDetail.ReplenOrder);
             }
 
-            _historyManager.SaveHistory(ActionCode.ChangeLineStatus, _orderDetail);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.ChangeLineStatus, _orderDetail);
             Close();
         }
 
@@ -142,7 +140,7 @@ namespace Neutron.Forms
             if (linesNotComplete.Any()) return;
 
             order.OrderStatusId = (int)OrderStatus.Complete;
-            _historyManager.SaveHistory(ActionCode.OrderComplete, order, _orderDetail.AreaId);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.OrderComplete, order, _orderDetail.AreaId);
             _repoOrders.Update(order);
         }
 

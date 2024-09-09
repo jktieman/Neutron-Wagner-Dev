@@ -37,7 +37,7 @@ namespace Neutron
 
         static void Main()
         {
-            //NeutronLicense neutronLicense = null;
+            NeutronLicense neutronLicense = null;
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
             
@@ -63,10 +63,10 @@ namespace Neutron
             //{
             //    CompanyCode = result.Code
             //};
-            //neutronLicense = new NeutronLicense
-            //{
-            //    CompanyCode = "WAG"
-            //};
+            neutronLicense = new NeutronLicense
+            {
+                CompanyCode = "WAG"
+            };
 
             _mutex = new Mutex(initiallyOwned: true, name: appName, createdNew: out var createdNew);
             if (!createdNew)
@@ -98,15 +98,8 @@ namespace Neutron
             }
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            var neutronLicense = jsonData.LoadFile<NeutronLicense>();
-            // check neutronLicense for null
-            if (neutronLicense == null)
-            {
-                MessageBox.Show("Neutron license is missing.", "Neutron Startup", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                return;
-            }
-            
+            // var neutronLicense = jsonData.LoadFile<NeutronLicense>();
+
             var cultureInfo = neutronVariables.DefaultLanguage;
 
             if (cultureInfo == null || cultureInfo.Length != 5 || !cultureInfo.Contains('-'))

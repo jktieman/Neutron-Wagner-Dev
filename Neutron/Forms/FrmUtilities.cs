@@ -894,6 +894,7 @@ namespace Neutron.Forms
                     _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
 
                     _jsonData.SaveFile<NeutronLicense>(new NeutronLicense { CompanyCode = TextBoxLicenseCode.Text });
+                    _neutronLicense.CompanyCode = TextBoxLicenseCode.Text;
                 }
                 else
                 {

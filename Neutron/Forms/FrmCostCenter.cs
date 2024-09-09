@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
 using NeutronCore.Enums;
+using System.Threading;
 
 namespace Neutron.Forms
 {
@@ -18,12 +21,16 @@ namespace Neutron.Forms
     {
         private CostCenterManager _costCenterManager;
         public string CostCenterCode = String.Empty;
+        public string CostCenterName = String.Empty;
         public ActionCode CostCenterActionCode = ActionCode.PickHot;
         private IDynamicLogger _logger;
-
+        private CultureInfo _cultureInfo;
+        private ResourceManager _resourceManager;
         public FrmCostCenter()
         {
             InitializeComponent();
+            _cultureInfo = Thread.CurrentThread.CurrentCulture;
+            SetCulture(_cultureInfo.Name);
             Init();
         }
 
@@ -53,7 +60,8 @@ namespace Neutron.Forms
 
         private void ButtonSave_Click(object sender, EventArgs e)
         {
-            CostCenterCode = ComboBoxCostCenter.ValueMember;
+            CostCenterCode = ComboBoxCostCenter.SelectedValue.ToString();
+            CostCenterName = ComboBoxCostCenter.Text;
             CostCenterActionCode = GetActionCode(); 
             DialogResult = DialogResult.OK;
             Close();
@@ -156,6 +164,27 @@ namespace Neutron.Forms
             return result;
         }
 
+        private void SetCulture(string lang)
+        {
+            try
+            {
+                var languageDirectory = LoaderSettings.GetLanguageDirectory();
+                _cultureInfo = CultureInfo.CreateSpecificCulture(lang);
+                _resourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "FrmHotAction",
+                    resourceDir: languageDirectory, usingResourceSet: null);
+
+                GroupBoxHotActions.Text = _resourceManager.GetString($"TransactionType");
+                RadioButtonCostCenter.Text = _resourceManager.GetString($"CostCenter");
+                RadioButtonOther.Text = _resourceManager.GetString($"Other");
+                RadioButtonScrap.Text = _resourceManager.GetString($"Scrap");
+                RadioButtonWarranty.Text = _resourceManager.GetString($"Warranty");
+                RadioButtonPick.Text = _resourceManager.GetString($"Pick");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
+            }
+        }
         //private void RadioButtonHotAction(object sender, EventArgs e)
         //{
         //    if (RadioButtonPick.Checked)

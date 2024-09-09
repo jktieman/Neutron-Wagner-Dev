@@ -76,7 +76,6 @@ namespace Neutron.Forms
         private InventoryRepository _inventoryRepository;
         private readonly IJsonData _jsonData;
         private readonly NeutronVariables _neutronVariables;
-        private readonly HistoryManager _historyManager;
         private readonly IAreaRepository _areaRepository;
         private readonly IRFIDManager _rfidManager;
         private readonly WorkstationView _workstationView;
@@ -101,7 +100,7 @@ namespace Neutron.Forms
         public FrmInventory(IJsonData jsonData, IAkaRepository akaRepository,
             ILacProcessor lacProcessor, IWorkstationRepository workstationRepository
             , WorkstationView workstationView, NeutronVariables neutronVariables
-            , HistoryManager historyManager, IAreaRepository areaRepository
+            , IAreaRepository areaRepository
             , IRFIDManager rfidManager, ILocationsRepository locationsRepository
             , IIptiDisplayFunctions iptiDisplayFunctions)
         {
@@ -115,7 +114,6 @@ namespace Neutron.Forms
             _workstationRepository = workstationRepository;
             _workstationView = workstationView;
             _neutronVariables = neutronVariables;
-            _historyManager = historyManager;
             _areaRepository = areaRepository;
             _rfidManager = rfidManager;
             _locationsRepository = locationsRepository;
@@ -306,7 +304,7 @@ namespace Neutron.Forms
                         DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
                         DataGridView1.Rows[idx].Selected = true;
                     }
-                    SetCurrentInventoryItem();
+                    await SetCurrentInventoryItem();
                     DataGridView1.Refresh();
                     DataGridView1.ClearSelection();
                     if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
@@ -338,26 +336,27 @@ namespace Neutron.Forms
         /// <summary>
         /// Sets the Current Inventory Item, Location and Item Definition
         /// </summary>
-        private void SetCurrentInventoryItem()
+        private async Task SetCurrentInventoryItem()
         {
             if (_bindingSource.Current == null) return;
             var inventory = ((ObjectView<SqlInventoryView>)_bindingSource.Current).Object;
-            SetCurrentInventoryItem(_repoInventory.FindByKey(inventory.Id));
+            var inv = await _repoInventory.FindByKeyAsync(inventory.Id);
+            await SetCurrentInventoryItem(inv);
         }
-        private void SetCurrentInventoryItem(Inventory inventory)
+        private async Task SetCurrentInventoryItem(Inventory inventory)
         {
             CurrentInventoryItem = inventory;
-            SetCurrentLocation(inventory.LocationId);
-            SetCurrentItemDefinition(inventory.ItemDefinitionId);
+            await SetCurrentLocation(inventory.LocationId);
+            await SetCurrentItemDefinition(inventory.ItemDefinitionId);
         }
 
         /// <summary>
         /// Sets the Current Item Definition
         /// </summary>
         /// <param name="itemDefinitionId">Item Definition Id</param>
-        private void SetCurrentItemDefinition(int itemDefinitionId)
+        private async Task SetCurrentItemDefinition(int itemDefinitionId)
         {
-            var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
+            var itemDefinition = await _repoItemDefinition.FindByKeyAsync(itemDefinitionId);
             CurrentItem = itemDefinition;
         }
 
@@ -365,9 +364,9 @@ namespace Neutron.Forms
         /// Sets the Current Location
         /// </summary>
         /// <param name="locationId">Location Id</param>
-        private void SetCurrentLocation(int locationId)
+        private async Task SetCurrentLocation(int locationId)
         {
-            var location = _repoLocation.FindByKey(locationId);
+            var location = await _repoLocation.FindByKeyAsync(locationId);
             CurrentLocation = location;
         }
 
@@ -401,10 +400,9 @@ namespace Neutron.Forms
         }
 
         #region Find Functions
-        private void MButtonFind_Click(object sender, EventArgs e)
+        private async void MButtonFind_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            Task.Run(() => RefreshData()).ContinueWith(t => Cursor.Current = Cursors.Default);
+           await FindRecord();
         }
         private async Task FindRecord()
         {
@@ -416,9 +414,10 @@ namespace Neutron.Forms
         {
             if (e.KeyCode == Keys.Return)
             {
-                Cursor.Current = Cursors.WaitCursor;
-                await RefreshData();
-                Cursor.Current = Cursors.Default;
+                await FindRecord();
+         //              Cursor.Current = Cursors.WaitCursor;
+         //await RefreshData();
+         //       Cursor.Current = Cursors.Default;
             }
             if (e.KeyCode == Keys.Escape)
             {
@@ -506,7 +505,7 @@ namespace Neutron.Forms
             try
             {
 
-                SetCurrentInventoryItem();
+                await SetCurrentInventoryItem();
                 if (CurrentItem != null)
                 {
                     TextBoxViewEditId.Text = CurrentItem.Id.ToString();
@@ -526,18 +525,18 @@ namespace Neutron.Forms
                 _logger.LogDetailAsync($"Error during Load View Edit. {ex.Message}").SafeFireAndForget();
             }
         }
-        private void MButtonNew_Click(object sender, EventArgs e)
+        private async void MButtonNew_Click(object sender, EventArgs e)
         {
-            NewInventoryItem();
+           await NewInventoryItem();
         }
-        private void NewInventoryItem()
+        private async Task NewInventoryItem()
         {
             ClearNewFields();
             var inventoryView = GetSelectedInventoryView(DataGridView1);
             if (inventoryView != null)
             {
                 TextBoxNewItem.Text = inventoryView.Item;
-                NewItemFind();
+                await NewItemFind();
             }
 
             tabControl1.SelectedTab = tabPage3;
@@ -553,9 +552,9 @@ namespace Neutron.Forms
         {
             tabControl1.SelectedTab = tabPage3;
         }
-        private void MbNewFind_Click(object sender, EventArgs e)
+        private async void MbNewFind_Click(object sender, EventArgs e)
         {
-            NewItemFind();
+            await NewItemFind();
         }
         private async void MbViewEditClose_Click(object sender, EventArgs e)
         {
@@ -623,8 +622,10 @@ namespace Neutron.Forms
         /// <returns></returns>
         private bool WorkstationCanPositionDevice()
         {
-            return _workstationView.AreaId != AreaEight && _workstationView.AreaId == ((Area)ComboBoxAreaNumber.SelectedItem).AreaNumber;
-
+            //return _workstationView.AreaId != AreaEight && _workstationView.AreaId == ((Area)ComboBoxAreaNumber.SelectedItem).AreaNumber;
+            var moveableAreas = new int[] { 1, 2, 3, 4 };
+            // return _workstationView.AreaId != 8 && _workstationView.AreaId == ((Area)ComboBoxAreaNumber.SelectedItem).AreaNumber;
+            return moveableAreas.Contains(_workstationView.AreaId);
         }
         private async void MbNewListing_Click(object sender, EventArgs e)
         {
@@ -663,14 +664,14 @@ namespace Neutron.Forms
                     MessageBox.Show(_resourceManager.GetString("Message0"));
                     return;
                 }
-                if (IsDuplicate(rec))
+                if (await IsDuplicate(rec))
                 {
                     MessageBox.Show(_resourceManager.GetString("Message1"));
                     return;
                 }
                 await _repoInventory.InsertAsync(rec);
 
-                _historyManager.SaveHistory(ActionCode.InventoryAdd, rec);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, rec);
 
                 await RefreshData(rec.Id);
 
@@ -683,21 +684,27 @@ namespace Neutron.Forms
         }
         private async Task UpdateViewEdit()
         {
-            var id = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).Id;
+            var currentInventoryView = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object);
+            // convert SqlInventoryView to Inventory
+            var inventory = await _repoInventory.FindByKeyAsync(currentInventoryView.Id);
+            if (inventory == null) return;
+
+            await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory, inventory.Quantity, true);
+
             var beginningQuantity = 0;
             var rec = new Inventory
             {
-                Id = id,
-                LocationId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).LocationId,
-                ItemDefinitionId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).ItemDefinitionId,
+                Id = currentInventoryView.Id,
+                LocationId = currentInventoryView.LocationId,
+                ItemDefinitionId = currentInventoryView.ItemDefinitionId,
             };
             if (!ValidateFields(rec))
             {
                 MessageBox.Show(_resourceManager.GetString("Message4"));
                 return;
             }
-            _repoInventory.Update(rec);
-            _historyManager.SaveHistory(ActionCode.InventoryModify, rec, beginningQuantity, true);
+            await _repoInventory.UpdateAsync(rec);
+            await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryModify, rec, beginningQuantity, true);
             await RefreshData(rec.Id);
             tabControl1.SelectedTab = tabPage1;
         }
@@ -755,17 +762,13 @@ namespace Neutron.Forms
                 return false;
             }
         }
-        private bool IsDuplicate(Inventory recIn)
+        private async Task<bool> IsDuplicate(Inventory recIn)
         {
-            var rec = _repoInventory
-                .FindBy(f => f.LocationId == recIn.LocationId && f.ItemDefinitionId == recIn.ItemDefinitionId)
-                .FirstOrDefault();
-            if (rec != null)
-            {
-                MessageBox.Show(_resourceManager.GetString("Message5"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return true;
-            }
-            return false;
+            var rec = await _repoInventory
+                .FindByFirstOrDefaultAsync(f => f.LocationId == recIn.LocationId && f.ItemDefinitionId == recIn.ItemDefinitionId);
+            if (rec == null) return false;
+            MessageBox.Show(_resourceManager.GetString("Message5"), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return true;
         }
         #region Form Setup Grids
         private void SetupGrids()
@@ -1532,13 +1535,12 @@ namespace Neutron.Forms
                 var locView = ((ObjectView<SqlInventoryView>)_locationBindingSource.Current).Object;
                 if (locView != null)
                 {
-                    // var invId = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object).Id;
-                    DeleteInventoryItem(locView.Id, false);
-                    // _RefreshData();
+                    var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result != DialogResult.Yes) return;
+                    await DeleteInventoryItemAsync(locView.Id, false);
                     await LoadViewEdit();
                     tabControl1.SelectedTab = tabPage2;
-                    // RefreshData();
-                    //tabControl1.SelectedTab = tabPage1; 
                 }
             }
             else
@@ -1547,31 +1549,12 @@ namespace Neutron.Forms
             }
             Cursor.Current = Cursors.Default;
         }
-        public void DeleteInventoryItem(int invId, bool releaseOnly)
+        public async Task DeleteInventoryItemAsync(int invId, bool releaseOnly)
         {
-            var inventoryManager = new InventoryManager(_repoInventory, _locationsRepository, _historyManager);
-            inventoryManager.DeleteInventoryRecord(invId, releaseOnly: releaseOnly);
+            var inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+            await inventoryManager.DeleteInventoryRecordAsync(invId, releaseOnly: releaseOnly);
         }
-        //private void DeleteInventoryRecord(int invId, bool releaseOnly = false)
-        //{
-        //    var inventory = _repoInventory.FindByKey(invId);
-        //    if (inventory == null) return;
-        //    if (releaseOnly)
-        //    {
-        //        if (inventory.StorageTypeId == (int)StorageType.Release)
-        //        {
-        //            _historyManager.SaveHistory(ActionCode.InventoryDelete, inventory);
-        //            _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-        //            _repoInventory.Delete(inventory.Id);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        _historyManager.SaveHistory(ActionCode.InventoryDelete, inventory);
-        //        _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
-        //        _repoInventory.Delete(inventory.Id);
-        //    }
-        //}
+      
         /// <summary>
         /// Add a new location to the inventory from the view/edit tab
         /// </summary>
@@ -1848,12 +1831,17 @@ namespace Neutron.Forms
                 //var use = Convert.ToBoolean(inUse);
                 views = _locationsRepository.FindLocationViewsByAreaAndInUse(areaId, inUse);
             }
-            _logger.LogDetailAsync("GetAllAvailableLocations views.Count: " + views.Count()).SafeFireAndForget();
 
-            var blv = new BindingListView<LocationView>(views.ToList());
+            if (views != null)
+            {
+                _logger.LogDetailAsync($"GetAllAvailableLocations views.Count: {views.Count()} ").SafeFireAndForget();
 
-            _logger.LogDetailAsync("Step 1").SafeFireAndForget();
-            _newLocationBindingSource.DataSource = blv;
+                var blv = new BindingListView<LocationView>(views.ToList());
+
+                _logger.LogDetailAsync("Step 1").SafeFireAndForget();
+                _newLocationBindingSource.DataSource = blv;
+            }
+
             _logger.LogDetailAsync("Step 2").SafeFireAndForget();
             DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
             _logger.LogDetailAsync("Step 3").SafeFireAndForget();
@@ -1908,34 +1896,32 @@ namespace Neutron.Forms
         {
             e.Cancel = !CloseButtonPressed;
         }
-        private void TextBoxNewItem_Leave(object sender, EventArgs e)
+        private async void TextBoxNewItem_Leave(object sender, EventArgs e)
         {
             // get the item and fill in the form
-            NewItemFind();
+            await NewItemFind();
         }
-        private void NewItemFind()
+        private async Task NewItemFind()
         {
             var item = TextBoxNewItem.Text;
             if (string.IsNullOrWhiteSpace(item)) return;
 
             try
             {
-                var item1 = item;
-                var recs = _repoItemDefinition.FindBy(f => f.Item == item1).ToList();
-
+                var recs = await _repoItemDefinition.FindByAsync(f => f.Item == item);
                 // if the item Definition is null, check the AKA table
-                if (!recs.Any())
+                if (recs == null)
                 {
                     var possibleAka = item;
                     var item2 = _akaRepository.Get(possibleAka);
                     if (item2 != null)
                     {
                         TextBoxNewItem.Text = item2;
-                        recs = _repoItemDefinition.FindBy(r => r.Item == item2).ToList();
+                        recs = await _repoItemDefinition.FindByAsync(r => r.Item == item2);
                     }
                 }
 
-                if (recs.Any())
+                if (recs != null)
                 {
                     // create the datasource for ComboBoxNewAreaChoice
                     // the Id is the Id of the ItemDefinition
@@ -2029,11 +2015,20 @@ namespace Neutron.Forms
                 TextBoxNewItem.Focus();
             }
         }
-        private void MbNewAddLocation_Click(object sender, EventArgs e)
+        private async void MbNewAddLocation_Click(object sender, EventArgs e)
         {
             var inUse = 0; // 0 = not in use, 1 = in use, 2 = all
-            var id = (TextBoxNewId.Text).ParseInt();
-            SetCurrentItemDefinition(id);
+
+            // get the text of a ComboBoxNewAreaChoice
+            var itemDefinitionId = (int)ComboBoxNewAreaChoice.SelectedValue;
+            //string areaText = ComboBoxNewAreaChoice.SelectedItem.ToString();
+          //  var item = TextBoxNewItem.Text;
+          //  var area = await _repoArea.FindByFirstOrDefaultAsync(r => r.Name == areaText);
+         //   var itemDefinition = _repoItemDefinition.FindByFirstOrDefaultAsync(r => r.Item == item && r.AreaId == area.Id);
+         //   var id = (TextBoxNewId.Text).ParseInt();
+            
+            
+            await SetCurrentItemDefinition(itemDefinitionId);
             if (CurrentItem != null)
             {
                 TextBoxInventoryNewLocationsItem.Text = CurrentItem.Item;
@@ -2071,11 +2066,6 @@ namespace Neutron.Forms
                     var locView = ((ObjectView<LocationView>)_newLocationBindingSource.Current).Object;
                     if (locView != null)
                     {
-                        //var inv = _repoInventory
-                        //    .FindBy(r => r.ItemDefinitionId == CurrentItem.Id && r.LocationId == locView.Id)
-                        //    .FirstOrDefault();
-                        //if (inv == null)
-                        //{
                         var inventory = new Inventory()
                         {
                             ItemDefinitionId = CurrentItem.Id,
@@ -2089,8 +2079,8 @@ namespace Neutron.Forms
                             RFID = TextBoxInventoryNewLocationsRfid.Text
                         };
                         await _repoInventory.InsertAsync(inventory);
-                        _historyManager.SaveHistory(ActionCode.InventoryAdd, inventory);
-                        _locationsRepository.SetLocationInUse(inventory.LocationId, b: true);
+                        await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, inventory);
+                        await _locationsRepository.SetLocationInUse(inventory.LocationId, b: true);
 
                         //TODO  fixed locationCode 
 
@@ -2099,7 +2089,7 @@ namespace Neutron.Forms
 
                         //_locationsRepository.SetLocationCode(inventory.LocationId, locationCode);
 
-                        SetCurrentInventoryItem(inventory);
+                        await SetCurrentInventoryItem(inventory);
                         await LoadViewEdit();
                         tabControl1.SelectedTab = tabPage2;
                     }
@@ -2173,7 +2163,9 @@ namespace Neutron.Forms
             if (!string.IsNullOrEmpty(inventoryId))
             {
                 //update
-                inventory = _repoInventory.FindByKey(inventoryId.ParseInt());
+                inventory = await _repoInventory.FindByKeyAsync(inventoryId.ParseInt());
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory, inventory.Quantity, true);
+
                 beginningQuantity = inventory.Quantity;
                 inventory.Quantity = (TextBoxAddDetailQuantity.Text).ParseInt();
                 inventory.StorageTypeId = ((NeutronData.Models.Lookups.StorageType)ComboBoxAddDetailStorageType.SelectedItem).Id;
@@ -2181,8 +2173,8 @@ namespace Neutron.Forms
                 inventory.PrimeBin = CheckBoxAddDetailPrimeBin.Checked;
                 inventory.AreaId = (int)ComboBoxAddDetailArea.SelectedValue;
                 inventory.RFID = TextBoxAddDetailLocationCode.Text;
-                _repoInventory.Update(inventory);
-                _historyManager.SaveHistory(ActionCode.InventoryModify, inventory, beginningQuantity, true);
+                await _repoInventory.UpdateAsync(inventory);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory, beginningQuantity, true);
             }
             else
             {
@@ -2196,19 +2188,25 @@ namespace Neutron.Forms
                 inventory.AreaId = (int)ComboBoxAddDetailArea.SelectedValue;
                 inventory.RFID = TextBoxAddDetailLocationCode.Text;
                 await _repoInventory.InsertAsync(inventory);
-                _historyManager.SaveHistory(ActionCode.InventoryAdd, inventory, beginningQuantity, true);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, inventory, beginningQuantity, true);
             }
-            if (inventory.Quantity == 0 && inventory.StorageTypeId == (int)StorageType.Release)
+
+            var inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+            var deleted = await inventoryManager.ReleaseCheckAsync(inventory);
+            
+            //if (inventory.Quantity == 0 && inventory.StorageTypeId == (int)StorageType.Release)
+            //{
+            //    await DeleteInventoryItemAsync(inventory.Id, releaseOnly: true);
+            //}
+            //else
+            if (!deleted)
             {
-                DeleteInventoryItem(inventory.Id, releaseOnly: true);
-            }
-            else
-            {
-                _locationsRepository.SetLocationInUse(inventory.LocationId, b: true);
+                await _locationsRepository.SetLocationInUse(inventory.LocationId, b: true);
                 TextBoxViewEditId.Text = CurrentItem.Id.ToString();
                 TextBoxViewEditItem.Text = CurrentItem.Item;
                 TextBoxViewEditDescription.Text = CurrentItem.Description;
             }
+            
             var views = await GetInventoryViewListByItem(CurrentItem.Id);
             var blv = new BindingListView<SqlInventoryView>(views.ToList());
             _locationBindingSource.DataSource = blv;
@@ -2294,11 +2292,11 @@ namespace Neutron.Forms
             //return;
             // }
             await DataGridViewPosition((DataGridView)sender, e.RowIndex);
-            SetCurrentInventoryItem();
+            await SetCurrentInventoryItem();
         }
         private async Task DataGridViewPosition(DataGridView grid, int rowIndex)
         {
-            if (_workstationView.AreaId == AreaEight) return;
+            //if (_workstationView.AreaId == AreaEight) return;
 
             var qty = 0;
             var quantity = "0";
@@ -2364,31 +2362,37 @@ namespace Neutron.Forms
 
                 quantity = qty.ToString();
 
-                if (_workstationView.Blastzones.Any())
+             
+                    if (_workstationView.Blastzones.Any())
+                    {
+                        if (_iptiDisplayFunctions != null)
+                        {
+                            await _iptiDisplayFunctions.ClearBlastzone();
+                            await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
+                            await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
+                        }
+                    } 
+                
+                
+                //Prolites
+                if (_workstationView.ProLiteManager != null)
                 {
-                    if (_iptiDisplayFunctions != null)
+                    if (_workstationView.ProLiteManager.GetProlites().Count > 0)
                     {
-                        await _iptiDisplayFunctions.ClearBlastzone();
-                        await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
-                        await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
-                    }
-                }
+                        var proliteNumber = 1;
+                        if (_workstationView.ProLiteManager.GetProlites().Count > 1)
+                        {
+                            proliteNumber = deviceNumber;
+                        }
+                        // only one Prolite, so it doesn't matter what device number
+                        // just light up the first Prolite
+                        if (_workstationView.ProLiteManager != null)
+                        {
+                            await _workstationView.ProLiteManager.ClearAllProlites();
+                            _workstationView.ProLiteManager.TurnOn(proliteNumber, level, part, qty);
+                        }
 
-                if (_workstationView.Prolites.Any())
-                {
-                    var proliteNumber = 1;
-                    if (_workstationView.Prolites.Count > 1)
-                    {
-                        proliteNumber = deviceNumber;
-                    }
-                    // only one Prolite, so it doesn't matter what device number
-                    // just light up the first Prolite
-                    if (_workstationView.ProLiteManager != null)
-                    {
-                        await _workstationView.ProLiteManager.ClearAllProlites();
-                        _workstationView.ProLiteManager.TurnOn(proliteNumber, level, part, qty);
-                    }
-
+                    } 
                 }
 
                 // if there are Hanels on this station
@@ -2832,7 +2836,7 @@ namespace Neutron.Forms
             }
         }
 
-        private void BackgroundWorkerItemDefinitions_DoWork(object sender, DoWorkEventArgs e)
+        private async void BackgroundWorkerItemDefinitions_DoWork(object sender, DoWorkEventArgs e)
         {
             if (!(sender is BackgroundWorker worker)) return;
             if (!(e.Argument is DataTable dataTable)) return;
@@ -2899,12 +2903,12 @@ namespace Neutron.Forms
                             RFID = rfid,
                         };
                         // add the new Inventory object to the database
-                        _repoInventory.Insert(inventory);
+                        await _repoInventory.InsertAsync(inventory);
                     }
                     else
                     {
                         // get the existing Inventory object
-                        var inventory = _repoInventory.FindByKey(id.ParseInt());
+                        var inventory = await _repoInventory.FindByKeyAsync(id.ParseInt());
                         if (inventory == null) continue;
                         // update the values
                         inventory.Quantity = quantity.ParseInt();
@@ -2913,7 +2917,7 @@ namespace Neutron.Forms
                         inventory.StorageTypeId = (int)GetEnumValue<StorageType>(storageTypeName);
                         inventory.RFID = rfid;
                         // update the database
-                        _repoInventory.Update(inventory);
+                        await _repoInventory.UpdateAsync(inventory);
                     }
                     // Update the progress
                     processedCount++;

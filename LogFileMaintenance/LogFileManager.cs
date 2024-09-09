@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
+using Timer = System.Timers.Timer;
 
 namespace LogFileMaintenance
 {
@@ -11,6 +14,8 @@ namespace LogFileMaintenance
         private readonly string _logFileFolder;
         private readonly uint _maximumAgeInDays;
         private readonly IDynamicLogger _logger;
+        private Timer _timer;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public LogFileManager(string logFileFolder, uint maximumAgeInDays, IDynamicLogger logger)
         {
@@ -19,21 +24,47 @@ namespace LogFileMaintenance
             _logger = logger;
         }
 
+        public void StartLogFileManagementService()
+        {
+            var interval = TimeSpan.FromHours(8);
+            _timer = new Timer(interval.TotalMilliseconds);
+            _timer.Elapsed += async (sender, e) =>
+            {
+                if (_semaphore.CurrentCount == 0)
+                {
+                    return;
+                }
+                await _semaphore.WaitAsync();
+                try
+                {
+                    await Process();
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            };
 
-        public void Process()
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+            _timer.Start();
+        }
+
+
+        public async Task Process()
         {
             var allFolders = GetSubdirectories(_logFileFolder);
 
-            _logger.LogDetailAsync("{allFolders.Count} Subdirectories in the specified folder:").SafeFireAndForget();
+            _logger.LogDetailAsync($"{allFolders.Count} Subdirectories in the specified folder:").SafeFireAndForget();
             foreach (var folder in allFolders)
             {
-               DeleteOldFiles(folder, _maximumAgeInDays);
+              await DeleteOldFiles(folder, _maximumAgeInDays);
             }
 
             _logger.LogDetailAsync("File cleanup completed.").SafeFireAndForget();
         }
 
-        private void DeleteOldFiles(string folderPath, uint maximumAgeInDays)
+        private Task DeleteOldFiles(string folderPath, uint maximumAgeInDays)
         {
             var minimumDate = DateTime.Now.AddDays(-maximumAgeInDays);
             // set the minimumDate Time to midnight
@@ -57,6 +88,8 @@ namespace LogFileMaintenance
                     }
                 }
             }
+
+            return Task.CompletedTask;
         }
         private List<string> GetSubdirectories(string folderPath)
         {

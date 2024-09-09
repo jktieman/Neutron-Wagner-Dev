@@ -58,15 +58,6 @@ namespace NeutronData.ModelViews
             foreach (var pickView in PickViews)
             {
                 UpdatePickView(pickView, user);
-                //var pickLocation = new PickLocation {
-                //    Inventory = CurrentInventoryLocation
-                //    , Quantity = pickView.QuantityToBePicked
-                //    , PickDate = DateTime.Now
-                //    , RequestedQuantity = pickView.QuantityToBePicked
-                //    , User = user};
-                //pickView.PickLocations.Add(pickLocation);
-                //pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
-                //pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty;
             }
         }
 
@@ -86,8 +77,11 @@ namespace NeutronData.ModelViews
                 };
                 pickView.PickLocations.Add(pickLocation);
                 pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
-                pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty;
-            
+                pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty <= 0
+                    ? 0
+                    : pickView.Quantity - pickView.PickedQty;
+
+
         }
 
         public int GetTotalQuantityToBePicked()

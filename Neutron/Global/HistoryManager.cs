@@ -52,9 +52,31 @@ namespace Neutron.Global
                 OrderInfo = order.OrderInfo ?? string.Empty,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,
-                AreaId = 8
+                AreaId = _workstationView.AreaId
             };
             Save(history);
+
+        }
+
+        public async Task SaveHistoryAsync(ActionCode actionCode, Order order)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = order.Ord1,
+                Ord2 = order.Ord2,
+                OrderId = order.Id,
+                Priority = order.Priority,
+                LoadDate = order.LoadDate,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = order.OrderInfo ?? string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
+            };
+            await SaveAsync(history);
 
         }
 
@@ -74,9 +96,30 @@ namespace Neutron.Global
                 OrderInfo = order.OrderInfo ?? string.Empty,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,
-                AreaId = 8
+                AreaId = _workstationView.AreaId
             };
             Save(history);
+
+        }
+        public async Task SaveHistoryAsync(ActionCode actionCode, ReplenOrder order)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = order.Ord1,
+                Ord2 = order.Ord2,
+                OrderId = order.Id,
+                Priority = order.Priority,
+                LoadDate = order.LoadDate,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = order.OrderInfo ?? string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
+            };
+            await SaveAsync(history);
 
         }
 
@@ -96,7 +139,7 @@ namespace Neutron.Global
                 OrderInfo = order.Order.OrderInfo ?? string.Empty,   //order.Order.OrderInfo,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,
-                AreaId = 8
+                AreaId = _workstationView.AreaId
             };
             Save(history);
 
@@ -118,10 +161,29 @@ namespace Neutron.Global
                 OrderInfo = order.OrderInfo ?? string.Empty,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,
-                AreaId = 8
+                AreaId = _workstationView.AreaId
             };
              Save(history);
-
+        }
+        public async Task SaveHistoryAsync(ActionCode actionCode, ReplenOrderView order)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = order.Ord1,
+                Ord2 = order.Ord2,
+                OrderId = order.Id,
+                Priority = order.Priority,
+                LoadDate = order.LoadDate,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = order.OrderInfo ?? string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = _workstationView.AreaId
+            };
+            await SaveAsync(history);
         }
 
         public void SaveHistory(ActionCode actionCode, OrderDetail orderDetail)
@@ -145,6 +207,30 @@ namespace Neutron.Global
                 AreaId = orderDetail.AreaId
             };
             Save(history);
+
+        }
+
+        public async Task SaveHistoryAsync(ActionCode actionCode, OrderDetail orderDetail)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = orderDetail.Order.Ord1,
+                Ord2 = orderDetail.Order.Ord2,
+                OrderId = orderDetail.OrderId,
+                Item = orderDetail.PartNum,
+                Description = orderDetail.PartDesc,
+                RequestedQuantity = orderDetail.Quantity,
+                IssuedQuantity = orderDetail.PickedQuantity,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = orderDetail.Order.OrderInfo ?? string.Empty,
+                OrderDetailInfo = orderDetail.OrderDetailInfo ?? string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = orderDetail.AreaId
+            };
+            await SaveAsync(history);
 
         }
 
@@ -207,7 +293,7 @@ namespace Neutron.Global
                         OrderInfo = pickView.OrderDetail.Order.OrderInfo,
                         OrderDetailInfo = pickView.OrderDetail.OrderDetailInfo,
                         WorkstationId = _workstationView.WorkstationId,
-                        AreaId = 8
+                        AreaId = _workstationView.AreaId
                     };
                     Save(history);
                 }
@@ -249,7 +335,7 @@ namespace Neutron.Global
                         OrderInfo = order.OrderInfo ?? string.Empty,  //  string.Empty,
                         OrderDetailInfo = pickView.OrderDetail.OrderDetailInfo ?? string.Empty,  // string.Empty,
                         WorkstationId = _workstationView.WorkstationId,
-                        AreaId = 8
+                        AreaId = _workstationView.AreaId
                     };
                     Save(history);
                 }
@@ -386,6 +472,38 @@ namespace Neutron.Global
             Save(history);
         }
 
+        public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory)
+        {
+            var inv = _inventoryRepository.GetInventoryViewById(inventory.Id);
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = string.Empty,
+                Ord2 = string.Empty,
+                OrderId = 0,
+                OrderDetailId = null,
+                Item = inv.ItemDefinition.Item,
+                Description = inv.ItemDefinition.Description,
+                IssuedQuantity = inv.Quantity,
+                RequestedQuantity = 0,
+                AreaId = inv.AreaId,
+                Loc1 = inv.Location.Loc1,
+                Loc2 = inv.Location.Loc2,
+                Loc3 = inv.Location.Loc3,
+                Loc4 = inv.Location.Loc4,
+                Loc5 = inv.Location.Loc5,
+                Slot = inv.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+            };
+            await SaveAsync(history);
+        }
+
         //Hot Action
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, PickView pickView)
         {
@@ -438,6 +556,59 @@ namespace Neutron.Global
                 WorkstationId = _workstationView.WorkstationId,
             };
             Save(history);
+        }
+
+        public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickedQty, PickView pickView)
+        {
+            var cCenter = "          ";
+            var orderDetailInfo = string.Empty;
+            var info = pickView.OrderDetail.OrderDetailInfo;
+
+            if (!string.IsNullOrEmpty(info))
+            {
+                if (info.EndsWith("261") || info.Length == 24)
+                {
+                    orderDetailInfo = $"{info}";
+                }
+
+                else if (info.Length == 36)
+                {
+                    cCenter = info.Substring(0, 10);
+                    orderDetailInfo = info;
+                }
+                else
+                {
+                    orderDetailInfo = info.Trim();
+                }
+            }
+
+            var inv = _inventoryRepository.GetInventoryViewById(inventory.Id);
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = pickView.Ord1,
+                Ord2 = pickView.Ord2,
+                OrderId = pickView.OrderId,
+                Item = inv.ItemDefinition.Item,
+                Description = inv.ItemDefinition.Description,
+                IssuedQuantity = pickedQty,
+                RequestedQuantity = pickView.Quantity,
+                AreaId = inv.AreaId,
+                Loc1 = inv.Location.Loc1,
+                Loc2 = inv.Location.Loc2,
+                Loc3 = inv.Location.Loc3,
+                Loc4 = inv.Location.Loc4,
+                Loc5 = inv.Location.Loc5,
+                Slot = inv.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = cCenter,
+                OrderInfo = pickView.OrderDetail.Order.OrderInfo,
+                OrderDetailInfo = orderDetailInfo,
+                WorkstationId = _workstationView.WorkstationId,
+            };
+            await SaveAsync(history);
         }
 
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, ReplenPickView pickView)
@@ -705,21 +876,53 @@ namespace Neutron.Global
             Save(history);
         }
 
-        // LocationCount
-        public void SaveHistory(ActionCode actionCode, LocationCount cnt)
+        public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inv, int beginningQty, bool invMod)
         {
-            var inv = _inventoryRepository.GetInventoryViewById(cnt.InventoryId);
+            var inventory = await _repoInventory.FindByKeyAsync(inv.Id);
+            var orderText = "  INV MOD";
             var history = new History
             {
                 ActionCode = (int)actionCode,
                 ActionCodeName = actionCode.GetEnumDescription(),
-                ActionDateTime = cnt.CountDate,
+                ActionDateTime = DateTime.Now,
+                Ord1 = orderText,
+                Ord2 = orderText,
+                OrderId = 0,
+                Item = inventory.ItemDefinition.Item,
+                Description = inventory.ItemDefinition.Description,
+                IssuedQuantity = inv.Quantity,
+                RequestedQuantity = beginningQty,
+                AreaId = inventory.AreaId,
+                Loc1 = inventory.Location.Loc1,
+                Loc2 = inventory.Location.Loc2,
+                Loc3 = inventory.Location.Loc3,
+                Loc4 = inventory.Location.Loc4,
+                Loc5 = inventory.Location.Loc5,
+                Slot = inventory.Location.Slot,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+            };
+            await SaveAsync(history);
+        }
+
+        // LocationCount
+        public void SaveHistory(ActionCode actionCode, LocationCount locationCount)
+        {
+            var inv = _inventoryRepository.GetInventoryViewById(locationCount.InventoryId);
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = locationCount.CountDate,
                 Ord1 = string.Empty,
                 Ord2 = string.Empty,
                 Item = inv.Item,
                 Description = inv.Description,
-                RequestedQuantity = cnt.PreviousQty,
-                IssuedQuantity = cnt.NewQty,
+                RequestedQuantity = locationCount.PreviousQty,
+                IssuedQuantity = locationCount.NewQty,
                 AreaId = inv.AreaId,
                 Loc1 = inv.Location.Loc1,
                 Loc2 = inv.Location.Loc2,
@@ -738,6 +941,39 @@ namespace Neutron.Global
             Save(history);
 
         }
+        // LocationCount
+        public async Task SaveHistoryAsync(ActionCode actionCode, LocationCount locationCount)
+        {
+            var inv = _inventoryRepository.GetInventoryViewById(locationCount.InventoryId);
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = locationCount.CountDate,
+                Ord1 = string.Empty,
+                Ord2 = string.Empty,
+                Item = inv.Item,
+                Description = inv.Description,
+                RequestedQuantity = locationCount.PreviousQty,
+                IssuedQuantity = locationCount.NewQty,
+                AreaId = inv.AreaId,
+                Loc1 = inv.Location.Loc1,
+                Loc2 = inv.Location.Loc2,
+                Loc3 = inv.Location.Loc3,
+                Loc4 = inv.Location.Loc4,
+                Loc5 = inv.Location.Loc5,
+                Slot = inv.Location.Slot,
+                OrderId = 0,
+                OrderDetailId = null,
+                EmpId = GlobalVar.User.EmpId,
+                CostCenter = string.Empty,
+                OrderInfo = string.Empty,
+                OrderDetailInfo = string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+            };
+            await SaveAsync(history);
+
+        }
 
         public async Task SaveHistoryAsync(ActionCode actionCode, Location location)
         {
@@ -746,8 +982,21 @@ namespace Neutron.Global
                 ActionCode = (int)actionCode,
                 ActionCodeName = actionCode.GetEnumDescription(),
                 ActionDateTime = DateTime.Now,
-                Item = null,
-                Description = null,
+                Ord1 = string.Empty,
+                Ord2 = string.Empty,
+                Item = string.Empty,
+                Description = string.Empty,
+                RequestedQuantity = 0,
+                IssuedQuantity = 0,
+                OrderId = null,
+                OrderDetailId = null,
+                TransmitDateTime = null,
+                Priority = 0,
+                LoadDate = null,
+                TypeCode = string.Empty,
+                PrimeBin = string.Empty,
+                NewBin = string.Empty,
+                TroubleBit = string.Empty,
                 AreaId = location.AreaId,
                 Loc1 = location.Loc1,
                 Loc2 = location.Loc2,
@@ -924,7 +1173,7 @@ namespace Neutron.Global
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,
-                AreaId = 8
+                AreaId = _workstationView.AreaId    
             };
             Save(history);
         }
@@ -1074,6 +1323,11 @@ namespace Neutron.Global
                 WorkstationId = _workstationView.WorkstationId,
             };
             Save(history);
+        }
+
+        public Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickLocationQty, ReplenPickView pickView)
+        {
+            throw new NotImplementedException();
         }
 
         //public void SaveActionCodesToDatabase()

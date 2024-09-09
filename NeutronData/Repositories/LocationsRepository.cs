@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using AlliedLogger;
-using NeutronCore;
-using NeutronCore.Enums;
-using NeutronCore.Global;
+using AsyncAwaitBestPractices;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
-using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using Logger = NeutronCore.Global.Logger;
 
@@ -25,7 +20,7 @@ namespace NeutronData.Repositories
 
         private readonly GenericRepository<Location> _repo = new GenericRepository<Location>(new NeutronDb());
         private readonly IDynamicLogger _logger;
-
+        private const int DefaultLocationId = 10954;
         public LocationsRepository()
         {
             _logger = Logger.SetupLogger(@"LocationsRepository");
@@ -37,6 +32,34 @@ namespace NeutronData.Repositories
 
         #endregion
 
+        #region AllLocationViewsExact
+        public int TotalLocationViewsExact(int areaId, int sizeCodeId,
+            int velocityCodeId, int heightCodeId, int inUse)
+        {
+            var recs = new List<LocationView>();
+            int count = 0;
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param1 = new SqlParameter("@AreaId", areaId);
+                    var param2 = new SqlParameter("@SizeCodeId", sizeCodeId);
+                    var param3 = new SqlParameter("@VelocityCodeId", velocityCodeId);
+                    var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
+                    var param5 = new SqlParameter("@InUse", inUse);
+
+                    count = context.Database.SqlQuery<LocationView>(
+                        "usp_GetLocationViewsExact @AreaId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
+                        , param1, param2, param3, param4, param5).Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+
+            return count;
+        }
         public IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse)
         {
@@ -58,12 +81,46 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             return recs;
         }
+        public IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId,
+            int velocityCodeId, int heightCodeId, int inUse, int currentPage)
+        {
+            var paginatedResult = new List<LocationView>();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param1 = new SqlParameter("@AreaId", areaId);
+                    var param2 = new SqlParameter("@SizeCodeId", sizeCodeId);
+                    var param3 = new SqlParameter("@VelocityCodeId", velocityCodeId);
+                    var param4 = new SqlParameter("@HeightCodeId", heightCodeId);
+                    var param5 = new SqlParameter("@InUse", inUse);
 
+                    var recs = context.Database.SqlQuery<LocationView>(
+                        "usp_GetLocationViewsExact @AreaId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
+                        , param1, param2, param3, param4, param5).ToList();
+                    if (recs.Any())
+                    {
+                        paginatedResult = recs.Skip((currentPage - 1)).Take(15).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get All Location Views Exact Error. {ex.Message}{Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+
+            return paginatedResult;
+        }
+
+
+        #endregion
+
+            #region AllLocationViewsExactByInUse
         public IEnumerable<LocationView> GetAllLocationViewsExactByInUse(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse)
         {
@@ -85,11 +142,12 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Exact By InUse Error. {ex.Message}{Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Exact By InUse Error. {ex.Message}{Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
             return recs;
         }
+        #endregion
 
         public int GetMaxSizeCodeByArea(int areaId)
         {
@@ -98,16 +156,71 @@ namespace NeutronData.Repositories
             {
                 result = context.Locations.Where(r => r.AreaId == areaId).Max(r => r.SizeCodeId);
             }
-
             return result;
-            // return _repo.All().Where(r => r.AreaId == areaId && r.InUse == false).Max(r => r.SizeCodeId);
+        }
+
+        #region LocationViewsByArea
+
+
+
+
+        public int TotalLocationViewsByArea(int areaId)
+        {
+            var count = 0;
+            _logger.LogDetailAsync(@"Get Total Location Views Start").SafeFireAndForget();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramAreaId = new SqlParameter("@AREAID", areaId);
+                    count = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByArea @AREAID", paramAreaId).Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get Total Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+
+            _logger.LogDetailAsync($"Get Total Location Views End: {count}").SafeFireAndForget();
+
+
+            return count;
+        }
+        public IEnumerable<LocationView> FindLocationViewsByArea(int areaId, int currentPage)
+        {
+            var recs = new List<LocationView>();
+            var paginatedResult = new List<LocationView>();
+
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramAreaId = new SqlParameter("@AREAID", areaId);
+                    recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByArea @AREAID", paramAreaId).ToList();
+                    if (recs.Any())
+                    {
+                        paginatedResult = recs.Skip((currentPage - 1)).Take(15).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+
+            _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}").SafeFireAndForget();
+            _logger.LogDetailAsync($"Get Paginated Location Views End: {paginatedResult.Count}").SafeFireAndForget();
+            return paginatedResult;
+
+            // return recs;
         }
 
         public IEnumerable<LocationView> FindLocationViewsByArea(int areaId)
         {
             var recs = new List<LocationView>();
 
-            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
             try
             {
                 using (var context = new NeutronDb())
@@ -118,20 +231,45 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+            _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}").SafeFireAndForget();
+            return recs;
+        }
+        #endregion
+
+        #region LocationViewsByAreaAndInUse
+
+        public int TotalLocationViewsByAreaAndInUse(int areaId, int inUse)
+        {
+            var count = 0;
+
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramAreaId = new SqlParameter("@AREAID", areaId);
+                    var paramInUse = new SqlParameter("@INUSE", inUse);
+                    count = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByAreaAndInUse @AREAID, @INUSE", paramAreaId, paramInUse).Count();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
-            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
+            _logger.LogDetailAsync($"Get All Location Views End: {count}").SafeFireAndForget();
 
 
-            return recs;
+            return count;
         }
 
         public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse)
         {
             var recs = new List<LocationView>();
 
-            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
             try
             {
                 using (var context = new NeutronDb())
@@ -143,19 +281,47 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
-
-            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
-
-
+            _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}").SafeFireAndForget();
             return recs;
         }
+
+        public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse, int currentPage)
+        {
+            var recs = new List<LocationView>();
+            var paginatedResult = new List<LocationView>();
+
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var paramAreaId = new SqlParameter("@AREAID", areaId);
+                    var paramInUse = new SqlParameter("@INUSE", inUse);
+                    recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByAreaAndInUse @AREAID, @INUSE", paramAreaId, paramInUse).ToList();
+                    if (recs.Any())
+                    {
+                        paginatedResult = recs.Skip((currentPage - 1)).Take(15).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+            _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}").SafeFireAndForget();
+            return paginatedResult;
+        }
+        #endregion
+
+        #region LocationViewsByAreaAndSlot
+
         public IEnumerable<LocationView> FindLocationViewsByAreaAndSlot(int areaId, string slot)
         {
             var recs = new List<LocationView>();
 
-            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
             try
             {
                 using (var context = new NeutronDb())
@@ -167,13 +333,18 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
-            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
+            _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}").SafeFireAndForget();
 
             return recs;
         }
+
+        #endregion
+
+        #region LocationViewsBySlot
+
         /// <summary>
         /// Find Locations using any part of the Slot Name 
         /// </summary>
@@ -183,7 +354,7 @@ namespace NeutronData.Repositories
         {
             var recs = new List<LocationView>();
 
-            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
             try
             {
                 using (var context = new NeutronDb())
@@ -194,19 +365,20 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Error.{Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
-            _ = _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}");
+            _logger.LogDetailAsync($"Get All Location Views End: {recs.Count}").SafeFireAndForget();
 
             return recs;  //.Where(r => r.Slot.Contains(find));
         }
 
+        #endregion
         public IEnumerable<LocationView> FindLocationViews(string find = "")
         {
             var recs = new List<LocationView>();
 
-            _ = _logger.LogDetailAsync(@"Get All Location Views Start");
+            _logger.LogDetailAsync(@"Get All Location Views Start").SafeFireAndForget();
             try
             {
                 using (var context = new NeutronDb())
@@ -218,10 +390,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Error.   {ex.Message} \r\n {ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Error.   {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
-            _ = _logger.LogDetailAsync($"Get All Location Views End:  {recs.Count}");
+            _logger.LogDetailAsync($"Get All Location Views End:  {recs.Count}").SafeFireAndForget();
 
             return recs;
         }
@@ -231,26 +403,20 @@ namespace NeutronData.Repositories
         /// depending on what is passed in
         ///  </summary>
         /// <param name="locationId">The Location Id</param>
-        /// <param name="b">The true or false value</param>
-        public void SetLocationInUse(int locationId, bool b)
+        /// <param name="isInUse">The true or false value</param>
+
+        public async Task SetLocationInUse(int locationId, bool isInUse)
         {
-            var defaultLocationId = 10954;
             try
             {
-                var location = _repo.FindByKey(locationId);
-                if (locationId == defaultLocationId)
-                {
-                    location.InUse = false;
-                }
-                else
-                {
-                    location.InUse = b;
-                }
-                _repo.Update(location);
+                var location = await _repo.FindByKeyAsync(locationId);
+                location.InUse = locationId != DefaultLocationId && isInUse;
+                await _repo.UpdateAsync(location);
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Set Location In Use Error.   {ex.Message} \r\n {ex.InnerException}");
+                var errorMessage = $"Failed to set InUse status for location with ID: {locationId}. Error: {ex.Message} {Environment.NewLine} {ex.InnerException}";
+                _logger.LogDetailAsync(errorMessage).SafeFireAndForget();
             }
         }
         /// <summary>
@@ -259,17 +425,17 @@ namespace NeutronData.Repositories
         /// </summary>
         /// <param name="locationId"></param>
         /// <param name="locationCode"></param>
-        public void SetLocationCode(int locationId, string locationCode)
+        public async Task SetLocationCode(int locationId, string locationCode)
         {
             try
             {
-                var location = _repo.FindByKey(locationId);
+                var location = await _repo.FindByKeyAsync(locationId);
                 location.LocationCode = locationCode;
-                _repo.Update(location);
+                await _repo.UpdateAsync(location);
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Set Location Code Error.   {ex.Message} \r\n {ex.InnerException}");
+                _logger.LogDetailAsync($"Set Location Code Error.   {ex.Message} \r\n {ex.InnerException}").SafeFireAndForget();
             }
         }
 
@@ -313,7 +479,7 @@ namespace NeutronData.Repositories
         public async Task<bool> IsInInventory(int locationId)
         {
             var result = false;
-            await _logger.LogDetailAsync(@"Check for Location in Inventory Start");
+            _logger.LogDetailAsync(@"Check for Location in Inventory Start").SafeFireAndForget();
             var parameters = new List<SqlParameter>();
             try
             {
@@ -338,10 +504,10 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Check for Location in Inventory Error.   {ex.Message} \r\n {ex.InnerException}");
+                _logger.LogDetailAsync($"Check for Location in Inventory Error.   {ex.Message} \r\n {ex.InnerException}").SafeFireAndForget();
             }
 
-            await _logger.LogDetailAsync($"Check for Location in Inventory End True or False:  {result}");
+            _logger.LogDetailAsync($"Check for Location in Inventory End True or False:  {result}").SafeFireAndForget();
 
             return result;
         }
@@ -376,7 +542,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Get All Location Views Exact By Areas Error.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
+                _logger.LogDetailAsync($"Get All Location Views Exact By Areas Error.  {ex.Message}{Environment.NewLine}{ex.InnerException}").SafeFireAndForget();
             }
 
             return recs;

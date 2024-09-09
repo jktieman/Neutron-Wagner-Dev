@@ -806,7 +806,7 @@
             this.MBMaintenance.Name = "MBMaintenance";
             this.MBMaintenance.Size = new System.Drawing.Size(350, 84);
             this.MBMaintenance.TabIndex = 5;
-            this.MBMaintenance.Text = "Maintenance";
+            this.MBMaintenance.Text = "Nova MNT Loader";
             this.MBMaintenance.UseSelectable = true;
             this.MBMaintenance.Click += new System.EventHandler(this.MBMaintenance_Click);
             // 

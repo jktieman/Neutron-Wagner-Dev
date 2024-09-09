@@ -68,7 +68,7 @@
             this.ComboBoxCostCenter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxCostCenter.FormattingEnabled = true;
-            this.ComboBoxCostCenter.Location = new System.Drawing.Point(21, 198);
+            this.ComboBoxCostCenter.Location = new System.Drawing.Point(418, 153);
             this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
             this.ComboBoxCostCenter.Size = new System.Drawing.Size(497, 32);
             this.ComboBoxCostCenter.TabIndex = 1;
@@ -80,7 +80,7 @@
             this.RadioButtonCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RadioButtonCostCenter.Location = new System.Drawing.Point(21, 153);
             this.RadioButtonCostCenter.Name = "RadioButtonCostCenter";
-            this.RadioButtonCostCenter.Size = new System.Drawing.Size(181, 28);
+            this.RadioButtonCostCenter.Size = new System.Drawing.Size(186, 28);
             this.RadioButtonCostCenter.TabIndex = 2;
             this.RadioButtonCostCenter.TabStop = true;
             this.RadioButtonCostCenter.Tag = "Cost Center";
@@ -137,6 +137,7 @@
             // 
             // GroupBoxHotActions
             // 
+            this.GroupBoxHotActions.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.GroupBoxHotActions.Controls.Add(this.LabelHotActionFind);
             this.GroupBoxHotActions.Controls.Add(this.TextBoxFindCostCenter);
             this.GroupBoxHotActions.Controls.Add(this.ComboBoxCostCenter);
@@ -147,7 +148,7 @@
             this.GroupBoxHotActions.Controls.Add(this.RadioButtonPick);
             this.GroupBoxHotActions.Location = new System.Drawing.Point(22, 26);
             this.GroupBoxHotActions.Name = "GroupBoxHotActions";
-            this.GroupBoxHotActions.Size = new System.Drawing.Size(872, 318);
+            this.GroupBoxHotActions.Size = new System.Drawing.Size(932, 205);
             this.GroupBoxHotActions.TabIndex = 1;
             this.GroupBoxHotActions.TabStop = false;
             this.GroupBoxHotActions.Text = "Transaction Type";
@@ -156,7 +157,7 @@
             // 
             this.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ButtonCancel.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonCancel.Location = new System.Drawing.Point(554, 361);
+            this.ButtonCancel.Location = new System.Drawing.Point(614, 238);
             this.ButtonCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonCancel.Name = "ButtonCancel";
             this.ButtonCancel.Size = new System.Drawing.Size(162, 76);
@@ -169,7 +170,7 @@
             // 
             this.ButtonSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ButtonSave.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.ButtonSave.Location = new System.Drawing.Point(732, 361);
+            this.ButtonSave.Location = new System.Drawing.Point(792, 238);
             this.ButtonSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(162, 76);
@@ -182,12 +183,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(918, 450);
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.ClientSize = new System.Drawing.Size(974, 332);
             this.Controls.Add(this.ButtonCancel);
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.GroupBoxHotActions);
             this.Name = "FrmCostCenter";
-            this.Text = "FrmCostCenter";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Cost Center";
             this.GroupBoxHotActions.ResumeLayout(false);
             this.GroupBoxHotActions.PerformLayout();
             this.ResumeLayout(false);

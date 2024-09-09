@@ -30,7 +30,7 @@ namespace Neutron.Forms
         private ResourceManager _enumResourceManager;
 
         readonly IAkaRepository _akaRepository;
-        private readonly HistoryManager _historyManager;
+        private readonly IHistoryManager _historyManager;
         private readonly WorkstationView _workstationView;
         private BindingListView<HistoryView> _bindingSourceEquin;
         private DateTime _currentFromDateTime;
@@ -38,7 +38,7 @@ namespace Neutron.Forms
         private readonly HeaderTextManager _headerTextManager;
         private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
 
-        public FrmHistory(IAkaRepository akaRepository, HistoryManager historyManager, WorkstationView workstationView)
+        public FrmHistory(IAkaRepository akaRepository, IHistoryManager historyManager, WorkstationView workstationView)
         {
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -120,7 +120,7 @@ namespace Neutron.Forms
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "ActionCode",
-                Visible = false
+                Visible = true
             };
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
@@ -212,6 +212,17 @@ namespace Neutron.Forms
                 Name = "AreaId",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             };
+            DataGridView1.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "WorkstationName",
+                HeaderText = _gridResourceManager.GetString("Workstation"),
+                Visible = true,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "WorkstationName",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            };
+
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {

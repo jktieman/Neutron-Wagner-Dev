@@ -47,7 +47,7 @@ namespace Neutron.Ninject
         public static T Create<T>(NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
             , WorkstationView workstationView
-            , HistoryManager historyManager)
+            , IHistoryManager historyManager)
         {
             return _kernel.Get<T>(
                 new ConstructorArgument("neutronVariables", neutronVariables)
@@ -60,7 +60,7 @@ namespace Neutron.Ninject
         public static T Create<T>(NeutronVariables neutronVariables
             , NeutronLicense neutronLicense
             , WorkstationView workstationView
-            , HistoryManager historyManager
+            , IHistoryManager historyManager
             , IptiDisplayFunctions iptiDisplayFunctions)
         {
             return _kernel.Get<T>(

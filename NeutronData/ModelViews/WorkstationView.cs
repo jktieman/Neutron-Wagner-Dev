@@ -20,10 +20,10 @@ public class WorkstationView
     public Area Area { get; set; }
     public int AreaId { get; set; }
     public int Sequence { get; set; }
-    public List<HardwareDevice> HardwareDevices { get; set; } = new();
-    public List<HardwareDevice> Hanels { get; set; } = new();
-    public List<HardwareDevice> Prolites { get; set; } = new();
-    public List<HardwareDevice> Blastzones { get; set; } = new();
+    public List<HardwareDevice> HardwareDevices { get; set; } = [];
+    public List<HardwareDevice> Hanels { get; set; } = [];
+    public List<HardwareDevice> Prolites { get; set; } = [];
+    public List<HardwareDevice> Blastzones { get; set; } = [];
     public HardwareDevice BatchTable { get; set; } = new();
 
     public IReadOnlyCollection<int> EnabledDevices
@@ -33,7 +33,7 @@ public class WorkstationView
             var list = new List<int>();
             foreach (var item in HardwareDevices)
             {
-                if (item.Enabled && (item.DeviceTypeId == 1 || item.DeviceTypeId == 2))
+                if (item.Enabled && item.DeviceTypeId is 1 or 2)
                 {
                     list.Add(item.DeviceNumber);
                 }

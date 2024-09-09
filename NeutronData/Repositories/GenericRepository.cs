@@ -35,6 +35,11 @@ namespace NeutronData.Repositories
             return _dbSet.ToList();
         }
 
+        public async Task<IEnumerable<TEntity>> AllAsync()
+        {
+            return await _dbSet.ToListAsync();
+        }
+
         public IEnumerable<TEntity> AllInclude(
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
@@ -63,9 +68,37 @@ namespace NeutronData.Repositories
             return results;
         }
 
+        public async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            IEnumerable<TEntity> results = await _dbSet.AsNoTracking()
+                .Where(predicate).ToListAsync();
+            return results;
+        }
+
+        public async Task<TEntity> FindByFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var result = await _dbSet.AsNoTracking()
+                .Where(predicate).FirstOrDefaultAsync();
+            return result;
+        }
+
+        public TEntity FindByKeyInclude(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = GetAllIncluding(includeProperties);
+            IEnumerable<TEntity> results = query.Where(predicate).ToList();
+            return results.FirstOrDefault();
+        }
+
         public TEntity FindByKey(int? id)
         {
             var rec = _dbSet.FirstOrDefault(s => s.Id == id);
+            return rec;
+        }
+
+        public async Task<TEntity> FindByKeyAsync(int? id)
+        {
+            var rec = await _dbSet.FirstOrDefaultAsync(s => s.Id == id);
             return rec;
         }
 
@@ -162,6 +195,31 @@ namespace NeutronData.Repositories
             {
                 _logger.LogDetailAsync("Delete Error.  " + ex.Message).SafeFireAndForget();
             }
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var result = false;
+            try
+            {
+                var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == id);
+                if (local != null)
+                {
+                    _context.Entry(local).State = EntityState.Detached;
+                }
+
+                var entity = await FindByKeyAsync(id);
+                _dbSet.Attach(entity);
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync("Delete Error.  " + ex.Message).SafeFireAndForget();
+            }
+
+            return result;
         }
 
     }

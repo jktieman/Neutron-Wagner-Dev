@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProliteController
@@ -14,8 +13,7 @@ namespace ProliteController
         void TurnOnBlindCycle(int deviceNumber, int level, int part);
         void ClearProlite(int deviceNumber);
         Task ClearAllProlites();
-        Task StartProcessingCommands();
+
         bool IsProliteManagerEnabled();
-        List<Prolite> GetProlites();
     }
 }

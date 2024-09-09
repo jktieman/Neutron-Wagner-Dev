@@ -29,7 +29,6 @@ namespace Neutron.Classes
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
         private readonly NeutronVariables _neutronVariables;
-        private readonly IHistoryManager _historyManager;
         private readonly IOrdersRepository _ordersRepository;
         private readonly IReplenOrdersRepository _replenOrdersRepository;
         private IDynamicLogger _logger;
@@ -38,12 +37,11 @@ namespace Neutron.Classes
         public bool CompressRunning { get; private set; }
 
         public CompressService(IJsonData jsonData, WorkstationView workstationView, NeutronVariables neutronVariables
-        , IHistoryManager historyManager, IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository)
+        , IOrdersRepository ordersRepository, IReplenOrdersRepository replenOrdersRepository)
         {
             _jsonData = jsonData;
             _workstationView = workstationView;
             _neutronVariables = neutronVariables;
-            _historyManager = historyManager;
             _ordersRepository = ordersRepository;
             _replenOrdersRepository = replenOrdersRepository;
             Init();
@@ -138,7 +136,7 @@ namespace Neutron.Classes
                 _logger.LogDetailAsync("Compress Finished").SafeFireAndForget();
                 CompressRunning = false;
             }
-           // _compressTimer?.Stop();
+
         }
 
         private async Task CompressOrders(DateTime compressBefore)
@@ -203,7 +201,7 @@ namespace Neutron.Classes
             foreach (var order in orders)
             {
                 _logger.LogDetailAsync($"Archive Order ID: {order.Id}  Order: {order.Ord1}").SafeFireAndForget();
-                _historyManager.SaveHistory(ActionCode.OrderArchived, order);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.OrderArchived, order);
             }
         }
 
@@ -267,7 +265,7 @@ namespace Neutron.Classes
             foreach (var order in orders)
             {
                 _logger.LogDetailAsync($"Archive Replen Order ID: {order.Id}  Order: {order.Ord1}").SafeFireAndForget();
-                _historyManager.SaveHistory(ActionCode.OrderArchived, order);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.OrderArchived, order);
                 await Task.Delay(10);
             }
         }

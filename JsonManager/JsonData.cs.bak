@@ -6,24 +6,10 @@ using System.Linq;
 
 namespace JsonManager
 {
-    /// <summary>
-    /// Represents a manager for JSON data, providing functionality for saving and loading JSON files.
-    /// Implements the <see cref="JsonManager.IJsonData"/> interface.
-    /// </summary>
-    /// <remarks>
-    /// This class provides methods to save and load JSON data to and from files.
-    /// It also manages the directories where the JSON files are stored.
-    /// </remarks>
     public class JsonData : IJsonData
     {
         private string _rootDirectory;
-        /// <summary>
-        /// Initializes a new instance of the <see cref="JsonData"/> class.
-        /// </summary>
-        /// <remarks>
-        /// The constructor sets the root directory for JSON files to the 'Neutron' folder on the system drive.
-        /// If the 'Neutron' directory does not exist, the root directory is set to an empty string.
-        /// </remarks>
+        
         public JsonData()
         {
             _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\");
@@ -114,10 +100,6 @@ namespace JsonManager
                     using (TextReader reader = new StreamReader(fileInfo.FullName))
                     {
                         data = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
-                        if (data == null)
-                        {
-                            data = new T();
-                        }
                     }
                 }
                 catch (Exception)
