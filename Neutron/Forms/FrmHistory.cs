@@ -106,7 +106,7 @@ namespace Neutron.Forms
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Id",
-                HeaderText = _gridResourceManager.GetString("Id"),
+                HeaderText = _gridResourceManager.GetString($"Id"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Id",
@@ -116,7 +116,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCode",
-                HeaderText = _gridResourceManager.GetString("ActionCode"),
+                HeaderText = _gridResourceManager.GetString($"ActionCode"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "ActionCode",
@@ -126,7 +126,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionCodeName",
-                HeaderText = _gridResourceManager.GetString("ActionCodeName"),
+                HeaderText = _gridResourceManager.GetString($"ActionCodeName"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "ActionCodeName",
@@ -136,7 +136,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "ActionDateTime",
-                HeaderText = _gridResourceManager.GetString("ActionDateTime"),
+                HeaderText = _gridResourceManager.GetString($"ActionDateTime"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "ActionDateTime",
@@ -146,7 +146,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord1",
-                HeaderText = _gridResourceManager.GetString("Ord1"),
+                HeaderText = _gridResourceManager.GetString($"Ord1"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Ord1",
@@ -156,7 +156,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Ord2",
-                HeaderText = _gridResourceManager.GetString("Ord2"),
+                HeaderText = _gridResourceManager.GetString($"Ord2"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Ord2",
@@ -166,7 +166,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Item",
-                HeaderText = _gridResourceManager.GetString("Item"),
+                HeaderText = _gridResourceManager.GetString($"Item"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Item",
@@ -176,7 +176,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Description",
-                HeaderText = _gridResourceManager.GetString("Description"),
+                HeaderText = _gridResourceManager.GetString($"Description"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Description",
@@ -186,7 +186,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "RequestedQuantity",
-                HeaderText = _gridResourceManager.GetString("RequestedQuantity"),
+                HeaderText = _gridResourceManager.GetString($"RequestedQuantity"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "RequestedQuantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -196,7 +196,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "IssuedQuantity",
-                HeaderText = _gridResourceManager.GetString("IssuedQuantity"),
+                HeaderText = _gridResourceManager.GetString($"IssuedQuantity"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 Name = "IssuedQuantity",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -206,7 +206,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
-                HeaderText = _gridResourceManager.GetString("Area"),
+                HeaderText = _gridResourceManager.GetString($"Area"),
                 Visible = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "AreaId",
@@ -216,7 +216,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "WorkstationName",
-                HeaderText = _gridResourceManager.GetString("Workstation"),
+                HeaderText = _gridResourceManager.GetString($"Workstation"),
                 Visible = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "WorkstationName",
@@ -271,13 +271,13 @@ namespace Neutron.Forms
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "Loc5",
-                Visible = true
+                Visible = false
             };
             DataGridView1.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Slot",
-                HeaderText = _gridResourceManager.GetString("Slot"),
+                HeaderText = _gridResourceManager.GetString($"Slot"),
                 Visible = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -287,7 +287,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderId",
-                HeaderText = _gridResourceManager.GetString("OrderId"),
+                HeaderText = _gridResourceManager.GetString($"OrderId"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "OrderId",
@@ -297,7 +297,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailId",
-                HeaderText = _gridResourceManager.GetString("OrderDetailId"),
+                HeaderText = _gridResourceManager.GetString($"OrderDetailId"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "OrderDetailId",
@@ -307,7 +307,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "EmpId",
-                HeaderText = _gridResourceManager.GetString("EmpId"),
+                HeaderText = _gridResourceManager.GetString($"EmpId"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Name = "EmpId",
@@ -318,7 +318,7 @@ namespace Neutron.Forms
             {
                 DataPropertyName = "EmployeeName",
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
-                HeaderText = _gridResourceManager.GetString("EmployeeName"),
+                HeaderText = _gridResourceManager.GetString($"EmployeeName"),
                 Name = "EmployeeName",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
                 Visible = true
@@ -327,7 +327,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "CostCenter",
-                HeaderText = _gridResourceManager.GetString("CostCenter"),
+                HeaderText = _gridResourceManager.GetString($"CostCenter"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "CostCenter",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -337,7 +337,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "TransmitDate",
-                HeaderText = _gridResourceManager.GetString("TransmitDate"),
+                HeaderText = _gridResourceManager.GetString($"TransmitDate"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "TransmitDate",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -347,7 +347,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderInfo",
-                HeaderText = _gridResourceManager.GetString("OrderInfo"),
+                HeaderText = _gridResourceManager.GetString($"OrderInfo"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "OrderInfo",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -357,7 +357,7 @@ namespace Neutron.Forms
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "OrderDetailInfo",
-                HeaderText = _gridResourceManager.GetString("OrderDetailInfo"),
+                HeaderText = _gridResourceManager.GetString($"OrderDetailInfo"),
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
                 Name = "OrderDetailInfo",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -395,12 +395,12 @@ namespace Neutron.Forms
         private void ButtonCheckAll_Click(object sender, EventArgs e)
         {
             SelectAllCheckBoxes(checkThem: true);
-            Run();
+            //Run();
         }
         private void ButtonClearAll_Click(object sender, EventArgs e)
         {
             SelectAllCheckBoxes(checkThem: false);
-            Run();
+            //Run();
         }
         private void SelectAllCheckBoxes(bool checkThem)
         {
@@ -415,14 +415,10 @@ namespace Neutron.Forms
         //}
         private void GetHistoryRecords()
         {
-            // var fromDate = GetFromDate();
-            // var toDate = GetToDate();
             var fromDate = _currentFromDateTime;
             var toDate = _currentToDateTime;
             var codes = GetCodes();
             var findWhat = TextBoxFind.Text.Trim().ToLower();
-            //var find = _akaRepository.Get(findWhat);
-            //TextBoxFind.Text = find;
             var history = _historyManager.GetHistoryRecords(codes, fromDate, toDate, findWhat);
             _bindingSourceEquin = new BindingListView<HistoryView>(history);
             DataGridView1.DataSource = _bindingSourceEquin;
@@ -522,8 +518,31 @@ namespace Neutron.Forms
         private void Run()
         {
             Cursor.Current = Cursors.WaitCursor;
-            _currentFromDateTime = DateTimePickerFrom.Value;
-            _currentToDateTime = DateTimePickerTo.Value;
+            // get the date based on the Checked RadiobuttonToday, RadioButtonWeek, RadioButtonMonth, RadioButtonDateRange
+            var selectedRadioButton = PanelDateRanges.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+            if (selectedRadioButton == RadioButtonToday)
+            {
+                _currentFromDateTime = DateTime.Today;
+                _currentToDateTime = DateTime.Today.AddDays(1).AddSeconds(-1);
+            }
+            else if (selectedRadioButton == RadioButtonWeek)
+            {
+                _currentFromDateTime = GetFirstDayOfWeek(DateTime.Today);
+                _currentToDateTime = _currentFromDateTime.AddDays(7).AddSeconds(-1);
+            }
+            else if (selectedRadioButton == RadioButtonMonth)
+            {
+                _currentFromDateTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                _currentToDateTime = _currentFromDateTime.AddMonths(1).AddSeconds(-1);
+            }
+            else if (selectedRadioButton == RadioButtonDateRange)
+            {
+                _currentFromDateTime = DateTimePickerFrom.Value;
+                _currentToDateTime = DateTimePickerTo.Value.AddDays(1).AddSeconds(-1);
+            }
+            
+            //_currentFromDateTime = DateTimePickerFrom.Value;
+            //_currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
@@ -541,24 +560,24 @@ namespace Neutron.Forms
                 _enumResourceManager = ResourceManager.CreateFileBasedResourceManager(baseName: "EnumDescriptions",
                     resourceDir: languageDirectory, usingResourceSet: null);
 
-                ButtonClearAll.Text = _resourceManager.GetString("ClearAll");
-                ButtonCheckAll.Text = _resourceManager.GetString("CheckAll");
-                GroupBoxActionCodes.Text = _resourceManager.GetString("ActionCodes");
-                LabelTo.Text = _resourceManager.GetString("To");
-                LabelFrom.Text = _resourceManager.GetString("From");
-                RadioButtonDateRange.Text = _resourceManager.GetString("DateRange");
-                RadioButtonMonth.Text = _resourceManager.GetString("Month");
-                RadioButtonWeek.Text = _resourceManager.GetString("Week");
-                RadioButtonToday.Text = _resourceManager.GetString("Today");
-                LabelFindDescription.Text = _resourceManager.GetString("SearchForPartofOrderorItem");
-                MButtonClose.Text = _resourceManager.GetString("Close");
-                MBHistoryTransmitSelected.Text = _resourceManager.GetString("TransmitSelected");
-                MBSaveHistory.Text = _resourceManager.GetString("SavetoFile");
-                MButtonRun.Text = _resourceManager.GetString("Run");
-                LabelFormTitle.Text = _resourceManager.GetString("History");
-                mlUserInfo.Text = _resourceManager.GetString("Login");
-                LabelFormHeaderText.Text = _resourceManager.GetString("NeutronWarehouseManagement");
-                Text = _resourceManager.GetString("History");
+                ButtonClearAll.Text = _resourceManager.GetString($"ClearAll");
+                ButtonCheckAll.Text = _resourceManager.GetString($"CheckAll");
+                GroupBoxActionCodes.Text = _resourceManager.GetString($"ActionCodes");
+                LabelTo.Text = _resourceManager.GetString($"To");
+                LabelFrom.Text = _resourceManager.GetString($"From");
+                RadioButtonDateRange.Text = _resourceManager.GetString($"DateRange");
+                RadioButtonMonth.Text = _resourceManager.GetString($"Month");
+                RadioButtonWeek.Text = _resourceManager.GetString($"Week");
+                RadioButtonToday.Text = _resourceManager.GetString($"Today");
+                LabelFindDescription.Text = _resourceManager.GetString($"SearchForPartofOrderorItem");
+                MButtonClose.Text = _resourceManager.GetString($"Close");
+                MBHistoryTransmitSelected.Text = _resourceManager.GetString($"TransmitSelected");
+                MBSaveHistory.Text = _resourceManager.GetString($"SavetoFile");
+                MButtonRun.Text = _resourceManager.GetString($"Run");
+                LabelFormTitle.Text = _resourceManager.GetString($"History");
+                mlUserInfo.Text = _resourceManager.GetString($"Login");
+                LabelFormHeaderText.Text = _resourceManager.GetString($"NeutronWarehouseManagement");
+                Text = _resourceManager.GetString($"History");
             }
             catch (Exception ex)
             {
@@ -575,7 +594,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-            GetHistoryRecords();
+            //GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -589,7 +608,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-            GetHistoryRecords();
+           // GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -603,7 +622,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-            GetHistoryRecords();
+           // GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -617,7 +636,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-            GetHistoryRecords();
+           // GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -635,7 +654,7 @@ namespace Neutron.Forms
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                Run();
+                //Run();
             }
         }
 
