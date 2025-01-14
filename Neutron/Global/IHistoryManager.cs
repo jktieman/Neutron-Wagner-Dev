@@ -16,6 +16,7 @@ namespace Neutron.Global
         void SaveHistory(ActionCode actionCode, ReplenOrderView order);
         void SaveHistory(ActionCode actionCode, OrderDetail orderDetail);
         void SaveHistory(ActionCode actionCode, ReplenOrderDetail orderDetail);
+        Task SaveHistoryAsync(ActionCode actionCode, ReplenOrderDetail orderDetail);
         void SaveHistory(ActionCode actionCode, PickStop pickStop);
         void SaveHistory(ActionCode actionCode, ReplenPickStop pickStop);
         void SaveHistory(ActionCode actionCode, Order value, int workstationId);
@@ -25,6 +26,7 @@ namespace Neutron.Global
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, PickList pickList);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, OrderDetail orderDetail);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, ReplenOrderDetail orderDetail);
+        
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, string costCenter);
         void SaveHistory(ActionCode actionCode, Inventory inventory, int prevQty, bool value);
