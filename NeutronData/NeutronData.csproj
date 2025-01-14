@@ -280,6 +280,10 @@
     <Compile Include="Repositories\WorkstationRepository.cs" />
     <Compile Include="Repositories\AreaRepository.cs" />
     <Compile Include="SqlModelViews\SqlInventoryView.cs" />
+    <Compile Include="UnitOfWorks\IInventoryUnitOfWork.cs" />
+    <Compile Include="UnitOfWorks\ILocationUnitOfWork.cs" />
+    <Compile Include="UnitOfWorks\InventoryUnitOfWork.cs" />
+    <Compile Include="UnitOfWorks\LocationUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
