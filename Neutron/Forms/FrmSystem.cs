@@ -48,7 +48,7 @@ namespace Neutron.Forms
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = NeutronCore.Global.Logger.SetupLogger("System");
-           // SetupEmail();
+            // SetupEmail();
             _storedProcedureManager = storedProcedureManager;
             _standAlone = standAlone;
             _emailEnabled = _neutronVariables.EnableEmailNotification;
@@ -60,6 +60,33 @@ namespace Neutron.Forms
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
         }
+
+        //public FrmSystem(IJsonData jsonData, IStoredProcedureManager storedProcedureManager
+        //    , NeutronVariables neutronVariables, NeutronLicense neutronLicense, bool standAlone = false)
+        //{
+        //    if (jsonData == null) throw new ArgumentNullException(nameof(jsonData));
+        //    if (storedProcedureManager == null) throw new ArgumentNullException(nameof(storedProcedureManager));
+        //    if (neutronVariables == null) throw new ArgumentNullException(nameof(neutronVariables));
+        //    if (neutronLicense == null) throw new ArgumentNullException(nameof(neutronLicense));
+        //    InitializeComponent();
+        //    _cultureInfo = Thread.CurrentThread.CurrentUICulture; // Use CurrentUICulture for UI-specific culture
+        //    SetCulture(_cultureInfo.Name);
+        //    _jsonData = jsonData;
+        //    _neutronVariables = neutronVariables;
+        //    _neutronLicense = neutronLicense;
+        //    _logger = NeutronCore.Global.Logger.SetupLogger("System"); // Consider making "System" configurable
+        //    _storedProcedureManager = storedProcedureManager;
+        //    _standAlone = standAlone;
+        //    _emailEnabled = _neutronVariables.EnableEmailNotification;
+        //    KeyPreview = true;
+        //    HideTabControlTabs();
+        //    mlUserInfo.Text = GlobalVar.User?.UserInfo ?? "No user information available"; // Handle null case
+        //    var mediator = Mediator.GetInstance(); // Use a local variable for consistency
+        //    mediator.StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
+        //    mediator.StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
+        //    CloseButtonPressed = false;
+        //}
+
 
         protected override CreateParams CreateParams
         {
