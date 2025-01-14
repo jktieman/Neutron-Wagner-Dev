@@ -7,5 +7,6 @@ namespace Neutron.Interfaces
     {
         Task<bool> DeleteInventoryRecordAsync(int invId, bool releaseOnly = false);
         Task<bool> ReleaseCheckAsync(Inventory inventory);
+        bool QuickReleaseCheckAsync(Inventory inventory);
     }
 }
