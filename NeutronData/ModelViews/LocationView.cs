@@ -7,7 +7,7 @@ namespace NeutronData.ModelViews
     {
         public int Id { get; set; }
         public int AreaId { get; set; }
-        public string AreaName { get; set; }
+        public string AreaName { get; set; } = string.Empty;
         public int AreaNumber { get; set; }
         public int Loc1 { get; set; }
         public int Loc2 { get; set; }

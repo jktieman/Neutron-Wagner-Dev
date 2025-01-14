@@ -84,7 +84,7 @@ namespace NeutronData.ModelViews
             return total;
         }
 
-        private int GetPickViewTotal(ReplenPickView pickview)
+        public int GetPickViewTotal(ReplenPickView pickview)
         {
             var total = 0;
             foreach (var pickLocation in pickview.PickLocations)

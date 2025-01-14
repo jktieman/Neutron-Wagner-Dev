@@ -19,11 +19,12 @@ namespace NeutronData.ModelViews
 
         public PickStop()
         {
-            Inventory = new List<Inventory>();
-            Images = new List<ItemImage>();
-            PickViews = [];
+           // Inventory = new List<Inventory>();
+           // Images = new List<ItemImage>();
+           // PickViews = [];
         }
-        public List<PickView> PickViews { get; set; }
+
+        public List<PickView> PickViews { get; set; } = [];
         public int Sequence { get; set; }
         public int OrderId { get; set; }
         public string Ord1 { get; set; }
@@ -37,12 +38,12 @@ namespace NeutronData.ModelViews
         public int PickedQty { get; set; }
         public string Slot { get; set; }
         public int SlotQty { get; set; }
-        public List<Inventory> Inventory { get; set; }
+        public List<Inventory> Inventory { get; set; } = [];
         public int InventoryIndex { get; set; }
         public int GroupBoxLocationInventoryIndex { get; set; }
         public Inventory CurrentInventoryLocation { get; set; }
         public int TotalQuantityInInventory { get; set; }
-        public List<ItemImage> Images { get; set; }
+        public List<ItemImage> Images { get; set; } = [];
 
         public bool Skipped { get; set; }
         public string ItemKey { get; set; }
