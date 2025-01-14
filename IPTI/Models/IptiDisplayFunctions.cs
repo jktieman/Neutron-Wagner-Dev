@@ -246,7 +246,7 @@ namespace IPTI.Models
         public async Task TurnOnBatchDisplay(int position, string text)
         {
             text = text.Replace("-", " ");
-            _logger.LogDetailAsync($"START").SafeFireAndForget();
+            _logger.LogDetailAsync($"START: Position: {position}  Text: {text}").SafeFireAndForget();
             try
             {
                 if (_workstationView.BatchTable == null) return;
@@ -254,6 +254,7 @@ namespace IPTI.Models
                 var command = _tcpIptiCommandCenter.BatchBayController.TurnOnDisplay(position, text);
                 if (command != string.Empty)
                 {
+                    _logger.LogDetailAsync($"Command: {command}").SafeFireAndForget();
                     await _tcpIptiController.SendText(command);
                 }
 

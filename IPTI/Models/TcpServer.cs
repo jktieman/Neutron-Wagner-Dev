@@ -19,18 +19,18 @@ namespace IPTI.Models
     public class TcpServer
     {
         // Propagates cancellation notifications to all CancellationToken objects created from it.
-        private CancellationTokenSource _tokenSource;
+        private readonly CancellationTokenSource _tokenSource;
         private CancellationToken _token;
         private int _transmitDelay;
         private readonly IPAddress _ipAddress;
         private readonly int _port;
-        
+
         private TcpListener _listener;
         // Dictionary to store the clients connected to the server.
         // Key: Client's remote endpoint.
         // Value: Metadata object containing information about the client.
-        private ConcurrentDictionary<string, Metadata> _connectedClients = new ConcurrentDictionary<string, Metadata>();
-        
+        private readonly ConcurrentDictionary<string, Metadata> _connectedClients = new ConcurrentDictionary<string, Metadata>();
+
         private IDynamicLogger _logger;
         private bool _monitorTransmitter = true;
 
@@ -59,6 +59,7 @@ namespace IPTI.Models
             _transmitDelay = transmitDelay;
             // Initialize the CancellationTokenSource object.
             _tokenSource = new CancellationTokenSource();
+            _token = _tokenSource.Token;
             Init();
         }
 
@@ -66,25 +67,20 @@ namespace IPTI.Models
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("TcpServer");
             _listener = new TcpListener(_ipAddress, _port);
-            _token = _tokenSource.Token;
             _listener.Start();
 
             Task.Run(() => AcceptConnections(_token), _token);
-           // Task.Run( () => MonitorTransmitter(_token), _token);
+            // Task.Run( () => MonitorTransmitter(_token), _token);
         }
 
-        public TcpListener Listener
-        {
-            get { return _listener; }
-            private set { _listener = value; }
-        }
+        public TcpListener Listener => _listener;
 
         public void DisposeServer()
         {
             try
             {
                 _monitorTransmitter = false;
-                
+
                 if (_connectedClients != null && _connectedClients.Count > 0)
                 {
                     foreach (var curr in _connectedClients)
@@ -137,13 +133,13 @@ namespace IPTI.Models
             {
 
                 // ListClients();
-                _logger.LogDetailAsync($"Value: {value} ").SafeFireAndForget();
+               // _logger.LogDetailAsync($"Value: {value} ").SafeFireAndForget();
 
                 // if there are any _clients
                 // return the first _client
                 var key = _connectedClients.Keys.FirstOrDefault();
                 if (string.IsNullOrEmpty(key)) return;
-                _logger.LogDetailAsync($"Key Value: {key} ").SafeFireAndForget();
+               // _logger.LogDetailAsync($"Key Value: {key} ").SafeFireAndForget();
                 var md = _connectedClients[key];
 
                 var command = new Put2LightCommand().GetCommand(value);
@@ -159,7 +155,7 @@ namespace IPTI.Models
                     }
                     md.NetworkStream.WriteAsync(dataBytes, 0, dataBytes.Length, _token);
                     md.NetworkStream.FlushAsync(_token);
-                    
+
                 }
             }
             catch (Exception ex)
@@ -188,17 +184,18 @@ namespace IPTI.Models
                 while (!token.IsCancellationRequested)
                 {
                     _logger.LogDetailAsync($"Accept Connection LOOP TIME: {DateTime.Now.Millisecond}").SafeFireAndForget();
+
                     var client = await _listener.AcceptTcpClientAsync();
+
                     _logger.LogDetailAsync($"Got a Client: {DateTime.Now.Millisecond}").SafeFireAndForget();
+
                     var md = new Metadata(client);
-                    
                     _connectedClients.TryAdd(client.Client.RemoteEndPoint.ToString(), md);
 
                     Mediator.GetInstance().OnIsClientConnected(this, true);
                     _logger.LogDetailAsync($"Got a Client: {client.Client.RemoteEndPoint}").SafeFireAndForget();
 
-
-                    await Task.Run(() => DataReceiver(md), md.Token);
+                    await DataReceiver(md);
                 }
             }
             catch (Exception ex)
@@ -233,17 +230,15 @@ namespace IPTI.Models
                         }
                     }
 
-                    var data = await DataReadAsync(md.TcpClient, _token);
+                    var data = await DataReadAsync(md.TcpClient);
 
                     if (data == null || data.Length < 1)
                     {
                         await Task.Delay(30, _token);
                         continue;
                     }
-                    _logger.LogDetailAsync($"Byte Data as String: {Encoding.UTF8.GetString(data)}").SafeFireAndForget();
-                    
-                    //ProcessDataReceived(data);
 
+                    ProcessDataReceived(data, data.Length);
                 }
             }
             catch (Exception e)
@@ -262,61 +257,55 @@ namespace IPTI.Models
             md.Dispose();
         }
 
-        private void ProcessDataReceived(byte[] data)
+        private void ProcessDataReceived(byte[] data, int length)
         {
-            _logger.LogDetailAsync($"Byte Data as String: {Encoding.UTF8.GetString(data)}").SafeFireAndForget();
+            var bytes = data.Take(length).ToArray();
+
+            _logger.LogDetailAsync($"Byte Data as HEX String: {bytes.ByteArrayToHexString()}").SafeFireAndForget();
+            //_logger.LogDetailAsync($"Byte Data as Human String: {bytes.ByteArrayToHumanString()}").SafeFireAndForget();
+            //_logger.LogDetailAsync($"Byte Data as RAW String: {bytes.ByteArrayToRawString()}").SafeFireAndForget();
+            //_logger.LogDetailAsync($"Byte Data as String: {bytes.ByteArrayToString()}").SafeFireAndForget();
+            //_logger.LogDetailAsync($"Byte Data as X2 String: {bytes.ByteArrayToStringX2()}").SafeFireAndForget();
         }
 
-        public async Task<byte[]> DataReadAsync(TcpClient client, CancellationToken token)
+        public async Task<byte[]> DataReadAsync(TcpClient client)
         {
-            token.ThrowIfCancellationRequested();
-            var stream = client.GetStream();
-            if (!stream.CanRead || !stream.DataAvailable) return null;
-            var buffer = new byte[1024];
-            using (var ms = new MemoryStream())
+            await _logger.LogDetailAsync($"Start");
+            try
             {
-                int read;
-                while ((read = await stream.ReadAsync(buffer, 0, buffer.Length, token)) > 0)
+                var key = _connectedClients.Keys.FirstOrDefault();
+                if (string.IsNullOrEmpty(key)) return new byte[] { };
+                var md = _connectedClients[key];
+                lock (md.SendLock)
                 {
-                    ms.Write(buffer, 0, read);
+                    _token.ThrowIfCancellationRequested();
                 }
-                if (read <= 0)
+                var stream = client.GetStream();
+                if (!stream.CanRead) return null;
+                var buffer = new byte[1024];
+                using (var ms = new MemoryStream())
                 {
-                    throw new SocketException();
+                    while (true)
+                    {
+                        var read = await stream.ReadAsync(buffer, 0, buffer.Length, _token);
+
+                        ProcessDataReceived(buffer, read);
+
+                        if (read <= 0) break;
+                        ms.Write(buffer, 0, read);
+
+                    }
+
+                    return ms.ToArray();
                 }
-                return ms.ToArray();
             }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Exception Report: {ex.Message} ").SafeFireAndForget();
+            }
+
+            return Array.Empty<byte>();
         }
-
-
-        //public async Task<byte[]> DataReadAsync(TcpClient client, CancellationToken token)
-        //{
-        //    if (token.IsCancellationRequested) throw new OperationCanceledException();
-
-        //    var stream = client.GetStream();
-        //    if (!stream.CanRead) return null;
-        //    if (!stream.DataAvailable) return null;
-
-        //    var buffer = new byte[1024];
-        //    using (var ms = new MemoryStream())
-        //    {
-        //        while (true)
-        //        {
-        //            var read = await stream.ReadAsync(buffer, 0, buffer.Length, token);
-        //            if (read > 0)
-        //            {
-        //                ms.Write(buffer, 0, read);
-        //                return ms.ToArray();
-        //            }
-        //            else
-        //            {
-        //                throw new SocketException();
-        //            }
-        //        }
-        //    }
-        //}
-
-
         private async Task MonitorTransmitter(CancellationToken token)
         {
 
@@ -328,7 +317,7 @@ namespace IPTI.Models
                 var md = _connectedClients[key];
                 var ready = IsClientConnected(md.TcpClient);
                 Mediator.GetInstance().OnIsClientConnected(this, ready);
-               await Task.Delay(100, token);
+                await Task.Delay(100, token);
             }
         }
 

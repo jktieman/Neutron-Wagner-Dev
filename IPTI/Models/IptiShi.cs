@@ -42,10 +42,10 @@ namespace IPTI.Models
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show($"Unable to turn On display.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-                throw;
+                //throw;
             }
             return result;
         }
@@ -57,10 +57,10 @@ namespace IPTI.Models
             {
                 result = _towerLevelInfo.BayId.PadLeft(2, '0') + "39" + _towerLevelInfo.Display.PadLeft(2, '0');
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                // MessageBox.Show($"Unable to turn Off display.  {ex.Message} {Environment.NewLine} {ex.InnerException}");
-               throw;
+               //throw;
             }
             return result;
         }
