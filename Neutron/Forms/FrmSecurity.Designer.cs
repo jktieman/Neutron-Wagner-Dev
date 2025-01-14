@@ -124,10 +124,10 @@
             this.TabPageUsers.Controls.Add(this.ButtonSaveUsers);
             this.TabPageUsers.Controls.Add(this.ButtonSelectUsers);
             this.TabPageUsers.Controls.Add(this.ListViewUsers);
-            this.TabPageUsers.Location = new System.Drawing.Point(4, 29);
+            this.TabPageUsers.Location = new System.Drawing.Point(4, 34);
             this.TabPageUsers.Name = "TabPageUsers";
             this.TabPageUsers.Padding = new System.Windows.Forms.Padding(3);
-            this.TabPageUsers.Size = new System.Drawing.Size(887, 613);
+            this.TabPageUsers.Size = new System.Drawing.Size(887, 608);
             this.TabPageUsers.TabIndex = 4;
             this.TabPageUsers.Text = "Users";
             this.TabPageUsers.UseVisualStyleBackColor = true;
@@ -166,6 +166,7 @@
             // 
             this.ListViewUsers.CheckBoxes = true;
             this.ListViewUsers.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListViewUsers.HideSelection = false;
             this.ListViewUsers.Location = new System.Drawing.Point(9, 107);
             this.ListViewUsers.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewUsers.Name = "ListViewUsers";
@@ -180,10 +181,10 @@
             this.TabPageGroups.Controls.Add(this.TextBoxNewGroup);
             this.TabPageGroups.Controls.Add(this.LabelNewGroupName);
             this.TabPageGroups.Controls.Add(this.ListViewGroups);
-            this.TabPageGroups.Location = new System.Drawing.Point(4, 29);
+            this.TabPageGroups.Location = new System.Drawing.Point(4, 34);
             this.TabPageGroups.Name = "TabPageGroups";
             this.TabPageGroups.Padding = new System.Windows.Forms.Padding(3);
-            this.TabPageGroups.Size = new System.Drawing.Size(887, 613);
+            this.TabPageGroups.Size = new System.Drawing.Size(887, 608);
             this.TabPageGroups.TabIndex = 5;
             this.TabPageGroups.Text = "Security Groups";
             this.TabPageGroups.UseVisualStyleBackColor = true;
@@ -203,7 +204,7 @@
             // 
             this.TextBoxNewGroup.Location = new System.Drawing.Point(386, 39);
             this.TextBoxNewGroup.Name = "TextBoxNewGroup";
-            this.TextBoxNewGroup.Size = new System.Drawing.Size(185, 26);
+            this.TextBoxNewGroup.Size = new System.Drawing.Size(185, 30);
             this.TextBoxNewGroup.TabIndex = 0;
             // 
             // LabelNewGroupName
@@ -219,6 +220,7 @@
             // ListViewGroups
             // 
             this.ListViewGroups.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListViewGroups.HideSelection = false;
             this.ListViewGroups.Location = new System.Drawing.Point(9, 107);
             this.ListViewGroups.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewGroups.Name = "ListViewGroups";
@@ -233,9 +235,9 @@
             this.TabPageSecureItems.Controls.Add(this.ButtonSaveSecureItems);
             this.TabPageSecureItems.Controls.Add(this.ButtonSelectSecureItems);
             this.TabPageSecureItems.Controls.Add(this.ListViewSecureItems);
-            this.TabPageSecureItems.Location = new System.Drawing.Point(4, 29);
+            this.TabPageSecureItems.Location = new System.Drawing.Point(4, 34);
             this.TabPageSecureItems.Name = "TabPageSecureItems";
-            this.TabPageSecureItems.Size = new System.Drawing.Size(887, 613);
+            this.TabPageSecureItems.Size = new System.Drawing.Size(887, 608);
             this.TabPageSecureItems.TabIndex = 7;
             this.TabPageSecureItems.Text = "Secure Items";
             this.TabPageSecureItems.UseVisualStyleBackColor = true;
@@ -274,6 +276,7 @@
             // 
             this.ListViewSecureItems.CheckBoxes = true;
             this.ListViewSecureItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListViewSecureItems.HideSelection = false;
             this.ListViewSecureItems.Location = new System.Drawing.Point(9, 107);
             this.ListViewSecureItems.Margin = new System.Windows.Forms.Padding(4);
             this.ListViewSecureItems.Name = "ListViewSecureItems";
@@ -285,10 +288,10 @@
             // TabPageNewUser
             // 
             this.TabPageNewUser.Controls.Add(this.PanelNewUser);
-            this.TabPageNewUser.Location = new System.Drawing.Point(4, 29);
+            this.TabPageNewUser.Location = new System.Drawing.Point(4, 34);
             this.TabPageNewUser.Name = "TabPageNewUser";
             this.TabPageNewUser.Padding = new System.Windows.Forms.Padding(3);
-            this.TabPageNewUser.Size = new System.Drawing.Size(887, 613);
+            this.TabPageNewUser.Size = new System.Drawing.Size(887, 608);
             this.TabPageNewUser.TabIndex = 6;
             this.TabPageNewUser.Text = "New User";
             this.TabPageNewUser.UseVisualStyleBackColor = true;
@@ -325,7 +328,7 @@
             this.ComboBoxPreferredLanguage.FormattingEnabled = true;
             this.ComboBoxPreferredLanguage.Location = new System.Drawing.Point(231, 131);
             this.ComboBoxPreferredLanguage.Name = "ComboBoxPreferredLanguage";
-            this.ComboBoxPreferredLanguage.Size = new System.Drawing.Size(150, 28);
+            this.ComboBoxPreferredLanguage.Size = new System.Drawing.Size(150, 33);
             this.ComboBoxPreferredLanguage.TabIndex = 3;
             // 
             // comboBox1
@@ -333,7 +336,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(231, 131);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(150, 28);
+            this.comboBox1.Size = new System.Drawing.Size(150, 33);
             this.comboBox1.TabIndex = 9;
             // 
             // CheckBoxDisabled
@@ -342,7 +345,7 @@
             this.CheckBoxDisabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxDisabled.Location = new System.Drawing.Point(464, 131);
             this.CheckBoxDisabled.Name = "CheckBoxDisabled";
-            this.CheckBoxDisabled.Size = new System.Drawing.Size(98, 24);
+            this.CheckBoxDisabled.Size = new System.Drawing.Size(118, 29);
             this.CheckBoxDisabled.TabIndex = 7;
             this.CheckBoxDisabled.Text = "Disabled";
             this.CheckBoxDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -362,7 +365,7 @@
             // 
             this.TextBoxPassword.Location = new System.Drawing.Point(548, 99);
             this.TextBoxPassword.Name = "TextBoxPassword";
-            this.TextBoxPassword.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxPassword.Size = new System.Drawing.Size(150, 30);
             this.TextBoxPassword.TabIndex = 6;
             // 
             // LabelPassword
@@ -378,14 +381,14 @@
             // 
             this.TextBoxLastname.Location = new System.Drawing.Point(548, 67);
             this.TextBoxLastname.Name = "TextBoxLastname";
-            this.TextBoxLastname.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxLastname.Size = new System.Drawing.Size(150, 30);
             this.TextBoxLastname.TabIndex = 5;
             // 
             // TextBoxUsername
             // 
             this.TextBoxUsername.Location = new System.Drawing.Point(231, 99);
             this.TextBoxUsername.Name = "TextBoxUsername";
-            this.TextBoxUsername.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxUsername.Size = new System.Drawing.Size(150, 30);
             this.TextBoxUsername.TabIndex = 2;
             // 
             // LabelPreferredLanguage
@@ -419,7 +422,7 @@
             // 
             this.TextBoxFirstname.Location = new System.Drawing.Point(231, 67);
             this.TextBoxFirstname.Name = "TextBoxFirstname";
-            this.TextBoxFirstname.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxFirstname.Size = new System.Drawing.Size(150, 30);
             this.TextBoxFirstname.TabIndex = 1;
             // 
             // LabelFirstname
@@ -435,7 +438,7 @@
             // 
             this.TextBoxPin.Location = new System.Drawing.Point(549, 35);
             this.TextBoxPin.Name = "TextBoxPin";
-            this.TextBoxPin.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxPin.Size = new System.Drawing.Size(150, 30);
             this.TextBoxPin.TabIndex = 4;
             // 
             // LabelPin
@@ -451,7 +454,7 @@
             // 
             this.TextBoxEmpId.Location = new System.Drawing.Point(231, 35);
             this.TextBoxEmpId.Name = "TextBoxEmpId";
-            this.TextBoxEmpId.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxEmpId.Size = new System.Drawing.Size(150, 30);
             this.TextBoxEmpId.TabIndex = 0;
             // 
             // LabelEmpId
@@ -467,9 +470,9 @@
             // 
             this.TabPageEditUser.Controls.Add(this.DataGridView1);
             this.TabPageEditUser.Controls.Add(this.PanelEditUser);
-            this.TabPageEditUser.Location = new System.Drawing.Point(4, 29);
+            this.TabPageEditUser.Location = new System.Drawing.Point(4, 34);
             this.TabPageEditUser.Name = "TabPageEditUser";
-            this.TabPageEditUser.Size = new System.Drawing.Size(887, 613);
+            this.TabPageEditUser.Size = new System.Drawing.Size(887, 608);
             this.TabPageEditUser.TabIndex = 8;
             this.TabPageEditUser.Text = "Edit User";
             this.TabPageEditUser.UseVisualStyleBackColor = true;
@@ -486,6 +489,7 @@
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
+            this.DataGridView1.RowHeadersWidth = 51;
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.Size = new System.Drawing.Size(861, 287);
             this.DataGridView1.TabIndex = 5;
@@ -525,7 +529,7 @@
             this.ComboBoxEditPreferredLanguage.FormattingEnabled = true;
             this.ComboBoxEditPreferredLanguage.Location = new System.Drawing.Point(213, 151);
             this.ComboBoxEditPreferredLanguage.Name = "ComboBoxEditPreferredLanguage";
-            this.ComboBoxEditPreferredLanguage.Size = new System.Drawing.Size(215, 28);
+            this.ComboBoxEditPreferredLanguage.Size = new System.Drawing.Size(215, 33);
             this.ComboBoxEditPreferredLanguage.TabIndex = 4;
             // 
             // LabelEditPreferredLanguage
@@ -542,7 +546,7 @@
             this.ComboBoxUsers.FormattingEnabled = true;
             this.ComboBoxUsers.Location = new System.Drawing.Point(202, 13);
             this.ComboBoxUsers.Name = "ComboBoxUsers";
-            this.ComboBoxUsers.Size = new System.Drawing.Size(326, 28);
+            this.ComboBoxUsers.Size = new System.Drawing.Size(326, 33);
             this.ComboBoxUsers.TabIndex = 0;
             this.ComboBoxUsers.SelectedIndexChanged += new System.EventHandler(this.ComboBoxUsers_SelectedIndexChanged);
             // 
@@ -552,7 +556,7 @@
             this.CheckBoxDisabledEditUser.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxDisabledEditUser.Location = new System.Drawing.Point(471, 153);
             this.CheckBoxDisabledEditUser.Name = "CheckBoxDisabledEditUser";
-            this.CheckBoxDisabledEditUser.Size = new System.Drawing.Size(98, 24);
+            this.CheckBoxDisabledEditUser.Size = new System.Drawing.Size(118, 29);
             this.CheckBoxDisabledEditUser.TabIndex = 8;
             this.CheckBoxDisabledEditUser.Text = "Disabled";
             this.CheckBoxDisabledEditUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -560,7 +564,6 @@
             // 
             // ButtonDeleteEditUser
             // 
-            this.ButtonDeleteEditUser.Enabled = false;
             this.ButtonDeleteEditUser.Location = new System.Drawing.Point(134, 200);
             this.ButtonDeleteEditUser.Name = "ButtonDeleteEditUser";
             this.ButtonDeleteEditUser.Size = new System.Drawing.Size(150, 33);
@@ -594,7 +597,7 @@
             // 
             this.TextBoxPasswordEditUser.Location = new System.Drawing.Point(557, 118);
             this.TextBoxPasswordEditUser.Name = "TextBoxPasswordEditUser";
-            this.TextBoxPasswordEditUser.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxPasswordEditUser.Size = new System.Drawing.Size(150, 30);
             this.TextBoxPasswordEditUser.TabIndex = 7;
             // 
             // LabelEditPassword
@@ -610,14 +613,14 @@
             // 
             this.TextBoxLastnameEditUser.Location = new System.Drawing.Point(557, 86);
             this.TextBoxLastnameEditUser.Name = "TextBoxLastnameEditUser";
-            this.TextBoxLastnameEditUser.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxLastnameEditUser.Size = new System.Drawing.Size(150, 30);
             this.TextBoxLastnameEditUser.TabIndex = 6;
             // 
             // TextBoxUsernameEditUser
             // 
             this.TextBoxUsernameEditUser.Location = new System.Drawing.Point(213, 118);
             this.TextBoxUsernameEditUser.Name = "TextBoxUsernameEditUser";
-            this.TextBoxUsernameEditUser.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxUsernameEditUser.Size = new System.Drawing.Size(150, 30);
             this.TextBoxUsernameEditUser.TabIndex = 3;
             // 
             // LabelEditLastname
@@ -642,7 +645,7 @@
             // 
             this.TextBoxFirstnameEditUser.Location = new System.Drawing.Point(213, 86);
             this.TextBoxFirstnameEditUser.Name = "TextBoxFirstnameEditUser";
-            this.TextBoxFirstnameEditUser.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxFirstnameEditUser.Size = new System.Drawing.Size(150, 30);
             this.TextBoxFirstnameEditUser.TabIndex = 2;
             // 
             // LabelEditLast50Records
@@ -668,7 +671,7 @@
             // 
             this.TextBoxPinEditUser.Location = new System.Drawing.Point(557, 54);
             this.TextBoxPinEditUser.Name = "TextBoxPinEditUser";
-            this.TextBoxPinEditUser.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxPinEditUser.Size = new System.Drawing.Size(150, 30);
             this.TextBoxPinEditUser.TabIndex = 5;
             // 
             // LabelEditPin
@@ -684,7 +687,7 @@
             // 
             this.TextBoxEmpIdEditUser.Location = new System.Drawing.Point(213, 54);
             this.TextBoxEmpIdEditUser.Name = "TextBoxEmpIdEditUser";
-            this.TextBoxEmpIdEditUser.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxEmpIdEditUser.Size = new System.Drawing.Size(150, 30);
             this.TextBoxEmpIdEditUser.TabIndex = 1;
             this.TextBoxEmpIdEditUser.Enter += new System.EventHandler(this.TextBoxEmpIdEditUser_Enter);
             // 
@@ -703,7 +706,7 @@
             this.ComboBoxGroups.FormattingEnabled = true;
             this.ComboBoxGroups.Location = new System.Drawing.Point(378, 8);
             this.ComboBoxGroups.Name = "ComboBoxGroups";
-            this.ComboBoxGroups.Size = new System.Drawing.Size(185, 28);
+            this.ComboBoxGroups.Size = new System.Drawing.Size(185, 33);
             this.ComboBoxGroups.TabIndex = 0;
             this.ComboBoxGroups.SelectedIndexChanged += new System.EventHandler(this.ComboBoxGroups_SelectedIndexChanged);
             // 
@@ -723,7 +726,7 @@
             this.ButtonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonClose.Location = new System.Drawing.Point(767, 8);
             this.ButtonClose.Name = "ButtonClose";
-            this.ButtonClose.Size = new System.Drawing.Size(132, 30);
+            this.ButtonClose.Size = new System.Drawing.Size(132, 35);
             this.ButtonClose.TabIndex = 1;
             this.ButtonClose.Text = "Close";
             this.ButtonClose.UseVisualStyleBackColor = true;
@@ -731,7 +734,7 @@
             // 
             // FrmSecurity
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(916, 724);
