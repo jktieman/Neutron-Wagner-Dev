@@ -132,11 +132,11 @@ namespace EthernetTransmitter
         {
             try
             {
-                _logger.LogDetailAsync($"Data Sent: {e.BytesSent}").SafeFireAndForget();
+               await _logger.LogDetailAsync($"Data Sent: {e.BytesSent}");
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Exception in Events_DataSent: {ex}").SafeFireAndForget();
+               await _logger.LogDetailAsync($"Exception in Events_DataSent: {ex}");
             }
         }
         /// <summary>
