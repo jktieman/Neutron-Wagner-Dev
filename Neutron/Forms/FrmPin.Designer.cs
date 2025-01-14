@@ -97,7 +97,7 @@ namespace Neutron.Forms
             // FrmPin
             // 
             this.AcceptButton = this.mButtonLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = MetroFramework.Forms.MetroFormBorderStyle.FixedSingle;
             this.ClientSize = new System.Drawing.Size(410, 224);
@@ -112,7 +112,6 @@ namespace Neutron.Forms
             this.Name = "FrmPin";
             this.Padding = new System.Windows.Forms.Padding(30, 94, 30, 31);
             this.Resizable = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Neutron Login";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.frmPin_Load);
