@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using Hanel_DC.Extensions;
 using Hanel_DC.HanelUtilities;
 using HanelCommands;
@@ -14,6 +15,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
     internal class HanelMp12DDeviceController : IHanelDeviceController
     {
         private IDynamicLogger _logger;
+        private readonly bool _testing;
         private string _xErrorMsg = "";
         private readonly bool _Serial_Type = true;
         private readonly string _LogFileName = "Hanel_MP12D";   
@@ -29,12 +31,14 @@ namespace Hanel_DC.Hanel_DeviceControllers
         public HanelMp12DDeviceController()
         {
             this._ObjectID = HanelUtil.GetUniqueObjectIdentifier();
-            Init();
-        }
-
-        private void Init()
-        {
+            _testing = false;
             _logger = NeutronCore.Global.Logger.SetupLogger("HanelMp12DDeviceController");
+        }
+        public HanelMp12DDeviceController(IDynamicLogger logger)
+        {
+            this._ObjectID = HanelUtil.GetUniqueObjectIdentifier();
+            _testing = true;
+            _logger = logger;
         }
 
         public HanelMp12DSerialPortMonitor SerialPortMonitor => _serialPortMonitor;
@@ -73,11 +77,11 @@ namespace Hanel_DC.Hanel_DeviceControllers
             , int nDataBits, string cParity, int nStopBits, ref string cError
             , bool simulationMode, int logLevel, List<HanelDeviceStatus> currentHanelDeviceStatusList, string logPath = "")
         {
-            var parity = Parity.None;
+            var parity = GetParity(cParity);
             var stopBits = GetStopBits(nStopBits);  // StopBits.One;
             _currentHanelDeviceStatusList = currentHanelDeviceStatusList;
-            if (cParity == "NONE") parity = Parity.None;
-            if (nStopBits == 1) stopBits = StopBits.One;
+            //if (cParity == "NONE") parity = Parity.None;
+            //if (nStopBits == 1) stopBits = StopBits.One;
 
             var comPort = $"COM{nCommPort}";
             bool flag = false;
@@ -86,16 +90,13 @@ namespace Hanel_DC.Hanel_DeviceControllers
             {
                 try
                 {
-                    //_serialPortMonitor = new HanelMp12DSerialPortMonitor( comPort
-                    //    , nBaudRate, nDataBits, parity, stopBits, ref cError, ref _currentHanelDeviceStatusList, _logger);
                     _serialPortMonitor = new HanelMp12DSerialPortMonitor(comPort
                         , nBaudRate, nDataBits, parity, stopBits, ref cError, ref currentHanelDeviceStatusList);
                 }
                 catch (Exception ex)
                 {
                     cError = $"{cError}{Environment.NewLine}{ex.Message}";
-                 _ = _logger.LogDetailAsync(cError);
-                    throw;
+                 _logger.LogDetailAsync(cError).SafeFireAndForget();
                 }
             }
 
@@ -106,27 +107,9 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     _serialPortMonitor.Start();
                     flag = true;
                 }
-
-
-
-                //    if (HanelMp12DDeviceController.Mp12D_Open(nCommPort, nBaudRate, nDataBits, ref cParity, nStopBits, SimulationMode ? -1 : 0, ref this._hMachine, ref cError, LogLevel, ref LogPath) == this._PB_True && this._hMachine > 0U)
-                //    {
-                //        cError = "";
-                //        flag = true;
-                //    }
-                //    else if (cError == "")
-                //    {
-                //        this._hMachine = 0U;
-                //        cError = "Something went wrong attempting to open a channel to the machine controller.";
-                //    }
-                //    else
-                //        this._hMachine = 0U;
-
                 else
                     cError = "Unable to open serial port.";
             }
-
-
             return flag;
         }
 
@@ -144,7 +127,6 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     return StopBits.One;
             }
         }
-
         private static Parity GetParity(string parity)
         {
             switch (parity)
