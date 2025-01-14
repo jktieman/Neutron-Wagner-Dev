@@ -57,16 +57,16 @@ namespace Neutron
             this.GroupBoxLanguage = new System.Windows.Forms.GroupBox();
             this.RadioButtonFrenchCanadian = new System.Windows.Forms.RadioButton();
             this.RadioButtonEnglish = new System.Windows.Forms.RadioButton();
-            this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.BindingSourceLocations = new System.Windows.Forms.BindingSource(this.components);
             this.BindingSourceItemDefinition = new System.Windows.Forms.BindingSource(this.components);
             this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
+            this.PictureBoxLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager1)).BeginInit();
             this.metroPanelMain.SuspendLayout();
             this.GroupBoxLanguage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // htmlToolTip1
@@ -315,7 +315,7 @@ namespace Neutron
             // 
             // PictureBoxLogo
             // 
-            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
+            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.TEST;
             resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
             this.PictureBoxLogo.Name = "PictureBoxLogo";
             this.PictureBoxLogo.TabStop = false;
@@ -350,9 +350,9 @@ namespace Neutron
             this.metroPanelMain.ResumeLayout(false);
             this.GroupBoxLanguage.ResumeLayout(false);
             this.GroupBoxLanguage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceLocations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BindingSourceItemDefinition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -381,7 +381,6 @@ namespace Neutron
         private MetroFramework.Controls.MetroTile MtLocations;
         private MetroFramework.Controls.MetroTile MtInventory;
         private System.Windows.Forms.Label LabelWarehouseManagement;
-        private System.Windows.Forms.PictureBox PictureBoxLogo;
         private System.Windows.Forms.Button ButtonPark;
         private System.Windows.Forms.Button ButtonClose;
         private MetroFramework.Controls.MetroTile MtProductivity;
@@ -389,6 +388,7 @@ namespace Neutron
         private System.Windows.Forms.RadioButton RadioButtonFrenchCanadian;
         private System.Windows.Forms.RadioButton RadioButtonEnglish;
         private System.Windows.Forms.CheckBox CheckBoxClientConnected;
+        private System.Windows.Forms.PictureBox PictureBoxLogo;
     }
 }
 
