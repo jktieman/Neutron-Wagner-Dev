@@ -24,30 +24,51 @@ namespace LogFileMaintenance
             _logger = logger;
         }
 
-        public void StartLogFileManagementService()
+        public Task StartLogFileManagementService()
         {
             var interval = TimeSpan.FromHours(8);
             _timer = new Timer(interval.TotalMilliseconds);
-            _timer.Elapsed += async (sender, e) =>
+            _timer.Elapsed += (sender, e) =>
             {
                 if (_semaphore.CurrentCount == 0)
                 {
                     return;
                 }
-                await _semaphore.WaitAsync();
-                try
+
+                _ = Task.Run(async () =>
                 {
-                    await Process();
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
+                    await _semaphore.WaitAsync();
+                    try
+                    {
+                        await Process();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogDetailAsync($"Error during log file processing.  {ex.Message}").SafeFireAndForget();
+                    }
+                    finally
+                    {
+                        _semaphore.Release();
+                    }
+                });
+
+
             };
 
             _timer.AutoReset = true;
             _timer.Enabled = true;
             _timer.Start();
+            return Task.CompletedTask;
+        }
+
+        public void StopLogFileManagementService()
+        {
+            if (_timer != null)
+            {
+                _timer.Stop();
+                _timer.Dispose();
+                _timer = null;
+            }
         }
 
 
@@ -58,7 +79,7 @@ namespace LogFileMaintenance
             _logger.LogDetailAsync($"{allFolders.Count} Subdirectories in the specified folder:").SafeFireAndForget();
             foreach (var folder in allFolders)
             {
-              await DeleteOldFiles(folder, _maximumAgeInDays);
+                await DeleteOldFiles(folder, _maximumAgeInDays);
             }
 
             _logger.LogDetailAsync("File cleanup completed.").SafeFireAndForget();
@@ -69,7 +90,7 @@ namespace LogFileMaintenance
             var minimumDate = DateTime.Now.AddDays(-maximumAgeInDays);
             // set the minimumDate Time to midnight
             minimumDate = minimumDate.Date;
-            
+
             var filesToDelete = Directory.EnumerateFiles(folderPath);
 
             foreach (var file in filesToDelete)
@@ -100,7 +121,13 @@ namespace LogFileMaintenance
             }
             catch (UnauthorizedAccessException ex)
             {
-                _logger.LogDetailAsync($"Error accessing directories: {ex.Message}").SafeFireAndForget();
+                _logger.LogDetailAsync($"Error accessing directories: {ex.Message}").ContinueWith(t =>
+                    {
+                        if (t.Exception != null)
+                        {
+                            _logger.LogDetailAsync($"Error during logging. {t.Exception}").SafeFireAndForget();
+                        }
+                    }, TaskContinuationOptions.OnlyOnFaulted);  
             }
             return subdirectories;
         }
