@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
+using System.Threading;
 
 namespace NeutronData.Repositories
 {
@@ -16,19 +17,21 @@ namespace NeutronData.Repositories
         private readonly DbContext _context;
         private IDynamicLogger _logger;
         private readonly DbSet<TEntity> _dbSet;
-
-
+        private Task _currentTask;
+        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
+        
         public GenericRepository(DbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
-           // Init();
+            Init();
         }
 
-        //private void Init()
-        //{
-        //    _logger = NeutronCore.Global.Logger.SetupLogger("GenericRepository");
-        //}
+        private void Init()
+        {
+            var entityType = typeof(TEntity).Name;
+            _logger = NeutronCore.Global.Logger.SetupLogger($"GenericRepository-{entityType}");
+        }
 
         public IEnumerable<TEntity> All()
         {
@@ -90,16 +93,51 @@ namespace NeutronData.Repositories
             return results.FirstOrDefault();
         }
 
+        public async Task<TEntity> FindByKeyIncludeAsync(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = GetAllIncluding(includeProperties);
+            IEnumerable<TEntity> results = await query.Where(predicate).ToListAsync();
+            return results.FirstOrDefault();
+        }
+
         public TEntity FindByKey(int? id)
         {
             var rec = _dbSet.FirstOrDefault(s => s.Id == id);
-            return rec;
+             return rec;
         }
+
+        //public async Task<TEntity> FindByKeyAsync(int? id)
+        //{
+        //    _logger.LogDetailAsync($"Find by Key Async: {id}").SafeFireAndForget();
+        //    if (_currentTask != null && !_currentTask.IsCompleted)
+        //    {
+        //        throw new InvalidOperationException("Another operation is still running.");
+        //    }
+
+        //    _currentTask =  _dbSet.FirstOrDefaultAsync(s => s.Id == id);
+        //    return await (Task<TEntity>)_currentTask;
+        //}
+
 
         public async Task<TEntity> FindByKeyAsync(int? id)
         {
-            var rec = await _dbSet.FirstOrDefaultAsync(s => s.Id == id);
-            return rec;
+            await Semaphore.WaitAsync();
+            try
+            {
+                _logger.LogDetailAsync($"Find by Key Async: {id}").SafeFireAndForget();
+                if (_currentTask != null && !_currentTask.IsCompleted)
+                {
+                    throw new InvalidOperationException("Another operation is still running.");
+                }
+
+                _currentTask = _dbSet.FirstOrDefaultAsync(s => s.Id == id);
+                return await (Task<TEntity>)_currentTask;
+            }
+            finally
+            {
+                Semaphore.Release();
+            }
         }
 
         public void Insert(TEntity entity)

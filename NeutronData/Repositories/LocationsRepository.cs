@@ -33,6 +33,7 @@ namespace NeutronData.Repositories
         #endregion
 
         #region AllLocationViewsExact
+        //NOT USED
         public int TotalLocationViewsExact(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse)
         {
@@ -61,7 +62,7 @@ namespace NeutronData.Repositories
             return count;
         }
         public IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId,
-            int velocityCodeId, int heightCodeId, int inUse)
+            int velocityCodeId, int heightCodeId, bool inUse)
         {
             var recs = new List<LocationView>();
             try
@@ -120,7 +121,7 @@ namespace NeutronData.Repositories
 
         #endregion
 
-            #region AllLocationViewsExactByInUse
+        #region AllLocationViewsExactByInUse
         public IEnumerable<LocationView> GetAllLocationViewsExactByInUse(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse)
         {
@@ -216,7 +217,7 @@ namespace NeutronData.Repositories
             // return recs;
         }
 
-        public IEnumerable<LocationView> FindLocationViewsByArea(int areaId)
+        public async Task<IEnumerable<LocationView>> FindLocationViewsByArea(int areaId)
         {
             var recs = new List<LocationView>();
 
@@ -226,7 +227,7 @@ namespace NeutronData.Repositories
                 using (var context = new NeutronDb())
                 {
                     var paramAreaId = new SqlParameter("@AREAID", areaId);
-                    recs = context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByArea @AREAID", paramAreaId).ToList();
+                    recs = await context.Database.SqlQuery<LocationView>("usp_GetAllLocationViewsByArea @AREAID", paramAreaId).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -265,7 +266,7 @@ namespace NeutronData.Repositories
             return count;
         }
 
-        public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse)
+        public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, bool inUse)
         {
             var recs = new List<LocationView>();
 
@@ -287,7 +288,7 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse, int currentPage)
+        public IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, bool inUse, int currentPage)
         {
             var recs = new List<LocationView>();
             var paginatedResult = new List<LocationView>();

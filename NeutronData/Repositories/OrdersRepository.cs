@@ -1475,9 +1475,9 @@ namespace NeutronData.Repositories
             // Retrieve the order details for the given order ID and area ID
             // The Stored Procedure makes sure the LineStatus is either 1 or 9 and orders by PartNum
             var details = GetOrderDetailsByOrderAndArea(orderId, areaId).ToList();
-            
-            
-            
+
+
+
             order.OrderDetails = details;
 
             return order;
@@ -1490,7 +1490,7 @@ namespace NeutronData.Repositories
             try
             {
                 var parameters = new List<object>();
-               // using var context = new NeutronDb();
+                // using var context = new NeutronDb();
                 var param = new SqlParameter(parameterName: "@ORDERID", value: orderId);
                 parameters.Add(param);
                 param = new SqlParameter(parameterName: "@AREAID", value: areaId);
@@ -1521,11 +1521,19 @@ namespace NeutronData.Repositories
                     param = new SqlParameter(parameterName: "@SERIALPICKING", value: serialPicking);
                     parameters.Add(param);
                     _ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreenWithRoute. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
-                    
+
                     recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreenWithRoute @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
-                    
-                    
-                    LogInvalidOrderDetails(areaId, recs);
+
+
+                    var orderIds = GetInvalidOrderDetails(areaId, recs);
+                    if (orderIds.Any())
+                    {
+                        foreach (var orderId in orderIds)
+                        {
+                            var availableOrdersView = recs.Find(r => r.Id == orderId);
+                            recs.Remove(availableOrdersView);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -1541,26 +1549,47 @@ namespace NeutronData.Repositories
         /// Logs the details of invalid orders.
         /// </summary>
         /// <param name="areaId">The identifier of the area where the orders are being processed.</param>
-        /// <param name="recs">A list of available orders views.</param>
+        /// <param name="availableOrders">A list of available orders views.</param>
         /// <remarks>
         /// This method checks the list of available orders views for any orders that should not be appearing in the Induction Screen.
         /// If such orders are found, it logs the details of these orders and sends a message to the supervisor.
         /// </remarks>
-        private void LogInvalidOrderDetails(int areaId, List<AvailableOrdersView> recs)
+        private List<int> GetInvalidOrderDetails(int areaId, List<AvailableOrdersView> availableOrders)
         {
-            var recList = recs.Select(r => r.Id).ToList();
-            var detailLines = _context.OrderDetails
-                .Where(r => recList.Contains(r.OrderId) && r.AreaId < areaId && r.LineStatusId != 6)
-                .ToList();
-            if (!detailLines.Any()) return;
+            var orderIds = new List<int>();
+            try
+            {
+                var availableOrderIds = availableOrders.Select(order => order.Id).ToList();
+                var invalidOrderDetails = _context.OrderDetails
+                    .Where(r => availableOrderIds.Contains(r.OrderId) && r.AreaId < areaId && r.LineStatusId != (int)LineStatus.Complete)
+                    .ToList();
+                if (invalidOrderDetails.Any())
+                {
+                    orderIds = invalidOrderDetails.Select(r => r.OrderId).Distinct().ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Exception: {ex.Message}");
+            }
+            
+            return orderIds;
+
+
+            //if (!invalidOrderDetails.Any()) return;
+            //var errorMessage = CreateErrorMessage(invalidOrderDetails);
+            //_logger.LogDetailAsync(errorMessage);
+            //Mediator.GetInstance().OnDisplayMessage(this, errorMessage);
+        }
+        private string CreateErrorMessage(List<OrderDetail> invalidOrderDetails)
+        {
             var sb = new StringBuilder();
             sb.AppendLine($"Contact Supervisor Immediately!{Environment.NewLine}{Environment.NewLine}");
-            foreach (var line in detailLines)
+            foreach (var detail in invalidOrderDetails)
             {
-                sb.AppendLine($"This item should NOT be showing up in the Induction Screen. OrderDetail Id: {line.Id} Item: {line.PartNum} AreaId: {line.AreaId} LineStatus: {line.LineStatusId} ");
+                sb.AppendLine($"This item should NOT be showing up in the Induction Screen. OrderDetail Id: {detail.Id} Item: {detail.PartNum} AreaId: {detail.AreaId} LineStatus: {detail.LineStatusId} ");
             }
-            _logger.LogDetailAsync(sb.ToString());
-            Mediator.GetInstance().OnDisplayMessage(this, sb.ToString());
+            return sb.ToString();
         }
 
         public string GetRoute(int orderId)
@@ -1574,7 +1603,7 @@ namespace NeutronData.Repositories
                     var param = new SqlParameter(parameterName: "@ORDERID", value: orderId);
                     parameters.Add(param);
                     _ = _logger.LogDetailAsync($"Get Route  OrderId: {orderId} ");
-                   route = context.Database.SqlQuery<string>("usp_GetRoute @ORDERID", parameters.ToArray()).FirstOrDefault();
+                    route = context.Database.SqlQuery<string>("usp_GetRoute @ORDERID", parameters.ToArray()).FirstOrDefault();
                 }
             }
             catch (Exception ex)

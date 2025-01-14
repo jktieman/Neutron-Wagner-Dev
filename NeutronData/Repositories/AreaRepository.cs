@@ -18,22 +18,7 @@ namespace NeutronData.Repositories;
 
 public class AreaRepository : IAreaRepository
 {
-    private const int Ebin = 4;
-
-    private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-    private readonly GenericRepository<Workstation> _repoWorkstation = new GenericRepository<Workstation>(new NeutronDb());
-    private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
-    private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
-    private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
-
-    private readonly IDynamicLogger _logger;
-
     private readonly GenericRepository<Area> _repoArea = new GenericRepository<Area>(new NeutronDb());
-
-    public AreaRepository()
-    {
-        _logger = Logger.SetupLogger("AreaRepository");
-    }
 
     public int GetAreaId(int areaNumber)
     {
@@ -121,18 +106,25 @@ public class AreaRepository : IAreaRepository
         return recs;
     }
 
+    /// <summary>
+    /// Retrieves a list of all pickable area numbers as strings.
+    /// </summary>
+    /// <returns>A list of strings representing the pickable area numbers.</returns>
+    /// <exception cref="Exception">Thrown when an error occurs during the retrieval process.</exception>
     public List<string> GetAllPickableAreaNumbersAsString()
     {
-        var recs = new List<string>();
         try
         {
-            recs = _repoArea.All().Where(r => r.Pickable == true).Select(r => r.AreaNumber.ToString()).ToList();
+            return _repoArea.All()
+                .Where(r => r.Pickable)
+                .Select(r => r.AreaNumber.ToString())
+                .ToList();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            return new List<string>();
         }
-
-        return recs;
     }
+
 }

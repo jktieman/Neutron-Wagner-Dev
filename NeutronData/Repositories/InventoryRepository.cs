@@ -190,7 +190,7 @@ namespace NeutronData.Repositories
             return projection;
         }
 
-       public List<SqlInventoryView> FindInventoryViewsByArea(string find, int areaId)
+       public async Task<List<SqlInventoryView>> FindInventoryViewsByArea(string find, int areaId)
         {
             var recs = new List<SqlInventoryView>();
             try
@@ -199,7 +199,7 @@ namespace NeutronData.Repositories
                 {
                     var param = new SqlParameter(parameterName: "@FIND", value: find);
                     var paramArea = new SqlParameter(parameterName: "@AREAID", value: areaId);
-                    recs = context.Database.SqlQuery<SqlInventoryView>(sql: "usp_GetInventoryViewFind_Area @FIND, @AREAID", parameters: new object[] { param, paramArea }).ToList();
+                    recs = await context.Database.SqlQuery<SqlInventoryView>(sql: "usp_GetInventoryViewFind_Area @FIND, @AREAID", parameters: new object[] { param, paramArea }).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -210,7 +210,7 @@ namespace NeutronData.Repositories
             return recs;
         }
 
-        public List<SqlInventoryView> FindInventoryViews(string find)
+        public async Task<List<SqlInventoryView>> FindInventoryViews(string find)
         {
             var recs = new List<SqlInventoryView>();
             try
@@ -218,7 +218,7 @@ namespace NeutronData.Repositories
                 using (var context = new NeutronDb())
                 {
                     var param = new SqlParameter("@Find", find);
-                   recs = context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToList();
+                   recs = await context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToListAsync();
                 }
             }
             catch (Exception ex)
