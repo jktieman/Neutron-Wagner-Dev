@@ -17,10 +17,10 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <PublishUrl>E:\Neutron Installation\</PublishUrl>
+    <PublishUrl>\\10.5.20.200\software\NeutronTestInstallation\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -33,7 +33,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>600</ApplicationRevision>
+    <ApplicationRevision>639</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -204,6 +204,30 @@
     <Compile Include="Forms\FrmCostCenter.Designer.cs">
       <DependentUpon>FrmCostCenter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmGetLocationBlast.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmGetLocationBlast.Designer.cs">
+      <DependentUpon>FrmGetLocationBlast.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmGetLocationDevice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmGetLocationDevice.Designer.cs">
+      <DependentUpon>FrmGetLocationDevice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmGetLocationSlot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmGetLocationSlot.Designer.cs">
+      <DependentUpon>FrmGetLocationSlot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmMp12DTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmMp12DTest.Designer.cs">
+      <DependentUpon>FrmMp12DTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmQuantity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,9 +246,19 @@
     <Compile Include="Forms\FrmScanTransId.Designer.cs">
       <DependentUpon>FrmScanTransId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmTaskNumber.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmTaskNumber.Designer.cs">
+      <DependentUpon>FrmTaskNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\PickStoreBase.cs" />
     <Compile Include="Global\IHistoryManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
+    <Compile Include="Models\DialogService.cs" />
     <Compile Include="Models\HeaderTextManager.cs" />
     <Compile Include="Models\MyDataReceivedEventArgs.cs" />
     <Compile Include="Ninject\Bindings.cs" />
@@ -559,6 +593,18 @@
     <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
       <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmGetLocationBlast.resx">
+      <DependentUpon>FrmGetLocationBlast.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmGetLocationDevice.resx">
+      <DependentUpon>FrmGetLocationDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmGetLocationSlot.resx">
+      <DependentUpon>FrmGetLocationSlot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmMp12DTest.resx">
+      <DependentUpon>FrmMp12DTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmQuantity.resx">
       <DependentUpon>FrmQuantity.cs</DependentUpon>
     </EmbeddedResource>
@@ -567,6 +613,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmScanTransId.resx">
       <DependentUpon>FrmScanTransId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmTaskNumber.resx">
+      <DependentUpon>FrmTaskNumber.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\InductionPosition.resx">
       <DependentUpon>InductionPosition.cs</DependentUpon>
