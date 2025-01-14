@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using Neutron.Global;
 using NeutronData.ModelViews;
 
@@ -16,22 +18,29 @@ namespace Neutron.Models
         public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled)
         {
             _logger = NeutronCore.Global.Logger.SetupLogger(@"PickDeviceManager");
-
-            for (var i = 0; i < carList.Count; i++)
+            try
             {
-                var mover = CreateDeviceMover(i + 1, carList[i]);
-                //_currentLocations[i + 1] = null;
-                //_currentLocations.Add(mover.MoverNumber, mover.);
-                //_currentLocations[mover.MoverNumber] = null;
-                _deviceMovers.Add(mover);
+                for (var i = 0; i < carList.Count; i++)
+                {
+                    var mover = CreateDeviceMover(i + 1, carList[i]);
+                    //_currentLocations[i + 1] = null;
+                    //_currentLocations.Add(mover.MoverNumber, mover.);
+                    //_currentLocations[mover.MoverNumber] = null;
+                    _deviceMovers.Add(mover);
+                }
+                _shuttleEnabled = shuttleEnabled;
             }
-            _shuttleEnabled = shuttleEnabled;
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Pick Device Manager Exception: {ex.Message}");
+            }
+
 
         }
 
         private DeviceMover CreateDeviceMover(int deviceNumber, IEnumerable<PickStop> carList)
         {
-         _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}");
+            _logger.LogDetailAsync($"CreateDeviceMover device Number {deviceNumber}").SafeFireAndForget();
             var firstLocation = true;
             var locs = new List<NeutronData.Models.Location>();
             foreach (var pickStop in carList)
@@ -46,44 +55,48 @@ namespace Neutron.Models
 
         public void MoveNext(int deviceNumber)
         {
-         _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}");
-            
-         
-         var deviceMover = _deviceMovers.FirstOrDefault(r => r.MoverNumber == deviceNumber);
-         _logger.LogDetailAsync($"MoveNext 1");
+            _logger.LogDetailAsync($"MoveNext device Number {deviceNumber}").SafeFireAndForget();
 
+            var deviceMover = _deviceMovers.FirstOrDefault(r => r.MoverNumber == deviceNumber);
 
             if (deviceMover != null)
             {
                 var location = deviceMover.MoveNext();
-               
-
-
-
-                _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}");
-                _currentLocations[deviceNumber] = location;
                 if (location != null)
                 {
-                    var loc1 = location.Loc1;
-                    var loc2 = location.Loc2;
-                    var loc3 = location.Loc3;
-                    var loc4 = location.Loc4;
-                    var loc5 = location.Loc5;
-                    
-                    if (_shuttleEnabled)
-                    {
-                        if (GlobalVar.Shuttle != null)
+                    _logger.LogDetailAsync($"Location {location?.Loc1}--{location?.Loc2}").SafeFireAndForget();
+                    _currentLocations[deviceNumber] = location;
+                   // if (location != null)
+                   // {
+                        var loc1 = location.Loc1;
+                        var loc2 = location.Loc2;
+                        var loc3 = location.Loc3;
+                        var loc4 = location.Loc4;
+                        var loc5 = location.Loc5;
+
+                        if (_shuttleEnabled)
                         {
-                         _ = _logger.LogDetailAsync($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}");
-                            GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                            if (GlobalVar.Shuttle != null)
+                            {
+                                _logger.LogDetailAsync($"GlobalVar.Shuttle.PositionDevice Loc1:{loc1}  Loc2:{loc2}").SafeFireAndForget();
+                                GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                            }
+                            if (GlobalVar.Hanel != null)
+                            {
+                                _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}").SafeFireAndForget();
+                                GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
+                            }
                         }
-                        if (GlobalVar.Hanel != null)
-                        {
-                         _ = _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
-                            GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4 );
-                        }
-                    }
+                    //}
                 }
+                else
+                {
+                    _logger.LogDetailAsync($"Location is NULL").SafeFireAndForget();
+                }
+            }
+            else
+            {
+                _logger.LogDetailAsync($"Device Mover is NULL").SafeFireAndForget();
             }
 
             //if (!_shuttleEnabled) return;
@@ -101,7 +114,7 @@ namespace Neutron.Models
 
         public void Reset()
         {
-         _ = _logger.LogDetailAsync($"Reset:");
+            _logger.LogDetailAsync($"Reset:").SafeFireAndForget();
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
@@ -112,7 +125,7 @@ namespace Neutron.Models
                     var loc4 = kvp.Value.Loc4;
                     var loc5 = kvp.Value.Loc5;
 
-                 _ = _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                    _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}").SafeFireAndForget();
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
@@ -127,7 +140,8 @@ namespace Neutron.Models
                         }
                         if (GlobalVar.Hanel != null)
                         {
-                         _ = _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}");
+                            _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}").SafeFireAndForget();
+
                             GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
                         }
                     }
@@ -137,7 +151,7 @@ namespace Neutron.Models
 
         public void ResetMoveNext(int moveNext = default(int))
         {
-         _ = _logger.LogDetailAsync($"Reset MoveNext: {moveNext}");
+            _logger.LogDetailAsync($"Reset MoveNext: {moveNext}").SafeFireAndForget();
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
@@ -149,11 +163,11 @@ namespace Neutron.Models
 
                     if (loc1 == moveNext)
                     {
-                     _ = _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}");
+                        _logger.LogDetailAsync($"Reset MoveNext Move Later - Loc1: {loc1}  Loc2: {loc2}").SafeFireAndForget();
                         continue;
                     }
 
-                 _ = _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}");
+                    _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}").SafeFireAndForget();
                     if (_shuttleEnabled)
                     {
                         if (GlobalVar.Shuttle != null)
@@ -170,7 +184,7 @@ namespace Neutron.Models
 
             if (moveNext != default(int))
             {
-             _ = _logger.LogDetailAsync($"Reset MoveNext Device: {moveNext}");
+                _logger.LogDetailAsync($"Reset MoveNext Device: {moveNext}").SafeFireAndForget();
                 MoveNext(moveNext);
             }
         }

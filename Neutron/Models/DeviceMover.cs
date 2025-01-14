@@ -21,17 +21,17 @@ namespace Neutron.Models
 
         public Location MoveNext()
         {
-            _logger.LogDetailAsync($"MoveNext 2");
+           // _logger.LogDetailAsync($"MoveNext 2");
             Location result = null;
             if (Locations.Count > Position)
             {
-                _logger.LogDetailAsync($"MoveNext 3");
+               // _logger.LogDetailAsync($"MoveNext 3");
                 result = Locations[Position];
-                _logger.LogDetailAsync($"MoveNext 4");
+               // _logger.LogDetailAsync($"MoveNext 4");
                 Position += 1;
-                _logger.LogDetailAsync($"MoveNext 5");
+               // _logger.LogDetailAsync($"MoveNext 5");
             }
-            _logger.LogDetailAsync($"MoveNext 6");
+           // _logger.LogDetailAsync($"MoveNext 6");
             return result;
         }
 }

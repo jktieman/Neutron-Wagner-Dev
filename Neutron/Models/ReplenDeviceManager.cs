@@ -20,7 +20,7 @@ namespace Neutron.Models
 
         public ReplenDeviceManager(List<List<ReplenPickStop>> carList, bool shuttleEnabled)
         {
-            _logger = NeutronCore.Global.Logger.SetupLogger(@"PickDeviceManager");
+            _logger = NeutronCore.Global.Logger.SetupLogger(@"ReplenDeviceManager");
             for (int i = 0; i < carList.Count; i++)
             {
                 var mover = CreateDeviceMover(deviceNumber: i + 1, carList: carList[i]);
