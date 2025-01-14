@@ -13,7 +13,6 @@ namespace NeutronData.Models
             ReplenOrderDetails = new List<ReplenOrderDetail>();
             Containers = new List<Container>();
         }
-        public int Id { get; set; }
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
         public int Priority { get; set; }
