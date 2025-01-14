@@ -376,7 +376,7 @@ namespace ProliteController
         {
             _logger.LogDetailAsync($"Turn ON Prolite Location -  Device Number: {deviceNumber}  Tray: {tray}  Level: {level}  Part: {part}  Quantity: {quantity}").SafeFireAndForget();
 
-            //var counter = 0;
+            var counter = 0;
             //while (_proliteBusy)
             //{
             //    Thread.Sleep(100);
@@ -413,7 +413,7 @@ namespace ProliteController
         public void TurnOnHot(int deviceNumber)
         {
             _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} HOT").SafeFireAndForget();
-            //var counter = 0;
+            var counter = 0;
             //while (_proliteBusy)
             //{
             //    Thread.Sleep(100);
@@ -453,7 +453,7 @@ namespace ProliteController
         {
             _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Blind Cycle").SafeFireAndForget();
 
-            //var counter = 0;
+            var counter = 0;
             //while (_proliteBusy)
             //{
             //    Thread.Sleep(100);
@@ -495,7 +495,7 @@ namespace ProliteController
 
             _logger.LogDetailAsync($"Clear Prolite: {deviceNumber}").SafeFireAndForget();
 
-            //var counter = 0;
+            var counter = 0;
             //while (_proliteBusy)
             //{
             //    Thread.Sleep(100);
