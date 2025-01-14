@@ -16,12 +16,23 @@ using HanelCommands;
 using NeutronCore;
 using NeutronCore.Enums;
 using AsyncAwaitBestPractices;
+using Hanel_DC.Extensions;
 
 namespace Neutron.Controllers
 {
 
+    /// <summary>
+    /// Represents the controller for the Mp12D device, implementing the <see cref="Neutron.Interfaces.IHanelDriver"/> interface.
+    /// </summary>
+    /// <remarks>
+    /// This class is responsible for managing the interactions with the Mp12D device, including initialization, status checking, and handling notifications.
+    /// </remarks>
     public class Mp12D : IHanelDriver
     {
+        public static char CR = Convert.ToChar(13);
+        public static char LF = Convert.ToChar(10);
+        public static char AST = Convert.ToChar(42);
+
         private Hanel_DeviceController _hanel;
         private SendOrPostCallback _callBackHandlerInit;
         private HanelTellMeWhenTrayArrives _myTrayArrivedNotificationDelegate = MyTrayArrived;
@@ -37,6 +48,7 @@ namespace Neutron.Controllers
         private Form _currentForm;
         private readonly Object _locker = new Object();
         private int[] _previousTray;
+        private bool _testing;
 
         public Mp12D(Form frm, WorkstationView workstationView)
         {
@@ -44,20 +56,63 @@ namespace Neutron.Controllers
             _workstationView = workstationView ?? throw new ArgumentNullException(nameof(workstationView));
             // FrmMain passed in
             _currentForm = frm;
+            _testing = false;
+            _logger = NeutronCore.Global.Logger.SetupLogger("Mp12D");
+            Init();
+        }
+        /// <summary>
+        /// Testing Constructor adds a logger
+        /// </summary>
+        /// <param name="frm"></param>
+        /// <param name="workstationView"></param>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public Mp12D(Form frm, WorkstationView workstationView, IDynamicLogger logger)
+        {
+            _previousTray = new int[10];
+            _workstationView = workstationView ?? throw new ArgumentNullException(nameof(workstationView));
+            _testing = true;
+            _logger = logger;
+            // FrmMain passed in
+            _currentForm = frm;
 
             Init();
         }
+        //private void Init()
+        //{
+        //    _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
+        //    _callBackHandlerInit = MyInitProgressDelegate;
+        //    _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D());
+        //    _logger.LogDetailAsync(@"Hanel Device Controller has been created: ").SafeFireAndForget();
+
+        //    Init2();
+        //}
 
         private void Init()
         {
-            _logger = NeutronCore.Global.Logger.SetupLogger("Mp12D");
-            _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
-            _callBackHandlerInit = MyInitProgressDelegate;
-            _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D());
-            _logger.LogDetailAsync(@"Hanel Device Controller has been created: ").SafeFireAndForget();
-
+            LogInitializationStart();
+            InitializeCallbackHandler();
+            CreateHanelDeviceController();
+            LogDeviceControllerCreation();
             Init2();
         }
+        private void LogInitializationStart()
+        {
+            _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
+        }
+        private void InitializeCallbackHandler()
+        {
+            _callBackHandlerInit = MyInitProgressDelegate;
+        }
+        private void CreateHanelDeviceController()
+        {
+            _hanel = _testing ? new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D(), _logger, true) : new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D());
+        }
+        private void LogDeviceControllerCreation()
+        {
+            _logger.LogDetailAsync("Hanel Device Controller has been created: ").SafeFireAndForget();
+        }
+
 
         public Form CurrentForm
         {
@@ -413,11 +468,12 @@ namespace Neutron.Controllers
             return response;
         }
 
-        public void CloseController()
+        public bool CloseController()
         {
+            var result = false;
             try
             {
-                _hanel.Close_Controller(ref cError);
+               result =  _hanel.Close_Controller(ref cError);
 
                 _logger.LogDetailAsync($"Close Hanel MP12D Controller - Success {cError}").SafeFireAndForget();
             }
@@ -426,6 +482,7 @@ namespace Neutron.Controllers
                 _logger.LogDetailAsync($"Close Hanel MP12D Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
             }
 
+            return result;
         }
 
         public HanelDeviceStatus GetDeviceStatus(int deviceNumber)
@@ -495,6 +552,71 @@ namespace Neutron.Controllers
         {
             _hanel?.ResetHanelDeviceStatus();
             ResetPreviousTray();
+        }
+
+        public byte[] ValidCommand(byte[] dataIn)
+        {
+            
+                byte[] byteArray = null;
+                if (dataIn.Length == 0)
+                {
+                    return null;
+                }
+
+                _logger.LogDetailAsync($"dataIn: {dataIn.ByteArrayToHexString()}");
+                // extract the byte array starting with 42 and ending with 10
+                //var startIndex =   Array.IndexOf(dataIn, AST);
+                var startIndex = FindAsterisk(dataIn);
+                _logger.LogDetailAsync($"Start Index: {startIndex}");
+                if (startIndex == -1)
+                {
+                    _logger.LogDetailAsync($"Start Index = -1 {startIndex}");
+                    return null;
+                }
+
+                if (startIndex >= 0)
+                {
+                    while (dataIn.First() != AST)
+                    {
+
+                        dataIn = dataIn.Skip(1).ToArray();
+                        _logger.LogDetailAsync($"Building dataIn: {dataIn.ByteArrayToHexString()} ");
+                    }
+                }
+                _logger.LogDetailAsync($"Final dataIn: {dataIn.ByteArrayToHexString()} ");
+                startIndex = Array.IndexOf(dataIn, AST);
+                _logger.LogDetailAsync($"Final dataIn Start Index: {startIndex} ");
+                var endIndex = Array.IndexOf(dataIn, LF);
+                _logger.LogDetailAsync($"Final dataIn End Index: {endIndex} ");
+                if (endIndex == -1)
+                {
+                    return null;
+                }
+
+                byteArray = dataIn.Skip(startIndex + 1).Take(endIndex - startIndex - 1).ToArray();
+                _logger.LogDetailAsync($"Return ByteArray: {byteArray.ByteArrayToHexString()}");
+                return byteArray;
+            
+        }
+
+        public void ProcessCommand(string command)
+        {
+
+        }
+
+        static int FindAsterisk(byte[] byteArray)
+        {
+            byte asterisk = (byte)'*'; // ASCII value of '*'
+
+            for (int i = 0; i < byteArray.Length; i++)
+            {
+                if (byteArray[i] == asterisk)
+                {
+                    return i; // Return the index of the asterisk
+                }
+            }
+
+            return -1; // Return -1 if asterisk is not found
         }
     }
 }

@@ -167,6 +167,11 @@ namespace Neutron.Controllers
             _hanel?.ResetHanelDeviceStatus();
         }
 
+        public byte[] ValidCommand(byte[] byteArray)
+        {
+            throw new NotImplementedException();
+        }
+
         public void ShowMessage(string msg)
         {
             //MessageBox.Show(msg);
@@ -262,7 +267,7 @@ namespace Neutron.Controllers
 
                                         cError = "";
                                         // this puts the command into the Queue
-                                        if (_hanel.Drive_Device(deviceNumber, trayNumber, ref cError))
+                                        if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
                                         {
                                             Task.Run(() => _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}"));
                                             continueLoop = false;
@@ -372,11 +377,12 @@ namespace Neutron.Controllers
             return response;
         }
 
-        public void CloseController()
+        public bool CloseController()
         {
+            bool result = false;
             try
             {
-                _hanel.Close_Controller(ref cError);
+                result = _hanel.Close_Controller(ref cError);
 
                 Task.Run(() => _logger.LogDetailAsync($"Close RCC Controller - Success {cError}"));
             }
@@ -385,6 +391,7 @@ namespace Neutron.Controllers
                 Task.Run(() => _logger.LogDetailAsync($"Close RCC Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}"));
             }
 
+            return result;
         }
 
         public HanelDeviceStatus GetDeviceStatus(int deviceNumber)
