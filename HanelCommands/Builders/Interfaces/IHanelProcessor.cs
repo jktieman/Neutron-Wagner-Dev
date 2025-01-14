@@ -8,6 +8,6 @@ namespace HanelCommands.Builders.Interfaces
 {
     public interface IHanelProcessor
     {
-        void Process(byte[] dataIn, List<HanelDeviceStatus> hanelDeviceStatusList);
+        void Process(byte[] dataIn, ref List<HanelDeviceStatus> hanelDeviceStatusList);
     }
 }

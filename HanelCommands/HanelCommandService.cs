@@ -18,18 +18,29 @@ namespace HanelCommands
         private List<string> _subResponses;
        // private List<HanelCommand> _hanelCommands = new List<HanelCommand>();
         private List<HanelDeviceStatus> _currentHanelDeviceStatusList;
-        private IDynamicLogger _logger;
+        private readonly IDynamicLogger _logger;
+        private readonly bool _testing;
 
         public HanelCommandService(int numberOfDevices, List<HanelDeviceStatus> currentHanelDeviceStatusList)
         {
             _currentHanelDeviceStatusList = currentHanelDeviceStatusList;
             _numberOfDevices = numberOfDevices;
+            _testing = false;
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelCommandService");
+            Init();
+        }
+
+        public HanelCommandService(int numberOfDevices, List<HanelDeviceStatus> currentHanelDeviceStatusList, IDynamicLogger logger)
+        {
+            _currentHanelDeviceStatusList = currentHanelDeviceStatusList;
+            _numberOfDevices = numberOfDevices;
+            _logger = logger;
+            _testing = true;
             Init();
         }
 
         private void Init()
         { 
-            _logger = NeutronCore.Global.Logger.SetupLogger("HanelCommandService");
             LoadCommands();
             LoadResponses();
         }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using HanelCommands.Builders.Interfaces;
+using NeutronEvents;
 
 namespace HanelCommands.Builders.Rules.A20_Rules
 {
@@ -30,11 +32,28 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "XA A20 E02 Lift is Full";
+                            device.StatusMessage = CreateStatusMessage(lift, commandSegments);
+                            Mediator.GetInstance().OnDisplayMessage(this, device.StatusMessage);
                         }
                     }
                 }
             }
+        }
+        private string CreateStatusMessage(string lift, string[] segments)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"TOWER {lift}");
+            sb.AppendLine();
+            sb.AppendLine("XA A20 E02 Lift is Full");
+            sb.AppendLine();
+            var x = segments.Where(s => s.StartsWith("X")).ToList();
+            foreach (var segment in x)
+            {
+                sb.AppendLine(segment.Substring(6).Trim());
+            }
+
+            return sb.ToString();
+
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using HanelCommands.Builders.Interfaces;
+using NeutronEvents;
 
 namespace HanelCommands.Builders.Rules
 {
@@ -31,12 +33,31 @@ namespace HanelCommands.Builders.Rules
                         var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
                         if (device != null)
                         {
+                            device.CommandAccepted = false;
+                            device.CommandExecuted = false;
                             device.SwitchedOn = true;
-                            device.StatusMessage = $"Tower {device.DeviceNumber} Switched On - P XN_E00";
+                            device.StatusMessage = CreateStatusMessage(lift, commandSegments);
+                            Mediator.GetInstance().OnDisplayMessage(this, device.StatusMessage);
                         }
                     }
                 }
             }
+        }
+        private string CreateStatusMessage(string lift, string[] segments)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"TOWER {lift}");
+            sb.AppendLine();
+            sb.AppendLine($"Tower {lift} Switched On");
+            sb.AppendLine();
+            var x = segments.Where(s => s.StartsWith("X")).ToList();
+            foreach (var segment in x)
+            {
+                sb.AppendLine(segment.Substring(6).Trim());
+            }
+
+            return sb.ToString();
+
         }
     }
 }

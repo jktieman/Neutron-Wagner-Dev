@@ -13,7 +13,7 @@ namespace HanelCommands.Builders.A_Processors
             new A20MatchRule(),
         };
 
-        public void Process(byte[] dataIn, List<HanelDeviceStatus> hanelDeviceStatusList)
+        public void Process(byte[] dataIn, ref List<HanelDeviceStatus> hanelDeviceStatusList)
         {
             if (dataIn.Length > 0 && hanelDeviceStatusList != null)
             {

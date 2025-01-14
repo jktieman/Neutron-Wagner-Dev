@@ -30,7 +30,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
                         if (device != null)
                         {
-                            device.CommandAccepted = true;
+                            device.CommandAccepted = false;
                             device.StatusMessage = " E99 Input was Canceled";
                         }
                     }
