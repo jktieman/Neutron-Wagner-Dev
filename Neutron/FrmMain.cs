@@ -44,6 +44,8 @@ using IPTI.Models;
 using IDisplayController = IPTI.Models.IDisplayController;
 using AsyncAwaitBestPractices;
 using LogFileMaintenance;
+using System.Runtime.InteropServices;
+using NeutronData.UnitOfWorks;
 
 #endregion
 
@@ -72,6 +74,7 @@ namespace Neutron
         private readonly IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
+
         //  private TcpIptiCommandCenter _tcpIptiCommandCenter;
         private CompressService _compressService;
 
@@ -91,6 +94,9 @@ namespace Neutron
         private IptiDisplayFunctions _iptiDisplayFunctions;
         private bool _monitorTransmitter = true;
         private bool _isClientConnected;
+        private readonly IDynamicLogger _loggerExceptions;
+        private IInventoryUnitOfWork _inventoryUnitOfWork;
+        private static readonly object _userLock = new object();
 
         /// <summary>
         /// Passed from NInject Kernel
@@ -111,6 +117,7 @@ namespace Neutron
         /// <param name="areaRepository"></param>
         /// <param name="locationsRepository"></param>
         /// <param name="inventoryRepository"></param>
+        /// <param name="inventoryUnitOfWork"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
@@ -120,7 +127,8 @@ namespace Neutron
             , NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , IAreaRepository areaRepository
             , ILocationsRepository locationsRepository
-            , IInventoryRepository inventoryRepository)
+            , IInventoryRepository inventoryRepository
+            , IInventoryUnitOfWork inventoryUnitOfWork) : base()
         {
             _jsonData = jsonData ?? throw new ArgumentNullException(nameof(jsonData));
             _akaRepository = akaRepository ?? throw new ArgumentNullException(nameof(akaRepository));
@@ -138,6 +146,8 @@ namespace Neutron
             _areaRepository = areaRepository ?? throw new ArgumentNullException(nameof(areaRepository));
             _locationsRepository = locationsRepository ?? throw new ArgumentNullException(nameof(locationsRepository));
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
+            _inventoryUnitOfWork = inventoryUnitOfWork ?? throw new ArgumentNullException(nameof(inventoryUnitOfWork));
+
             // _tcpIptiCommandCenter = null;
 
             InitializeComponent();
@@ -146,7 +156,10 @@ namespace Neutron
             KeyPreview = true;
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
 
-            _logger = NeutronCore.Global.Logger.SetupLogger("Main");
+            _logger = NeutronCore.Global.Logger.SetupLogger("Main") ?? throw new InvalidOperationException("Logger setup failed.");
+            // if _logger is null, throw an exception
+
+            _loggerExceptions = NeutronCore.Global.Logger.SetupLogger("Logger Exceptions") ?? throw new InvalidOperationException("Logger Exceptions setup failed.");
 
             Mediator.GetInstance().InventoryFileCreated += (s, e) => MessageBox.Show("Inventory File Created."
                 , "Inventory File", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
@@ -160,25 +173,41 @@ namespace Neutron
             Mediator.GetInstance().SendEmailMessage += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().IsClientConnected += FrmMain_IsClientConnected;
 
-            // _sendEmail.Message(this, e.Message);
+            _ = ShowLoadingMessageAsync();
 
-            _ = Initialize();
         }
 
         private async Task Initialize()
         {
-            //TODO Remove this or change to false for Production
-            //GlobalVar.Testing = true;
-            //Log on to Neutron
-            await LogOn();
-            //Init();
-            var result = Init();
-            _logger.LogDetailAsync($"After Task.Run INIT result: {result} ").SafeFireAndForget();
-            if (result == false)
+            try
             {
-                await CloseApp();
+                //Log on to Neutron
+                await LogOn().ConfigureAwait(false);
+                
+                var result = await Init();
+
+                _logger.LogDetailAsync($"After Task.Run INIT result: {result}")
+                    .SafeFireAndForget();
+                if (result == false)
+                {
+                    await CloseApp();
+                }
             }
+            catch (Exception ex)
+            {
+                // Handle the exception (e.g., log it or display an error message)
+                _logger.LogDetailAsync($"Initialize Form Exception : {ex.Message}").SafeFireAndForget();
+                await CloseApp().ConfigureAwait(false);
+            }
+
         }
+        public async Task HandleLoggingException(string module, Exception ex)
+        {
+            // Log the exception to the Logger Exceptions Folder
+            await _loggerExceptions.LogDetailAsync($"{module}:{ex.Message}");
+        }
+
+
 
         private void FrmMain_IsClientConnected(object sender, IsClientConnectedEventArgs e)
         {
@@ -200,10 +229,11 @@ namespace Neutron
         }
 
 
-        private bool Init()
+        private async Task<bool> Init()
         {
+            var result = true;
             _logger.LogDetailAsync("Init Started").SafeFireAndForget();
-            var result = InitForm();
+            result = await InitForm();
             _logger.LogDetailAsync($"Init Result: {result}").SafeFireAndForget();
 
 
@@ -281,7 +311,7 @@ namespace Neutron
             }
         }
         #endregion
-        private bool InitForm()
+        private Task<bool> InitForm()
         {
             _logger.LogDetailAsync("InitForm Started").SafeFireAndForget();
             var result = true;
@@ -292,6 +322,7 @@ namespace Neutron
                 if (LoaderSettings.Init())
                 {
                     var workstationId = _neutronVariables.WorkstationId;
+
                     if (workstationId == 0) workstationId = 1;
                     if (workstationId > 0)
                     {
@@ -301,7 +332,7 @@ namespace Neutron
                             SetupEmail();
 
                             _historyManager = DI.Create<HistoryManager>(_workstationView);
-                            GlobalVar.HistoryManager = _historyManager;  
+                            GlobalVar.HistoryManager = _historyManager;
 
                             _logger.LogDetailAsync($"Startup: CompanyCode: {_neutronLicense.CompanyCode}").SafeFireAndForget();
 
@@ -322,21 +353,21 @@ namespace Neutron
                             // if the workstation is a supervisor, return the workstationView
                             // otherwise, set up the hardware devices
                             // if (_workstationView.StationTypeId != (int)StationType.Supervisor)
-                           
-                           //var areas = new List<int> { 1, 2, 3, 4 };
 
-                           // var areas = _repoHardwareDevices.All().Select(r => r.WorkstationId).Distinct().ToList();
-                            
+                            //var areas = new List<int> { 1, 2, 3, 4 };
+
+                            // var areas = _repoHardwareDevices.All().Select(r => r.WorkstationId).Distinct().ToList();
+
                             _workstationView.BatchTable = null;
-                            
+
                             //if (areas.Contains(_workstationView.AreaId))
                             //{
-                              //  _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - Before").SafeFireAndForget();
+                            //  _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - Before").SafeFireAndForget();
 
-                                SetupHardwareDevices();
+                            SetupHardwareDevices();
 
-                               // _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - After").SafeFireAndForget();
-                           // }
+                            // _logger.LogDetailAsync("Workstation is NOT a Supervisor Station. Setup Hardware - After").SafeFireAndForget();
+                            // }
 
                             // Removes old log files based on days to keep in Options/NeutronVariables
                             _logger.LogDetailAsync($"Start Log File Maintenance with Fire And Forget").SafeFireAndForget();
@@ -371,26 +402,46 @@ namespace Neutron
 
             _logger.LogDetailAsync("InitForm Complete").SafeFireAndForget();
 
-            return result;
+            return Task.FromResult(result);
         }
 
-        private void MaintainLogFiles()
+        private async Task ShowLoadingMessageAsync()
         {
+            using (var loadingForm = new LoadingForm())
+            {
+                loadingForm.Show();
+                // Perform a long-running operation asynchronously
+                await Initialize();
+                loadingForm.Close();
+            }
+        }
+
+
+
+        private async Task MaintainLogFiles()
+        {
+            uint defaultDaysToKeep = 30;
+            uint daysToKeep = 0;
             var logger = NeutronCore.Global.Logger.SetupLogger("LogFileMaintenance");
             var logFileDir = LoaderSettings.GetLogFileDirectory();
-            if (string.IsNullOrEmpty(logFileDir)) return;
-
-            if (_neutronVariables.LogFilesDaysToKeep == uint.MinValue)
+            if (string.IsNullOrEmpty(logFileDir))
             {
-                // save new value into _neutronVariables
-                _neutronVariables.LogFilesDaysToKeep = 30;
-                // save the Json file
-                _jsonData.SaveFile(_neutronVariables);
+                await logger.LogDetailAsync("Log file directory is not set. Log file maintenance will not proceed.");
+                return;
             }
 
-            var daysToKeep = _neutronVariables.LogFilesDaysToKeep;
+            daysToKeep = _neutronVariables.LogFilesDaysToKeep == uint.MinValue ? defaultDaysToKeep : _neutronVariables.LogFilesDaysToKeep;
+
             var logFileManager = new LogFileManager(logFileDir, daysToKeep, logger);
-            logFileManager.StartLogFileManagementService();
+
+            try
+            {
+                await logFileManager.StartLogFileManagementService().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                logger.LogDetailAsync($"Error occurred during log file maintenance: {ex.Message}").SafeFireAndForget();
+            }
 
         }
 
@@ -604,7 +655,7 @@ namespace Neutron
                 }
 
             }
-            
+
             // quick reference flag shows if Prolites are used
             //_prolite = prolites.Any();
 
@@ -908,27 +959,101 @@ namespace Neutron
         #endregion
 
         #region Login/Logout Functions
+
         public void SetMtLogOffText()
         {
-            MtLogOff.Text = _resourceManager.GetString("LogOn");
+            if (InvokeRequired)
+            {
+                Invoke(new Action(SetMtLogOffText));
+                return;
+            }
+            UpdateLogOffUI();
+            ClearUserSession();
+            _securityProcessor.ReprocessSecuritySet(string.Empty);
+        }
+        private void UpdateLogOffUI()
+        {
+            if (MtLogOff.InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    MtLogOff.Text = _resourceManager.GetString($"LogOn");
+                }));
+            }
+            
+            MtLogOff.Text = _resourceManager.GetString($"LogOn");
+            mlUserInfo.Text = string.Empty;
+
+            if (mlUserInfo.InvokeRequired)
+            {
+                mlUserInfo.Invoke(new Action(() =>
+                {
+                    mlUserInfo.Text = string.Empty;
+                }));
+            }
+            else
+            {
+                mlUserInfo.Text = string.Empty;
+            }
+        }
+        private void ClearUserSession()
+        {
             GlobalVar.User = null;
             _currentUser = null;
-            mlUserInfo.Text = "";
-            _securityProcessor.ReprocessSecuritySet("");
         }
+        //public void SetMtLogOffText()
+        //{
+        //    if (InvokeRequired)
+        //    {
+
+        //    }
+        //    MtLogOff.Text = _resourceManager.GetString("LogOn");
+        //    GlobalVar.User = null;
+        //    _currentUser = null;
+        //    mlUserInfo.Text = "";
+        //    _securityProcessor.ReprocessSecuritySet("");
+        //}
         private async void MtLogOff_Click(object sender, EventArgs e)
         {
-            //LogOnOff();
-            if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
+            try
             {
-                SetMtLogOffText();
+
+                if (MtLogOff.InvokeRequired)
+                {
+                    MtLogOff.Invoke(new Action(() => MtLogOff_Click(sender, e)));
+                    return;
+                }
+                var logOffText = _resourceManager.GetString($"LogOff");
+                var logOnText = _resourceManager.GetString($"LogOn");
+                if (MtLogOff.Text == logOffText)
+                {
+                    SetMtLogOffText();
+                }
+                else if (MtLogOff.Text == logOnText)
+                {
+                    await LogOn();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error in MtLogOff_Click: {ex.Message}").SafeFireAndForget();
             }
 
-            else if (MtLogOff.Text == _resourceManager.GetString("LogOn"))
-            {
-                await LogOn();
-            }
         }
+
+        //private async void MtLogOff_Click(object sender, EventArgs e)
+        //{
+        //    //LogOnOff();
+        //    if (MtLogOff.Text == _resourceManager.GetString("LogOff"))
+        //    {
+        //        SetMtLogOffText();
+        //    }
+
+        //    else if (MtLogOff.Text == _resourceManager.GetString("LogOn"))
+        //    {
+        //        await LogOn();
+        //    }
+        //}
         private void LogOff()
         {
             GlobalVar.User = null;
@@ -941,23 +1066,49 @@ namespace Neutron
         {
             try
             {
-                MtLogOff.Text = _resourceManager.GetString("LogOff");
-                MtLogOff.Refresh();
+                if (MtLogOff.InvokeRequired)
+                {
+                    MtLogOff.Invoke(new Action(() =>
+                    {
+                        MtLogOff.Text = _resourceManager.GetString("LogOff");
+                        MtLogOff.Refresh();
+                    }));
+                }
+                else
+                {
+                    MtLogOff.Text = _resourceManager.GetString("LogOff");
+                    MtLogOff.Refresh();
+                }
+
+
 
                 if (_neutronVariables.PinLoginOnly)
                 {
                     using (var frm = new FrmPin())
                     {
+                        frm.StartPosition = FormStartPosition.CenterScreen;
                         DialogResult result = frm.ShowDialog();
                         if (result == DialogResult.OK)
                         {
-                            _currentUser = frm.CurrentUser;
-
-                            mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                            lock (_userLock)
+                            {
+                                _currentUser = frm.CurrentUser;
+                            }
+                            if (mlUserInfo.InvokeRequired)
+                            {
+                                mlUserInfo.Invoke(new Action(() =>
+                                {
+                                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                                }));
+                            }
+                            else
+                            {
+                                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                            }
                         }
                         else
                         {
-                            await CloseApp();
+                            await CloseApp().ConfigureAwait(false);
                         }
                     }
                 }
@@ -969,7 +1120,18 @@ namespace Neutron
                         if (result == DialogResult.OK)
                         {
                             _currentUser = frm.CurrentUser;
-                            mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+
+                            if (mlUserInfo.InvokeRequired)
+                            {
+                                mlUserInfo.Invoke(new Action(() =>
+                                {
+                                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                                }));
+                            }
+                            else
+                            {
+                                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                            }
                         }
                     }
                 }
@@ -1075,7 +1237,7 @@ namespace Neutron
             //    Show();
             //}
         }
-        private void MtInventory_Click(object sender, EventArgs e)
+        private async void MtInventory_Click(object sender, EventArgs e)
         {
             var counter = 0;
             while (true)
@@ -1091,12 +1253,26 @@ namespace Neutron
             }
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageInventory]) return;
             var main = this;
+            _logger.LogDetailAsync($"Open Inventory Form.").SafeFireAndForget();
+            //using (var frm = new FrmInventory(_jsonData,_akaRepository,_lacProcessor,_workstationRepository,    _workstationView, _neutronVariables,_areaRepository,null,_locationsRepository,_inventoryUnitOfWork, _iptiDisplayFunctions))
+            //{
+            //    main.Hide();
+            //    frm.ShowDialog();
+            //    main.Show();
+            //}
+
             using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables, _iptiDisplayFunctions))
             {
                 main.Hide();
                 frm.ShowDialog();
                 main.Show();
             }
+            //using (var frm = await FrmInventory.CreateAsync(_jsonData, _akaRepository, _lacProcessor, _workstationRepository, _workstationView, _neutronVariables, _areaRepository, null, _locationsRepository, _inventoryUnitOfWork, _iptiDisplayFunctions))
+            //{
+            //    main.Hide();
+            //    frm.ShowDialog();
+            //    main.Show();
+            //}
         }
         private void MtHotAction_Click(object sender, EventArgs e)
         {
@@ -1118,7 +1294,7 @@ namespace Neutron
             Hide();
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                        , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, _inventoryRepository))
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _inventoryUnitOfWork, _iptiDisplayFunctions, _inventoryRepository))
             {
                 frm.ShowDialog();
                 Show();
@@ -1214,19 +1390,27 @@ namespace Neutron
         }
         private void ShowPickForm()
         {
-            using (var frm = DI.Create<FrmPick>(
-                       _neutronVariables,
-                       _neutronLicense,
-                       _workstationView,
-                       _historyManager,
-                       _iptiDisplayFunctions))
+            try
             {
-                frm.ShowDialog();
-                if (_neutronVariables.AutoLogOff)
+                using (var frm = DI.Create<FrmPick>(
+                                      _neutronVariables,
+                                      _neutronLicense,
+                                      _workstationView,
+                                      _historyManager,
+                                      _iptiDisplayFunctions))
                 {
-                    SetMtLogOffText();
+                    frm.ShowDialog();
+                    if (_neutronVariables.AutoLogOff)
+                    {
+                        SetMtLogOffText();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Mediator.GetInstance().OnDisplayMessage(this, $"Error loading Pick Form. {ex.Message}");
+            }
+
         }
 
         private void MtUtilities_Click(object sender, EventArgs e)
@@ -1390,7 +1574,7 @@ namespace Neutron
 
             if (GlobalVar.Hanel != null)
             {
-                GlobalVar.Hanel.CloseController();
+                var result = GlobalVar.Hanel.CloseController();
                 if (GlobalVar.Hanel != null)
                 {
                     GlobalVar.Hanel = null;
@@ -1437,6 +1621,7 @@ namespace Neutron
 
             Close();
         }
+
         private void FrmMain_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F12)
@@ -1452,7 +1637,7 @@ namespace Neutron
             {
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                            , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _iptiDisplayFunctions, _inventoryRepository))
+                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _inventoryUnitOfWork, _iptiDisplayFunctions, _inventoryRepository))
                 {
                     frm.ShowDialog();
                     Show();
@@ -1519,7 +1704,17 @@ namespace Neutron
             }
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
-            mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+            if (mlUserInfo.InvokeRequired)
+            {
+                mlUserInfo.Invoke(new Action(() =>
+                {
+                    mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+                }));
+            }
+            else
+            {
+                mlUserInfo.Text = $"{_resourceManager.GetString("CurrentUser")}{_currentUser.UserInfo}";
+            }
         }
         private void ButtonRemstar_Click(object sender, EventArgs e)
         {
