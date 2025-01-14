@@ -67,6 +67,12 @@ namespace Neutron.Forms
                             mtbUsername.Focus();
                             return;
                         }
+
+                        var groups = db.GroupUser.Include("Groups").Where(r => r.UserId == CurrentUser.Id).ToList();
+
+                        GlobalVar.User.Groups = groups.Select(g => g.Group).ToList();
+
+
                         GlobalVar.User = CurrentUser;
                         DialogResult = DialogResult.OK;
                         Close();
@@ -89,7 +95,11 @@ namespace Neutron.Forms
                     {
                         CurrentUser = new User
                         {
-                            Firstname = "Neutron", Lastname = "Admin", EmpId = "9999", Username = "admin", Pin = "2277"
+                            Firstname = "Neutron",
+                            Lastname = "Admin",
+                            EmpId = "9999",
+                            Username = "admin",
+                            Pin = "2277"
                         };
                     }
                     catch (Exception ex)
