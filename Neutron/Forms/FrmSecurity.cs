@@ -41,7 +41,7 @@ namespace Neutron.Forms
             SetCulture(_cultureInfo.Name);
             _neutronVariables = neutronVariables;
             _historyManager = historyManager;
-            ButtonDeleteEditUser.Enabled = false;
+            //ButtonDeleteEditUser.Enabled = true;
             CloseButtonPressed = false;
             SetupGrids();
         }
@@ -195,6 +195,11 @@ namespace Neutron.Forms
             CheckUsers(users);
             CheckSecureItems(secureItems);
             ComboBoxUsers.DataSource = _allUsers;
+            var userToFind = _allUsers.FirstOrDefault(u => u.EmpId == _currentUser.EmpId);
+            if (userToFind != null)
+            {
+                ComboBoxUsers.SelectedItem = userToFind;
+            }
             UpdateInformation();
         }
         private void UpdateInformation()
@@ -439,19 +444,20 @@ namespace Neutron.Forms
         }
         private void ButtonFindEditUser_Click(object sender, EventArgs e)
         {
-            FindEditUser();
+            var id = TextBoxEmpIdEditUser.Text.Trim();
+            FindEditUser(id);
         }
-        private void FindEditUser()
+        private void FindEditUser(string id)
         {
-            ButtonDeleteEditUser.Enabled = false;
-            var empId = TextBoxEmpIdEditUser.Text.Trim();
+            //ButtonDeleteEditUser.Enabled = false;
+            var empId = id;
             try
             {
                 var recs = _historyManager.GetHistoryRecordsByUser(empId).Take(50)
                                  .OrderByDescending(h => h.ActionDateTime).ToList();
                 if (!recs.Any())
                 {
-                    ButtonDeleteEditUser.Enabled = true;
+                    //ButtonDeleteEditUser.Enabled = true;
                 }
                 DataGridView1.DataSource = recs;
             }
@@ -463,6 +469,12 @@ namespace Neutron.Forms
         }
         private void ClearGrid()
         {
+            // Check if the DataGridView is data-bound
+            if (DataGridView1.DataSource != null)
+            {
+                // Unbind the DataGridView
+                DataGridView1.DataSource = null;
+            }
             if (DataGridView1.RowCount > 0)
             {
                 DataGridView1.Rows.Clear();
@@ -508,10 +520,10 @@ namespace Neutron.Forms
 
                     ClearEditUserFields();
                     TextBoxEmpIdEditUser.Focus();
-                    ButtonDeleteEditUser.Enabled = false;
+                    //ButtonDeleteEditUser.Enabled = false;
                 }
             }
-            ButtonDeleteEditUser.Enabled = false;
+            //ButtonDeleteEditUser.Enabled = false;
             RefreshUsersAndSecureItems();
         }
         private void ButtonSaveEditUser_Click(object sender, EventArgs e)
@@ -521,6 +533,7 @@ namespace Neutron.Forms
                 if (VerifyEditFields())
                 {
                     var user = _context.Users.Find(_currentUser.Id);
+                    //_currentUser = user;
                     if (user != null)
                     {
                         user.EmpId = TextBoxEmpIdEditUser.Text.Trim();
@@ -540,7 +553,7 @@ namespace Neutron.Forms
                 MessageBox.Show($"Unable To Save Changes.  {ex.Message}{Environment.NewLine}{ex.InnerException}");
                 TextBoxEmpIdEditUser.Focus();
             }
-            ButtonDeleteEditUser.Enabled = false;
+            //ButtonDeleteEditUser.Enabled = false;
             RefreshUsersAndSecureItems();
         }
 
@@ -603,7 +616,7 @@ namespace Neutron.Forms
             TextBoxUsernameEditUser.Text = string.Empty;
             TextBoxPasswordEditUser.Text = string.Empty;
             CheckBoxDisabledEditUser.Checked = false;
-            ButtonDeleteEditUser.Enabled = false;
+            //ButtonDeleteEditUser.Enabled = false;
             ComboBoxEditPreferredLanguage.SelectedIndex = 0;
             ClearGrid();
         }
@@ -685,7 +698,7 @@ namespace Neutron.Forms
 
         private void ComboBoxUsers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var user = ((ComboBox)sender).SelectedItem as User;
+            var user = (User)((ComboBox)sender).SelectedItem;
             if (user != null)
             {
                 _currentUser = user;
@@ -697,8 +710,8 @@ namespace Neutron.Forms
                 TextBoxUsernameEditUser.Text = user.Username;
                 CheckBoxDisabledEditUser.Checked = user.Disabled;
                 ComboBoxEditPreferredLanguage.SelectedValue = user.LanguageId;
+                FindEditUser(user.EmpId);
             }
-            FindEditUser();
         }
         private void SetCulture(string lang)
         {
