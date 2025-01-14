@@ -258,6 +258,30 @@ namespace Neutron.Global
 
         }
 
+        public async Task SaveHistoryAsync(ActionCode actionCode, ReplenOrderDetail orderDetail)
+        {
+            var history = new History
+            {
+                ActionCode = (int)actionCode,
+                ActionCodeName = actionCode.GetEnumDescription(),
+                ActionDateTime = DateTime.Now,
+                Ord1 = orderDetail.ReplenOrder.Ord1,
+                Ord2 = orderDetail.ReplenOrder.Ord2,
+                OrderId = orderDetail.ReplenOrderId,
+                Item = orderDetail.PartNum,
+                Description = orderDetail.PartDesc,
+                RequestedQuantity = orderDetail.Quantity,
+                IssuedQuantity = orderDetail.PickedQuantity,
+                EmpId = GlobalVar.User.EmpId,
+                OrderInfo = orderDetail.ReplenOrder.OrderInfo ?? string.Empty,
+                OrderDetailInfo = orderDetail.OrderDetailInfo ?? string.Empty,
+                WorkstationId = _workstationView.WorkstationId,
+                AreaId = orderDetail.AreaId
+            };
+            await SaveAsync(history);
+
+        }
+
         public void SaveHistory(ActionCode actionCode, PickStop pickStop)
         {
             foreach (var pickView in pickStop.PickViews)
@@ -611,7 +635,7 @@ namespace Neutron.Global
             await SaveAsync(history);
         }
 
-        public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, ReplenPickView pickView)
+        public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickedQty, ReplenPickView pickView)
         {
             var cCenter = "          ";
             var orderDetailInfo = string.Empty;
@@ -661,7 +685,7 @@ namespace Neutron.Global
                 OrderDetailInfo = orderDetailInfo,
                 WorkstationId = _workstationView.WorkstationId,
             };
-            Save(history);
+            await SaveAsync(history);
         }
 
         public void SaveHistory(ActionCode actionCode, Inventory inventory, int pickedQty, PickList pickList)
@@ -1325,12 +1349,7 @@ namespace Neutron.Global
             Save(history);
         }
 
-        public Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickLocationQty, ReplenPickView pickView)
-        {
-            throw new NotImplementedException();
-        }
-
-        //public void SaveActionCodesToDatabase()
+       //public void SaveActionCodesToDatabase()
         //{
         //    //Run this one time at startup
         //    //break down the ActionCode Enum into a List and save to the database.
