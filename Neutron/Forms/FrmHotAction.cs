@@ -44,6 +44,8 @@ using NeutronEvents;
 using IPTI.Models;
 using static System.Net.Mime.MediaTypeNames;
 using Application = System.Windows.Forms.Application;
+using System.Text;
+using NeutronData.UnitOfWorks;
 
 namespace Neutron.Forms
 {
@@ -79,6 +81,7 @@ namespace Neutron.Forms
         private readonly IHistoryManager _historyManager;
 
         private ILocationsRepository _locationsRepository;
+        private readonly IInventoryUnitOfWork _inventoryUnitOfWork;
         private readonly IIptiDisplayFunctions _iptiDisplayFunctions;
         private readonly IInventoryRepository _inventoryRepository;
 
@@ -151,6 +154,7 @@ namespace Neutron.Forms
             , IItemDefinitionsRepository itemDefinitionsRepository
             , NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , WorkstationView workstationView, IHistoryManager historyManager, ILocationsRepository locationsRepository
+            , IInventoryUnitOfWork inventoryUnitOfWork
             , IIptiDisplayFunctions iptiDisplayFunctions, IInventoryRepository inventoryRepository
             , string item = "", int quantity = 1, PickList pickList = null)
         {
@@ -163,6 +167,7 @@ namespace Neutron.Forms
             _workstationView = workstationView;
             _historyManager = historyManager;
             _locationsRepository = locationsRepository;
+            _inventoryUnitOfWork = inventoryUnitOfWork;
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -211,7 +216,7 @@ namespace Neutron.Forms
                 CloseButtonPressed = false;
                 _imagesDirectory = LoaderSettings.GetImagesDirectory();
                 FillComboBoxes();
-                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+                _inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
                 InitialSearch(_item);
                 LabelStationName.Text = _workstationView.ToString();
                 LabelStationName2.Text = _workstationView.ToString();
@@ -328,7 +333,7 @@ namespace Neutron.Forms
                 CloseButtonPressed = false;
                 _imagesDirectory = LoaderSettings.GetImagesDirectory();
                 FillComboBoxes();
-                _inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+                _inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
                 InitialSearch(_item);
                 LabelStationName.Text = _workstationView.ToString();
                 LabelStationName2.Text = _workstationView.ToString();
@@ -1099,7 +1104,8 @@ namespace Neutron.Forms
                 DataPropertyName = "LocationCode",
                 HeaderText = _gridResourceManager.GetString($"LocationCode"),
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                Name = "LocationCode"
+                Name = "LocationCode",
+                Visible = false
             };
             DataGridViewHot.Columns.Add(col);
             col = new DataGridViewTextBoxColumn
@@ -2456,9 +2462,9 @@ namespace Neutron.Forms
                 _workstationView.ProLiteManager?.ClearAllProlites();
                 if (_iptiDisplayFunctions != null)
                 {
-                    _iptiDisplayFunctions.ClearBatchTable();
-                    _iptiDisplayFunctions.ClearBlastzone();
-                    _iptiDisplayFunctions?.TurnOffBatchOrderControl();
+                    await _iptiDisplayFunctions.ClearBatchTable();
+                    await _iptiDisplayFunctions.ClearBlastzone();
+                    await _iptiDisplayFunctions.TurnOffBatchOrderControl();
                 }
 
                 if (_useCostCenter && _hotPickButtonPressed)
@@ -2474,7 +2480,7 @@ namespace Neutron.Forms
             else
             {
                 actionCode = ActionCode.StoreRack;
-                orderDetail = _repoReplenOrderDetails.FindByKey(_pickList.OrderDetailId.ParseInt());
+                orderDetail = await _repoReplenOrderDetails.FindByKeyAsync(_pickList.OrderDetailId.ParseInt());
 
             }
 
@@ -2541,7 +2547,7 @@ namespace Neutron.Forms
 
                             TextBoxHotPickLocationQuantity.Text = inv.Quantity.ToString();
 
-                            _repoInventory.Update(inv);
+                            await _repoInventory.UpdateAsync(inv);
 
                             if (_useCostCenter && _hotPickButtonPressed)
                             {
@@ -2551,12 +2557,32 @@ namespace Neutron.Forms
                             {
                                 _historyManager.SaveHistory(actionCode, inv, pickQty);
                             }
-                            await _inventoryManager.ReleaseCheckAsync(inv);
+                            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
+                            var canDelete = inventoryManager.QuickReleaseCheckAsync(inv);
+                            if (canDelete)
+                            {
+                                var sb = new StringBuilder();
+                                var item = inv.ItemDefinition != null ? inv.ItemDefinition.Item : string.Empty;
+                                var storageType = inv.StorageType != null ? inv.StorageType.Name : string.Empty;
+                                sb.AppendLine(
+                                    $"Are you sure you want to DELETE the selected Inventory Item? {Environment.NewLine}" +
+                                    $"ItemId: {inv.ItemDefinitionId} Item: {item} LocationId: {inv.LocationId}" +
+                                    $"Quantity: {inv.Quantity} AreaId: {inv.AreaId} Storage: {storageType} ");
+
+                                var result = MessageBox.Show($"{sb.ToString()}", "Delete Inventory Item",
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+
+                                if (result == DialogResult.Yes)
+                                {
+                                    _logger.LogDetailAsync($"{sb.ToString()}").SafeFireAndForget();
+                                    var deleted = await inventoryManager.ReleaseCheckAsync(inv);
+                                }
+                            }
                         }
                         else
                         {
                             inv.Quantity += pickQty;
-                            _repoInventory.Update(inv);
+                            await _repoInventory.UpdateAsync(inv);
                             if (orderDetail != null) orderDetail.PickedQuantity += pickQty;
                             _historyManager.SaveHistory(actionCode, inv, pickQty, _pickList);
                         }
@@ -2594,7 +2620,7 @@ namespace Neutron.Forms
                 {
                     _quantityToPick = 0;
                     orderDetail.LineStatusId = (int)LineStatus.Complete;
-                    _repoReplenOrderDetails.Update(orderDetail);
+                    await _repoReplenOrderDetails.UpdateAsync(orderDetail);
 
                     //close the form
                     CloseButtonPressed = true;
@@ -2603,7 +2629,7 @@ namespace Neutron.Forms
                 else
                 {
                     _quantityToPick = _pickList.Ordered.ParseInt() - orderDetail.PickedQuantity;
-                    _repoReplenOrderDetails.Update(orderDetail);
+                    await _repoReplenOrderDetails.UpdateAsync(orderDetail);
                     TextBoxHotPickQuantity.Text = _quantityToPick.ToString();
                     if (inv != null)
                     {
