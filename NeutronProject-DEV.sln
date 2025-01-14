@@ -41,8 +41,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronTrayLayout", "..\Neu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDllu", "..\NeutronDllu\NeutronDllu\NeutronDllu.csproj", "{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neutron_Test", "Neutron_Test\Neutron_Test.csproj", "{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBinDisplay", "EBinDisplayManager\EBinDisplay.csproj", "{51955251-C665-4F33-B31B-45011E6BAB99}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDataTests", "NeutronDataTests\NeutronDataTests.csproj", "{A4825200-9451-4D7C-AB6D-830FEABFEDFF}"
@@ -66,8 +64,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplenService", "ReplenService\ReplenService.csproj", "{93BF7D7C-0F65-4490-B653-34FE740559AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogFileMaintenance", "LogFileMaintenance\LogFileMaintenance.csproj", "{66326536-A1D8-49E7-9380-1A4C97EDF278}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronTest", "NeutronTest\NeutronTest.csproj", "{3D208A34-F70C-4958-B394-B84053F9042E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,10 +148,6 @@ Global
 		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{523DF18E-8BEB-4E4D-9D1F-69915B334EFD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51955251-C665-4F33-B31B-45011E6BAB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51955251-C665-4F33-B31B-45011E6BAB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51955251-C665-4F33-B31B-45011E6BAB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -204,10 +196,6 @@ Global
 		{66326536-A1D8-49E7-9380-1A4C97EDF278}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66326536-A1D8-49E7-9380-1A4C97EDF278}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66326536-A1D8-49E7-9380-1A4C97EDF278}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D208A34-F70C-4958-B394-B84053F9042E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D208A34-F70C-4958-B394-B84053F9042E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D208A34-F70C-4958-B394-B84053F9042E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D208A34-F70C-4958-B394-B84053F9042E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
