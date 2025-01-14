@@ -8,7 +8,7 @@ namespace NeutronData.Interfaces
     public interface ILocationsRepository
     {
         IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId
-                    , int velocityCodeId, int heightCodeId, int inUse);
+                    , int velocityCodeId, int heightCodeId, bool inUse);
 
         IEnumerable<LocationView> GetAllLocationViewsExact(int areaId, int sizeCodeId
             , int velocityCodeId, int heightCodeId, int inUse, int currentPage);
@@ -18,9 +18,9 @@ namespace NeutronData.Interfaces
         IEnumerable<LocationView> GetAllLocationViewsExactByAreas(string areas, int itemDefinitionSizeCodeId
             , int itemDefinitionVelocityCodeId, int itemDefinitionHeightCodeId, int inUse);
         IEnumerable<LocationView> FindLocationViewsByArea(int areaId, int currentPage);
-        IEnumerable<LocationView> FindLocationViewsByArea(int areaId);
-        IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse, int currentPage);
-        IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, int inUse);
+        Task<IEnumerable<LocationView>> FindLocationViewsByArea(int areaId);
+        IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, bool inUse, int currentPage);
+        IEnumerable<LocationView> FindLocationViewsByAreaAndInUse(int areaId, bool inUse);
         IEnumerable<LocationView> FindLocationViewsByAreaAndSlot(int areaId, string slot);
         IEnumerable<LocationView> FindLocationViewsBySlot(string find);
         IEnumerable<LocationView> FindLocationViews(string find = "");
