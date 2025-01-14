@@ -104,6 +104,28 @@ namespace Neutron.Forms
                     _repoOrderDetails.Update(_orderDetail);
                 }
             }
+            else if (_currentStatus == (int)LineStatus.Picking)
+            {
+                if (newStatus == (int)LineStatus.Complete)
+                {
+                    _orderDetail.PickedQuantity = _orderDetail.Quantity;
+                    _orderDetail.LineStatusId = newStatus;
+                    _repoOrderDetails.Update(_orderDetail);
+                    var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
+                    if (inv != null)
+                    {
+                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
+                    }
+
+                    CheckForOrderComplete(_orderDetail.Order);
+                }
+                else if (newStatus == (int)LineStatus.Available)
+                {
+                    _orderDetail.LineStatusId = newStatus;
+                    _repoOrderDetails.Update(_orderDetail);
+                    SetOrderAvailable(_orderDetail.Order);
+                }
+            }
             else
             {
                 _orderDetail.LineStatusId = newStatus;
