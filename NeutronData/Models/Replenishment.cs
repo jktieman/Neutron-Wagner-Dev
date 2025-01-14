@@ -15,8 +15,8 @@ public class Replenishment
     public int QuantityInEight { get; set; }
     public int ReplenArea { get; set; }
     public int ReplenAreaQuantity { get; set; }
-    public int LocationMin { get; set; }
-    public int LocationMax { get; set; }
+    public int SystemMin { get; set; }
+    public int SystemMax { get; set; }
     public int QuantityNeeded { get; set; }
     
 }

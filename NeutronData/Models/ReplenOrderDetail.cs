@@ -1,5 +1,7 @@
-﻿using NeutronData.Interfaces;
+﻿using System;
+using NeutronData.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 
 namespace NeutronData.Models
 {

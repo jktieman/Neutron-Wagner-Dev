@@ -1,6 +1,7 @@
 ﻿using NeutronData.Interfaces;
 using System.IO.Ports;
 using System;
+using System.Linq.Expressions;
 
 namespace NeutronData.Models
 {
