@@ -75,6 +75,7 @@
     <Compile Include="Models\NeutronLicense.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StaticClasses\AreaNumber.cs" />
     <Compile Include="StaticClasses\ControlCharacters.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +87,9 @@
       <Name>AlliedLogger</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -13,7 +13,7 @@ namespace NeutronCore.Global
                 var logFileDir = LoaderSettings.GetLogFileDirectory();
                 var logActivity = LoaderSettings.EnableLogging;
                 _logger = new DynamicLogger(logFileDir, folderName, logActivity);
-                _ = _logger.LogDetailAsync($"{folderName} - Logger setup complete.");
+                //_ = _logger.LogDetailAsync($"{folderName} - Logger setup complete.");
             }
             catch (Exception ex)
             {
