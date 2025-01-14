@@ -129,7 +129,7 @@ namespace Neutron.Forms
         private readonly WorkstationView _workstationView;
         private readonly IEnumManager _enumManager;
         private IIptiDisplayFunctions _iptiDisplayFunctions;
-
+        private IptiConfig _ipti;
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , WorkstationView workstationView, IEnumManager enumManager, IIptiDisplayFunctions iptiDisplayFunctions)
         {
@@ -1209,7 +1209,7 @@ namespace Neutron.Forms
 
                 var upc = string.Empty;
                 var order = TextBoxTestOrderNumber.Text;
-                var ord = _repoOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
+                var ord = _repoOrders.FindByInclude(r => r.Ord1 == order, r => r.OrderDetails).FirstOrDefault();
                 if (ord != null)
                 {
                     var orderDetail = ord.OrderDetails.First();
@@ -2589,10 +2589,10 @@ namespace Neutron.Forms
             {
                 //LabelViewEditDeviceNumber.Visible = false;
                 //TextBoxViewEditDeviceNumber.Visible = false;
-                LabelViewEditDeviceNumberOfCarriers.Visible = false;
-                TextBoxViewEditNumberOfCarriers.Visible = false;
-                LabelNewDeviceNumberOfCarriers.Visible = false;
-                TextBoxNewNumberOfCarriers.Visible = false;
+                LabelViewEditDeviceNumberOfCarriers.Visible = true;
+                TextBoxViewEditNumberOfCarriers.Visible = true;
+                LabelNewDeviceNumberOfCarriers.Visible = true;
+                TextBoxNewNumberOfCarriers.Visible = true;
                 //LabelViewEditDeviceCarrierLevel.Visible = false;
                 //LabelViewEditDeviceCarrierWidth.Visible = false;
                 //LabelViewEditDeviceCarrierDepth.Visible = false;
@@ -3191,8 +3191,8 @@ namespace Neutron.Forms
             //}
 
 
-            var ipti = _jsonData.LoadFile<IptiConfig>();
-            if (ipti == null)
+            _ipti = _jsonData.LoadFile<IptiConfig>();
+            if (_ipti == null)
             {
                 ComboBoxButtonColorOne.SelectedIndex = ComboBoxButtonColorOne.FindStringExact("Red");
                 ComboBoxButtonColorTwo.SelectedIndex = ComboBoxButtonColorTwo.FindStringExact("OFF");
@@ -3203,12 +3203,12 @@ namespace Neutron.Forms
             }
             else
             {
-                ComboBoxButtonColorOne.SelectedIndex = ipti.ButtonColorOne.ParseInt();
-                ComboBoxButtonColorTwo.SelectedIndex = ipti.ButtonColorTwo.ParseInt();
-                ComboBoxButtonOnTime.SelectedIndex = ComboBoxButtonOnTime.FindStringExact(ipti.ButtonOnTime);
-                ComboBoxButtonOffTime.SelectedIndex = ComboBoxButtonOffTime.FindStringExact(ipti.ButtonOffTime);
-                ComboBoxOrderControlButton.SelectedIndex = ipti.OrderControlButton.ParseInt();
-                TextBoxTransmitDelay.Text = ipti.TransmitDelay.ToString();
+                ComboBoxButtonColorOne.SelectedIndex = _ipti.ButtonColorOne.ParseInt();
+                ComboBoxButtonColorTwo.SelectedIndex = _ipti.ButtonColorTwo.ParseInt();
+                ComboBoxButtonOnTime.SelectedIndex = ComboBoxButtonOnTime.FindStringExact(_ipti.ButtonOnTime);
+                ComboBoxButtonOffTime.SelectedIndex = ComboBoxButtonOffTime.FindStringExact(_ipti.ButtonOffTime);
+                ComboBoxOrderControlButton.SelectedIndex = _ipti.OrderControlButton.ParseInt();
+                TextBoxTransmitDelay.Text = _ipti.TransmitDelay.ToString();
             }
 
 
@@ -3861,18 +3861,18 @@ namespace Neutron.Forms
             for (var i = 0; i < 16; i++)
             {
                 var num = i + 1;
-                var text = $"{num}{num}{num}{num}";
+                var text = $"{num}";
                 if (_iptiDisplayFunctions != null)
                 {
                     await _iptiDisplayFunctions.TurnOnBatchDisplay(num, text);
                 }
-                Thread.Sleep(100);
+                Task.Delay(_ipti.TransmitDelay).Wait();
             }
         }
 
         private async void ButtonTurnAllOff_Click(object sender, EventArgs e)
         {
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 16; i++)
             {
                 var num = i + 1;
                 if (_iptiDisplayFunctions != null)
@@ -3880,7 +3880,16 @@ namespace Neutron.Forms
                     await _iptiDisplayFunctions.TurnOffBatchDisplay(num);
 
                 }
-                Thread.Sleep(100);
+                Task.Delay(_ipti.TransmitDelay).Wait();
+            }
+        }
+
+        private void MBHanelTester_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FrmMp12DTest(_jsonData, _neutronVariables, _workstationView ))
+            {
+                frm.ShowDialog();
+                Show();
             }
         }
     }
