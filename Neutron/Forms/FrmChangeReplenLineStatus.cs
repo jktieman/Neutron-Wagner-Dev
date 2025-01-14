@@ -120,6 +120,7 @@ namespace Neutron.Forms
                 {
                     _orderDetail.LineStatusId = newStatus;
                     _repoOrderDetails.Update(_orderDetail);
+                    SetOrderAvailable(_orderDetail.ReplenOrder);
                 }
             }
             else
