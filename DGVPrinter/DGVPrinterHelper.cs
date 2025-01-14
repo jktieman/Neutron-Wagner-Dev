@@ -404,7 +404,7 @@ namespace DGVPrinterHelper //AllocationRequest
         private float colheaderheight = 0;
         //private List<float> rowheights;
         private List<float> colwidths;
-        private List<List<SizeF>> cellsizes;
+       // private List<List<SizeF>> cellsizes;
 
         #endregion
 
