@@ -1,5 +1,5 @@
-﻿using AlliedLogger;
-using AlliedPostOffice;
+﻿using System.Data.Entity;
+using AlliedLogger;
 using IPTI.Models;
 using Ninject.Modules;
 using JsonManager;
@@ -8,16 +8,20 @@ using Neutron.Classes;
 using Neutron.Forms;
 using Neutron.Global;
 using Neutron.Models;
+using NeutronData.DataContexts;
 using NeutronData.General;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.Repositories;
+using NeutronData.UnitOfWorks;
 using NeutronLoader;
 using NeutronMaintenance;
 using SqlSchemaManager;
 using ProliteController;
-using SAPServer;
 using IDisplayController = IPTI.Models.IDisplayController;
+
+using System.Data.Common;
+using System.Data.SqlClient;
 
 
 namespace Neutron.Ninject
@@ -26,11 +30,14 @@ namespace Neutron.Ninject
     {
         public override void Load()
         {
-           // Bind<DbContext>().To<NeutronDb>().InThreadScope();
+            Bind<DbConnection>().To<SqlConnection>().InSingletonScope();
+            Bind<DbContext>().To<NeutronDb>().InThreadScope();
             Bind<IJsonData>().To<JsonData>().InSingletonScope();
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();
             Bind<ILacProcessor>().To<LacProcessor>().InSingletonScope();
+            Bind<ILocationUnitOfWork>().To<LocationUnitOfWork>().InSingletonScope();
+            Bind<IInventoryUnitOfWork>().To<InventoryUnitOfWork>().InSingletonScope();
             Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
             Bind<IImageManager>().To<ImageManager>().InSingletonScope();
             Bind<IOrdersRepository>().To<OrdersRepository>().InSingletonScope();
@@ -39,7 +46,7 @@ namespace Neutron.Ninject
             Bind<IInventoryRepository>().To<InventoryRepository>().InSingletonScope();
             Bind<FrmMain>().To<FrmMain>().InSingletonScope();
             Bind<FrmSystem>().To<FrmSystem>()
-                //.WithConstructorArgument("rackStation")
+                
                 .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("neutronVariables")
                 .WithConstructorArgument("standAlone");
@@ -103,7 +110,9 @@ namespace Neutron.Ninject
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
             Bind<IDisplayController>().To<TcpIptiController>().InSingletonScope();
-           // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
+            Bind<IDialogService>().To<DialogService>().InSingletonScope();
+
+            // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
             //Bind<ISapService>().To<SAPService>().InSingletonScope();
         }

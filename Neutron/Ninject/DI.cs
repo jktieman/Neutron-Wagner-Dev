@@ -8,22 +8,36 @@ using NeutronData.ModelViews;
 using Ninject;
 using Ninject.Parameters;
 using Neutron.Forms;
-using AlliedLogger;
 using IPTI.Models;
 
 
 namespace Neutron.Ninject
 {
+    // ReSharper disable once InconsistentNaming
     public static class DI
     {
         private static StandardKernel _kernel;
-        private static IDynamicLogger _logger;
-
+        private static readonly object _lock = new object();
         public static void Initialize()
         {
-            _kernel = new StandardKernel();
-            _kernel.Load(Assembly.GetExecutingAssembly());
-            _logger = NeutronCore.Global.Logger.SetupLogger("DI_Module");
+            lock (_lock)
+            {
+                try
+                {
+                    if (_kernel != null)
+                    {
+                        _kernel.Dispose();
+                    }
+                    _kernel = new StandardKernel();
+                    _kernel.Load(Assembly.GetExecutingAssembly());
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception or handle it appropriately
+                    Console.WriteLine($"Error initializing DI kernel: {ex.Message}");
+                    throw;
+                }
+            }
         }
 
         public static T Create<T>()
