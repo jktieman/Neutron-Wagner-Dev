@@ -12,6 +12,7 @@ using NeutronCore.Enums;
 using NeutronCore.Extensions;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronCore.StaticClasses;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
@@ -41,7 +42,7 @@ namespace NeutronLoader
         private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
         private ReplenProcessor _replenProcessor;
         private ItemDefinitionProcessor _itemDefinitionProcessor;
-        private const int AreaEight = 8;
+        private const int AreaEight = AreaNumber.Eight;
         private IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
@@ -175,6 +176,7 @@ namespace NeutronLoader
 
                 if (_neutronVariables.AutoLoadReplenishments)
                 {
+
                     // Restock/Replenishment lines where Tower or Blastzone is under MIN
                     var replenishmentLines = await GetNewOrdersFromReplenishments();
 
@@ -197,7 +199,6 @@ namespace NeutronLoader
                 _loadOrdersBusy = false;
             }
         }
-
         private async Task<List<NeutronInput>> GetNewReplenOrdersFromSap()
         {
             _logger.LogDetailAsync("Get New Replen Orders From SAP").SafeFireAndForget();
@@ -643,7 +644,7 @@ namespace NeutronLoader
             var orderLines = new List<NeutronInput>();
             try
             {
-                var recs = _replenProcessor.GetNewAndUpdatedReplenishments();
+                var recs = await _replenProcessor.GetNewAndUpdatedReplenishments();
 
                 if (recs.Any())
                 {

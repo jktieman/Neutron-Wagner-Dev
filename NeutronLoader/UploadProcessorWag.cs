@@ -267,7 +267,7 @@ namespace NeutronLoader
                     foreach (var transId in transIds)
                     {
                         // look in OrderDetail to see if it is complete
-                        var orderDetail = _repoOrderDetails.FindBy(od => od.TransId == transId).FirstOrDefault();
+                        var orderDetail = await _repoOrderDetails.FindByFirstOrDefaultAsync(od => od.TransId == transId);
                         if (orderDetail != null)
                         {
                             _logger.LogDetailAsync(
@@ -276,16 +276,16 @@ namespace NeutronLoader
                             if (orderDetail.LineStatusId == 6)
                             {
                                 // Get the information needed to send back to SAP
-                                await SendToSap(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
+                                await SendToSapAsync(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
                                 _logger.LogDetailAsync(
                                     $"Send to SAP: TransId: {orderDetail.TransId}  Quantity: {orderDetail.Quantity}  Picked: {orderDetail.PickedQuantity}").SafeFireAndForget();
 
-                                var recs = _repoHistory
-                                    .FindBy(r => r.OrderDetailInfo.StartsWith(transId.ToString())).ToList();
+                                var recs = await _repoHistory
+                                    .FindByAsync(r => r.OrderDetailInfo.StartsWith(transId.ToString()));
                                 foreach (var rec in recs)
                                 {
                                     rec.TransmitDateTime = DateTime.Now;
-                                    _repoHistory.Update(rec);
+                                    await _repoHistory.UpdateAsync(rec);
                                     _logger.LogDetailAsync(
                                         $"Set Transmit DateTime Item: {rec.Item} DateTime: {rec.TransmitDateTime}").SafeFireAndForget();
                                 }
@@ -301,9 +301,10 @@ namespace NeutronLoader
         {
             _logger.LogDetailAsync($"Process Replen Orphans").SafeFireAndForget();
             // Are there any History records where the RequestedQuantity and IssuedQuantity aren't the same
-            var orphans = _repoHistory.FindBy(h => !h.TransmitDateTime.HasValue
+            var orphanList = await _repoHistory.FindByAsync(h => !h.TransmitDateTime.HasValue
                                                    && h.ActionCode == 2
-                                                   && h.RequestedQuantity != h.IssuedQuantity).ToList();
+                                                   && h.RequestedQuantity != h.IssuedQuantity);
+            var orphans = orphanList.ToList();
             if (orphans.Any())
             {
                 _logger.LogDetailAsync($"Found {orphans.Count} Orphan Replen Records").SafeFireAndForget();
@@ -325,7 +326,8 @@ namespace NeutronLoader
                     foreach (var transId in transIds)
                     {
                         // look in OrderDetail to see if it is complete
-                        var orderDetail = _repoReplenOrderDetails.FindBy(od => od.TransId == transId).FirstOrDefault();
+                        var orderDetail = await _repoReplenOrderDetails.FindByFirstOrDefaultAsync(od => od.TransId == transId);
+                        
                         if (orderDetail != null)
                         {
                             _logger.LogDetailAsync(
@@ -334,15 +336,15 @@ namespace NeutronLoader
                             if (orderDetail.LineStatusId == 6)
                             {
                                 // Get the information needed to send back to SAP
-                                await SendToSap(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
+                                await SendToSapAsync(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
                                 _logger.LogDetailAsync(
                                     $"Send to SAP: TransId: {orderDetail.TransId}  Quantity: {orderDetail.Quantity}  Picked: {orderDetail.PickedQuantity}").SafeFireAndForget();
-                                var recs = _repoHistory
-                                    .FindBy(r => r.OrderDetailInfo.StartsWith(transId.ToString())).ToList();
+                                var recs = await _repoHistory
+                                    .FindByAsync(r => r.OrderDetailInfo.StartsWith(transId.ToString()));
                                 foreach (var rec in recs)
                                 {
                                     rec.TransmitDateTime = DateTime.Now;
-                                    _repoHistory.Update(rec);
+                                    await _repoHistory.UpdateAsync(rec);
                                     _logger.LogDetailAsync(
                                         $"Set Transmit DateTime Item: {rec.Item} DateTime: {rec.TransmitDateTime}").SafeFireAndForget();
                                 }
@@ -353,13 +355,13 @@ namespace NeutronLoader
             }
         }
 
-        private async Task SendToSap(int transId, int requested, int issued)
+        private async Task SendToSapAsync(int transId, int requested, int issued)
         {
             _logger.LogDetailAsync($"Process Replen Orphans TransId: {transId}  Requested: {requested}  Issued: {issued}").SafeFireAndForget();
             
             var transIdDec = Convert.ToDecimal(transId);
 
-            var input = _repoNovaInput.FindBy(n => n.TRANSID == transIdDec).FirstOrDefault();
+            var input = await _repoNovaInput.FindByFirstOrDefaultAsync(n => n.TRANSID == transIdDec);
 
             if (input != null)
             {
