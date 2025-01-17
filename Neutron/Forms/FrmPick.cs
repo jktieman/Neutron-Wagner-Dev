@@ -191,6 +191,7 @@ namespace Neutron.Forms
         private DateTime _lastKeystrokeTime;
         private TextBox _previousTextBoxPos;
         private int _currentPickStopSequence;
+        private List<BatchPosition> _currentBatchPositions;
         private const int ScannerThreshold = 50; // milliseconds
 
         public FrmPick(IJsonData jsonData, WorkstationView workstationView
@@ -296,9 +297,9 @@ namespace Neutron.Forms
             FillComboBoxAreaNumbers();
 
             mlUserInfo.Text = GetCurrentUserString();
-            
-            
-            
+
+
+
             CloseButtonPressed = false;
             _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();
             _documentToPrint = new DocumentToPrint();
@@ -318,7 +319,7 @@ namespace Neutron.Forms
             // _ipticonfig = _jsonData.LoadFile<IptiConfig>();
 
             //_tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
-            
+
             Mediator.GetInstance().IptiButtonPressed += async (s, e) => await IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
@@ -423,36 +424,51 @@ namespace Neutron.Forms
 
         private async Task ProcessInput(TextBox textBox)
         {
+            _logger.LogDetailAsync($"Start Scanner ProcessInput").SafeFireAndForget();
             if (textBox == null)
             {
                 throw new ArgumentNullException(nameof(textBox));
             }
-            await _logger.LogDetailAsync($"Start Scanner ProcessInput").ConfigureAwait(false);
+
             if (textBox.Tag == null || !int.TryParse(textBox.Tag.ToString(), out var position))
             {
                 throw new InvalidOperationException("Invalid textBox tag.");
             }
-
+            _logger.LogDetailAsync($"1 Position: {position}").SafeFireAndForget();
             if (string.IsNullOrEmpty(textBox.Text))
             {
+                _logger.LogDetailAsync($"2 textBox.Text is null or empty.").SafeFireAndForget();
                 await ClearItemFromBatchByPosition(position);
+                _logger.LogDetailAsync($"3 Back From ClearItemFromBatchByPosition Position: {position}").SafeFireAndForget();
+                _logger.LogDetailAsync($"4 Returning from null or empty TextBox.Text").SafeFireAndForget();
                 return;
             }
             try
             {
+                _logger.LogDetailAsync($"5 Starting Try").SafeFireAndForget();
                 var rows = GetMatchingRows(textBox.Text);
+                _logger.LogDetailAsync($"6 Got Matching Rows {rows.Count}").SafeFireAndForget();
                 if (rows.Any())
                 {
+
+                    _logger.LogDetailAsync($"7 Got Rows > 1 Call GetRowByTaskNumber.").SafeFireAndForget();
                     var row = rows.Count > 1 ? GetRowByTaskNumber(rows) : rows.FirstOrDefault();
+
                     if (row != null)
                     {
+                        _logger.LogDetailAsync($"8 Got Row By Task Number: {row.Cells["Ord1"].Value}").SafeFireAndForget();
+
                         var id = Convert.ToInt32(row.Cells["Id"].Value);
                         //               // var ord1 = Convert.ToString(row.Cells["Ord1"].Value);
                         //               // var ord2 = Convert.ToString(row.Cells["Ord2"].Value);
+                        _logger.LogDetailAsync($"9 Add Remove Order From Induction Screen: ID:{id} Index: {row.Index}").SafeFireAndForget();
                         var idx = await AddRemoveOrderFromInductionScreen(id, row.Index);
+                        _logger.LogDetailAsync($"10 Back From AddRemoveOrderFromInductionScreen").SafeFireAndForget();
                     }
                 }
+                _logger.LogDetailAsync($"11 Call SetFocusNextTextBoxPos").SafeFireAndForget();
                 SetFocusNextTextBoxPos();
+                _logger.LogDetailAsync($"12 Back From SetFocusNextTextBoxPos").SafeFireAndForget();
             }
             catch (Exception ex)
             {
@@ -3203,7 +3219,7 @@ namespace Neutron.Forms
 
         private async void MBPickListBack_Click(object sender, EventArgs e)
         {
-            await ExecutePickBackProcess();
+           // await ExecutePickBackProcess();
             await PickListBack();
         }
 
@@ -3230,7 +3246,7 @@ namespace Neutron.Forms
 
         private async Task AvailableOrdersBack()
         {
-            await ClearDisplayFunctions();
+            await ClearIptiDisplayFunctions();
             ResetHanelDeviceStatus();
             ClearProLites();
             ClearActiveDeviceIndicators();
@@ -3244,7 +3260,7 @@ namespace Neutron.Forms
         {
 
             MBPickAccept.Visible = false;
-            if (await CheckForValidOrders() == false) return;
+            // if (await CheckForValidOrders() == false) return;
 
             //ClearOrderPositions();
 
@@ -3278,6 +3294,7 @@ namespace Neutron.Forms
 
 
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START after FinalCheckOfOrdersToPick"));
+            _currentBatchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
 
             TextBoxFindAvailableOrders.Text = string.Empty;
             try
@@ -3319,7 +3336,7 @@ namespace Neutron.Forms
                     {
                         MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
                         ClearAllSelectOrdersToPick();
-                        await ClearBatchPositions();
+                        await ClearBatchPositions(_currentBatchPositions);
                         LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
                         LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
                         await AvailableOrdersScreen();
@@ -3330,7 +3347,7 @@ namespace Neutron.Forms
                     // ---         Task.Run(() => _logger.LogDetailAsync($"No Orders Selected"));
                     MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
                     ClearAllSelectOrdersToPick();
-                    await ClearBatchPositions();
+                    await ClearBatchPositions(_currentBatchPositions);
                     LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
                     LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
                     await AvailableOrdersScreen();
@@ -3396,7 +3413,7 @@ namespace Neutron.Forms
 
                     //Is this a real order
                     if (string.IsNullOrEmpty(order) || bp.OrderId == 0) continue;
-                    var isRealOrder = await _repoOrders.FindByKeyAsync(bp.OrderId);
+                    var isRealOrder = _repoOrders.FindByKey(bp.OrderId);
                     if (isRealOrder != null)
                     {
                         // compare isRealOrder.Ord1 and isRealOrder.Ord2 to bp.Ord1 and bp.Ord2
@@ -3471,7 +3488,7 @@ namespace Neutron.Forms
                         var order = textBox.Text.Trim();
                         //Is this a real order
                         if (string.IsNullOrEmpty(order) || bp.OrderId == 0) continue;
-                        var isRealOrder = await _repoOrders.FindByKeyAsync(bp.OrderId);
+                        var isRealOrder = _repoOrders.FindByKey(bp.OrderId);
                         if (isRealOrder != null)
                         {
                             // compare isRealOrder.Ord1 and isRealOrder.Ord2 to bp.Ord1 and bp.Ord2
@@ -3698,7 +3715,7 @@ namespace Neutron.Forms
         {
             orderDetail.LineStatusId = (int)LineStatus.Available;
             await _repoOrderDetails.UpdateAsync(orderDetail);
-            var order = await _repoOrders.FindByKeyAsync(orderDetail.OrderId);
+            var order = _repoOrders.FindByKey(orderDetail.OrderId);
             order.OrderStatusId = (int)OrderStatus.Available;
             await _repoOrders.UpdateAsync(order);
         }
@@ -3707,7 +3724,7 @@ namespace Neutron.Forms
         {
             orderDetail.LineStatusId = (int)LineStatus.Picking;
             await _repoOrderDetails.UpdateAsync(orderDetail);
-            var order = await _repoOrders.FindByKeyAsync(orderDetail.OrderId);
+            var order = _repoOrders.FindByKey(orderDetail.OrderId);
             order.OrderStatusId = (int)OrderStatus.Picking;
             await _repoOrders.UpdateAsync(order);
         }
@@ -4205,18 +4222,34 @@ namespace Neutron.Forms
         /// </remarks>
         private async Task<int> AddRemoveOrderFromInductionScreen(int orderId, int rowIndex)
         {
+            _logger.LogDetailAsync($"2-1 Start AddRemoveOrderFromInductionScreen.").SafeFireAndForget();
             if (orderId == 0) return -1;
-            var orderToProcess = _ordersToPick.FirstOrDefault(r => r.OrderId == orderId);
-            if (orderToProcess != null)
+            _logger.LogDetailAsync($"2-2 OrderId does not equal zero.").SafeFireAndForget();
+            var batchPosition = _ordersToPick.FirstOrDefault(r => r.OrderId == orderId);
+            if (batchPosition != null)
             {
+                _logger.LogDetailAsync($"2-3 Got BatchPosition Ord1: {batchPosition.Ord1} ").SafeFireAndForget();
+
                 DataGridViewAvailableOrders.Rows[rowIndex].DefaultCellStyle.BackColor = Color.White;
-                await RemoveOrderFromInductionScreen(orderToProcess);
+                _logger.LogDetailAsync($"2-4 Set Backcolor to White.").SafeFireAndForget();
+                await RemoveOrderFromInductionScreen(batchPosition);
+                _logger.LogDetailAsync($"Back From RemoveOrderFromInductionScreen").SafeFireAndForget();
                 return -1;
             }
-            var order = await _repoOrders.FindByKeyAsync(orderId);
-            if (order == null) return -1;
+            _logger.LogDetailAsync($"2-5 BatchPosition is NULL").SafeFireAndForget();
+            var order = _repoOrders.FindByKey(orderId);
+            if (order == null)
+            {
+                _logger.LogDetailAsync($"2-6 Back from getting Order is null.").SafeFireAndForget();
+                return -1;
+            }
+            _logger.LogDetailAsync($"2-7 Back from getting Order: {order.Ord1}").SafeFireAndForget();
+
             DataGridViewAvailableOrders.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LawnGreen;
-            return await AddOrderToInductionScreen(order);
+            _logger.LogDetailAsync($"2-8 Set Backcolor to Green.").SafeFireAndForget();
+            var idx = await AddOrderToInductionScreen(order);
+            _logger.LogDetailAsync($"2-9 Back from getting Index: {idx}").SafeFireAndForget();
+            return idx;
         }
 
         /// <summary>
@@ -4284,7 +4317,7 @@ namespace Neutron.Forms
         //    }
         //    else //must be an add order
         //    {
-        //        var order = await _repoOrders.FindByKeyAsync(orderId);
+        //        var order =  _repoOrders.FindByKey(orderId);
         //        if (order == null) return arrayPosition;
 
         //        var ord1 = order.Ord1;
@@ -4474,10 +4507,16 @@ namespace Neutron.Forms
         /// <remarks>
         /// This method resets the batch positions for all orders to pick.
         /// </remarks>
-        private async Task ClearBatchPositions()
+        private Task ClearBatchPositions(List<BatchPosition> batchPositions)
         {
-            var resetTasks = _ordersToPick.Select(ResetBatchPosition);
-            await Task.WhenAll(resetTasks);
+            foreach (var batchPosition in batchPositions)
+            {
+                ClearBatchPosition(batchPosition);
+            }
+
+            return Task.CompletedTask;
+            //var resetTasks = batchPositions.Select(ResetBatchPosition);
+            //await Task.WhenAll(resetTasks);
         }
 
         /// <summary>
@@ -4510,6 +4549,40 @@ namespace Neutron.Forms
             batchPosition.Ord1 = string.Empty;
             batchPosition.Ord2 = string.Empty;
             batchPosition.OrderComplete = false;
+            
+            var pos = batchPosition.PositionNumber.ToString();
+            var controlName = $"TextBoxPos{pos}";
+            var control = Controls.Find(controlName, true).FirstOrDefault();
+            if (control != null)
+            {
+                var textBox = ((TextBox)control);
+                textBox.Text = string.Empty;
+            }
+            controlName = $"TextBoxPickPos{pos}";
+            control = Controls.Find(controlName, true).FirstOrDefault();
+            if (control != null)
+            {
+                var textBox = ((TextBox)control);
+                textBox.Text = string.Empty;
+            }
+
+            controlName = $"Pos{pos}Display";
+            control = Controls.Find(controlName, true).First();
+            if (control != null)
+            {
+                var panel = (Panel)control;
+                // if the order is complete, turn the panel back color green
+                panel.BackColor = Color.Transparent;
+            }
+
+            controlName = $"Pos{pos}Display";
+            control = Controls.Find(controlName, true).First();
+            if (control != null)
+            {
+                var panel = (Panel)control;
+                // if the order is complete, turn the panel back color green
+                panel.BackColor = Color.Transparent;
+            }
         }
 
 
@@ -4874,16 +4947,17 @@ namespace Neutron.Forms
 
         private async Task ExecutePickBackProcess()
         {
-            await ClearDisplayFunctions();
+            await ClearIptiDisplayFunctions();
             ResetHanelDeviceStatus();
             ClearProLites();
             ClearActiveDeviceIndicators();
             await UpdateOrdersStatus();
-            await ClearBatchPositions();
-            ClearOrderPositions();
-            ClearPickPositions();
-            ClearPickDisplays();
-            await ClearInductionScreen();
+            await ClearBatchPositions(_currentBatchPositions);
+            //ClearOrderPositions(_currentBatchPositions);
+            //ClearPickPositions(_currentBatchPositions);
+            //ClearTextBoxPickPositions(_currentBatchPositions);
+            //ClearPickDisplays(_currentBatchPositions);
+            await ClearInductionScreen(_currentBatchPositions);
             UpdateFormTitleAndTab();
         }
         private async Task ClearDisplayFunctions()
@@ -4928,19 +5002,20 @@ namespace Neutron.Forms
 
         private async Task UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
         {
-            var batchPositions = GetIncompleteBatchPositions(ordersToPick);
-            foreach (var batchPosition in batchPositions)
+            foreach (var batchPosition in ordersToPick)
             {
+                if (batchPosition.OrderId == 0) continue;
                 await UpdateOrderDetailsStatus(batchPosition);
             }
-        }
-        private List<BatchPosition> GetIncompleteBatchPositions(List<BatchPosition> ordersToPick)
-        {
-            return ordersToPick.Where(r => r.OrderId != 0 && r.OrderComplete == false).ToList();
         }
         private async Task UpdateOrderDetailsStatus(BatchPosition batchPosition)
         {
             var orderDetails = GetPickingOrderDetails(batchPosition);
+
+            if (orderDetails == null)
+            {
+                return;
+            }
             foreach (var orderDetail in orderDetails)
             {
                 await SetOrderDetailStatusToAvailable(orderDetail);
@@ -4948,7 +5023,8 @@ namespace Neutron.Forms
         }
         private IEnumerable<OrderDetail> GetPickingOrderDetails(BatchPosition batchPosition)
         {
-            return _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking);
+            var orderDetails = _repoOrderDetails.FindBy(r => r.OrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking).ToList();
+            return orderDetails;
         }
 
         //private void UpdateOrdersToAvailableStatus(List<BatchPosition> ordersToPick)
@@ -5567,7 +5643,7 @@ namespace Neutron.Forms
             if (numberOfStops > 0)
             {
                 InitializeCurrentPickStopSequence();
-                
+
                 _bindingSourcePickStops.MoveFirst();
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
 
@@ -5679,7 +5755,7 @@ namespace Neutron.Forms
                 _currentPickStop = (PickStop)_bindingSourcePickStops.Current;
 
                 EnablePickAcceptIfSequenceMatches();
-                
+
                 await UpdatePickScreen();
                 await UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
@@ -5699,7 +5775,7 @@ namespace Neutron.Forms
                 {
                     PositionDevice(loc1, loc2, loc3, loc4, true);
                 }
-                
+
             }
         }
 
@@ -5964,7 +6040,8 @@ namespace Neutron.Forms
             {
                 await _iptiDisplayFunctions.ClearBatchTable();
                 await _iptiDisplayFunctions.ClearBlastzone();
-                await _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentPickStop.Item.Trim());
+                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+                //await _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentPickStop.Item.Trim());
             }
 
         }
@@ -6081,15 +6158,31 @@ namespace Neutron.Forms
 
 
         /// <summary>
-        /// Clear and Reset all Order Positions
+        /// Clear and Reset all Order Positions on Induction screen
         /// </summary>
-        private void ClearOrderPositions()
+        private void ClearOrderPositions(List<BatchPosition> batchPositions)
         {
-            if (_ordersToPick == null) return;
-            foreach (var batchPosition in _ordersToPick)
+            if (batchPositions == null) return;
+            foreach (var batchPosition in batchPositions)
             {
                 var pos = batchPosition.PositionNumber.ToString();
                 var control = Controls.Find($"TextBoxPos{pos}", true).FirstOrDefault();
+                if (control != null)
+                {
+                    var textBox = ((TextBox)control);
+                    textBox.Text = string.Empty;
+                }
+            }
+        }
+
+        //Clear the pickbox Text on the OrderSelection Screen
+        private void ClearTextBoxPickPositions(List<BatchPosition> batchPositions)
+        {
+            if (batchPositions == null) return;
+            foreach (var batchPosition in batchPositions)
+            {
+                var pos = batchPosition.PositionNumber.ToString();
+                var control = Controls.Find($"TextBoxPickPos{pos}", true).FirstOrDefault();
                 if (control != null)
                 {
                     var textBox = ((TextBox)control);
@@ -6132,6 +6225,13 @@ namespace Neutron.Forms
                 }
             }
         }
+        /// <summary>
+        /// Updates the positions of the orders to be picked by filtering and processing the list of orders.
+        /// </summary>
+        /// <remarks>
+        /// This method filters the list of orders to pick, excluding those with an <see cref="BatchPosition.OrderId"/> of 0.
+        /// It then iterates through the filtered list and updates the display for each order.
+        /// </remarks>
         private void UpdatePickPositions()
         {
             var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
@@ -6141,10 +6241,10 @@ namespace Neutron.Forms
             }
         }
 
-        private void ClearPickPositions()
+        private void ClearPickPositions(List<BatchPosition> batchPositions)
         {
-            var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
-            foreach (var order in ordersToPick)
+            //var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+            foreach (var order in batchPositions)
             {
                 ClearOrderDisplay(order);
             }
@@ -6196,11 +6296,11 @@ namespace Neutron.Forms
         /// <summary>
         /// Clear the Pick Displays
         /// </summary>
-        private void ClearPickDisplays()
+        private void ClearPickDisplays(List<BatchPosition> batchPositions)
         {
-            var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+           // var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
 
-            foreach (var bp in ordersToPick)
+            foreach (var bp in batchPositions)
             {
                 var pos = bp.PositionNumber.ToString();
                 var c = Controls.Find($"Pos{pos}Display", true).First();
@@ -6213,6 +6313,16 @@ namespace Neutron.Forms
             }
         }
 
+        /// <summary>
+        /// Updates the display panels associated with the pick positions.
+        /// </summary>
+        /// <remarks>
+        /// This method iterates through the list of orders to pick, identifies the corresponding display panel
+        /// for each position, and updates its background color based on the completion status of the order.
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if a control corresponding to a position cannot be found or is not of the expected type.
+        /// </exception>
         private void UpdatePickDisplays()
         {
             var ordersToPick = _ordersToPick.Where(r => r.OrderId != 0).ToList();
@@ -6293,7 +6403,8 @@ namespace Neutron.Forms
                 else
                 {
                     // ---         Task.Run(() => _logger.LogDetailAsync($"Close Batch With Skip"));
-                    await CloseBatchWithSkip();
+                    var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+                    await CloseBatchWithSkip(batchPositions);
                 }
 
                 // ---         Task.Run(() => _logger.LogDetailAsync($"SkipPick_Click End : [{DateTime.Now.ToLongTimeString()}]"));
@@ -6303,7 +6414,7 @@ namespace Neutron.Forms
             }
         }
 
-        private async Task CloseBatchWithSkip()
+        private async Task CloseBatchWithSkip(List<BatchPosition> batchPositions)
         {
             if (_iptiDisplayFunctions != null)
             {
@@ -6314,7 +6425,7 @@ namespace Neutron.Forms
 
             //ClearOrderPositions();
 
-            await ClearBatchPositions();
+            await ClearBatchPositions(batchPositions);
 
             _deviceIndicatorManager?.ClearAllDeviceIndicators();
 
@@ -6387,36 +6498,42 @@ namespace Neutron.Forms
             //var thisPick = IntegerExtensions.ParseInt(LabelPickQty.Text);
 
             // var pick = false;
-            // in case a hot action or Location Count changes the current inventory
-            // let's refresh the currentInventory
-            var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
-            _currentPickStop.CurrentInventoryLocation.Quantity = GetCurrentInventoryLocationQuantity(inventoryId);
 
+            //var zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
 
-            var zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
+            //if (zeroInventory)
+            //{
+            //    // in case a hot action or Location Count changes the current inventory
+            //    // let's refresh the currentInventory
+            //    var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
+            //    _currentPickStop.CurrentInventoryLocation.Quantity = GetCurrentInventoryLocationQuantity(inventoryId);
 
-            if (zeroInventory)
-            {
-                var prompt = new StringBuilder();
-                prompt.AppendLine($"Release Inventory Location{Environment.NewLine}Item: {_currentPickStop.Item}{Environment.NewLine}Location: {GetInventoryLocation(_currentPickStop.CurrentInventoryLocation.Location)} ?");
+            //    zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
 
-                var result = await _dialogService.Show2Async("Release Inventory Location",
-                    $"{prompt}", "Yes", "No");
-                if (result == true)
-                {
-                    //await _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, _currentPickStop.CurrentInventoryLocation);
-                    //await _repoInventory.DeleteAsync(inventory.Id);
-                }
-                else
-                {
-                    var qty = await LocationCount(_currentPickStop.CurrentInventoryLocation.Id);
-                    if (qty == -1)
-                    {
-                        MBPickAccept.Visible = true;
-                        return;
-                    }
-                }
-            }
+            //    if (zeroInventory)
+            //    {
+            //        var prompt = new StringBuilder();
+            //        prompt.AppendLine($"Release Inventory Location{Environment.NewLine}Item: {_currentPickStop.Item}{Environment.NewLine}Location: {GetInventoryLocation(_currentPickStop.CurrentInventoryLocation.Location)} ?");
+
+            //        var result = await _dialogService.Show2Async("Release Inventory Location",
+            //            $"{prompt}", "Yes", "No");
+            //        if (result == true)
+            //        {
+            //            //await _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, _currentPickStop.CurrentInventoryLocation);
+            //            //await _repoInventory.DeleteAsync(inventory.Id);
+            //        }
+            //        else
+            //        {
+            //            var qty = await LocationCount(_currentPickStop.CurrentInventoryLocation.Id);
+            //            if (qty == -1)
+            //            {
+            //                MBPickAccept.Visible = true;
+            //                return;
+            //            }
+            //        }
+
+            //    }
+            //}
 
             MBPickAccept.Visible = false;
             var batchComplete = false;
@@ -7037,11 +7154,11 @@ namespace Neutron.Forms
                         logMessage.AppendLine("Update Inventory");
                         await _historyManager.SaveHistoryAsync(ActionCode.PickOrder, inventory, pickLocation.Quantity, pickView);
                         logMessage.AppendLine("Write Pick Order to History");
-                        if (inventory.Quantity == 0)
-                        {
-                            await _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventory);
-                            await _repoInventory.DeleteAsync(inventory.Id);
-                        }
+                        //if (inventory.Quantity == 0)
+                        //{
+                        //    await _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventory);
+                        //    await _repoInventory.DeleteAsync(inventory.Id);
+                        //}
                     }
                 }
                 else
@@ -7154,7 +7271,7 @@ namespace Neutron.Forms
         //                sb.AppendLine($"Pick Location: {pickLocation.Inventory.Location.Slot}");
         //                //  pickLocation.Inventory.Quantity -= pickLocation.Quantity;
 
-        //                //var inventory = await _repoInventory.FindByKeyAsync(pickLocation.Inventory.Id);
+        //                //var inventory = _repoInventory.FindByKey(pickLocation.Inventory.Id);
         //                var inventory = await _repoInventory.FindByKeyIncludeAsync(r => r.Id == pickLocation.Inventory.Id,r => r.Location );
         //                if (inventory != null)
         //                {
@@ -7210,18 +7327,20 @@ namespace Neutron.Forms
 
         private async Task CloseBatchAsync()
         {
+            var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+            
             LogCloseBatchStart();
             ResetHanelDeviceStatus();
             await UpdateOrderStatusAsync();
-            await ClearBatchRelatedData();
+           // await ClearBatchRelatedData(batchPositions);
             ClearAllDeviceIndicators();
             ClearProLites();
             ParkPositionAfterBatch();
-            await ClearBatchPositions();
-            ClearPickPositions();
+            await ClearBatchPositions(batchPositions);
+            //ClearPickPositions(batchPositions);
             //ClearOrderPositions();
-            ClearPickDisplays();
-            await ClearInductionScreen();
+            //ClearPickDisplays(batchPositions);
+            await ClearInductionScreen(batchPositions);
             await HandlePostBatchActions();
         }
 
@@ -7229,7 +7348,7 @@ namespace Neutron.Forms
         {
             foreach (var bp in _ordersToPick)
             {
-                var order = await _repoOrders.FindByKeyAsync(bp.OrderId);
+                var order = _repoOrders.FindByKey(bp.OrderId);
                 if (order == null) continue;
                 await CheckForOrderComplete(order);
             }
@@ -7237,10 +7356,10 @@ namespace Neutron.Forms
 
         private void LogCloseBatchStart()
         {
-            Task.Run(() => _logger.LogDetailAsync("CloseBatch START")).SafeFireAndForget();
+            _logger.LogDetailAsync("CloseBatch START").SafeFireAndForget();
         }
 
-        private async Task ClearBatchRelatedData()
+        private async Task ClearBatchRelatedData(List<BatchPosition> batchPositions)
         {
             if (_iptiDisplayFunctions != null)
             {
@@ -7249,7 +7368,7 @@ namespace Neutron.Forms
                 await _iptiDisplayFunctions.ClearBlastzone();
             }
             //ClearOrderPositions();
-            await ClearBatchPositions();
+            await ClearBatchPositions(batchPositions);
             LogClearAllDeviceIndicators();
         }
         private void LogClearAllDeviceIndicators()
@@ -7351,7 +7470,7 @@ namespace Neutron.Forms
         //            //    var items = await _repoInventory.FindByAsync(r => r.LocationId == locationId);
         //            //    if (!items.Any())
         //            //    {
-        //            //        var location = await _repoLocation.FindByKeyAsync(locationId);
+        //            //        var location = _repoLocation.FindByKey(locationId);
         //            //        if (location == null) continue;
         //            //        _logger.LogDetailAsync($"Set Location InUse to False. Location ID: {location.Id}").SafeFireAndForget();
         //            //        location.InUse = false;
@@ -7718,7 +7837,7 @@ namespace Neutron.Forms
                     if (bp.OrderId != 0)
                     {
                         var id = bp.OrderId;
-                        var order = await _repoOrders.FindByKeyAsync(id);
+                        var order = _repoOrders.FindByKey(id);
                         if (order != null)
                         {
                             await CheckForOrderComplete(order);
@@ -7740,6 +7859,7 @@ namespace Neutron.Forms
                 var idx = _currentPickStop.GroupBoxLocationInventoryIndex - 1;
                 _currentPickStop.GroupBoxLocationInventoryIndex = idx;
                 var inventory = _currentPickStop.Inventory[idx];
+                _currentPickStop.CurrentInventoryLocation = inventory;
                 UpdateGroupBoxLocation(inventory);
                 if (_workstationView.AreaId == AreaEight)
                 {
@@ -7758,12 +7878,13 @@ namespace Neutron.Forms
         private Task GetNextInventoryLocation()
         {
             //TODO:  set the proper InventoryItem
-            
+
             if (_currentPickStop.GroupBoxLocationInventoryIndex + 1 < _currentPickStop.Inventory.Count)
             {
                 var idx = _currentPickStop.GroupBoxLocationInventoryIndex + 1;
                 _currentPickStop.GroupBoxLocationInventoryIndex = idx;
                 var inventory = _currentPickStop.Inventory[idx];
+                _currentPickStop.CurrentInventoryLocation = inventory;
                 UpdateGroupBoxLocation(inventory);
                 if (_workstationView.AreaId == AreaEight)
                 {
@@ -7919,7 +8040,7 @@ namespace Neutron.Forms
             //    _currentPickStop.CurrentInventoryLocation = inventory;
             //    _currentPickStop.CurrentInventoryLocation.ItemDefinition = itemDefinition;
             //    _currentPickStop.CurrentInventoryLocation.Location = location;
-            //    _currentPickStop.CurrentInventoryLocation.StorageType = await _repoStorageTypes.FindByKeyAsync(2);
+            //    _currentPickStop.CurrentInventoryLocation.StorageType = _repoStorageTypes.FindByKey(2);
             //}
             //else
             //{
@@ -7928,7 +8049,7 @@ namespace Neutron.Forms
             //        _currentPickStop.CurrentInventoryLocation = inventory;
             //        _currentPickStop.CurrentInventoryLocation.ItemDefinition = itemDefinition;
             //        _currentPickStop.CurrentInventoryLocation.Location = location;
-            //        _currentPickStop.CurrentInventoryLocation.StorageType = await _repoStorageTypes.FindByKeyAsync(2);
+            //        _currentPickStop.CurrentInventoryLocation.StorageType =  _repoStorageTypes.FindByKey(2);
             //    }
             //    else
             //    {
@@ -7947,7 +8068,7 @@ namespace Neutron.Forms
             //UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
 
             // UpdateTowerDisplay();
-            if (_workstationView.AreaId == AreaEight) return ;
+            if (_workstationView.AreaId == AreaEight) return;
 
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
             // UpdateCurrentDeviceIndicator();
@@ -8268,17 +8389,18 @@ namespace Neutron.Forms
         /// </remarks>
         /// <returns>A task representing the asynchronous operation.</returns>
         /// <exception cref="Exception">Logs any exceptions that occur during the execution.</exception>
-        public async Task AvailableOrdersScreen()
+        public Task AvailableOrdersScreen()
         {
             try
             {
+                //var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
                 _logger.LogDetailAsync("Available Orders Screen START").SafeFireAndForget();
                 ShowAvailableOrders();
                 Cursor.Current = Cursors.WaitCursor;
                 MBCompress.Visible = false;
                 LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
                 LabelFormTitle.BackColor = Color.FromArgb(0, 120, 215);
-                await ClearBatchPositions();
+               // await ClearBatchPositions(batchPositions);
                 //ClearOrderPositions();
                 _showSkipped = true;
                 tabControl1.TabPages["AvailableOrders"].BringToFront();
@@ -8295,6 +8417,8 @@ namespace Neutron.Forms
             {
                 Cursor.Current = Cursors.Default;
             }
+
+            return Task.CompletedTask;
         }
 
         private void MBAvailableOrdersRack_Click(object sender, EventArgs e)
@@ -8439,7 +8563,7 @@ namespace Neutron.Forms
 
         private async Task LocationCount(int inventoryId, int qty)
         {
-            var inv = await _repoInventory.FindByKeyAsync(inventoryId);
+            var inv =  _repoInventory.FindByKey(inventoryId);
             if (inv == null) return;
             await _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inv, inv.Quantity, true);
 
@@ -9842,7 +9966,7 @@ namespace Neutron.Forms
         {
             var isOrderComplete = await IsOrderComplete(order);
             if (!isOrderComplete) return false;
-            await CompleteOrder(order);
+            await SetCompleteOrder(order);
             return true;
         }
         private async Task<bool> IsOrderComplete(Order order)
@@ -9851,7 +9975,7 @@ namespace Neutron.Forms
                 .FindByAsync(r => r.OrderId == order.Id && r.LineStatusId != (int)LineStatus.Complete);
             return !linesNotComplete.Any();
         }
-        private async Task CompleteOrder(Order order)
+        private async Task SetCompleteOrder(Order order)
         {
             order.OrderStatusId = (int)OrderStatus.Complete;
             await _historyManager.SaveHistoryAsync(ActionCode.OrderComplete, order);
@@ -10413,7 +10537,7 @@ namespace Neutron.Forms
                 currentSkip.Picked = currentSkip.Quantity;
                 _historyManager.SaveHistory(ActionCode.SkipPick, currentSkip);
 
-                var detail = await _repoOrderDetails.FindByKeyAsync(currentSkip.OrderDetail.Id);
+                var detail = _repoOrderDetails.FindByKey(currentSkip.OrderDetail.Id);
 
                 detail.LineStatusId = (int)LineStatus.Complete;
                 detail.PickedQuantity = detail.Quantity;
@@ -10454,7 +10578,7 @@ namespace Neutron.Forms
                 //currentSkip.Picked = 0;
                 _historyManager.SaveHistory(ActionCode.SkipPick, currentSkip);
 
-                var detail = await _repoOrderDetails.FindByKeyAsync(currentSkip.OrderDetail.Id);
+                var detail = _repoOrderDetails.FindByKey(currentSkip.OrderDetail.Id);
 
                 detail.LineStatusId = (int)LineStatus.Complete;
                 detail.PickedQuantity = 0;
@@ -10505,7 +10629,7 @@ namespace Neutron.Forms
 
                         // Mediator.GetInstance().OnBatchComplete(this);
 
-                        var detail = await _repoOrderDetails.FindByKeyAsync(currentSkip.OrderDetail.Id);
+                        var detail = _repoOrderDetails.FindByKey(currentSkip.OrderDetail.Id);
 
                         detail.LineStatusId = (int)LineStatus.Complete;
                         detail.PickedQuantity = newQty;
@@ -11294,7 +11418,7 @@ namespace Neutron.Forms
             {
                 foreach (var orderDetail in orderDetails)
                 {
-                    var order = await _repoOrders.FindByKeyAsync(orderDetail.OrderId);
+                    var order = _repoOrders.FindByKey(orderDetail.OrderId);
                     if ((orderDetail.LineStatusId == (int)LineStatus.Available || orderDetail.LineStatusId == (int)LineStatus.Skipped)
                         && order.OrderStatusId == (int)OrderStatus.Available)
                     {
@@ -11474,13 +11598,15 @@ namespace Neutron.Forms
 
         private async void MBClear_Click(object sender, EventArgs e)
         {
-            await ClearInductionScreen();
+            
+            var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
+await ClearInductionScreen(batchPositions);
         }
-        private async Task ClearInductionScreen()
+        private async Task ClearInductionScreen(List<BatchPosition> batchPositions)
         {
             ClearAllSelectOrdersToPick();
-            await ClearBatchPositions();
-            //ClearOrderPositions();
+            await ClearBatchPositions(batchPositions);
+            //ClearOrderPositions(batchPositions);
             ClearDataGridViewBackColor();
             if (_iptiDisplayFunctions != null) await ClearIptiDisplayFunctions();
 
