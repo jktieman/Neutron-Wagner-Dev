@@ -200,17 +200,11 @@ namespace Neutron.Forms
             //Console.WriteLine($"13: {DateTime.Now}");
             //-------------------
             InitializeStationName();
-            Console.WriteLine($"14: {DateTime.Now}");
             InitializeHeaderTextManager();
-            Console.WriteLine($"15: {DateTime.Now}");
             ConfigureTabControl();
-            Console.WriteLine($"16: {DateTime.Now}");
             ConfigureForms();
-            Console.WriteLine($"17: {DateTime.Now}");
             ConfigureUserInfo();
-            Console.WriteLine($"18: {DateTime.Now}");
             InitializeLogger();
-            Console.WriteLine($"19: {DateTime.Now}");
             _logger.LogDetailAsync("Logger Finished Initializing").SafeFireAndForget();
             InitializeInventoryRepository();
             ConfigureRfidControls();
@@ -230,7 +224,7 @@ namespace Neutron.Forms
             //    await RefreshData();
             //}).Wait();
             RefreshData();
-            _startup = false;            
+            _startup = false;
             _logger.LogDetailAsync($"After Constructor Refresh");
         }
 
@@ -447,22 +441,25 @@ namespace Neutron.Forms
                         DataGridView1.FirstDisplayedScrollingRowIndex = DataGridView1.Rows[idx].Index;
                         DataGridView1.CurrentCell = DataGridView1.Rows[idx].Cells[1];
                         DataGridView1.Rows[idx].Selected = true;
+                        SetCurrentInventoryItem();
                     }
 
-                    SetCurrentInventoryItem();
+
                     //DataGridView1.Refresh();
-                    //DataGridView1.ClearSelection();
+
                     _logger.LogDetailAsync("Fast Auto Size Start").SafeFireAndForget();
                     if (DataGridView1.InvokeRequired)
                     {
                         DataGridView1.Invoke(new Action(() =>
                         {
                             if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                            DataGridView1.ClearSelection();
                         }));
                     }
                     else
                     {
                         if (DataGridView1.RowCount > 0) DataGridView1.FastAutoSizeColumns();
+                        DataGridView1.ClearSelection();
                     }
                     _logger.LogDetailAsync("Fast Auto Size End").SafeFireAndForget();
 
@@ -819,13 +816,14 @@ namespace Neutron.Forms
                 {
                     TextBoxViewEditItem.Text = CurrentItem.Item;
                     TextBoxViewEditDescription.Text = CurrentItem.Description;
-                    var views = await GetInventoryViewListByItem(CurrentItem.Id);
+                    var views = await GetInventoryViewListByItemName(CurrentItem.Item);
                     var localViews = new List<SqlInventoryView>(views);
                     var blv = new BindingListView<SqlInventoryView>(localViews.ToList());
                     _locationBindingSource.DataSource = blv;
                     DataGridViewInventoryLocations.DataSource = _locationBindingSource;
-                    tabControl1.SelectedTab = tabPage2;
+
                     DataGridViewInventoryLocations.ClearSelection();
+                    tabControl1.SelectedTab = tabPage2;
                 }
             }
             catch (Exception ex)
@@ -834,28 +832,37 @@ namespace Neutron.Forms
             }
         }
 
-        private async void MButtonNew_Click(object sender, EventArgs e)
+        private void MButtonNew_Click(object sender, EventArgs e)
         {
-            if (DataGridView1.SelectedRows.Count == 0) return;
-            var row = DataGridView1.SelectedRows[0];
-            var inventoryId = (int)row.Cells["Id"].Value;
-            var inventoryView = _inventoryRepository.GetInventoryViewById(inventoryId);
+            ClearNewFields();
+            if (!string.IsNullOrEmpty(TextBoxFind.Text))
+            {
+                TextBoxNewItem.Text = TextBoxFind.Text;
+                TextBoxNewArea.Focus();
+            }
+            MbNewAvailableLocations.Text = _resourceManager.GetString($"ShowAll");
+            tabControl1.SelectedTab = tabPage3;
 
-            await NewInventoryItem(inventoryView.Item);
+            //if (DataGridView1.SelectedRows.Count == 0) return;
+            //var row = DataGridView1.SelectedRows[0];
+            //var inventoryId = (int)row.Cells["Id"].Value;
+            //var inventoryView = _inventoryRepository.GetInventoryViewById(inventoryId);
+
+            //await NewInventoryItem(inventoryView.Item);
         }
 
-        private async Task NewInventoryItem(string item)
+        private async Task NewInventoryItem(ItemDefinition itemDefinition)
         {
             ClearNewFields();
 
-            if (item != null)
+            if (itemDefinition != null)
             {
-                TextBoxNewItem.Text = item;
-                await NewItemFind(item);
+                TextBoxNewItem.Text = itemDefinition.Item;
+                await NewItemFind(itemDefinition.Item, itemDefinition.AreaId);
             }
             else
             {
-                await NewItemFind(null);
+                await NewItemFind(null, 0);
             }
 
             MbNewAvailableLocations.Text = _resourceManager.GetString($"ShowAll");
@@ -877,7 +884,10 @@ namespace Neutron.Forms
 
         private async void MbNewFind_Click(object sender, EventArgs e)
         {
-            await NewItemFind(TextBoxNewItem.Text);
+            // var areaId = (int)ComboBoxNewAreaChoice.SelectedValue;
+            var areaId = TextBoxNewArea.Text.ParseInt();
+
+            await NewItemFind(TextBoxNewItem.Text, areaId);
         }
 
         private async void MbViewEditClose_Click(object sender, EventArgs e)
@@ -1020,7 +1030,7 @@ namespace Neutron.Forms
         {
             var currentInventoryView = (((ObjectView<SqlInventoryView>)_bindingSource.Current).Object);
             // convert SqlInventoryView to Inventory
-            var inventory = await _inventoryUnitOfWork.Inventory.FindByKeyAsync(currentInventoryView.Id);
+            var inventory = _inventoryUnitOfWork.Inventory.FindByKey(currentInventoryView.Id);
             if (inventory == null) return;
 
             await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory, inventory.Quantity,
@@ -1930,6 +1940,11 @@ namespace Neutron.Forms
             _logger.LogDetailAsync($"-----").SafeFireAndForget();
             _newOrViewEdit = "ViewEdit";
             _processing = true;
+
+            var inventoryView = ((ObjectView<SqlInventoryView>)_locationBindingSource.Current).Object;
+            var inventory = await _inventoryUnitOfWork.Inventory.FindByFirstOrDefaultAsync(r => r.Id == inventoryView.Id);
+            if (inventory == null) return;
+            SetCurrentInventoryItem(inventory);
             UpdateAddLocationForm(CurrentItem);
             // Get the available locations for the current item
             var recs = await GetAvailableLocations(CurrentItem, 0);
@@ -2037,6 +2052,7 @@ namespace Neutron.Forms
             //_logger.LogDetailAsync($"GetAvailableLocations 2").SafeFireAndForget();
 
             DataGridViewInventoryNewLocations.DataSource = _newLocationBindingSource;
+            DataGridViewInventoryNewLocations.ClearSelection();
 
             //_logger.LogDetailAsync($"GetAvailableLocations 3").SafeFireAndForget();
             if (GetRecordCount(_newLocationBindingSource) > 0)
@@ -2093,77 +2109,84 @@ namespace Neutron.Forms
             e.Cancel = !CloseButtonPressed;
         }
 
-        private async Task NewItemFind(string inventoryViewItem)
+        private async Task NewItemFind(string inventoryViewItem, int areaId)
         {
-
-            if (!string.IsNullOrWhiteSpace(inventoryViewItem))
+            //check inventoryViewItem for null or empty
+            if (string.IsNullOrWhiteSpace(inventoryViewItem)) return;
+            // check areaId for 0
+            if (areaId == 0) return;
+            ClearNewFields();
+            //if (!string.IsNullOrWhiteSpace(inventoryViewItem))
+            //{
+            var item = inventoryViewItem;
+            try
             {
-                var item = inventoryViewItem;
-                try
-                {
-                    var recs = await _inventoryUnitOfWork.ItemDefinitions.FindByAsync(f => f.Item == item);
-                    // if the item Definition is null, check the AKA table
-                    var itemDefinitions = recs.ToList();
-                    if (!itemDefinitions.Any())
-                    {
-                        var possibleAka = item;
-                        var item2 = _akaRepository.Get(possibleAka);
-                        if (!string.IsNullOrEmpty(item2))
-                        {
-                            TextBoxNewItem.Text = item2;
-                            recs = await _inventoryUnitOfWork.ItemDefinitions.FindByAsync(r => r.Item == item2);
-                        }
-                    }
+                var rec = await _inventoryUnitOfWork.ItemDefinitions.FindByFirstOrDefaultAsync(f => f.Item == item && f.AreaId == areaId);
+                // if the item Definition is null, check the AKA table
+                //var itemDefinitions = recs.ToList();
+                //if (!itemDefinitions.Any()) return;
+                if (rec == null) return;
 
-                    if (itemDefinitions.Any())
-                    {
-                        // create the datasource for ComboBoxNewAreaChoice
-                        // the Id is the Id of the ItemDefinition
-                        // the Name is the Name of the Area
+                //{
+                //    var possibleAka = item;
+                //    var item2 = _akaRepository.Get(possibleAka);
+                //    if (!string.IsNullOrEmpty(item2))
+                //    {
+                //        TextBoxNewItem.Text = item2;
+                //        recs = await _inventoryUnitOfWork.ItemDefinitions.FindByAsync(r => r.Item == item2);
+                //    }
+                //}
 
-                        var areas = itemDefinitions.Select(r => new LookUp()
-                        {
-                            Id = r.Id,
-                            Name = r.Area.Name
-                        }).ToList();
-                        ComboBoxNewAreaChoice.DataSource = areas;
-                        ComboBoxNewAreaChoice.DisplayMember = "Name";
-                        ComboBoxNewAreaChoice.ValueMember = "Id";
+                //if (itemDefinitions.Any())
+                //{
+                // create the datasource for ComboBoxNewAreaChoice
+                // the Id is the Id of the ItemDefinition
+                // the Name is the Name of the Area
+                //var areaId = (int)ComboBoxNewAreaChoice.SelectedValue;
+                //var areas = itemDefinitions.Select(r => new LookUp()
+                //{
+                //    Id = r.Id,
+                //    Name = r.Area.Name
+                //}).ToList();
+                //ComboBoxNewAreaChoice.DataSource = areas;
+                //ComboBoxNewAreaChoice.DisplayMember = "Name";
+                //ComboBoxNewAreaChoice.ValueMember = "Id";
+                ////ComboBoxNewAreaChoice.SelectedValue = areaId;
 
-                        var rec = itemDefinitions.FirstOrDefault();
+                //var rec = itemDefinitions.FirstOrDefault();
 
-                        if (rec != null)
-                        {
-                            //SetCurrentItemDefinition(rec);
+                // if (rec != null)
+                // {
+                SetCurrentItemDefinition(rec);
 
-                            TextBoxNewId.Text = rec.Id.ToString();
-                            TextBoxNewItem.Text = rec.Item;
-                            TextBoxNewDescription.Text = rec.Description;
-                            CheckBoxNewScale.Checked = rec.Scale;
-                            TextBoxArea.Text = rec.Area.Name;
-                            TextBoxNewLocationMax.Text = rec.LocationMax.ToString();
-                            TextBoxNewLocationMin.Text = rec.LocationMin.ToString();
-                            TextBoxNewSystemMax.Text = rec.SystemMax.ToString();
-                            TextBoxNewSystemMin.Text = rec.SystemMin.ToString();
-                            TextBoxNewWeight.Text = rec.Weight.ToString("F4");
-                            TextBoxPickMax.Text = rec.PickMax.ToString();
-                            ComboBoxNewStorageType.SelectedValue = rec.StorageTypeId;
-                            ComboBoxNewUnitOfIssue.SelectedValue = rec.UnitOfIssueId;
-                            ComboBoxNewSizeCode.SelectedValue = rec.SizeCodeId;
-                            ComboBoxNewVelocityCode.SelectedValue = rec.VelocityCodeId;
-                            ComboBoxNewHeightCode.SelectedValue = rec.HeightCodeId;
-                            MbNewAddLocation.Enabled = true;
-                        }
-                    }
+                TextBoxNewId.Text = rec.Id.ToString();
+                TextBoxNewItem.Text = rec.Item;
+                TextBoxNewDescription.Text = rec.Description;
+                CheckBoxNewScale.Checked = rec.Scale;
+                TextBoxArea.Text = rec.Area.Name;
+                TextBoxNewLocationMax.Text = rec.LocationMax.ToString();
+                TextBoxNewLocationMin.Text = rec.LocationMin.ToString();
+                TextBoxNewSystemMax.Text = rec.SystemMax.ToString();
+                TextBoxNewSystemMin.Text = rec.SystemMin.ToString();
+                TextBoxNewWeight.Text = rec.Weight.ToString("F4");
+                TextBoxPickMax.Text = rec.PickMax.ToString();
+                ComboBoxNewStorageType.SelectedValue = rec.StorageTypeId;
+                ComboBoxNewUnitOfIssue.SelectedValue = rec.UnitOfIssueId;
+                ComboBoxNewSizeCode.SelectedValue = rec.SizeCodeId;
+                ComboBoxNewVelocityCode.SelectedValue = rec.VelocityCodeId;
+                ComboBoxNewHeightCode.SelectedValue = rec.HeightCodeId;
+                MbNewAddLocation.Enabled = true;
+                // }
+                //}
 
-                    _firstTimeCombo = false;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(_resourceManager.GetString($"Message8") + ex.Message);
-                    TextBoxNewItem.Focus();
-                }
+                _firstTimeCombo = false;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(_resourceManager.GetString($"Message8") + ex.Message);
+                TextBoxNewItem.Focus();
+            }
+            // }
         }
 
         //private void UpdateNewItem(int itemDefinitionId)
@@ -2293,19 +2316,25 @@ namespace Neutron.Forms
 
         private async void MbNewAddLocation_Click(object sender, EventArgs e)
         {
-            _logger.LogDetailAsync($"-----").SafeFireAndForget();
+                _logger.LogDetailAsync($"-----").SafeFireAndForget();
             _processing = true;
             _newOrViewEdit = "New";
-            var workingItemDefinitionId = (int)ComboBoxNewAreaChoice.SelectedValue;
+            //var workingItemDefinitionId = (int)ComboBoxNewAreaChoice.SelectedValue;
 
-            _workingItemDefinition = await _inventoryUnitOfWork.ItemDefinitions.FindByKeyAsync(workingItemDefinitionId);
+            //_workingItemDefinition = _inventoryUnitOfWork.ItemDefinitions.FindByKey(workingItemDefinitionId);
 
-            if (_workingItemDefinition == null) return;
-            SetCheckedRadioButton(_workingItemDefinition.AreaId);
+            //if (_workingItemDefinition == null) return;
 
-            UpdateAddLocationForm(_workingItemDefinition);
+            //SetCheckedRadioButton(_workingItemDefinition.AreaId);
+
+            //UpdateAddLocationForm(_workingItemDefinition);
+            SetCheckedRadioButton(CurrentItem.AreaId);
+
+            UpdateAddLocationForm(CurrentItem);
+
             // Get the available locations for the current item
-            var recs = await GetAvailableLocations(_workingItemDefinition, 0);
+            // var recs = await GetAvailableLocations(_workingItemDefinition, 0);
+            var recs = await GetAvailableLocations(CurrentItem, 0);
 
             UpdateDataGridViewInventoryNewLocations(recs);
             _processing = false;
@@ -2336,7 +2365,7 @@ namespace Neutron.Forms
             {
                 case "New":
                     {
-                        await NewInventoryItem(_workingItemDefinition.Item);
+                        await NewInventoryItem(CurrentItem);
                         tabControl1.SelectedTab = tabPage3;
                         break;
                     }
@@ -2434,6 +2463,27 @@ namespace Neutron.Forms
             return recs;
         }
 
+        private async Task<List<SqlInventoryView>> GetInventoryViewListByItemName(string itemName)
+        {
+            var recs = new List<SqlInventoryView>();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var findItemId = new SqlParameter("@ItemName", itemName);
+                    recs = await context.Database
+                        .SqlQuery<SqlInventoryView>("usp_GetInventoryViewByItemName @ItemName", findItemId).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error during Get Inventory View List By Item Event. {ex.Message}")
+                    .SafeFireAndForget();
+            }
+
+            return recs;
+        }
+
         //private IEnumerable<SqlInventoryView> GetInventoryViewList()
         //{
         //    IEnumerable<SqlInventoryView> recs = new List<SqlInventoryView>();
@@ -2487,7 +2537,7 @@ namespace Neutron.Forms
                 var inventoryId = CurrentInventoryItem.Id;
 
                 //update
-                inventory = await _inventoryUnitOfWork.Inventory.FindByKeyAsync(inventoryId);
+                inventory = _inventoryUnitOfWork.Inventory.FindByKey(inventoryId);
                 await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory,
                     inventory.Quantity, true);
 
@@ -2548,10 +2598,11 @@ namespace Neutron.Forms
                 TextBoxViewEditDescription.Text = CurrentItem.Description;
             }
 
-            var views = await GetInventoryViewListByItem(CurrentItem.Id);
+            var views = await GetInventoryViewListByItemName(CurrentItem.Item);
             var blv = new BindingListView<SqlInventoryView>(views.ToList());
             _locationBindingSource.DataSource = blv;
             DataGridViewInventoryLocations.DataSource = _locationBindingSource;
+            DataGridViewInventoryLocations.ClearSelection();
             tabControl1.SelectedTab = tabPage2;
         }
 
@@ -2604,23 +2655,26 @@ namespace Neutron.Forms
 
         private void ClearNewFields()
         {
-            TextBoxNewId.Text = "";
-            TextBoxNewItem.Text = "";
-            TextBoxNewDescription.Text = "";
+
+            TextBoxNewId.Text = string.Empty;
+          //  TextBoxNewItem.Text = string.Empty;
+          //  TextBoxNewArea.Text = string.Empty;
+            TextBoxNewDescription.Text = string.Empty;
             CheckBoxNewScale.Checked = false;
             CheckBoxInUse.Checked = false;
             // ComboBoxNewArea.SelectedValue = -1;
-            TextBoxArea.Text = "";
-            TextBoxNewLocationMax.Text = "";
-            TextBoxNewLocationMin.Text = "";
-            TextBoxNewSystemMax.Text = "";
-            TextBoxNewSystemMin.Text = "";
-            TextBoxNewWeight.Text = "";
+            TextBoxArea.Text = string.Empty;
+            TextBoxNewLocationMax.Text = string.Empty;
+            TextBoxNewLocationMin.Text = string.Empty;
+            TextBoxNewSystemMax.Text = string.Empty;
+            TextBoxNewSystemMin.Text = string.Empty;
+            TextBoxNewWeight.Text = string.Empty;
             ComboBoxNewStorageType.SelectedValue = -1;
             ComboBoxNewUnitOfIssue.SelectedValue = -1;
             ComboBoxNewSizeCode.SelectedValue = -1;
             ComboBoxNewVelocityCode.SelectedValue = -1;
             ComboBoxNewHeightCode.SelectedValue = -1;
+            TextBoxNewItem.Focus();
         }
 
         private async void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -3237,7 +3291,7 @@ namespace Neutron.Forms
             //put a breakpoint here and check dataTable
             return dataTable;
         }
-        
+
         private async void ComboBoxAreaNumber_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_startup) return;
@@ -3329,7 +3383,8 @@ namespace Neutron.Forms
                     else
                     {
                         // get the existing Inventory object
-                        var inventory = await _inventoryUnitOfWork.Inventory.FindByKeyAsync(id.ParseInt());
+                        var inventoryId = id.ParseInt();
+                        var inventory = _inventoryUnitOfWork.Inventory.FindByKey(inventoryId);
                         if (inventory == null) continue;
                         // update the values
                         inventory.Quantity = quantity.ParseInt();
@@ -3344,11 +3399,11 @@ namespace Neutron.Forms
                     // Update the progress
                     processedCount++;
                     var progressPercentage = (int)((double)processedCount / rowCount * 100);
-                    if (progressPercentage % 25 == 0)
-                    {
-                        _logger.LogDetailAsync($"Loading {progressPercentage}% complete").SafeFireAndForget();
-                        worker.ReportProgress(progressPercentage);
-                    }
+                    //if (progressPercentage % 25 == 0)
+                    //{
+                    //    _logger.LogDetailAsync($"Loading {progressPercentage}% complete").SafeFireAndForget();
+                    //    worker.ReportProgress(progressPercentage);
+                    //}
                 }
 
                 Mediator.GetInstance().OnDisplayMessage(this, $"Load complete");
@@ -3384,23 +3439,23 @@ namespace Neutron.Forms
 
         private void ButtonFindLocation_Click(object sender, EventArgs e)
         {
-            if (_workingItemDefinition == null) return;
+            if (CurrentItem == null) return;
 
-            if (_workingItemDefinition.AreaId == AreaEight)
+            if (CurrentItem.AreaId == AreaEight)
             {
                 OpenSlotForm();
                 return;
             }
 
-            if (_workingItemDefinition.AreaId == 1 || _workingItemDefinition.AreaId == 2)
+            if (CurrentItem.AreaId == 1 || CurrentItem.AreaId == 2)
             {
                 OpenBlastForm();
-                
+
             }
             else
             {
                 OpenDeviceForm();
-               
+
             }
         }
 
