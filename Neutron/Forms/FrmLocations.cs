@@ -614,7 +614,7 @@ namespace Neutron.Forms
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
             if (locationView == null) return;
             var id = locationView.Id;
-            var loc = await _locationUnitOfWork.Locations.FindByKeyAsync(id);
+            var loc = _locationUnitOfWork.Locations.FindByKey(id);
             if (loc == null) return;
             var area = (Area)ComboBoxViewEditArea.SelectedItem;
             if (area == null) return;
@@ -786,7 +786,7 @@ namespace Neutron.Forms
         private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
-            var loc = await _locationUnitOfWork.Locations.FindByKeyAsync(locationView.Id);
+            var loc = _locationUnitOfWork.Locations.FindByKey(locationView.Id);
             if (!await LocationHasInventory(loc.Id))
             {
                 var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
