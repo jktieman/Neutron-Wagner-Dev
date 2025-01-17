@@ -92,7 +92,7 @@ namespace Neutron.Forms
         {
             if (_location == null) return;
 
-            var rec = await _repoLocation.FindByKeyAsync(_location.Id);
+            var rec = _repoLocation.FindByKey(_location.Id);
             if (rec == null) return;
 
             await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationModify, rec);
