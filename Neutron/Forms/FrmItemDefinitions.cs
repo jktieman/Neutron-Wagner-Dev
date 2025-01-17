@@ -558,7 +558,7 @@ namespace Neutron.Forms
                     if (!string.IsNullOrEmpty(TextBoxViewEditDescription.Text))
                     {
                         var description = TextBoxViewEditDescription.Text;
-                        var itemDef = await _repoItemDefinition.FindByKeyAsync(id);
+                        var itemDef = _repoItemDefinition.FindByKey(id);
                         if (itemDef != null)
                         {
                             await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, itemDef);
@@ -1097,7 +1097,7 @@ namespace Neutron.Forms
         private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
-            var itemDefinition = await _repoItemDefinition.FindByKeyAsync(itemDefinitionView.Id);
+            var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionView.Id);
             if (itemDefinition is null) return;
 
             if (CheckForInventory(itemDefinition.Id)) return;
