@@ -80,6 +80,7 @@
             this.ComboBoxNewAreaChoice = new System.Windows.Forms.ComboBox();
             this.LabelNewAreaChoice = new System.Windows.Forms.Label();
             this.TextBoxNewId = new System.Windows.Forms.TextBox();
+            this.TextBoxNewArea = new System.Windows.Forms.TextBox();
             this.TextBoxNewItem = new System.Windows.Forms.TextBox();
             this.LabelNewItem = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -706,7 +707,7 @@
             this.MbNewAddLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewAddLocation.Name = "MbNewAddLocation";
             this.MbNewAddLocation.Size = new System.Drawing.Size(135, 78);
-            this.MbNewAddLocation.TabIndex = 0;
+            this.MbNewAddLocation.TabIndex = 1;
             this.MbNewAddLocation.Text = "Add Location";
             this.MbNewAddLocation.UseSelectable = true;
             this.MbNewAddLocation.Click += new System.EventHandler(this.MbNewAddLocation_Click);
@@ -729,7 +730,7 @@
             this.MbNewListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewListing.Name = "MbNewListing";
             this.MbNewListing.Size = new System.Drawing.Size(135, 78);
-            this.MbNewListing.TabIndex = 1;
+            this.MbNewListing.TabIndex = 3;
             this.MbNewListing.Text = "Listing";
             this.MbNewListing.UseSelectable = true;
             this.MbNewListing.Visible = false;
@@ -743,7 +744,7 @@
             this.MbNewClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MbNewClose.Name = "MbNewClose";
             this.MbNewClose.Size = new System.Drawing.Size(135, 78);
-            this.MbNewClose.TabIndex = 1;
+            this.MbNewClose.TabIndex = 2;
             this.MbNewClose.Text = "Back";
             this.MbNewClose.UseSelectable = true;
             this.MbNewClose.Click += new System.EventHandler(this.MbNewClose_Click);
@@ -766,6 +767,7 @@
             this.PanelNew.Controls.Add(this.ComboBoxNewAreaChoice);
             this.PanelNew.Controls.Add(this.LabelNewAreaChoice);
             this.PanelNew.Controls.Add(this.TextBoxNewId);
+            this.PanelNew.Controls.Add(this.TextBoxNewArea);
             this.PanelNew.Controls.Add(this.TextBoxNewItem);
             this.PanelNew.Controls.Add(this.LabelNewItem);
             this.PanelNew.Controls.Add(this.panel4);
@@ -780,19 +782,20 @@
             this.ComboBoxNewAreaChoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxNewAreaChoice.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComboBoxNewAreaChoice.FormattingEnabled = true;
-            this.ComboBoxNewAreaChoice.Location = new System.Drawing.Point(789, 22);
+            this.ComboBoxNewAreaChoice.Location = new System.Drawing.Point(1003, 22);
             this.ComboBoxNewAreaChoice.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewAreaChoice.Name = "ComboBoxNewAreaChoice";
             this.ComboBoxNewAreaChoice.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewAreaChoice.TabIndex = 71;
+            this.ComboBoxNewAreaChoice.Visible = false;
             this.ComboBoxNewAreaChoice.SelectedIndexChanged += new System.EventHandler(this.ComboBoxNewAreaChoice_SelectedIndexChanged);
             // 
             // LabelNewAreaChoice
             // 
             this.LabelNewAreaChoice.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelNewAreaChoice.Location = new System.Drawing.Point(592, 25);
+            this.LabelNewAreaChoice.Location = new System.Drawing.Point(594, 28);
             this.LabelNewAreaChoice.Name = "LabelNewAreaChoice";
-            this.LabelNewAreaChoice.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewAreaChoice.Size = new System.Drawing.Size(112, 29);
             this.LabelNewAreaChoice.TabIndex = 72;
             this.LabelNewAreaChoice.Text = "Area";
             this.LabelNewAreaChoice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -805,6 +808,17 @@
             this.TextBoxNewId.Size = new System.Drawing.Size(93, 22);
             this.TextBoxNewId.TabIndex = 61;
             this.TextBoxNewId.Visible = false;
+            // 
+            // TextBoxNewArea
+            // 
+            this.TextBoxNewArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewArea.Location = new System.Drawing.Point(712, 28);
+            this.TextBoxNewArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewArea.Name = "TextBoxNewArea";
+            this.TextBoxNewArea.Size = new System.Drawing.Size(54, 34);
+            this.TextBoxNewArea.TabIndex = 1;
+            this.TextBoxNewArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxNewArea.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewItem_KeyDown);
             // 
             // TextBoxNewItem
             // 
@@ -886,6 +900,7 @@
             this.ComboBoxNewUnitOfIssue.Name = "ComboBoxNewUnitOfIssue";
             this.ComboBoxNewUnitOfIssue.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewUnitOfIssue.TabIndex = 11;
+            this.ComboBoxNewUnitOfIssue.TabStop = false;
             // 
             // LabelNewUnitOfIssue
             // 
@@ -908,6 +923,7 @@
             this.ComboBoxNewStorageType.Name = "ComboBoxNewStorageType";
             this.ComboBoxNewStorageType.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewStorageType.TabIndex = 10;
+            this.ComboBoxNewStorageType.TabStop = false;
             // 
             // LabelNewStorageType
             // 
@@ -928,6 +944,7 @@
             this.TextBoxArea.ReadOnly = true;
             this.TextBoxArea.Size = new System.Drawing.Size(190, 34);
             this.TextBoxArea.TabIndex = 12;
+            this.TextBoxArea.TabStop = false;
             this.TextBoxArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxNewLocationCode
@@ -939,6 +956,7 @@
             this.TextBoxNewLocationCode.ReadOnly = true;
             this.TextBoxNewLocationCode.Size = new System.Drawing.Size(190, 34);
             this.TextBoxNewLocationCode.TabIndex = 12;
+            this.TextBoxNewLocationCode.TabStop = false;
             this.TextBoxNewLocationCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewLocationCode.Visible = false;
             // 
@@ -951,6 +969,7 @@
             this.TextBoxNewWeight.ReadOnly = true;
             this.TextBoxNewWeight.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewWeight.TabIndex = 12;
+            this.TextBoxNewWeight.TabStop = false;
             this.TextBoxNewWeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelNewWeight
@@ -974,6 +993,7 @@
             this.CheckBoxNewScale.Name = "CheckBoxNewScale";
             this.CheckBoxNewScale.Size = new System.Drawing.Size(145, 33);
             this.CheckBoxNewScale.TabIndex = 13;
+            this.CheckBoxNewScale.TabStop = false;
             this.CheckBoxNewScale.Text = "Use Scale";
             this.CheckBoxNewScale.UseVisualStyleBackColor = true;
             // 
@@ -986,6 +1006,7 @@
             this.TextBoxNewSystemMin.ReadOnly = true;
             this.TextBoxNewSystemMin.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewSystemMin.TabIndex = 9;
+            this.TextBoxNewSystemMin.TabStop = false;
             this.TextBoxNewSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelNewSystemMin
@@ -1020,6 +1041,7 @@
             this.ComboBoxNewHeightCode.Name = "ComboBoxNewHeightCode";
             this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewHeightCode.TabIndex = 6;
+            this.ComboBoxNewHeightCode.TabStop = false;
             // 
             // LabelNewHeight
             // 
@@ -1042,6 +1064,7 @@
             this.ComboBoxNewVelocityCode.Name = "ComboBoxNewVelocityCode";
             this.ComboBoxNewVelocityCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewVelocityCode.TabIndex = 5;
+            this.ComboBoxNewVelocityCode.TabStop = false;
             // 
             // LabelNewVelocity
             // 
@@ -1064,6 +1087,7 @@
             this.ComboBoxNewSizeCode.Name = "ComboBoxNewSizeCode";
             this.ComboBoxNewSizeCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewSizeCode.TabIndex = 4;
+            this.ComboBoxNewSizeCode.TabStop = false;
             // 
             // LabelNewSize
             // 
@@ -1084,6 +1108,7 @@
             this.TextBoxNewSystemMax.ReadOnly = true;
             this.TextBoxNewSystemMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewSystemMax.TabIndex = 3;
+            this.TextBoxNewSystemMax.TabStop = false;
             this.TextBoxNewSystemMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxPickMax
@@ -1095,6 +1120,7 @@
             this.TextBoxPickMax.ReadOnly = true;
             this.TextBoxPickMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxPickMax.TabIndex = 8;
+            this.TextBoxPickMax.TabStop = false;
             this.TextBoxPickMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxNewLocationMin
@@ -1106,6 +1132,7 @@
             this.TextBoxNewLocationMin.ReadOnly = true;
             this.TextBoxNewLocationMin.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewLocationMin.TabIndex = 8;
+            this.TextBoxNewLocationMin.TabStop = false;
             this.TextBoxNewLocationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxNewLocationMax
@@ -1117,6 +1144,7 @@
             this.TextBoxNewLocationMax.ReadOnly = true;
             this.TextBoxNewLocationMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewLocationMax.TabIndex = 2;
+            this.TextBoxNewLocationMax.TabStop = false;
             this.TextBoxNewLocationMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxNewDescription
@@ -1128,6 +1156,7 @@
             this.TextBoxNewDescription.ReadOnly = true;
             this.TextBoxNewDescription.Size = new System.Drawing.Size(450, 34);
             this.TextBoxNewDescription.TabIndex = 0;
+            this.TextBoxNewDescription.TabStop = false;
             this.TextBoxNewDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelPickMax
@@ -2441,5 +2470,6 @@
         private System.Windows.Forms.Label LabelNewLocationArea;
         private System.Windows.Forms.TextBox TextBoxAddDetailArea;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox TextBoxNewArea;
     }
 }
