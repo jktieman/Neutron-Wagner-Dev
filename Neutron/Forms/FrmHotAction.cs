@@ -2480,7 +2480,7 @@ namespace Neutron.Forms
             else
             {
                 actionCode = ActionCode.StoreRack;
-                orderDetail = await _repoReplenOrderDetails.FindByKeyAsync(_pickList.OrderDetailId.ParseInt());
+                orderDetail = _repoReplenOrderDetails.FindByKey(_pickList.OrderDetailId.ParseInt());
 
             }
 
@@ -2504,7 +2504,7 @@ namespace Neutron.Forms
                         await _repoInventory.UpdateAsync(inventory);
 
                         await _locationsRepository.SetLocationInUse(inventory.LocationId, true);
-                        inv = await _repoInventory.FindByKeyAsync(inventory.Id);
+                        inv = _repoInventory.FindByKey(inventory.Id);
 
                         if (_pickList == null)
                         {
