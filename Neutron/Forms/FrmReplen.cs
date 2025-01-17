@@ -3045,7 +3045,7 @@ namespace Neutron.Forms
                         var neededLocations = 3 - exactInventorySequence.Count;
                         if (neededLocations > 0)
                         {
-                            var itemDefinition = await _repoItemDefinition.FindByKeyAsync(pickView.ItemId);
+                            var itemDefinition = _repoItemDefinition.FindByKey(pickView.ItemId);
                             if (itemDefinition == null) return pickableViews;
 
                             var additionInventoryLocations = await
@@ -3184,9 +3184,9 @@ namespace Neutron.Forms
 
             if (areaId == AreaEight)
             {
-                var itemDefinition = await _repoItemDefinition.FindByKeyAsync(itemDefinitionId);
+                var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
                 if (itemDefinition == null) return inventoryList;
-                var location = await _repoLocationRepository.FindByKeyAsync(10954);
+                var location = _repoLocationRepository.FindByKey(10954);
                 if (location == null) return inventoryList;
 
 
@@ -3208,7 +3208,7 @@ namespace Neutron.Forms
             }
             else
             {
-                var itemDefinition = await _repoItemDefinition.FindByKeyAsync(itemDefinitionId);
+                var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
                 if (itemDefinition == null) return inventoryList;
                 var location = await _repoLocationRepository.FindByFirstOrDefaultAsync(r => r.SizeCodeId == itemDefinition.SizeCodeId && r.VelocityCodeId == itemDefinition.VelocityCodeId && r.HeightCodeId == itemDefinition.HeightCodeId && r.InUse == false);
                 if (location != null)
@@ -3626,7 +3626,7 @@ namespace Neutron.Forms
                 await RemoveOrderFromInductionScreen(orderToProcess);
                 return -1;
             }
-            var order = await _repoReplenOrder.FindByKeyAsync(orderId);
+            var order = _repoReplenOrder.FindByKey(orderId);
             if (order == null) return -1;
             DataGridViewAvailableOrders.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LawnGreen;
             return await AddOrderToInductionScreen(order);
@@ -4490,7 +4490,7 @@ namespace Neutron.Forms
         {
             orderDetail.LineStatusId = (int)LineStatus.Available;
             await _repoReplenOrderDetails.UpdateAsync(orderDetail);
-            var order = await _repoReplenOrder.FindByKeyAsync(orderDetail.ReplenOrderId);
+            var order = _repoReplenOrder.FindByKey(orderDetail.ReplenOrderId);
             order.OrderStatusId = (int)OrderStatus.Available;
             await _repoReplenOrder.UpdateAsync(order);
         }
@@ -4499,7 +4499,7 @@ namespace Neutron.Forms
         {
             orderDetail.LineStatusId = (int)LineStatus.Picking;
             await _repoReplenOrderDetails.UpdateAsync(orderDetail);
-            var order = await _repoReplenOrder.FindByKeyAsync(orderDetail.ReplenOrderId);
+            var order =  _repoReplenOrder.FindByKey(orderDetail.ReplenOrderId);
             order.OrderStatusId = (int)OrderStatus.Picking;
             await _repoReplenOrder.UpdateAsync(order);
         }
@@ -5668,7 +5668,7 @@ namespace Neutron.Forms
             {
                 foreach (var loc in locationViews)
                 {
-                    var location = await _repoLocationRepository.FindByKeyAsync(loc.Id);
+                    var location = _repoLocationRepository.FindByKey(loc.Id);
                     var inv = new Inventory
                     {
                         ItemDefinition = itemDefinition,
@@ -5691,7 +5691,7 @@ namespace Neutron.Forms
                 if (_workstationView.AreaId == AreaEight)
                 {
                     // create a default location in Area 8
-                    var loc = await _repoLocationRepository.FindByKeyAsync(10954);
+                    var loc = _repoLocationRepository.FindByKey(10954);
                     if (loc != null)
                     {
                         var inv = new Inventory
@@ -6895,7 +6895,7 @@ namespace Neutron.Forms
 
         private async Task LocationCount(int inventoryId, int qty)
         {
-            var inv = await _repoInventory.FindByKeyAsync(inventoryId);
+            var inv =  _repoInventory.FindByKey(inventoryId);
             if (inv == null) return;
             await _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inv, inv.Quantity, true);
 
@@ -9282,7 +9282,7 @@ namespace Neutron.Forms
         //            sb.AppendLine($"Pick Location: {pickLocation.Inventory.Location.Slot}");
         //            //  pickLocation.Inventory.Quantity -= pickLocation.Quantity;
 
-        //            var inventory = _repoInventory.FindByKeyAsync(pickLocation.Inventory.Id).Result;
+        //            var inventory = _repoInventory.FindByKey(pickLocation.Inventory.Id).Result;
         //            if (inventory != null)
         //            {
         //                sb.AppendLine($"Inventory Qty: {inventory.Quantity}  Pick Location Qty: {pickLocation.Quantity}");
