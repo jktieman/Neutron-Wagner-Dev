@@ -701,7 +701,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
                 device.CommandExecuted = false;
             }
 
-            DumpStatus();
+           // DumpStatus();
         }
 
         private void DumpStatus()
