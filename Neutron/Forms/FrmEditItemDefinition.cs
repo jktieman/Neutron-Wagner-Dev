@@ -90,7 +90,7 @@ namespace Neutron.Forms
 
         private async Task UpdateItemDefinition()
         {
-            var rec = await _repoItemDefinition.FindByKeyAsync(ItemDefinition.Id);
+            var rec = _repoItemDefinition.FindByKey(ItemDefinition.Id);
             if (rec == null) return;
            await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
 
