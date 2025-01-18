@@ -22,8 +22,6 @@ namespace NeutronData.Repositories
 
         Task<TEntity> FindByKeyIncludeAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties);
-
-        Task<TEntity> FindByKeyAsync(int? id);
         Task<TEntity> FindByFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task InsertAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
