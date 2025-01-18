@@ -119,27 +119,6 @@ namespace NeutronData.Repositories
         //    return await (Task<TEntity>)_currentTask;
         //}
 
-
-        public async Task<TEntity> FindByKeyAsync(int? id)
-        {
-            await Semaphore.WaitAsync();
-            try
-            {
-                _logger.LogDetailAsync($"Find by Key Async: {id}").SafeFireAndForget();
-                if (_currentTask != null && !_currentTask.IsCompleted)
-                {
-                    throw new InvalidOperationException("Another operation is still running.");
-                }
-
-                _currentTask = _dbSet.FirstOrDefaultAsync(s => s.Id == id);
-                return await (Task<TEntity>)_currentTask;
-            }
-            finally
-            {
-                Semaphore.Release();
-            }
-        }
-
         public void Insert(TEntity entity)
         {
             try
@@ -246,7 +225,7 @@ namespace NeutronData.Repositories
                     _context.Entry(local).State = EntityState.Detached;
                 }
 
-                var entity = await FindByKeyAsync(id);
+                var entity = FindByKey(id);
                 _dbSet.Attach(entity);
                 _dbSet.Remove(entity);
                 await _context.SaveChangesAsync();
