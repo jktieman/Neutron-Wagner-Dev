@@ -902,7 +902,7 @@ namespace Neutron.Global
 
         public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inv, int beginningQty, bool invMod)
         {
-            var inventory = await _repoInventory.FindByKeyAsync(inv.Id);
+            var inventory =  _repoInventory.FindByKey(inv.Id);
             var orderText = "  INV MOD";
             var history = new History
             {
