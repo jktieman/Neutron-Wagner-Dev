@@ -24,7 +24,7 @@ namespace Neutron.Models
 
         public async Task<bool> DeleteInventoryRecordAsync(int invId, bool releaseOnly = false)
         {
-            var inventory = await _inventoryUnitOfWork.Inventory.FindByKeyAsync(invId);
+            var inventory = _inventoryUnitOfWork.Inventory.FindByKey(invId);
             if (inventory == null || (releaseOnly && inventory.StorageTypeId != (int)StorageType.Release))
             {
                 return false;
