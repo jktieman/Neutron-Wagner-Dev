@@ -410,7 +410,7 @@ namespace NeutronData.Repositories
         {
             try
             {
-                var location = await _repo.FindByKeyAsync(locationId);
+                var location = _repo.FindByKey(locationId);
                 location.InUse = locationId != DefaultLocationId && isInUse;
                 await _repo.UpdateAsync(location);
             }
@@ -430,7 +430,7 @@ namespace NeutronData.Repositories
         {
             try
             {
-                var location = await _repo.FindByKeyAsync(locationId);
+                var location = _repo.FindByKey(locationId);
                 location.LocationCode = locationCode;
                 await _repo.UpdateAsync(location);
             }
