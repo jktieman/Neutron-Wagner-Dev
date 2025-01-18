@@ -22,7 +22,7 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronEvents;
 using NeutronLoader;
-using SlotNameFactory;
+using SlotNameFactory;  
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -288,19 +288,26 @@ namespace Neutron
         private void EmailLoaderError(string message)
         {
             // split the message by CR LF
-            var messageLines = message.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            if (messageLines[0] == _lastEmailMessage)
+            //var messageLines = message.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //if (messageLines[0] == _lastEmailMessage)
+            //{
+            //    _logger.LogDetailAsync($"Loader Error Email Message: {messageLines[0]} = {_lastEmailMessage}");
+            //    _lastEmailMessageCounter += 1;
+            //    if (_lastEmailMessageCounter < 60) return;
+            //    _lastEmailMessage = string.Empty;
+            //    _lastEmailMessageCounter = 0;
+            //    return;
+            //}
+
+            //_lastEmailMessage = messageLines[0];
+            //_lastEmailMessageCounter = 0;
+            if (message == _lastEmailMessage)
             {
-                _logger.LogDetailAsync($"Loader Error Email Message: {messageLines[0]} = {_lastEmailMessage}");
-                _lastEmailMessageCounter += 1;
-                if (_lastEmailMessageCounter < 60) return;
-                _lastEmailMessage = string.Empty;
-                _lastEmailMessageCounter = 0;
+                _logger.LogDetailAsync($"Same Loader Message, NO EMAIL SENT: {message} = {_lastEmailMessage}")
+                    .SafeFireAndForget();
                 return;
             }
-
-            _lastEmailMessage = messageLines[0];
-            _lastEmailMessageCounter = 0;
+            _lastEmailMessage = message;
 
             _logger.LogDetailAsync($"Loader Error Email: {message}").SafeFireAndForget();
             if (_neutronVariables.EnableEmailNotification)
@@ -1237,7 +1244,7 @@ namespace Neutron
             //    Show();
             //}
         }
-        private async void MtInventory_Click(object sender, EventArgs e)
+        private void MtInventory_Click(object sender, EventArgs e)
         {
             var counter = 0;
             while (true)
