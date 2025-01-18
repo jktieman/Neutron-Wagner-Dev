@@ -115,15 +115,9 @@ namespace ProliteController
 
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
-
-            _ = Init();
-        }
-
-        private Task Init()
-        {
             Prolites = new List<Prolite>();
             _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
-            return Task.CompletedTask;
+
         }
 
         public async Task StartProcessingCommands()
@@ -164,7 +158,7 @@ namespace ProliteController
             }
 
             while (!_proliteCommandQueueProcessor.CancellationPending)
-            {                    
+            {
                 var busy = _proliteBusy;
                 Thread.Sleep(millisecondsTimeout: 100);
                 foreach (var command in _proliteCommandQueue.GetConsumingEnumerable())
@@ -552,15 +546,6 @@ namespace ProliteController
         {
 
             _logger.LogDetailAsync($"Clear All Prolites").SafeFireAndForget();
-            //var counter = 0;
-            //while (_proliteBusy)
-            //{
-            //    Thread.Sleep(100);
-            //    counter += 100;
-            //    if (counter >= 10000) break;
-            //    _logger.LogDetailAsync($"Prolite is Busy Current Wait Time: {counter}").SafeFireAndForget();
-            //}
-
             _proliteBusyClearing = true;
             _logger.LogDetailAsync($"Clear All Prolites - Prolite Busy Clearing: {_proliteBusyClearing}").SafeFireAndForget();
             if (Prolites == null)
@@ -573,13 +558,13 @@ namespace ProliteController
                 if (prolite.Enabled == false) continue;
                 try
                 {
-                   // _logger.LogDetailAsync($"Clear Prolite {prolite.DeviceNumber}").SafeFireAndForget();
+                    _logger.LogDetailAsync($"Clear Prolite {prolite.DeviceNumber}").SafeFireAndForget();
                     var cmd = prolite.Clear();
 
                     //SerialPortWrite(cmd);
                     _logger.LogDetailAsync($"Adding to QUEUE: {cmd}").SafeFireAndForget();
                     _proliteCommandQueue.Add(cmd);
-                   // await Task.Delay(100);
+                    // await Task.Delay(100);
                 }
                 catch (IOException ex)
                 {
@@ -695,7 +680,7 @@ namespace ProliteController
         private void SerialPortOnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             //_logger.LogDetailAsync($"Pro-Lite Serial Data Received: ProliteBusy = {_proliteBusy} Current Command: {_currentCommand}").SafeFireAndForget();
-            
+
             var serialPort = (SerialPort)sender;
             var data = string.Empty;
 
@@ -724,9 +709,9 @@ namespace ProliteController
             var hexData = BitConverter.ToString(Encoding.Default.GetBytes(data));  //.Replace("-", "");
             var hexCurrentCommand = BitConverter.ToString(Encoding.Default.GetBytes(_currentCommand));  //.Replace("-", "");
             _logger.LogDetailAsync($"Pro-Lite Serial Data Received Current Command: {hexCurrentCommand}  Response: (Hex): [ {hexData} ] TURN OFF _proliteBusy").SafeFireAndForget();
-            _proliteBusy = false; 
+            _proliteBusy = false;
             _currentCommand = string.Empty;
-            
+
             //_logger.LogDetailAsync($"Pro-Lite Serial Data Received: ProliteBusy = {_proliteBusy}").SafeFireAndForget();
 
             //if (data.Length < 11)
