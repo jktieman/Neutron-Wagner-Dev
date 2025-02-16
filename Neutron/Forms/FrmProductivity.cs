@@ -55,9 +55,11 @@ namespace Neutron.Forms
         private bool _clearAllActions = false;
         private bool _checkAllUsers = false;
         private bool _clearAllUsers = false;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public FrmProductivity(IJsonData jsonData, NeutronVariables neutronVariables)
+        public FrmProductivity(IJsonData jsonData, NeutronVariables neutronVariables, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             InitializeComponent();
@@ -667,15 +669,15 @@ namespace Neutron.Forms
         }
         private void MBSaveHistory_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridView1);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridView1);
         }
         private void MBSaveSummary_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridView1);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridView1);
         }
         private void MBSaveDetail_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridView2);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridView2);
         }
         private void MButtonRun_Click(object sender, EventArgs e)
         {
