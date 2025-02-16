@@ -31,6 +31,19 @@ namespace NeutronCore.Extensions
             return Encoding.UTF8.GetString(bytes);
         }
 
+        public static string ByteArrayToReadableString(this byte[] bytes)
+        {
+            var sb = new StringBuilder();
+            foreach (var b in bytes)
+            {
+                if (b >= 32 && b <= 126) // ASCII range for readable characters
+                {
+                    sb.Append((char)b);
+                }
+            }
+            return sb.ToString();
+        }
+
         public static string ByteArrayToRawString(this byte[] bytes)
         {
             return bytes.ToString();
