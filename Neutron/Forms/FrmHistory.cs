@@ -36,11 +36,14 @@ namespace Neutron.Forms
         private DateTime _currentFromDateTime;
         private DateTime _currentToDateTime;
         private readonly HeaderTextManager _headerTextManager;
-        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
+        private readonly GenericRepository<History> _repoHistory;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public FrmHistory(IAkaRepository akaRepository, IHistoryManager historyManager, WorkstationView workstationView)
+        public FrmHistory(IAkaRepository akaRepository, IHistoryManager historyManager, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             InitializeComponent();
+            _repoHistory = new GenericRepository<History>(contextFactory);
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             HideTabControlTabs();
@@ -507,7 +510,7 @@ namespace Neutron.Forms
         private void MBSaveHistory_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            CsvUtility.SaveToCsv(DataGridView1);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridView1);
             Cursor.Current = Cursors.Default;
         }
         private void MButtonRun_Click(object sender, EventArgs e)
