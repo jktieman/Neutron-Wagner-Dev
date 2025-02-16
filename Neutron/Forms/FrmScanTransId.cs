@@ -24,12 +24,14 @@ namespace Neutron.Forms
 
         public string TransId { get; set; }
         public ReplenOrder ReplenOrder { get; set; }
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder =
-            new GenericRepository<ReplenOrder>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder;
         private readonly string _order;
-        
-        public FrmScanTransId(string order)
+        private readonly Func<NeutronDb> _contextFactory;
+
+        public FrmScanTransId(string order, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
             _order = order;
             InitializeComponent();
             TextBoxOrder.Text = order;
