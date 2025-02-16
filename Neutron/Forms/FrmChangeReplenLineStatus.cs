@@ -14,17 +14,23 @@ namespace Neutron.Forms
     public partial class FrmChangeReplenLineStatus : Form
     {
         private readonly ReplenOrderDetail _orderDetail;
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<LineStatusLookup> _repoStatus = new GenericRepository<LineStatusLookup>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        // private readonly List<int> _statusNumbers = new List<int> { 1, 6, 9 };
-        private readonly int _currentStatus;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<LineStatusLookup> _repoStatus;
+        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails;
+        private readonly GenericRepository<ReplenOrder> _repoOrders;
 
-        public FrmChangeReplenLineStatus(ReplenOrderDetail orderDetail)
+        private readonly int _currentStatus;
+        private readonly Func<NeutronDb> _contextFactory;
+
+        public FrmChangeReplenLineStatus(ReplenOrderDetail orderDetail, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _orderDetail = orderDetail;
             _currentStatus = orderDetail.LineStatusId;
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoStatus = new GenericRepository<LineStatusLookup>(contextFactory);
+            _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoOrders = new GenericRepository<ReplenOrder>(contextFactory);
             InitializeComponent();
             SetupStatusComboBox();
             if (_orderDetail == null) return;
