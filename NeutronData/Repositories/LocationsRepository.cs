@@ -17,13 +17,16 @@ namespace NeutronData.Repositories
 
     public class LocationsRepository : ILocationsRepository
     {
+        private readonly Func<NeutronDb> _contextFactory;
 
-        private readonly GenericRepository<Location> _repo = new GenericRepository<Location>(new NeutronDb());
+        private readonly GenericRepository<Location> _repo;
         private readonly IDynamicLogger _logger;
         private const int DefaultLocationId = 10954;
-        public LocationsRepository()
+        public LocationsRepository(Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory;
             _logger = Logger.SetupLogger(@"LocationsRepository");
+            _repo = new GenericRepository<Location>(contextFactory);
         }
 
 
