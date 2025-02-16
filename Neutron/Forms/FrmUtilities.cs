@@ -50,6 +50,8 @@ using SAPServer.Models;
 using Zen.Barcode;
 using SerialConfiguration = NeutronData.Models.SerialConfiguration;
 using NeutronData.Interfaces;
+using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
+using System.Configuration;
 
 
 namespace Neutron.Forms
@@ -58,41 +60,22 @@ namespace Neutron.Forms
     {
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
-
-        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices =
-            new GenericRepository<HardwareDevice>(new NeutronDb());
-
-        private readonly GenericRepository<Area> _repoAreas = new GenericRepository<Area>(new NeutronDb());
-        private readonly AkaRepository _repoAka = new AkaRepository();
-        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<Location> _repoLocations = new GenericRepository<Location>(new NeutronDb());
-
-        private readonly GenericRepository<Workstation> _repoWorkstations =
-            new GenericRepository<Workstation>(new NeutronDb());
-
-        private readonly GenericRepository<StationType> _repoStationTypes =
-            new GenericRepository<StationType>(new NeutronDb());
-
-        private readonly GenericRepository<StorageDeviceType> _repoDeviceTypes =
-            new GenericRepository<StorageDeviceType>(new NeutronDb());
-
-        private readonly GenericRepository<StorageType> _repoStorageTypes =
-            new GenericRepository<StorageType>(new NeutronDb());
-
-        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes =
-            new GenericRepository<CommunicationType>(new NeutronDb());
-
-        private readonly GenericRepository<TcpConfiguration> _repoTcpConfigurations =
-            new GenericRepository<TcpConfiguration>(new NeutronDb());
-
-        private readonly GenericRepository<SerialConfiguration> _repoSerialConfigurations =
-            new GenericRepository<SerialConfiguration>(new NeutronDb());
-
-        private readonly GenericRepository<Language> _repoLanguages =
-            new GenericRepository<Language>(new NeutronDb());
-        private readonly GenericRepository<LookupTable> _repoLookupTables =
-            new GenericRepository<LookupTable>(new NeutronDb());
+        private readonly AkaRepository _repoAka = new AkaRepository(new NeutronDb());
+        
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices;
+        private readonly GenericRepository<Area> _repoAreas;
+        private readonly GenericRepository<Order> _repoOrders;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders;
+        private readonly GenericRepository<Location> _repoLocations;
+        private readonly GenericRepository<Workstation> _repoWorkstations;
+        private readonly GenericRepository<StationType> _repoStationTypes;
+        private readonly GenericRepository<StorageDeviceType> _repoDeviceTypes;
+        private readonly GenericRepository<StorageType> _repoStorageTypes;
+        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes;
+        private readonly GenericRepository<TcpConfiguration> _repoTcpConfigurations;
+        private readonly GenericRepository<SerialConfiguration> _repoSerialConfigurations;
+        private readonly GenericRepository<Language> _repoLanguages;
+        private readonly GenericRepository<LookupTable> _repoLookupTables;
 
         private BindingSource _bindingSourceHardwareDevices = new BindingSource();
         private BindingSource _bindingSourceTcp = new BindingSource();
@@ -131,8 +114,9 @@ namespace Neutron.Forms
         private IIptiDisplayFunctions _iptiDisplayFunctions;
         private IptiConfig _ipti;
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , WorkstationView workstationView, IEnumManager enumManager, IIptiDisplayFunctions iptiDisplayFunctions)
+            , WorkstationView workstationView, IEnumManager enumManager, IIptiDisplayFunctions iptiDisplayFunctions, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             //SetCulture(_cultureInfo.Name);
@@ -143,6 +127,23 @@ namespace Neutron.Forms
             _workstationView = workstationView;
             _enumManager = enumManager;
             _iptiDisplayFunctions = iptiDisplayFunctions;
+
+            _repoHardwareDevices = new GenericRepository<HardwareDevice>(contextFactory);
+            _repoAreas = new GenericRepository<Area>(contextFactory);
+            _repoOrders = new GenericRepository<Order>(contextFactory);
+            _repoReplenOrders = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoLocations = new GenericRepository<Location>(contextFactory);
+            _repoWorkstations = new GenericRepository<Workstation>(contextFactory);
+            _repoStationTypes = new GenericRepository<StationType>(contextFactory);
+            _repoDeviceTypes = new GenericRepository<StorageDeviceType>(contextFactory);
+            _repoStorageTypes = new GenericRepository<StorageType>(contextFactory);
+            _repoCommunicationTypes = new GenericRepository<CommunicationType>(contextFactory);
+            _repoTcpConfigurations = new GenericRepository<TcpConfiguration>(contextFactory);
+            _repoSerialConfigurations = new GenericRepository<SerialConfiguration>(contextFactory);
+            _repoLanguages = new GenericRepository<Language>(contextFactory);
+            _repoLookupTables = new GenericRepository<LookupTable>(contextFactory);
+
+
             Init();
         }
 
@@ -1513,12 +1514,12 @@ namespace Neutron.Forms
 
         private void MBPrintLookup_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridViewLookups);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridViewLookups);
         }
 
         private void MBPrintHardwareDevices_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridView1);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridView1);
         }
 
         private void MBHardwareDevicesViewEdit_Click(object sender, EventArgs e)
@@ -2163,7 +2164,7 @@ namespace Neutron.Forms
 
         private void MBTcpSaveToFile_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridViewTcp);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridViewTcp);
         }
 
         private void MBTcpBack_Click(object sender, EventArgs e)
@@ -2241,7 +2242,7 @@ namespace Neutron.Forms
 
         private void MBSerialSaveToFile_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridViewSerial);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridViewSerial);
         }
 
         private void MBSerialBack_Click(object sender, EventArgs e)
@@ -2994,7 +2995,7 @@ namespace Neutron.Forms
             var heightCodeManager = DI.Create<HeightCodeManager>();
 
 
-            var locationManager = new RandomLocationManager(sizeCodeManager, heightCodeManager, velocityCodeManager);
+            var locationManager = new RandomLocationManager(sizeCodeManager, heightCodeManager, velocityCodeManager, _contextFactory);
             var maintenance = new MasterMaintenanceProcessor(locationManager);
             maintenance.ProcessFiles();
         }
@@ -3697,6 +3698,7 @@ namespace Neutron.Forms
         };
 
         private bool _isClientConnected;
+        private readonly Func<NeutronDb> _contextFactory;
 
         #endregion
 
@@ -3766,7 +3768,7 @@ namespace Neutron.Forms
 
         }
 
-        private async void ButtonTurnOnBlastzoneDisplay_Click(object sender, EventArgs e)
+        private void ButtonTurnOnBlastzoneDisplay_Click(object sender, EventArgs e)
         {
             //TurnOnBlastzoneDisplay(NumericUpDownBayId.Text.ParseInt(), TextBoxBlastzoneDisplay.Text.ParseInt(), TextBoxBlastzoneText.Text);
             var bayId = NumericUpDownBayId.Text.ParseInt();
@@ -3774,89 +3776,89 @@ namespace Neutron.Forms
             var text = TextBoxBlastzoneText.Text;
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayId, display, text);
+                _iptiDisplayFunctions.TurnOnBlastzoneDisplay(bayId, display, text);
             }
 
         }
-        private async void ButtonTurnOffBlastzoneDisplay_Click(object sender, EventArgs e)
+        private void ButtonTurnOffBlastzoneDisplay_Click(object sender, EventArgs e)
         {
             // TurnOffBlastzoneDisplay(NumericUpDownBayId.Text.ParseInt(), TextBoxBlastzoneDisplay.Text.ParseInt());
             var bayId = NumericUpDownBayId.Text.ParseInt();
             var display = TextBoxBlastzoneDisplay.Text.ParseInt();
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOffBlastzoneDisplay(bayId, display);
+                _iptiDisplayFunctions.TurnOffBlastzoneDisplay(bayId, display);
 
             }
         }
-        private async void ButtonBlastzoneClearAll_Click(object sender, EventArgs e)
+        private void ButtonBlastzoneClearAll_Click(object sender, EventArgs e)
         {
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.ClearBlastzone();
+                _iptiDisplayFunctions.ClearBlastzone();
             }
 
         }
-        private async void ButtonTurnOnBlastzoneOrderControl_Click(object sender, EventArgs e)
-        {
-            var bayId = NumericUpDownBayId.Text.ParseInt();
-            if (_iptiDisplayFunctions != null)
-            {
-                await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayId, TextBoxBlastzoneOrderControlText.Text);
-
-            }
-        }
-        private async void ButtonTurnOffBlastzoneOrderControl_Click(object sender, EventArgs e)
+        private void ButtonTurnOnBlastzoneOrderControl_Click(object sender, EventArgs e)
         {
             var bayId = NumericUpDownBayId.Text.ParseInt();
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOffBlastzoneOrderControl(bayId);
+                _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(bayId, TextBoxBlastzoneOrderControlText.Text);
+
+            }
+        }
+        private void ButtonTurnOffBlastzoneOrderControl_Click(object sender, EventArgs e)
+        {
+            var bayId = NumericUpDownBayId.Text.ParseInt();
+            if (_iptiDisplayFunctions != null)
+            {
+                _iptiDisplayFunctions.TurnOffBlastzoneOrderControl(bayId);
             }
 
         }
-        private async void ButtonTurnOnBatchDisplay_Click(object sender, EventArgs e)
+        private void ButtonTurnOnBatchDisplay_Click(object sender, EventArgs e)
         {
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOnBatchDisplay(TextBoxBatchPosition.Text.ParseInt(), TextBoxBatchText.Text);
+                _iptiDisplayFunctions.TurnOnBatchDisplay(TextBoxBatchPosition.Text.ParseInt(), TextBoxBatchText.Text);
             }
         }
-        private async void ButtonTurnOffBatchDisplay_Click(object sender, EventArgs e)
+        private void ButtonTurnOffBatchDisplay_Click(object sender, EventArgs e)
         {
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOffBatchDisplay(TextBoxBatchPosition.Text.ParseInt());
+                _iptiDisplayFunctions.TurnOffBatchDisplay(TextBoxBatchPosition.Text.ParseInt());
 
             }
 
         }
-        private async void ButtonClearBatch_Click(object sender, EventArgs e)
+        private void ButtonClearBatch_Click(object sender, EventArgs e)
         {
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.ClearBatchTable();
+                _iptiDisplayFunctions.ClearBatchTable();
 
             }
         }
-        private async void ButtonTurnOnBatchOrderControl_Click(object sender, EventArgs e)
+        private void ButtonTurnOnBatchOrderControl_Click(object sender, EventArgs e)
         {
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOnBatchOrderControl(TextBoxBatchOrderControlText.Text);
+                _iptiDisplayFunctions.TurnOnBatchOrderControl(TextBoxBatchOrderControlText.Text);
 
             }
         }
-        private async void ButtonTurnOffBatchOrderControl_Click(object sender, EventArgs e)
+        private  void ButtonTurnOffBatchOrderControl_Click(object sender, EventArgs e)
         {
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+                 _iptiDisplayFunctions.TurnOffBatchOrderControl();
 
             }
         }
 
-        private async void ButtonTurnAllOn_Click(object sender, EventArgs e)
+        private void ButtonTurnAllOn_Click(object sender, EventArgs e)
         {
             for (var i = 0; i < 16; i++)
             {
@@ -3864,20 +3866,20 @@ namespace Neutron.Forms
                 var text = $"{num}";
                 if (_iptiDisplayFunctions != null)
                 {
-                    await _iptiDisplayFunctions.TurnOnBatchDisplay(num, text);
+                   _iptiDisplayFunctions.TurnOnBatchDisplay(num, text);
                 }
                 Task.Delay(_ipti.TransmitDelay).Wait();
             }
         }
 
-        private async void ButtonTurnAllOff_Click(object sender, EventArgs e)
+        private void ButtonTurnAllOff_Click(object sender, EventArgs e)
         {
             for (var i = 0; i < 16; i++)
             {
                 var num = i + 1;
                 if (_iptiDisplayFunctions != null)
                 {
-                    await _iptiDisplayFunctions.TurnOffBatchDisplay(num);
+                   _iptiDisplayFunctions.TurnOffBatchDisplay(num);
 
                 }
                 Task.Delay(_ipti.TransmitDelay).Wait();
