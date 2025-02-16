@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NeutronData.DataContexts;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
@@ -8,13 +9,15 @@ namespace NeutronMaintenance
 {
     public class VelocityCodeManager : IVelocityCodeManager
     {
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public VelocityCodeManager()
+        public VelocityCodeManager(Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _repoVelocityCode = new GenericRepository<VelocityCode>(contextFactory);
         }
 
         /// <summary>

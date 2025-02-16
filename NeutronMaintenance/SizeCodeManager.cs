@@ -1,20 +1,23 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NeutronData.DataContexts;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
-using NeutronMaintenance.Models;
+
 
 namespace NeutronMaintenance
 {
     public class SizeCodeManager : ISizeCodeManager
     {
-        private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
+        private readonly GenericRepository<SizeCode> _repoSizeCode;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public SizeCodeManager()
+        public SizeCodeManager(Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _repoSizeCode = new GenericRepository<SizeCode>(contextFactory);
         }
 
         /// <summary>

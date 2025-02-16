@@ -20,26 +20,14 @@ namespace NeutronMaintenance
         private readonly IVelocityCodeManager _velocityCodeManager;
         private readonly GenericRepository<Location> _repoLocation;
 
-        //private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
-        //private readonly GenericRepository<SizeCode> _repoSizeCode;
-        //private readonly GenericRepository<VelocityCode> _repoVelocityCode;
-        //private readonly GenericRepository<HeightCode> _repoHeightCode;
-        //private readonly GenericRepository<LocationCode> _repoLocationCode;
-        //private readonly GenericRepository<Inventory> _repoInventory;
-
-        public RandomLocationManager(ISizeCodeManager sizeCodeManager, IHeightCodeManager heightCodeManager,  IVelocityCodeManager velocityCodeManager)
+        public RandomLocationManager(ISizeCodeManager sizeCodeManager, IHeightCodeManager heightCodeManager,  IVelocityCodeManager velocityCodeManager, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            
             _sizeCodeManager = sizeCodeManager;
             _heightCodeManager = heightCodeManager;
             _velocityCodeManager = velocityCodeManager;
-            _repoLocation = new GenericRepository<Location>(new NeutronDb());
-
-            //_repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-            //_repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-            //_repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
-            //_repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
-            //_repoLocationCode = new GenericRepository<LocationCode>(new NeutronDb());
-            //_repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+            _repoLocation = new GenericRepository<Location>(contextFactory);
         }
 
         public void Process(NovaRandomLocation novaRandomLocation)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
@@ -17,27 +18,34 @@ namespace NeutronMaintenance
     public class MaintenanceProcessor
     {
         private readonly BlockingCollection<FileInfo> interfaceFileQueue = new BlockingCollection<FileInfo>();
-        private static BackgroundWorker interfaceFileQueueProcessor;
-        private readonly GenericRepository<Inventory> repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Location> repoLocation = new GenericRepository<Location>(new NeutronDb());
+        private static BackgroundWorker _interfaceFileQueueProcessor;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<Location> _repoLocation;
+        
         //private readonly HistoryManager historyManager = new HistoryManager();
        // private readonly AlliedFileWatcher interfaceWatcher;
-        private readonly IDynamicLogger _logger;
-        string configFilePath;
-        readonly bool usePr1Processor = false;
-        readonly IJsonData jsonData;
-        readonly NeutronVariables neutronVariables;
-        readonly NeutronLicense neutronLicense;
+        
+       private readonly IDynamicLogger _logger;
+        string _configFilePath;
+        readonly bool _usePr1Processor = false;
+        readonly IJsonData _jsonData;
+        readonly NeutronVariables _neutronVariables;
+        readonly NeutronLicense _neutronLicense;
 
-        public MaintenanceProcessor(IJsonData jsonData, string configFilePath)
+        public MaintenanceProcessor(IJsonData jsonData, string configFilePath, Func<NeutronDb> contextFactory)
         {
-            this.jsonData = jsonData;
-            this.configFilePath = configFilePath;
-            neutronVariables = jsonData.LoadFile<NeutronVariables>();
-            neutronLicense = jsonData.LoadFile<NeutronLicense>();
-            usePr1Processor = neutronVariables.UsePr1Processor;
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _jsonData = jsonData;
+            _configFilePath = configFilePath;
+            _neutronVariables = jsonData.LoadFile<NeutronVariables>();
+            _neutronLicense = jsonData.LoadFile<NeutronLicense>();
+            _usePr1Processor = _neutronVariables.UsePr1Processor;
             LoaderSettings.Init();
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoLocation = new GenericRepository<Location>(contextFactory);
+
 
             _logger = NeutronCore.Global.Logger.SetupLogger("MaintenanceProcessor");
         }
@@ -57,8 +65,8 @@ namespace NeutronMaintenance
             //{
             //    fileProcessor = new FileProcessor(files);
             //}
-         _ = _logger.LogDetailAsync($"Background Worker Company Code: {neutronLicense.CompanyCode}");
-            switch (neutronLicense.CompanyCode)
+         _ = _logger.LogDetailAsync($"Background Worker Company Code: {_neutronLicense.CompanyCode}");
+            switch (_neutronLicense.CompanyCode)
             {
                 case "TMG":
                     // fileProcessor = new FileProcessor(files);
@@ -99,23 +107,23 @@ namespace NeutronMaintenance
 
         private void StopBackgroundWorker()
         {
-            interfaceFileQueueProcessor.CancelAsync();
+            _interfaceFileQueueProcessor.CancelAsync();
         }
 
         private void InitBackgroundWorker()
         {
-            interfaceFileQueueProcessor = new BackgroundWorker
+            _interfaceFileQueueProcessor = new BackgroundWorker
             {
                 WorkerReportsProgress = false,
                 WorkerSupportsCancellation = true
             };
-            interfaceFileQueueProcessor.DoWork += InterfaceFileQueueProcessorDoWork;
-            interfaceFileQueueProcessor.RunWorkerCompleted += InterfaceFileQueueProcessorRunWorkerCompleted;
+            _interfaceFileQueueProcessor.DoWork += InterfaceFileQueueProcessorDoWork;
+            _interfaceFileQueueProcessor.RunWorkerCompleted += InterfaceFileQueueProcessorRunWorkerCompleted;
         }
 
         private void InterfaceFileQueueProcessorDoWork(object sender, DoWorkEventArgs e)
         {
-            if (interfaceFileQueueProcessor.CancellationPending)
+            if (_interfaceFileQueueProcessor.CancellationPending)
             {
                 e.Cancel = true;
                 return;
@@ -134,8 +142,8 @@ namespace NeutronMaintenance
 
                 }
             }
-         _ = _logger.LogDetailAsync($"Form Pick Company Code: {neutronLicense.CompanyCode}");
-            switch (neutronLicense.CompanyCode)
+         _ = _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}");
+            switch (_neutronLicense.CompanyCode)
             {
                 case "TMG":
                     // fileProcessor = new FileProcessor(files);

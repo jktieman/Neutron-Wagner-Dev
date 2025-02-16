@@ -1,20 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NeutronData.DataContexts;
 using NeutronData.Models.Lookups;
 using NeutronData.Repositories;
-using NeutronMaintenance.Models;
 
 namespace NeutronMaintenance
 {
     public class HeightCodeManager : IHeightCodeManager
     {
-        private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
+        private readonly GenericRepository<HeightCode> _repoHeightCode;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public HeightCodeManager()
+        public HeightCodeManager(Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _repoHeightCode = new GenericRepository<HeightCode>(contextFactory);
         }
 
         /// <summary>
