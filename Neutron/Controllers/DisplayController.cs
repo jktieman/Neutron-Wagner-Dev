@@ -23,8 +23,8 @@ namespace Neutron.Controllers
 {
     public class DisplayController : IDisplayController
     {
-        private readonly GenericRepository<SerialConfiguration> _repoSerial = new GenericRepository<SerialConfiguration>(new NeutronDb());
-        private readonly GenericRepository<HardwareDevice> _repoHardwareDevice = new GenericRepository<HardwareDevice>(new NeutronDb());
+        private readonly GenericRepository<SerialConfiguration> _repoSerial;
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevice;
 
         private Hart_DisplayController _hartDisplayController;
 
@@ -44,19 +44,25 @@ namespace Neutron.Controllers
         private readonly Hart_SHI Global_Module;
         List<Hart_BLI> blisOn = new List<Hart_BLI>();
         List<Hart_SHI> shisOn = new List<Hart_SHI>();
+        private readonly Func<NeutronDb> _contextFactory;
         public bool Ready { get; set; }
         public event EventHandler<MyDataReceivedEventArgs> MyDataReceived;
         
         public DisplayController(IJsonData jsonData, WorkstationView workstationView
         , NeutronVariables neutronVariables
-        , NeutronLicense neutronLicense)
+        , NeutronLicense neutronLicense, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _workstationView = workstationView;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _bliEnabled = _neutronVariables.BliEnabled;
             _shiEnabled = _neutronVariables.ShiEnabled;
             Global_Module = new Hart_SHI(0, 0, 0, "", "");
+            _repoSerial = new GenericRepository<SerialConfiguration>(contextFactory);
+            _repoHardwareDevice = new GenericRepository<HardwareDevice>(contextFactory);
+
+
             CreateLog();
 
             FillBliList();
