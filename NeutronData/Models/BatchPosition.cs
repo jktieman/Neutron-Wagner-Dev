@@ -7,5 +7,6 @@
         public string Ord1 { get; set; }
         public string Ord2 { get; set; }
         public bool OrderComplete { get; set; }
+        public int RowIndex { get; set; }
     }
 }
