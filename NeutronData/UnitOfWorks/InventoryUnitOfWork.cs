@@ -2,16 +2,12 @@
 using NeutronData.Models;
 using NeutronData.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NeutronData.DataContexts;
 
 namespace NeutronData.UnitOfWorks;
 public class InventoryUnitOfWork : IInventoryUnitOfWork
 {
-    private readonly DbContext _context;
+    private readonly Func<NeutronDb> _contextFactory;
     private IGenericRepository<SizeCode> _repoSizeCode;
     private IGenericRepository<HeightCode> _repoHeightCode;
     private IGenericRepository<VelocityCode> _repoVelocityCode;
@@ -25,41 +21,48 @@ public class InventoryUnitOfWork : IInventoryUnitOfWork
     private GenericRepository<StorageType> _repoStorageTypes;
 
 
-    public InventoryUnitOfWork(DbContext context)
+    public InventoryUnitOfWork(Func<NeutronDb> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
+
     }
-    public IGenericRepository<SizeCode> SizeCodes => _repoSizeCode ??= new GenericRepository<SizeCode>(_context);
+    public IGenericRepository<SizeCode> SizeCodes => _repoSizeCode ??= new GenericRepository<SizeCode>(_contextFactory);
     public IGenericRepository<HeightCode> HeightCodes =>
-        _repoHeightCode ??= new GenericRepository<HeightCode>(_context);
+        _repoHeightCode ??= new GenericRepository<HeightCode>(_contextFactory);
     public IGenericRepository<Location> Locations =>
-        _repoLocations ??= new GenericRepository<Location>(_context);
+        _repoLocations ??= new GenericRepository<Location>(_contextFactory);
     public IGenericRepository<LocationCode> LocationCodes =>
-        _repoLocationCodes ??= new GenericRepository<LocationCode>(_context);
+        _repoLocationCodes ??= new GenericRepository<LocationCode>(_contextFactory);
     public IGenericRepository<VelocityCode> VelocityCodes =>
-        _repoVelocityCode ??= new GenericRepository<VelocityCode>(_context);
+        _repoVelocityCode ??= new GenericRepository<VelocityCode>(_contextFactory);
     public IGenericRepository<StorageDevice> StorageDevices =>
-        _repoStorageDevices ??= new GenericRepository<StorageDevice>(_context);
+        _repoStorageDevices ??= new GenericRepository<StorageDevice>(_contextFactory);
     public IGenericRepository<Area> Areas =>
-        _repoAreas ??= new GenericRepository<Area>(_context);
+        _repoAreas ??= new GenericRepository<Area>(_contextFactory);
     public IGenericRepository<UnitOfIssue> UnitOfIssue =>
-        _repoUnitOfIssue ??= new GenericRepository<UnitOfIssue>(_context);
+        _repoUnitOfIssue ??= new GenericRepository<UnitOfIssue>(_contextFactory);
     public IGenericRepository<ItemDefinition> ItemDefinitions =>
-        _repoItemDefinitions ??= new GenericRepository<ItemDefinition>(_context);
+        _repoItemDefinitions ??= new GenericRepository<ItemDefinition>(_contextFactory);
 
     public IGenericRepository<Inventory> Inventory => 
-        _repoInventory ??= new GenericRepository<Inventory>(_context);
+        _repoInventory ??= new GenericRepository<Inventory>(_contextFactory);
 
     public IGenericRepository<StorageType> StorageTypes =>
-        _repoStorageTypes ??= new GenericRepository<StorageType>(_context);
+        _repoStorageTypes ??= new GenericRepository<StorageType>(_contextFactory);
 
     public void Dispose()
     {
-        _context.Dispose();
-    }
-
-    public void Save()
-    {
-        _context.SaveChanges();
+        // Dispose of any repositories that implement IDisposable
+        _repoSizeCode = null;
+        _repoHeightCode = null;
+        _repoVelocityCode = null;
+        _repoStorageDevices = null;
+        _repoAreas = null;
+        _repoLocationCodes = null;
+        _repoLocations = null;
+        _repoItemDefinitions = null;
+        _repoUnitOfIssue = null;
+        _repoInventory = null;
+        _repoStorageTypes = null;
     }
 }

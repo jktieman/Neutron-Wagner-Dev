@@ -1,16 +1,11 @@
-﻿using NeutronData.Models.Lookups;
+﻿using System;
+using NeutronData.Models.Lookups;
 using NeutronData.Models;
 using NeutronData.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeutronData.UnitOfWorks;
-public interface IInventoryUnitOfWork
+public interface IInventoryUnitOfWork : IDisposable
 {
-
     IGenericRepository<SizeCode> SizeCodes { get; }
     IGenericRepository<HeightCode> HeightCodes { get; }
     IGenericRepository<VelocityCode> VelocityCodes { get; }
@@ -22,8 +17,5 @@ public interface IInventoryUnitOfWork
     IGenericRepository<UnitOfIssue> UnitOfIssue { get; }
     IGenericRepository<Inventory> Inventory { get; }
     IGenericRepository<StorageType> StorageTypes { get; }
-    
-    
-    void Save();
 
 }
