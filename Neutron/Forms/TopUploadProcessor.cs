@@ -1,9 +1,11 @@
 ﻿using Neutron.Global;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronLoader;
+using System;
 using System.Windows.Forms;
 
 namespace Neutron.Forms
@@ -13,10 +15,12 @@ namespace Neutron.Forms
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public TopUploadProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , WorkstationView workstationView)
+            , WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
@@ -70,7 +74,7 @@ namespace Neutron.Forms
                             DateTime = pickLocation.PickDate.ToString($"yyyyMMddHHmmss"),
                             EmpId = ($"EmpId:{empId} Note: Picked From Different Location")
                         };
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                         hostFile.CreateHostFile(ord);
                     }
                 }
@@ -100,7 +104,7 @@ namespace Neutron.Forms
                         EmpId = ($"EmpId:{empId} Note: Picked Used")
                     };
 
-                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                     hostFile.CreateHostFile(ord);
                 }
             }
@@ -131,7 +135,7 @@ namespace Neutron.Forms
                             DateTime = pickLocation.PickDate.ToString($"yyyyMMddHHmmss"),
                             EmpId = ($"EmpId:{empId} Note: Stored in Different Location")
                         };
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                         hostFile.CreateHostFile(ord);
                     }
                 }
