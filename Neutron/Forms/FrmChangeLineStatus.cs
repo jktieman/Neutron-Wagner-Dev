@@ -16,17 +16,25 @@ namespace Neutron.Forms
     {
         private readonly OrderDetail _orderDetail;
         private readonly IHistoryManager _historyManager;
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<LineStatusLookup> _repoStatus = new GenericRepository<LineStatusLookup>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<LineStatusLookup> _repoStatus;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails;
+        private readonly GenericRepository<Order> _repoOrders;
        // private readonly List<int> _statusNumbers = new List<int> { 1, 6, 9 };
         private readonly int _currentStatus;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public FrmChangeLineStatus(OrderDetail orderDetail, IHistoryManager historyManager)
+        public FrmChangeLineStatus(OrderDetail orderDetail, IHistoryManager historyManager, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _orderDetail = orderDetail;
             _historyManager = historyManager;
+
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoStatus = new GenericRepository<LineStatusLookup>(contextFactory);
+            _repoOrderDetails = new GenericRepository<OrderDetail>(contextFactory);
+            _repoOrders = new GenericRepository<Order>(contextFactory);
+
             _currentStatus = orderDetail.LineStatusId;
             InitializeComponent();
             SetupStatusComboBox();
