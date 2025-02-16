@@ -21,33 +21,33 @@ namespace Neutron.Forms
         private readonly IHistoryManager _historyManager;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
-        private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode =
-            new GenericRepository<VelocityCode>(new NeutronDb());
-
-        private readonly GenericRepository<HeightCode> _repoHeightCode =
-            new GenericRepository<HeightCode>(new NeutronDb());
-
-        private readonly GenericRepository<Workstation> _repoStation = new GenericRepository<Workstation>(new NeutronDb());
-
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition =
-            new GenericRepository<ItemDefinition>(new NeutronDb());
-
-        private readonly GenericRepository<StorageType> _repoStorageType =
-            new GenericRepository<StorageType>(new NeutronDb());
-
-        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue =
-            new GenericRepository<UnitOfIssue>(new NeutronDb());
+        
+        private readonly GenericRepository<SizeCode> _repoSizeCode;
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode;
+        private readonly GenericRepository<HeightCode> _repoHeightCode;
+        private readonly GenericRepository<Workstation> _repoStation;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<StorageType> _repoStorageType;
+        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public ItemDefinition ItemDefinition { get; set; }
 
-        public FrmEditItemDefinition(int id, IHistoryManager historyManager)
+        public FrmEditItemDefinition(int id, IHistoryManager historyManager, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _historyManager = historyManager;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
+            _repoSizeCode = new GenericRepository<SizeCode>(contextFactory);
+            _repoVelocityCode = new GenericRepository<VelocityCode>(contextFactory);
+            _repoHeightCode = new GenericRepository<HeightCode>(contextFactory);
+            _repoStation = new GenericRepository<Workstation>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoStorageType = new GenericRepository<StorageType>(contextFactory);
+            _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(contextFactory);
+
             SetupViewEditForm();
             FillForm(id);
         }
