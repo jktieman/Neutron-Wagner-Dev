@@ -13,13 +13,17 @@ namespace Neutron.Forms
     {
         private readonly Order _order;
         private readonly IHistoryManager _historyManager;
-        private readonly GenericRepository<OrderStatus> _repoStatus = new GenericRepository<OrderStatus>(new NeutronDb());
-        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
+        private readonly GenericRepository<OrderStatus> _repoStatus;
+        private readonly GenericRepository<Order> _repoOrders;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public FrmChangeOrderStatus(Order order, IHistoryManager historyManager)
+        public FrmChangeOrderStatus(Order order, IHistoryManager historyManager, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _order = order;
             _historyManager = historyManager;
+            _repoStatus = new GenericRepository<OrderStatus>(contextFactory);
+            _repoOrders = new GenericRepository<Order>(contextFactory);
             InitializeComponent();
             SetupStatusComboBox();
             if (order == null) return;
