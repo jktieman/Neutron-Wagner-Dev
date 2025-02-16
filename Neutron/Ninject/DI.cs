@@ -9,6 +9,7 @@ using Ninject;
 using Ninject.Parameters;
 using Neutron.Forms;
 using IPTI.Models;
+using NeutronData.DataContexts;
 
 
 namespace Neutron.Ninject
@@ -30,6 +31,7 @@ namespace Neutron.Ninject
                     }
                     _kernel = new StandardKernel();
                     _kernel.Load(Assembly.GetExecutingAssembly());
+                   
                 }
                 catch (Exception ex)
                 {

@@ -22,6 +22,11 @@ using IDisplayController = IPTI.Models.IDisplayController;
 
 using System.Data.Common;
 using System.Data.SqlClient;
+using Ninject;
+using System;
+using Microsoft.Extensions.Caching.Memory;
+using static System.Windows.Forms.Design.AxImporter;
+using Microsoft.Extensions.Options;
 
 
 namespace Neutron.Ninject
@@ -31,7 +36,14 @@ namespace Neutron.Ninject
         public override void Load()
         {
             Bind<DbConnection>().To<SqlConnection>().InSingletonScope();
-            Bind<DbContext>().To<NeutronDb>().InThreadScope();
+           // Bind<DbContext>().To<NeutronDb>().InThreadScope();
+            Bind<NeutronDb>().ToSelf();
+            // Add the binding for Func<NeutronDb>
+            Bind<Func<NeutronDb>>().ToMethod(context =>
+            {
+                return () => context.Kernel.Get<NeutronDb>(); 
+            });
+            Bind(typeof(GenericRepository<>)).ToSelf().InTransientScope();
             Bind<IJsonData>().To<JsonData>().InSingletonScope();
             Bind<IAkaRepository>().To<AkaRepository>().InSingletonScope();
             Bind<ISecurityProcessor>().To<SecurityProcessor>().InSingletonScope();
@@ -40,12 +52,13 @@ namespace Neutron.Ninject
             Bind<IInventoryUnitOfWork>().To<InventoryUnitOfWork>().InSingletonScope();
             Bind<INeutronRootDirectory>().To<NeutronRootDirectory>().InSingletonScope();
             Bind<IImageManager>().To<ImageManager>().InSingletonScope();
-            Bind<IOrdersRepository>().To<OrdersRepository>().InSingletonScope();
+            Bind<IOrdersRepository>().To<OrdersRepository>().WithConstructorArgument("workstation");
             Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>().InSingletonScope();
             Bind<IInventoryManager>().To<InventoryManager>().InSingletonScope();
             Bind<IInventoryRepository>().To<InventoryRepository>().InSingletonScope();
-            Bind<FrmMain>().To<FrmMain>().InSingletonScope();
-            Bind<FrmSystem>().To<FrmSystem>()
+           // Bind<FrmMain>().To<FrmMain>().InSingletonScope();
+            Bind<FrmMain>().ToSelf();
+           Bind<FrmSystem>().To<FrmSystem>()
                 
                 .WithConstructorArgument("workstationView")
                 .WithConstructorArgument("neutronVariables")
@@ -103,6 +116,7 @@ namespace Neutron.Ninject
                 .WithConstructorArgument("folderName", @"General")
                 .WithConstructorArgument("logActivity", "false");
 
+            Bind<IOrderDetailsRepository>().To<OrderDetailsRepository>().InSingletonScope();
             Bind<IWorkstationRepository>().To<WorkstationRepository>().InSingletonScope();
             Bind<IAreaRepository>().To<AreaRepository>().InSingletonScope();
             Bind<IRFIDManager>().To<RFIDManager>().InSingletonScope();
@@ -111,6 +125,9 @@ namespace Neutron.Ninject
             Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
             Bind<IDisplayController>().To<TcpIptiController>().InSingletonScope();
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
+            Bind<IPrintJobRepository>().To<PrintJobRepository>().InSingletonScope();
+            Bind<IOptions<MemoryCacheOptions>>().ToConstant(Microsoft.Extensions.Options.Options.Create(new MemoryCacheOptions()));
+            Bind<IMemoryCache>().To<MemoryCache>().InSingletonScope();
 
             // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
