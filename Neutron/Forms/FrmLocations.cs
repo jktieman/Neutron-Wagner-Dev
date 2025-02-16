@@ -31,7 +31,6 @@ using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using SlotNameFactory;
 using NeutronData.Interfaces;
-using StationType = NeutronCore.Enums.StationType;
 using ExcelManager;
 using System.Reflection;
 using NeutronEvents;
@@ -56,26 +55,7 @@ namespace Neutron.Forms
         private LocationsRepository _locationRepository;
         private IDynamicLogger _logger;
 
-        //private readonly GenericRepository<HeightCode> _repoHeightCode =
-        //    new GenericRepository<HeightCode>(new NeutronDb());
-
-        //private readonly GenericRepository<Inventory>
-        //    _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-
-        //private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
-
-        //private readonly GenericRepository<StorageDevice> _repoDevices =
-        //    new GenericRepository<StorageDevice>(new NeutronDb());
-
-        //private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-
         private readonly IWorkstationRepository _workstationRepository;
-
-        //private readonly GenericRepository<VelocityCode> _repoVelocityCodes =
-        //    new GenericRepository<VelocityCode>(new NeutronDb());
-
-        //private readonly GenericRepository<Area> _repoArea =
-        //    new GenericRepository<Area>(new NeutronDb());
 
         private ISlot _slotName;
         private HeaderTextManager _headerTextManager;
@@ -84,11 +64,13 @@ namespace Neutron.Forms
         private readonly IIptiDisplayFunctions _iptiDisplayFunctions;
         
         private readonly ILocationUnitOfWork _locationUnitOfWork;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public FrmLocations(IJsonData jsonData, IWorkstationRepository workstationRepository,
             WorkstationView workstationView, NeutronVariables neutronVariables, ILacProcessor lacProcessor,
-            ILocationUnitOfWork locationUnitOfWork, IIptiDisplayFunctions iptiDisplayFunctions)
+            ILocationUnitOfWork locationUnitOfWork, IIptiDisplayFunctions iptiDisplayFunctions, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             InitializeComponent();
             _workstationRepository = workstationRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -114,7 +96,7 @@ namespace Neutron.Forms
             HideTabControlTabs();
             SetupPrinters();
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
-            _locationRepository = new LocationsRepository();
+            _locationRepository = new LocationsRepository(_contextFactory);
             LabelStationName.Text = _workstationView.ToString();
 
             var areas = _locationUnitOfWork.Areas.All();
@@ -251,7 +233,7 @@ namespace Neutron.Forms
             return count;
         }
 
-        private async void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             _logger.LogDetailAsync($"Cell Click").SafeFireAndForget();
 
@@ -305,9 +287,9 @@ namespace Neutron.Forms
                 {
                     if (_iptiDisplayFunctions != null)
                     {
-                        await _iptiDisplayFunctions.ClearBlastzone();
-                        await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
-                        await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
+                        _iptiDisplayFunctions.ClearBlastzone();
+                        _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
+                        _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
                     }
                 }
 
@@ -792,7 +774,7 @@ namespace Neutron.Forms
                 var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result != DialogResult.Yes) return;
-                var deleted = await _locationUnitOfWork.Locations.DeleteAsync(loc.Id);
+                await _locationUnitOfWork.Locations.DeleteAsync(loc.Id);
                 await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationDelete, loc);
                 RefreshData();
                 tabControl1.SelectedTab = tabPage1;
@@ -1046,15 +1028,15 @@ namespace Neutron.Forms
         /// <remarks>
         /// This method is asynchronous and will close the form when invoked.
         /// </remarks>
-        private async void MButtonClose_Click(object sender, EventArgs e)
+        private void MButtonClose_Click(object sender, EventArgs e)
         {
-            await CloseFormAsync();
+            CloseForm();
         }
 
         /// <summary>
         /// Closes the form and performs necessary cleanup operations.
         /// </summary>
-        private async Task CloseFormAsync()
+        private void CloseForm()
         {
             // Indicate that the close button was pressed
             CloseButtonPressed = true;
@@ -1063,9 +1045,9 @@ namespace Neutron.Forms
             // Clear the Blastzone if the IPTI Display Functions are available
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.ClearBlastzone().ConfigureAwait(false);
+               _iptiDisplayFunctions.ClearBlastzone();
             }
-            // Close the form
+
             Close();
         }
 
@@ -1458,7 +1440,7 @@ namespace Neutron.Forms
             CheckBoxInUse.Checked = location.InUse;
 
             ButtonPositionDevice.Visible = WorkstationCanPositionDevice();
-
+             
         }
 
         #endregion
